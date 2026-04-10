@@ -1,0 +1,31 @@
+/* #Sizobi
+$[
+	1.063,
+	["A3C_HC_GROUP_MENU",[[0,0,1,1],0.025,0.04,"GUI_GRID"],0,0,0],
+	[2300,"A3C_HC_GROUP_MENU_CTRLPARENT",[1,"",["0.245588 * safezoneW + safezoneX","0.291019 * safezoneH + safezoneY","0.213156 * safezoneW","0.340895 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1500,"A3C_HC_GROUP_MENU_Box_Behaviour",[2300,"",["4.95907e-007 * safezoneW","0.0439747 * safezoneH","0.0893878 * safezoneW","0.0989911 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1501,"A3C_HC_GROUP_MENU_Box_CombatMode",[2300,"",["0.0893883 * safezoneW","0.0439747 * safezoneH","0.0893878 * safezoneW","0.0989911 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1502,"A3C_HC_GROUP_MENU_Box_Formation",[2300,"",["4.95907e-007 * safezoneW","0.142978 * safezoneH","0.0893878 * safezoneW","0.0989911 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1503,"A3C_HC_GROUP_MENU_Box_Color",[2300,"",["0.0893883 * safezoneW","0.142978 * safezoneH","0.0893878 * safezoneW","0.0989911 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1200,"A3C_HC_GROUP_MENU_BG_Rejoin",[2300,"#(argb,8,8,3)color(1,1,1,1)",["4.95907e-007 * safezoneW","0.241982 * safezoneH","0.0893878 * safezoneW","0.032997 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1201,"A3C_HC_GROUP_MENU_BG_Convoy",[2300,"#(argb,8,8,3)color(1,1,1,1)",["0.0893883 * safezoneW","0.241982 * safezoneH","0.0893878 * safezoneW","0.032997 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1202,"A3C_HC_GROUP_MENU_BG_Confirm",[2300,"#(argb,8,8,3)color(1,1,1,1)",["4.95907e-007 * safezoneW","0.274983 * safezoneH","0.0893878 * safezoneW","0.032997 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1203,"A3C_HC_GROUP_MENU_BG_FocusGroup",[2300,"#(argb,8,8,3)color(1,1,1,1)",["0.0893883 * safezoneW","0.274983 * safezoneH","0.0893878 * safezoneW","0.032997 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1600,"A3C_HC_GROUP_MENU_Button_Rejoin",[2300,"",["4.95907e-007 * safezoneW","0.241982 * safezoneH","0.0893878 * safezoneW","0.032997 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1601,"A3C_HC_GROUP_MENU_Button_Convoy",[2300,"",["0.0893883 * safezoneW","0.241982 * safezoneH","0.0893878 * safezoneW","0.032997 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1602,"A3C_HC_GROUP_MENU_Button_Confirm",[2300,"",["4.95907e-007 * safezoneW","0.274983 * safezoneH","0.0893878 * safezoneW","0.032997 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1603,"A3C_HC_GROUP_MENU_Button_FocusGroup",[2300,"",["0.0893883 * safezoneW","0.274983 * safezoneH","0.0893878 * safezoneW","0.032997 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1204,"A3C_HC_GROUP_MENU_Box_GroupName",[2300,"#(argb,8,8,3)color(1,1,1,1)",["4.95907e-007 * safezoneW","-2.69893e-005 * safezoneH","0.178776 * safezoneW","0.0440017 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1400,"A3C_HC_GROUP_MENU_Box_Groupname_CT",[2300,"",["4.95907e-007 * safezoneW","-2.69893e-005 * safezoneH","0.178776 * safezoneW","0.0440017 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1205,"A3C_HC_GROUP_MENU_BG_Cancel",[2300,"#(argb,8,8,3)color(1,1,1,1)",["0.178776 * safezoneW","4.50745e-005 * safezoneH","0.0343799 * safezoneW","0.0439865 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1604,"A3C_HC_GROUP_MENU_Button_Cancel",[2300,"",["0.178776 * safezoneW","4.50745e-005 * safezoneH","0.0343799 * safezoneW","0.0439865 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1206,"A3C_HC_GROUP_MENU_BG_UNASSEMBLEWEAPON",[2300,"#(argb,8,8,3)color(1,1,1,1)",["0.178776 * safezoneW","0.043962 * safezoneH","0.0343799 * safezoneW","0.0439865 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1605,"A3C_HC_GROUP_MENU_Button_UNASSEMBLEWEAPON",[2300,"",["0.178776 * safezoneW","0.043962 * safezoneH","0.0343799 * safezoneW","0.0439865 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1207,"A3C_HC_GROUP_MENU_BG_FIREARTY",[2300,"#(argb,8,8,3)color(1,1,1,1)",["0.178776 * safezoneW","0.0879674 * safezoneH","0.0343799 * safezoneW","0.0440051 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1606,"A3C_HC_GROUP_MENU_BUTTON_FIREARTY",[2300,"",["0.178776 * safezoneW","0.0879674 * safezoneH","0.0343799 * safezoneW","0.0440051 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1208,"A3C_HC_GROUP_MENU_BG_PARA",[2300,"#(argb,8,8,3)color(1,1,1,1)",["0.178776 * safezoneW","0.131972 * safezoneH","0.0343799 * safezoneW","0.0440051 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1607,"A3C_HC_GROUP_MENU_Button_PARA",[2300,"",["0.178776 * safezoneW","0.131972 * safezoneH","0.0343799 * safezoneW","0.0440051 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1209,"A3C_HC_GROUP_MENU_BG_VEHBOARD",[2300,"#(argb,8,8,3)color(1,1,1,1)",["0.179664 * safezoneW","0.175972 * safezoneH","0.0343799 * safezoneW","0.0440051 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1608,"A3C_HC_GROUP_MENU_Button_VEHBOARD",[2300,"",["0.179664 * safezoneW","0.175972 * safezoneH","0.0343799 * safezoneW","0.0440051 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]]
+]
+*/

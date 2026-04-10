@@ -1,0 +1,240 @@
+/*%FSM<COMPILE "G:\!Games\Steam\steamapps\common\Arma 3 Tools\FSMEditor\scriptedFSM.cfg, A3C_MON_MAPTAB">*/
+/*%FSM<HEAD>*/
+/*
+item0[] = {"Start_",0,250,-100.000000,-375.000000,50.000000,-275.000000,0.000000,"Start" \n ""};
+item1[] = {"TRUE___",4,218,-100.000000,-178.647156,50.000000,-128.647156,0.000000,"" \n "" \n "" \n "TRUE" \n "" \n "" \n ""};
+item2[] = {"Exit_",1,4346,52.564026,269.337250,152.564026,319.337219,0.000000,"Exit" \n ""};
+item3[] = {"DISPLAY_CLOSED",4,218,14.729614,68.907532,189.448914,142.503235,0.000000,"DISPLAY CLOSED"};
+item4[] = {"LOOP_INIT",2,250,-58.809387,-20.426605,31.190628,29.573395,0.000000,"LOOP INIT"};
+item5[] = {"MAP__map_was_clo",4,218,249.053772,-29.042023,433.271423,41.895264,0.000000,"MAP: map was closed"};
+item6[] = {"close_overlay",2,250,295.502502,76.964905,385.502502,126.964897,0.000000,"close overlay"};
+item7[] = {"SLEEP",4,218,-141.891525,80.757935,-51.891571,130.757935,0.000000,"SLEEP"};
+item8[] = {"EMPTY",4,218,-308.442444,-21.724945,-218.442368,28.275055,0.000000,"EMPTY"};
+item9[] = {"CHECK_DEAD",2,250,-307.428864,89.083923,-217.428741,139.083923,0.000000,"CHECK DEAD"};
+link0[] = {0,1};
+link1[] = {1,4};
+link2[] = {3,2};
+link3[] = {4,3};
+link4[] = {4,5};
+link5[] = {4,7};
+link6[] = {5,6};
+link7[] = {6,3};
+link8[] = {7,9};
+link9[] = {8,4};
+link10[] = {9,8};
+globals[] = {0.000000,0,0,0,0,640,480,1,186,6316128,1,-421.532837,499.299622,492.753174,-183.755875,897,659,1};
+window[] = {0,-1,-1,-1,-1,1117,286,1890,286,1,915};
+*//*%FSM</HEAD>*/
+class FSM
+{
+        fsmName = "A3C_MON_MAPTAB";
+        class States
+        {
+                /*%FSM<STATE "Start_">*/
+                class Start_
+                {
+                        name = "Start_";
+                        itemno = 0;
+                        init = /*%FSM<STATEINIT""">*/"private _dspID = _this select 0;" \n
+                         "private _originalHud = _this select 1;" \n
+                         "private _dsp = findDisplay _dspID;" \n
+                         "" \n
+                         "//systemchat str [""FSM"",_dspID];"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "TRUE___">*/
+                                class TRUE___
+                                {
+                                        itemno = 1;
+                                        priority = 0.000000;
+                                        to="LOOP_INIT";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Exit_">*/
+                class Exit_
+                {
+                        name = "Exit_";
+                        itemno = 2;
+                        init = /*%FSM<STATEINIT""">*/"showHud _originalHUD;" \n
+                         "" \n
+                         "//systemchat ""fsm closed"";" \n
+                         "" \n
+                         "" \n
+                         "A3C_SELECTED_UNITS = [];" \n
+                         "" \n
+                         "" \n
+                         "//---------------------------- Loop completed: Tablet is closed -------------------------------" \n
+                         "//----------------------------------------------------------------------------------------" \n
+                         "if (A3C_HC_GroupMenu_SuppressionRequested) then {" \n
+                         "	systemchat ""A3C: Suppression request cancelled - map and\or overlay closed"";" \n
+                         "	A3C_HC_GroupMenu_SuppressionRequested = false;" \n
+                         "	[""A3C_SUP_MAPCLICK"", ""onMapSingleClick""] call BIS_fnc_removeStackedEventHandler;" \n
+                         "};" \n
+                         "" \n
+                         "" \n
+                         "//-- just for safety: activate map" \n
+                         "(findDisplay 12 displayCtrl 51) ctrlEnable true;" \n
+                         "" \n
+                         "//-- re-activate Action-Menu" \n
+                         "{inGameUISetEventHandler [_x, ""false""]} foreach [""PrevAction"",""NextAction""];" \n
+                         "" \n
+                         "//-- switch back to regular groupBar/commandBar when HC was used" \n
+                         "if (hcShownBar) then {hcShowBar false};" \n
+                         "" \n
+                         "" \n
+                         "//-- reset variables, remove UI eventhandlers (unnecessary?), delete tablet markers." \n
+                         "A3C_USERACTION = [];" \n
+                         "A3C_PICKUP_OBJECTS = []; //-- security for player not completing Sling Action (probably only relevant for HC)" \n
+                         "//A3C_SELECTED_UNITS = [];" \n
+                         "A3C_WAYPOINTS_TEMP =[];" \n
+                         "A3C_DIAG_ACTIVE = false;" \n
+                         "A3C_TAB_BUILDING_BOOL = false;" \n
+                         "A3C_MAP_BOOL_CT = false;" \n
+                         "A3C_BOOL_DISABLEMAPCTRL = false;" \n
+                         "A3C_BOOL_MOUSEMOVING = false;" \n
+                         "A3C_BOOL_MAPFORCE = true;" \n
+                         "" \n
+                         "//player removeEventHandler [""killed"", A3C_KILLED_WIP];" \n
+                         "{deletemarkerLocal _x;} foreach A3C_TRACKER_MARKERS; // (A3C_TAB_MARKERS + A3C_TRACKER_MARKERS);" \n
+                         "if !((getmarkercolor ""A3C_BUILDING_VIEWER"") == """") then {deletemarkerLocal ""A3C_BUILDING_VIEWER""};" \n
+                         "" \n
+                         "" \n
+                         "(findDisplay 12 displayCtrl 51) ctrlEnable true;" \n
+                         "findDisplay 12 displayCtrl 51 ctrlMapCursor [""Track"", ""Track""];" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "//_opac = 1;" \n
+                         "//_hide = false;" \n
+                         "//if (difficulty > 1) then {" \n
+                         "//	_hide = true;" \n
+                         "//};" \n
+                         "" \n
+                         "//if (_hide) then {" \n
+                         "//	_opac = 0;" \n
+                         "//};" \n
+                         "" \n
+                         "//-- what was this next bit??" \n
+                         "//mouseOverIcon = (missionNamespace getVariable ""AIC_Interactive_Icon_Over_Icon"");" \n
+                         "//if (!isNil ""_mouseOverIcon"") then {_opac = 1};" \n
+                         "" \n
+                         "//A3C_OPACITY = _opac;" \n
+                         "//systemchat str _opac;" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "LOOP_INIT">*/
+                class LOOP_INIT
+                {
+                        name = "LOOP_INIT";
+                        itemno = 4;
+                        init = /*%FSM<STATEINIT""">*/"_timer = time;" \n
+                         "//systemchat 'fsm loop';"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "MAP__map_was_clo">*/
+                                class MAP__map_was_clo
+                                {
+                                        itemno = 5;
+                                        priority = 0.000000;
+                                        to="close_overlay";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_dspID == 6998 && {!visibleMap}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "SLEEP">*/
+                                class SLEEP
+                                {
+                                        itemno = 7;
+                                        priority = 0.000000;
+                                        to="CHECK_DEAD";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > _timer + 2"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "DISPLAY_CLOSED">*/
+                                class DISPLAY_CLOSED
+                                {
+                                        itemno = 3;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull (findDisplay _dspID)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "close_overlay">*/
+                class close_overlay
+                {
+                        name = "close_overlay";
+                        itemno = 6;
+                        init = /*%FSM<STATEINIT""">*/"[6998] call A3C_Close_Map_Overlay;" \n
+                         "//systemchat 'fsm hide';"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "DISPLAY_CLOSED">*/
+                                class DISPLAY_CLOSED
+                                {
+                                        itemno = 3;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull (findDisplay _dspID)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "CHECK_DEAD">*/
+                class CHECK_DEAD
+                {
+                        name = "CHECK_DEAD";
+                        itemno = 9;
+                        init = /*%FSM<STATEINIT""">*/"//[] call A3C_CHECK_FOR_DEAD_WIP;" \n
+                         "[] call A3C_UI_MAPTAB_FSM_CHECKCHANGE;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "EMPTY">*/
+                                class EMPTY
+                                {
+                                        itemno = 8;
+                                        priority = 0.000000;
+                                        to="LOOP_INIT";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+        };
+        initState="Start_";
+        finalStates[] =
+        {
+                "Exit_",
+        };
+};
+/*%FSM</COMPILE>*/

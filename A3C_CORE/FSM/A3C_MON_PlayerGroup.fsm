@@ -1,0 +1,661 @@
+/*%FSM<COMPILE "G:\!Games\Steam\steamapps\common\Arma 3 Tools\FSMEditor\scriptedFSM.cfg, A3C_MON_PlayerGroup">*/
+/*%FSM<HEAD>*/
+/*
+item0[] = {"Start_",0,250,-100.000000,-375.000000,50.000000,-275.000000,0.000000,"Start" \n ""};
+item1[] = {"End_",1,250,850.000000,25.000000,950.000000,75.000000,0.000000,"End" \n ""};
+item2[] = {"run_cleanup_",2,250,150.014221,442.164612,275.014221,517.164612,0.000000,"run cleanup" \n ""};
+item3[] = {"Exit_",1,250,45.704163,705.340698,145.704163,755.340698,0.000000,"Exit" \n ""};
+item4[] = {"Arrays_do_not_match",4,218,141.896606,42.341797,291.896606,117.341797,0.000000,"" \n "" \n "Arrays do not match" \n "" \n "" \n ""};
+item5[] = {"",7,210,354.400330,-98.792625,362.400330,-90.792648,0.000000,""};
+item6[] = {"Player_left_the",4,218,33.368530,612.153564,158.368530,662.153564,0.000000,"Player left the game" \n "" \n ""};
+item7[] = {"wait",2,250,-101.245728,-124.150703,-1.245728,-74.150696,0.000000,"wait"};
+item8[] = {"start_conditions",4,218,-122.074348,-230.319000,27.925659,-180.319000,0.000000,"" \n "" \n "" \n "start conditions" \n "" \n "" \n ""};
+item9[] = {"",7,210,404.213745,487.709381,412.213745,495.709351,0.000000,""};
+item10[] = {"",7,210,-534.498657,-145.714081,-526.498657,-137.714066,0.000000,""};
+item11[] = {"wait_",4,218,-576.484497,472.646484,-486.484802,522.646484,0.000000,"wait" \n ""};
+item12[] = {"HC_ACTIONS__relay",2,250,-343.735352,-37.043915,-217.765671,25.291687,0.000000,"HC ACTIONS:" \n "relay target info" \n "prevent dismounts" \n ""};
+item13[] = {"__0sec_",4,218,-165.917511,-31.198120,-75.917511,18.801880,0.000000,"10sec" \n ""};
+item14[] = {"nothing_",4,218,-325.363434,-124.682404,-235.363434,-74.682404,0.000000,"nothing" \n ""};
+item15[] = {"",7,210,-143.397903,-151.394714,-135.397888,-143.394730,0.000000,""};
+item16[] = {"",7,210,-144.047134,-103.350761,-136.047119,-95.350784,0.000000,""};
+item17[] = {"",7,210,-54.707520,-10.708939,-46.707520,-2.708923,0.000000,""};
+item18[] = {"player_not_leader",4,218,-149.041473,37.885788,-85.460114,71.651260,0.000000,"player not leader" \n ""};
+item19[] = {"wait_1",2,250,-192.939819,43.577209,-164.164093,58.596939,0.000000,"wait"};
+item20[] = {"player_took_lead",4,218,-242.807556,39.239670,-207.238800,59.507080,0.000000,"player took lead" \n ""};
+item21[] = {"TeamSwitch",2,250,-401.004242,266.426819,-325.439240,298.367188,0.000000,"TeamSwitch"};
+item22[] = {"sleep_",4,218,-69.775879,270.852051,-25.232826,299.693176,0.000000,"sleep" \n ""};
+item23[] = {"wait_2",2,250,-63.221161,205.716187,-28.889923,233.908081,0.000000,"wait"};
+item24[] = {"true_",4,218,-373.715546,40.534256,-353.709534,56.941071,0.000000,"true" \n ""};
+item25[] = {"Group_Reset",2,250,-294.419403,42.898743,-257.441193,55.650543,0.000000,"Group_Reset"};
+item26[] = {"true_",4,218,-321.660492,42.739975,-301.654480,59.146790,0.000000,"true" \n ""};
+item27[] = {"Group_Switch_",4,218,-80.571899,119.554459,-10.511353,152.712738,0.000000,"Group Switch" \n ""};
+item28[] = {"",7,210,-183.723999,135.884750,-175.723984,143.884735,0.000000,""};
+item29[] = {"secondary_s_out",4,218,129.751892,-325.810516,243.588623,-282.357239,0.000000,"" \n "" \n "" \n "secondary's out" \n "" \n "" \n "" \n ""};
+item30[] = {"wait_3",2,250,259.001923,-421.435516,359.001923,-371.435516,0.000000,"wait"};
+item31[] = {"true_",4,218,93.883232,-430.361969,243.883240,-380.361969,0.000000,"true" \n ""};
+item32[] = {"",7,210,361.347412,339.915466,369.347412,347.915466,0.000000,""};
+item33[] = {"remoteControl_ON",4,218,-0.109039,42.247498,107.428741,88.001358,0.000000,"remoteControl" \n "ON" \n ""};
+item34[] = {"remoteControl_OFF",4,218,-264.623901,334.218781,-165.578552,383.369507,0.000000,"remoteControl" \n "OFF" \n ""};
+item35[] = {"wait_4",2,250,0.779541,334.348602,100.779541,384.348602,0.000000,"wait"};
+item36[] = {"assign_TeamColor",2,4346,-465.629425,332.175934,-365.629425,382.175934,0.000000,"assign" \n "TeamColor"};
+item37[] = {"",7,210,-421.977997,45.121384,-413.977966,53.121368,0.000000,""};
+link0[] = {0,8};
+link1[] = {2,9};
+link2[] = {2,11};
+link3[] = {4,2};
+link4[] = {5,32};
+link5[] = {6,3};
+link6[] = {7,5};
+link7[] = {7,17};
+link8[] = {7,29};
+link9[] = {8,7};
+link10[] = {9,6};
+link11[] = {10,15};
+link12[] = {11,10};
+link13[] = {12,14};
+link14[] = {13,12};
+link15[] = {14,16};
+link16[] = {15,16};
+link17[] = {16,7};
+link18[] = {17,4};
+link19[] = {17,13};
+link20[] = {17,18};
+link21[] = {17,27};
+link22[] = {17,33};
+link23[] = {18,19};
+link24[] = {19,20};
+link25[] = {19,28};
+link26[] = {20,25};
+link27[] = {21,24};
+link28[] = {22,21};
+link29[] = {23,22};
+link30[] = {24,12};
+link31[] = {25,26};
+link32[] = {26,12};
+link33[] = {27,23};
+link34[] = {28,27};
+link35[] = {29,30};
+link36[] = {30,31};
+link37[] = {31,7};
+link38[] = {32,9};
+link39[] = {33,35};
+link40[] = {34,36};
+link41[] = {35,32};
+link42[] = {35,34};
+link43[] = {36,37};
+link44[] = {37,24};
+globals[] = {0.000000,0,0,0,0,640,480,1,182,6316128,1,-720.933594,431.799805,809.842651,-452.290833,1001,1096,1};
+window[] = {0,-1,-1,-1,-1,1606,338,2023,338,1,1019};
+*//*%FSM</HEAD>*/
+class FSM
+{
+        fsmName = "A3C_MON_PlayerGroup";
+        class States
+        {
+                /*%FSM<STATE "Start_">*/
+                class Start_
+                {
+                        name = "Start_";
+                        itemno = 0;
+                        init = /*%FSM<STATEINIT""">*/"_time = time;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "start_conditions">*/
+                                class start_conditions
+                                {
+                                        itemno = 8;
+                                        priority = 0.000000;
+                                        to="wait";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"true && {!(is3DEN)} && {time > (_time + 1)}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "End_">*/
+                class End_
+                {
+                        name = "End_";
+                        itemno = 1;
+                        init = /*%FSM<STATEINIT""">*/"hint ""exit fsm"";"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "run_cleanup_">*/
+                class run_cleanup_
+                {
+                        name = "run_cleanup_";
+                        itemno = 2;
+                        init = /*%FSM<STATEINIT""">*/"//[(units group player) - [player]] call A3C_GROUP_RESET;" \n
+                         "[] call A3C_JOIN_UNIT;" \n
+                         "_time = time;" \n
+                         "//systemchat ""array changed"";" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Player_left_the">*/
+                                class Player_left_the
+                                {
+                                        itemno = 6;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(isnull (finddisplay 46))"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "wait_">*/
+                                class wait_
+                                {
+                                        itemno = 11;
+                                        priority = 0.000000;
+                                        to="wait";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > (_time + 1)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Exit_">*/
+                class Exit_
+                {
+                        name = "Exit_";
+                        itemno = 3;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait">*/
+                class wait
+                {
+                        name = "wait";
+                        itemno = 7;
+                        init = /*%FSM<STATEINIT""">*/"_time = time;" \n
+                         "_playerUnit = player;" \n
+                         "" \n
+                         "" \n
+                         "{" \n
+                         "	private _assignedTeam = assignedTeam _x;" \n
+                         "	if (_assignedTeam == """") then {_assignedTeam = ""MAIN""};" \n
+                         "	_x setVariable [""A3C_ASSIGNEDTEAM"",_assignedTeam];" \n
+                         "} foreach ((units player) - [player]);" \n
+                         "" \n
+                         "//systemchat str time;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Arrays_do_not_match">*/
+                                class Arrays_do_not_match
+                                {
+                                        itemno = 4;
+                                        priority = 0.000000;
+                                        to="run_cleanup_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"//(profilenamespace getvariable ""A3C_GROUPUNITS"") isEqualTo units player" \n
+                                         "//!( A3C_UNITCOUNTER == (count units group player))" \n
+                                         "//({alive _x} count units player) != ({alive _x} count (profilenamespace getvariable ""A3C_GROUPUNITS""))" \n
+                                         "//(count units player) != ({!isNull _x} count (profilenamespace getvariable ""A3C_GROUPUNITS"")) // " \n
+                                         "!((units player) isEqualTo ((profilenamespace getvariable ""A3C_GROUPUNITS"") select {!isNull  _x}))" \n
+                                         "" \n
+                                         ""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "__0sec_">*/
+                                class __0sec_
+                                {
+                                        itemno = 13;
+                                        priority = 0.000000;
+                                        to="HC_ACTIONS__relay";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"false" \n
+                                         "//time > (_time + 10)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "player_not_leader">*/
+                                class player_not_leader
+                                {
+                                        itemno = 18;
+                                        priority = 0.000000;
+                                        to="wait_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(player != leader group player) && (player in units A3C_PLAYERGROUP)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Group_Switch_">*/
+                                class Group_Switch_
+                                {
+                                        itemno = 27;
+                                        priority = 0.000000;
+                                        to="wait_2";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"((alive player) && !(player in units A3C_PLAYERGROUP))"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "remoteControl_ON">*/
+                                class remoteControl_ON
+                                {
+                                        itemno = 33;
+                                        priority = 0.000000;
+                                        to="wait_4";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"player != cameraOn"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Player_left_the">*/
+                                class Player_left_the
+                                {
+                                        itemno = 6;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(isnull (finddisplay 46))"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "secondary_s_out">*/
+                                class secondary_s_out
+                                {
+                                        itemno = 29;
+                                        priority = 0.000000;
+                                        to="wait_3";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"false" \n
+                                         "//false" \n
+                                         "//{currentWeapon _x == secondaryWeapon _x} count (units player - [player]) > 0" \n
+                                         ""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "HC_ACTIONS__relay">*/
+                class HC_ACTIONS__relay
+                {
+                        name = "HC_ACTIONS__relay";
+                        itemno = 12;
+                        init = /*%FSM<STATEINIT""">*/"{" \n
+                         "	private _colorVar = _x getVariable [""A3C_ASSIGNEDTEAM"",""MAIN""];" \n
+                         "	private _assignedTeam = assignedTeam _x;" \n
+                         "	if (_colorVar != _assignedTeam) then {" \n
+                         "		_x setVariable [""A3C_ASSIGNEDTEAM"",_assignedTeam];" \n
+                         "	};" \n
+                         "} foreach ((units player) - [player]);" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "_tgts = [(side player),1000,""ENEMY"",position (vehicle player),[""MAN"",""CAR"",""TANK"",""AIR"",""SHIP""]] call MCSS_fnc_NearEntities;" \n
+                         "{" \n
+                         "	_t = _x;" \n
+                         "	_kn = player knowsabout _t;" \n
+                         "	if (_kn > 1.5) then {" \n
+                         "		{" \n
+                         "				_x reveal [_t,_kn];" \n
+                         "		} foreach A3C_HCALLGROUPS_Current;" \n
+                         "	};" \n
+                         "} foreach _tgts;" \n
+                         "" \n
+                         "//-- " \n
+                         "{" \n
+                         "	_gp = _x;" \n
+                         "	_x enableAttack false;" \n
+                         "	{" \n
+                         "		if (behaviour _x in [""SAFE""]) then {" \n
+                         "			[_x,""AUTOCOMBAT""] remoteExec [""enableAI"",_x];" \n
+                         "		} else {" \n
+                         "			[_x,""AUTOCOMBAT""] remoteExec [""disableAI"",_x];" \n
+                         "		};" \n
+                         "		//_x setskill 1;" \n
+                         "		[_x,1] remoteExec [""setSkill"",_x];" \n
+                         "		if (!isnull objectParent _x) then {" \n
+                         "			if (_x == driver vehicle _x) then {" \n
+                         "				if !((vehicle _x) isKindOf ""AIR"") then { //-- make liberation specific" \n
+                         "					[vehicle _x,1] remoteExec [""setFuel"",vehicle _x ];" \n
+                         "					//vehicle _x setfuel 1;" \n
+                         "				};" \n
+                         "			};" \n
+                         "			//-- prevent loaded AI groups from dismounting in combat mode (more suited for non commanded units)" \n
+                         "			//(vehicle _x) setUnloadInCombat [false,false];" \n
+                         "			[(vehicle _x),[false,false]] remoteExec [""setUnloadInCombat"",(vehicle _x)];	" \n
+                         "		};" \n
+                         "		" \n
+                         "		//if (combatMode _x == ""RED"") then {" \n
+                         "		//	_x setCombatMode ""YELLOW"";" \n
+                         "		//};" \n
+                         "		if (currentCommand _x == ""STOP"") then {" \n
+                         "			[_x, (leader group _x)] remoteExec [""doFollow"",_x];" \n
+                         "			//_x doFollow (leader group _x);" \n
+                         "		};" \n
+                         "	} foreach (units _x);" \n
+                         "	//_tgts = [(side player),viewDistance,""ENEMY"",position (vehicle (leader _x)),[""MAN"",""CAR"",""TANK"",""AIR"",""SHIP""]] call MCSS_fnc_NearEntities;" \n
+                         "	_tgts =  ((leader _x) targetsQuery [objNull, sideUnknown, """", [], 60]);" \n
+                         "	{" \n
+                         "		_unit = _x select 1;" \n
+                         "		//if ( (_x != leader group _x)  ) then {};" \n
+                         "		if (!alive _unit) then {_tgts = _tgts - [_x]};" \n
+                         "		if (_unit distance2D (leader _gp) > 1000) then {_tgts = _tgts - [_x]};" \n
+                         "		if (side _unit getfriend side player > 0.6) then {_tgts = _tgts - [_x]};" \n
+                         "	} foreach 	_tgts;" \n
+                         "//OR " \n
+                         "	{" \n
+                         "		_t = _x select 1;" \n
+                         "" \n
+                         "		_kn = (leader _gp) knowsabout _t;" \n
+                         "		" \n
+                         "		if (_kn > 1.5) then {" \n
+                         "			if ({unitIsUAV _x} count units _gp > 0) then {" \n
+                         "				//{" \n
+                         "				//	_u = _x;" \n
+                         "				//	if (unitIsUAV _x) then {" \n
+                         "						//{_u setSkill [_x,0]} foreach ['spotDistance','spotTime']" \n
+                         "				//	};			" \n
+                         "				//} foreach (units _gp);" \n
+                         "				_kn = _kn * 0.4;" \n
+                         "				if ([_t,vehicle (leader _gp)] call MCSS_fnc_LOS_SIMPLE) then {" \n
+                         "					player reveal [_t,_kn];" \n
+                         "				};" \n
+                         "			} else {" \n
+                         "				player reveal [_t,_kn];" \n
+                         "			};			" \n
+                         "		};" \n
+                         "		//systemchat format " \n
+                         "		//	[" \n
+                         "		//		""Hi my name is %1, group leader of %2, i know about a %3 at %4 (%5). His group is %6""," \n
+                         "		//		name (leader _gp)," \n
+                         "		//		_gp," \n
+                         "		//		parseText (getText (configFile >> ""CfgVehicles"" >> typeOf (vehicle leader group _t) >> ""displayName""))," \n
+                         "		//		getPos _t," \n
+                         "		//		_kn," \n
+                         "		//		group _t	" \n
+                         "		//	];" \n
+                         "		////};" \n
+                         "	} foreach _tgts;" \n
+                         "} foreach A3C_HCALLGROUPS_Current;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "nothing_">*/
+                                class nothing_
+                                {
+                                        itemno = 14;
+                                        priority = 0.000000;
+                                        to="wait";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait_1">*/
+                class wait_1
+                {
+                        name = "wait_1";
+                        itemno = 19;
+                        init = /*%FSM<STATEINIT""">*/"//systemchat ""lost control"";"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Group_Switch_">*/
+                                class Group_Switch_
+                                {
+                                        itemno = 27;
+                                        priority = 0.000000;
+                                        to="wait_2";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"((alive player) && !(player in units A3C_PLAYERGROUP))"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "player_took_lead">*/
+                                class player_took_lead
+                                {
+                                        itemno = 20;
+                                        priority = 0.000000;
+                                        to="Group_Reset";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(player == leader group player) && (player in units A3C_PLAYERGROUP)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "TeamSwitch">*/
+                class TeamSwitch
+                {
+                        name = "TeamSwitch";
+                        itemno = 21;
+                        init = /*%FSM<STATEINIT""">*/"_playerUnit removeEventHandler [""KILLED"",A3C_KILLED];" \n
+                         "_playerUnit removeEventHandler [""FIRED"",A3C_FIRED];" \n
+                         "[] call A3C_Teamswitch;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "true_">*/
+                                class true_
+                                {
+                                        itemno = 24;
+                                        priority = 0.000000;
+                                        to="HC_ACTIONS__relay";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait_2">*/
+                class wait_2
+                {
+                        name = "wait_2";
+                        itemno = 23;
+                        init = /*%FSM<STATEINIT""">*/"_time = time;" \n
+                         "//systemchat ""group switch"";"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "sleep_">*/
+                                class sleep_
+                                {
+                                        itemno = 22;
+                                        priority = 0.000000;
+                                        to="TeamSwitch";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > (_time + 0.3)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Group_Reset">*/
+                class Group_Reset
+                {
+                        name = "Group_Reset";
+                        itemno = 25;
+                        init = /*%FSM<STATEINIT""">*/"[(units group player) - [player]] call A3C_GROUP_RESET;" \n
+                         "//systemchat ""took control"";"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "true_">*/
+                                class true_
+                                {
+                                        itemno = 26;
+                                        priority = 0.000000;
+                                        to="HC_ACTIONS__relay";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait_3">*/
+                class wait_3
+                {
+                        name = "wait_3";
+                        itemno = 30;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "_assignedTargets = [];" \n
+                         "{" \n
+                         "	_gp = _x;" \n
+                         "	{" \n
+                         "		_u = _x;" \n
+                         "		if (!isPLayer _u) then {" \n
+                         "			if (isNull assignedTarget _u) then {" \n
+                         "				if (currentWeapon _u == secondaryWeapon _u) then {" \n
+                         "					_u doTarget objNull;" \n
+                         "					_u lookAt objNull;" \n
+                         "					_u disableAI ""AUTOTARGET"";" \n
+                         "					_ammo = (getText (configfile >> ""CfgMagazines"" >> currentMagazine _u >> ""ammo""));" \n
+                         "					_aiAmmoUsageFlags = getText (configfile >> ""CfgAmmo"" >> _ammo >> ""aiAmmoUsageFlags"");" \n
+                         "					if (_aiAmmousageFlags == """") then {" \n
+                         "						_aiAmmoUsageFlags = str (getNumber (configfile >> ""CfgAmmo"" >> _ammo >> ""aiAmmoUsageFlags""));" \n
+                         "					};" \n
+                         "					_targetTypes = if ([""256"",_aiAmmoUsageFlags] call BIS_fnc_instring) then {[""AIR""]} else {[""CAR"",""TANK""]};" \n
+                         "					" \n
+                         "					_nearTargets = [(side _u),viewDistance,""ENEMY"",position _x,_targetTypes] call MCSS_fnc_NearEntities;" \n
+                         "					if (count _nearTargets > 0) then {" \n
+                         "						{" \n
+                         "							_target = _x;" \n
+                         "							if (!(_target in _assignedTargets)) exitWith {" \n
+                         "								_assignedTargets pushBackUnique _target;" \n
+                         "								" \n
+                         "								if (canMove _target) then {" \n
+                         "									_u doTarget _target;" \n
+                         "									_u doFire _target" \n
+                         "								} else {" \n
+                         "									_u doTarget objNull;" \n
+                         "									_u lookAt objNull;" \n
+                         "								};" \n
+                         "							};" \n
+                         "						} foreach _nearTargets;" \n
+                         "					} else {" \n
+                         "						if !(_u getVariable [""A3C_ROE"",false]) then {" \n
+                         "							_u enableAI ""AUTOTARGET"";" \n
+                         "						};" \n
+                         "					};" \n
+                         "				} else {" \n
+                         "					if !(_x getVariable [""A3C_ROE"",false]) then {" \n
+                         "						_x enableAI ""AUTOTARGET"";" \n
+                         "					};" \n
+                         "				};" \n
+                         "			} else {" \n
+                         "				if ((canMove assignedTarget _u) OR (getDammage (assignedTarget _u) < 0.9)) then {" \n
+                         "					_u doTarget objNull;" \n
+                         "					_u lookAt objNull;" \n
+                         "				};" \n
+                         "			};" \n
+                         "		};" \n
+                         "	} foreach (units _gp);" \n
+                         "} foreach (A3C_HCALLGROUPS_Current + [group player]);"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "true_">*/
+                                class true_
+                                {
+                                        itemno = 31;
+                                        priority = 0.000000;
+                                        to="wait";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > _time + 1;"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait_4">*/
+                class wait_4
+                {
+                        name = "wait_4";
+                        itemno = 35;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Player_left_the">*/
+                                class Player_left_the
+                                {
+                                        itemno = 6;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(isnull (finddisplay 46))"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "remoteControl_OFF">*/
+                                class remoteControl_OFF
+                                {
+                                        itemno = 34;
+                                        priority = 0.000000;
+                                        to="assign_TeamColor";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"player == cameraOn"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "assign_TeamColor">*/
+                class assign_TeamColor
+                {
+                        name = "assign_TeamColor";
+                        itemno = 36;
+                        init = /*%FSM<STATEINIT""">*/"{" \n
+                         "	private _colorVar = _x getVariable [""A3C_ASSIGNEDTEAM"",""MAIN""];" \n
+                         "	_x assignTeam _colorVar;" \n
+                         "} foreach ((units player) - [player]);" \n
+                         "" \n
+                         "//systemchat ""remote off"";"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "true_">*/
+                                class true_
+                                {
+                                        itemno = 24;
+                                        priority = 0.000000;
+                                        to="HC_ACTIONS__relay";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+        };
+        initState="Start_";
+        finalStates[] =
+        {
+                "End_",
+                "Exit_",
+        };
+};
+/*%FSM</COMPILE>*/

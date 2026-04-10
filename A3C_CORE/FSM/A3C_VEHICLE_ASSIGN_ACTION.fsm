@@ -1,0 +1,212 @@
+/*%FSM<COMPILE "G:\!Games\Steam\steamapps\common\Arma 3 Tools\FSMEditor\scriptedFSM.cfg, Assign_Vehicle_Action">*/
+/*%FSM<HEAD>*/
+/*
+item0[] = {"Start_",0,250,-75.000000,-150.000000,25.000000,-100.000000,0.000000,"Start" \n ""};
+item1[] = {"Dialog_active_",4,218,-75.000000,-25.000000,25.000000,25.000000,0.000000,"Dialog active" \n ""};
+item2[] = {"End_",1,250,850.000000,25.000000,950.000000,75.000000,0.000000,"End" \n ""};
+item3[] = {"",7,210,171.000000,-3.999996,179.000000,3.999996,0.000000,""};
+item4[] = {"wait",2,250,-75.000000,50.000000,25.000000,100.000000,0.000000,"wait"};
+item5[] = {"Exit_",1,250,-75.000000,450.000000,25.000000,500.000000,0.000000,"Exit" \n ""};
+item6[] = {"curstortarget_chopper",4,218,-150.000000,125.000000,-25.000000,175.000000,0.000000,"curstortarget chopper" \n ""};
+item7[] = {"cursortarget_not",4,218,0.000000,125.000000,150.000000,175.000000,0.000000,"cursortarget not chopper" \n ""};
+item8[] = {"add_action",2,4346,-225.000000,200.000000,-125.000000,250.000000,0.000000,"add action"};
+item9[] = {"remove_action_",2,250,125.000000,200.000000,225.000000,250.000000,0.000000,"remove action" \n ""};
+item10[] = {"",7,210,-179.000000,-3.999996,-171.000000,3.999996,0.000000,""};
+item11[] = {"exit_conditions",4,218,-75.000000,325.000000,25.000000,375.000000,0.000000,"exit conditions" \n "" \n ""};
+link0[] = {0,1};
+link1[] = {1,4};
+link2[] = {3,1};
+link3[] = {4,6};
+link4[] = {4,7};
+link5[] = {6,8};
+link6[] = {7,9};
+link7[] = {8,10};
+link8[] = {8,11};
+link9[] = {9,3};
+link10[] = {9,11};
+link11[] = {10,1};
+link12[] = {11,5};
+globals[] = {0.000000,0,0,0,0,640,480,1,120,6316128,1,-524.902100,382.795258,685.177429,-266.933289,1980,1244,1};
+window[] = {2,-1,-1,-32000,-32000,1227,286,2275,286,3,1998};
+*//*%FSM</HEAD>*/
+class FSM
+{
+        fsmName = "Assign_Vehicle_Action";
+        class States
+        {
+                /*%FSM<STATE "Start_">*/
+                class Start_
+                {
+                        name = "Start_";
+                        itemno = 0;
+                        init = /*%FSM<STATEINIT""">*/"_chopper = _this select 0;" \n
+                         "_unit = _this select 1;" \n
+                         "_switchVar = 0;" \n
+                         "" \n
+                         "_chopper setvariable [""A3C_CHOPPER_ASSG_ACTIVE"",true,true];" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Dialog_active_">*/
+                                class Dialog_active_
+                                {
+                                        itemno = 1;
+                                        priority = 0.000000;
+                                        to="wait";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_chopper getvariable ""A3C_CHOPPER_ASSG_ACTIVE"""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "End_">*/
+                class End_
+                {
+                        name = "End_";
+                        itemno = 2;
+                        init = /*%FSM<STATEINIT""">*/"hint ""exit fsm"";"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait">*/
+                class wait
+                {
+                        name = "wait";
+                        itemno = 4;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "cursortarget_not">*/
+                                class cursortarget_not
+                                {
+                                        itemno = 7;
+                                        priority = 0.000000;
+                                        to="remove_action_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(cursortarget == _chopper) && (_switchVar == 1)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "curstortarget_chopper">*/
+                                class curstortarget_chopper
+                                {
+                                        itemno = 6;
+                                        priority = 0.000000;
+                                        to="add_action";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(cursortarget == _chopper)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Exit_">*/
+                class Exit_
+                {
+                        name = "Exit_";
+                        itemno = 5;
+                        init = /*%FSM<STATEINIT""">*/"_chopper setvariable [""A3C_CHOPPER_ASSG_ACTIVE"",false,true];" \n
+                         "player removeAction A3C_assign_action_playerToVehicle;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "add_action">*/
+                class add_action
+                {
+                        name = "add_action";
+                        itemno = 8;
+                        init = /*%FSM<STATEINIT""">*/"if (_switchVar == 0) then {" \n
+                         "if ( (assignedVehicle _unit) == _chopper) then {" \n
+                         "     _switchVar = 1;" \n
+                         "      player removeAction A3C_assign_action_playerToVehicle;" \n
+                         "	A3C_assign_action_playerToVehicle = player addAction ['<t color=''#80FF00''>' + 'Unassign from Vehicle' + '</t>',""[0] spawn A3C_AssignPlayerToVehicleCargo; _switchVar = 0;"",false];" \n
+                         "} else {" \n
+                         "   _switchVar = 1;" \n
+                         "      player removeAction A3C_assign_action_playerToVehicle;" \n
+                         "	A3C_assign_action_playerToVehicle = player addAction ['<t color=''#80FF00''>' + 'Assign Vehicle' + '</t>',""[1] spawn A3C_AssignPlayerToVehicleCargo; _switchVar = 0;"",false];" \n
+                         "};" \n
+                         "};"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Dialog_active_">*/
+                                class Dialog_active_
+                                {
+                                        itemno = 1;
+                                        priority = 0.000000;
+                                        to="wait";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_chopper getvariable ""A3C_CHOPPER_ASSG_ACTIVE"""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "exit_conditions">*/
+                                class exit_conditions
+                                {
+                                        itemno = 11;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(_chopper getvariable ""A3C_CHOPPER_ASSG_ACTIVE"") OR !(canmove _chopper) or !(alive (driver _chopper))"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "remove_action_">*/
+                class remove_action_
+                {
+                        name = "remove_action_";
+                        itemno = 9;
+                        init = /*%FSM<STATEINIT""">*/"player removeAction A3C_assign_action_playerToVehicle;" \n
+                         "_switchVar = 0;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Dialog_active_">*/
+                                class Dialog_active_
+                                {
+                                        itemno = 1;
+                                        priority = 0.000000;
+                                        to="wait";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_chopper getvariable ""A3C_CHOPPER_ASSG_ACTIVE"""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "exit_conditions">*/
+                                class exit_conditions
+                                {
+                                        itemno = 11;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(_chopper getvariable ""A3C_CHOPPER_ASSG_ACTIVE"") OR !(canmove _chopper) or !(alive (driver _chopper))"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+        };
+        initState="Start_";
+        finalStates[] =
+        {
+                "End_",
+                "Exit_",
+        };
+};
+/*%FSM</COMPILE>*/

@@ -1,0 +1,635 @@
+if (isDedicated) exitwith {};
+
+
+//if (isNil 'A3C_is_Initialized') exitWith {
+//	hint "ARMA COMMAND IS INITIALIZING - STAND BY";
+//	waituntil {!isNil 'A3C_is_Initialized'};
+//	hint "ARMA COMMAND INITIALIZED";
+//};
+
+
+A3C_ADD_KEYBINDS_EHD = -1; //-- UInamespace partner: A3C_KEY_VAR_KD
+A3C_ADD_KEYBINDS_EHU = -1; //-- UInamespace partner: A3C_INDEX_VAR_KEYU
+A3C_ADD_KEYBINDS_EMB = -1; //-- UInamespace partner: A3C_INDEX_VAR_MOUSEB
+A3C_ADD_KEYBINDS_EMZ = -1; //-- UInamespace partner: A3C_INDEX_VAR_MOUSEZ
+A3C_MAP_KEYBINDS_51_MM = -1; //-- UInamespace partner: A3C_INDEX_VAR_MAP_MOUSEM
+A3C_MAP_KEYBINDS_51_MD = -1; //-- UInamespace partner: A3C_INDEX_VAR_MAP_MOUSED
+A3C_MAP_KEYBINDS_51_MU = -1; //-- UInamespace partner: A3C_INDEX_VAR_MAP_MOUSEU
+A3C_MAP_KEYBINDS_51_KD = -1; //-- UInamespace partner: A3C_INDEX_VAR_MAP_KEYD
+//A3C_EVH_DRAW= -1;
+//A3C_MAP_EH_51_ESC= -1;
+
+
+
+//-- A3C_ADD_KEYBINDS adds all keybinds when mission begins. Should keybinds get lost due to savegames or else, the refresh buttons will trigger the function to re-establish binds.
+A3C_ADD_KEYBINDS =
+{
+
+	//////////////////////////////////////////////////////
+	////                  HUD - EVHS		        ////
+	//////////////////////////////////////////////////////
+
+
+	////////////////////////////////////////////////////// --  Main Display 46 KeyDown
+	//-- Prevent Bleeding of UI Eventhandlers
+	_var  = uiNamespace getVariable "A3C_INDEX_VAR_KEYD";
+	if (!isNil "_var") then {
+		(findDisplay 46) displayRemoveEventHandler ["KeyDown",_var];
+	} else {
+		if (!isNil "A3C_ADD_KEYBINDS_EHD" && {A3C_ADD_KEYBINDS_EHD != -1}) then {
+			(findDisplay 46) displayRemoveEventHandler ["KeyDown",A3C_ADD_KEYBINDS_EHD];
+		};
+	};
+
+	//-- add EH
+	A3C_ADD_KEYBINDS_EHD = (findDisplay 46) displayAddEventHandler
+	[
+		"KeyDown",
+		{
+			
+			private ["_exit","_taoBind"];
+			private _btn = _this select 1;
+			_exit = false;
+			if !(player == (leader group player)) exitwith {};
+			if ( !isNull(findDisplay 312) ) exitWith {}; //-- ZEUS interface is open. Prevent most A3C stuff
+			if (A3C_IsTAO) then {
+				_taoBind = (["Tao Folding Map", "toggle"] call CBA_fnc_getKeybind) select 5;
+				if (_taoBind isEqualTo [(_this select 1),[(_this select 2),(_this select 3),(_this select 4)]]) then {_exit = true};
+			};
+			
+			if (_exit) exitwith {false};
+			
+			private _inputAction = inputAction "miniMapToggle";
+			if !((_this select 1) in A3C_HUD_DOWNKEYS) then {
+				if !(visibleMap) then {
+					if (inputAction 'revealTarget' > 0) then {
+						[cameraOn, screentoworld [0.5,0.5]] call MCSS_fnc_RevealCursorPos;
+					};
+					if ((_this select 1) in actionKeys "showmap") then {
+						if (_inputAction == 0) then {
+							if (A3C_BOOL_MAPFORCE) then {
+								if (isnull (findDisplay 6998)) then {
+									if (profileNameSpace getVariable "A3C_MAP_VAR")  then {
+										A3C_WeaponCurr = currentWeapon player;
+										A3C_BOOL_MAPFORCE= false;
+										nul = [6998] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB.sqf";
+										A3C_HELI_INF_MODE = "INF";
+										if (count units player > 0) then {
+											if (({(_x == (driver vehicle _x)) && {typeOf (vehicle _x) iskindOf "AIR"}} count (units player - [player])) >= ((count (units player - [player])) / 2)) then {
+												A3C_HELI_INF_MODE = "AIR";
+											};
+										} else {
+											A3C_HELI_INF_MODE = "HC";
+										};
+										A3C_SELECTED_UNITS = [];
+									};
+								};
+							};
+						};
+					};
+
+				};
+			};
+			if !(_btn in A3C_HUD_DOWNKEYS) then {
+				if (_btn != 50) then { //-- map can not be added to downkeys since the 'UP' EH will not fire
+					A3C_HUD_DOWNKEYS pushback _btn;
+				};
+				if (visiblemap) then {
+				} else {
+					_this call A3C_HUD_F_KEYDOWN;
+				};
+			};
+			_bool = [(_this select 1),[(_this select 2),(_this select 3),(_this select 4)]] call A3C_GET_KEY_BOOL;
+			//systemChat str _bool;
+			_bool
+
+		}
+	];
+	uiNamespace setVariable ["A3C_INDEX_VAR_KEYD",A3C_ADD_KEYBINDS_EHD];
+
+	////////////////////////////////////////////////////// --  Main Display 46 KeyUp
+	//-- Prevent Bleeding of UI Eventhandlers
+	_var  = uiNamespace getVariable "A3C_INDEX_VAR_KEYU";
+	if (!isNil "_var") then {
+		(findDisplay 46) displayRemoveEventHandler ["KeyUp",_var];
+	} else {
+		if (!isNil "A3C_ADD_KEYBINDS_EHU" && {A3C_ADD_KEYBINDS_EHU != -1}) then {
+			(findDisplay 46) displayRemoveEventHandler ["KeyUp",A3C_ADD_KEYBINDS_EHU];
+		};
+	};
+
+	//-- add EH
+	A3C_ADD_KEYBINDS_EHU = (findDisplay 46) displayAddEventHandler
+	[
+		"KeyUp",
+		{
+			A3C_BOOL_MAPFORCE = true; //!!!!~~~~~~~~~
+			if !(player == (leader group player)) exitwith {};
+			if ( !isNull(findDisplay 312) ) exitWith {}; //-- ZEUS interface is open. Prevent most A3C stuff
+			_this call A3C_HUD_KEYHANDLER_UP;
+
+			false
+		}
+	];
+	uiNamespace setVariable ["A3C_INDEX_VAR_KEYU",A3C_ADD_KEYBINDS_EHU];
+
+
+
+	////////////////////////////////////////////////////// --  Main Display 46 MouseButtonDown
+	//-- Prevent Bleeding of UI Eventhandlers
+	_var  = uiNamespace getVariable "A3C_INDEX_VAR_MOUSEB";
+	if (!isNil "_var") then {
+		(findDisplay 46) displayRemoveEventHandler ["MouseButtonDown",_var];
+	} else {
+		if (!isNil "A3C_ADD_KEYBINDS_EMB" && {A3C_ADD_KEYBINDS_EMB != -1}) then {
+			(findDisplay 46) displayRemoveEventHandler ["MouseButtonDown",A3C_ADD_KEYBINDS_EMB];
+		};
+	};
+
+	//-- add EH
+	A3C_ADD_KEYBINDS_EMB = (findDisplay 46) displayAddEventHandler
+	[
+		"MouseButtonDown",
+		{
+			_this spawn A3C_HUD_MouseDown;
+			false
+		}
+	];
+	uiNamespace setVariable ["A3C_INDEX_VAR_MOUSEB",A3C_ADD_KEYBINDS_EMB];
+
+	////////////////////////////////////////////////////// --  Main Display 46 MouseWheel
+	//-- Prevent Bleeding of UI Eventhandlers
+
+	_var  = uiNamespace getVariable "A3C_INDEX_VAR_MOUSEZ";
+	if (!isNil "_var") then {
+		(findDisplay 46) displayRemoveEventHandler ["MouseZChanged",_var];
+	} else {
+		if (!isNil "A3C_ADD_KEYBINDS_EMZ" && {A3C_ADD_KEYBINDS_EMZ != -1}) then {
+			(findDisplay 46) displayRemoveEventHandler ["MouseZChanged",A3C_ADD_KEYBINDS_EMZ];
+		};
+	};
+	//-- add EH
+	A3C_ADD_KEYBINDS_EMZ = (findDisplay 46) displayAddEventHandler
+	[
+		"MouseZChanged",
+		{
+			_this call A3C_HUD_MOUSEWHL_HANDLER;
+			if ((!isnull (finddisplay 6998)) OR (!isnull (finddisplay 6999))) then {true} else {false}
+		}
+	];
+	uiNamespace setVariable ["A3C_INDEX_VAR_MOUSEZ",A3C_ADD_KEYBINDS_EMZ];
+
+
+
+	//////////////////////////////////////////////////////
+	////                  MAP - EVHS		        ////
+	//////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////// --  Map Display 12 KeyDown
+	//-- Prevent Bleeding of UI Eventhandlers
+	_var  = uiNamespace getVariable "A3C_INDEX_VAR_MAP_KEYD";
+	if (!isNil "_var") then {
+		(findDisplay 12 displayctrl 51) ctrlRemoveEventHandler ["KeyDown",_var];
+	} else {
+		if (!isNil "A3C_MAP_KEYBINDS_51_KD" && {A3C_MAP_KEYBINDS_51_KD != -1}) then {
+			(findDisplay 12 displayctrl 51) ctrlRemoveEventHandler ["KeyDown",A3C_MAP_KEYBINDS_51_KD];
+		};
+	};
+
+	//-- add EH
+	A3C_MAP_KEYBINDS_51_KD = (findDisplay 12 displayctrl 51) ctrlAddEventHandler
+	[
+		"KeyDown",
+		{
+			_this params ["_ctrl","_btn1","_shift","_ctrl","_alt"];
+			
+			//if (_this call A3C_isOverlayClosed) exitwith {false};
+
+			_return = false;
+			//-- close map: map part (partner edition in overlay EH)
+			if (_btn1 in ([1] + (actionKeys "hidemap"))) then {
+				if (!isNil "A3C_GROUP_NAMEING_ACTIVE") then {
+					_return = true;
+				} else {
+					openMap false;
+					[6998] call A3C_Close_Map_Overlay;
+				};	
+			};
+			
+			
+			if !(isnull (finddisplay 6998)) then {
+				//-- shift and ctrl checks - otherwise not available. CTRL does not fire from OVERLAY so it happens here instead
+				if (_btn1 == 42) then { 
+					A3C_MODIFIER_SHIFT = true; //-- needed for UI (TREE EH's do not do CTL/SHIFT)
+					_return = true
+				};
+				
+				if (_btn1 == 29) then {
+					A3C_MODIFIER_CTRL = true; //-- needed for UI (TREE EH's do not do CTL/SHIFT)
+					_return = true;
+				};
+			};
+			//systemchat str ["DOWN",_btn1,_shift,_ctrl];
+
+			_return
+		}
+	];
+	uiNamespace setVariable ["A3C_INDEX_VAR_MAP_KEYD",A3C_MAP_KEYBINDS_51_KD];
+
+
+	////////////////////////////////////////////////////// --  Map Display 12 MouseButtonDown
+	//-- Prevent Bleeding of UI Eventhandlers
+	_var  = uiNamespace getVariable "A3C_INDEX_VAR_MAP_MOUSED";
+	if (!isNil "_var") then {
+		(findDisplay 12 displayctrl 51) ctrlRemoveEventHandler ["MouseButtonDown",_var];
+	} else {
+		if (!isNil "A3C_MAP_KEYBINDS_51_MD" && {A3C_MAP_KEYBINDS_51_MD != -1}) then {
+			(findDisplay 12 displayctrl 51) ctrlRemoveEventHandler ["MouseButtonDown",A3C_MAP_KEYBINDS_51_MD];
+		};
+	};
+
+
+	//-- add EH
+	A3C_MAP_KEYBINDS_51_MD = (findDisplay 12 displayctrl 51) ctrlAddEventhandler //displayAddEventHandler
+	[
+		"MouseButtonDown",
+		{
+			_return = false;
+			A3C_BOOL_MAP_MD = true;
+			if (visibleMap) then {
+				_this spawn A3C_TAB_LMOUSE_D;
+			};
+			_return
+		}
+	];
+	uiNamespace setVariable ["A3C_INDEX_VAR_MAP_MOUSED",A3C_MAP_KEYBINDS_51_MD];
+
+	////////////////////////////////////////////////////// --  Map Display 12 MouseButtonUp
+	//-- Prevent Bleeding of UI Eventhandlers
+	_var  = uiNamespace getVariable "A3C_INDEX_VAR_MAP_MOUSEU";
+	if (!isNil "_var") then {
+		(findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["MouseButtonUp",_var];
+	} else {
+		if (!isNil "A3C_MAP_KEYBINDS_51_MU" && {A3C_MAP_KEYBINDS_51_MU != -1}) then {
+			(findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["MouseButtonUp",A3C_MAP_KEYBINDS_51_MU];
+		};
+	};
+
+
+	//-- add EH
+	A3C_MAP_KEYBINDS_51_MU = (findDisplay 12 displayCtrl 51) ctrlAddEventHandler
+	[
+		"MouseButtonUp",
+		{
+
+			A3C_BOOL_MAP_MD = false;
+			if (visibleMap) then {
+				_this spawn A3C_LEFTMOUSEUP;
+				A3C_BOOL_MOUSEMOVING = false;
+			};
+		}
+	];
+	uiNamespace setVariable ["A3C_INDEX_VAR_MAP_MOUSEU",A3C_MAP_KEYBINDS_51_MU];
+
+	/*
+	////////////////////////////////////////////////////// --  Map Display 12 MouseMoving
+	//-- Prevent Bleeding of UI Eventhandlers
+	_var  = uiNamespace getVariable "A3C_INDEX_VAR_MAP_MOUSEM";
+	if (!isNil "_var") then {
+		(findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["MouseMoving",_var];
+	} else {
+		if (!isNil "A3C_MAP_KEYBINDS_51_MM" && {A3C_MAP_KEYBINDS_51_MM != -1}) then {
+			(findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["MouseMoving",A3C_MAP_KEYBINDS_51_MM];
+		};
+	};
+
+	//-- add EH
+	A3C_MAP_KEYBINDS_51_MM = (findDisplay 12 displayCtrl 51) ctrlAddEventHandler
+	[
+		"MouseMoving",
+		{
+			_return = false;
+			if (visibleMap) then {
+				A3C_MAP_X = _this select 1;
+				A3C_MAP_Y = _this select 2;
+				if (A3C_MapSel_Field_Active) then {
+					A3C_MapSel_Field_DEST = (findDisplay 12 displayCtrl 51) posscreentoworld [A3C_MAP_X,A3C_MAP_Y];
+				};
+				//private _ctls = [11,13,7071,7074];
+				//if ((!isnull (findDisplay 6998)) && {{[[A3C_MAP_X,A3C_MAP_Y],findDisplay 6998 displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea} count _ctls > 1}) then {
+				//	(findDisplay 12 displayCtrl 51) ctrlEnable false;
+				//	systemchat 'off';
+				//} else {
+				//	(findDisplay 12 displayCtrl 51) ctrlEnable true;
+				//	systemchat 'on';
+				//};
+				if (A3C_BOOL_MOUSEMOVING) then {
+					_this spawn A3C_MMCode;
+				};
+			};
+
+		}
+	];
+	uiNamespace setVariable ["A3C_INDEX_VAR_MAP_MOUSEM",A3C_MAP_KEYBINDS_51_MM];
+	*/
+
+
+	if !(isNil "A3C_GRENADEHANDLER") then {(findDisplay 46) displayRemoveEventHandler ["MouseButtonUP",A3C_GRENADEHANDLER];};
+
+
+
+	/*
+
+
+	//if (A3C_MAP_KEYBINDS_51_MC == -1) then {
+
+		A3C_MAP_KEYBINDS_51_MC = (findDisplay 12 displayCtrl 51) ctrlSetEventHandler
+		[
+			"MouseButtonClick",
+			"
+				systemchat '1';
+				true
+
+			"
+		];
+
+		//uiNamespace setVariable ["A3C_INDEX_VAR_MAP_MOUSED",A3C_MAP_KEYBINDS_51_MC];
+	//};
+
+	if (A3C_MAP_EH_51_ESC == -1) then {
+		A3C_MAP_EH_51_ESC = (findDisplay 12 ) displayAddEventhandler
+		[
+			"KeyDown",
+			{
+				//systemchat "1";
+
+			}
+		];
+	};
+
+	*/
+
+
+	//---------------------------------------  C B A  K E Y B I N D S  -------------------------------
+	//------------------------------------------------------------------------------------------------
+
+
+	//["A3C", "A3C_KeyFnc_Interface", ["Open Tablet", "Open up planning device"], {["INTERFACE","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [15,[false,true,false]],true] call cba_fnc_addKeybind;
+
+	["A3C", "A3C_KeyFnc_Menu", ["Open 3D Menu", "Open A3C Radial-Menu (Regular Selection)"], {[_this,false] call A3C_SPAWN_RADIAL}, {}, [15,[false,false,false]],true] call cba_fnc_addKeybind;
+	//
+	["A3C", "A3C_KeyFnc_Menu_cursor", ["Open 3D Menu (CursorObject)", "Open A3C Radial-Menu (CursorObject Selection)"], {[_this,true] call A3C_SPAWN_RADIAL}, {}, [15,[false,true,false]],true] call cba_fnc_addKeybind;
+
+	["A3C", "A3C_KeyFnc_HUD_MENU", ["Open HUD MENU controls", "Get access to your HUD MODE settings via mouse while key is pressed."], {[_this] call A3C_SPAWN_HUD_MENU}, {}, [42,[true,false,false]],true] call cba_fnc_addKeybind;
+
+	A3C_MAP_KEY_ID = ["A3C", "A3C_KeyFnc_MapControls", ["Open Map Controls", "Hold down this key to access Planning controls on map"], {["MAP","DOWN",_this] call A3C_FNC_CBA_KEY}, {["MAP","UP",_this] call A3C_FNC_CBA_KEY}, [46,[false,false,false]],false] call cba_fnc_addKeybind;
+
+	[
+		"A3C",
+		"A3C_KeyFnc_Suppress_DRAW_T2",
+		[
+			"Configure Suppression Zone",
+			"Open suppression display"
+		],
+		{
+			if (visibleMap OR (!isNull (findDisplay 6999))) exitWith {};
+			if !(player == leader group player) exitWith {};
+			if ((count groupSelectedUnits player) == 0) then {
+				{
+					if (!isPlayer _x) then {
+						player groupSelectUnit [_x,true];
+					};
+				} foreach units player - [player];
+			};
+			A3C_SUP_DRAWKEY_ID = [(_this select 1),(_this select 2),(_this select 3),(_this select 4)];
+			A3C_SUPPRESSION_UNITS_SQ_TEMP = (groupSelectedUnits player);
+			{
+				if (isPlayer _x) then {A3C_SUPPRESSION_UNITS_SQ_TEMP = A3C_SUPPRESSION_UNITS_SQ_TEMP - [_x]};
+			} foreach A3C_SUPPRESSION_UNITS_SQ_TEMP;
+			{
+				if (_x in A3C_SUPPRESSION_UNITS_SQ) then {
+					A3C_SUPPRESSION_UNITS_SQ_TEMP = A3C_SUPPRESSION_UNITS_SQ_TEMP - [_x];
+				};
+			} foreach A3C_SUPPRESSION_UNITS_SQ_TEMP;
+			if (count A3C_SUPPRESSION_UNITS_SQ_TEMP > 0) then {
+				[] spawn {
+					with uiNameSpace do {
+						A3C_SUPMENU = (finddisplay 46) createDisplay "A3C_SUPPRESSION_DRAW";
+					};
+					_mode = (profileNameSpace getVariable ["A3C_SUP_RESTRICTIVE", ["UNLIMITED",0]]) select 0;
+					[_mode,false] call A3C_SUP_SETTINGS;
+					//for "_i" from 1401 to 1403 do {
+					//	(findDisplay 7998 displayCtrl _i) ctrlShow false;
+					//};
+				};
+			} else {
+				[] spawn {
+					hint "Selection either empty or busy suppressing";
+					sleep 5;
+					hintsilent "";
+				};
+			};
+			[] spawn {
+				sleep 0.1;
+				showCommandingMenu "";
+			};
+		},
+		{},
+		[20,[false,false,true]],
+		false
+	] call cba_fnc_addKeybind;
+
+	//["A3C", "A3C_KeyFnc_Suppress_V2", ["Suppression Hotkey", "Key for ingame suppression actions"], {["SUPPRESSION","DOWN"] call A3C_FNC_CBA_KEY}, {["SUPPRESSION","UP"] call A3C_FNC_CBA_KEY}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+
+
+
+	["A3C", "A3C_KeyFnc_Lock", ["Lock Formation", "Locks the indicator objects in position while maintaining other options"], {["LOCK","DOWN"] call A3C_FNC_CBA_KEY}, {}, [38,[false,false,false]],false ] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Grenade_Player", ["GetTactical Grenade", "Gives enhanced throwing-options"], {["GREN_P","DOWN"] call A3C_FNC_CBA_KEY}, {["GREN_P","UP"] call A3C_FNC_CBA_KEY}, [35,[false,false,false]],false ] call cba_fnc_addKeybind;
+
+
+	//["A3C", "A3C_KeyFnc_HC_REMOTE_SUP_02", ["HC-Focus Suppression", "Order suppressive fire to focused HC-group"], {["HC_SUPPRESS","DOWN"] call A3C_FNC_CBA_KEY}, {["HC_SUPPRESS","UP"] call A3C_FNC_CBA_KEY}, [199,[false,false,false]],false ] call cba_fnc_addKeybind;
+	//["A3C", "A3C_KeyFnc_HC_REMOTE_02", ["HC-Focus Remote", "Order remote fire (UGL/AT/TANKSHELL) to focused HC-group"], {["HC_REMOTE","DOWN"] call A3C_FNC_CBA_KEY}, {["HC_REMOTE","UP"] call A3C_FNC_CBA_KEY}, [199,[false,true,false]],false ] call cba_fnc_addKeybind;
+
+	["A3C", "A3C_KeyFnc_Formation_Menu_2", ["Custom Formation Menu", "Custom Formation HUD"], {["FORM","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [33,[true,false,false]],true] call cba_fnc_addKeybind; //["FORM","UP"] call A3C_FNC_CBA_KEY
+	["A3C", "A3C_KeyFnc_ZEUS_Remote", ["A3C-ZEUS Exit", "Exit A3C-Zeus Remote"], {["ZEUS","DOWN"] call A3C_FNC_CBA_KEY}, {}, [21,[true,false,false]],false] call cba_fnc_addKeybind;
+
+	["A3C", "A3C_KeyFnc_Hud_TeamSel_ALL", ["Hud Select: All Units", "Select/Deselect All Units in HUD-mode"], {["HUD","DOWN","ALL"] call A3C_FNC_CBA_KEY}, {}, [5,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_TeamSel_Red", ["Hud Select: Team Red", "Select/Deselect Team Red in HUD mode"], {["HUD","DOWN","RED"] call A3C_FNC_CBA_KEY}, {}, [6,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_TeamSel_Green", ["Hud Select: Team Green", "Select/Deselect Team Green in HUD mode"], {["HUD","DOWN","GREEN"] call A3C_FNC_CBA_KEY}, {}, [7,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_TeamSel_Blue", ["Hud Select: Team Blue", "Select/Deselect Team Blue in HUD mode"], {["HUD","DOWN","BLUE"] call A3C_FNC_CBA_KEY}, {}, [8,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_TeamSel_Yellow", ["Hud Select: Team Yellow", "Select/Deselect Team Yellow in HUD mode"], {["HUD","DOWN","YELLOW"] call A3C_FNC_CBA_KEY}, {}, [9,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_TeamSel_White", ["Hud Select: Team White", "Select/Deselect Team White in HUD mode"], {["HUD","DOWN","MAIN"] call A3C_FNC_CBA_KEY}, {}, [10,[false,false,false]],false] call cba_fnc_addKeybind;
+
+	["A3C", "A3C_KeyFnc_Hud_Unit_02", ["Hud Select: Unit 02", "Select/Deselect Unit 02 in HUD-mode"], {["HUD","DOWN",02] call A3C_FNC_CBA_KEY}, {}, [60,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_03", ["Hud Select: Unit 03", "Select/Deselect Unit 03 in HUD-mode"], {["HUD","DOWN",03] call A3C_FNC_CBA_KEY}, {}, [61,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_04", ["Hud Select: Unit 04", "Select/Deselect Unit 04 in HUD-mode"], {["HUD","DOWN",04] call A3C_FNC_CBA_KEY}, {}, [62,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_05", ["Hud Select: Unit 05", "Select/Deselect Unit 05 in HUD-mode"], {["HUD","DOWN",05] call A3C_FNC_CBA_KEY}, {}, [63,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_06", ["Hud Select: Unit 06", "Select/Deselect Unit 06 in HUD-mode"], {["HUD","DOWN",06] call A3C_FNC_CBA_KEY}, {}, [64,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_07", ["Hud Select: Unit 07", "Select/Deselect Unit 07 in HUD-mode"], {["HUD","DOWN",07] call A3C_FNC_CBA_KEY}, {}, [65,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_08", ["Hud Select: Unit 08", "Select/Deselect Unit 08 in HUD-mode"], {["HUD","DOWN",08] call A3C_FNC_CBA_KEY}, {}, [66,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_09", ["Hud Select: Unit 09", "Select/Deselect Unit 09 in HUD-mode"], {["HUD","DOWN",09] call A3C_FNC_CBA_KEY}, {}, [67,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_10", ["Hud Select: Unit 10", "Select/Deselect Unit 10 in HUD-mode"], {["HUD","DOWN",10] call A3C_FNC_CBA_KEY}, {}, [68,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_11", ["Hud Select: Unit 11", "Select/Deselect Unit 11 in HUD-mode"], {["HUD","DOWN",11] call A3C_FNC_CBA_KEY}, {}, [59,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_12", ["Hud Select: Unit 12", "Select/Deselect Unit 12 in HUD-mode"], {["HUD","DOWN",12] call A3C_FNC_CBA_KEY}, {}, [60,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_13", ["Hud Select: Unit 13", "Select/Deselect Unit 13 in HUD-mode"], {["HUD","DOWN",13] call A3C_FNC_CBA_KEY}, {}, [61,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_14", ["Hud Select: Unit 14", "Select/Deselect Unit 14 in HUD-mode"], {["HUD","DOWN",14] call A3C_FNC_CBA_KEY}, {}, [62,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_15", ["Hud Select: Unit 15", "Select/Deselect Unit 15 in HUD-mode"], {["HUD","DOWN",15] call A3C_FNC_CBA_KEY}, {}, [63,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_16", ["Hud Select: Unit 16", "Select/Deselect Unit 16 in HUD-mode"], {["HUD","DOWN",16] call A3C_FNC_CBA_KEY}, {}, [64,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_17", ["Hud Select: Unit 17", "Select/Deselect Unit 17 in HUD-mode"], {["HUD","DOWN",17] call A3C_FNC_CBA_KEY}, {}, [65,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_18", ["Hud Select: Unit 18", "Select/Deselect Unit 18 in HUD-mode"], {["HUD","DOWN",18] call A3C_FNC_CBA_KEY}, {}, [66,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_19", ["Hud Select: Unit 19", "Select/Deselect Unit 19 in HUD-mode"], {["HUD","DOWN",19] call A3C_FNC_CBA_KEY}, {}, [67,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_20", ["Hud Select: Unit 20", "Select/Deselect Unit 20 in HUD-mode"], {["HUD","DOWN",20] call A3C_FNC_CBA_KEY}, {}, [68,[true,true,false]],false] call cba_fnc_addKeybind;
+
+	["A3C", "A3C_KeyFnc_Hud_Order_Reg", ["Send To Hud Indicators: Regular"], {["ORDER_REG","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [57,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Order_FW", ["Send To Hud Indicators: FW Peel"], {["ORDER_FW","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [57,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Order_BW", ["Send To Hud Indicators: BW Peel"], {["ORDER_BW","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [57,[false,false,true]],false] call cba_fnc_addKeybind;
+
+	//TEST
+	//["A3C", "A3C_KeyFnc_HUD_DRAW_OPTION", ["Action Key for HUD-DrawPath (Requires selected units)", "Enables(Down) / Disables(Up) Path-Drawing via HUD"], {["HUD_DRAW","DOWN"] call A3C_FNC_CBA_KEY}, {["HUD_DRAW","UP"] call A3C_FNC_CBA_KEY}, [29,[false,true,false]],false ] call cba_fnc_addKeybind;
+
+
+	//-- Additional Keybinds for usage with Voice Activation
+	["A3C", "A3C_KeyFnc_Voice_GoCode_A", ["Activate GoCode A via key (VA)"], {["GoCode_A","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_GoCode_B", ["Activate GoCode B via key (VA)"], {["GoCode_B","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_GoCode_C", ["Activate GoCode C via key (VA)"], {["GoCode_C","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_GoCode_D", ["Activate GoCode D via key (VA)"], {["GoCode_D","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+
+
+	["A3C", "A3C_KeyFnc_Switch_CommandLevel", ["Switch between SQUAD and PLATOON Level"], {["COMMAND_LEVEL","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [57,[false,true,false]],true] call cba_fnc_addKeybind;
+
+
+	["A3C", "A3C_KeyFnc_Voice_MedicAll", ["Squad Patch Up via key (VA)"], {["Voice_Medic_All","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+
+	["A3C", "A3C_KeyFnc_Voice_AD", ["Toggle AUTOCOMBAT for selected units via key (VA)"], {["Voice_AUTOCOMBAT","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+
+	["A3C", "A3C_KeyFnc_Voice_Refresh", ["Refresh Squad via key (VA)"], {["Voice_REFRESH","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	[
+		"A3C",
+		"A3C_KeyFnc_Voice_Regroup",
+		["A3C FallBack / ReGroup (VA)"],
+		{
+
+			_units = if (count (groupSelectedUnits player) == 0) then {(units player - [player])} else {(groupSelectedUnits player)};
+			{
+				_x commandFollow player;
+			} foreach _units;
+			//["REFRESH",1,false] call A3C_RADIAL_BTN_FNC_RING_INNER;
+			//[] spawn {
+			//	sleep 0.1;
+				{player groupSelectUnit [_x,false]} foreach (units player);
+				showCommandingMenu "";
+			//};
+		},
+		{},
+		[-1,[false,false,false]],
+		false
+	] call cba_fnc_addKeybind;
+
+	["A3C", "A3C_KeyFnc_Voice_LookDir", ["Reset looking direction for selected units via key (VA)"], {["Voice_LookDir","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+
+	["A3C", "A3C_KeyFnc_Voice_HudStance_Auto", ["Set Hud-Stance to AUTO via key (VA)"], {["Voice_Stance_Auto","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_HudStance_STAND", ["Set Hud-Stance to STAND via key (VA)"], {["Voice_Stance_STAND","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_HudStance_CROUCH", ["Set Hud-Stance to CROUCH via key (VA)"], {["Voice_Stance_CROUCH","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_HudStance_PRONE", ["Set Hud-Stance to PRONE via key (VA)"], {["Voice_Stance_PRONE","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_HudStance_NOCHANGE", ["Set Hud-Stance to NO CHANGE via key (VA)"], {["Voice_Stance_NOCHANGE","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+
+	["A3C", "A3C_KeyFnc_Voice_HOLD", ["Order selected units to STANDBY (VA)"], {["Voice_Hold","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_CONT", ["Order selected units to CONTINUE after HOLD (VA)"], {["Voice_Cont","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_UNLOADD", ["Unload other groups from your vehicle (VA)"], {["Voice_Unload","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],true] call cba_fnc_addKeybind;
+
+	[
+		"A3C",
+		"A3C_KeyFnc_UavMacro",
+		["UAV SCREEN TOGGLE"],
+		{["DOWN",_this] call A3C_FNC_UAV_KEY},
+		{},
+		[183,[false,false,false]],
+		false,
+		0,
+		true
+	] call cba_fnc_addKeybind;
+	[
+		"A3C",
+		"A3C_KeyFnc_UavMacro_1",
+		["CONNECT TO NEXT UNCONNECTED UAV (if available)"],
+		{["DOWN",_this] call A3C_FNC_UAV_KEY},
+		{},
+		[183,[false,true,false]],
+		false,
+		0,
+		true
+	] call cba_fnc_addKeybind;
+	// [
+	// 	"A3C",
+	// 	"A3C_KeyFnc_UavMacro_2",
+	// 	["UAV TERMINAL VIEW"],
+	// 	{["DOWN",_this] call A3C_FNC_UAV_KEY},
+	// 	{},
+	// 	[183,[true,false,false]],
+	// 	false,
+	// 	0,
+	// 	false
+	// ] call cba_fnc_addKeybind;
+
+
+};
+
+
+
+
+A3C_LARROW_KeyCheck = {
+
+	_bindings = actionKeysNamesArray _this; //--_this is inputAction string
+
+	_ctrl = false;
+	_shift = false;
+	_alt = false;
+
+	_keysArray = [];
+	{
+		_keysArray set [ _forEachIndex, [] ];
+		_index = _keysArray select _forEachIndex;
+
+		_keycombo = toLower _x;
+		_keys = _keycombo splitString "+";
+
+		{
+			_key = _x;
+			_multi = _key find "2x";
+			if ( _multi > -1 ) then {
+				_key = _key select [ 2, count _key - 2 ];
+				_multi = true;
+			}else{
+				_multi = false;
+			};
+
+			if ( {
+					if ( [ _x, _key ] call BIS_fnc_inString ) then {
+						switch ( _x ) do {
+							case "ctrl" : {
+								_ctrl = true;
+							};
+							case "shift" : {
+								_shift = true;
+							};
+							case "alt" : {
+								_alt = true;
+							};
+						};
+						_nul = _index pushBack [ _x, _multi ];
+						true
+					}else{
+						false
+					};
+				}count [ "ctrl", "shift", "alt" ] isEqualTo 0 ) then {
+				_nul = _index pushBack [ _key, _multi ];
+			};
+		}forEach _keys;
+	}forEach _bindings;
+
+	ctrl = _ctrl;
+	shift = _shift;
+	alt = _alt;
+	keys = _keysArray;
+	_keysArrays;
+};

@@ -1,0 +1,145 @@
+/*%FSM<COMPILE "G:\!Games\Steam\steamapps\common\Arma 3 Tools\FSMEditor\scriptedFSM.cfg, A3C_MON_RADIAL">*/
+/*%FSM<HEAD>*/
+/*
+item0[] = {"Start_",0,4346,-100.000000,-375.000000,50.000000,-275.000000,0.000000,"Start" \n ""};
+item1[] = {"TRUE___",4,218,-100.000000,-178.647156,50.000000,-128.647156,0.000000,"" \n "" \n "" \n "TRUE" \n "" \n "" \n ""};
+item2[] = {"Exit_",1,250,52.564026,269.337250,152.564026,319.337219,0.000000,"Exit" \n ""};
+item3[] = {"DISPLAY_CLOSED",4,218,14.729614,68.907532,189.448914,142.503235,0.000000,"DISPLAY CLOSED"};
+item4[] = {"LOOP_INIT",2,250,-58.809387,-20.426605,31.190628,29.573395,0.000000,"LOOP INIT"};
+item5[] = {"CTRLSGROUP_HIDDE",4,218,260.317749,-24.818024,444.535400,46.119263,0.000000,"CTRLSGROUP HIDDEN"};
+item6[] = {"SLEEP",4,218,-141.891525,80.757935,-51.891571,130.757935,0.000000,"SLEEP"};
+item7[] = {"EMPTY",4,218,-308.442444,-21.724945,-218.442368,28.275055,0.000000,"EMPTY"};
+item8[] = {"CHECK_DEAD",2,250,-307.428864,89.083923,-217.428741,139.083923,0.000000,"CHECK DEAD"};
+link0[] = {0,1};
+link1[] = {1,4};
+link2[] = {3,2};
+link3[] = {4,3};
+link4[] = {4,5};
+link5[] = {4,6};
+link6[] = {5,2};
+link7[] = {6,8};
+link8[] = {7,4};
+link9[] = {8,7};
+globals[] = {0.000000,0,0,0,0,640,480,1,186,6316128,1,-421.532837,499.299622,488.612183,-439.260315,654,659,1};
+window[] = {0,-1,-1,-1,-1,961,130,1318,130,1,672};
+*//*%FSM</HEAD>*/
+class FSM
+{
+        fsmName = "A3C_MON_RADIAL";
+        class States
+        {
+                /*%FSM<STATE "Start_">*/
+                class Start_
+                {
+                        name = "Start_";
+                        itemno = 0;
+                        init = /*%FSM<STATEINIT""">*/"private _dsp = findDisplay (_this select 0);" \n
+                         "private _ctrlsGroup = _dsp displayCtrl (_this select 1);" \n
+                         "//systemchat ""start fsm radial"";"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "TRUE___">*/
+                                class TRUE___
+                                {
+                                        itemno = 1;
+                                        priority = 0.000000;
+                                        to="LOOP_INIT";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Exit_">*/
+                class Exit_
+                {
+                        name = "Exit_";
+                        itemno = 2;
+                        init = /*%FSM<STATEINIT""">*/"//systemchat 'exit radial fsm';"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "LOOP_INIT">*/
+                class LOOP_INIT
+                {
+                        name = "LOOP_INIT";
+                        itemno = 4;
+                        init = /*%FSM<STATEINIT""">*/"_timer = time;" \n
+                         "//systemchat 'fsm loop';"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "CTRLSGROUP_HIDDE">*/
+                                class CTRLSGROUP_HIDDE
+                                {
+                                        itemno = 5;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(ctrlShown _ctrlsGroup)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "SLEEP">*/
+                                class SLEEP
+                                {
+                                        itemno = 6;
+                                        priority = 0.000000;
+                                        to="CHECK_DEAD";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > _timer + 2"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "DISPLAY_CLOSED">*/
+                                class DISPLAY_CLOSED
+                                {
+                                        itemno = 3;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull _dsp"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "CHECK_DEAD">*/
+                class CHECK_DEAD
+                {
+                        name = "CHECK_DEAD";
+                        itemno = 8;
+                        init = /*%FSM<STATEINIT""">*/"//[] call A3C_CHECK_FOR_DEAD_WIP;" \n
+                         "[] call A3C_UI_MAPTAB_FSM_CHECKCHANGE;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "EMPTY">*/
+                                class EMPTY
+                                {
+                                        itemno = 7;
+                                        priority = 0.000000;
+                                        to="LOOP_INIT";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+        };
+        initState="Start_";
+        finalStates[] =
+        {
+                "Exit_",
+        };
+};
+/*%FSM</COMPILE>*/

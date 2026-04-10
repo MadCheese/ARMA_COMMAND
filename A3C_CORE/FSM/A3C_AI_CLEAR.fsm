@@ -1,0 +1,258 @@
+/*%FSM<COMPILE "G:\!Games\Steam\steamapps\common\Arma 3 Tools\FSMEditor\scriptedFSM.cfg, A3C_AI_CLEAR">*/
+/*%FSM<HEAD>*/
+/*
+item0[] = {"Start_",0,250,-100.000000,-375.000000,50.000000,-275.000000,0.000000,"Start" \n ""};
+item1[] = {"End_",1,250,850.000000,25.000000,950.000000,75.000000,0.000000,"End" \n ""};
+item2[] = {"lean_",2,4346,-100.000000,75.000000,25.000000,150.000000,0.000000,"lean" \n ""};
+item3[] = {"Exit_",1,250,100.000000,600.000000,200.000000,650.000000,0.000000,"Exit" \n ""};
+item4[] = {"unit_close_to_door",4,218,-100.000000,-25.000000,50.000000,50.000000,0.000000,"" \n "" \n "unit close to door" \n "" \n "" \n ""};
+item5[] = {"",7,210,158.499985,-103.999992,166.500000,-96.000015,0.000000,""};
+item6[] = {"Player_left_the",4,218,-10.936157,273.810791,114.063843,323.810791,0.000000,"" \n "" \n "Player left the game" \n "" \n ""};
+item7[] = {"wait",2,250,-75.000000,-125.000000,25.000000,-75.000000,0.000000,"wait"};
+item8[] = {"true_____",4,218,-101.419617,-229.258911,57.159302,-146.001068,0.000000,"" \n "" \n "" \n "" \n "true" \n "" \n "" \n "" \n "" \n ""};
+item9[] = {"",7,210,158.499985,108.500023,166.500000,116.499992,0.000000,""};
+item10[] = {"wait___",4,218,-334.010498,81.408447,-195.292114,148.887360,0.000000,"" \n "" \n "wait" \n "" \n "" \n ""};
+item11[] = {"wait___",4,218,-326.858215,-126.278168,-197.541260,-71.961182,0.000000,"" \n "" \n "wait" \n "" \n "" \n ""};
+item12[] = {"reset_",2,250,-325.297302,-11.094360,-200.297302,45.102905,0.000000,"reset" \n ""};
+item13[] = {"script_done__",4,218,188.372925,270.050171,313.372925,320.050171,0.000000,"" \n "" \n "script done" \n "" \n ""};
+link0[] = {0,8};
+link1[] = {2,9};
+link2[] = {2,10};
+link3[] = {4,2};
+link4[] = {5,9};
+link5[] = {6,3};
+link6[] = {7,4};
+link7[] = {7,5};
+link8[] = {8,7};
+link9[] = {9,6};
+link10[] = {9,13};
+link11[] = {10,12};
+link12[] = {11,7};
+link13[] = {12,11};
+link14[] = {13,3};
+globals[] = {0.000000,0,0,0,0,640,480,1,149,6316128,1,-745.152283,668.985474,738.103516,-422.440399,803,659,1};
+window[] = {0,-1,-1,-1,-1,883,52,1493,52,1,821};
+*//*%FSM</HEAD>*/
+class FSM
+{
+        fsmName = "A3C_AI_CLEAR";
+        class States
+        {
+                /*%FSM<STATE "Start_">*/
+                class Start_
+                {
+                        name = "Start_";
+                        itemno = 0;
+                        init = /*%FSM<STATEINIT""">*/"_unit = _this select 0;" \n
+                         "_doors = _this select 1;" \n
+                         "_building = _this select 2;" \n
+                         "_door = [];"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "true_____">*/
+                                class true_____
+                                {
+                                        itemno = 8;
+                                        priority = 0.000000;
+                                        to="wait";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "End_">*/
+                class End_
+                {
+                        name = "End_";
+                        itemno = 1;
+                        init = /*%FSM<STATEINIT""">*/"hint ""exit fsm"";"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "lean_">*/
+                class lean_
+                {
+                        name = "lean_";
+                        itemno = 2;
+                        init = /*%FSM<STATEINIT""">*/"_doors = [_doors,[],{_x distance _unit},""ASCEND""] call BIS_fnc_sortBy;" \n
+                         "_door = _doors select 0;" \n
+                         "_doors = _doors - [_door];" \n
+                         "_doorDir = [_building,_door] call A3C_DOOR_DIR;" \n
+                         "_dobj = ""SuppressTarget"" createVehicleLocal [0,0,0];" \n
+                         "_dobj setpos _door; _dobj setdir _doorDir;" \n
+                         "_dobj enablesimulation false;" \n
+                         "_relDir = _dobj getreldir _unit;" \n
+                         "deleteVehicle _dobj;" \n
+                         "_act = false;" \n
+                         "_lookDir = 0;" \n
+                         "_right = false;" \n
+                         "switch (true) do {" \n
+                         "	case ((_reldir > 270) && {_reldir < 315}) : {" \n
+                         "		_act = true;" \n
+                         "		_right = false;" \n
+                         "		_lookDir = _doorDir;" \n
+                         "	};" \n
+                         "	case ((_reldir > 180) && {_reldir < 225}) : {" \n
+                         "		_act = true;" \n
+                         "		_right = true;" \n
+                         "		_lookDir = _doorDir;" \n
+                         "	};" \n
+                         "	case ((_reldir > 90) && {_reldir < 135}) : {" \n
+                         "		_act = true;" \n
+                         "		_right = false;" \n
+                         "		_lookDir = _doorDir + 180;" \n
+                         "	};" \n
+                         "	case ((_reldir > 45) && {_reldir < 90}) : {" \n
+                         "		_act = true;" \n
+                         "		_right = true;" \n
+                         "		_lookDir = _doorDir + 180;" \n
+                         "	};" \n
+                         "};" \n
+                         "_unit lookat ([_door,50,_lookdir] call BIS_fnc_RelPos);" \n
+                         "if (_act) then {" \n
+                         "	if (_right) then {" \n
+                         "		_unit playMove ""AadjPknlMstpSrasWrflDright"";" \n
+                         "	} else {" \n
+                         "		_unit playMove ""AadjPknlMstpSrasWrflDleft"";" \n
+                         "	};" \n
+                         "};" \n
+                         "" \n
+                         "_time = time;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Player_left_the">*/
+                                class Player_left_the
+                                {
+                                        itemno = 6;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(!alive _unit)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "script_done__">*/
+                                class script_done__
+                                {
+                                        itemno = 13;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(_unit getvariable ""A3C_CLEARING"")"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "wait___">*/
+                                class wait___
+                                {
+                                        itemno = 10;
+                                        priority = 0.000000;
+                                        to="reset_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > (_time + 3)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Exit_">*/
+                class Exit_
+                {
+                        name = "Exit_";
+                        itemno = 3;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait">*/
+                class wait
+                {
+                        name = "wait";
+                        itemno = 7;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Player_left_the">*/
+                                class Player_left_the
+                                {
+                                        itemno = 6;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(!alive _unit)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "script_done__">*/
+                                class script_done__
+                                {
+                                        itemno = 13;
+                                        priority = 0.000000;
+                                        to="Exit_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(_unit getvariable ""A3C_CLEARING"")"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "unit_close_to_door">*/
+                                class unit_close_to_door
+                                {
+                                        itemno = 4;
+                                        priority = 0.000000;
+                                        to="lean_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{ (_unit distance2d _x < 1.2) && {(abs ((getPosATL _unit select 2) - ((_x select 2) -0.5))) < 1.8} } count _doors > 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "reset_">*/
+                class reset_
+                {
+                        name = "reset_";
+                        itemno = 12;
+                        init = /*%FSM<STATEINIT""">*/"_unit playMove ""aidlpknlmstpsraswrfldnon_ai"";" \n
+                         "_unit playMoveNow ""aidlpknlmstpsraswrfldnon_ai"";" \n
+                         "_time = time;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "wait___">*/
+                                class wait___
+                                {
+                                        itemno = 11;
+                                        priority = 0.000000;
+                                        to="wait";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > (_time + 7)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+        };
+        initState="Start_";
+        finalStates[] =
+        {
+                "End_",
+                "Exit_",
+        };
+};
+/*%FSM</COMPILE>*/

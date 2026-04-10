@@ -1,0 +1,1088 @@
+////////////////////////////////////////////////////////
+// GUI EDITOR OUTPUT START (by Mad_Cheese, v1.063, #Vuguzo)
+////////////////////////////////////////////////////////
+
+class RscPicture_ControlFrame: RscPicture
+{
+	idc = 10;
+
+	text = "A3C_CORE\ui\pictures\BG_Map_Overlay.paa";
+	x = -0.82496 * safezoneW;
+	y = -1.04448 * safezoneH;
+	w = 0.617236 * safezoneW;
+	h = 0.978512 * safezoneH;
+	colorText[] = {0,0,0,0.7};
+};
+class rscPicture_ControlFrame_1: RscButton
+{
+	idc = 11;
+	onMouseEnter = "[] call A3C_MAP_DelLoopObs; A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;";
+
+	x = 0 * safezoneW + safezoneX;
+	y = 0 * safezoneH + safezoneY;
+	w = 0.587303 * safezoneW;
+	h = 0.230885 * safezoneH;
+};
+class A3C_LOGO: RscPicture
+{
+	moving = 1;
+
+	idc = 1203;
+	text = "";
+	x = 0.280503 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0549726 * safezoneH;
+	colorText[] = {1,1,1,0.3};
+};
+class New_Slash: RscText
+{
+	idc = 1000;
+	text = "|"; //--- ToDo: Localize;
+	x = 0.316097 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.00593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_TIMEOUT_CHECKBOX1: RscPicture
+{
+	idc = 7022;
+
+	text = "#(argb,8,8,3)color(1,1,1,1)";
+	x = 0.333894 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+};
+class A3C_TIMEOUT_CHECKBOX2: RscButton
+{
+	idc = 7007;
+	action = "[] call A3C_BTN_FNC_COND";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.333894 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	tooltip = "activate/deactivate wp timeout"; //--- ToDo: Localize;
+};
+class A3C_TEXT_04: RscText
+{
+	idc = 7008;
+
+	text = "^"; //--- ToDo: Localize;
+	x = 0.357623 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class Sleep_Input: RscEdit
+{
+	idc = 7009;
+	style = 0;
+	font = "PuristaLight";
+	autocomplete = "false";
+	colorSelection[] = {1,1,1,1};
+	colorDisabled[] = {};
+	onSetFocus = "A3C_BOOL_CT_SPACING = true; A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onKillFocus = "A3C_BOOL_CT_SPACING = false; A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable true";
+
+	text = "05"; //--- ToDo: Localize;
+	x = 0.375421 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0237294 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	colorText[] = {0,0,0,1};
+};
+class A3C_TEXT_05: RscText
+{
+	idc = 7010;
+
+	text = "s )"; //--- ToDo: Localize;
+	x = 0.405082 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_WPD_BTN1: RscButton
+{
+	idc = 7018;
+	action = "[] spawn A3C_Btn_fnc_Execute";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	text = "COMMIT"; //--- ToDo: Localize;
+	x = 0.108464 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.166106 * safezoneW;
+	h = 0.0439781 * safezoneH;
+};
+class A3C_WPD_BTN2: RscButton
+{
+	idc = 7019;
+	action = "(findDisplay 12 displayCtrl 51) ctrlEnable true; (findDisplay 6998) closeDisplay 0; openMap false; [] call A3C_Btn_fnc_Cancel";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	text = "EXIT"; //--- ToDo: Localize;
+	x = 0.316097 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.160174 * safezoneW;
+	h = 0.0439781 * safezoneH;
+};
+class A3C_UNIT_1: RscShortcutButton
+{
+	idc = 7025;
+	onMouseButtonDown = "[(1 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.0372761 * safezoneW + safezoneX;
+	y = 0.0932029 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_2: RscShortcutButton
+{
+	idc = 7026;
+	onMouseButtonDown = "[(2 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.102532 * safezoneW + safezoneX;
+	y = 0.0932029 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_3: RscShortcutButton
+{
+	idc = 7027;
+	onMouseButtonDown = "[(3 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.167788 * safezoneW + safezoneX;
+	y = 0.0932029 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_4: RscShortcutButton
+{
+	idc = 7028;
+	onMouseButtonDown = "[(4 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.233044 * safezoneW + safezoneX;
+	y = 0.0932029 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_5: RscShortcutButton
+{
+	idc = 7029;
+	onMouseButtonDown = "[(5 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.2983 * safezoneW + safezoneX;
+	y = 0.0932029 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_6: RscShortcutButton
+{
+	idc = 7030;
+	onMouseButtonDown = "[(6 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.363556 * safezoneW + safezoneX;
+	y = 0.0932029 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_7: RscShortcutButton
+{
+	idc = 7031;
+	onMouseButtonDown = "[(7 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.428812 * safezoneW + safezoneX;
+	y = 0.0932029 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_8: RscShortcutButton
+{
+	idc = 7032;
+	onMouseButtonDown = "[(8 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.494068 * safezoneW + safezoneX;
+	y = 0.0932029 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_9: RscShortcutButton
+{
+	idc = 7033;
+	onMouseButtonDown = "[(9 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.0372761 * safezoneW + safezoneX;
+	y = 0.126186 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_10: RscShortcutButton
+{
+	idc = 7034;
+	onMouseButtonDown = "[(10 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.102532 * safezoneW + safezoneX;
+	y = 0.126186 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_11: RscShortcutButton
+{
+	idc = 7035;
+	onMouseButtonDown = "[(11 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.167788 * safezoneW + safezoneX;
+	y = 0.126186 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_12: RscShortcutButton
+{
+	idc = 7036;
+	onMouseButtonDown = "[(12 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.233044 * safezoneW + safezoneX;
+	y = 0.126186 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_13: RscShortcutButton
+{
+	idc = 7037;
+	onMouseButtonDown = "[(13 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.2983 * safezoneW + safezoneX;
+	y = 0.126186 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_14: RscShortcutButton
+{
+	idc = 7038;
+	onMouseButtonDown = "[(14 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.363556 * safezoneW + safezoneX;
+	y = 0.126186 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_15: RscShortcutButton
+{
+	idc = 7039;
+	onMouseButtonDown = "[(15 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.428812 * safezoneW + safezoneX;
+	y = 0.126186 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_UNIT_16: RscShortcutButton
+{
+	idc = 7040;
+	onMouseButtonDown = "[(16 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.494068 * safezoneW + safezoneX;
+	y = 0.126186 * safezoneH + safezoneY;
+	w = 0.0593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_map_undo_IMAGE: RscPicture
+{
+	idc = 7092;
+
+	text = "A3C_CORE\ui\pictures\icon_menu_undo.paa";
+	x = 0.428812 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	colorText[] = {1,1,1,0.7};
+};
+class A3C_Undo: RscButton
+{
+	idc = 7041;
+	action = "[] call A3C_UNDO";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.428812 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	tooltip = "Undo"; //--- ToDo: Localize;
+};
+class A3C_TAB_STANCE1: RscPicture
+{
+	idc = 7044;
+
+	text = "#(argb,8,8,3)color(1,1,1,1)";
+	x = 0.0372761 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+};
+class A3C_TAB_STANCE1_2: RscButton
+{
+	idc = 7045;
+	action = "[] call A3C_STANCE_BTN_1";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.0372761 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	tooltip = "stance while en route"; //--- ToDo: Localize;
+};
+class A3C_TAB_STANCE2: RscPicture
+{
+	idc = 7046;
+
+	text = "#(argb,8,8,3)color(1,1,1,1)";
+	x = 0.120329 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+};
+class A3C_TAB_STANCE2_2: RscButton
+{
+	idc = 7047;
+	action = "[] call A3C_STANCE_BTN_2";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.120329 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	tooltip = "set stance upon arrival"; //--- ToDo: Localize;
+};
+class A3C_TAB_Speed: RscPicture
+{
+	idc = 7048;
+
+	text = "#(argb,8,8,3)color(1,1,1,1)";
+	x = 0.0788027 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+};
+class A3C_TAB_Speed_2: RscButton
+{
+	idc = 7049;
+	action = "[] call A3C_SPEED_BTN";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.0788027 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	tooltip = "set travel speed"; //--- ToDo: Localize;
+};
+class A3C_TAB_FORMM: RscPicture
+{
+	idc = 7050;
+
+	text = "#(argb,8,8,3)color(1,1,1,1)";
+	x = 0.244909 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+};
+class A3C_TAB_FORMM_2: RscButton
+{
+	idc = 7051;
+	action = "[] call A3C_BUTTON_FORMMODE";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.244909 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	tooltip = "set formation (relative to looking-direction)"; //--- ToDo: Localize;
+};
+class A3C_TAB_REDBOX: RscPicture
+{
+	idc = 7052;
+
+	text = "#(argb,8,8,3)color(1,0,0,1)";
+	x = 0.488135 * safezoneW + safezoneX;
+	y = 0.0272358 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0109945 * safezoneH;
+};
+class A3C_TAB_REDBOX_2: RscButton
+{
+	idc = 7053;
+	onMouseButtonDown = "['Red',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.488135 * safezoneW + safezoneX;
+	y = 0.0272358 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0109945 * safezoneH;
+	tooltip = "team red. LMB to select, Shift+LMB to add"; //--- ToDo: Localize;
+};
+class A3C_TAB_GREENBOX: RscPicture
+{
+	idc = 7054;
+
+	text = "#(argb,8,8,3)color(0,1,0,1)";
+	x = 0.523729 * safezoneW + safezoneX;
+	y = 0.0272358 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0109945 * safezoneH;
+};
+class A3C_TAB_GREENBOX_2: RscButton
+{
+	idc = 7055;
+	onMouseButtonDown = "['GREEN',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.523729 * safezoneW + safezoneX;
+	y = 0.0272358 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0109945 * safezoneH;
+	tooltip = "select team green. LMB to select, Shift+LMB to add"; //--- ToDo: Localize;
+};
+class A3C_TAB_BLUEBOX: RscPicture
+{
+	idc = 7056;
+
+	text = "#(argb,8,8,3)color(0,0,1,1)";
+	x = 0.488135 * safezoneW + safezoneX;
+	y = 0.0492248 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0109945 * safezoneH;
+};
+class A3C_TAB_BLUEBOX_2: RscButton
+{
+	idc = 7057;
+	onMouseButtonDown = "['Blue',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.488135 * safezoneW + safezoneX;
+	y = 0.0492248 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0109945 * safezoneH;
+	tooltip = "select team blue. LMB to select, Shift+LMB to add"; //--- ToDo: Localize;
+};
+class A3C_TAB_YELLOWBOX: RscPicture
+{
+	idc = 7058;
+
+	text = "#(argb,8,8,3)color(1,1,0,1)";
+	x = 0.523729 * safezoneW + safezoneX;
+	y = 0.0492248 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0109945 * safezoneH;
+};
+class A3C_TAB_YELLOWBOX_2: RscButton
+{
+	idc = 7059;
+	onMouseButtonDown = "['YELLOW',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.523729 * safezoneW + safezoneX;
+	y = 0.0492248 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0109945 * safezoneH;
+	tooltip = "select team yellow. LMB to select, Shift+LMB to add"; //--- ToDo: Localize;
+};
+class A3C_TAB_WHITEBOX: RscPicture
+{
+	idc = 7060;
+
+	text = "#(argb,8,8,3)color(1,1,1,1)";
+	x = 0.488135 * safezoneW + safezoneX;
+	y = 0.0712139 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0109945 * safezoneH;
+};
+class A3C_TAB_WHITEBOX_2: RscButton
+{
+	idc = 7061;
+	onMouseButtonDown = "['MAIN',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.488135 * safezoneW + safezoneX;
+	y = 0.0712139 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0109945 * safezoneH;
+	tooltip = "select team white. LMB to select, Shift+LMB to add"; //--- ToDo: Localize;
+};
+class A3C_TAB_CMODE: RscPicture
+{
+	idc = 7062;
+
+	text = "\a3\ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa";
+	x = 0.161856 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+};
+class A3C_TAB_CMODE_2: RscButton
+{
+	idc = 7063;
+	action = "[] call A3C_BUTTON_CMODE";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.161856 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	tooltip = "set wp combat mode (use at own risk)"; //--- ToDo: Localize;
+};
+class A3C_SmokeMode: RscPicture
+{
+	idc = 7064;
+
+	text = "#(argb,8,8,3)color(1,1,1,1)";
+	x = 0.203382 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+};
+class A3C_SmokeMode_2: RscButton
+{
+	idc = 7065;
+	onMouseButtonDown = "[(_this select 1),(_this select 4)] spawn A3C_BUTTON_SMOKEMODE";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.203382 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	tooltip = "LMB: activate/deactivate smoke. Shift+LMB: activate suppressive fire"; //--- ToDo: Localize;
+};
+class A3C_TAB_slash2: RscText
+{
+	idc = 7085;
+
+	text = "|"; //--- ToDo: Localize;
+	x = 0.185585 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.00593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_TAB_slash3: RscText
+{
+	idc = 7086;
+
+	text = "|"; //--- ToDo: Localize;
+	x = 0.149991 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.00593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_TAB_slash4: RscText
+{
+	idc = 7087;
+
+	text = "|"; //--- ToDo: Localize;
+	x = 0.233044 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.00593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_TAB_slash5: RscText
+{
+	idc = 7088;
+
+	text = "|"; //--- ToDo: Localize;
+	x = 0.268638 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.00593236 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class Sleep_Input_2: RscEdit
+{
+	idc = 7066;
+	style = 0;
+	font = "PuristaLight";
+	autocomplete = "false";
+	onSetFocus = "A3C_BOOL_CT_SPACING = true; A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onKillFocus = "A3C_BOOL_CT_SPACING = false; A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable true";
+	colorSelection[] = {1,1,1,1};
+	colorDisabled[] = {};
+
+	text = "02"; //--- ToDo: Localize;
+	x = 0.286435 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0237294 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	colorText[] = {0,0,0,1};
+};
+class A3C_HELI_INF: RscPicture
+{
+	idc = 7067;
+
+	text = "A3C_CORE\ui\pictures\icon_Menu_page_aircraft.paa";
+	x = 0.0372761 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+};
+class A3C_HELI_INF_1: RscButton
+{
+	idc = 7068;
+	action = "[] call A3C_SWITCH_COMMAND_PAGE";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.0372761 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+};
+class A3C_Cancel_Data: RscPicture
+{
+	idc = 7069;
+
+	text = "A3C_CORE\ui\pictures\icon_menu_cancel.paa";
+	x = 0.458474 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+};
+class A3C_Cancel_Data_1: RscButton
+{
+	idc = 7070;
+	onmousebuttondown = "[A3C_SELECTED_UNITS,(_this select 4),(_this select 5)] spawn A3C_CANCELPLANS";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.458474 * safezoneW + safezoneX;
+	y = 0.0382303 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	tooltip = "LMB: delete session. shift+LMB: delete active orders. ctrl+LMB: skip currentwaypoint"; //--- ToDo: Localize;
+};
+class A3C_Refresh_Data: RscPicture
+{
+	idc = 7071;
+
+	text = "A3C_CORE\ui\pictures\icon_menu_refresh.paa";
+	x = 0.0669379 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+};
+class A3C_Refresh_Data_1: RscButton
+{
+	idc = 7072;
+	onmousebuttondown = "[(units group player) - [player]] call A3C_GROUP_RESET;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.0669379 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	tooltip = "refresh group"; //--- ToDo: Localize;
+};
+class A3C_Leavegroup: RscPicture
+{
+	idc = 7074;
+
+	text = "A3C_CORE\ui\pictures\icon_menu_hc_disband.paa";
+	x = 0.529662 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_Leavegroup_1: RscButton
+{
+	idc = 7075;
+	action = "[0] spawn A3C_BTN_HC";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.529662 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+	tooltip = "disband selected units to reserve"; //--- ToDo: Localize;
+};
+class A3C_Joingroup: RscPicture
+{
+	idc = 7076;
+
+	text = "A3C_CORE\ui\pictures\icon_menu_hc_rejoin.paa";
+	x = 0.529662 * safezoneW + safezoneX;
+	y = 0.192154 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_Joingroup_1: RscButton
+{
+	idc = 7077;
+	action = "[1] spawn A3C_BTN_HC";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.529662 * safezoneW + safezoneX;
+	y = 0.192154 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+	tooltip = "re-join disbanded units"; //--- ToDo: Localize;
+};
+class RscListbox_1500: RscCombo
+{
+	idc = 7078;
+	onLBSelChanged = "[A3C_LB_MODE,(_this select 1),6998] call A3C_LB_Change";
+	onSetFocus = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onKillFocus = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable true";
+
+	x = -0.0460169 * safezoneW + safezoneX;
+	y = 0.994753 * safezoneH + safezoneY;
+	w = 0.0652846 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_IMG_TOGGLETRACKER: RscPicture
+{
+	idc = 1222;
+	text = "\a3\ui_f\data\GUI\Cfg\Hints\Commanding_ca.paa";
+	x = 0.547459 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	colorText[] = {1,1,1,0.6};
+};
+class A3C_BTN_TOGGLETRACKER: RscButton
+{
+	idc = 7096;
+	action = "[] call A3C_TAB_TOGGLE_TRACKER;";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.547459 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.0329835 * safezoneH;
+	tooltip = "Toggle Force Tracking"; //--- ToDo: Localize;
+};
+class A3C_pageFront_TAB: RscPicture
+{
+	idc = 70981;
+
+	text = "A3C_CORE\ui\pictures\icon_menu_PageNext.paa";
+	x = 0.559324 * safezoneW + safezoneX;
+	y = 0.115192 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_pageFront_TAB_1: RscButton
+{
+	idc = 7097;
+	action = "['next',16] call A3C_SWITCHPAGE_TABLET";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.559324 * safezoneW + safezoneX;
+	y = 0.115192 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.021989 * safezoneH;
+	tooltip = "next page"; //--- ToDo: Localize;
+};
+class A3C_pageBack_TAB: RscPicture
+{
+	idc = 70982;
+
+	text = "A3C_CORE\ui\pictures\icon_menu_PagePrev.paa";
+	x = 0.0135467 * safezoneW + safezoneX;
+	y = 0.115192 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_pageBack_TAB_2: RscButton
+{
+	idc = 7098;
+	action = "['prev',16] call A3C_SWITCHPAGE_TABLET";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.0135467 * safezoneW + safezoneX;
+	y = 0.115192 * safezoneH + safezoneY;
+	w = 0.0177971 * safezoneW;
+	h = 0.021989 * safezoneH;
+	tooltip = "previous page"; //--- ToDo: Localize;
+};
+class Order_GoCode_A: RscPicture
+{
+	idc = 709100;
+
+	text = "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
+	x = 0.494068 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class Order_GoCode_A_1: RscButton
+{
+	idc = 709101;
+	action = "['A'] call A3C_ACTIVATEGOCODE";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.494068 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class Order_GoCode_B: RscPicture
+{
+	idc = 709102;
+
+	text = "A3C_CORE\ui\pictures\icon_menu_gocode_B.paa";
+	x = 0.511865 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class Order_GoCode_B_1: RscButton
+{
+	idc = 709103;
+	action = "['B'] call A3C_ACTIVATEGOCODE";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.511865 * safezoneW + safezoneX;
+	y = 0.15917 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class Order_GoCode_C: RscPicture
+{
+	idc = 709104;
+
+	text = "A3C_CORE\ui\pictures\icon_menu_gocode_C.paa";
+	x = 0.494068 * safezoneW + safezoneX;
+	y = 0.192154 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class Order_GoCode_C_1: RscButton
+{
+	idc = 709105;
+	action = "['C'] call A3C_ACTIVATEGOCODE";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.494068 * safezoneW + safezoneX;
+	y = 0.192154 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class Order_GoCode_D: RscPicture
+{
+	idc = 709106;
+
+	text = "A3C_CORE\ui\pictures\icon_menu_gocode_D.paa";
+	x = 0.511865 * safezoneW + safezoneX;
+	y = 0.192154 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class Order_GoCode_D_1: RscButton
+{
+	idc = 709107;
+	action = "['D'] call A3C_ACTIVATEGOCODE";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true";
+
+	x = 0.511865 * safezoneW + safezoneX;
+	y = 0.192154 * safezoneH + safezoneY;
+	w = 0.0118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_DIAGDEG: RscText
+{
+	idc = 709108;
+
+	x = 0.956791 * safezoneW + safezoneX;
+	y = 0.983759 * safezoneH + safezoneY;
+	w = 0.118647 * safezoneW;
+	h = 0.021989 * safezoneH;
+};
+class A3C_TAB_PURPLEBOX: RscPicture
+{
+	idc = 7060;
+
+	text = "#(argb,8,8,3)color(0.5,0.2,0.6,0.6)";
+	x = 0.523729 * safezoneW + safezoneX;
+	y = 0.0712139 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0109945 * safezoneH;
+};
+class A3C_TAB_PURPLEBOX_2: RscButton
+{
+	idc = 7061;
+	onMouseButtonDown = "['PURPLE',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
+	onMouseEnter = "A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false";
+	onMouseExit = "if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}";
+
+	x = 0.523729 * safezoneW + safezoneX;
+	y = 0.0712139 * safezoneH + safezoneY;
+	w = 0.0296618 * safezoneW;
+	h = 0.0109945 * safezoneH;
+	tooltip = "select all units. LMB to select, Shift+LMB to add"; //--- ToDo: Localize;
+};
+
+class A3C_RC_Context:  RscControlsGroup
+{
+	// left: + right: -
+	// up: - down: + 
+	idc = 709109;
+	x = -0.0163421 * safezoneW + safezoneX;
+	y = 0.994753 * safezoneH + safezoneY;
+	w = 0.0652846 * safezoneW;
+	h = 0.0549726 * safezoneH;
+	
+	class Controls
+	{
+				//class bs1 : RscPicture
+				//{
+				//	idc = -1;
+				//	text = "#(argb,8,8,3)color(1,1,1,1)";
+				//	x = 0 * GUI_GRID_W + GUI_GRID_X;
+				//	y = 0 * GUI_GRID_H + GUI_GRID_Y;
+				//	w = 5.5 * GUI_GRID_W;
+				//	h = 2.5 * GUI_GRID_H;
+				//};
+				class ctg1 : RscPicture
+				{
+					idc = 709110;
+					text = ""; 
+					x = 1.5 * GUI_GRID_W + GUI_GRID_X;
+					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
+					w = 1 * GUI_GRID_W;
+					h = 1 * GUI_GRID_H;
+				};
+				class ctg1_1 : RscButton
+				{
+					idc = 7091101;
+					x = 1.5 * GUI_GRID_W + GUI_GRID_X;
+					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
+					w = 1 * GUI_GRID_W;
+					h = 1 * GUI_GRID_H;
+					action = "['SPEED'] call A3C_CONTEXTBUTTON";
+				};
+				class ctg2 : RscPicture
+				{
+					idc = 709111;
+					text = "A3C_CORE\ui\pictures\stance_stand.paa";
+					x = 0 * GUI_GRID_W + GUI_GRID_X;
+					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
+					w = 1 * GUI_GRID_W;
+					h = 1 * GUI_GRID_H;
+				};
+				class ctg2_1 : RscButton
+				{
+					idc = 7091111;
+					x = 0 * GUI_GRID_W + GUI_GRID_X;
+					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
+					w = 1 * GUI_GRID_W;
+					h = 1 * GUI_GRID_H;
+					action = "['STANCE1'] call A3C_CONTEXTBUTTON";
+				};
+				class ctg3 :  RscCombo
+				{
+					idc = 709112;
+					//text = "#(argb,8,8,3)color(1,1,1,1)";
+					x = 0 * GUI_GRID_W + GUI_GRID_X;
+					y = 0 * GUI_GRID_H + GUI_GRID_Y;
+					w = 5.5 * GUI_GRID_W;
+					h = 1 * GUI_GRID_H;
+					onLBSelChanged = "[A3C_LB_MODE,(_this select 1),6999] call A3C_LB_Change; ";
+				};
+				class ctg4 : RscPicture
+				{
+					idc = 709113;
+					text = "A3C_CORE\ui\pictures\stance_crouch.paa";
+					x = 3 * GUI_GRID_W + GUI_GRID_X;
+					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
+					w = 1 * GUI_GRID_W;
+					h = 1 * GUI_GRID_H;
+				};
+				class ctg4_1 : RscButton
+				{
+					idc = 7091131;
+					x = 3 * GUI_GRID_W + GUI_GRID_X;
+					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
+					w = 1 * GUI_GRID_W;
+					h = 1 * GUI_GRID_H;
+					action = "['STANCE2'] call A3C_CONTEXTBUTTON";
+				};
+				class ctg5 : RscPicture
+				{
+					idc = 709114;
+					text = "A3C_CORE\ui\pictures\icon_Menu_trash.paa";
+					x = 4.5 * GUI_GRID_W + GUI_GRID_X;
+					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
+					w = 1 * GUI_GRID_W;
+					h = 1 * GUI_GRID_H;
+				};
+				class ctg5_1 : RscButton
+				{
+					idc = 7091141;
+					x = 4.5 * GUI_GRID_W + GUI_GRID_X;
+					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
+					w = 1 * GUI_GRID_W;
+					h = 1 * GUI_GRID_H;
+					//action = "(findDisplay 6999 displayCtrl 709109) ctrlShow false";
+					action = "['DELETE'] call A3C_CONTEXTBUTTON";
+				};
+	};
+};
+
+
+////////////////////////////////////////////////////////
+// GUI EDITOR OUTPUT END
+////////////////////////////////////////////////////////

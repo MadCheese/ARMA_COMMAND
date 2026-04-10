@@ -1,0 +1,638 @@
+
+//---------------------------  S H A R E D  V A L U E S   A N D   A R R A Y S  ------------------------
+//------------------------------------------------------------------------------------------------------
+
+
+A3C_CarrierArray =
+[
+	[[-31.6045,-22.9785,24],92.178],
+	[[-31.915,-3.06934,24],92.178],
+	[[-32.1641,16.7773,24],93.26],
+	[[-32.4199,36.4346,24],92.178],
+	[[-31.3652,55.6875,24],92.178],
+	[[-32.2373,74.7832,24],92.1777],
+	[[34.0117,121.157,24],230],
+	[[33.1025,148.224,24],230],
+
+	[[-9.61328,-23.7344,24],92.178],
+	[[-9.92969,-3.89941,24],92.178],
+	[[-10.1982,15.542,24],92.178],
+	[[-12.4434,35.6865,24],92.178],
+
+	[[33.9961,101.191,24],230]
+];
+
+A3C_HUMAN_HITPOINTS = ["HitAbdomen","HitArms","HitChest","HitDiaphragm","HitFace","HitHands","HitHead","HitLegs","HitNeck","HitPelvis"];
+
+
+
+
+A3C_UI_COLOR_RED = [0.5,0,0,1];
+A3C_UI_COLOR_BLUE = [0,0.3,0.6,1];
+A3C_UI_COLOR_YELLOW = [0.8,0.6,0,1];
+A3C_UI_COLOR_GREY = [0.29,0.29,0.29,1];
+A3C_UI_COLOR_BLACK = [0,0,0,1];
+A3C_UI_COLOR_YELLOW2 = [0.85,0.85,0,1];
+
+A3C_CONVOY_SLOWDOWN_VICS = [];
+A3C_UI_HUDICONS_HC_GROUP = [];
+
+
+A3C_HCALLGROUPS_Current = [];
+
+
+
+A3C_THROW_MUZZLES = getArray (configFile >> "CfgWeapons" >> "THROW" >> "muzzles");
+A3C_SUPPRESSION_FORBIDDEN = ["missiles_DAGR","missiles_ASRAAM","cannon_120mm"];
+
+A3C_HangarTypes = [];
+_array = "true" configClasses (configFile >> "CfgVehicles");{
+	if (["hangar",(configname _x)] call BIS_fnc_instring) then {
+		A3C_HangarTypes pushback (configName _x);
+	};
+} foreach _array;
+
+
+
+A3C_CurrentPlayerObject = player;
+
+
+A3C_GoCode_Activate_A = false;
+A3C_GoCode_Activate_B = false;
+A3C_GoCode_Activate_C = false;
+A3C_GoCode_Activate_D = false;
+
+A3C_MISSIONENDED = false;
+
+A3C_UI_HUD_ASSIGNVEHICLE = false;
+A3C_UI_HUD_ASSIGNVEHICLE_OBJECTS = [];
+
+A3C_HUD_UI_3D_TAG_reposition = false;
+A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+A3C_HUD_UI_3D_TAG_ICON_SIZE = 3;
+A3C_HUD_UI_3D_TAG_ICON_POS = [0,0,0];
+A3C_HUD_UI_3D_TAG_ICON_COL = [1,1,1,0.7];
+
+A3C_HUD_UI_3D_TAG_ICON_MOD = "NONE"; //-- for modifier
+
+A3C_UI_MAP_BOOL_isHCWaypointPosEdit = false; //-- different from A3C_BOOL_MOVINGHC (for default Arma HC module)
+
+
+A3C_SHOWNHUD = shownHud select 6;;
+
+A3C_HC_ACTIVEGROUP = grpNull;
+A3C_HC_ACTIVE_WPSPEED = "UNCHANGED";
+
+//A3C_Mon_Server_EH_units = [];
+
+
+
+
+A3C_UNITCOUNTER =  (count (units group player));
+//if (isnil "A3C_ADJUSTSKILL") then {
+//	A3C_ADJUSTSKILL = true;
+//};
+
+
+
+A3C_HC_WP_SYNC_ROOT = [grpNull,-1];
+
+A3C_UI_MAPTAB_SYNC_BOARDGROUP = grpNull;
+A3C_UI_MAPTAB_SYNC_HOSTGROUP = grpNull;
+A3C_UI_MAPTAB_SYNC_BoardWPI = -1;
+A3C_UI_MAPTAB_SYNC_HostWPI = -1;
+
+
+//A3C_HC_WP_SYNC_ARRAYS = [];
+A3C_UI_MAPTAB_isCircleMenu = false;
+A3C_UI_MAPTAB_CircleMenu_CTRLS = [];
+
+A3C_TARGETVEH = objnull;
+A3C_SNAP_OBJECT = objnull;
+
+A3C_GRENPHR = "A3C_FireInTheHole";
+
+
+
+
+A3C_DEBUG = if (!isNil 'A3C_DEBUG') then {A3C_DEBUG} else {false};
+
+A3C_BOOL_REJOINING = false;
+
+
+
+
+A3C_IsAce3 = if (isClass(configFile/"CfgPatches"/"ace_medical")) then {true} else {false}; //-- detect if ACE3-Medical is running
+A3C_IsIFA = if (isClass(configFile/"CfgPatches"/"WW2_Assets_c_Weapons_InfantryWeapons_c")) then {true} else {false}; //-- detect if IFA is running
+
+
+
+
+
+A3C_DISABLE_TRACKER = if (!isNil 'A3C_DISABLE_TRACKER') then {A3C_DISABLE_TRACKER} else {false};
+
+///////////////////////////////////////////////////////////////////////////////////
+//-- CHECK FOR SERVER SIDE ADDON PRESENCE
+//-- CASES: ADVANCED RAPPELLING
+A3C_checkserverAddon = {
+	if !(isServer) exitWith {};
+	params ["_inputString","_caller"];
+	private ["_isClass"];
+	_isClass = if (isClass(configFile/"CfgPatches"/_inputString)) then {true} else {false};
+	switch _inputString do {
+		case ("AR_AdvancedRappelling") : {A3C_IsRappel = _isClass; publicVariable 'A3C_IsRappel'};
+		case ("AICommand") : {A3C_IsAICommand = _isClass; publicVariable 'A3C_IsAICommand'};
+		case ("A3C_UI") : {A3C_IsA3CServer = _isClass; publicVariable 'A3C_IsA3CServer'};
+	};
+};
+publicVariable 'A3C_checkserverAddon';
+//-- check for supported serverSide Addons
+{
+	[_x,player] remoteExec ["A3C_checkserverAddon",2];
+} foreach ["AR_AdvancedRappelling","A3C_UI"];
+
+//-- check for supportet client/serverSide addons
+A3C_IsAICommand = if (isClass(configFile/"CfgPatches"/"AICommand")) then {true} else {false};
+//if (!isServer) then {
+	if (A3C_IsAICommand) then {
+		["AICommand",player] remoteExec ["A3C_checkserverAddon",2];
+	};
+//};
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+if (isServer) then {
+	A3C_DETO_VIC_INDEX = 0;
+	publicVariable 'A3C_DETO_VIC_INDEX';
+
+	A3C_BLACKLIST_WAYPOINT_EDIT = [];
+	publicVariable 'A3C_BLACKLIST_WAYPOINT_EDIT';
+
+	A3C_CLIENT_IDS = [];
+	publicVariable 'A3C_CLIENT_IDS';
+
+	A3C_REMFIRE_UNITS_ACTIVE = [];
+	publicVariable 'A3C_REMFIRE_UNITS_ACTIVE';
+
+	A3C_GROUP_CONVOYS = [];
+	publicVariable 'A3C_GROUP_CONVOYS';
+
+	A3C_REMOTE_BLACKFISH_HandlerIndex = 0;
+	publicVariable "A3C_REMOTE_BLACKFISH_HandlerIndex";
+		
+};
+
+
+
+//-- exit server
+if (isDedicated) exitWith {
+	A3C_isHCSkillMaxed = if (!isNil 'A3C_isHCSkillMaxed') then {A3C_isHCSkillMaxed} else {true}; //-- can obe overRidden in Server's in server mission init.sqf
+};
+
+
+
+A3C_PLAYERGROUP = group player;
+
+
+
+A3C_EHM = if (isClass(configFile/"CfgPatches"/"BaBe_core")) then {true} else {false}; //-- detect if Enhanced Movement is running
+A3C_IsTAO = if (isClass(configFile/"CfgPatches"/"tao_foldmap_a3")) then {true} else {false}; //-- detect if TAO Folding Map is running
+A3C_LaxMount = if (isClass(configFile/"CfgPatches"/"L_MOUNT")) then {true} else {false}; //-- detect if L-MOUNT is running
+
+
+A3C_GREN_MUZZLE = "";
+
+
+A3C_UNITCOUNT = ((count (units group player)) -1);
+
+
+
+
+//-- A3C Version Check:
+//checks the current version of A3C and hints if new version is detected
+with profilenamespace do {
+	_giveHint = false;
+	if (isnil "A3C_CHECKVERSION") then {
+		_giveHint = true;
+		profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD PA001"];
+	} else {
+		if !( (profileNameSpace getvariable "A3C_CHECKVERSION") == "BUILD PA001") then {
+			_giveHint = true;
+			profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD PA001"];
+		};
+	};
+
+	if (_giveHint) then {
+		[] spawn {
+			waituntil {alive player};
+				"ARMA COMMAND DLC" hintC [
+				"You are playing a new build (#PA001) for the first time!",
+				"Please refer to the documentation                       ",
+				">>>>>>>   NEWS:   <<<<<<<                               ",
+				"PRE-ALPHA 01"
+			];		
+		};	
+	};
+};
+
+
+//----------------  V A L U E S   A N D   A R R A Y S   F O R   P L A N N I N G   M O D E  -------------
+//------------------------------------------------------------------------------------------------------
+
+
+
+
+
+A3C_RC_Context = 709109;
+A3C_RC_Context_HC_WP = 709115;
+A3C_HC_GROUP_MENU_CTRLPARENT = 8007;
+A3C_ObjectSelector_Parent = 8008;
+PRNT_ACTION_SUBSET_1 = 8009;
+PRNT_ACTION_SUBSET_2 = 8010;
+MAP_BG_SUB_BG_1 = 1010101;
+MAP_BG_SUB_BG_2 = 1010102;
+A3C_SELECTOR_TREE = 202020;
+A3C_RC_TimeOut = 7009;
+
+
+A3C_MAPTAB_WPMENU_ActionSubCtrls = 709200; //[709142,709130,709125,709126,709129]; //
+A3C_MAPTAB_WPMENU_ActionAddCtrls = 709201;
+A3C_MAPTAB_WPMENU_ActionTypeGroup = 709203;
+
+A3C_MAPTAB_WPMENU_PreCondCtrls = 709202;
+
+A3C_MAPTAB_WPMENU_MacroConfirm = [709131,709132,709133,709134];
+
+A3C_UI_SHARED_TREE_HC_AT_TICK = [];
+
+
+A3C_OBJECTPLACER = objNull;
+A3C_OBJECTPLACER_DIR = 180;
+
+
+A3C_TICKTIME_MoveMark = time;
+A3C_BOOL_MOVINGMARKER = false;
+//A3C_DIAG_ACTIVE = false;
+//A3C_MOVE_Active = false;
+//A3C_CTRL_ACTIVE = false;
+A3C_SYNC_ABORT = false;
+
+A3C_CurSel = false;
+
+A3C_TAB_BUILDING_BOOL = false;
+A3C_BOOL_MOVINGHC = false;
+A3C_BOOL_CT_SPACING = false;
+A3C_BOOL_DISABLEMAPCTRL = false;
+A3C_BOOL_LOOPING = false;
+A3C_BOOL_MAP_MD = false;
+A3C_BOOL_MOUSEUP = false;
+A3C_BOOL_MAPFORCE = true;
+A3C_STATE_CHECKING_PICKUP = false;
+
+A3C_isMergeGroupActive = false;
+
+A3C_LAST_SUBSET_ACTION = "NONE";
+
+A3C_ENGAGEDTARGETS = [];
+
+A3C_PICKUP_OBJECTS = [];
+A3C_PICKUP_MARKERS = [];
+
+A3C_TAB_MARKERS = [];
+A3C_LINE_ID = 1;
+A3C_MARKER_COUNT = 0;
+A3C_SYNC_INDEX = 1;
+A3C_VARNAME_INDEX  = 0;
+A3C_USERACTION_ID = 0;
+A3C_BUTTONPAGE_TABLET = 0;
+A3C_DIFFICULTY = difficulty;
+A3C_OPACITY = if (profilenamespace getvariable ["A3C_MAP_VAR",true]) then {1} else {0};
+A3C_TAB_TOGGLE_VAR = 0;
+A3C_TRACKER_VISIBLE = 1;
+A3C_TEMP_ACTION = ["NONE","NONE"];
+A3C_TEMP_CONDITION = ["NONE","NONE"];
+
+
+
+
+
+A3C_assign_action_playerToVehicle = -1000;
+
+
+A3C_TIMEOUT_VAL = 15;
+A3C_SPACING_INF = 2;
+A3C_SPACING_AIR = 100;
+A3C_FORMMODE_TEMP = 0;
+
+A3C_LoiterDir = "CIRCLE";
+A3C_LoiterRadius = 500;
+
+
+A3C_UNDO_MODE = 0; // 0 means undo WP, 1 means undo SYNC
+//-- A3C_USERACTION: Array to contain data input information used in Undo function. passed as [_inputIndex,_InputType,_syncWPindex]
+//-- _inputType: 0 == Waypoint Entry , 1 == Sync Entry
+
+A3C_MMCode = {};
+
+A3C_USERACTION = [];
+A3C_TRACKER_MARKERS = [];
+A3C_MV_MARKERDATA= [];
+
+
+A3C_TRACKED_ENEMYGROUP = objnull;
+A3C_TAB_BUILDING = objNull;
+A3C_LB_DEST = objnull;
+
+A3C_SUPPRESSION_INDICATOR = objNull;
+A3C_SQ_REM_INDICATOR = objNull;
+A3C_HC_REM_INDICATOR = objNull;
+
+
+A3C_BOOL_DRAGLINE = false;
+
+A3C_HELI_INF_MODE = "INF";
+//A3C_VAL_SPACING = 4;
+
+
+A3C_HC_DETONATION_BOOL = false; //~~ change to clearer varnames, make obvious that it's about map drawing
+
+A3C_HC_VEHICLEBOARD_BOOL = false;
+A3C_HC_VEHICLEBOARD_GROUPS = [];
+A3C_UI_MAPICONS_HC_VICS = [];
+
+A3C_WP_SPEED_TEMP = -1;
+A3C_STANCE1_TEMP = "UP";
+A3C_STANCE2_TEMP = "MIDDLE";
+
+A3C_CHECKVAR = "TEMP";
+A3C_CONNECTING_MODE = "LOOKDIR";
+
+A3C_MovedItem_ID = ""; //-- used to identify a moved marker or Icon
+
+A3C_WeaponCurr = "";
+
+A3C_Selected_PolyID = "";
+
+A3C_GCUNITS = [];
+A3C_MARKERS = [];
+A3C_HC_MARKERS = [];
+A3C_WAYPOINTS = [];
+A3C_WAYPOINTS_TEMP = [];
+A3C_MARKERS_TEMP = [];
+A3C_HC_DISBANDED = [];
+
+
+A3C_SELECTED_UNITS = [];
+A3C_FLEXMARKERS =[];
+A3C_BPICONS = [];
+A3C_BPMARKERS = [];
+A3C_HC_TOSWITCH = [grpNull,-1];
+A3C_DIR_POS = [0,0,0];
+A3C_INF_MARKERS =
+[
+	'A3C_Marker_BUILDING',
+	'A3C_Marker_WAYPOINT',
+	'mil_dot','waypoint',
+	'mil_objective',
+	'mil_circle',
+	'mil_pickup',
+	'A3C_Marker_PICKUP_GROUND',
+	'A3C_Marker_DROPOFF_GROUND',
+	'A3C_Marker_LANDING',
+	'selector_selectedMission',
+	'A3C_Marker_SMOKE',
+	'A3C_Marker_HCWP',
+	'A3C_Marker_TIMEOUT',
+	'empty'
+
+];
+
+
+A3C_AIR_MARKERS =
+[
+	'A3C_Marker_WAYPOINT',
+	'A3C_Marker_PICKUP_AIR',
+	'A3C_Marker_DROPOFF_AIR',
+	'A3C_Marker_LANDING',
+	'A3C_Marker_Rappel',
+	'A3C_Marker_SlingDrop',
+	'A3C_Marker_Paradrop'
+]; //~~ add 'A3C_Marker_SlingLoad'! but spawn new selection
+
+A3C_GCD_MARKERS =
+[
+	'A3C_Marker_GoCode_A',
+	'A3C_Marker_GoCode_B',
+	'A3C_Marker_GoCode_C',
+	'A3C_Marker_GoCode_D'
+];
+
+
+//----------------  V A L U E S   A N D   A R R A Y S   F O R   H U D   M O D E  -------------
+//------------------------------------------------------------------------------------------------------
+
+
+
+A3C_HUD_Snap = false;
+
+A3C_HUD_FORM = 0; // 0 = Line, 1 = L-Form
+A3C_HUD_SPACING = 2;
+A3C_SUPPRESSIONHEIGHT = 0;
+A3C_HUD_ARROW_TEXT_INDEX = 0;
+A3C_HUD_RADIUS = 0;
+A3C_HUD_RADIUS_MIN = 0;
+A3C_HUD_ARROW_TEXTCOUNT = 1;
+A3C_HUD_ARROWINDEX = 1;
+
+A3C_SCROLLTIME = time;
+A3C_FORMATION_DIR = [player,(screenToWorld [0.5,0.5])] call BIS_fnc_dirto;
+
+A3C_HUD_UNITS = [];
+A3C_HUD_ARROWS = [];
+A3C_HUD_DOWNKEYS = [];
+A3C_SPLIT_UNITS = [];
+A3C_TAKEN_WEAPONS = [];
+A3C_TAKEN_MAGS = [];
+// A3C_PATIENTS = [];
+// A3C_MEDICS = []; //-- #REMINDER: variable moved to group namespace to create access for any group
+A3C_DANGER_UNITS = [];
+
+
+A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = []; //-- Remfire Units: Indicator based (old)
+A3C_UI_RADIAL_Current_Remfire_Units = []; //-- Remfire Units: Radial
+A3C_UI_RADIAL_Current_Remfire_Vehicles = []; //-- Remfire Vehicles: Radial
+
+A3C_REMFIRE_nearEmptyStatics = [];
+
+A3C_BOOL_REMFIRE = false;
+A3C_BOOL_REMFIRE_SUP = false;
+A3C_REMFIRE_MAGTYPES = [];
+
+A3C_GTI_UNIT = objnull;
+A3C_REMFIRE_UNIT = objnull;
+
+
+
+// A3C_MEDICS_LB = [];
+// A3C_PATIENTS_LB = [];
+// A3C_MEDICS_ACTIVE = [];
+// A3C_PATIENTS_DESIGNATED = [];
+// A3C_PATIENTS_ASSIGNED = [];
+A3C_ROE3_UNITS = [];
+A3C_RadialMenu_KEY_ID = [-500,false,false,false];
+A3C_HUD_MENU_KEY_ID = [-500,false,false,false];
+
+
+A3C_MODIFIER_CTRL = false;
+A3C_MODIFIER_SHIFT = false; //-- not really a customizable modifier - just adding functionality to CT-TREE clicks
+A3C_MODIFIER_LOCK = false;
+A3C_MOUSEWHEEL_ACTIVE = false;
+A3C_HUD_ARROWS_IN_BUILDING = false;
+A3C_360_out = true;
+A3C_BOOL_ROE_3 = false;
+
+
+A3C_MAPTAB_OPENING_CONTEXTMENU = false;
+
+
+A3C_BOOL_STANCE_ICON_TRAVEL = false;
+profilenamespace setvariable ["A3C_HUD_STANCE_MODE_TRAVEL",profileNameSpace getVariable ["A3C_HUD_STANCE_MODE_TRAVEL", 4]];
+A3C_HUD_STANCE_MODE_TRAVEL = profileNameSpace getVariable "A3C_HUD_STANCE_MODE_TRAVEL";
+A3C_HUD_STANCE_ICON_COLOR_TRAVEL = [1,1,1,1]; //~~no longer needed
+A3C_HUD_STANCE_ICON_TRAVEL= "A3C_CORE\ui\pictures\icon_menu_stance_NoChange.paa";
+
+
+
+A3C_BOOL_STANCE_ICON_DESTINATION = false;
+profilenamespace setvariable ["A3C_HUD_STANCE_MODE_DESTINATION",profileNameSpace getVariable ["A3C_HUD_STANCE_MODE_DESTINATION", 4]];
+A3C_HUD_STANCE_MODE_DESTINATION = profileNameSpace getVariable "A3C_HUD_STANCE_MODE_DESTINATION";
+A3C_HUD_STANCE_ICON_COLOR_DESTINATION= [1,1,1,1]; //~~no longer needed
+A3C_HUD_STANCE_ICON_DESTINATION= "A3C_CORE\ui\pictures\icon_menu_stance_NoChange.paa";
+
+profileNamespace setvariable ["A3C_EHM_DIR",0];
+
+
+
+
+
+A3C_HUD_GOCODE_ICON = "A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa";
+
+
+//A3C_HUD_STANCE_FINAL = "AUTO";
+
+A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
+A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
+A3C_HUD_FORM_ICON_SIZE = 0.8;
+
+A3C_HUD_SPEED_ICON_COLOR = [1,1,1,0.5];
+A3C_HUD_SPEED_ICON_SIZE = 0.8;
+//A3C_HUD_FORM_ICON_SIZE = 0.8;
+
+
+profileNameSpace setVariable ["A3C_HUD_OBJECTS",profileNameSpace getVariable ["A3C_HUD_OBJECTS",true]];
+
+profilenamespace setvariable ["A3C_NUM_VAR",profileNameSpace getVariable ["A3C_NUM_VAR", true]];
+profilenamespace setvariable ["A3C_SKILL_VAR",profileNameSpace getVariable ["A3C_SKILL_VAR", true]];
+profilenamespace setvariable ["A3C_MAP_VAR",profileNameSpace getVariable ["A3C_MAP_VAR", true]];
+//profilenamespace setvariable ["A3C_MAP_CtrlPos",profileNameSpace getVariable ["A3C_MAP_CtrlPos", []]];
+profilenamespace setvariable ["A3C_MAP_KEY_ID",profileNameSpace getVariable ["A3C_MAP_KEY_ID", [46,[false,false,false]]]];
+
+profilenamespace setvariable ["A3C_ORDER_REG_KEY_ID",profileNameSpace getVariable ["A3C_ORDER_REG_KEY_ID", [57,[false,false,false]]]];
+profilenamespace setvariable ["A3C_ORDER_FW_KEY_ID",profileNameSpace getVariable ["A3C_ORDER_FW_KEY_ID", [57,[false,true,false]]]];
+profilenamespace setvariable ["A3C_ORDER_BW_KEY_ID",profileNameSpace getVariable ["A3C_ORDER_BW_KEY_ID", [57,[false,false,true]]]];
+profilenamespace setvariable ["A3C_FORCERAIL_VAR",profileNameSpace getVariable ["A3C_FORCERAIL_VAR", false]];
+
+profilenamespace setvariable ["A3C_HUD_RES_VAR",profileNameSpace getVariable ["A3C_HUD_RES_VAR", true]];
+
+profilenamespace setvariable ["A3C_SUP_RESTRICTIVE",profileNameSpace getVariable ["A3C_SUP_RESTRICTIVE", ["UNLIMITED",0]]];
+profilenamespace setvariable ["A3C_SUP_VAL_MAGAZINE",profileNameSpace getVariable ["A3C_SUP_VAL_MAGAZINE", 1]];
+profilenamespace setvariable ["A3C_SUP_VAL_PERCENTAGE",profileNameSpace getVariable ["A3C_SUP_VAL_PERCENTAGE", 25]];
+profilenamespace setvariable ["A3C_SUP_VAL_TIME",profileNameSpace getVariable ["A3C_SUP_VAL_TIME", 30]];
+
+profilenamespace setvariable ["A3C_HUD_MENUSHOW_VAR",profileNameSpace getVariable ["A3C_HUD_MENUSHOW_VAR", true]];
+profilenamespace setvariable ["A3C_HUD_MENUOVERRIDE_VAR",profileNameSpace getVariable ["A3C_HUD_MENUOVERRIDE_VAR", true]];
+
+A3C_HUD_GOCODE_ICON_COLOR = if (profilenamespace getvariable "A3C_HUD_MENUOVERRIDE_VAR") then {[1,1,1,0.2]} else {[1,1,1,0.7]};
+
+profilenamespace setvariable ["A3C_HUD_SPEED_VAR",profileNameSpace getVariable ["A3C_HUD_SPEED_VAR", -1]];
+profilenamespace setvariable ["A3C_TABLET_IMG",profileNameSpace getVariable ["A3C_TABLET_IMG", "A3C_CORE\ui\pictures\BG_Tablet_Tough.paa"]];
+
+profileNamespace setVariable ['A3C_HUD_isOpen',false];
+profilenamespace setvariable ["A3C_HUD_GOCODE_VAR","NONE"];
+
+profilenamespace setvariable ["A3C_HUD_LAYOUT_CORNER",profileNameSpace getVariable ["A3C_HUD_LAYOUT_CORNER", false]];
+profilenamespace setvariable ["HC_GROUP_RESPONSE",profileNameSpace getVariable ["HC_GROUP_RESPONSE", false]];
+
+profilenamespace setvariable ["A3C_AUTOMEDIC",profileNameSpace getVariable ["A3C_AUTOMEDIC", false]];
+
+if (isServer) then { //-- ONLY RELEVANT FOR HOSTING MACHINE - DEDICATED EXITED EARLIER IN SCRIPT. Variable is only tested by server monitor
+	A3C_isHCSkillMaxed = if (!isNil 'A3C_isHCSkillMaxed') then {A3C_isHCSkillMaxed} else {profileNameSpace getVariable ["A3C_SKILL_VAR",true]}; //-- SKILL MP
+};
+
+
+
+A3C_HUD_SPEED_ICON = if ( (profilenamespace getvariable "A3C_HUD_SPEED_VAR") == -1) then {"A3C_CORE\ui\pictures\icon_menu_speed_full.paa"} else {"A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa"};
+
+
+A3C_DATA_REMOTE_AMMO = [];
+{
+	//A3C_DATA_REMOTE_AMMO pushBack (configname _x);
+	_ammo = getText (configfile >> "CfgVehicles" >> configName _x >> "ammo");
+	_trigger = getText (configfile >> "CfgAmmo" >> _ammo >> "mineTrigger");
+	if (_trigger == "RemoteTrigger") then {
+		A3C_DATA_REMOTE_AMMO pushBack
+		[
+			configName _x,
+			getText (configfile >> "CfgVehicles" >> configName _x >> "displayName"),
+			_ammo
+		];
+	};
+} foreach ("true" configClasses (configFile >> "CfgVehicles"));
+
+
+//---------------------------  R A D I A L   V A L U E S   A N D   A R R A Y S  ------------------------
+//------------------------------------------------------------------------------------------------------
+
+BV_GREN = 0;
+BV_ROE = 0;
+BV_BRAIN = 0;
+BV_FORM = 0;
+BV_STANCES = 0;
+BV_ITEMS = 0;
+BV_VEHS = 0;
+BV_MEDICAL = 0;
+BV_CBMODE = 0;
+
+
+
+BV_LB1 = 6;
+BV_LB2 = 7;
+BV_STANCES = 0;
+BV_ACT = 0;
+
+BV_RINGFORM = 0;
+
+
+
+A3C_RD_UNITS = [];
+
+A3C_AI_GREN_ARRAY = [];
+
+A3C_RADIAL_VEH_KIND = "CAR";
+
+A3C_RD_BOOL_UNITS = true;
+
+
+A3C_Prevent_attach_IR = false;
+A3C_Prevent_attach_IR_Laser = false;
+A3C_Prevent_attach_Flashlight = false;
+A3C_Prevent_attach_Silencer = false;
+A3C_Prevent_attach_NVG = false;
+A3C_Prevent_SwitchWeapon = false;
+
+
+//-- DEBUG
+RED_LINES = [];
+GREEN_LINES = [];
+BLUE_LINES = [];

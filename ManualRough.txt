@@ -1,0 +1,3140 @@
+     
+[Music]
+     
+hello my name is Lukas, I go by e in the community we briefly met
+     
+at Gamescom Cologne in      which I
+     
+really enjoyed and also thanks a lot for
+     
+this amazing USB stick it's great and
+     
+can make for some really fun situations
+     
+at international airports we discussed
+     
+armas a ILO but as well as an old
+     
+project of mine entitled c 
+     
+command-and-control i stopped its
+     
+development two years ago and began
+     
+working on its more serious successor
+     
+this project is entitled ARMA Command I
+     
+am driven to pitch this project for the
+     
+community DLC program but before I do
+     
+that I'd love to ask for your advice
+     
+what would you do to improve the product
+     
+and do you think ARMA Command is a
+     
+realistic candidate for the DLC program
+     
+which might be aiming more towards
+     
+in-game content ARMA Command in a
+     
+nutshell as an AI commanding suite for
+     
+ARMA   and it's shaped through seven
+     
+years of research and the feedback of a
+     
+very engaged beta testing community the
+     
+beta has been locked down for the last
+     
+two years but a lot of what I'm showing
+     
+you right now only the core team of four
+     
+people even know about a little bit of
+     
+project background I am actually not
+     
+much of a gamer and definitely not much
+     
+of a programmer I personally gravitate
+     
+to milsim themed games that let you
+     
+assume both the role of a commander as
+     
+well as the more action latin experience
+     
+of a soldier in combat the game that
+     
+opened my eyes to this was the original
+     
+Ghost Recon title and what you see in
+     
+this shot is a recreation of the moment
+     
+that got me completely hooked    years
+     
+ago other games like Rainbow six Raven
+     
+shield or brothers and arms and also
+     
+full spectrum warrior all had some great
+     
+assets that I loved there was always
+     
+some caveats to these games finally in
+     
+     I saw a YouTube clip of ARMA  
+     
+scales completely opened pretty solid AI
+     
+and really nice graphics I then got into
+     
+mission editing and scripting and in
+     
+     this project actually started as a
+     
+feature for a stealth mission before it
+     
+became the fleshed out commanding suite
+     
+that it is today
+     
+ARMA Command aims to enrich the
+     
+experience of any player leading AI
+     
+units be it on squad or high command
+     
+level by adding AI abilities actions and
+     
+behaviors delivered through rich and
+     
+context-sensitive user
+     
+interfaces in short ARMA Command aims to
+     
+make AI command an ARMA   more complex
+     
+more intuitive and also faster so let's
+     
+jump right into it I try my best to keep
+     
+this videos snappy but since it's still
+     
+rather long I added a detailed table of
+     
+contents with time codes to the
+     
+description so are you guys ready for
+     
+some fun all right let's go ARMA Command
+     
+and ARMA itself share the same basic
+     
+commanding structure that will be to
+     
+commanding levels which are a squad
+     
+level and high command level and then
+     
+each of those consists of two components
+     
+which would be the  d or Hut component
+     
+on one hand and then the map planning
+     
+component on the other hand so we're
+     
+going to look at each of these
+     
+commanding levels starting off with
+     
+squat level and it's  d or HUD mechanics
+     
+squat level movement in  d or HUD
+     
+consists of two main elements first off
+     
+we have the actual indicator objects
+     
+which provide a lot of visual feedback
+     
+on how and where exactly a unit is going
+     
+to position itself you can rotate the
+     
+formation using mouse wheel and you can
+     
+change your spacing by holding down
+     
+control and using mouse wheel a little
+     
+background about these indicators these
+     
+are inspired by two games that are
+     
+already mentioned full-spectrum Warrier
+     
+and Gulf streaked on specifically
+     
+Advanced Warfighter both of these games
+     
+are not very popular but they really got
+     
+me because of these very indicators and
+     
+the problem that they address is that
+     
+while you do get a reasonable level of
+     
+control over individual unit selections
+     
+in Arma itself this precision gets lost
+     
+once you start ordering around a bigger
+     
+selection of units because if you do
+     
+that the AI is going to move to the
+     
+position and then stand there
+     
+information which typically leaves them
+     
+very very vulnerable and this is
+     
+addressed by giving the players the
+     
+ability to arrange their units snap them
+     
+to the environment or any cover objects
+     
+outside of buildings inside of buildings
+     
+whatever the situation might ask for and
+     
+this turns out to be the first feature
+     
+with a major major positive effect on
+     
+the AIS life expectancy which is really
+     
+my Big Sight goal for this entire
+     
+project basically to get them to a state
+     
+where a human player can appreciate them
+     
+more as the asset that I think they
+     
+really are there's two versions of these
+     
+indicators available the mark one
+     
+resembles the full spectrum
+     
+warrior-type feel while the mark   is
+     
+just VR units that also mirror the
+     
+unit's gear and display the stance that
+     
+a unit will take upon arrival these
+     
+indicator objects also have icons
+     
+attached to them which display the units
+     
+team color and become visible at about
+     
+   meters of distance these are really
+     
+useful if you can't see the objects they
+     
+might for example be inside of a
+     
+building or just very far away this way
+     
+even in subpar situations you still get
+     
+a visual idea about your current
+     
+selection there's multiple ways to
+     
+select units in Hut mode selecting
+     
+individual units it's almost the same as
+     
+it is in vanilla ARMA the only
+     
+difference here being that you also have
+     
+to hold down control so in order to
+     
+select unit number two in Hut mode you
+     
+would hold down control and press f  to
+     
+give the order you simply hit space but
+     
+the real power of this lies in bulk
+     
+selection of units you can press forward
+     
+to select all units and you can also
+     
+select color teams   for team red   for
+     
+team green and so on there's two
+     
+additional ways to select units for Hut
+     
+mode which might be a little bit more
+     
+hidden first you can just look at a unit
+     
+hold down alt and ctrl and then
+     
+right-click for the record if you hold
+     
+down control and right-click it's going
+     
+to select that same unit in Arma space
+     
+and you can also use the radial menu
+     
+which unfortunately I have to spoil here
+     
+a little bit you can open the radials
+     
+unit selectors make your selection and
+     
+then right-click on any button to
+     
+convert that selection to Hut mode now
+     
+that we have the indicators and
+     
+selection out of the way let's look at
+     
+the second element which is the
+     
+interactive UI it basically functions as
+     
+a visual feedback mechanic at all times
+     
+unless you don't want it to but if you
+     
+hold down shift it becomes interactive
+     
+and you can actually change the settings
+     
+you can either use left or right mouse
+     
+button to cycle through the settings but
+     
+for those settings with multiple options
+     
+you can also use your mouse wheel which
+     
+might be a little bit faster the first
+     
+control is travel stance the second
+     
+control is travel speed basically just
+     
+regular and diminished and the third one
+     
+is the stance that the unit will take
+     
+upon arrival so as an example we're
+     
+gonna have all our units run over there
+     
+and then crouch once they arrive the big
+     
+icon in the middle of the UI is called
+     
+the form sector icon and it does two
+     
+different things you can see both the
+     
+unit formation and
+     
+sector reflected in this icon for
+     
+example you can see that right now the
+     
+units are covering a firing sector to my
+     
+right or to my front so again in
+     
+combination with the indicator objects
+     
+and indicator icons this helps you to
+     
+get a solid idea about the current state
+     
+of your plants even in sup ideal
+     
+situations if the UI is engaged you get
+     
+access to a small array of form sector
+     
+formations first you have to line
+     
+formations one with a sector to the
+     
+right one with a sector to the left
+     
+these two are only really relevant if
+     
+you're trying to position your units in
+     
+the open if you snap one of these first
+     
+two line formations against a wall for
+     
+example this selection will
+     
+automatically be done for you next you
+     
+have another line information with a
+     
+sector facing to the front the purpose
+     
+of this is to enable your units to take
+     
+cover and fire over any small wall or
+     
+any other cover object then we have two
+     
+L formations one to the right one to the
+     
+left they were really useful before
+     
+snapping was implemented and maybe they
+     
+still are in regards of positioning your
+     
+units around a building corner for
+     
+example but I'm not completely sure and
+     
+they're just still there at the moment
+     
+staggered column on the other hand that
+     
+can be really practical
+     
+also when snapping to other objects or
+     
+walls and also when changing spacing you
+     
+can sometimes reach the magical fit for
+     
+some situations circle formation is
+     
+something that I really wanted and my
+     
+community encouraged me to do it at the
+     
+time this can be used to form up a
+     
+sector or an LZ or to protect something
+     
+and if you do not have to UI engaged you
+     
+can use your mouse wheel to change the
+     
+looking direction from outwards to
+     
+inwards you might use that to circle in
+     
+an escaped prisoner or maybe more
+     
+commonly to have your units form up
+     
+around an ammo crate for example the
+     
+last available formation has an add-on
+     
+dependency which is enhanced movement by
+     
+bat Benson if you're running that add-on
+     
+this formation becomes available and you
+     
+can quickly sent your units to an
+     
+obstacle and have them climb over it
+     
+the next UI element represents the
+     
+conditions and these are inactive at the
+     
+moment because we are in override mode
+     
+but we can change it from override to
+     
+adding mode which is going to keep
+     
+adding waypoints to that unit
+     
+effectively creating a route like you
+     
+would a map planning which we're going
+     
+to look at later but you're actually
+     
+doing it in  d space and you can see
+     
+that route or any other plans you make
+     
+in a hut mode reflected on the map as
+     
+well because the map planning system and
+     
+the
+     
+movement system are interconnected once
+     
+we are in adding mode the conditions
+     
+become available and we have access over
+     
+the array of go codes the last control
+     
+of the UI element is show or hide UI if
+     
+you choose to hide it you will only see
+     
+it as long as you hold down shift in
+     
+order to get access to the actual
+     
+controls and that concludes  d squat
+     
+level movement which is the first
+     
+component of squat level  d mode or
+     
+squat level Hut mode the second element
+     
+of hut mode for both squat and high
+     
+command levels is the radial menu this
+     
+menu is activated by pressing tab and
+     
+deactivated by releasing tab
+     
+the main purpose that I saw for making
+     
+this menu was that I do like these key
+     
+bind sequence based ARMA   default
+     
+commands but I was always wondering what
+     
+AI command would look like within a UI
+     
+and mouse interaction based framework
+     
+this menu is of course selection
+     
+dependent the first way you can select
+     
+units for the radial menu is just
+     
+selecting them in ARMA before you open
+     
+the menu if you open the radial menu
+     
+without any pre selection and you're
+     
+also not looking at a squat made it's
+     
+going to select all units automatically
+     
+if you are looking at a squat made when
+     
+you're opening the radial it will target
+     
+this one unit specifically but then in
+     
+order to get a slightly more dynamic
+     
+unit selection that also does not rely
+     
+on keybinds and the action menu you can
+     
+hover your mouse over the empty left
+     
+screen area and that will open the pop
+     
+up unit selectors the buttons work as
+     
+most button menus do you can select
+     
+individual units with left click and you
+     
+can also use shift to select multiples
+     
+or hold down control to add or remove
+     
+from a selection if your group size
+     
+exceeds the amount of available unit
+     
+selectors you can use these little
+     
+arrows to set the selector buttons to
+     
+different pages you can also use this
+     
+part of the menu to assign team colors
+     
+select some units hold down shift and
+     
+right click on any of the selected units
+     
+buttons then select your favorite color
+     
+and you can of course add or remove
+     
+entire color teams from your selection
+     
+by using the team color selectors in the
+     
+center of the menu
+     
+you also get an additional purple box to
+     
+select all units at once hopefully this
+     
+is a useful menu in general but the AI
+     
+actions are where it really shines now
+     
+they have streamlined controls there is
+     
+streamlined through squad and a high
+     
+command level they're fully
+     
+context-sensitive
+     
+and they have an automatic unit finder
+     
+if you're dealing with selections of
+     
+multiple units I'm going to take
+     
+through these actions one by one but
+     
+first let's look at the other functions
+     
+that the radial has to offer
+     
+the first section on squat level is the
+     
+RO YZ and they're fairly simple it's
+     
+really just three and a half the first
+     
+option is fire at will and that might as
+     
+well just be called default this will
+     
+make units engage depending on their
+     
+behavior and combat mode and the purpose
+     
+of this is to set a unit back to default
+     
+after using the next item which is fire
+     
+on target and this is different this
+     
+will effectively strip the AI of its
+     
+ability to auto target anything so if I
+     
+now spawn some virtual enemies my units
+     
+will ideally not engage it's not
+     
+bulletproof yet no pun intended
+     
+let's say we want to steal this car
+     
+there's three guards blocking it and
+     
+let's say this one guy over here
+     
+represents a bigger threat that is maybe
+     
+also a little bit further away in
+     
+reality we do not want to alert the
+     
+bigger threat which also implies that we
+     
+do not want to engage it as soon as I
+     
+order my AI to target any of these units
+     
+they will immediately open fire which is
+     
+a good segue into the next specific roee
+     
+which is fire on my lead this is a great
+     
+mechanic for an ambush type scenario for
+     
+example but in this case my units are
+     
+also set to fire on target and I can use
+     
+that to set up a slightly more
+     
+sophisticated sink shot scenario now
+     
+that they can't open fire I manually
+     
+order them to target two of these
+     
+enemies and as soon as I open fire on
+     
+the third they get the green light the
+     
+key feature here being of course that
+     
+the fourth enemy which we imagine to be
+     
+a little bit further away is not being
+     
+engaged and ideally also not yet alert
+     
+it this is a good example on how you can
+     
+combine these are ohi's for some
+     
+specific results fire at will resets the
+     
+targeting to default and last but not
+     
+least there's an option to engage or
+     
+disengage Auto combat which can be
+     
+fairly useful if you have to retreat
+     
+under fire section two of the radial
+     
+menu on squat level is the AI auto
+     
+functions first we get an option to
+     
+reset the looking direction the next
+     
+item is the simplified medical options
+     
+and the reason to have those is to give
+     
+the player a more visual idea of who is
+     
+about to heal whom you also get
+     
+streamlined selections for all medics
+     
+all healers and all patients the naming
+     
+might be a little bit confusing here but
+     
+a medic will be any unit that carries a
+     
+real medi-pack it doesn't need to have
+     
+the actual unit rate how
+     
+every healer will be any unit that
+     
+carries a first-aid kit and it's
+     
+important to consider that a first-aid
+     
+kit will be consumed while a medi-pack
+     
+will of course stay persistent in this
+     
+example two of my guys are hurt they
+     
+both carry a first-aid kit so if I would
+     
+tell all units to heal all units that
+     
+would mean that these units will heal
+     
+themselves because they do have healing
+     
+capabilities and they would lose those
+     
+capabilities after this action because
+     
+there are expending their first aid kit
+     
+however if I tell the medic to heal all
+     
+he can heal multiple patients at no
+     
+expense visit every patient and heal
+     
+them up on my one this considers of both
+     
+the medic and the patient are currently
+     
+information or stationery the medic will
+     
+also fall back into formation once
+     
+healing up all the patients if those
+     
+were his orders if he was stationary
+     
+before he will return to that position
+     
+that was the medical capabilities the
+     
+next two features of the AI auto
+     
+functions or maybe a little bit
+     
+misplaced at the moment you have the
+     
+option to set different behaviors and
+     
+combat modes to individual units within
+     
+our squad finally we have an option here
+     
+for AI rearming and as you will see
+     
+later this will have to be moved to the
+     
+AI actions section but this option has a
+     
+couple of very particular features to it
+     
+if you have multiple units selected only
+     
+the first of two options will be
+     
+available and that is showing you the
+     
+containers and what they have inside of
+     
+them but you do not have the option to
+     
+interact with those specific items if
+     
+you click on rearm all of your selected
+     
+units will run to that container and
+     
+perform an enhanced an automated rearm
+     
+action however if you use this action on
+     
+an individual unit you can either use
+     
+the same function or you can double
+     
+click on any of the containing items
+     
+which is going to make the unit run to
+     
+that container and pick up that item so
+     
+you can effectively create a route for
+     
+one unit to pick up items from different
+     
+containers a little bonus that you get
+     
+on individual unit selections is that
+     
+you can make the unit run to that crate
+     
+and then open its inventory giving you
+     
+easier access over how exactly to rearm
+     
+that unit the next section should be
+     
+fairly self-explanatory it's just unit
+     
+stances in a UI based delivery and now
+     
+that we have stances and resetting
+     
+looking Direction taken care of it is
+     
+important to note that there is a
+     
+right-click macro on the brain button
+     
+itself if you right-click on it all of
+     
+your selected units will reset their
+     
+lookin direction and their stance will
+     
+be set to auto if you right-click on the
+     
+main stances button you get access to
+     
+triggering any go code that a unit might
+     
+be waiting for you can use these goal
+     
+codes to synchronize movement within and
+     
+in-between of squad and high command
+     
+levels the next section covers the AI is
+     
+items or weapon items first we have an
+     
+option to attach or detach silencers by
+     
+clicking with left or right mouse button
+     
+respectively then in the same fashion we
+     
+have an option to engage or disengage
+     
+the eyes laser pointers keep in mind
+     
+that this also has to force the AI into
+     
+combat behaviors so I recommend using
+     
+this with either Crouch or standing
+     
+stances then there is the option to
+     
+switch between primary and secondary
+     
+weapon which is mainly useful if your
+     
+unit decides to use by nose or his
+     
+secondary weapon and you actually wanted
+     
+to use the primary weapon finally there
+     
+is an option to attach or detach IR
+     
+strobes to your units the next section
+     
+covers squad AI boarding vehicles you
+     
+currently have four main vehicle classes
+     
+which are cars tanks helicopters and
+     
+jets you might have realized that ships
+     
+are missing so for the moment I work
+     
+those into the cars section the radial
+     
+option is fairly useful to board
+     
+different AI to different vehicles
+     
+quickly selecting the unit with the
+     
+selector buttons and then quickly
+     
+finding the correct vehicle before
+     
+boarding the selected AI to specific
+     
+seats of that vehicle right-clicking on
+     
+the main vehicle button will make the
+     
+selected units dismount from any
+     
+vehicles next we have the refresh button
+     
+which has three different applications
+     
+the first one is not to get too
+     
+technical that there's certain things
+     
+that I'm forced to do that can't for
+     
+example clash with a mission joining a
+     
+lot of units to your squad and that
+     
+might result in for example the unit
+     
+selector is not displaying your group
+     
+correctly anymore in that case all you
+     
+have to do is hit the refresh button
+     
+with your left mouse button and your
+     
+group will be rescanned and displayed
+     
+correctly refreshing also reestablishes
+     
+a numeric order for your squad shoot you
+     
+have lost some units in battle
+     
+right-clicking on the refresh button
+     
+will call your selected units back into
+     
+formation but it also addresses a couple
+     
+of potential problems that might happen
+     
+during a mission for example one thing
+     
+that might happen is that a mission
+     
+designer runs a stop command on your
+     
+squad and if that happens your units
+     
+will no longer be able to fall back this
+     
+is also addressed in the radials
+     
+fallback function so even though I'm
+     
+personally very used to our muscle
+     
+one one key binds this has proven to be
+     
+crucial especially in some multiplayer
+     
+situations where you lose that kind of
+     
+control over you units and you can use
+     
+this function to restore it full control
+     
+if you hold down shift and right click
+     
+on the refresh button you will unstuck
+     
+your selected units this will teleport
+     
+your units to a closeby empty position
+     
+and of course it's a little bit emerged
+     
+in braking but it can be desirable if
+     
+you have units stuck in a building for
+     
+example the next section covers GTI
+     
+precision grenades it is important to
+     
+note that this feature was written by
+     
+Zappa the creator of get tactical
+     
+interface it gives you a visual
+     
+reference of the throwing vector and you
+     
+can use it to easily put a grenade
+     
+through a door or a window this feature
+     
+is also available for your players
+     
+character by default using the H key for
+     
+the player will just throw the grenade
+     
+that you currently have selected and in
+     
+the radial you can cycle through an AI
+     
+scary grenade types using your right
+     
+mouse button if you want to cancel this
+     
+action simply let go of tab to confirm
+     
+it's spacebar and now it's finally time
+     
+to look at the real MVP of the radio
+     
+menu this would be as I mentioned before
+     
+the new context-sensitive AI action
+     
+section the first reason behind having
+     
+these actions is again to give an
+     
+alternative commanding structure to any
+     
+player who may find himself confused by
+     
+the action section of ARMA   ski bind
+     
+based commanding menu but the main
+     
+purpose is of course the attempt to add
+     
+some immersive behavior patterns and
+     
+routines for the AI that the player
+     
+might be craving and he may or may not
+     
+have access to via ARMA  's default
+     
+command I'm going to demonstrate some of
+     
+the actions through a squat level and
+     
+then later demonstrate some others
+     
+through high command the first action is
+     
+available because I have infantry units
+     
+in my selection and that is find cover
+     
+this function to a degree depends on
+     
+enemy presence because it does look for
+     
+some enemies to take cover from but even
+     
+without enemy presence the units will
+     
+move to a nearby wall building or other
+     
+cover object the next action which is to
+     
+assemble a static weapon as available
+     
+because two of my units do actually
+     
+carry the backpacks that are required to
+     
+assemble a static mg if I use this
+     
+action at toggles a selection box I
+     
+select the static mg which then spawns
+     
+the according vehicle that I can drag
+     
+around and rotate with my mouse wheel
+     
+and if I'm happy with the position I
+     
+ferm by hitting spacebar this will of
+     
+course make your units move to that
+     
+position before assembling and mounting
+     
+that static weapon facing in the correct
+     
+direction since you need two units to
+     
+assemble a static weapon and only one of
+     
+them can mount it the other unit will
+     
+position himself behind that weapon in
+     
+order to not be in the line of fire
+     
+and just as a site note all of these
+     
+assembling mechanics are compatible with
+     
+IFA three or fo 
+     
+which uses secondary weapons instead of
+     
+backpacks the next action that's
+     
+available could be called suppression or
+     
+just firing at a position this system
+     
+was previously key bind based but it
+     
+made a lot more sense to embed it with
+     
+the new streamlined AI actions of the
+     
+radial menu
+     
+I'm opening the radial menu by holding
+     
+down tab and I select the mg gunner now
+     
+I select the suppression option and drag
+     
+the little icon to my desired position
+     
+all while still keeping tab pressed down
+     
+of course looking at this rock formation
+     
+I confirmed by hitting spacebar and the
+     
+unit will start firing at that position
+     
+and now that he's doing that you get a
+     
+new action to cancel suppression and
+     
+that will make him stop firing and since
+     
+we're talking about suppression right
+     
+now I would like to show you another
+     
+menu that you have at your disposal even
+     
+though it's not a part of the radial
+     
+menu itself to open this menu hold down
+     
+alt and hit T there's two components to
+     
+this menu first on the bottom right of
+     
+the screen you see the suppression
+     
+settings this is where you can set some
+     
+exit conditions for suppression
+     
+unlimited is going to require you to
+     
+manually cancel the action but you could
+     
+also use the percentage of used ammo or
+     
+the amount of used magazines or the
+     
+amount of time elapsed the second
+     
+feature of this menu is that you can
+     
+also use it to draw a suppression zone
+     
+over the screen with your left mouse
+     
+button then confirm or cancel your
+     
+orders using the controls on the bottom
+     
+right this menu is of course inspired as
+     
+most of you will know by VBS and I do
+     
+want to get a little bit more in depth
+     
+developing these controls and also
+     
+making them available for high command
+     
+for example now that we assembled a
+     
+static weapon and used it to fire at a
+     
+specific position it's time to pack it
+     
+up again if I do not look at the unit
+     
+when I open the menu I will be asked to
+     
+select the weapon that I want to
+     
+disassemble but if I do look at the unit
+     
+when I open the menu it will
+     
+automatically select that weapon for me
+     
+the next action is ordering the AI to
+     
+place explosives you can run this on
+     
+bigger selections of units without
+     
+having to worry about who actually has
+     
+the charges so here I use the axe
+     
+and I find a position in the open I then
+     
+confirmed by hitting spacebar and then I
+     
+select the ie D this will make the unit
+     
+run to that position execute his orders
+     
+and then either return to formation or
+     
+its previous position now that he's done
+     
+with that I will repeat the same process
+     
+but this time I'll be looking at a
+     
+vehicle while confirming the order you
+     
+may note that I now only get a selection
+     
+of charges that can be detonated
+     
+remotely I select the explosive charge
+     
+and the unit runs to the back of the car
+     
+and attaches the charge to that car
+     
+before of course returning to its
+     
+previous position if you had AI on
+     
+either squad or a high command level
+     
+placed down explosive charges you get
+     
+access to a new action which is manage
+     
+explosives and this gives you the option
+     
+to see and separately detonate all of
+     
+the charges for any AI under your
+     
+command I first choose the IAD on its
+     
+own and I then choose detonate all
+     
+charges which now really only affects
+     
+the explosive charge next there's a few
+     
+very exciting AI actions that are all in
+     
+the realm of remote firing at this point
+     
+you should be fairly confident with the
+     
+radial menus control mechanic of
+     
+canceling by letting go of tab or
+     
+confirming by hitting spacebar and
+     
+eventually making a listbox selection
+     
+the same applies for all of these remote
+     
+firing actions but one last time I'll
+     
+open the radial with all units selected
+     
+I then select the UGL shot option a look
+     
+at the position that I desire and then I
+     
+confirm by hitting spacebar which is
+     
+automatically going to select the best
+     
+unit to fire at that position taking
+     
+this concept a little bit further you
+     
+also have a remote    shot available
+     
+this action respects the difference
+     
+between guided and unguided rocket types
+     
+so if you tell an AI with a guided
+     
+rocket to fire at a moving vehicle this
+     
+vehicle will of course be locked and
+     
+traced there's two more actions that are
+     
+exclusively available on squad level and
+     
+both of these are only available for
+     
+individual unit selections if I open the
+     
+radial menus actions while being sure
+     
+that I only have one unit selected I can
+     
+access the open inventory action this
+     
+will simply make the AI show you its
+     
+inventory but you can also see two extra
+     
+combo boxes in the top of the menu this
+     
+action is very work in progress but the
+     
+idea is to give the player dynamic
+     
+access over the rearming sources and the
+     
+receiving units if you use the inventory
+     
+action on a unit that is no further away
+     
+from you than   meters your players
+     
+character
+     
+gets to interact with that units
+     
+inventory meaning that you can for
+     
+example take your friends watch which is
+     
+not okay so you're going to give it back
+     
+this ammo crate actually has Arsenal
+     
+added to it any individual unit
+     
+selection that is closer than    meters
+     
+to any vehicle that has Arsenal added to
+     
+it will get access to the action you'll
+     
+be prompted to let go of tap if you
+     
+haven't done so already and now you can
+     
+use virtual Arsenal on your AI squad
+     
+members
+     
+you also get an additional combo box
+     
+that you can use to switch to any AI
+     
+squad members or even yourself once you
+     
+exit virtual Arsenal it will be switched
+     
+back to your original unit and wrapping
+     
+up the radial menu on squat level if you
+     
+hover your mouse over the empty area in
+     
+the top of the screen another control
+     
+panel pops up which you can use to
+     
+change your groups formation there's one
+     
+last mechanic in Hut mode that I want to
+     
+show and that's the formation drawing
+     
+system to open this menu hold down shift
+     
+and press F and for mysterious reasons
+     
+you have to do it twice the first time
+     
+the red dot in the middle of the screen
+     
+represents the player's position and all
+     
+the other dots have a spacing of one
+     
+meter so this is a top-down
+     
+representation of the player's
+     
+surroundings and you can now select team
+     
+colors and draw any shapes at any
+     
+positions that you like before you hit
+     
+the big activate formation button close
+     
+the menu by hitting escape and since the
+     
+units were information to begin with
+     
+they are now assuming their new
+     
+positions to return to regular
+     
+formations open the menu again and
+     
+disengage your custom formation you can
+     
+also position your units in  d space
+     
+open the formation manager then engage
+     
+the custom formation before actually
+     
+regrouping so this was a very in-depth
+     
+look at Hut mode on squat level and we
+     
+can finally move on to squat level map
+     
+planning which after all is how this
+     
+entire project started seven years ago
+     
+map planning addresses the issue of
+     
+usually not having a waypoint system
+     
+available for your AI on squat level and
+     
+this essentially means that if you want
+     
+to do anything strategic via the map
+     
+you're gonna have to micromanage a lot
+     
+map planning aims to help automate some
+     
+of that micromanagement while combining
+     
+it with the vast functionality of ARMA
+     
+commands actions we already had to map
+     
+open before and you may have recognized
+     
+the big overlay box in the bottom center
+     
+of the screen as far as the actual UI
+     
+design we're in the process of totally
+     
+overhauling this but the functionality
+     
+of the menu is pretty solid in the
+     
+current state you can show and hide this
+     
+overlay box by hitting the C button
+     
+which will be stored in your profile so
+     
+if you close it one
+     
+it won't show again in any mission until
+     
+you choose to open it again the
+     
+functionality of the unit selector
+     
+buttons and the team color selectors are
+     
+exactly the same as they are in the
+     
+radial menu except that here you don't
+     
+also have to hold down shift if you
+     
+right click on a button to change the
+     
+unit's team color you can also select an
+     
+individual unit by right-clicking on its
+     
+unit icon or you can drag a selection
+     
+box over multiple units to add or remove
+     
+them from your selection select the unit
+     
+click anywhere on the map and keep your
+     
+left mouse button pressed down as you
+     
+drag the pop-up arrow to any direction
+     
+you want the AI to look at releasing
+     
+your left mouse button creates a
+     
+waypoint for that unit with a little
+     
+vision cone that represents the looking
+     
+direction you can adjust the Waypoint
+     
+position by dragging the marker around
+     
+with your left mouse button and you can
+     
+do the same with the vision cone you can
+     
+further move the Waypoint markers over
+     
+any building which will make them snap
+     
+to any of the available building
+     
+positions you can synchronize the
+     
+waypoints of multiple units by holding
+     
+down ctrl and dragging a line from one
+     
+units Waypoint to the other units
+     
+Waypoint if you drag the line between
+     
+two waypoints at the same unit you will
+     
+create a waypoint loop the units however
+     
+are not moving yet because the waypoints
+     
+are still in planning stage to confirm
+     
+the orders either hit space or hit the
+     
+commit button which is a lot larger than
+     
+you might think as a little easter egg
+     
+boats and stds or help getting off the
+     
+shoreline to prevent them from getting
+     
+stuck anyway point that you give is
+     
+dependent on the current Waypoint
+     
+settings and these are reflected in the
+     
+top bar of the overlay as with the hut
+     
+UI you can left-click on a button before
+     
+choosing your sub selection or you can
+     
+use your mouse wheel as a faster
+     
+alternative the first three options are
+     
+the same as they are in the hut mode
+     
+that will be travel stance travel speed
+     
+and stance upon arrival the next setting
+     
+is a combat mode which is either default
+     
+or disengaged and disengage is inspired
+     
+by what used to be called at all cost
+     
+in the original Ghost Recon series the
+     
+AI will ignore its own well being and
+     
+execute any movement orders as well as
+     
+it can at all costs the next available
+     
+option is definitely one of map
+     
+planning's most powerful features and
+     
+these are the squad level Waypoint
+     
+actions this takes those AI actions from
+     
+the radial menu that fit into the map
+     
+planning framework and works it into the
+     
+Waypoint system the action selection is
+     
+context-sensitive and it is good to keep
+     
+in mind that some actions only become
+     
+available for individual unit selections
+     
+while others like static weapon
+     
+only become available for selections of
+     
+multiple units as one example I'm going
+     
+to select unit to put down one Waypoint
+     
+and then for the next Waypoint I'm going
+     
+for the grenade action this opens up a
+     
+sub selection where I can select the
+     
+grenade type and now I just click on the
+     
+map position that I want the AI to throw
+     
+the grenade at the reasons of
+     
+streamlining the action is reset after
+     
+using certain actions because it turns
+     
+out to be more practical to sometimes
+     
+repeat an order versus having to turn it
+     
+off every single time and I'll put down
+     
+a final Waypoint and confirm by hitting
+     
+spacebar or clicking on the button the
+     
+unit moves to its first Waypoint and
+     
+there it will throw the grenade at the
+     
+desired position before moving on to the
+     
+final Waypoint keep in mind that the
+     
+maximum throwing distance for an AI is
+     
+about    meters I'm gonna demonstrate
+     
+some of the further actions as we go
+     
+along but for some of those it's
+     
+important to understand some of the
+     
+other controls the next available option
+     
+is formations it's grayed out by default
+     
+and it becomes active once you have
+     
+multiple units selected and these might
+     
+be a little bit abstract to begin with
+     
+but they become familiar fairly quickly
+     
+the first one is just a line and it's
+     
+orientation depends on your set looking
+     
+Direction the units will line up behind
+     
+the selected position and while the
+     
+first unit is going to look exactly at
+     
+the set looking Direction the other
+     
+units will cover a firing sector of    
+     
+degrees right now that's only available
+     
+on the relative right until I tested out
+     
+some ideas how I can maybe streamline
+     
+this a lot more if the waypoints do not
+     
+line up perfectly that means a script is
+     
+attempting to snap them against an
+     
+object and this is a not yet fully
+     
+developed attempt to address these
+     
+sometimes misleading marker sizes of
+     
+buildings and walls for example the next
+     
+option is in-line formation to the
+     
+relative right of the leader and in this
+     
+case all of these units will be facing
+     
+towards the set looking direction then
+     
+you get an option to align your units to
+     
+the relative left of the leader and then
+     
+next we have a split formation which you
+     
+can use to set up synchronized and
+     
+pretty sophisticated squat maneuvers via
+     
+the map planning controls fairly quickly
+     
+then finally you also have a circle
+     
+information available for the map
+     
+planning tools if that's selected you
+     
+can just click on the map and drag the
+     
+left mouse button upwards until you
+     
+reach the size of a circle that you
+     
+desire the next control is an edit box
+     
+which controls the spacing of the units
+     
+when using the lion formations and then
+     
+after that we have the Waypoint
+     
+conditions at the moment the icon says
+     
+go which is not to be confused with goat
+     
+coats in this case it means go now
+     
+the first available condition is a
+     
+timeout which opens up an edit box or
+     
+you can enter any desired timeout value
+     
+in seconds and then you get to forego
+     
+codes which again you can use the
+     
+synchronized movement on any command
+     
+level that you want at this point is
+     
+worth noting that certain waypoint
+     
+actions require a condition in order for
+     
+them to work properly this applies
+     
+especially suppression and sometimes
+     
+also to throwing smoke grenades because
+     
+if you have for example a route plant
+     
+with a suppression Waypoint that does
+     
+not have a condition that action will be
+     
+canceled right after being executed so
+     
+we need the condition to create some
+     
+sort of a time reference and that is why
+     
+if you forget to select the condition
+     
+and you go for the suppression action it
+     
+will default to go code D just to take
+     
+care of suppression and map planning
+     
+real quick once you click on the map to
+     
+select the position that you want to
+     
+suppress a firing polygon will display
+     
+the actual area that the units are going
+     
+to suppress if you move to polygon
+     
+center marker any actively suppressing
+     
+units will adjust their target in real
+     
+time you can also adjust the edge
+     
+markers of the polygon and you can also
+     
+hold down ctrl and drag your left mouse
+     
+button over the main center mark to
+     
+increase or decrease the total size
+     
+moving on with the functions next you
+     
+have an undo button for any place orders
+     
+and then finally you get a button to
+     
+delete Waypoint data for your unit
+     
+selection and it comes with three layers
+     
+simple left click on the button will
+     
+delete any planned waypoints for the
+     
+current unit selection Shift + left
+     
+click will delete the current planning
+     
+session and any orders that the units
+     
+might be currently carrying out and then
+     
+finally ctrl + left click will make the
+     
+selected units skip their current
+     
+Waypoint currently the refresh button in
+     
+this menu only has the functionality to
+     
+actually refresh your group which again
+     
+would be useful as something unexpected
+     
+happens and your unit selectors to not
+     
+display your group correctly these two
+     
+little arrows in the bottom right corner
+     
+of the overlay are gonna have to find a
+     
+new home pretty soon but you can use
+     
+these arrows to disband and rejoin units
+     
+to or from the soul called reserve this
+     
+essentially moves them to their own
+     
+group in a high command with the
+     
+difference to some of the high command
+     
+functions that we will look at later
+     
+being that you will always be able to
+     
+access those groups that you disbanded
+     
+from your own squad next to the reserve
+     
+control
+     
+you find an option to toggle the force
+     
+tracker the force tracker displays any
+     
+known groups that do not have the same
+     
+side as your player character you can
+     
+right click on an enemy's marker and
+     
+tell your selected units to engage that
+     
+target this will also be relevant later
+     
+when operating on the high command page
+     
+and then finally to the left side of the
+     
+reserved arrows you can see what
+     
+resembles a pause and a play button
+     
+these are also a part of the radial
+     
+menus unit selectors but you can see
+     
+what they do a little bit better here
+     
+they can be used to put the units in and
+     
+out of standby mode imagine you spend
+     
+quite a bit of time on making your plans
+     
+and the situation unexpectedly changes
+     
+as those plans are being carried out you
+     
+may not want to delete your plans
+     
+entirely but letting the AI carry out
+     
+their orders without any modification
+     
+can no longer guarantee their safety in
+     
+this case you can simply put them into
+     
+standby mode by hitting the pause button
+     
+and this will make the units find cover
+     
+and standby until you tell them to
+     
+continue with their orders by hitting
+     
+the play button in Hut mode you can
+     
+further use these functions in
+     
+combination with the add waypoints
+     
+option to time a waypoint route that you
+     
+created in  d space in the bottom left
+     
+corner of the overlay you can find
+     
+another button that currently displays
+     
+an infantry soldier and the reason why
+     
+it displays a soldier at the moment is
+     
+because we are currently operating on
+     
+the page for ground forces but if we
+     
+click on that button and will take us to
+     
+the second page which is a dedicated
+     
+page for aircraft within your squad and
+     
+the reason why I haven't mentioned these
+     
+command pages before is that I do have
+     
+intentions to merge these first squad
+     
+level based pages into one there's also
+     
+a high command page which you reach if
+     
+you click on that aforementioned button
+     
+again you can currently also use the one
+     
+two and three keys to select these pages
+     
+directly I restarted the demo and now I
+     
+have some new units in my squad that are
+     
+inside of a Huron helicopter I opened
+     
+the map again and it defaulted to the
+     
+ground forces page and you can see these
+     
+two new units being grayed out because
+     
+they are inside of an aircraft
+     
+I can still click on a pilot unit which
+     
+will also take me directly to the
+     
+aircraft control page note that the unit
+     
+spacing automatically changes to    
+     
+metres on this page this is to provide a
+     
+little more safety when moving multiple
+     
+aircraft the only difference is within
+     
+the command mechanics on this page is
+     
+that the travel stance has changed to a
+     
+waypoint flying height and the Waypoint
+     
+actions have been moved to the area that
+     
+was previously occupied by the stands
+     
+upon awry
+     
+there's four different flying Heights
+     
+available unfortunately since this page
+     
+is being shared by both helicopters and
+     
+planes I can only allow for maximum
+     
+flying height of     meters that's
+     
+because AI and the helicopters does no
+     
+longer operate properly at any altitudes
+     
+higher than this the lowest available
+     
+flying height is   meters and I would
+     
+absolutely advise against using that
+     
+except if you are in completely flat and
+     
+empty terrain the Waypoint actions on
+     
+this page are specific to aircraft but
+     
+they're more precisely tailored to work
+     
+for helicopters and vitals the first
+     
+helicopter action is pick up which will
+     
+make the AI give you a chat message and
+     
+perform a combat landing and at the
+     
+moment while it's landing you actually
+     
+have to use Armas onboarding mechanics
+     
+to assign your units to that helicopter
+     
+you can also assign yourself by looking
+     
+at the helicopter and using the action
+     
+menu the pilot now knows that he has to
+     
+wait for the assigned units to board
+     
+before continuing with this path as an
+     
+alternative you can also put down
+     
+waypoints for any foot soldiers and
+     
+synchronize those with any vehicles
+     
+pickup Waypoint the next Waypoint in
+     
+this example has a drop-off action
+     
+attached to it and this will unload any
+     
+units of your squad that are not
+     
+currently in any crew positions then
+     
+there is a rappel action and this is
+     
+only available if you're also running
+     
+the advanced rappelling add-on by duda
+     
+this function automatically detects
+     
+buildings and can be used to rappel you
+     
+units to preferably flat building roofs
+     
+and if the building has building
+     
+positions configured on top of that roof
+     
+the AI will be guided to those positions
+     
+after rappelling so they can snap to the
+     
+building's path lot if you're also
+     
+running the enhanced movement add-on the
+     
+units will also vault or climb over any
+     
+obstacle on that roof and as an easter
+     
+egg there's a special rappelling
+     
+behavior for vetoes that carry infantry
+     
+then we have a power drop action which
+     
+works for both infantry and vehicle
+     
+drops and then there's an automatic
+     
+sling load or sling drop action this
+     
+Waypoint action uses a slightly
+     
+different control mechanic that is also
+     
+used by some other Waypoint actions on
+     
+the ground forces page that I haven't
+     
+showed you yet since you do need to tell
+     
+it which object to load you need to
+     
+click on a map position and then drag
+     
+the marker on top of the pop-up icon of
+     
+the vehicle that you want to sling load
+     
+the pilot now has a waypoint plant that
+     
+contains a sling load Waypoint and if I
+     
+put down another Waypoint using the same
+     
+action it will automatically detect it
+     
+it now has two
+     
+drop cargo instead of loading it the
+     
+final Waypoint action for aircraft is of
+     
+course a full landing this will make a
+     
+helicopter or VTOL and as close to the
+     
+Waypoint position as it can and it will
+     
+make a jet land at the closest airfield
+     
+or aircraft carrier if it has the
+     
+capabilities to perform a tailhook
+     
+landing before wrapping up map planning
+     
+on squat level I do want to show you two
+     
+more Waypoint actions that are available
+     
+for ground troops
+     
+the first one is placing explosives and
+     
+this does need you to know what unit is
+     
+carrying the explosives and select that
+     
+unit individually you can now put down
+     
+the Waypoint and either drag the markers
+     
+somewhere in the open or drag it over
+     
+one of the pop-up vehicles to have the
+     
+unit attach its charge to that vehicle
+     
+the mechanic to detonate any of these
+     
+charges is of course the radial menu
+     
+finally we have the actions to assemble
+     
+or disassemble any static weapon if we
+     
+have any of these capabilities within
+     
+our selection to assemble a weapon
+     
+simply put down the Waypoint and drag
+     
+the pop-up arrow in the direction that
+     
+you want the weapon to face if you want
+     
+to disassemble a weapon via map planning
+     
+you currently have to manually order the
+     
+gunner out of the weapon first and this
+     
+will of course be addressed eventually
+     
+but you can send you units to collect an
+     
+empty static weapon by selecting the
+     
+action clicking on the map and then
+     
+dragging the marker over the weapons
+     
+pop-up icon there's two little bonus
+     
+features for map planning on squat level
+     
+you can select an individual unit and
+     
+then click and hold your left mouse
+     
+button on top of it and you can now drag
+     
+a detailed path across the map and as
+     
+soon as you let go of your left mouse
+     
+button the unit will start executing
+     
+this path this path drawing is only
+     
+available for individual unit selections
+     
+but you can also use the same mechanic
+     
+on a selection of multiple units and
+     
+then hold down shift which I'm not happy
+     
+with but it does give me the ability to
+     
+board my AI to any known vehicles one
+     
+last thing about map planning this
+     
+features started as a tablet dialogue
+     
+originally the tablet is still around
+     
+but since map planning has become the
+     
+clear priority as functions may not be
+     
+   % up-to-date so with this we finally
+     
+have the two components of squad level
+     
+which are  d or Hut mode on one hand and
+     
+map planning on the other hand taken
+     
+care of we can move on to the second
+     
+commanding level which is of course High
+     
+Command I created my own High Command
+     
+system because I had some issues when I
+     
+was trying to add to Armas existing one
+     
+especially when writing for multiplayer
+     
+since we've just been on the map we're
+     
+going to look at the map planning
+     
+High Command first one purpose of
+     
+embedding high command to the UI
+     
+structure of ARMA commence map planning
+     
+tool was again to add an alternative
+     
+control system that uses button
+     
+selectors and mouse click interaction
+     
+the other reason is just streamlining it
+     
+with my squat level map planning
+     
+mechanics you as the squat leader
+     
+already display the high command icon
+     
+for your group we did disband some units
+     
+to the reserve earlier and that unit is
+     
+also being displayed as a high command
+     
+group the easiest way to select a unit
+     
+is to right-click on its group icon this
+     
+automatically sets the map planning tool
+     
+to the high command page as well you can
+     
+of course also use the unit selector
+     
+buttons but at the moment we only have
+     
+one group under our command you can now
+     
+left click anywhere on the map to start
+     
+putting down waypoints for this group if
+     
+you want to override any sequence of
+     
+waypoints simply alt down alt or placing
+     
+down a new Waypoint and you can of
+     
+course modify any of your plans as you
+     
+wish the only group that we currently
+     
+see in high command is the group that we
+     
+disbanded from our squad but you can get
+     
+command access to all groups on your
+     
+side by carrying the tablet item which
+     
+comes with ARMA command in your
+     
+inventory this is how our my command
+     
+manages dynamic access to its High
+     
+Command features the real power of map
+     
+planning in High Command lies in its two
+     
+custom sub menus the first of these is
+     
+the group interaction menu and you can
+     
+open this by holding down ctrl and
+     
+right-clicking on a group icon here you
+     
+can quickly change the most essential
+     
+settings of the group such as behavior
+     
+combat mode formation and a custom team
+     
+color option for high command we can
+     
+change the stance of any infantry in
+     
+their group we can change the group's
+     
+name or we can rejoin that group to our
+     
+players squad and then on the right side
+     
+you get a context-sensitive selections
+     
+of actions that are available for that
+     
+group there's a maximum of    actions
+     
+but since these are a fairly
+     
+context-dependent
+     
+you barely ever get to see the second
+     
+row we're going to demonstrate most of
+     
+you High Command actions later when
+     
+showing the radial functions but some
+     
+actions are available for both map
+     
+planning and the radial menu and to work
+     
+a little bit different for each one
+     
+boarding the equals via the map for
+     
+example will show you pop-up icons for
+     
+any vehicle that the AI can board which
+     
+you can then click on to confirm the
+     
+order if you want to cancel this process
+     
+hold down ctrl and right click anywhere
+     
+on the map other actions such as
+     
+suppression or artillery fire require a
+     
+map click to relay the target position
+     
+and the artillery action in this case
+     
+will also prompt you to specify your
+     
+orders convoys and focus groups are
+     
+things that I'm going to address
+     
+a little bit later what if we made any
+     
+changes to the group's name or his
+     
+settings we can confirm those by hitting
+     
+the green button we can also right click
+     
+on any groups Waypoint which opens the
+     
+Waypoint interaction menu this menu
+     
+displays the group's name which you
+     
+cannot change but an X displays the
+     
+current Waypoint type which does give
+     
+you a selection the first combo box
+     
+contains the Waypoint conditions right
+     
+now there's no condition attached to
+     
+this Waypoint which means it will be
+     
+completed upon arrival we can change the
+     
+condition to either go codes time out or
+     
+any specific day time and this brings up
+     
+a second combo box which you can use to
+     
+specify your condition the next two
+     
+combo boxes can be used to adjust the
+     
+speed or information of the selected
+     
+Waypoint the most powerful feature of
+     
+the Waypoint menu is the action field
+     
+which you can open to get a
+     
+context-sensitive selection of the a is
+     
+available Waypoint actions these are
+     
+most of the actions that you already saw
+     
+on the other menus and they add another
+     
+level of depth to map planning on a high
+     
+command again certain actions such as
+     
+suppression require a condition and
+     
+since you may want to use the Waypoint
+     
+condition to delay the execution of the
+     
+action these actions will bring up to
+     
+further combo boxes where you can
+     
+specify the conditions for the action
+     
+itself this currently defaults to a   
+     
+second timeout which I will streamline
+     
+to be go code D the ambush action is
+     
+currently exclusive to map planning on a
+     
+high command just like the suppression
+     
+action this will bring up a polygon that
+     
+he can adjust to your liking
+     
+once the units reach their Waypoint they
+     
+will lay down and hold fire until any
+     
+enemy units enter that kill zone when
+     
+that happens they will open fire and I
+     
+do have some ideas how I might be able
+     
+to work explosives into this mechanic as
+     
+well finally in action worth mentioning
+     
+is the airstrike or CAS which brings up
+     
+one last combo box where you can specify
+     
+the details for that airstrike and this
+     
+enables your high command pilots to use
+     
+the BIS airstrike function for Zeus
+     
+without spawning any extra vehicle this
+     
+action requires an approach of at least
+     
+three kilometers so that the aircraft
+     
+can move into position and execute the
+     
+airstrike properly speaking of
+     
+approached the landing action for jets
+     
+does not only make the aircraft land at
+     
+the closest airfield or aircraft carrier
+     
+but it also makes the AI commence the
+     
+landing at a distance of five kilometers
+     
+and that's because some High Command
+     
+actions like landing have a custom
+     
+Waypoint radius that is usually not
+     
+available in ARMA after a jet lands on
+     
+an airfield or carrier its fuel is set
+     
+to zero
+     
+in a quite complex but probably not
+     
+perfect management system handles as
+     
+storage if you give a new Waypoint to
+     
+the jet now it will be refueled and
+     
+teleported to the taxi out position of
+     
+the airfield before starting takeoff if
+     
+the jet is stationed on a carrier it
+     
+will be teleported to the next free
+     
+catapult to wrap up the weight plant
+     
+menu you can cancel by hitting the
+     
+button in the top right corner and you
+     
+can delete your Waypoint or confirm your
+     
+changes in the bottom of the menu and
+     
+while the mechanics are pretty different
+     
+these two menus are inspired by VBS
+     
+tactics which is unfortunately not
+     
+available to any ARMA player you can
+     
+synchronize High Command waypoints by
+     
+holding down ctrl and dragging a line
+     
+from one Waypoint to the other just like
+     
+you can on squad level this is mostly a
+     
+normal synchronisation but if one of the
+     
+groups can load either the units or
+     
+vehicle of the other group you get a
+     
+little pop-up menu that ask you if you
+     
+want to synchronize or load any units or
+     
+vehicles if you have some high command
+     
+units and vehicles that are somewhat
+     
+lined up you can hold down ctrl and drag
+     
+a selection box over these vehicles with
+     
+your left mouse button this will open
+     
+the group interaction menu on all of
+     
+these units and you get an action to
+     
+create a convoy this will store all of
+     
+the groups and put them into a single
+     
+new one this function takes averages of
+     
+the positions and directions of all
+     
+these vehicles and then automatically
+     
+creates a call information while the
+     
+units are being added to the new group
+     
+in the correct order in accordance with
+     
+the convoy PID the new groups behavior
+     
+is automatically set to safe and there's
+     
+some other little things going on behind
+     
+the scenes that try to help the convoy
+     
+stick together
+     
+convoy groups also get little yellow box
+     
+icons for their subordinate vehicles
+     
+which you can use to monitor the status
+     
+of the convoy while it's unwrapped since
+     
+the driving of both wheeled and tracked
+     
+vehicles has really improved in armor
+     
+over the last couple of years this is
+     
+one of the features that I personally
+     
+used the most because it enables me to
+     
+move large amounts of vehicles and gear
+     
+all across the map with a somewhat
+     
+streamlined mechanic you can finally
+     
+hold down control right click on the
+     
+convoy groups icon and then use the
+     
+rejoin convoy function in the group
+     
+context menu to re-establish the
+     
+original group order as well Easter Egg
+     
+just like on squad level you can click
+     
+and hold your left mouse button over a
+     
+high command infantry groups icon hold
+     
+shift and then drag your mouse over any
+     
+of the pop-up icons this will make an
+     
+infantry group for that vehicle and it
+     
+can be really quick and useful this
+     
+concludes map planning
+     
+high command level and also in its
+     
+entirety and we can now look at the
+     
+final aspect of ARMA Command which is
+     
+high command in  d or HUD mode the
+     
+basics here are just the same as they
+     
+are in default ARMA to engage high
+     
+command hold down control and hit
+     
+spacebar and please note again that this
+     
+is not compatible with the actual ARMA  
+     
+high command modules command axis just
+     
+to recap is managed by carrying the
+     
+physical tablet item just like in
+     
+default ARMA every group leader under
+     
+you command displays an icon in  d space
+     
+finally the difference between ARMA
+     
+Command and ARMA  's default high
+     
+command is the way you interact with any
+     
+specific groups and default high command
+     
+interaction is almost entirely dedicated
+     
+to moving units around and while that's
+     
+the most important of course I was very
+     
+excited to bundle the actions and
+     
+routines that I already had into a  d
+     
+high command framework to achieve this I
+     
+added a high command layer to the radial
+     
+menu because that seemed to be a good
+     
+way to streamline functionalities
+     
+between squat and high command levels on
+     
+high command level being aware of your
+     
+selection is essential and that's why
+     
+the unit selectors are shown by default
+     
+when you open the menu by holding down
+     
+tab the selector buttons are already
+     
+familiar but in high command you can
+     
+also click on any of the  d group icons
+     
+while the radial menu is engaged you can
+     
+additionally hold down cute to hide the
+     
+radial menu while you're making your
+     
+selection left mouse button to select
+     
+the group individually right mouse
+     
+button to add or remove a group from
+     
+your selection it is important to note
+     
+that your selection stays persistent
+     
+when closing and reopening the radial
+     
+menu on High Command level the first
+     
+available action is giving a movement
+     
+order hit the move button then drag the
+     
+indicator icon to your desired position
+     
+and confirm by hitting spacebar since
+     
+selection stays persistent we can repeat
+     
+the process or any other action for the
+     
+same group without having to select it
+     
+every single time and as a little easter
+     
+egg you can add waypoints to multiple
+     
+groups simultaneously the next section
+     
+is once again the shining star and
+     
+that's the context-sensitive high
+     
+command actions here we get access to
+     
+the full range of ARMA commands actions
+     
+and routines for high command units in
+     
+ d space I showed you a lot of these
+     
+already but I would like to emphasize
+     
+how useful it can be to have these
+     
+available for high command units in  d
+     
+space an assignment of vehicles works
+     
+exactly as a dozen map planning and
+     
+sign a group to the vehicle select the
+     
+action then look at the vehicle and
+     
+confirm by hitting spacebar High Command
+     
+actions also include the remote firing
+     
+capabilities some examples that I
+     
+haven't showed you yet are firing a
+     
+static rocket launcher or ordering a
+     
+tank to fire a shell at any target or
+     
+position you can also order artillery
+     
+strikes on any position which will then
+     
+ask you to detail your fire mission
+     
+suppression works exactly as it does on
+     
+squat level and it's very useful in high
+     
+command when applied to a fire support
+     
+group and overwatch for example or you
+     
+can of course use it on a helicopter to
+     
+completely hammer down an enemy's
+     
+stronghold there's four additional
+     
+actions on high command level and those
+     
+are options to engage or disengage
+     
+strobes lasers or flashlights as well as
+     
+an option to turn off the engine of
+     
+stationary vehicles the remaining
+     
+sections of the radials high command
+     
+layer are straightforward you can change
+     
+the stance for all members of these
+     
+selected groups you can toggle any go
+     
+codes and you can change the behavior
+     
+and combat modes for the selected groups
+     
+finally you can hover your mouse over
+     
+the top area of the screen and then
+     
+choose information for your selected
+     
+groups all in all the radial menu
+     
+provides a powerful user interface that
+     
+can quickly execute both the essential
+     
+functions as well as the vast and very
+     
+context specified actions and routines
+     
+and it aims to do so for both squad and
+     
+high command levels respectively that
+     
+wraps up high command level in  d or Hut
+     
+mode it is important to note that you do
+     
+not lose control over your squad while
+     
+operating in high command the only
+     
+difference between high command and
+     
+squad level is that it hides Armas squat
+     
+UI changes the radials functionality and
+     
+displays the group icons in  d space
+     
+don't forget to switch back to squat
+     
+level by holding down control and
+     
+hitting spacebar there is a prototype of
+     
+a feature that I feel is worth pointing
+     
+out and that's the Zeus compatibility at
+     
+the moment it only works if a player's
+     
+vehicle has a Zeus module sync to it by
+     
+the editor but if that's the case and
+     
+the player is currently operating as
+     
+Zeus they can hold down ctrl shift and
+     
+left-click on a unit to gain remote
+     
+control over that unit squad leader now
+     
+they have access over the full range of
+     
+armor commands functions which I hope
+     
+would have an impact on their ability to
+     
+create immersive scenarios to exit Zeus
+     
+remote hold down shift and press your
+     
+Zeus key and that concludes my
+     
+presentation
+     
+of Armagh command in its current state
+     
+there's more features and ideas sketched
+     
+out but for a number of reasons I
+     
+decided I would shift my attention
+     
+towards starting this conversation my
+     
+intention for these two videos is to
+     
+reconnect and ask for your professional
+     
+opinion especially regarding fitness for
+     
+the community DLC program of course if
+     
+you guys have any questions or would be
+     
+interested in a direct presentation on
+     
+our server I would be happy to provide
+     
+anything you need thank you so much for
+     
+taking time out of your day to watch
+     
+this presentation and one last time
+     
+thank you and the entire team at
+     
+bohemia' for all the hard work you've
+     
+put into this amazing series I'm really
+     
+looking forward to hear from you and see
+     
+if we can't come up with something in
+     
+that sense my name is Lucas also known
+     
+as mat cheese thank you once again and
+     
+have a wonderful day
+     
+[Applause]

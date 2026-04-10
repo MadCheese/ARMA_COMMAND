@@ -1,0 +1,26 @@
+/* #Jyxiqa
+$[
+	1.063,
+	["1",[[0,0,1,1],0.025,0.04,"GUI_GRID"],0,0,0],
+	[1600,"",[1,"TEAM RED",["0.883773 * safezoneW + safezoneX","0.378981 * safezoneH + safezoneY","0.0973751 * safezoneW","0.044007 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1601,"",[1,"TEAM GREEN",["0.883773 * safezoneW + safezoneX","0.433989 * safezoneH + safezoneY","0.0973751 * safezoneW","0.044007 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1602,"",[1,"TEAM BLUE",["0.883773 * safezoneW + safezoneX","0.488998 * safezoneH + safezoneY","0.0973751 * safezoneW","0.044007 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1603,"",[1,"TEAM YELLOW",["0.883773 * safezoneW + safezoneX","0.544007 * safezoneH + safezoneY","0.0973751 * safezoneW","0.044007 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1604,"",[1,"TEAM MAIN",["0.883773 * safezoneW + safezoneX","0.599016 * safezoneH + safezoneY","0.0973751 * safezoneW","0.044007 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1605,"",[1,"ALL UNITS",["0.883773 * safezoneW + safezoneX","0.654025 * safezoneH + safezoneY","0.0973751 * safezoneW","0.044007 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1606,"",[1,"ACTIVATE FORMATION",["0.883773 * safezoneW + safezoneX","0.235958 * safezoneH + safezoneY","0.0973751 * safezoneW","0.121019 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1607,"",[1,"CLEAR DATA",["0.883773 * safezoneW + safezoneX","0.180949 * safezoneH + safezoneY","0.0973751 * safezoneW","0.044007 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1608,"",[1,"SAVE",["0.883773 * safezoneW + safezoneX","0.709033 * safezoneH + safezoneY","0.0973751 * safezoneW","0.044007 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1609,"",[1,"SAVED",["0.883773 * safezoneW + safezoneX","0.764042 * safezoneH + safezoneY","0.0973751 * safezoneW","0.176028 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]]
+]
+*/
+
+/* #Balico
+$[
+	1.063,
+	["1",[[0,0,1,1],0.025,0.04,"GUI_GRID"],0,0,0],
+	[1607,"",[1,"TEXT",["0.282338 * safezoneW + safezoneX","0.389982 * safezoneH + safezoneY","0.349405 * safezoneW","0.0550088 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1600,"",[1,"SAVE",["0.637471 * safezoneW + safezoneX","0.389982 * safezoneH + safezoneY","0.0400956 * safezoneW","0.0550088 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1601,"",[1,"CANCEL",["0.683294 * safezoneW + safezoneX","0.389982 * safezoneH + safezoneY","0.0400956 * safezoneW","0.0550088 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]]
+]
+*/

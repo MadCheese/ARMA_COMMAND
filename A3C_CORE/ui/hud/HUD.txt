@@ -1,0 +1,153 @@
+
+
+//ultra
+/* #Xywypi
+$[
+	1.063,
+	["HUD_RSC",[[0,0,1,1],0.025,0.04,"GUI_GRID"],0,0,0],
+	[2300,"A3C_HUD_UI_CtrlsGroup",[1,"",["0.36186 * safezoneW + safezoneX","0.302 * safezoneH + safezoneY","0.276279 * safezoneW","0.66 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1202,"",[2300,"A3C_CORE\ui\pictures\BG_HUD_Menu.paa",["0","0 ","0.276279 * safezoneW","0.66 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1600,"A3C_HUD_TRAVEL_BOX",[2300,"",["0.0153493 * safezoneW","0.528 * safezoneH","0.024562 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Stance: TRAVEL","-1"],["idc = 16;","action = |[0] call A3C_HUD_STANCE_BUTTONS|;"]],
+	[1601,"A3C_HUD_DESTINATION_BOX",[2300,"",["0.0690702 * safezoneW","0.528 * safezoneH","0.024562 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Stance: DESTINATION","-1"],["idc = 17;","action = |[1] call A3C_HUD_STANCE_BUTTONS|;"]],
+	[1602,"A3C_HUD_OVERRIDE_BOX_2",[2300,"",["0.211047 * safezoneW","0.528 * safezoneH","0.024562 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 11;","action = |[] call A3C_HUD_WPMODE_BUTTON|;"]],
+	[1603,"A3C_HUD_HIDE_BOX_2",[2300,"",["0.237907 * safezoneW","0.528 * safezoneH","0.024562 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 13;","action = |[] call A3C_HUD_UI_BUTTON|;"]],
+	[1604,"A3C_HUD_SPEED_BOX",[2300,"",["0.0422098 * safezoneW","0.528 * safezoneH","0.024562 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 15;","action = |[] call A3C_HUD_SPEED_BUTTON|;"]],
+	[1605,"A3C_HUD_GOCODE_BOX",[2300,"",["0.184186 * safezoneW","0.528 * safezoneH","0.024562 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 18;","action = |[0] call A3C_HUD_GOCODE_BUTTON|;"]],
+	[1606,"A3C_HUD_FORM_BOX",[2300,"",["0.095931 * safezoneW","0.462 * safezoneH","0.0837209 * safezoneW","0.2 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Formation","-1"],["idc = 14;","action = |[1] call A3C_HUD_UI_FORM_BUTTON|;"]],
+	[1203,"A3C_HUD_UI_FORM_BOX",[2300,"A3C_CORE\ui\pictures\icon_formSec_Circle.paa",["0.095931 * safezoneW","0.462 * safezoneH","0.0837209 * safezoneW","0.2 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1204,"A3C_HUD_UI_TRAVEL_BOX",[2300,"A3C_CORE\ui\pictures\icon_menu_stance_Auto.paa",["0.0153493 * safezoneW","0.528 * safezoneH","0.024562 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1205,"A3C_HUD_UI_SPEED_BOX",[2300,"A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa",["0.0422098 * safezoneW","0.528 * safezoneH","0.024562 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1206,"A3C_HUD_UI_DESTINATION_BOX",[2300,"A3C_CORE\ui\pictures\icon_menu_stance_Stand_Dim.paa",["0.0690702 * safezoneW","0.528 * safezoneH","0.024562 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1207,"A3C_HUD_UI_GOCODE_BOX",[2300,"A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa",["0.184186 * safezoneW","0.528 * safezoneH","0.024562 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1208,"A3C_HUD_OVERRIDE_BOX_1",[2300,"A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa",["0.211047 * safezoneW","0.528 * safezoneH","0.024562 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1209,"A3C_HUD_HIDE_BOX_1",[2300,"A3C_CORE\ui\pictures\icon_menu_showUI_true.paa",["0.237907 * safezoneW","0.528 * safezoneH","0.024562 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]]
+]
+*/
+s
+
+//windowed
+/* #Gofano
+$[
+	1.063,
+	["1",[[0,0,1,1],0.025,0.04,"GUI_GRID"],0,0,0],
+	[2300,"A3C_HUD_UI_CtrlsGroup",[1,"",["0.29372 * safezoneW + safezoneX","0.28002 * safezoneH + safezoneY","0.495193 * safezoneW","0.660103 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1202,"",[2300,"A3C_CORE\ui\pictures\BG_HUD_Menu",["0 * safezoneW","0 * safezoneH","0.495193 * safezoneW","0.660103 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1600,"A3C_HUD_TRAVEL_BOX",[2300,"",["0.020628 * safezoneW","0.532352 * safezoneH","0.0440171 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Stance: TRAVEL","-1"],["idc = 16;","action = |[0] call A3C_HUD_STANCE_BUTTONS|;"]],
+	[1601,"A3C_HUD_DESTINATION_BOX",[2300,"",["0.075636 * safezoneW","0.532352 * safezoneH","0.0440171 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Stance: DESTINATION","-1"],["idc = 17;","action = |[1] call A3C_HUD_STANCE_BUTTONS|;"]],
+	[1602,"A3C_HUD_OVERRIDE_BOX_2",[2300,"",["0.386431 * safezoneW","0.530152 * safezoneH","0.0440171 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 11;","action = |[] call A3C_HUD_WPMODE_BUTTON|;"]],
+	[1603,"A3C_HUD_HIDE_BOX_2",[2300,"",["0.441439 * safezoneW","0.530152 * safezoneH","0.0440171 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 13;","action = |[] call A3C_HUD_UI_BUTTON|;"]],
+	[1604,"A3C_HUD_SPEED_BOX",[2300,"",["0.130644 * safezoneW","0.532352 * safezoneH","0.0440171 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 15;","action = |[] call A3C_HUD_SPEED_BUTTON|;"]],
+	[1605,"A3C_HUD_GOCODE_BOX",[2300,"",["0.331423 * safezoneW","0.530152 * safezoneH","0.0440171 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 18;","action = |[0] call A3C_HUD_GOCODE_BUTTON|;"]],
+	[1606,"A3C_HUD_FORM_BOX",[2300,"",["0.1719 * safezoneW","0.461958 * safezoneH","0.152685 * safezoneW","0.203532 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Formation","-1"],["idc = 14;","action = |[1] call A3C_HUD_UI_FORM_BUTTON|;"]],
+	[1203,"A3C_HUD_UI_FORM_BOX",[2300,"A3C_CORE\ui\pictures\icon_formSec_Circle.paa",["0.1719 * safezoneW","0.461958 * safezoneH","0.152685 * safezoneW","0.203532 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1204,"A3C_HUD_UI_TRAVEL_BOX",[2300,"A3C_CORE\ui\pictures\icon_menu_stance_Auto.paa",["0.020628 * safezoneW","0.532352 * safezoneH","0.0440171 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1205,"A3C_HUD_UI_SPEED_BOX",[2300,"A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa",["0.075636 * safezoneW","0.532352 * safezoneH","0.0440171 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1206,"A3C_HUD_UI_DESTINATION_BOX",[2300,"A3C_CORE\ui\pictures\icon_menu_stance_Stand_Dim.paa",["0.130644 * safezoneW","0.532352 * safezoneH","0.0440171 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1207,"A3C_HUD_UI_GOCODE_BOX",[2300,"A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa",["0.331423 * safezoneW","0.530152 * safezoneH","0.0440171 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1208,"A3C_HUD_OVERRIDE_BOX_1",[2300,"A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa",["0.386431 * safezoneW","0.530152 * safezoneH","0.0440171 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1209,"A3C_HUD_HIDE_BOX_1",[2300,"A3C_CORE\ui\pictures\icon_menu_showUI_true.paa",["0.441439 * safezoneW","0.530152 * safezoneH","0.0440171 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]]
+]
+*/
+
+
+
+
+
+/* #Kyxode
+$[
+	1.063,
+	["1",[[0,0,1,1],0.025,0.04,"GUI_GRID"],0,0,0],
+	[1202,"",[1,"A3C_CORE\ui\pictures\BG_HUD_Menu",["0.293718 * safezoneW + safezoneX","0.247049 * safezoneH + safezoneY","0.412564 * safezoneW","0.660103 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1600,"A3C_HUD_TRAVEL_BOX",[1,"",["0.316638 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Stance: TRAVEL","-1"],["idc = 16;","action = |[0] call A3C_HUD_STANCE_BUTTONS|;"]],
+	[1601,"A3C_HUD_DESTINATION_BOX",[1,"",["0.396859 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Stance: DESTINATION","-1"],["idc = 17;","action = |[1] call A3C_HUD_STANCE_BUTTONS|;"]],
+	[1602,"A3C_HUD_OVERRIDE_BOX_2",[1,"",["0.606579 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 11;","action = |[] call A3C_HUD_WPMODE_BUTTON|;"]],
+	[1603,"A3C_HUD_HIDE_BOX_2",[1,"",["0.646689 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 13;","action = |[] call A3C_HUD_UI_BUTTON|;"]],
+	[1604,"A3C_HUD_SPEED_BOX",[1,"",["0.356749 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 15;","action = |[] call A3C_HUD_SPEED_BUTTON|;"]],
+	[1605,"A3C_HUD_GOCODE_BOX",[1,"",["0.566469 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 18;","action = |[0] call A3C_HUD_GOCODE_BUTTON|;"]],
+	[1606,"A3C_HUD_FORM_BOX",[1,"",["0.442699 * safezoneW + safezoneX","0.719957 * safezoneH + safezoneY","0.114601 * safezoneW","0.186964 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Formation","-1"],["idc = 14;","action = |[1] call A3C_HUD_UI_FORM_BUTTON|;"]],
+	[1203,"A3C_HUD_UI_FORM_BOX",[1,"A3C_CORE\ui\pictures\icon_formSec_Circle.paa",["0.436167 * safezoneW + safezoneX","0.70896 * safezoneH + safezoneY","0.127207 * safezoneW","0.203532 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1204,"A3C_HUD_UI_TRAVEL_BOX",[1,"A3C_CORE\ui\pictures\icon_menu_stance_Auto.paa",["0.316638 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1205,"A3C_HUD_UI_SPEED_BOX",[1,"A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa",["0.356749 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1206,"A3C_HUD_UI_DESTINATION_BOX",[1,"A3C_CORE\ui\pictures\icon_menu_stance_Stand_Dim.paa",["0.396859 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1207,"A3C_HUD_UI_GOCODE_BOX",[1,"A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa",["0.566469 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1208,"A3C_HUD_OVERRIDE_BOX_1",[1,"A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa",["0.606579 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1209,"A3C_HUD_HIDE_BOX_1",[1,"A3C_CORE\ui\pictures\icon_menu_showUI_true.paa",["0.646689 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]]
+]
+*/
+
+/* #Zybico
+$[
+	1.063,
+	["HUD_CORNER",[[0,0,1,1],0.025,0.04,"GUI_GRID"],0,0,0],
+	[1202,"",[1,"A3C_CORE\ui\pictures\BG_HUD_Menu_Corner.paa",["0.585951 * safezoneW + safezoneX","0.335032 * safezoneH + safezoneY","0.412564 * safezoneW","0.660103 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1600,"A3C_HUD_TRAVEL_BOX",[1,"",["0.752122 * safezoneW + safezoneX","0.906921 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Stance: TRAVEL","-1"],["idc = 16;","action = |[0] call A3C_HUD_STANCE_BUTTONS|;"]],
+	[1601,"A3C_HUD_DESTINATION_BOX",[1,"",["0.832343 * safezoneW + safezoneX","0.906921 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Stance: DESTINATION","-1"],["idc = 17;","action = |[1] call A3C_HUD_STANCE_BUTTONS|;"]],
+	[1602,"A3C_HUD_OVERRIDE_BOX_2",[1,"",["0.946944 * safezoneW + safezoneX","0.719957 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 11;","action = |[] call A3C_HUD_WPMODE_BUTTON|;"]],
+	[1603,"A3C_HUD_HIDE_BOX_2",[1,"",["0.946944 * safezoneW + safezoneX","0.587983 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 13;","action = |[] call A3C_HUD_UI_BUTTON|;"]],
+	[1604,"A3C_HUD_SPEED_BOX",[1,"",["0.792233 * safezoneW + safezoneX","0.906921 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 15;","action = |[] call A3C_HUD_SPEED_BUTTON|;"]],
+	[1605,"A3C_HUD_GOCODE_BOX",[1,"",["0.946944 * safezoneW + safezoneX","0.65397 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 18;","action = |[0] call A3C_HUD_GOCODE_BUTTON|;"]],
+	[1606,"A3C_HUD_FORM_BOX",[1,"",["0.878183 * safezoneW + safezoneX","0.796942 * safezoneH + safezoneY","0.114601 * safezoneW","0.186964 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Formation","-1"],["idc = 14;","action = |[1] call A3C_HUD_UI_FORM_BUTTON|;"]],
+	[1203,"A3C_HUD_UI_FORM_BOX",[1,"A3C_CORE\ui\pictures\icon_formSec_Circle.paa",["0.867525 * safezoneW + safezoneX","0.784845 * safezoneH + safezoneY","0.130645 * safezoneW","0.209032 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1204,"A3C_HUD_UI_TRAVEL_BOX",[1,"A3C_CORE\ui\pictures\icon_menu_stance_Auto.paa",["0.752122 * safezoneW + safezoneX","0.906921 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1205,"A3C_HUD_UI_SPEED_BOX",[1,"A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa",["0.792233 * safezoneW + safezoneX","0.906921 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1206,"A3C_HUD_UI_DESTINATION_BOX",[1,"A3C_CORE\ui\pictures\icon_menu_stance_Stand_Dim.paa",["0.832343 * safezoneW + safezoneX","0.906921 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1207,"A3C_HUD_UI_GOCODE_BOX",[1,"A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa",["0.946944 * safezoneW + safezoneX","0.65397 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1208,"A3C_HUD_OVERRIDE_BOX_1",[1,"A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa",["0.946944 * safezoneW + safezoneX","0.719957 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1209,"A3C_HUD_HIDE_BOX_1",[1,"A3C_CORE\ui\pictures\icon_menu_showUI_true.paa",["0.946944 * safezoneW + safezoneX","0.587983 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]]
+]
+*/
+
+
+
+
+
+
+/* #Xoqusu
+$[
+	1.063,
+	["1",[[0,0,1,1],0.025,0.04,"GUI_GRID"],0,0,0],
+	[1202,"",[1,"A3C_CORE\ui\pictures\BG_HUD_Menu.paa",["0.293718 * safezoneW + safezoneX","0.247049 * safezoneH + safezoneY","0.412564 * safezoneW","0.660103 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1600,"A3C_HUD_TRAVEL_BOX",[1,"",["0.316638 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Stance: TRAVEL","-1"],["idc = 16;","action = |[0] call A3C_HUD_STANCE_BUTTONS|;"]],
+	[1601,"A3C_HUD_DESTINATION_BOX",[1,"",["0.396859 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Stance: DESTINATION","-1"],["idc = 17;","action = |[1] call A3C_HUD_STANCE_BUTTONS|;"]],
+	[1602,"A3C_HUD_OVERRIDE_BOX_2",[1,"",["0.606579 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 11;","action = |[] call A3C_HUD_WPMODE_BUTTON|;"]],
+	[1603,"A3C_HUD_HIDE_BOX_2",[1,"",["0.646689 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 13;","action = |[] call A3C_HUD_UI_BUTTON|;"]],
+	[1604,"A3C_HUD_SPEED_BOX",[1,"",["0.356749 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 15;","action = |[] call A3C_HUD_SPEED_BUTTON|;"]],
+	[1605,"A3C_HUD_GOCODE_BOX",[1,"",["0.566469 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 18;","action = |[0] call A3C_HUD_GOCODE_BUTTON|;"]],
+	[1606,"A3C_HUD_FORM_BOX",[1,"",["0.44843 * safezoneW + safezoneX","0.730955 * safezoneH + safezoneY","0.103141 * safezoneW","0.165026 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Formation","-1"],["idc = 14;","action = |[1] call A3C_HUD_UI_FORM_BUTTON|;"]],
+	[1203,"A3C_HUD_UI_FORM_BOX",[1,"A3C_CORE\ui\pictures\icon_formSec_Circle.paa",["0.436969 * safezoneW + safezoneX","0.708959 * safezoneH + safezoneY","0.126061 * safezoneW","0.201698 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1204,"A3C_HUD_UI_TRAVEL_BOX",[1,"A3C_CORE\ui\pictures\icon_menu_stance_Auto.paa",["0.316638 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1205,"A3C_HUD_UI_SPEED_BOX",[1,"A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa",["0.356749 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1206,"A3C_HUD_UI_DESTINATION_BOX",[1,"A3C_CORE\ui\pictures\icon_menu_stance_Stand_Dim.paa",["0.396859 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1207,"A3C_HUD_UI_GOCODE_BOX",[1,"A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa",["0.566469 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1208,"A3C_HUD_OVERRIDE_BOX_1",[1,"A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa",["0.606579 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[1209,"A3C_HUD_HIDE_BOX_1",[1,"A3C_CORE\ui\pictures\icon_menu_showUI_true.paa",["0.646689 * safezoneW + safezoneX","0.781534 * safezoneH + safezoneY","0.0343803 * safezoneW","0.0586758 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]]
+]
+*/
+
+
+
+
+
+
+
+/* #Lozadi
+$[
+	1.063,
+	["1",[[0,0,1,1],0.025,0.04,"GUI_GRID"],0,0,0],
+	[1600,"A3C_HUD_TRAVEL_BOX",[2,"",["13 * GUI_GRID_W + GUI_GRID_X","3 * GUI_GRID_H + GUI_GRID_Y","4 * GUI_GRID_W","4 * GUI_GRID_H"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Stance: TRAVEL","-1"],["idc = 16;","action = |[0] call A3C_HUD_STANCE_BUTTONS|;"]],
+	[1601,"A3C_HUD_DESTINATION_BOX",[2,"",["23.5 * GUI_GRID_W + GUI_GRID_X","3 * GUI_GRID_H + GUI_GRID_Y","4 * GUI_GRID_W","4 * GUI_GRID_H"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Stance: DESTINATION","-1"],["idc = 17;","action = |[1] call A3C_HUD_STANCE_BUTTONS|;"]],
+	[1200,"A3C_HUD_OVERRIDE_BOX_1",[2,"#(argb,8,8,3)color(1,1,1,1)",["18.2 * GUI_GRID_W + GUI_GRID_X","0.1 * GUI_GRID_H + GUI_GRID_Y","1.5 * GUI_GRID_W","1.5 * GUI_GRID_H"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 10;"]],
+	[1602,"A3C_HUD_OVERRIDE_BOX_2",[2,"",["18.2 * GUI_GRID_W + GUI_GRID_X","0.1 * GUI_GRID_H + GUI_GRID_Y","1.5 * GUI_GRID_W","1.5 * GUI_GRID_H"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 11;","action = |[] call A3C_HUD_WPMODE_BUTTON|;"]],
+	[1201,"A3C_HUD_HIDE_BOX_1",[2,"#(argb,8,8,3)color(1,1,1,1)",["20.5 * GUI_GRID_W + GUI_GRID_X","0 * GUI_GRID_H + GUI_GRID_Y","1.5 * GUI_GRID_W","1.5 * GUI_GRID_H"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 12;"]],
+	[1603,"A3C_HUD_HIDE_BOX_2",[2,"",["20.5 * GUI_GRID_W + GUI_GRID_X","0 * GUI_GRID_H + GUI_GRID_Y","1.5 * GUI_GRID_W","1.5 * GUI_GRID_H"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 13;","action = |[] call A3C_HUD_UI_BUTTON|;"]],
+	[1604,"A3C_HUD_SPEED_BOX",[2,"",["19.3 * GUI_GRID_W + GUI_GRID_X","5.5 * GUI_GRID_H + GUI_GRID_Y","2 * GUI_GRID_W","2 * GUI_GRID_H"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 15;","action = |[] call A3C_HUD_SPEED_BUTTON|;"]],
+	[1605,"A3C_HUD_GOCODE_BOX",[2,"",["20.8 * GUI_GRID_W + GUI_GRID_X","3 * GUI_GRID_H + GUI_GRID_Y","2 * GUI_GRID_W","2 * GUI_GRID_H"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 18;","action = |[0] call A3C_HUD_GOCODE_BUTTON|;"]],
+	[1606,"A3C_HUD_FORM_BOX",[2,"",["17.7 * GUI_GRID_W + GUI_GRID_X","3 * GUI_GRID_H + GUI_GRID_Y","2 * GUI_GRID_W","2 * GUI_GRID_H"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"Change Formation","-1"],["idc = 14;","action = |[1] call A3C_HUD_UI_FORM_BUTTON|;"]],
+	[1202,"",[2,"#(argb,8,8,3)color(1,1,1,1)",["12 * GUI_GRID_W + GUI_GRID_X","2 * GUI_GRID_H + GUI_GRID_Y","16.5 * GUI_GRID_W","6.5 * GUI_GRID_H"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]]
+]
+*/
+
+
+
+
+
