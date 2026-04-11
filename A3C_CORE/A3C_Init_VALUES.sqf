@@ -159,7 +159,7 @@ A3C_IsAICommand = if (isClass(configFile/"CfgPatches"/"AICommand")) then {true} 
 	};
 //};
 
-
+A3C_MON_SERVER_checkGroups = [];
 ///////////////////////////////////////////////////////////////////////////////////
 
 if (isServer) then {

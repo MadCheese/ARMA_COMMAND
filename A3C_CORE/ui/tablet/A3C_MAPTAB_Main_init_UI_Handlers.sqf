@@ -160,7 +160,7 @@ A3C_TAB_UI_Handlers_OnMouseButtonDown = {
 			_wp_Index = _wp_Icon select 3;
 			_exit = true; //~~ sure?
 			if (_left) then {
-				if (_ctrl) then {
+				if (_alt) then {
 					//-- HC waypoint sync
 					A3C_CONNECTING_MODE = "HCSYNC";
 					A3C_BOOL_DRAGLINE = true;
@@ -559,7 +559,7 @@ A3C_TAB_UI_Handlers_OnMouseButtonDown = {
 		_squadWaypointSelected params ["_unit","_size","_position","_wpDotIDS"];
 		if (_left) then {
 			A3C_MovedItem_ID = if (_wpDotIDS select 1 == "" ) then {_wpDotIDS select 0} else {_wpDotIDS select 1};
-			if !(_ctrl) then {
+			if !(_alt) then {
 				A3C_BOOL_MOUSEUP = true;
 				A3C_BOOL_MOUSEMOVING = true;
 				A3C_BOOL_MOVINGMARKER = true;
@@ -1092,6 +1092,7 @@ A3C_TAB_UI_Handlers_OnMouseButtonUp = {
 	_sX = _this select 2;
 	_sY = _this select 3;
 	private _shift = _this select 4;
+	private _ctrl = _this select 5;
 	disableserialization;
 
 	
@@ -1107,7 +1108,25 @@ A3C_TAB_UI_Handlers_OnMouseButtonUp = {
 	if (A3C_UI_MAP_BOOL_isHCWaypointPosEdit) then {
 
 		//-- SELECT HC GROUP THAT OWNS THE CLICKED WAY POINT. >> maybe add check if waypoint was moved, ignore if moved to only select on click??
-		A3C_SELECTED_UNITS = [A3C_HC_ACTIVEGROUP]; //-- #TODO: this whole 'A3C_SELECTED_HC_GROUPS_SETTINGS', 'A3C_SELECTED_HC_GROUPS_SETTINGS', 'RD_UNITS' layout is a mess boiiii! IMPROVE
+		//-- check 1: is there any non group-element in the array?
+		if ({typeName _x == "GROUP"} count A3C_SELECTED_UNITS == 0) then {
+			A3C_SELECTED_UNITS = [A3C_HC_ACTIVEGROUP];
+		} else {
+			if (_ctrl) then {
+				if (A3C_HC_ACTIVEGROUP in A3C_SELECTED_UNITS) then {
+					A3C_SELECTED_UNITS = A3C_SELECTED_UNITS - [A3C_HC_ACTIVEGROUP];
+				} else {
+					A3C_SELECTED_UNITS set [count A3C_SELECTED_UNITS, A3C_HC_ACTIVEGROUP];
+				};
+			} else {
+				A3C_SELECTED_UNITS = [A3C_HC_ACTIVEGROUP];
+			};
+		};
+		//-- check 2: if _ctrl, then potentially add to selection
+		
+		
+		
+		 //-- #TODO: this whole 'A3C_SELECTED_HC_GROUPS_SETTINGS', 'A3C_SELECTED_HC_GROUPS_SETTINGS', 'RD_UNITS' layout is a mess boiiii! IMPROVE
 		A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS;
 		A3C_HELI_INF_MODE = "HC";
 

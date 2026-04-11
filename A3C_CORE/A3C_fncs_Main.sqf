@@ -3671,6 +3671,7 @@ A3C_HCALLGROUPS = {
 	_addAll = false;
 
 
+	// _hcArray = A3C_HC_DISBANDED + ((hcAllgroups player) - A3C_HC_DISBANDED);
 	_hcArray = A3C_HC_DISBANDED + ((hcAllgroups player) - A3C_HC_DISBANDED);
 
 

@@ -812,7 +812,7 @@ A3C_MAPTAB_fnc_drawMapUI = {
 
 						_cond = (waypointStatements _wp) select 0;
 						_scr = if (waypointscript _wp == "") then {(waypointStatements _wp) select 1} else {waypointscript _wp};
-						_sz = 20;
+						_sz = 45;
 
 						if ((vehicle (_leader)) isKindOf "AIR") then {
 							if (waypointType _wp == "LOITER") then {
