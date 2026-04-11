@@ -532,7 +532,6 @@ A3C_OPEN_OBJECTSELECTOR_MAP = {
 						private _allowAdding = false;
 						private _ammo = getText (configfile >> "CfgMagazines" >> _x >> "ammo");
 						private _mineTrigger = getText (configfile >> "CfgAmmo" >> _ammo >> "mineTrigger");
-						//systemchat format ["1 %1, %2",_mineTrigger,isNull _targetVehicle];
 						if (_mineTrigger == "RemoteTrigger") then {
 							_allowAdding = true;
 						} else {
@@ -1031,7 +1030,6 @@ A3C_TAB_LMOUSE_D = {
 
 	private _exit = false;
 	_gpIcons = (["HC_GP",_sx,_sy] call A3C_MAP_iconsAtMapPos);
-	// systemchat format ["group Icons clicked: %1", count _gpIcons];
 	_gpIcons = 
 	[
 		_gpIcons,
@@ -1184,11 +1182,11 @@ A3C_TAB_LMOUSE_D = {
 	
 	//-- detect click on HC-GROUP WAYPOINT ICON
 	if !(_isHighCommand) then {
-		_wpIcons = (["HC_WP",_sx,_sy] call A3C_MAP_iconsAtMapPos);
-		if (count _wpIcons > 0) then {
-			_wpIcon = _wpIcons select 0;
-			_gp = _wpIcon select 0;
-			_wpiC = _wpIcon select 3;
+		_wp_Icons = (["HC_WP",_sx,_sy] call A3C_MAP_iconsAtMapPos);
+		if (count _wp_Icons > 0) then {
+			_wp_Icon = _wp_Icons select 0;
+			_gp = _wp_Icon select 0;
+			_wp_Index = _wp_Icon select 3;
 			_exit = true; //~~ sure?
 			if (_left) then {
 				if (_ctrl) then {
@@ -1198,7 +1196,7 @@ A3C_TAB_LMOUSE_D = {
 					A3C_HC_VEHICLEBOARD_GROUPS = [_gp];
 					A3C_CLICKPOS_ORIG =  A3C_CLICKPOS_1;
 					A3C_BOOL_MOUSEMOVING = true;
-					A3C_HC_WP_SYNC_ROOT = [_gp,_wpiC];
+					A3C_HC_WP_SYNC_ROOT = [_gp,_wp_Index];
 					A3C_MMCode = {
 						_this spawn {
 							params ["_clickData","_sX","_sY"];
@@ -1209,21 +1207,20 @@ A3C_TAB_LMOUSE_D = {
 						};
 					};
 				} else {
-					if ([_gp,_wpIC] in A3C_BLACKLIST_WAYPOINT_EDIT) then {
+					if ([_gp,_wp_Index] in A3C_BLACKLIST_WAYPOINT_EDIT) then {
 						systemchat  "A3C: It is too late to move this waypoint - wait for completion";
 					} else {
 						//-- waypoint marker about to be moved
 						A3C_BOOL_MOUSEUP = true;
 						A3C_BOOL_MOUSEMOVING = true;
-						A3C_HC_TOSWITCH = [_gp,_wpIC];
+						A3C_HC_TOSWITCH = [_gp,_wp_Index];
 						A3C_HC_ACTIVEGROUP = _gp;
-						A3C_HC_ACTIVE_IND = _wpIC;
+						A3C_HC_ACTIVE_IND = _wp_Index;
 						A3C_UI_MAP_BOOL_isHCWaypointPosEdit = true;
 						if (["PlantExplosive_HC",(waypointStatements [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]) select 1 ] call BIS_fnc_instring) then {
 							A3C_HC_DETONATION_BOOL = true;
 						};
-						// [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] waypointAttachVehicle (leader A3C_HC_ACTIVEGROUP); systemchat 'wtf';
-						A3C_UI_MAP_BOOL_isHCWaypointPosEdit = true;
+						
 						A3C_MMCode = {
 							[A3C_HC_TOSWITCH,_this] spawn A3C_MOVEHC;
 						};
@@ -1233,16 +1230,12 @@ A3C_TAB_LMOUSE_D = {
 				_exit = true;
 
 			} else {
-
-				_wpIcons = (["HC_WP",_sx,_sy] call A3C_MAP_iconsAtMapPos);
-				if (count _wpIcons > 0) then {
-					_exit = true;
-					_wpIcon = _wpIcons select 0;
-					_gp = _wpIcon select 0;
-					_wpiC = _wpIcon select 3;
-					[_gp,_wpiC,A3C_HC_EDIT_ACTION,_a3c_dsp,[_sx, _sy]] call A3C_OPEN_RC_HC;
-					_resetSelection = false;
-				};
+				_exit = true;
+				_wp_Icon = _wp_Icons select 0;
+				_gp = _wp_Icon select 0;
+				_wp_Index = _wp_Icon select 3;
+				[_gp,_wp_Index,A3C_HC_EDIT_ACTION,_a3c_dsp,[_sx, _sy]] call A3C_OPEN_RC_HC;
+				_resetSelection = false;
 			};
 
 		};
@@ -2135,18 +2128,20 @@ A3C_LEFTMOUSEUP = {
 
 	private _isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
 
-	//
-	
 
+	
+	
 	if (A3C_UI_MAP_BOOL_isHCWaypointPosEdit) then {
-		// systemchat format ["selected WP: %1",[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]];
 
 		//-- SELECT HC GROUP THAT OWNS THE CLICKED WAY POINT. >> maybe add check if waypoint was moved, ignore if moved to only select on click??
 		A3C_SELECTED_UNITS = [A3C_HC_ACTIVEGROUP]; //-- #TODO: this whole 'A3C_SELECTED_HC_GROUPS_SETTINGS', 'A3C_SELECTED_HC_GROUPS_SETTINGS', 'RD_UNITS' layout is a mess boiiii! IMPROVE
 		A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS;
-		A3C_HELI_INF_MODE == "HC";
-		[] call A3C_UNITSEL_REFRESH_UI;
+		A3C_HELI_INF_MODE = "HC";
 
+
+		[] call A3C_UNITSEL_REFRESH_UI;
+		systemchat format ["HC Select WP-CLick: %1", [A3C_UI_MAP_BOOL_isHCWaypointPosEdit, A3C_SELECTED_UNITS]];
+	
 		//~~
 		//-- #TODO: #HuiHui -- streamline this duplicate code for visualizing selection change in tree-UI
 		private _CT_TREE = findDisplay _a3c_dsp displayCtrl A3C_SELECTOR_TREE;
@@ -2156,6 +2151,7 @@ A3C_LEFTMOUSEUP = {
 		//0.3;
 		
 		if (count A3C_SELECTED_UNITS == 1) then { //--
+
 			_button = (A3C_SELECTED_UNITS select 0) getVariable ["A3C_TREESEL_INDEX",[]];
 			if (count _button > 0) then {
 				_button = _button select 0;
@@ -2174,10 +2170,6 @@ A3C_LEFTMOUSEUP = {
 				};
 			};	
 		};
-		//~~
-		// systemchat format ["A3C_SELECTED_HC_GROUPS_SETTINGS: %1",A3C_SELECTED_HC_GROUPS_SETTINGS];
-
-
 		//-- after moving the current HC waypoint of a group, send the leader to the position and make units follow him
 		private _currentWP = currentWaypoint A3C_HC_ACTIVEGROUP;
 		if (A3C_HC_ACTIVE_IND == _currentWP) then {
@@ -2195,29 +2187,29 @@ A3C_LEFTMOUSEUP = {
 			};
 	
 		};
-
 		A3C_UI_MAP_BOOL_isHCWaypointPosEdit = false;
 	};
 
+		
 
 	if (A3C_BOOL_DRAGLINE && {A3C_CONNECTING_MODE == "HCSYNC"}) exitWith  {
 		
 		A3C_CONNECTING_MODE = "";
 		A3C_BOOL_DRAGLINE = false;
 		if !(_isHighCommand) then {
-			_wpIcons = (["HC_WP",_sx,_sy] call A3C_MAP_iconsAtMapPos);
+			_wp_Icons = (["HC_WP",_sx,_sy] call A3C_MAP_iconsAtMapPos);
 			A3C_HC_WP_SYNC_ROOT params ["_rootGroup","_rootWPI"];
-			if (count _wpIcons > 0) then {
-				_wpIcon = _wpIcons select 0;
-				_gp = _wpIcon select 0;
-				_wpiC = _wpIcon select 3;
+			if (count _wp_Icons > 0) then {
+				_wp_Icon = _wp_Icons select 0;
+				_gp = _wp_Icon select 0;
+				_wp_Index = _wp_Icon select 3;
 
 				if (A3C_HC_WP_SYNC_ROOT select 0 != _gp) then {
 					
-					[[A3C_HC_WP_SYNC_ROOT,[ [_gp,_wpIC] ]],A3C_FNC_SYNC_WP] remoteExec ["bis_fnc_call",0];
-					//[A3C_HC_WP_SYNC_ROOT,[ [_gp,_wpIC] ]] remoteExec ["synchronizeWaypoint",leader _rootGroup];
-					//A3C_HC_WP_SYNC_ROOT synchronizeWaypoint [ [_gp,_wpIC] ]; //-- sync first , otherwise wrong indexes in MP
-					//[_gp,_wpIC] synchronizeWaypoint [ A3C_HC_WP_SYNC_ROOT ];
+					[[A3C_HC_WP_SYNC_ROOT,[ [_gp,_wp_Index] ]],A3C_FNC_SYNC_WP] remoteExec ["bis_fnc_call",0];
+					//[A3C_HC_WP_SYNC_ROOT,[ [_gp,_wp_Index] ]] remoteExec ["synchronizeWaypoint",leader _rootGroup];
+					//A3C_HC_WP_SYNC_ROOT synchronizeWaypoint [ [_gp,_wp_Index] ]; //-- sync first , otherwise wrong indexes in MP
+					//[_gp,_wp_Index] synchronizeWaypoint [ A3C_HC_WP_SYNC_ROOT ];
 					private _syncTypes = ["SYNC"];
 					A3C_UI_MAPTAB_SYNC_BOARDGROUP = grpNull;
 					A3C_UI_MAPTAB_SYNC_HOSTGROUP = grpNull;
@@ -2263,8 +2255,8 @@ A3C_LEFTMOUSEUP = {
 								} foreach (units _refGroup);
 								if (count _emptyPoses >= (count units _checkedGroup)) then {
 									A3C_UI_MAPTAB_SYNC_BOARDGROUP = _checkedGroup;
-									A3C_UI_MAPTAB_SYNC_BoardWPI =  if (_checkedGroup == _gp) then {_wpIC} else {_rootWPI};
-									A3C_UI_MAPTAB_SYNC_HostWPI =  if (_checkedGroup == _gp) then {_rootWPI} else {_wpiC};
+									A3C_UI_MAPTAB_SYNC_BoardWPI =  if (_checkedGroup == _gp) then {_wp_Index} else {_rootWPI};
+									A3C_UI_MAPTAB_SYNC_HostWPI =  if (_checkedGroup == _gp) then {_rootWPI} else {_wp_Index};
 									A3C_UI_MAPTAB_SYNC_HOSTGROUP = _refGroup;
 									//_targetVeh = (vehicle leader _refGroup);
 									_syncTypes pushBackUnique "GET IN";
@@ -2276,8 +2268,8 @@ A3C_LEFTMOUSEUP = {
 									if ((_refVic canVehicleCargo _leadVic) select 0) then {
 										A3C_UI_MAPTAB_SYNC_BOARDGROUP = _checkedGroup;
 										A3C_UI_MAPTAB_SYNC_HOSTGROUP = _refGroup;
-										A3C_UI_MAPTAB_SYNC_BoardWPI =  if (_checkedGroup == _gp) then {_wpIC} else {_rootWPI};
-										A3C_UI_MAPTAB_SYNC_HostWPI =  if (_checkedGroup == _gp) then {_rootWPI} else {_wpiC};
+										A3C_UI_MAPTAB_SYNC_BoardWPI =  if (_checkedGroup == _gp) then {_wp_Index} else {_rootWPI};
+										A3C_UI_MAPTAB_SYNC_HostWPI =  if (_checkedGroup == _gp) then {_rootWPI} else {_wp_Index};
 										//systemchat str [_refVic,_refVic];
 										_syncTypes pushBackUnique "VEHICLE GET IN";
 									};
@@ -2439,6 +2431,7 @@ A3C_LEFTMOUSEUP = {
 		};
 	};
 
+	
 	if (A3C_MapSel_Field_Active) then {
 		//-- Selection field is active: Generate Area and find units within
 		A3C_MapSel_Field_Active = false; //-- always disable Selection field
@@ -2449,58 +2442,51 @@ A3C_LEFTMOUSEUP = {
 			A3C_MapSel_Field_DEST,
 			[(A3C_MapSel_Field_Root select 0), (A3C_MapSel_Field_DEST select 1), 0]
 		];
-		//if ((position player) inPolygon _selPoses) then {systemchat "Success"};
-		//if (A3C_HELI_INF_MODE == "HC") then {
-			private _gps = [];
-			{
-				_gp = _x;
-				if ( (position (vehicle leader _x)) inPolygon _selPoses) then {
+		
+		private _gps = [];
+		{
+			_gp = _x;
+			if ( (position (vehicle leader _x)) inPolygon _selPoses) then {
 
-					//_leaderVic = vehicle _leader;
-					//if (_leader == driver _leaderVic) then {
-						_gps pushbackUnique _gp;
-					//};
-					
-				};
-			} foreach A3C_HCALLGROUPS_Current;
-
-			private _infantryOnly = true;
-			{
-				if ({!isNull objectParent _x && {_x == driver (objectParent _x)}} count (units _x) > 0 ) exitWith { //
-					_infantryOnly = false;
-				};
-			} foreach _gps;
-			if !(_infantryOnly) then {
-				_gps = _gps select {
-					private _lVIc = objectParent (leader _x); !isNull _lVIc && {driver _lVIc in (units _x)}
-				};
+				//_leaderVic = vehicle _leader;
+				//if (_leader == driver _leaderVic) then {
+					_gps pushbackUnique _gp;
+				//};
+				
 			};
+		} foreach A3C_HCALLGROUPS_Current;
 
-			
-
-		//} else {
-			private _squadUnits = [];
-			
-				{
-					if ((position _x) inPolygon _selPoses && {_x == driver vehicle _x}) then {
-						_squadUnits pushbackUnique _x;
-					};
-				} foreach (units player - [player]);
-				private _pageMode = "INF";
-
-			if (A3C_HELI_INF_MODE == "HC" && {count (_gps - [group player]) > 0}) then {
-				_squadUnits = []; //~~ sure this could be done better than resetting the value. try to avoid check instead
-			} else {
-				if (count _squadUnits > 0) then {
-					_gps = [];
-				};
+		private _infantryOnly = true;
+		{
+			if ({!isNull objectParent _x && {_x == driver (objectParent _x)}} count (units _x) > 0 ) exitWith { //
+				_infantryOnly = false;
 			};
-			
-			//player sidechat str [count _squadUnits , count _gps];
+		} foreach _gps;
+		if !(_infantryOnly) then {
+			_gps = _gps select {
+				private _lVIc = objectParent (leader _x); !isNull _lVIc && {driver _lVIc in (units _x)}
+			};
+		};
 
+		private _squadUnits = [];
+		
+		{
+			if ((position _x) inPolygon _selPoses && {_x == driver vehicle _x}) then {
+				_squadUnits pushbackUnique _x;
+			};
+		} foreach (units player - [player]);
+		private _pageMode = "INF";
 
-			if (count (_squadUnits + _gps) == 0) exitWith {};
+		if (A3C_HELI_INF_MODE == "HC" && {count (_gps - [group player]) > 0}) then {
+			_squadUnits = []; //~~ sure this could be done better than resetting the value. try to avoid check instead
+		} else {
+			if (count _squadUnits > 0) then {
+				_gps = [];
+			};
+		};
+		
 
+		if (count (_squadUnits + _gps) != 0) then {
 			if (count _squadUnits > count _gps) then {
 				A3C_SELECTED_UNITS = A3C_SELECTED_UNITS select {typeName _x == "OBJECT"};
 				if ({_x in A3C_SELECTED_UNITS} count _squadUnits == count _squadUnits) then {
@@ -2528,7 +2514,7 @@ A3C_LEFTMOUSEUP = {
 						};
 					} foreach A3C_SELECTED_UNITS;
 				};
-				 A3C_SELECTED_HC_GROUPS_SETTINGS = +(A3C_SELECTED_UNITS);
+					A3C_SELECTED_HC_GROUPS_SETTINGS = +(A3C_SELECTED_UNITS);
 				//_cond = if (_pageMode == "AIR") then {};
 				
 			} else {
@@ -2569,7 +2555,10 @@ A3C_LEFTMOUSEUP = {
 			_foldMode = if (count A3C_SELECTED_UNITS > 0 && {_pageMode != "HC"}) then {"OPEN"} else {"COLLAPSE"};
 			[_foldMode,0.1] call A3C_MAPTAB_OVERLAY_TOGGLE_FOLD;
 			[_pageMode] call A3C_START_TABMODE;
-		//};
+		};
+
+		
+		
 	};
 
 	
@@ -2577,6 +2566,7 @@ A3C_LEFTMOUSEUP = {
 	A3C_DRAGPOS = [];
 	////~~~~ TEMP! MOVE THIS!
 	if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
+		
 		_gpIcons = (["HC_GP",_sx,_sy] call A3C_MAP_iconsAtMapPos);
 		_drawBoardIcons = (["BOARDING_DRAW",_sx,_sy] call A3C_MAP_iconsAtMapPos);
 		if (typeName A3C_SQ_CLICKED_UNIT == "OBJECT") then {
@@ -2589,22 +2579,7 @@ A3C_LEFTMOUSEUP = {
 				_vehi spawn {
 					sleep 1;
 					_boardingUnits = (A3C_SELECTED_UNITS) select {isNull objectParent _x};
-					[_this,'all',0,_boardingUnits] spawn A3C_AssignVehicleSeatMacro;
-					
-				//	params ["_vehi"];
-				//	[_vehi] call A3C_FINDVEHROLES;
-//
-//					//sleep 1;
-//					if (count A3C_VEHROLES > 0) then {
-//						A3C_TARGETVEH = _vehi;
-//						{
-//							if (_x in A3C_VEHROLES) then {
-//								_sc = [0,_x,A3C_SELECTED_UNITS,_vehi] call A3C_CREW;
-//								sleep 0.5;
-//							};
-//						} foreach ["driver","gunner","commander","cargo"];
-//					};
-					
+					[_this,'all',0,_boardingUnits] spawn A3C_AssignVehicleSeatMacro;				
 				};
 			} else {
 				if (count A3C_SELECTED_UNITS == 1) then {
@@ -2745,7 +2720,7 @@ A3C_LEFTMOUSEUP = {
 		};
 
 	};
-
+	
 	A3C_MAP_DRAGPLANNING_POSITIONS = [];
 	A3C_MAP_DRAGPLANNING_ACTIVE = false;
 
@@ -3128,6 +3103,88 @@ A3C_LEFTMOUSEUP = {
 			(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
 			(findDisplay _a3c_dsp displayCtrl 7065) ctrlSetToolTip "No Action || Use LMB to open settings or mousewheel to cycle";
 		//};
+	};
+};
+
+A3C_UNITSEL_REFRESH_UI = {
+
+	// if (true) exitWith {};
+
+	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
+	
+	private _commandMode = if (_a3c_dsp == 7999) then {
+		A3C_CURRENT_COMMAND_LEVEL
+	} else {
+		if (A3C_HELI_INF_MODE == "HC") then {
+			"HIGHCOMMAND"
+		} else {
+			"SQUAD"
+		};
+	};
+	
+	//-- security:
+	if (_commandMode == "SQUAD") then {
+		A3C_SELECTED_UNITS = A3C_SELECTED_UNITS select {typename _x == "OBJECT"};
+	} else {
+		A3C_SELECTED_UNITS = A3C_SELECTED_UNITS select {typename _x == "GROUP"};
+	};
+
+	if (_a3c_dsp == 7999) then {
+		private _radialHoverReal = A3C_RADIAL_HOVER;
+		A3C_RADIAL_HOVER = true;
+		if (_commandMode == "SQUAD") then {
+			//-- radial squad
+
+			if ("act" in tolower A3C_RADIALMODE) then {	
+				BV_ACT = 0;
+				["ACTIONS",-1] call A3C_RADIAL_BTN_FNC_RING_INNER;
+			};
+
+
+
+			//-- Medical controls opened: reset Listbox entries and medical data  uuu
+			if (BV_MEDICAL == 1) then {
+				["MEDICAL"] call A3C_LABEL_LB;
+			};
+			if (A3C_LBR_1 == "REARM") then {
+				A3C_ReArm_options = [];
+				[] call A3C_ReArm_OpenUI;
+			};
+			
+
+			if (A3C_RADIALMODE == "VEHS") then {
+				[A3C_RD_UNITS] call A3C_FINDVEHS;
+			};
+			[] call A3C_BTN_REINIT;	
+		} else {
+			//-- radial highCommand
+			if ("act" in tolower A3C_RADIALMODE) then {
+				["ROE",-1,false,true] call A3C_RADIAL_BTN_FNC_RING_INNER;
+				//A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_RD_UNITS;
+			};
+			//if (count A3C_RD_UNITS == 1) then {
+				[] call A3C_Radial_DashBoard;
+			//};
+		};
+		A3C_RADIAL_HOVER = _radialHoverReal;
+	} else {
+		if (_commandMode == "SQUAD") then {
+			//-- map/table - squad
+			_mode = "COLLAPSE";
+			if (count A3C_SELECTED_UNITS > 0) then {
+				_mode = "OPEN";
+				// private _vehicle = if ()
+				private _infModeTo = if (vehicle (A3C_SELECTED_UNITS select 0) isKindOf "AIR") then {"AIR"} else {"INF"};
+				[_infModeTo] call A3C_MAPTAB_REFRESH_BARCONTROLS;
+			};
+			[_mode,0.1] call A3C_MAPTAB_OVERLAY_TOGGLE_FOLD;
+
+			
+		} else {
+			//-- map/tablet - high command
+			["COLLAPSE",0.1] call A3C_MAPTAB_OVERLAY_TOGGLE_FOLD;
+		};
+
 	};
 };
 
