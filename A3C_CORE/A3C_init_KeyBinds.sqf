@@ -257,7 +257,7 @@ A3C_ADD_KEYBINDS =
 			_return = false;
 			A3C_BOOL_MAP_MD = true;
 			if (visibleMap) then {
-				_this spawn A3C_TAB_LMOUSE_D;
+				_this spawn A3C_TAB_UI_Handlers_OnMouseButtonDown;
 			};
 			_return
 		}
@@ -284,7 +284,7 @@ A3C_ADD_KEYBINDS =
 
 			A3C_BOOL_MAP_MD = false;
 			if (visibleMap) then {
-				_this spawn A3C_LEFTMOUSEUP;
+				_this spawn A3C_TAB_UI_Handlers_OnMouseButtonUp;
 				A3C_BOOL_MOUSEMOVING = false;
 			};
 		}

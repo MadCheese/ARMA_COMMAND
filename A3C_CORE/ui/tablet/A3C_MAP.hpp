@@ -99,7 +99,7 @@ class A3C_MAPDIALOG
 		{
 			idc = 12;
 			/////onMouseMoving = "(findDisplay 12 displayCtrl 51) ctrlEnable true;";
-			onMouseMoving = "_this call A3C_MAPTAB_MOUSEMON";
+			onMouseMoving = "_this call A3C_TAB_UI_Handlers_OnMouseMoving";
 			x = safezoneX;
 			y = safezoneY;
 			w = safezoneW;

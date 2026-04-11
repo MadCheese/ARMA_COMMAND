@@ -416,7 +416,7 @@ if !(isNull findDisplay 6999) then {
 	[
 		"MouseButtonDown",
 		{	//with uiNameSpace do {
-				_this spawn A3C_TAB_LMOUSE_D;
+				_this spawn A3C_TAB_UI_Handlers_OnMouseButtonDown;
 			//};
 		}
 	];
@@ -424,7 +424,7 @@ if !(isNull findDisplay 6999) then {
 	[
 		"MouseButtonUP",
 		{
-			_this spawn A3C_LEFTMOUSEUP;
+			_this spawn A3C_TAB_UI_Handlers_OnMouseButtonUp;
 			A3C_BOOL_MOUSEMOVING = false;
 		}
 	];

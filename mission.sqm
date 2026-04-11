@@ -2988,6 +2988,7 @@ class Mission
 					};
 					id=4933;
 					type="B_Soldier_TL_F";
+					atlOffset=-9.5367432e-07;
 				};
 				class Item1
 				{
@@ -3046,6 +3047,7 @@ class Mission
 			{
 			};
 			id=4932;
+			atlOffset=-9.5367432e-07;
 		};
 		class Item62
 		{
