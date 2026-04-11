@@ -207,7 +207,7 @@ A3C_GREN_MUZZLE = "";
 A3C_UNITCOUNT = ((count (units group player)) -1);
 
 
-
+A3C_Selection_MultiWaypoint = [];
 
 //-- A3C Version Check:
 //checks the current version of A3C and hints if new version is detected

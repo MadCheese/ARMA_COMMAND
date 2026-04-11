@@ -893,7 +893,8 @@ A3C_TAB_LMOUSE_D = {
 
 	disableserialization;
 
-	
+	//-- Variable Default-Resets
+	A3C_Selection_MultiWaypoint = [];
 
 	private _left = _mouseButton == 0;
 	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
@@ -2140,7 +2141,7 @@ A3C_LEFTMOUSEUP = {
 
 
 		[] call A3C_UNITSEL_REFRESH_UI;
-		systemchat format ["HC Select WP-CLick: %1", [A3C_UI_MAP_BOOL_isHCWaypointPosEdit, A3C_SELECTED_UNITS]];
+		// systemchat format ["HC Select WP-CLick: %1", [A3C_UI_MAP_BOOL_isHCWaypointPosEdit, A3C_SELECTED_UNITS]];
 	
 		//~~
 		//-- #TODO: #HuiHui -- streamline this duplicate code for visualizing selection change in tree-UI
@@ -2555,6 +2556,18 @@ A3C_LEFTMOUSEUP = {
 			_foldMode = if (count A3C_SELECTED_UNITS > 0 && {_pageMode != "HC"}) then {"OPEN"} else {"COLLAPSE"};
 			[_foldMode,0.1] call A3C_MAPTAB_OVERLAY_TOGGLE_FOLD;
 			[_pageMode] call A3C_START_TABMODE;
+		} else {
+			//-- no units in selection field: Check for waypoints
+            
+            private _waypointiconsInField = A3C_UI_MAPICONS_HC_WPS select {
+                (_x select 2) inPolygon _selPoses
+            };
+            if (count _waypointiconsInField > 0) then {
+                A3C_Selection_MultiWaypoint = _waypointiconsInField apply {
+                    [_x select 0, _x select 3]
+                };
+                systemchat format ["MouseUp - A3C_Selection_MultiWaypoint: %1", A3C_Selection_MultiWaypoint];
+            };
 		};
 
 		

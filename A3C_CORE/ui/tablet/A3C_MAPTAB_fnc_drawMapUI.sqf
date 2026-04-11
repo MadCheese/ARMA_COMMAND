@@ -1792,6 +1792,28 @@ A3C_MAPTAB_fnc_drawMapUI = {
 
 	};
 
+	//-- MultiWaypoint - highlight selected Waypoints
+	 _sz = 35;
+
+    {
+        private _wp = _x;
+        _this select 0 drawIcon
+		[
+			"\a3\ui_f\data\Map\GroupIcons\selector_selected_ca.paa",
+			[1,1,0,1],
+			waypointPosition _wp,
+			_sz,
+			_sz,
+			0,
+			format ["%1 (%2)", groupID (_wp select 0), _wp select 1],
+			0,
+			0.03,
+			'PuristaLight',
+			'right'
+		];
+
+    } foreach A3C_Selection_MultiWaypoint;
+
 
 
 };
