@@ -186,7 +186,7 @@ A3C_ReArm_Plot_AddItem = {
 			waitUntil {sleep 1; count (_unit getVariable "A3C_PLOT") == 0};
 			[_unit] call A3C_UNIT_RESUME_DESTINATION;
 		};
-		
+
 	} else {
 		if (_addWp) then {
 			_wpData pushBack _wpDataNew;
@@ -704,13 +704,10 @@ A3C_ReArm_GetSources = {
 	private _weapons = [];
 
 	//-- find containers 
-	private _containersHolders = (nearestObjects [_unit, A3C_WeaponHolderClasses, 100]) select {
-		//-- exclude corpse-weaponHolders (will be dealt with later)
-		isNull (getCorpse _x)
-	};
+	
 	private _containersOther = nearestObjects [_unit, ["CAR","HELICOPTER","SHIP","TANK"], 100];
 
-	private _list = _containersHolders + _containersOther;
+	private _list = _containersOther;
 
 	//-- exclude empty sources
 	_list = _list select 
@@ -721,6 +718,11 @@ A3C_ReArm_GetSources = {
 
 	//-- find corpses (Single unit re-arm only)
 	if (count A3C_RD_UNITS == 1) then {
+
+		private _containersHolders = (nearestObjects [_unit, A3C_WeaponHolderClasses, 100]) select {
+			//-- exclude corpse-weaponHolders (will be dealt with later)
+			isNull (getCorpse _x)
+		};
 		private _corpses = (nearestObjects [_unit, ["MAN"], 100]) select
 		{
 			!alive _x && 
@@ -731,7 +733,9 @@ A3C_ReArm_GetSources = {
 				}
 			}
 		};
-		_list = _list + _corpses;
+
+		
+		_list = _list + _containersHolders + _corpses;
 	};
 	
 	switch (_PriMode) do {
