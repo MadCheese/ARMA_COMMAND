@@ -14,9 +14,9 @@ A3C_TAB_UI_Handlers_OnMouseButtonDown = {
 
 	disableserialization;
 
-	//-- Variable Default-Resets
-	A3C_Selection_MultiWaypoint = [];
-	//----------------------------------
+
+
+	private _exit = false;
 
 	private _left = _mouseButton == 0;
 	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
@@ -151,7 +151,72 @@ A3C_TAB_UI_Handlers_OnMouseButtonDown = {
 		["SPACING","OFF"] call A3C_MAP_fnc_CT;
 	};
 
-	private _exit = false;
+	//-- detect click on HC-GROUP WAYPOINT ICON
+	if !(_isHighCommand) then {
+		_wp_Icons = (["HC_WP",_sx,_sy] call A3C_MAP_iconsAtMapPos);
+		if (count _wp_Icons > 0) then {
+			_wp_Icon = _wp_Icons select 0;
+			_gp = _wp_Icon select 0;
+			_wp_Index = _wp_Icon select 3;
+			_exit = true; //~~ sure?
+			if (_left) then {
+				if (_ctrl) then {
+					//-- HC waypoint sync
+					A3C_CONNECTING_MODE = "HCSYNC";
+					A3C_BOOL_DRAGLINE = true;
+					A3C_HC_VEHICLEBOARD_GROUPS = [_gp];
+					A3C_CLICKPOS_ORIG =  A3C_CLICKPOS_1;
+					A3C_BOOL_MOUSEMOVING = true;
+					A3C_HC_WP_SYNC_ROOT = [_gp,_wp_Index];
+					A3C_MMCode = {
+						_this spawn {
+							params ["_clickData","_sX","_sY"];
+							_a3c_dsp = if (visibleMap) then {6998} else {6999};
+							if (isNull findDisplay _a3c_dsp) exitWith {};
+							_map1 = if (_a3c_dsp == 6998) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
+							A3C_DRAGPOS = (_map1 posscreentoworld [_sx,_sy]);
+						};
+					};
+				} else {
+					if ([_gp,_wp_Index] in A3C_BLACKLIST_WAYPOINT_EDIT) then {
+						systemchat  "A3C: It is too late to move this waypoint - wait for completion";
+					} else {
+						//-- waypoint marker about to be moved
+						A3C_BOOL_MOUSEUP = true;
+						A3C_BOOL_MOUSEMOVING = true;
+						A3C_HC_TOSWITCH = [_gp,_wp_Index];
+						A3C_HC_ACTIVEGROUP = _gp;
+						A3C_HC_ACTIVE_IND = _wp_Index;
+						A3C_UI_MAP_BOOL_isHCWaypointPosEdit = true;
+						if (["PlantExplosive_HC",(waypointStatements [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]) select 1 ] call BIS_fnc_instring) then {
+							A3C_HC_DETONATION_BOOL = true;
+						};
+						
+						A3C_MMCode = {
+							[A3C_HC_TOSWITCH,_this] spawn A3C_TAB_UI_Handlers_Drag_HC_Wapyoint;
+						};
+					};
+				};
+
+				_exit = true;
+
+			} else {
+				_exit = true;
+				_wp_Icon = _wp_Icons select 0;
+				_gp = _wp_Icon select 0;
+				_wp_Index = _wp_Icon select 3;
+				[_gp,_wp_Index,A3C_HC_EDIT_ACTION,_a3c_dsp,[_sx, _sy]] call A3C_OPEN_RC_HC;
+				_resetSelection = false;
+			};
+
+		} else {
+			A3C_Selection_MultiWaypoint = [];
+		};
+	};
+
+	if (_exit) exitWith {};
+
+	
 	_gpIcons = (["HC_GP",_sx,_sy] call A3C_MAP_iconsAtMapPos);
 	_gpIcons = 
 	[
@@ -303,68 +368,7 @@ A3C_TAB_UI_Handlers_OnMouseButtonDown = {
 	};
 	
 	
-	//-- detect click on HC-GROUP WAYPOINT ICON
-	if !(_isHighCommand) then {
-		_wp_Icons = (["HC_WP",_sx,_sy] call A3C_MAP_iconsAtMapPos);
-		if (count _wp_Icons > 0) then {
-			_wp_Icon = _wp_Icons select 0;
-			_gp = _wp_Icon select 0;
-			_wp_Index = _wp_Icon select 3;
-			_exit = true; //~~ sure?
-			if (_left) then {
-				if (_ctrl) then {
-					//-- HC waypoint sync
-					A3C_CONNECTING_MODE = "HCSYNC";
-					A3C_BOOL_DRAGLINE = true;
-					A3C_HC_VEHICLEBOARD_GROUPS = [_gp];
-					A3C_CLICKPOS_ORIG =  A3C_CLICKPOS_1;
-					A3C_BOOL_MOUSEMOVING = true;
-					A3C_HC_WP_SYNC_ROOT = [_gp,_wp_Index];
-					A3C_MMCode = {
-						_this spawn {
-							params ["_clickData","_sX","_sY"];
-							_a3c_dsp = if (visibleMap) then {6998} else {6999};
-							if (isNull findDisplay _a3c_dsp) exitWith {};
-							_map1 = if (_a3c_dsp == 6998) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
-							A3C_DRAGPOS = (_map1 posscreentoworld [_sx,_sy]);
-						};
-					};
-				} else {
-					if ([_gp,_wp_Index] in A3C_BLACKLIST_WAYPOINT_EDIT) then {
-						systemchat  "A3C: It is too late to move this waypoint - wait for completion";
-					} else {
-						//-- waypoint marker about to be moved
-						A3C_BOOL_MOUSEUP = true;
-						A3C_BOOL_MOUSEMOVING = true;
-						A3C_HC_TOSWITCH = [_gp,_wp_Index];
-						A3C_HC_ACTIVEGROUP = _gp;
-						A3C_HC_ACTIVE_IND = _wp_Index;
-						A3C_UI_MAP_BOOL_isHCWaypointPosEdit = true;
-						if (["PlantExplosive_HC",(waypointStatements [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]) select 1 ] call BIS_fnc_instring) then {
-							A3C_HC_DETONATION_BOOL = true;
-						};
-						
-						A3C_MMCode = {
-							[A3C_HC_TOSWITCH,_this] spawn A3C_TAB_UI_Handlers_Drag_HC_Wapyoint;
-						};
-					};
-				};
-
-				_exit = true;
-
-			} else {
-				_exit = true;
-				_wp_Icon = _wp_Icons select 0;
-				_gp = _wp_Icon select 0;
-				_wp_Index = _wp_Icon select 3;
-				[_gp,_wp_Index,A3C_HC_EDIT_ACTION,_a3c_dsp,[_sx, _sy]] call A3C_OPEN_RC_HC;
-				_resetSelection = false;
-			};
-
-		};
-	};
-
-	if (_exit) exitWith {};
+	
 
 	//-- detect click on PLAYER SQUAD UNIT ICONS
 	_sqIcons = (["SQUAD",_sx,_sy] call A3C_MAP_iconsAtMapPos);
@@ -2108,6 +2112,109 @@ A3C_TAB_UI_Handlers_OnMouseMoving = {
 	
 };
 
+A3C_TAB_UI_Handlers_OnKeyDown = {
+	private _btn1 = _this select 1;
+	private _shift = _this select 2;
+	private _ctrl = _this select 3;
+	private _alt = _this select 4;
+
+	if (_btn1 in A3C_HUD_DOWNKEYS) exitwith {};
+
+	A3C_HUD_DOWNKEYS pushbackUnique _btn1;
+	if (_this call A3C_isMapClosed) exitwith {};
+	if (_this call A3C_isOverlayClosed) exitwith {};
+	//A3C_BUTTON_SHIFT = _shift;
+
+	//A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [_btn1];
+	//-- input is OPEN/CLOSE TABLET. -> close tablet.
+	if (!isNil 'A3C_TAB_KEY_ID' && {[_btn1,_shift,_ctrl,_alt] isEqualTo A3C_TAB_KEY_ID}) exitWith {
+		A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [_btn1];
+		(findDisplay _display) displayRemoveEventHandler ["KeyDown", A3C_TAB_KEY_D];
+		[] call A3C_Btn_fnc_Cancel;
+	};
+
+	//-- close map: overlay part (partner edition in map EH)
+	if (_btn1 in ([1] + (actionKeys "hidemap"))) then {
+		if (isNil "A3C_GROUP_NAMEING_ACTIVE") then {
+			openMap false;
+			[6998] call A3C_Close_Map_Overlay;
+		};	
+	};
+
+
+
+
+
+	if (_btn1 == 207) exitWith {
+		if (A3C_Selection_MultiWaypoint isEqualTo []) then {
+			//-- SINGLE - need to hover exactly over waypoint
+			getMousePosition params ["_sX","_sY"];
+			_wpIcons = (["HC_WP",_sx,_sy] call A3C_MAP_iconsAtMapPos);
+			if (count _wpIcons > 0) then {
+				_wpIcon = _wpIcons select 0;
+				_gp = _wpIcon select 0;
+				_wpiC = _wpIcon select 3;
+				[_gp, _wpiC] call A3C_HC_REMOVE_WP_RC;
+			};
+		} else {
+			//-- MULTIPLE WAYPOINTS SELECTED - can just delete
+			{
+				_x params ["_group", "_wpIndex"];
+				while {_x in (waypoints _group)} do {
+					_x call A3C_HC_REMOVE_WP_RC;
+				};
+				A3C_Selection_MultiWaypoint = A3C_Selection_MultiWaypoint - [_x];
+			} foreach A3C_Selection_MultiWaypoint;
+		};
+		
+
+	};
+
+
+	private _btn = _this select 1;
+	private _gpUnits = ((units group player) - [player]);
+	private _unitCount = count _gpUnits;
+	if (_unitCount > 9) then {_unitCount = 9};
+	private _teamColor = "MAIN";
+	private _colorTeamUnits = [];
+	if (A3C_MAP_BOOL_CT) exitWith {};
+	//if (A3C_BOOL_CT_SPACING) exitwith {};
+	if (_btn == 2 && {commandingMenu == ""}) exitwith {
+		if !(A3C_HELI_INF_MODE == "INF") then {
+			A3C_SELECTED_UNITS = [];
+		};
+
+		["INF"] call A3C_START_TABMODE;
+		A3C_HELI_INF_MODE = "INF";
+	};
+	if (_btn == 3 && {commandingMenu == ""}) exitwith {
+		if !(A3C_HELI_INF_MODE == "AIR") then {
+			A3C_SELECTED_UNITS = [];
+		};
+
+		["AIR"] call A3C_START_TABMODE;
+		A3C_HELI_INF_MODE = "AIR";
+	};
+	if (_btn == 4 && {commandingMenu == ""}) exitwith {
+		if !(A3C_HELI_INF_MODE == "HC") then {
+			A3C_SELECTED_UNITS = [];
+		};
+
+		["HC"] call A3C_START_TABMODE;
+		A3C_HELI_INF_MODE = "HC";
+	};
+
+	if (_btn1 == 42) then { 
+		A3C_MODIFIER_SHIFT = true; //-- needed for UI (TREE EH's do not do CTL/SHIFT)
+	};
+
+	if (_btn1 == 29) then {
+		A3C_MODIFIER_CTRL = true; //-- needed for UI (TREE EH's do not do CTL/SHIFT)
+	};
+};
+
+		
+
 
 ///--- RELATED HELPERS / EXTENSIONS
 
@@ -2176,17 +2283,39 @@ A3C_TAB_UI_Handlers_Drag_HC_Wapyoint = {
 	params ["_waypoint","_data"];
 
 	_waypoint params ["_group","_wpi"];
+
+
 	if (A3C_BOOL_DISABLEMAPCTRL) exitwith {};
+
+
+
 	_a3c_dsp = if (visibleMap) then {6998} else {6999};
 	disableSerialization;
 	_map1 = if (_a3c_dsp == 6998) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
 	_posi = _map1 posscreentoworld [(_data select 1),(_data select 2)];
-	private _currentWP = currentWaypoint A3C_HC_ACTIVEGROUP;
-	//if (A3C_HC_ACTIVE_IND != _currentWP) then {
+
+	if (A3C_Selection_MultiWaypoint isEqualTo []) then {
+		//-- Single Waypoint Drag
+		private _currentWP = currentWaypoint A3C_HC_ACTIVEGROUP;
+		_waypoint setwaypointposition [_posi,0];	
+	} else {
+		//-- Multiple Waypoint Drag
+		private _childWaypoints = A3C_Selection_MultiWaypoint - [_waypoint];
+		private _parentWaypointPos = waypointPosition _waypoint;
+		private _waypointRelposMap = _childWaypoints apply {
+			private _childWaypointPos = waypointPosition _x;
+			[_parentWaypointPos distance2D _childWaypointPos, _parentWaypointPos getDir _childWaypointPos]
+		};
 		_waypoint setwaypointposition [_posi,0];
-		//(leader _group) setDestination [_posi, "FORMATION PLANNED", true];
-		//[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] spawn A3C_BEHAVIOUR_HC_MoveToWayPointPosition;
-	//};
+		{
+			private _waypointRelposMapEntry = _waypointRelposMap select _forEachIndex;
+			private _newWaypointPos = _posi getPos [_waypointRelposMapEntry select 0, _waypointRelposMapEntry select 1];
+			_x setWaypointPosition [_newWaypointPos, -1]; //-- << Force exact placement with negative radius
+		} foreach _childWaypoints;
+
+	};	
+	
+
 	
 };
 

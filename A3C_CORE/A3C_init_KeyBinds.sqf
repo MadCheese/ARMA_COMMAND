@@ -291,83 +291,11 @@ A3C_ADD_KEYBINDS =
 	];
 	uiNamespace setVariable ["A3C_INDEX_VAR_MAP_MOUSEU",A3C_MAP_KEYBINDS_51_MU];
 
-	/*
-	////////////////////////////////////////////////////// --  Map Display 12 MouseMoving
-	//-- Prevent Bleeding of UI Eventhandlers
-	_var  = uiNamespace getVariable "A3C_INDEX_VAR_MAP_MOUSEM";
-	if (!isNil "_var") then {
-		(findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["MouseMoving",_var];
-	} else {
-		if (!isNil "A3C_MAP_KEYBINDS_51_MM" && {A3C_MAP_KEYBINDS_51_MM != -1}) then {
-			(findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["MouseMoving",A3C_MAP_KEYBINDS_51_MM];
-		};
-	};
-
-	//-- add EH
-	A3C_MAP_KEYBINDS_51_MM = (findDisplay 12 displayCtrl 51) ctrlAddEventHandler
-	[
-		"MouseMoving",
-		{
-			_return = false;
-			if (visibleMap) then {
-				A3C_MAP_X = _this select 1;
-				A3C_MAP_Y = _this select 2;
-				if (A3C_MapSel_Field_Active) then {
-					A3C_MapSel_Field_DEST = (findDisplay 12 displayCtrl 51) posscreentoworld [A3C_MAP_X,A3C_MAP_Y];
-				};
-				//private _ctls = [11,13,7071,7074];
-				//if ((!isnull (findDisplay 6998)) && {{[[A3C_MAP_X,A3C_MAP_Y],findDisplay 6998 displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea} count _ctls > 1}) then {
-				//	(findDisplay 12 displayCtrl 51) ctrlEnable false;
-				//	systemchat 'off';
-				//} else {
-				//	(findDisplay 12 displayCtrl 51) ctrlEnable true;
-				//	systemchat 'on';
-				//};
-				if (A3C_BOOL_MOUSEMOVING) then {
-					_this spawn A3C_MMCode;
-				};
-			};
-
-		}
-	];
-	uiNamespace setVariable ["A3C_INDEX_VAR_MAP_MOUSEM",A3C_MAP_KEYBINDS_51_MM];
-	*/
+	
 
 
 	if !(isNil "A3C_GRENADEHANDLER") then {(findDisplay 46) displayRemoveEventHandler ["MouseButtonUP",A3C_GRENADEHANDLER];};
 
-
-
-	/*
-
-
-	//if (A3C_MAP_KEYBINDS_51_MC == -1) then {
-
-		A3C_MAP_KEYBINDS_51_MC = (findDisplay 12 displayCtrl 51) ctrlSetEventHandler
-		[
-			"MouseButtonClick",
-			"
-				systemchat '1';
-				true
-
-			"
-		];
-
-		//uiNamespace setVariable ["A3C_INDEX_VAR_MAP_MOUSED",A3C_MAP_KEYBINDS_51_MC];
-	//};
-
-	if (A3C_MAP_EH_51_ESC == -1) then {
-		A3C_MAP_EH_51_ESC = (findDisplay 12 ) displayAddEventhandler
-		[
-			"KeyDown",
-			{
-				//systemchat "1";
-
-			}
-		];
-	};
-
-	*/
 
 
 	//---------------------------------------  C B A  K E Y B I N D S  -------------------------------

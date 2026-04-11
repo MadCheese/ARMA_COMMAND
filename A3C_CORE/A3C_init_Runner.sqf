@@ -129,9 +129,7 @@ A3C_KILLED_EVH = { //-- only used by player
 				};
 			};
 			profileNamespace setvariable ["A3C_GROUPUNITS",_groupUnits];
-
 		};
-
 
 		A3C_KILLED = player addEventHandler ["KILLED",{[_this select 0] spawn A3C_KILLED_EVH}];
 		A3C_FIRED = player addEventHandler ["FIRED",{_this spawn A3C_FIRED_EVH}];

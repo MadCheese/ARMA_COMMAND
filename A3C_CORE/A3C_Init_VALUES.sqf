@@ -180,7 +180,9 @@ if (isServer) then {
 
 	A3C_REMOTE_BLACKFISH_HandlerIndex = 0;
 	publicVariable "A3C_REMOTE_BLACKFISH_HandlerIndex";
-		
+
+	A3C_TurnOutEH_Vehicles = []; //-- Server only, NOT public
+
 };
 
 

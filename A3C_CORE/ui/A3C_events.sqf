@@ -408,22 +408,6 @@ A3C_FNC_CBA_KEY = {
 	_refPos = [];
 	
 
-	/*
-	if (_mode == "DOWN" && {_this in A3C_PREVENT_DOUBLE_EXEC}) exitWith {};
-	if (_mode == "DOWN") then {
-		A3C_PREVENT_DOUBLE_EXEC pushBack _this;
-
-	} else {
-		_downHandler = +(_this);
-		_downHandler set [1,"DOWN"];
-		player sidechat str [_downHandler,A3C_PREVENT_DOUBLE_EXEC];
-		A3C_PREVENT_DOUBLE_EXEC = A3C_PREVENT_DOUBLE_EXEC - [_downHandler];
-	};
-
-	systemchat format ["%1, %2", _this,A3C_PREVENT_DOUBLE_EXEC] ;
-	*/
-
-	//player != (leader group player)
 	if (player != (units player select 0) ) exitwith {}; // && {!([player] call A3C_isUnconscious)}//-- #NOTE: seems incomplete. this could enable keybind when player is not
 
 

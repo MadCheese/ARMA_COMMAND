@@ -3722,31 +3722,8 @@ A3C_Map_HC_groupContext_OpenMenu = {
 	A3C_HC_NearStatics = [];
 
 	_a3c_dsp = if (visibleMap) then {6998} else {6999};
-	//systemchat str _this;
-	
-	/*
-	//-- correct position
-	_menuPos = ctrlPosition (findDisplay _a3c_dsp displayCtrl A3C_HC_GROUP_MENU_CTRLPARENT);
-	_menuPos params ["_mnX","_mnY","_mnW","_mnH"];
-	_infoBoxPos = ctrlPosition (findDisplay _a3c_dsp displayCtrl 303030);
-	_framePos = ctrlPosition (findDisplay _a3c_dsp displayCtrl 10);
-
-	_lowerMin = (_framePos select 1) - _mnH;
-	_menuPos set [1,_mnY min _lowerMin];
-
-	if (_mnX >= (_infoBoxPos select 0) - _mnX) then { //-- groupMenu bleeds into frame: adjust X and Y
-
-		//_upperMin = (_infoBoxPos select 1) + (_infoBoxPos select 3);
-		//
-		//_menuPos set [1,(_mnY max _upperMin)]; // min _lowerMin
-		_menuPos set [0,(_infoBoxPos select 0) - _mnW];
-		
-
-	};
-	*/
 
 	
-	[_group] call A3C_CleanupTurnOutVehicles;
 
 	
 
@@ -3870,25 +3847,6 @@ A3C_Map_HC_groupContext_OpenMenu = {
 			[800703,["Column","Stag Column","Wedge","Ech Left","Ech Right","Vee","Line","File","Diamond"]],
 			[800704,["Red","Blue","Green","Black","White"]]
 		];
-	/*
-	if (_modeNum == 0) then {
-		//-- add convoy checks
-		if ({_group == (_x select 0)} count A3C_CONVOYGROUPS > 0) then {
-			(findDisplay _a3c_dsp displayCtrl 800710) ctrlSetText "REJOIN CONVOY";
-			(findDisplay _a3c_dsp displayCtrl 800710) ctrlSetTextColor [1,1,1,1];
-			(findDisplay _a3c_dsp displayCtrl 800706) ctrlSetText "#(argb,8,8,3)color(1,1,0,1)";
-		} else {
-			(findDisplay _a3c_dsp displayCtrl 800706) ctrlSetText "#(argb,8,8,3)color(1,1,0,0.2)";
-			(findDisplay _a3c_dsp displayCtrl 800710) ctrlSetText "CREATE CONVOY";
-			(findDisplay _a3c_dsp displayCtrl 800710) ctrlSetTextColor [1,1,1,0.2];
-		};
-
-	} else {
-		(findDisplay _a3c_dsp displayCtrl 800710) ctrlSetTextColor [1,1,1,1];
-		(findDisplay _a3c_dsp displayCtrl 800706) ctrlSetText "#(argb,8,8,3)color(1,1,0,1)";
-		(findDisplay _a3c_dsp displayCtrl 800710) ctrlSetText "Create Convoy";
-	};
-	*/
 	
 	_targetArray = A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS;
 	_startBar progressSetPosition 0.75;
@@ -3919,6 +3877,8 @@ A3C_Map_HC_groupContext_OpenMenu = {
 	};
 	
 	playsound "ReadOutHideClick1"; 
+
+	
 };
 
 
@@ -4735,120 +4695,7 @@ A3C_HC_UnassembleWeapon = {
 
 };
 
-A3C_HandleDisableTurnOut = {
-    params ["_group", "_behaviour"];
 
-    if (isNull _group) exitWith {};
-
-    private _activeBehaviours = ["Aware", "Danger", "Stealth"];
-
-    // Vehicles currently driven by members of this group
-    private _currentVehicles =
-        (units _group)
-        select {
-            private _veh = objectParent _x;
-            !isNull _veh && {_x isEqualTo driver _veh}
-        }
-        apply { objectParent _x };
-
-    _currentVehicles = _currentVehicles arrayIntersect _currentVehicles;  // dedupe
-
-    // Vehicles this group previously managed
-    private _managedVehicles = _group getVariable ["A3C_ManagedTurnoutVehicles", []];
-    _managedVehicles = _managedVehicles select {!isNull _x};
-
-    if (_behaviour in _activeBehaviours) then {
-        // Newly used vehicles: add EH
-        private _toAdd = _currentVehicles - _managedVehicles;
-
-        // No longer used vehicles: remove EH
-        private _toRemove = _managedVehicles - _currentVehicles;
-
-        {
-            [_x] remoteExecCall ["A3C_fnc_InstallTurnOutEH", _x];
-        } forEach _toAdd;
-
-        {
-            [_x] remoteExecCall ["A3C_fnc_RemoveTurnOutEH", _x];
-        } forEach _toRemove;
-
-        // Update group-managed vehicle list
-        _group setVariable ["A3C_ManagedTurnoutVehicles", _currentVehicles, true];
-
-    } else {
-        // Behaviour no longer needs turnout suppression:
-        // remove EH from every vehicle this group was managing
-        {
-            [_x] remoteExecCall ["A3C_fnc_RemoveTurnOutEH", _x];
-        } forEach _managedVehicles;
-
-        _group setVariable ["A3C_ManagedTurnoutVehicles", [], true];
-    };
-};
-
-
-A3C_fnc_InstallTurnOutEH = {
-    params ["_vehicle"];
-
-    if (isNull _vehicle) exitWith {};
-
-    // Guard on the machine where the vehicle is local / EH will exist
-    private _existingEH = _vehicle getVariable ["A3C_TurnOutEH", -1];
-    if (_existingEH >= 0) exitWith {};
-
-    private _ehId = _vehicle addEventHandler ["TurnOut", {
-        params ["_vehicle", "_unit", "_turret"];
-        {
-            _x action ["TurnIn", _vehicle];
-        } forEach (crew _vehicle);
-    }];
-
-    _vehicle setVariable ["A3C_TurnOutEH", _ehId];
-};
-
-
-A3C_fnc_RemoveTurnOutEH = {
-    params ["_vehicle"];
-
-    if (isNull _vehicle) exitWith {};
-
-    private _ehId = _vehicle getVariable ["A3C_TurnOutEH", -1];
-    if (_ehId < 0) exitWith {};
-
-    _vehicle removeEventHandler ["TurnOut", _ehId];
-    _vehicle setVariable ["A3C_TurnOutEH", nil];
-};
-
-A3C_CleanupTurnOutVehicles = {
-    params ["_group"];
-
-    if (isNull _group) exitWith {};
-
-    // Vehicles currently driven by members of this group
-    private _currentVehicles =
-        (units _group)
-        select {
-            private _veh = objectParent _x;
-            !isNull _veh && {_x isEqualTo driver _veh}
-        }
-        apply { objectParent _x };
-
-    _currentVehicles = _currentVehicles arrayIntersect _currentVehicles;
-
-    // Previously managed vehicles
-    private _managedVehicles = _group getVariable ["A3C_ManagedTurnoutVehicles", []];
-    _managedVehicles = _managedVehicles select {!isNull _x};
-
-    // Vehicles no longer driven by this group
-    private _orphanedVehicles = _managedVehicles - _currentVehicles;
-
-    {
-        [_x] remoteExecCall ["A3C_fnc_RemoveTurnOutEH", _x];
-    } forEach _orphanedVehicles;
-
-    // Update group state to only include currently valid vehicles
-    _group setVariable ["A3C_ManagedTurnoutVehicles", _currentVehicles, true];
-};
 
 A3C_Map_HC_groupContext_LB_Switch = {
 	params ["_box","_lb","_display"];
@@ -4883,12 +4730,8 @@ A3C_Map_HC_groupContext_LB_Switch = {
 				// private _executingEntity = if (_box ) then {leader _group} else {_group};
 				[_group, _immediateAction select 1] remoteExec [_immediateAction select 0, leader _group];
 			};
-			[_group, _immediateAction select 1] call A3C_HandleDisableTurnOut;
 		} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
-
 	};
-	
-
 };
 A3C_GROUP_STANCE_Selected = "AUTO";
 A3C_GP_Btns_Stances = {
@@ -4938,11 +4781,6 @@ A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 					};
 				} foreach (units _x);
 			} else {
-				if !(profileNameSpace getVariable ["HC_GROUP_RESPONSE", false]) then {
-
-					[_x, A3C_Map_HC_groupContext_Behaviour] call A3C_HandleDisableTurnOut;
-					//-- #TODO - probably move other bits below in this condition block?
-				};
 				if (A3C_Map_HC_groupContext_Behaviour != "") then {
 					[leader _x,A3C_Map_HC_groupContext_Behaviour] remoteExec ["setBehaviourStrong", leader _x];
 				};	
@@ -5250,7 +5088,6 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 		};
 	};
 };
-
 
 
 
