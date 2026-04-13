@@ -579,6 +579,7 @@ A3C_MapOverlayDefaultkeys = {
 
 
 	private _key = _data select 1;
+	// systemchat format ["Key A3C_MapOverlayDefaultkeys: %1", _key];
 
 	private _exit = false;
 
@@ -589,7 +590,14 @@ A3C_MapOverlayDefaultkeys = {
 		if (_key in [1,2,3,4,5,6,7,8,9,0]) then {
 			private _keyValueIndex = _key - 2;
 			if ((_key - 1) <= _lbSize) then {
-				[_A3C_HC_ObjectSelector_ListBox, _keyValueIndex, true] call A3C_setCurSel;
+				//-- we need to spawn with a slight delay because: 
+				//>> in A3C_TAB_UI_Handlers_OnKeyDown will fire and deselect units
+				[_A3C_HC_ObjectSelector_ListBox, _keyValueIndex] spawn {
+					sleep 0.1;
+					params ["_A3C_HC_ObjectSelector_ListBox","_keyValueIndex"];
+					[_A3C_HC_ObjectSelector_ListBox, _keyValueIndex, true] call A3C_setCurSel;
+				};
+				
 			};
 			_exit = true;
 		};	

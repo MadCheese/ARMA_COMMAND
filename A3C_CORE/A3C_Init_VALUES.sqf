@@ -204,7 +204,7 @@ A3C_LaxMount = if (isClass(configFile/"CfgPatches"/"L_MOUNT")) then {true} else 
 
 
 A3C_GREN_MUZZLE = "";
-
+A3C_GREN_ALLOW_UNITSWITCH = false;
 
 A3C_UNITCOUNT = ((count (units group player)) -1);
 
@@ -467,6 +467,7 @@ A3C_UI_RADIAL_Current_Remfire_Vehicles = []; //-- Remfire Vehicles: Radial
 
 A3C_REMFIRE_nearEmptyStatics = [];
 
+a3c_is_HC_remote = false;
 A3C_BOOL_REMFIRE = false;
 A3C_BOOL_REMFIRE_SUP = false;
 A3C_REMFIRE_MAGTYPES = [];

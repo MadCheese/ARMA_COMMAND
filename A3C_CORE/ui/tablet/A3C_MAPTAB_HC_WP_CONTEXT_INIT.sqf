@@ -510,24 +510,7 @@ A3C_OPEN_RC_HC = {
 				
 
 				A3C_HC_EDIT_ACTION = "CAS-STRIKE";
-				//systemchat str _actionScript;
-				//systemchat str _casTypeCurrent;
-				//A3C_HC_LB_IND set [1,_flexLBCAS]; //~~
 
-				
-				// lbClear _preCondModeCtrl;
-				// {
-				// 	_casMode = switch (true) do {
-				// 		case (_x isEqualTo ["machinegun"]) : {'GUN RUN'};
-				// 		case (_x isEqualTo ["missilelauncher"]) : {'MISSILES'};
-				// 		case (_x isEqualTo ["machinegun","missilelauncher"]) : {'GUNS + MISSILES'};
-				// 		case (_x isEqualTo ["bomblauncher"]) : {'BOMBING RUN'};
-				// 	};
-				// 	// [_preCondModeCtrl, _casMode] call A3C_addLbEntry;
-				// } foreach A3C_HC_CASMODES;
-				// [_preCondModeCtrl, _casTypeCurrent, true] call A3C_setCurSel;
-			
-				// _header3Text = "CAS TYPE";
 			};
 		};
 		
@@ -707,7 +690,7 @@ A3C_OPEN_RC_HC = {
 		_combo = (findDisplay _a3c_dsp displayCtrl 709141);
 		lbClear _combo;
 		[_combo, A3C_HC_EDIT_ACTION] call A3C_addLbEntry;
-		[_combo, 0, true, true] call A3C_setCurSel;
+		[_combo, 0, true] call A3C_setCurSel;
 	} else {
 		[] call A3C_MAPTAB_WPMENU_ADDACTIONS;
 	};
@@ -929,7 +912,7 @@ A3C_OPEN_RC_HC = {
 			private _lbText = if (_x == "GOCODE") then {"GO-CODE"} else {_x};
 			[_preCondModeCtrl, _lbText] call A3C_addLbEntry;
 			if (_x == A3C_HC_ACTIVE_PRE_COND_MODE) then {
-				[_preCondModeCtrl, _foreachIndex, true] call A3C_setCurSel;
+				[_preCondModeCtrl, _foreachIndex] call A3C_setCurSel;
 			};
 		} foreach ["ARRIVAL","GOCODE","TIMEOUT","DAYTIME"];
 	};
@@ -966,7 +949,7 @@ A3C_OPEN_RC_HC = {
 			//player groupchat str [_lbValue , A3C_HC_ACTIVE_PRE_COND_VAL];
 			if (_lbValue == A3C_HC_ACTIVE_PRE_COND_VAL) then {
 				//systemchat str ['open_',_lbValue,A3C_HC_ACTIVE_PRE_COND_VAL];
-				[finddisplay _a3c_dsp displayCtrl 709124, _foreachIndex, true] call A3C_setCurSel;
+				[finddisplay _a3c_dsp displayCtrl 709124, _foreachIndex] call A3C_setCurSel;
 				//if (A3C_HC_ACTIVE_PRE_COND_MODE == "DAYTIME") then {
 				//	//~~ currently this uses current date for re-opening UI - check if this creates trouble with date switch
 				//	A3C_HC_ACTIVE_PRE_COND_VAL = (format ["%1:%2:%3:",date select 0,date select 1,date select 2]) + _lbValue; 
@@ -1012,7 +995,7 @@ A3C_OPEN_RC_HC = {
 		};
 	};
 
-	[finddisplay _a3c_dsp displayCtrl 709125, _lbV3, true] call A3C_setCurSel;
+	[finddisplay _a3c_dsp displayCtrl 709125, _lbV3] call A3C_setCurSel;
 
 	lbClear (finddisplay _a3c_dsp displayCtrl 709126);
 	{
@@ -1022,9 +1005,9 @@ A3C_OPEN_RC_HC = {
 	_ctrlPosWPM = [_a3c_dsp,A3C_RC_Context_HC_WP,_ctrlPosWPM] call A3C_DSP_FindControlSafePos;
 	(findDisplay _a3c_dsp displayCtrl A3C_RC_Context_HC_WP) ctrlSetPosition _ctrlPosWPM;
 	(findDisplay _a3c_dsp displayCtrl A3C_RC_Context_HC_WP) ctrlCommit 0;
-	[finddisplay _a3c_dsp displayCtrl 709126, _lbV4, true] call A3C_setCurSel;
-	[finddisplay _a3c_dsp displayCtrl 709128, _lbV5, true] call A3C_setCurSel;
-	[finddisplay _a3c_dsp displayCtrl 709129, _lbV6, true] call A3C_setCurSel;
+	[finddisplay _a3c_dsp displayCtrl 709126, _lbV4] call A3C_setCurSel;
+	[finddisplay _a3c_dsp displayCtrl 709128, _lbV5] call A3C_setCurSel;
+	[finddisplay _a3c_dsp displayCtrl 709129, _lbV6] call A3C_setCurSel;
 
 	(finddisplay _a3c_dsp displayCtrl 709143) ctrlSetText _header3Text;
 
@@ -1040,7 +1023,7 @@ A3C_OPEN_RC_HC = {
 	{
 		[_comboCtrl, _x] call A3C_addLbEntry;
 		if (_x == (waypointBehaviour [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND])) then {
-			[_comboCtrl, _foreachIndex, true] call A3C_setCurSel;
+			[_comboCtrl, _foreachIndex] call A3C_setCurSel;
 		};
 	} foreach 
 	[
@@ -1059,7 +1042,7 @@ A3C_OPEN_RC_HC = {
 		_translation = ["NO CHANGE","BLUE","GREEN","WHITE","YELLOW","RED"] select _foreachIndex;
 		[_comboCtrl, _x] call A3C_addLbEntry;
 		if (_translation == (waypointCombatMode [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND])) then {
-			[_comboCtrl, _foreachIndex, true] call A3C_setCurSel;
+			[_comboCtrl, _foreachIndex] call A3C_setCurSel;
 		};
 
 		_comboCtrl lbSetColor
@@ -1883,7 +1866,7 @@ A3C_MAPTAB_WPMENU_ADDACTIONS = {
 			_lbText = "FULL LANDING";
 		};
 		if ((toLower _lbText) == (toLower A3C_HC_EDIT_ACTION)) then {
-			[_actionTypeCombo, _foreachIndex, true] call A3C_setCurSel;
+			[_actionTypeCombo, _foreachIndex] call A3C_setCurSel;
 			
 		};
 	} foreach _array;
@@ -1930,13 +1913,13 @@ A3C_daytimeZeroComp = {
 A3C_HC_CASMODE_VAL = 0;
 A3C_LB_HC = {
 	params ["_mode","_lb"];
-
+	
 	// systemchat str [_mode];
 	
 	if (isnil "_mode") exitWith {};
 	_a3c_dsp = if (count _this > 2) then {_this select 2} else {6999};
 
-	
+	// systemchat format ["A3C_LB_HC, A3C_HC_ACTIVE_POST_COND_MODE %1, _mode %2", A3C_HC_ACTIVE_POST_COND_MODE, _mode];
 
 	private _header3Text = "COMPLETION";
 	
@@ -1980,7 +1963,7 @@ A3C_LB_HC = {
 								[_preCondValCtrl, _x] call A3C_addLbEntry;
 							} foreach ["A","B","C","D"];
 							
-							[_preCondValCtrl, 0, true] call A3C_setCurSel;
+							[_preCondValCtrl, 0] call A3C_setCurSel;
 							
 							A3C_HC_ACTIVE_PRE_COND_VAL = "A";
 
@@ -1992,7 +1975,7 @@ A3C_LB_HC = {
 								[_preCondValCtrl, _x] call A3C_addLbEntry;
 							} foreach ["30SEK","60SEK","90SEK","2MIN","3MIN","4MIN"];
 							
-							[_preCondValCtrl, 2, true] call A3C_setCurSel;
+							[_preCondValCtrl, 2] call A3C_setCurSel;
 							
 							A3C_HC_ACTIVE_PRE_COND_VAL = 90;
 							"TIMEOUT"
@@ -2021,7 +2004,7 @@ A3C_LB_HC = {
 								_min = _min + 5;
 							};
 							
-							[_preCondValCtrl, 0, true] call A3C_setCurSel;
+							[_preCondValCtrl, 0] call A3C_setCurSel;
 							
 							"DAYTIME"
 						};
@@ -2071,7 +2054,7 @@ A3C_LB_HC = {
 					case ("none") : {
 						[finddisplay _a3c_dsp displayCtrl 709126, 'NONE'] call A3C_addLbEntry;
 						
-						[finddisplay _a3c_dsp displayCtrl 709126, 0, true] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl 709126, 0] call A3C_setCurSel;
 						A3C_HC_ACTIVE_POST_COND_VAL = "NONE";
 						
 						"NONE"
@@ -2081,7 +2064,7 @@ A3C_LB_HC = {
 							[finddisplay _a3c_dsp displayCtrl 709126, _x] call A3C_addLbEntry;
 						} foreach ["30SEK","60SEK","90SEK","2MIN","3MIN","4MIN"];
 						
-						[finddisplay _a3c_dsp displayCtrl 709126, 2, true] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl 709126, 2] call A3C_setCurSel;
 						A3C_HC_ACTIVE_POST_COND_VAL = 90;
 						
 
@@ -2091,7 +2074,7 @@ A3C_LB_HC = {
 						{
 							[finddisplay _a3c_dsp displayCtrl 709126, _x] call A3C_addLbEntry;
 						} foreach ["A","B","C","D"];
-						[finddisplay _a3c_dsp displayCtrl 709126, 0, true] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl 709126, 0] call A3C_setCurSel;
 						
 						A3C_HC_ACTIVE_POST_COND_VAL = "A";
 						"GOCODE"
@@ -2124,7 +2107,7 @@ A3C_LB_HC = {
 							[finddisplay _a3c_dsp displayCtrl 709126, _timeString] call A3C_addLbEntry;
 							_min = _min + 5;
 						};
-						[finddisplay _a3c_dsp displayCtrl 709126, 0, true] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl 709126, 0] call A3C_setCurSel;
 						
 						"DAYTIME"
 					};
@@ -2217,7 +2200,7 @@ A3C_LB_HC = {
 						{
 							[finddisplay _a3c_dsp displayCtrl 709126, _x] call A3C_addLbEntry;
 						} foreach ["30SEK","60SEK","90SEK","2MIN","3MIN","4MIN"];
-						[finddisplay _a3c_dsp displayCtrl 709125, 0, true] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl 709125, 0] call A3C_setCurSel;
 						A3C_HC_ACTIVE_POST_COND_MODE = "TIMEOUT";
 						A3C_HC_ACTIVE_POST_COND_VAL = "90";
 						
@@ -2231,7 +2214,7 @@ A3C_LB_HC = {
 						{
 							[_preCondModeCtrl, _x] call A3C_addLbEntry;
 						} foreach ["ARRIVAL","GOCODE","TIMEOUT","DAYTIME"];
-						[_preCondModeCtrl, 0, true] call A3C_setCurSel;
+						[_preCondModeCtrl, 0] call A3C_setCurSel;
 						A3C_HC_ACTIVE_POST_COND_MODE = "ARRIVAL";
 						A3C_HC_ACTIVE_POST_COND_VAL = "NONE";
 						
@@ -2280,12 +2263,8 @@ A3C_LB_HC = {
 							
 							[finddisplay _a3c_dsp displayCtrl 709123, 1, true] call A3C_setCurSel;
 							[finddisplay _a3c_dsp displayCtrl 709124, 0, true] call A3C_setCurSel;
-							
-							A3C_HC_ACTIVE_POST_COND_MODE = "GOCODE";
-							A3C_HC_ACTIVE_POST_COND_VAL = "A";
+							//-- Note = since we use true param, default post-cond values are already set here!
 							(finddisplay _a3c_dsp displayCtrl 709124) ctrlShow true;
-							// 
-							
 						};
 					};
 					case ("CYCLE") : {
@@ -2300,15 +2279,14 @@ A3C_LB_HC = {
 						_ctrlText = "REPAIR";
 					};
 					case ("FIRE SUPPORT") : {
+
 						A3C_HC_EDIT_ACTION = "SUPPRESSION";
 						_ctrlText = "SUPPRESSION";
 						if (A3C_HC_ACTIVE_POST_COND_MODE == "NONE") then {
 							
-							[finddisplay _a3c_dsp displayCtrl 709125, 0, true] call A3C_setCurSel;
-							[finddisplay _a3c_dsp displayCtrl 709126, 2, true] call A3C_setCurSel;
-							A3C_HC_ACTIVE_POST_COND_MODE = "TIMEOUT";
-							A3C_HC_ACTIVE_POST_COND_VAL = 90;
-							
+							[finddisplay _a3c_dsp displayCtrl 709125, 1, true] call A3C_setCurSel;
+							[finddisplay _a3c_dsp displayCtrl 709126, 3, true] call A3C_setCurSel; //-->> Go-Code D
+							//-- Note = since we use true param, default post-cond values are already set here!
 						};
 						_requiresPostData = true;
 					};
@@ -2316,12 +2294,9 @@ A3C_LB_HC = {
 						A3C_HC_EDIT_ACTION = "AMBUSH";
 						_ctrlText = "AMBUSH";
 						if (A3C_HC_ACTIVE_POST_COND_MODE == "NONE") then {
-							
-							[finddisplay _a3c_dsp displayCtrl 709125, 0, true] call A3C_setCurSel;
-							[finddisplay _a3c_dsp displayCtrl 709126, 2, true] call A3C_setCurSel;
-							A3C_HC_ACTIVE_POST_COND_MODE = "TIMEOUT";
-							A3C_HC_ACTIVE_POST_COND_VAL = 90;
-							
+							[finddisplay _a3c_dsp displayCtrl 709125, 1, true] call A3C_setCurSel;
+							[finddisplay _a3c_dsp displayCtrl 709126, 0, true] call A3C_setCurSel; //-->> Go-Code A
+							//-- Note = since we use true param, default post-cond values are already set here!
 						};
 						_requiresPostData = true;
 					};
@@ -2336,11 +2311,8 @@ A3C_LB_HC = {
 								[finddisplay _a3c_dsp displayCtrl 709126, _x] call A3C_addLbEntry;
 							} foreach ["A","B","C","D"];
 							[finddisplay _a3c_dsp displayCtrl 709125, 1, true] call A3C_setCurSel;
-							[finddisplay _a3c_dsp displayCtrl 709126, 0, true] call A3C_setCurSel;
-							A3C_HC_ACTIVE_POST_COND_MODE = "GOCODE";
-							A3C_HC_ACTIVE_POST_COND_VAL = "A";
-
-							
+							[finddisplay _a3c_dsp displayCtrl 709126, 0, true] call A3C_setCurSel; //-->> Go-Code A
+							//-- Note = since we use true param, default post-cond values are already set here!
 						};
 						_requiresPostData = true;
 						_requiresSubData = true;
@@ -2363,10 +2335,8 @@ A3C_LB_HC = {
 								[finddisplay _a3c_dsp displayCtrl 709126, _x] call A3C_addLbEntry;
 							} foreach ["A","B","C","D"];
 							[finddisplay _a3c_dsp displayCtrl 709125, 1, true] call A3C_setCurSel;
-							[finddisplay _a3c_dsp displayCtrl 709126, 0, true] call A3C_setCurSel;
-							A3C_HC_ACTIVE_POST_COND_MODE = "GOCODE";
-							A3C_HC_ACTIVE_POST_COND_VAL = "A";
-							
+							[finddisplay _a3c_dsp displayCtrl 709126, 0, true] call A3C_setCurSel; //-->> Go-Code A
+							//-- Note = since we use true param, default post-cond values are already set here!
 						};
 						_requiresPostData = true;
 					};
@@ -2380,8 +2350,8 @@ A3C_LB_HC = {
 							[finddisplay _a3c_dsp displayCtrl 709125, _x] call A3C_addLbEntry;
 						} foreach ["None","Timer","Go-Code","DayTime"]; ///bbbbb
 						[finddisplay _a3c_dsp displayCtrl 709126, "None"] call A3C_addLbEntry;
-						[finddisplay _a3c_dsp displayCtrl 709125, 0, true] call A3C_setCurSel;
-						[finddisplay _a3c_dsp displayCtrl 709126, 0, true] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl 709125, 0] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl 709126, 0] call A3C_setCurSel;
 						
 						
 						A3C_HC_ACTIVE_POST_COND_MODE = "NONE";
@@ -2462,10 +2432,6 @@ A3C_LB_HC = {
 						} foreach A3C_REMFIRE_MAGTYPES;
 
 						[_parent,_listBox, count A3C_REMFIRE_MAGTYPES] call A3C_OBJECTSEL_RESIZE;
-
-						
-
-
 					};
 					case ("CAS-STRIKE") : {
 						A3C_HC_EDIT_ACTION = "CAS-STRIKE";
@@ -2485,7 +2451,7 @@ A3C_LB_HC = {
 							[_preCondModeCtrl, _casMode, true] call A3C_addLbEntry;
 						} foreach A3C_HC_CASMODES;
 
-						[_preCondModeCtrl, _casTypeCurrent, true] call A3C_setCurSel;
+						[_preCondModeCtrl, _casTypeCurrent] call A3C_setCurSel;
 						_preCondModeCtrl ctrlShow true;
 						if (A3C_HC_ACTIVE_PRE_COND_MODE != "ARRIVAL") then { //-- reset any wp-conditions
 							A3C_HC_ACTIVE_PRE_COND_MODE = "ARRIVAL";
@@ -2570,14 +2536,14 @@ A3C_LB_HC = {
 							[_subCombo1, _x] call A3C_addLbEntry;
 						} foreach _subArray1;
 
-						[_subCombo1, _lbSel1, true] call A3C_setCurSel;
+						[_subCombo1, _lbSel1] call A3C_setCurSel;
 						
 
 						lbClear _subCombo2;
 						{
 							[_subCombo2, _x] call A3C_addLbEntry;
 						} foreach _subArray2;
-						[_subCombo2, _lbSel2, true] call A3C_setCurSel;
+						[_subCombo2, _lbSel2] call A3C_setCurSel;
 						
 					};
 					
@@ -2627,7 +2593,7 @@ A3C_LB_HC = {
 
 				
 				if (_lb4Val != -1) then {
-					[finddisplay _a3c_dsp displayCtrl 709126, _lb4Val, true] call A3C_setCurSel;
+					[finddisplay _a3c_dsp displayCtrl 709126, _lb4Val] call A3C_setCurSel;
 				};
 				
 			};

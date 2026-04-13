@@ -249,7 +249,57 @@ A3C_is_Initialized = true;
 	waituntil {alive player};
 	sleep 0.1;
 	while {!isNull player && {!isNull (findDisplay 46)}} do {
+		
+		//-- fetch all HC groups once per second so it does not fire on each frame in draw handler
 		A3C_HCALLGROUPS_Current = [] call A3C_HCALLGROUPS;
+
+		//-- clean up completed wp's from A3C_Selection_MultiWaypoint
+		if !(A3C_Selection_MultiWaypoint isEqualTo []) then {
+			private _groupCache = createHashMap;
+			private _newSelection = [];
+
+			{
+				private _grp = _x select 0;
+				private _wpIndex = _x select 1;
+
+				if (isNull _grp) then { continue };
+
+				private _key = str _grp;
+				private _cached = _groupCache getOrDefault [_key, []];
+
+				if (_cached isEqualTo []) then {
+					_cached = [
+						currentWaypoint _grp,
+						count (waypoints _grp)
+					];
+					_groupCache set [_key, _cached];
+				};
+
+				private _currentWp = _cached select 0;
+				private _wpCount = _cached select 1;
+
+				if (
+					_wpIndex >= _currentWp &&
+					_wpIndex < _wpCount
+				) then {
+					_newSelection pushBack _x;
+				};
+			} forEach A3C_Selection_MultiWaypoint;
+
+			if !(_newSelection isEqualTo A3C_Selection_MultiWaypoint) then {
+				A3C_Selection_MultiWaypoint = _newSelection;
+			};
+		};
+
+		if
+		(
+			player == leader group player 
+			&& {currentCommand player != ""}
+		) then
+		{
+			player commandFollow player;
+		};
+
 		sleep 1;
 	};
 };

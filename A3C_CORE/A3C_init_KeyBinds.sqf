@@ -204,7 +204,7 @@ A3C_ADD_KEYBINDS =
 			_this params ["_ctrl","_btn1","_shift","_ctrl","_alt"];
 			
 			//if (_this call A3C_isOverlayClosed) exitwith {false};
-
+			
 			_return = false;
 			//-- close map: map part (partner edition in overlay EH)
 			if (_btn1 in ([1] + (actionKeys "hidemap"))) then {
@@ -487,17 +487,7 @@ A3C_ADD_KEYBINDS =
 		0,
 		true
 	] call cba_fnc_addKeybind;
-	// [
-	// 	"A3C",
-	// 	"A3C_KeyFnc_UavMacro_2",
-	// 	["UAV TERMINAL VIEW"],
-	// 	{["DOWN",_this] call A3C_FNC_UAV_KEY},
-	// 	{},
-	// 	[183,[true,false,false]],
-	// 	false,
-	// 	0,
-	// 	false
-	// ] call cba_fnc_addKeybind;
+
 
 
 };

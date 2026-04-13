@@ -1557,9 +1557,8 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 					BR_A3C_DISABLE_RADIAL = true;
 					[] call A3C_RADIAL_CloseDisplay;
 					A3C_HUD_UI_3D_TAG_ICON_TYPE = "\a3c_ui\hud\icon_HUD_movePos.paa"; //"\a3\ui_f\data\IGUI\Cfg\Cursors\waypointMark_ca.paa";
-					//A3C_HUD_UI_3D_TAG_ICON_TYPE = "#(argb,8,8,3)color(1,1,1,1)";
 					A3C_HUD_UI_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0] call A3C_UI_Color_setOpacity;
-
+					A3C_HUD_UI_3D_TAG_reposition = true;
 					[
 						46,
 						'SPACE',
@@ -1568,7 +1567,6 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							if (count A3C_RD_UNITS > 1) then {
 								
 								private _units = +(A3C_RD_UNITS);
-								//systemchat str _units;
 								[_units,A3C_HUD_UI_3D_TAG_ICON_POS] spawn A3C_FNCS_CONVOY_MULTIGROUP;
 							} else {
 								{
@@ -1589,10 +1587,26 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							};
 						},
 						{
-							(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-							
+							private _iconType = "\a3c_ui\hud\icon_HUD_movePos.paa";
 							A3C_HUD_UI_3D_TAG_reposition = false;
-							[screentoWorld [0.5,0.5],"HC_WP"] spawn A3C_HUD_UI_3D_TAG;
+							//-- mini flicker
+							for "_i" from 1 to 2 do {
+								A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+								sleep 0.1;
+								A3C_HUD_UI_3D_TAG_ICON_TYPE = _iconType;
+								sleep 0.1;
+							};
+							if (BR_A3C_DISABLE_RADIAL) then {
+								//-- Radial key not released - reIssue the icon for repeated orders
+								A3C_HUD_UI_3D_TAG_ICON_TYPE = _iconType;
+								A3C_HUD_UI_3D_TAG_reposition = true;
+							} else {
+								//-- Radial key released - abort
+								A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+								A3C_HUD_UI_3D_TAG_reposition = false;
+							}
+
+							
 						},
 						false
 					] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -1602,19 +1616,19 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						{true},
 						{},
 						{
+							//-- here, we need to remove the keybind upon release of TAB, not the main thingy
+							(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 							if (A3C_HUD_UI_3D_TAG_reposition) then {
-								(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 								A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
 								A3C_HUD_UI_3D_TAG_reposition = false;
 							};
-							(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 						},
 						true
 					] call A3C_UI_RADIAL_ADD_EH_MACROS;
 
-					A3C_HUD_UI_3D_TAG_reposition = true;
+					
 				} else {
-					for "_i" from 10008 to 10039 do { //~~ BBBBBBB
+					for "_i" from 10008 to 10039 do {
 						(findDisplay 7999 displayCtrl _i) ctrlShow false;
 					};
 					//-- outer ring backgrounds
@@ -5759,13 +5773,17 @@ A3C_addLbEntry = {
 
 A3C_setCurSel = {
 	params ["_control","_index"];
+	
 	private _doExecuteLbAction = if (count _this > 2) then {_this select 2} else {false};
+	
 	if (typeName _doExecuteLbAction != "BOOL") exitWith {
 		systemchat format ["A3C_setCurSel: Wrong parameter type for doExecuteAction: %1", _this];
 	};
 	if !(_doExecuteLbAction) then {
 		A3C_CurSel = true;
 	};
+
+	// systemchat format ["A3C_setCurSel A3C_CurSel %1, condition %2", A3C_CurSel, !(_doExecuteLbAction)];
 	
 	_control lbSetCurSel _index;
 	if !(_doExecuteLbAction) then {

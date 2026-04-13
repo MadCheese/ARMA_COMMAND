@@ -380,10 +380,6 @@ A3C_FNC_UAV_KEY_OLD = {
 	
 };
 
-MCSS_fnc_CBA_Button = {
-	_data = _this select 0;
-	_name = _this select 1;
-};
 
 //-- Main CBA Keybind
 //-- input: example ["SHIFT","DOWN",_buttonData]
@@ -648,6 +644,7 @@ A3C_FNC_CBA_KEY = {
 						//systemchat 'oi';
 						BR_A3C_DISABLE_RADIAL = true;
 						showCommandingMenu "";
+						A3C_GREN_ALLOW_UNITSWITCH = if (count A3C_RD_UNITS == 1) then {false} else {true};
 						BR_A3C_TACV_oefId = ["BR_A3C_TACV_oefId", "onEachFrame", "BR_A3C_OEFControl"] call BIS_fnc_addStackedEventHandler;
 					};
 				};
@@ -1308,6 +1305,12 @@ A3C_HUD_F_KEYDOWN = {
 	if (_alt && {_btn == 15}) exitwith {
 		A3C_MODIFIER_CTRL = false;
 		A3C_HUD_DOWNKEYS = [];
+	};
+
+
+	if ( _btn in [17,200] && {!(a3c_is_HC_remote && {unitIsUAV cameraOn && {!((remoteControlled (driver cameraon)) == player)}})}      ) then {
+		private _driver = driver cameraOn;
+		[_driver, screenToWorld [0.5,0.5]] remoteExec ["doMove", _driver];
 	};
 
 

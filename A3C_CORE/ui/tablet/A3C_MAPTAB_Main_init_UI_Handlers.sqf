@@ -11,15 +11,15 @@ A3C_TAB_UI_Handlers_OnMouseButtonDown = {
 	*/
 	params ["_displayCtrl","_mouseButton","_sX","_sY","_shift","_ctrl","_alt"];
 	private ["_mouseOverIcon","_groupControls","_isHCMark"];
-
+	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
 	disableserialization;
 
-
+	
 
 	private _exit = false;
 
 	private _left = _mouseButton == 0;
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	
 	if (isNull findDisplay _a3c_dsp) exitWith {};
 	if (A3C_MAP_BOOL_CT) exitWith {};
 	if (A3C_UI_MAPTAB_isCircleMenu) exitWith {
@@ -49,6 +49,30 @@ A3C_TAB_UI_Handlers_OnMouseButtonDown = {
 	A3C_CLICKPOS_1 = (_map1 posscreentoworld [_sx,_sy]);
 	
 	A3C_HC_TOSWITCH = [grpNull,-1];
+
+
+	//-- Artillery Shortcut 
+	private _artilleryShortcutCondition = (count A3C_SELECTED_UNITS > 0 && {
+		_ctrl && {
+			_alt && {
+				{ 
+					!([_x] call A3C_GroupHasArtilleryCapacity) &&
+					{
+						typeName _x != "GROUP"
+					}
+				} count A3C_SELECTED_UNITS == 0
+			}
+		}
+	});
+	if (_artilleryShortcutCondition) exitWith {
+		A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS;
+		playsound "TacticalPing4";
+		A3C_HC_FOCUS_ARTY_POS = A3C_CLICKPOS_1;
+		["ARTY"] call A3C_OPEN_OBJECTSELECTOR_MAP;
+	};
+
+
+
 
 
 	if (A3C_HC_DETONATION_BOOL) exitWith {
@@ -138,7 +162,7 @@ A3C_TAB_UI_Handlers_OnMouseButtonDown = {
 		//systemchat 'oi';
 		if (_doubleClick && !(_left)) then {
 			A3C_isArtyAwaitingSuborder = false;
-			player groupChat format ["%1 this is %2, firemission is no longer needed.", groupID (group (gunner A3C_HC_FOCUS_ARTY)), groupID (group player)];
+			player groupChat format ["Fire-Support, this is %1, firemission is no longer needed.", groupID (group player)];
 			["A3C_ARTY_MAPCLICK", "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
 		};
 	};
@@ -181,20 +205,33 @@ A3C_TAB_UI_Handlers_OnMouseButtonDown = {
 					if ([_gp,_wp_Index] in A3C_BLACKLIST_WAYPOINT_EDIT) then {
 						systemchat  "A3C: It is too late to move this waypoint - wait for completion";
 					} else {
-						//-- waypoint marker about to be moved
-						A3C_BOOL_MOUSEUP = true;
-						A3C_BOOL_MOUSEMOVING = true;
-						A3C_HC_TOSWITCH = [_gp,_wp_Index];
-						A3C_HC_ACTIVEGROUP = _gp;
-						A3C_HC_ACTIVE_IND = _wp_Index;
-						A3C_UI_MAP_BOOL_isHCWaypointPosEdit = true;
-						if (["PlantExplosive_HC",(waypointStatements [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]) select 1 ] call BIS_fnc_instring) then {
-							A3C_HC_DETONATION_BOOL = true;
-						};
 						
-						A3C_MMCode = {
-							[A3C_HC_TOSWITCH,_this] spawn A3C_TAB_UI_Handlers_Drag_HC_Wapyoint;
+						if (_ctrl) then {
+							private _wp = [_gp, _wp_Index];
+							if (_wp in A3C_Selection_MultiWaypoint) then {
+								A3C_Selection_MultiWaypoint = A3C_Selection_MultiWaypoint - [_wp];
+							} else {
+								A3C_Selection_MultiWaypoint set [count A3C_Selection_MultiWaypoint, _wp];
+							};
+						} else {
+							//-- waypoint marker about to be moved
+							A3C_BOOL_MOUSEUP = true;
+							A3C_BOOL_MOUSEMOVING = true;
+							A3C_HC_TOSWITCH = [_gp,_wp_Index];
+							A3C_HC_ACTIVEGROUP = _gp;
+							A3C_HC_ACTIVE_IND = _wp_Index;
+							A3C_UI_MAP_BOOL_isHCWaypointPosEdit = true;
+							if (["PlantExplosive_HC",(waypointStatements [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]) select 1 ] call BIS_fnc_instring) then {
+								A3C_HC_DETONATION_BOOL = true;
+							};
+							
+							A3C_MMCode = {
+								[A3C_HC_TOSWITCH,_this] spawn A3C_TAB_UI_Handlers_Drag_HC_Wapyoint;
+							};
 						};
+							
+						
+						
 					};
 				};
 
@@ -746,7 +783,7 @@ A3C_TAB_UI_Handlers_OnMouseButtonDown = {
 					["MULTIWAYPOINT"] call A3C_OPEN_OBJECTSELECTOR_MAP;
 					waituntil {!ctrlShown (findDisplay _a3c_dsp displayCtrl A3C_ObjectSelector_Parent)};
 				};
-				//systemchat str ['ey1',A3C_MULTIWAYPOINT];
+
 				//systemchat str [_clickPos,isOnRoad _clickPos];
 				private _refArray = +A3C_SELECTED_UNITS; // select {(driver (vehicle leader _x))  in units _x};
 				
@@ -845,6 +882,7 @@ A3C_TAB_UI_Handlers_OnMouseButtonDown = {
 						//systemchat str _refArray;
 						// true; //{currentWaypoint _x >= count waypoints _x} count A3C_SELECTED_UNITS > 0;
 						[_refArray,_clickPos] spawn A3C_FNCS_CONVOY_MULTIGROUP;
+						
 					};
 
 					
@@ -1195,13 +1233,16 @@ A3C_TAB_UI_Handlers_OnMouseButtonUp = {
 				_wp_Icon = _wp_Icons select 0;
 				_gp = _wp_Icon select 0;
 				_wp_Index = _wp_Icon select 3;
-
+				
 				if (A3C_HC_WP_SYNC_ROOT select 0 != _gp) then {
-					
-					[[A3C_HC_WP_SYNC_ROOT,[ [_gp,_wp_Index] ]],A3C_FNC_SYNC_WP] remoteExec ["bis_fnc_call",0];
-					//[A3C_HC_WP_SYNC_ROOT,[ [_gp,_wp_Index] ]] remoteExec ["synchronizeWaypoint",leader _rootGroup];
-					//A3C_HC_WP_SYNC_ROOT synchronizeWaypoint [ [_gp,_wp_Index] ]; //-- sync first , otherwise wrong indexes in MP
-					//[_gp,_wp_Index] synchronizeWaypoint [ A3C_HC_WP_SYNC_ROOT ];
+					// systemchat str (synchronizedWaypoints A3C_HC_WP_SYNC_ROOT);
+					private _updatedSyncWaypoints = (synchronizedWaypoints A3C_HC_WP_SYNC_ROOT) + [ [_gp,_wp_Index] ];
+					[[A3C_HC_WP_SYNC_ROOT, _updatedSyncWaypoints],A3C_FNC_SYNC_WP] remoteExec ["bis_fnc_call",0];
+					// [] spawn {
+					// 	sleep 0.5;
+					// 	systemchat str (synchronizedWaypoints A3C_HC_WP_SYNC_ROOT);
+					// };
+					// if (true) exitWith {};
 					private _syncTypes = ["SYNC"];
 					A3C_UI_MAPTAB_SYNC_BOARDGROUP = grpNull;
 					A3C_UI_MAPTAB_SYNC_HOSTGROUP = grpNull;
@@ -1269,7 +1310,7 @@ A3C_TAB_UI_Handlers_OnMouseButtonUp = {
 							};
 						};
 					} foreach [_gp,_rootGroup];
-					//systemchat str _syncTypes;
+					
 					if (count _syncTypes > 1) then {
 						A3C_UI_MAPTAB_isCircleMenu = true;
 						A3C_UI_MAPTAB_CircleMenu_CTRLS = [];
@@ -2137,6 +2178,12 @@ A3C_TAB_UI_Handlers_OnKeyDown = {
 	private _ctrl = _this select 3;
 	private _alt = _this select 4;
 
+	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+
+	//-- EXIT IF LISTBOX IS USED - PREVENT DESELECTION OF UNITS
+	if (ctrlShown (findDisplay _a3c_dsp displayCtrl 800803)) exitWith {};
+
+
 	if (_btn1 in A3C_HUD_DOWNKEYS) exitwith {};
 
 	A3C_HUD_DOWNKEYS pushbackUnique _btn1;
@@ -2313,9 +2360,8 @@ A3C_TAB_UI_Handlers_Drag_HC_Wapyoint = {
 	_map1 = if (_a3c_dsp == 6998) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
 	_posi = _map1 posscreentoworld [(_data select 1),(_data select 2)];
 
-	if (A3C_Selection_MultiWaypoint isEqualTo []) then {
+	if !(_waypoint in A3C_Selection_MultiWaypoint) then {
 		//-- Single Waypoint Drag
-		private _currentWP = currentWaypoint A3C_HC_ACTIVEGROUP;
 		_waypoint setwaypointposition [_posi,0];	
 	} else {
 		//-- Multiple Waypoint Drag
@@ -2329,6 +2375,9 @@ A3C_TAB_UI_Handlers_Drag_HC_Wapyoint = {
 		{
 			private _waypointRelposMapEntry = _waypointRelposMap select _forEachIndex;
 			private _newWaypointPos = _posi getPos [_waypointRelposMapEntry select 0, _waypointRelposMapEntry select 1];
+			_newWaypointPos set [2, 1000];
+			// _newWaypointPos set [2,0];
+			// _newWaypointPos set = ATLtoASL _newWaypointPos;
 			_x setWaypointPosition [_newWaypointPos, -1]; //-- << Force exact placement with negative radius
 		} foreach _childWaypoints;
 

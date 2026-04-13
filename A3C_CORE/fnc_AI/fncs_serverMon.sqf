@@ -332,45 +332,50 @@ A3C_SERVERMON_fncActions = {
 			};
 			
 			//-- 'MOVE' nudge
-			private _wpCurr = [_gp,currentWaypoint _gp];
-			private _wpPos = waypointPosition _wpCurr;
-			private _precision = (getNumber (configfile >> "CfgVehicles" >> (typeOf _lv) >> "precision")) + 10;
-			private _condi = !isPlayer _driver &&
-			{
-				_driver in (units _gp) &&
-				{
-					waypointType _wpCurr == "MOVE" &&
-					{
-						speed _lv < 1 &&
-						{
-							!(_lv isKindOf "AIR") && 
-							{
-								_wpPos distance2D _lv > _precision OR
-								{
-									private _expD = (expectedDestination _leader) select 0;
-									_expD distance2D [0,0,0] > 1 && {_expD distance2D _wpPos > 5}
-								}
-							}
-						}	
-					}
-				}
-			};
-			if (_condi) then {
-				_wpPos = (waypointPosition _wpCurr) select [0,2];
-				_wpPos = _wpPos getPos [1, random 360];
-				_wpPos set [2,0];
-				_eff = effectiveCommander _lV;
-				[_eff,_wpPos] call A3C_DOMOVE;
-				//_gp move _wpPos;
-				//#HCMOVE
+			private _wpCurr     = [_gp, currentWaypoint _gp];
+			private _wpPos      = waypointPosition _wpCurr;
+			private _precision  = getNumber (configFile >> "CfgVehicles" >> typeOf _lv >> "precision") + 10;
+
+			private _isMove     = waypointType _wpCurr == "MOVE";
+			private _isStopped  = speed _lv < 1;
+			private _isGround   = !(_lv isKindOf "AIR");
+			private _driverOk   = !isPlayer _driver && {_driver in units _gp};
+
+			private _expD       = (expectedDestination _leader) select 0;
+			private _hasExpD    = _expD distance2D [0,0,0] > 1;
+			private _offExpD    = _hasExpD && {_expD distance2D _wpPos > 5};
+
+			private _farFromWP  = _wpPos distance2D _lv > _precision;
+			private _shouldNudge = _driverOk
+				&& {_isMove}
+				&& {_isStopped}
+				&& {_isGround}
+				&& { _farFromWP || {_offExpD} };
+
+			if (_shouldNudge) then {
+				private _nudgePos = +_wpPos;
+				_nudgePos resize 2;
+				_nudgePos = _nudgePos getPos [1, random 360];
+				_nudgePos set [2, 0];
+
+				private _eff = effectiveCommander _lv;
+				[_eff, _nudgePos] call A3C_DOMOVE;
 			} else {
-				if (_wpPos distance2D _lv <= _precision && {speed _lv < 1}) then {
-					if ( waypointScript _wpCurr == "" && {waypointType _wpCurr == "MOVE"}) then {
-						_wpCurr setWaypointPosition [getPos _lv, 0]; //-- unit got stuck just before waypoint: move waypoint to vehicle pos
-						// systemchat "MOVING WP";
-					};
+				if (
+					_driverOk
+					&& {_isMove}
+					&& {_isStopped}
+					&& {_wpPos distance2D _lv <= _precision}
+					&& {(waypointTimeoutCurrent _gp) == -1}
+					&& {waypointScript _wpCurr == ""}
+					&& {count (synchronizedWaypoints _wpCurr) == 0}
+				) then {
+					_wpCurr setWaypointPosition [getPosASL _lv, -1];
 				};
 			};
+
+
+
 			//-- automatically replace dead gunners
 			{
 				private _d = _x;

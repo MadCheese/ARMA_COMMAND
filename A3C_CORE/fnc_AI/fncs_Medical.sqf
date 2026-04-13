@@ -429,71 +429,75 @@ A3C_HEAL = {
 	};
 	// [[units player select 2],true,false] call A3C_CANCELPLANS;
 	// waitUntil {(_unit getvariable 'A3C_PLOT') isEqualTo []};
-	_data =
-	[
+
+	if (!(_vehicleHeal) && {_unit distance _patient < 3}) then {
+		_data =
 		[
-			[_pos,_pos], //-- positions
-			["","",""], //-- markers
-			["None",[]], //-- wp action
-			["NONE","NONE"], //--WP Condition
-			["UP","MIDDLE"], //-- WP Stances
-			[[0,false]], // WP Sync Data
-			true, //-- isWPCompleted
-			0, //-- Combat Mode
-			-1, //-- WP SPeed
-			25, //-- WP Flying Height
-			-1, //-- WP Loop Value
-			0 // -- radius (for circle, not completion)
-		]
-	];
+			[
+				[_pos,_pos], //-- positions
+				["","",""], //-- markers
+				["None",[]], //-- wp action
+				["NONE","NONE"], //--WP Condition
+				["UP","MIDDLE"], //-- WP Stances
+				[[0,false]], // WP Sync Data
+				true, //-- isWPCompleted
+				0, //-- Combat Mode
+				-1, //-- WP SPeed
+				25, //-- WP Flying Height
+				-1, //-- WP Loop Value
+				0 // -- radius (for circle, not completion)
+			]
+		];
 
-	private _exit = false;
-	// systemchat str [_unit, _patient, _vehicleHeal];
-	if !(_vehicleHeal) then {
-		_unit setvariable ["A3C_PLOT",_data,true];
-		_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE);
-		//#WIP
-		while {!isNull _patient} do {
-			
+		private _exit = false;
+		// systemchat str [_unit, _patient, _vehicleHeal];
+		if !(_vehicleHeal) then {
+			_unit setvariable ["A3C_PLOT",_data,true];
+			_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE);
+			//#WIP
+			while {!isNull _patient} do {
+				
 
-			if (_patient getVariable ["A3C_AbortHealing", false]) exitWith {
-				//-- player aborted action with doubleclick
-			};
-
-
-
-			if ( [_unit] call A3C_isUnconscious) exitWith {
-				//-- healer is unconscious - need to skip
-			};
-
-
-
-			//-- #WIP note: we might want to include self healing if not unconscious - but without re-calling the same fnc obviously.
-			//-- That means moving healing stuff into a fnc (logical anyways)
-
-			if !(({alive _x} count [_unit,_patient]) > 0) exitwith {
-				//terminate _scr;
-				if (count (_unit getVariable ["A3C_PLOT",[]]) > 0) then {
-					_unit setvariable ["A3C_ABORT_Data",[true,false],true];
-					waitUntil {count (_unit getVariable ["A3C_PLOT",[]]) == 0};
+				if (_patient getVariable ["A3C_AbortHealing", false]) exitWith {
+					//-- player aborted action with doubleclick
 				};
-			};
-			if (count (_unit getVariable ["A3C_PLOT",[]]) == 0) exitwith {
-				// systemchat "AAAAA";
-			};
-			//if (unitReady _unit) exitWith {
-			//	terminate _scr;
-			//};
-			if ((_unit distance2d _pos) <= 2) exitWith {
-				//terminate _scr;
-				if (count (_unit getVariable ["A3C_PLOT",[]]) > 0) then {
-					_unit setvariable ["A3C_ABORT_Data",[true,false],true];
-					waitUntil {count (_unit getVariable ["A3C_PLOT",[]]) == 0};
+
+
+
+				if ( [_unit] call A3C_isUnconscious) exitWith {
+					//-- healer is unconscious - need to skip
 				};
+
+
+
+				//-- #WIP note: we might want to include self healing if not unconscious - but without re-calling the same fnc obviously.
+				//-- That means moving healing stuff into a fnc (logical anyways)
+
+				if !(({alive _x} count [_unit,_patient]) > 0) exitwith {
+					//terminate _scr;
+					if (count (_unit getVariable ["A3C_PLOT",[]]) > 0) then {
+						_unit setvariable ["A3C_ABORT_Data",[true,false],true];
+						waitUntil {count (_unit getVariable ["A3C_PLOT",[]]) == 0};
+					};
+				};
+				if (count (_unit getVariable ["A3C_PLOT",[]]) == 0) exitwith {
+					// systemchat "AAAAA";
+				};
+				//if (unitReady _unit) exitWith {
+				//	terminate _scr;
+				//};
+				if ((_unit distance2d _pos) <= 2) exitWith {
+					//terminate _scr;
+					if (count (_unit getVariable ["A3C_PLOT",[]]) > 0) then {
+						_unit setvariable ["A3C_ABORT_Data",[true,false],true];
+						waitUntil {count (_unit getVariable ["A3C_PLOT",[]]) == 0};
+					};
+				};
+				sleep 0.1;
 			};
-			sleep 0.1;
 		};
 	};
+	
 	// systemchat "healing route loop done";
 	
 	

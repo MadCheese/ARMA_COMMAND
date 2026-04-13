@@ -74,15 +74,22 @@ BR_A3C_fn_relativePos =
 	_r
 };
 
+
+
 BR_A3C_OEFControl = {
 	if (isnull A3C_GTI_UNIT) exitwith {};
-	if (A3C_GTI_UNIT != player) then {BR_A3C_DISABLE_RADIAL = true};
+	private _isPlayer = A3C_GTI_UNIT == player;
+	private _screenToWorld = [0,0,0];
+	if !(_isPlayer) then {
+		BR_A3C_DISABLE_RADIAL = true;
+		_screenToWorld = screenToWorld [0.5,0.5];
+	};
 
-	_un =  A3C_GTI_UNIT;
+
 	//calculate needed v0
 	_v0Max = 19; // _un getVariable ["BR_A3C_RPG_throwForce",BR_A3C_TACV_GV0MaxS];
-	_v0Max = _v0Max - (getFatigue _un) * BR_A3C_TACV_fatEff * _v0Max;
-	_ehATL = (ASLtoATL (eyepos _un)) select 2;
+	_v0Max = _v0Max - (getFatigue A3C_GTI_UNIT) * BR_A3C_TACV_fatEff * _v0Max;
+	_ehATL = (ASLtoATL (eyepos A3C_GTI_UNIT)) select 2;
 	if (_ehATL < 1.4) then {
 		if  (_ehATL < 0.8) then {
 			_v0Max = _v0Max * BR_A3C_TACV_GV0MaxP
@@ -94,7 +101,7 @@ BR_A3C_OEFControl = {
 	//
 	_throwPos = [];
 	private _refDir = (eyeDirection A3C_GTI_UNIT) select 2;
-	if (A3C_GTI_UNIT == player && {cursorTarget isKindOf "HOUSE" && {!weaponlowered player OR {([_refDir,2] call BIS_fnc_cutDecimals) != 0}}}) then {
+	if (_isPlayer && {cursorTarget isKindOf "HOUSE" && {!weaponlowered player OR {([_refDir,2] call BIS_fnc_cutDecimals) != 0}}}) then {
 		_ins = lineIntersectsSurfaces
 		[
 			AGLToASL positionCameraToWorld [0,0,0],
@@ -106,7 +113,7 @@ BR_A3C_OEFControl = {
 			"GEOM",
 			"NONE"
 		];
-		//if (count _ins == 0) then {_scrtw} else {ASLtoATL (_ins select 0 select 0)};
+		//if (count _ins == 0) then {_screenToWorld} else {ASLtoATL (_ins select 0 select 0)};
 		_throwPos = positionCameraToWorld [0,0,viewDistance];
 		//_throwPos = positionCameraToWorld [0,0,viewDistance];
 		//{str (atan ((eyeDirection player ) select 2))} spawn fhint
@@ -119,19 +126,37 @@ BR_A3C_OEFControl = {
 		//systemchat str [_alpha,BR_A3C_TACV_throwTheta];
 		BR_A3C_TACV_throwTheta = ((_alpha + BR_A3C_TACV_throwTheta_Add) max 0.01) min 89.9;
 	} else {
-		_scrtw = screenToWorld [0.5,0.5];
+		
 		BR_A3C_TACV_throwTheta = ((45 + BR_A3C_TACV_throwTheta_Add) max 0.01) min 89.9;
-		if (_scrtw distance2d player >= viewDistance) then {
+		if (_screenToWorld distance2d cameraOn >= viewDistance) then {
 			_throwPos = positionCameraToWorld [0,0,viewDistance];
 		} else {
-			_throwPos = _scrtw;
+			_throwPos = _screenToWorld;
+		};	
+	};
+
+	if (!(_isPlayer) && {A3C_GREN_ALLOW_UNITSWITCH}) then {
+		private _suitableUnits = ((units player) - [player]) select {
+			alive _x && {A3C_GREN_MUZZLE in (magazines _x)}
 		};
-		
+		_suitableUnits =
+		[
+			_suitableUnits,
+			[],
+			{
+				_x distance _screenToWorld
+			},
+			"ASCEND"
+		] call BIS_fnc_sortBy;
+		if (count _suitableUnits > 0) then {
+			A3C_GTI_UNIT = _suitableUnits select 0; 
+		};
+
 	};
 
 
 	//BR_A3C_TACV_throwTheta = BR_A3C_TACV_throwTheta * 1.3;
-	_range = _throwPos distance _un;
+	_range = _throwPos distance A3C_GTI_UNIT;
 	_v0 = sqrt(_range * 9.81 / sin (2 * BR_A3C_TACV_throwTheta));
 
 	//maximalize v0 - recalc range
@@ -150,9 +175,9 @@ BR_A3C_OEFControl = {
 		case ("PRONE") : {[0.314453,0.65332,0.926847]};
 	};
 	_unPos = A3C_GTI_UNIT modelToWorld _modelPos;
-	//_unPos = [getPosATL _un, direction _un, 1] call BR_A3C_fn_relativePos;
-	_unDir = getDir _un;
-	_throwDir = [_un,_throwPos] call BIS_fnc_dirTo;
+	//_unPos = [getPosATL A3C_GTI_UNIT, direction A3C_GTI_UNIT, 1] call BR_A3C_fn_relativePos;
+	_unDir = getDir A3C_GTI_UNIT;
+	_throwDir = [A3C_GTI_UNIT,_throwPos] call BIS_fnc_dirTo;
 	_flyDirSin = sin _throwDir;
 	_flyDirCos = cos _throwDir;
 	_sPosx = _unPos select 0;
@@ -161,7 +186,7 @@ BR_A3C_OEFControl = {
 	_prevSz = 0;
 	_newtrajASL = [];
 	_newtrajATL = [];
-	_trayBase = (getPosASL _un) select 2;
+	_trayBase = (getPosASL A3C_GTI_UNIT) select 2;
 
 	BR_A3C_TACV_throwVel = [_flyDirSin * _v0x,_flyDirCos * _v0x, _v0z];
 	BR_A3C_TACV_throwV0 = _v0;
@@ -204,7 +229,7 @@ BR_A3C_OEFControl = {
 		_prevSz = _iDim;
 	};
 
-	if (A3C_GTI_UNIT == player) then {
+	if (_isPlayer) then {
 		
 		//_dist = _throwPos distance player;
 		//if (_dist > 30) then {
@@ -222,7 +247,7 @@ BR_A3C_OEFControl = {
 
 	};
 
-	_un doWatch _newtrajATL;
+	A3C_GTI_UNIT doWatch _newtrajATL;
 	//if (BR_A3C_TACV_mode == 1) then {_un setDir _throwDir};
 
 };
@@ -530,6 +555,7 @@ A3C_RadialMenu_GREN = {
 	};
 	BR_A3C_TACV_throwTheta = 45;
 	BR_A3C_TACV_throwTheta_Add = 0;
+	A3C_GREN_ALLOW_UNITSWITCH = if (count A3C_RD_UNITS == 1) then {false} else {true};
 	BR_A3C_TACV_oefId = ["BR_A3C_TACV_oefId", "onEachFrame", "BR_A3C_OEFControl"] call BIS_fnc_addStackedEventHandler;
 
 	BR_A3C_DISABLE_RADIAL = true;

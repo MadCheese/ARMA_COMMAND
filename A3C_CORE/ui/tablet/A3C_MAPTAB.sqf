@@ -294,66 +294,10 @@ A3C_DIAG_ACTIVE = true;
 {inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];
 
 
-/*
-//-- Add main MouseButton-Down-Event
-if !(isNull findDisplay 6999) then {
-
-	A3C_BU0 = (findDisplay _display displayCtrl 7043) ctrlAddEventHandler
-	[
-		"MouseButtonDown",
-		{	//with uiNameSpace do {
-				_this spawn A3C_TAB_UI_Handlers_OnMouseButtonDown;
-			//};
-		}
-	];
-	A3C_BU1 = (findDisplay _display displayCtrl 7043) ctrlAddEventHandler
-	[
-		"MouseButtonUP",
-		{
-			_this spawn A3C_TAB_UI_Handlers_OnMouseButtonUp;
-			A3C_BOOL_MOUSEMOVING = false;
-		}
-	];
-	A3C_BU2 = (findDisplay _display displayCtrl 7043) ctrlAddEventHandler
-	[
-		'MouseMoving',
-		{
-			A3C_MAP_X = _this select 1;
-			A3C_MAP_Y = _this select 2;
-			if (A3C_MapSel_Field_Active) then {
-				A3C_MapSel_Field_DEST = (findDisplay 6999 displayCtrl 7043) posscreentoworld [A3C_MAP_X,A3C_MAP_Y];
-			};
-			//systemchat str A3C_MAP_X;
-			if (A3C_BOOL_MOUSEMOVING) then {
-				_this spawn A3C_MMCode
-			};
-		}
-	];
-	//-- Main Tablet "keyDown"-Handler (no need to name as it is destroyed with the dialog .(A3C_TAB_KEY_D = )
-	
-};
-
-*/
-
-
 
 
 ////////////////////////////       NEW BUTTONS !!!!!!!! ///////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-//player setGroupID ["GODFATHER"];
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -402,27 +346,6 @@ A3C_BU_SAFE = (findDisplay _display displayCtrl 7043) ctrlAddEventHandler
 		};
 	"
 ];
-
-
-//-- Precation: player may get killed during WIP
-//A3C_KILLED_WIP = player addEventHandler
-//[
-//	"killed",
-//	{
-//		A3C_SELECTED_UNITS = [];
-//		[] call A3C_Btn_fnc_Cancel;
-//		{_x setvariable ["A3C_PLOT_TEMP",[],true];} foreach units group player;
-//		(_this select 0) removeEventHandler ["killed", A3C_KILLED_WIP];
-//	}
-//];
-
-//-- center map on player, set FOV
-//(findDisplay _display displayCtrl 7043) ctrlMapAnimAdd [0, 0.05, position player];
-//ctrlMapAnimCommit (findDisplay _display displayCtrl 7043);
-
-
-
-
 
 
 

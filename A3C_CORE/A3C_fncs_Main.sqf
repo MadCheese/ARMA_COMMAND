@@ -607,11 +607,27 @@ A3C_Prevent_ATSHOT = false;
 A3C_Prevent_TANKSHOT = false;
 A3C_Prevent_STATICSHOT = false;
 
-
+A3C_GroupHasArtilleryCapacity = {
+	params ["_group"];
+	private _return = false;
+	{
+		private _v = objectParent _x;
+		private _cond = !isNull _v && {
+			_x == gunner _v && {
+				count (getArtilleryAmmo [_v]) > 0
+			}
+		};
+		if (_cond) exitWith {
+			_return = true;
+		};
+	} foreach (units _group);
+	_return
+};
 
 
 A3C_UI_RADIAL_ADD_EH_MACROS = {
 	params ["_display","_ehType","_condition","_funcDependent","_funcStandard","_enableRadial"];
+	// systemchat format ["_ehType A3C_UI_RADIAL_ADD_EH_MACROS %1 ", _ehType];
 	if (_ehType == 'SPACE') then {
 		A3C_UI_RADIAL_EH_KEYUP_CONFIRM = (findDisplay _display) displayAddEventHandler
 		[
@@ -2367,10 +2383,6 @@ if (isDedicated) exitwith {};
 
 
 
-MCSS_fnc_CBA_Button = {
-	_data = _this select 0;
-	_name = _this select 1;
-};
 
 MCSS_fnc_RevealCursorPos = {
 	params ["_caller","_pos"];

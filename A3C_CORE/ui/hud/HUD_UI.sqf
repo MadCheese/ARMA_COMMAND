@@ -473,7 +473,6 @@ A3C_UI_RADIAL_OBJECTSELECTOR_LABEL_DETONATIONTARGETS = {
 
 
 A3C_OBJECTSELECTOR_MODE = "DISASSEMBLE";
-A3C_HC_FOCUS_ARTY = objNull;
 A3C_HC_FOCUS_ARTY_AMMO = "";
 A3C_HC_FOCUS_ARTY_POS = [0,0,0];
 
@@ -861,8 +860,7 @@ A3C_ObjectSelector_LB_Change = {
 			case ("ARTY_0") : {
 				
 				A3C_OBJECTSELECTOR_MODE = "ARTY_1";
-				//A3C_HC_FOCUS_ARTY_AMMO = ((getArtilleryAmmo [A3C_HC_FOCUS_ARTY]) select _lb);
-				
+
 				private _lbText = _listBox lbText _lb;
 				
 
@@ -912,17 +910,6 @@ A3C_ObjectSelector_LB_Change = {
 
 
 				
-				//{
-				//	{
-				//		if (_x select 0 in A3C_HC_FOCUS_ARTY_AMMO_ARRAY) then {
-				//			_ammoAmount = _ammoAmount + (_x select 1);
-				//		};
-				//	} foreach (magazinesAmmoFull _x);
-				//} foreach MCSS_REMOTE_ARTILLERY_ARRAY;
-				
-				//_ammoAmount = _ammoAmount min 4;
-				
-				
 
 			};
 
@@ -930,18 +917,15 @@ A3C_ObjectSelector_LB_Change = {
 				A3C_HC_FOCUS_ARTY_AmmoCount = call compile (_listBox lbText _lb);
 				(findDisplay _a3c_dsp displayCtrl 8008) ctrlShow false;
 			
-				//systemchat str A3C_HC_FOCUS_ARTY_AmmoCount;
-				
+
 				
 				with uiNamespace do {
 					(findDisplay 79996) closeDisplay 0;
 				};
-				if (A3C_HUD_UI_3D_TAG_ICON_TYPE != "") then {
-					[A3C_HUD_UI_3D_TAG_ICON_POS,"SUPPRESSION"] spawn A3C_HUD_UI_3D_TAG;
-				};
+
 
 				[A3C_HC_FOCUS_ARTY_POS,false] spawn A3C_ORDER_ARTILLERY
-				//if (true) exitWith {};
+
 				
 
 				

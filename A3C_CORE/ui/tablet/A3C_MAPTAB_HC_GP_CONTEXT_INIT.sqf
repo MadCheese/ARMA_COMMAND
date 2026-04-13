@@ -13,7 +13,7 @@ A3C_CONVOYGROUPS = [];
 A3C_HC_NearStatics = [];
 
 
-A3C_HC_GroupMenu_ArtySupMode = "ARTY";
+
 A3C_HC_GroupMenu_SuppressionRequested = false;
 
 A3C_ALLOW_HCrEFRESH = true;
@@ -496,26 +496,18 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		_return
 	};
 	{
-		//-- #NOTE: exitWith methods are not really logical in this block
-		if ([_x] call _reBoardFnc) exitWith {
-			_actions pushBack "VEHICLE_REBOARD";
-		};
 		
-		{
-			private _v = objectParent _x;
-			private _cond = !isNull _v && {
-				_x == gunner _v && {
-					count (getArtilleryAmmo [_v]) > 0
-				}
-			};
-			if (_cond) exitWith {
-				A3C_HC_FOCUS_ARTY = vehicle _x;
-				//_isArty = true;
-				A3C_HC_GroupMenu_ArtySupMode = "ARTY";
-				_actions pushBackUnique "ARTY";
-			};
-		} foreach (units _x);
+		if ([_x] call _reBoardFnc) then {
+			_actions pushBackUnique "VEHICLE_REBOARD";
+		};
 
+		if ([_x] call A3C_GroupHasArtilleryCapacity) then {
+			_actions pushBackUnique "ARTY";
+		};
+
+		//-- exit if both actions are already available
+		if ({_x in _actions} count ["VEHICLE_REBOARD", "ARTY"] == 2) exitWith {};
+		
 	} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
 
 	
@@ -576,8 +568,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		};
 	};
 
-	if (_suppressionCondition) then { //~~ Q: is supression / arty exclusive because arty groups would spam artillery?? there has to be a way to have a mixed group doing tank, arty and suppression
-		A3C_HC_GroupMenu_ArtySupMode = "SUPPRESSION";
+	if (_suppressionCondition) then { 
 		_actions pushBackUnique "SUPPRESSION"; //-- SUPPRESSION is ALWAYS added when possible, even when units are suppressing, so that you can change the suppressed position on the fly
 		if ({{_x in A3C_SUPPRESSION_UNITS_AI} count (units _x) > 0} count A3C_SELECTED_HC_GROUPS_SETTINGS > 0) then {
 			_actions pushBackUnique "SUPPRESSION_STOP";
@@ -694,7 +685,6 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						if ([vehicle _x] call A3C_isStaticMissileLauncher) then {
 							A3C_REMFIRE_STATICShot_Units pushbackUnique _x;
 						} else {
-							//if (A3C_HC_GroupMenu_ArtySupMode != "ARTY") then {
 							if ((count (getArtilleryAmmo [vehicle _x])) == 0 && {vehicle _x isKindOf "LAND"}) then { //-- exclude artillery and aircraft
 								_isCannonVic = false;
 								_isMissileVic = false;
@@ -2720,52 +2710,56 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								},
 								{
 									A3C_HC_FOCUS_ARTY = objNull;
-									A3C_HC_FOCUS_ARTY_AMMO = ""; //-- what is goin oin here
-									{
-										//if !((getArtilleryAmmo [vehicle _x]) isEqualTo []) exitWith { //~~ STILL NEEDED?!
-										//	A3C_HC_FOCUS_ARTY = vehicle _x;
-										//	_isArty = true;
-										//	A3C_HC_GroupMenu_ArtySupMode = "ARTY";
-										//};
-									} foreach (units (A3C_RD_UNITS select 0));
-									//if (!isNull A3C_HC_FOCUS_ARTY) then { //~~ #question is this necessary? as it is defined as objNull above
-										with uiNamespace do {
-											A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-										};
-										(findDisplay 79996) displayAddEventhandler
-										[
-											"KeyUp",
-											{
-												[_this] spawn {
-													_button = _this select 0;
-													_button = _button - [(_button select 0)];
-													if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-														BR_A3C_DISABLE_RADIAL = false;
-														A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-														(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-														(findDisplay 79996) closeDisplay 0;
-														A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [(_button select 0)];
-														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
-													};
+									A3C_HC_FOCUS_ARTY_AMMO = ""; //-- what is goin on here
+									with uiNamespace do {
+										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+									};
+									(findDisplay 79996) displayAddEventhandler
+									[
+										"KeyUp",
+										{
+											[_this] spawn {
+												_button = _this select 0;
+												_button = _button - [(_button select 0)];
+												if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
+													(findDisplay 79996) closeDisplay 0;
+													A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [(_button select 0)];
+													{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 												};
-											}
-										];
-										A3C_HC_FOCUS_ARTY_POS = +(A3C_HUD_UI_3D_TAG_ICON_POS);
-										["ARTY"] call A3C_OPEN_OBJECTSELECTOR_MAP;
-										[] spawn {
-											while {!isNull findDisplay 79996} do {
-												sleep 0.5;
 											};
-											if (A3C_HC_FOCUS_ARTY_AMMO == "") then {
-												A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-											};
+										}
+									];
+									A3C_HC_FOCUS_ARTY_POS = +(A3C_HUD_UI_3D_TAG_ICON_POS);
+									["ARTY"] call A3C_OPEN_OBJECTSELECTOR_MAP;
+									[] spawn {
+										while {!isNull findDisplay 79996} do {
+											sleep 0.5;
 										};
-									//};
-									A3C_HUD_UI_3D_TAG_reposition = false;
+										A3C_HUD_UI_3D_TAG_reposition = false;
+										private _iconType = '\a3c_ui\crosshairs\icon_crosshair_remote_Artillery.paa';
+										//-- mini flicker
+										for "_i" from 1 to 2 do {
+											A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+											sleep 0.1;
+											A3C_HUD_UI_3D_TAG_ICON_TYPE = _iconType;
+											sleep 0.1;
+										};
+										if (BR_A3C_DISABLE_RADIAL) then {
+											//-- Radial key not released - reIssue the icon for repeated orders
+											A3C_HUD_UI_3D_TAG_ICON_TYPE = _iconType;
+											A3C_HUD_UI_3D_TAG_reposition = true;
+										} else {
+											//-- Radial key released - abort
+											A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+											A3C_HUD_UI_3D_TAG_reposition = false;
+										}
+
+									};
+									
+									// A3C_HUD_UI_3D_TAG_reposition = false;
 								},
 								{
-									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
+									
 								},
 								false
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -2774,12 +2768,13 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								46,
 								'RADIAL',
 								{
-
 									true
 								},
 								{
 								},
 								{
+									//-- in order to allow multiple successive arty orders, we remove confirm keybind when MENU key is released 
+									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 									(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 									A3C_HUD_UI_3D_TAG_reposition = false;
 									A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
@@ -2819,13 +2814,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									waitUntil {!(A3C_isArtyAwaitingSuborder) OR {!visibleMap OR {!(_currentSelection isEqualTo A3C_SELECTED_UNITS)}}};
 									A3C_isArtyAwaitingSuborder = false;
 									["A3C_ARTY_MAPCLICK", "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
-									//systemchat "map arty stacked EH removed 1";
-
-								//} else {
-								//	[A3C_HC_FOCUS_ARTY_POS,false] spawn A3C_ORDER_ARTILLERY
 								};
 							};
-							//
 						};
 
 					};
@@ -3724,7 +3714,6 @@ A3C_Map_HC_groupContext_OpenMenu = {
 	_a3c_dsp = if (visibleMap) then {6998} else {6999};
 
 	
-
 	
 
 	_startBar = findDisplay _a3c_dsp displayCtrl 404040;
@@ -3776,7 +3765,7 @@ A3C_Map_HC_groupContext_OpenMenu = {
 
 	
 	
-
+	
 	
 
 
@@ -3847,34 +3836,131 @@ A3C_Map_HC_groupContext_OpenMenu = {
 			[800703,["Column","Stag Column","Wedge","Ech Left","Ech Right","Vee","Line","File","Diamond"]],
 			[800704,["Red","Blue","Green","Black","White"]]
 		];
-	
+
 	_targetArray = A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS;
 	_startBar progressSetPosition 0.75;
 	
 	if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
-		
 		[] call A3C_Radial_DashBoard;
+
 		waitUntil {
-			isNull findDisplay _a3c_dsp OR 
-			{
-				ctrlShown (findDisplay _a3c_dsp displayCtrl 303030)
-			}
+			isNull findDisplay _a3c_dsp ||
+			{ ctrlShown ((findDisplay _a3c_dsp) displayCtrl 303030) }
 		};
+
+		private _display = findDisplay _a3c_dsp;
+		if (isNull _display) exitWith {};
+
+		private _dashboardCtrl = _display displayCtrl 11015;
+		if (isNull _dashboardCtrl) exitWith {
+			systemChat "layout failed: 11015 not found";
+		};
+
+		// Controls that define the top row above the listboxes.
+		// Add every relevant control here if needed.
+		private _topRowCtrls = [
+			800724
+		];
+
+		// Extra conditional button macro
+		private _responseCtrls = [800707, 800711];
+		private _showResponseButton = !(profileNamespace getVariable ["HC_GROUP_RESPONSE", false]);
+
+		private _dashboardPos = ctrlPosition _dashboardCtrl;
+		private _dashboardBottom = (_dashboardPos select 1) + (_dashboardPos select 3);
+
+		// Find bottom edge of the top row
+		private _topBoundary = -1;
+		{
+			private _ctrl = _display displayCtrl _x;
+			if !(isNull _ctrl) then {
+				private _pos = ctrlPosition _ctrl;
+				private _bottom = (_pos select 1) + (_pos select 3);
+				if (_bottom > _topBoundary) then {
+					_topBoundary = _bottom;
+				};
+			};
+		} forEach _topRowCtrls;
+
+		if (_topBoundary < 0) exitWith {
+			systemChat "layout failed: no top row controls found";
+		};
+
+		// Height of the conditional bottom button area
+		private _responseButtonH = 0;
+		if (_showResponseButton) then {
+			private _responseCtrl = _display displayCtrl 800707;
+			if !(isNull _responseCtrl) then {
+				_responseButtonH = (ctrlPosition _responseCtrl) select 3;
+			};
+		};
+
+		// Space available for the two listbox rows
+		private _availableH = _dashboardBottom - _topBoundary - _responseButtonH;
+		private _rowH = _availableH / 2;
+
+		// Top row listboxes
+		{
+			private _ctrl = _display displayCtrl _x;
+			if !(isNull _ctrl) then {
+				private _pos = ctrlPosition _ctrl;
+				_pos set [1, _topBoundary];
+				_pos set [3, _rowH];
+				_ctrl ctrlSetPosition _pos;
+				_ctrl ctrlCommit 0;
+			};
+		} forEach [800701, 800702];
+
+		// Bottom row listboxes
+		{
+			private _ctrl = _display displayCtrl _x;
+			if !(isNull _ctrl) then {
+				private _pos = ctrlPosition _ctrl;
+				_pos set [1, _topBoundary + _rowH];
+				_pos set [3, _rowH];
+				_ctrl ctrlSetPosition _pos;
+				_ctrl ctrlCommit 0;
+			};
+		} forEach [800703, 800704];
+
+		// Conditional response button pair
+		{
+			private _ctrl = _display displayCtrl _x;
+			if !(isNull _ctrl) then {
+				private _pos = ctrlPosition _ctrl;
+
+				if (_showResponseButton) then {
+					_pos set [1, _dashboardBottom - _responseButtonH];
+					_ctrl ctrlSetPosition _pos;
+					_ctrl ctrlCommit 0;
+					_ctrl ctrlShow true;
+				} else {
+					_ctrl ctrlShow false;
+				};
+			};
+		} forEach _responseCtrls;
 	};
+
+	
+
 	
 	{
 		_x ctrlShow false;
 	} foreach [_startBar,_startText];
 	
 	_groupParent ctrlShow true;
-	[_targetArray] call A3C_MAP_fnc_GroupMenu_LabelActionButtons; //-- unfortunately has to happen after ctrl is shown
 
-	
 	if (profileNameSpace getVariable ["HC_GROUP_RESPONSE", false]) then {
 		{
 			(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-		} foreach [800707, 800711,709131,709132];	
+		} foreach [800707, 800711];	
 	};
+
+	
+	[_targetArray] call A3C_MAP_fnc_GroupMenu_LabelActionButtons; //-- unfortunately has to happen after ctrl is shown
+
+	
+	
 	
 	playsound "ReadOutHideClick1"; 
 
@@ -4272,7 +4358,7 @@ A3C_ORDER_ARTILLERY = {
 								};
 								if (_cond) then {
 
-									systemchat "SAFETY >> fired";
+									// systemchat "SAFETY >> fired";
 									//-- remove EHs
 									private _varData = _vehicle getVariable ["A3C_ARTY_EH",[]];
 									if !(_varData isEqualTo []) then {
@@ -4400,7 +4486,7 @@ A3C_ORDER_ARTILLERY = {
 
 							if (_newMagazine == _oldMagazine) then {
 								//-- canceled orders due to reload >> (engine bug) reissue remaining artillery orders!
-								systemchat "A VEHICLE IS RELOADING MID ORDER";
+								// systemchat "A VEHICLE IS RELOADING MID ORDER";
 								private _targetPos = [];
 								private _shellAmount = 0;
 								{
@@ -4416,7 +4502,7 @@ A3C_ORDER_ARTILLERY = {
 									[_vehicle,[_targetPos getPos [5,random 360],_oldMagazine,_shellAmount]] remoteExec ["commandArtilleryFire",_vehicle];
 								};
 							} else {
-								systemchat "A VEHICLE HAS CHANGED MAGS";
+								// systemchat "A VEHICLE HAS CHANGED MAGS";
 							};
 						}
 					];
@@ -4450,7 +4536,7 @@ A3C_ORDER_ARTILLERY = {
 						}
 					};
 					if (_cond) then {
-						systemchat "SAFETY >> unresponsive";
+						// systemchat "SAFETY >> unresponsive";
 						//-- remove EHs
 						private _varData = _vehicle getVariable ["A3C_ARTY_EH",[]];
 						if !(_varData isEqualTo []) then {
@@ -4487,34 +4573,10 @@ A3C_ORDER_ARTILLERY = {
 			};	
 		} foreach _artyOrdersCurrent;
 
-		
 
-		{
-			
-			// #TODO URGENT: EH'S NEED TO BE ADDED REMOTELY ?
-			//-- add eventhandlers if none exist yet
-			
-
-		} foreach MCSS_REMOTE_ARTILLERY_ARRAY;
-
-		/*
-		we want a splash message from each gunner, for the first shell of each order.
-		message has to be sent from fired-EH
-		*/
-		//systemchat str _artyOrdersCurrent;
-	} else {
-		//systemchat "SELECTION
 	};
 
-	//systemchat "firecount done";
 
-	//{
-	//	{
-	//		if (_x select 0 in A3C_HC_FOCUS_ARTY_AMMO_ARRAY) then {
-	//			_ammoAmount = _ammoAmount + (_x select 1);
-	//		};
-	//	} foreach (magazinesAmmoFull _x);
-	//} foreach MCSS_REMOTE_ARTILLERY_ARRAY;
 };
 
 A3C_AddToArtyRadio = {
@@ -4760,6 +4822,8 @@ A3C_GP_Btns_Stances = {
 
 
 A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
+
+
 	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
 	(findDisplay _a3c_dsp displayCtrl 303030) ctrlShow false;
 

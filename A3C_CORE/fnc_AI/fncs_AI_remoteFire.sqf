@@ -464,7 +464,6 @@ A3C_ORDER_REMOTE_LAUNCH = {
 		case ("ARTY") : {
 			A3C_REMFIRE_UNITS_ACTIVE = A3C_REMFIRE_UNITS_ACTIVE - [_unit];
 			publicVariable 'A3C_REMFIRE_UNITS_ACTIVE';
-			A3C_HC_FOCUS_ARTY = vehicle _unit;
 			with uiNamespace do {
 				//disableSerialization;
 				A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
@@ -821,6 +820,12 @@ A3C_ORDER_REMOTE_LAUNCH = {
 		};
 	};
 	_unit enableAI "AUTOTARGET";
+};
+
+
+
+A3C_ArtilleryOrder_Map_Setup = {
+	
 };
 
 
