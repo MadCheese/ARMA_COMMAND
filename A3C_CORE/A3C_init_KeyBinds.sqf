@@ -1,239 +1,98 @@
 if (isDedicated) exitwith {};
 
 
-//if (isNil 'A3C_is_Initialized') exitWith {
-//	hint "ARMA COMMAND IS INITIALIZING - STAND BY";
-//	waituntil {!isNil 'A3C_is_Initialized'};
-//	hint "ARMA COMMAND INITIALIZED";
-//};
 
+A3C_UI_HANDLER_ID_HUD_KeyDown = -1;
+A3C_UI_HANDLER_ID_HUD_KeyUp = -1;
+A3C_UI_HANDLER_ID_HUD_MouseButtonDown = -1;
+A3C_UI_HANDLER_ID_HUD_MouseZChanged = -1;
 
-A3C_ADD_KEYBINDS_EHD = -1; //-- UInamespace partner: A3C_KEY_VAR_KD
-A3C_ADD_KEYBINDS_EHU = -1; //-- UInamespace partner: A3C_INDEX_VAR_KEYU
-A3C_ADD_KEYBINDS_EMB = -1; //-- UInamespace partner: A3C_INDEX_VAR_MOUSEB
-A3C_ADD_KEYBINDS_EMZ = -1; //-- UInamespace partner: A3C_INDEX_VAR_MOUSEZ
-A3C_MAP_KEYBINDS_51_MM = -1; //-- UInamespace partner: A3C_INDEX_VAR_MAP_MOUSEM
-A3C_MAP_KEYBINDS_51_MD = -1; //-- UInamespace partner: A3C_INDEX_VAR_MAP_MOUSED
-A3C_MAP_KEYBINDS_51_MU = -1; //-- UInamespace partner: A3C_INDEX_VAR_MAP_MOUSEU
-A3C_MAP_KEYBINDS_51_KD = -1; //-- UInamespace partner: A3C_INDEX_VAR_MAP_KEYD
-//A3C_EVH_DRAW= -1;
-//A3C_MAP_EH_51_ESC= -1;
+A3C_UI_HANDLER_ID_MAP_KeyDown = -1;
+A3C_UI_HANDLER_ID_MAP_MouseButtonDown = -1;
+A3C_UI_HANDLER_ID_MAP_MouseButtonUp = -1;
 
 
 
-//-- A3C_ADD_KEYBINDS adds all keybinds when mission begins. Should keybinds get lost due to savegames or else, the refresh buttons will trigger the function to re-establish binds.
-A3C_ADD_KEYBINDS =
+//-- A3C_UI_FNC_ADD_KEYBINDS adds all keybinds when mission begins. Should keybinds get lost due to savegames or else, the refresh buttons will trigger the function to re-establish binds.
+A3C_UI_FNC_ADD_KEYBINDS =
 {
 
 	//////////////////////////////////////////////////////
-	////                  HUD - EVHS		        ////
+	////                  HUD - EVHS		          ////
 	//////////////////////////////////////////////////////
 
 
-	////////////////////////////////////////////////////// --  Main Display 46 KeyDown
-	//-- Prevent Bleeding of UI Eventhandlers
-	_var  = uiNamespace getVariable "A3C_INDEX_VAR_KEYD";
-	if (!isNil "_var") then {
-		(findDisplay 46) displayRemoveEventHandler ["KeyDown",_var];
-	} else {
-		if (!isNil "A3C_ADD_KEYBINDS_EHD" && {A3C_ADD_KEYBINDS_EHD != -1}) then {
-			(findDisplay 46) displayRemoveEventHandler ["KeyDown",A3C_ADD_KEYBINDS_EHD];
-		};
-	};
-
-	//-- add EH
-	A3C_ADD_KEYBINDS_EHD = (findDisplay 46) displayAddEventHandler
+	//-- HUD KeyDown
 	[
+		findDisplay 46,
+		"A3C_UI_HANDLER_ID_HUD_KeyDown",
+		"display",
 		"KeyDown",
 		{
-			
-			private ["_exit","_taoBind"];
-			private _btn = _this select 1;
-			_exit = false;
-			if !(player == (leader group player)) exitwith {};
-			if ( !isNull(findDisplay 312) ) exitWith {}; //-- ZEUS interface is open. Prevent most A3C stuff
-			if (A3C_IsTAO) then {
-				_taoBind = (["Tao Folding Map", "toggle"] call CBA_fnc_getKeybind) select 5;
-				if (_taoBind isEqualTo [(_this select 1),[(_this select 2),(_this select 3),(_this select 4)]]) then {_exit = true};
-			};
-			
-			if (_exit) exitwith {false};
-			
-			private _inputAction = inputAction "miniMapToggle";
-			if !((_this select 1) in A3C_DOWNKEYS) then {
-				if !(visibleMap) then {
-					//-- reveal Target
-					if (inputAction 'revealTarget' > 0) then {
-						[cameraOn, screentoworld [0.5,0.5]] call MCSS_fnc_RevealCursorPos;
-					};
-					//-- Open Map (Automatically open overlay if profileVar "A3C_MAP_VAR" is set to do so)
-					if ((_this select 1) in actionKeys "showmap") then {
-						if (_inputAction == 0) then {
-							if (A3C_BOOL_MAPFORCE) then {
-								if (isnull (findDisplay 6998)) then {
-									if (profileNameSpace getVariable "A3C_MAP_VAR")  then {
-										A3C_WeaponCurr = currentWeapon player;
-										A3C_BOOL_MAPFORCE= false;
-										nul = [6998] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB.sqf";
-										if (count units player > 0) then {
-											if (({(_x == (driver vehicle _x)) && {typeOf (vehicle _x) iskindOf "AIR"}} count (units player - [player])) >= ((count (units player - [player])) / 2)) then {
-												A3C_HELI_INF_MODE = "AIR";
-											} else {
-												A3C_HELI_INF_MODE = "INF";
-											};
-										} else {
-											A3C_HELI_INF_MODE = "HC";
-										};
-										A3C_SELECTED_UNITS = [];
-									};
-								};
-							};
-						};
-					};
-
-				};
-			};
-			if !(_btn in A3C_DOWNKEYS) then {
-				if (
-					!(_btn in [50]) && 
-					(_btn != 1 || {visibleMap})
-				) then {
-					A3C_DOWNKEYS pushBack _btn;
-				};
-
-				if !(visibleMap) then {
-					_this call A3C_HUD_F_KEYDOWN;
-				};
-			};
-			_bool = [(_this select 1),[(_this select 2),(_this select 3),(_this select 4)]] call A3C_GET_KEY_BOOL;
-			//systemChat str _bool;
-			_bool
-
+			private _blockDefaultKey = _this call A3C_HUD_UI_HandlerFNC_KeyDown;
+			_blockDefaultKey
 		}
-	];
-	uiNamespace setVariable ["A3C_INDEX_VAR_KEYD",A3C_ADD_KEYBINDS_EHD];
+	] call A3C_UI_CreateSafeEventhandler;
 
-	////////////////////////////////////////////////////// --  Main Display 46 KeyUp
-	//-- Prevent Bleeding of UI Eventhandlers
-	_var  = uiNamespace getVariable "A3C_INDEX_VAR_KEYU";
-	if (!isNil "_var") then {
-		(findDisplay 46) displayRemoveEventHandler ["KeyUp",_var];
-	} else {
-		if (!isNil "A3C_ADD_KEYBINDS_EHU" && {A3C_ADD_KEYBINDS_EHU != -1}) then {
-			(findDisplay 46) displayRemoveEventHandler ["KeyUp",A3C_ADD_KEYBINDS_EHU];
-		};
-	};
-
-	//-- add EH
-	A3C_ADD_KEYBINDS_EHU = (findDisplay 46) displayAddEventHandler
+	//-- HUD KeyUp
 	[
+		findDisplay 46,
+		"A3C_UI_HANDLER_ID_HUD_KeyUp",
+		"display",
 		"KeyUp",
 		{
-			A3C_BOOL_MAPFORCE = true; //!!!!~~~~~~~~~
-			if !(player == (leader group player)) exitwith {};
-			if ( !isNull(findDisplay 312) ) exitWith {}; //-- ZEUS interface is open. Prevent most A3C stuff
-			_this call A3C_HUD_KEYHANDLER_UP;
-
+			_this call A3C_HUD_UI_HandlerFNC_KeyUp;
 			false
 		}
-	];
-	uiNamespace setVariable ["A3C_INDEX_VAR_KEYU",A3C_ADD_KEYBINDS_EHU];
+	] call A3C_UI_CreateSafeEventhandler;
 
-
-
-	////////////////////////////////////////////////////// --  Main Display 46 MouseButtonDown
-	//-- Prevent Bleeding of UI Eventhandlers
-	_var  = uiNamespace getVariable "A3C_INDEX_VAR_MOUSEB";
-	if (!isNil "_var") then {
-		(findDisplay 46) displayRemoveEventHandler ["MouseButtonDown",_var];
-	} else {
-		if (!isNil "A3C_ADD_KEYBINDS_EMB" && {A3C_ADD_KEYBINDS_EMB != -1}) then {
-			(findDisplay 46) displayRemoveEventHandler ["MouseButtonDown",A3C_ADD_KEYBINDS_EMB];
-		};
-	};
-
-	//-- add EH
-	A3C_ADD_KEYBINDS_EMB = (findDisplay 46) displayAddEventHandler
+	
+	//-- HUD MouseButtonDown
 	[
+		findDisplay 46,
+		"A3C_UI_HANDLER_ID_HUD_MouseButtonDown",
+		"display",
 		"MouseButtonDown",
 		{
-			_this spawn A3C_HUD_MouseDown;
+			_this spawn A3C_HUD_UI_HandlerFNC_MouseButtonDown;
 			false
 		}
-	];
-	uiNamespace setVariable ["A3C_INDEX_VAR_MOUSEB",A3C_ADD_KEYBINDS_EMB];
-
-	////////////////////////////////////////////////////// --  Main Display 46 MouseWheel
-	//-- Prevent Bleeding of UI Eventhandlers
-
-	_var  = uiNamespace getVariable "A3C_INDEX_VAR_MOUSEZ";
-	if (!isNil "_var") then {
-		(findDisplay 46) displayRemoveEventHandler ["MouseZChanged",_var];
-	} else {
-		if (!isNil "A3C_ADD_KEYBINDS_EMZ" && {A3C_ADD_KEYBINDS_EMZ != -1}) then {
-			(findDisplay 46) displayRemoveEventHandler ["MouseZChanged",A3C_ADD_KEYBINDS_EMZ];
-		};
-	};
-	//-- add EH
-	A3C_ADD_KEYBINDS_EMZ = (findDisplay 46) displayAddEventHandler
+	] call A3C_UI_CreateSafeEventhandler;
+	
+	//-- HUD MouseZChanged
 	[
+		findDisplay 46,
+		"A3C_UI_HANDLER_ID_HUD_MouseZChanged",
+		"display",
 		"MouseZChanged",
 		{
-			_this call A3C_HUD_MOUSEWHL_HANDLER;
-			if ((!isnull (finddisplay 6998)) OR (!isnull (finddisplay 6999))) then {true} else {false}
+			private _blockDefaultKey = _this call A3C_HUD_UI_HandlerFNC_MouseZChanged;
+			_blockDefaultKey
 		}
-	];
-	uiNamespace setVariable ["A3C_INDEX_VAR_MOUSEZ",A3C_ADD_KEYBINDS_EMZ];
-
-
+	] call A3C_UI_CreateSafeEventhandler;
 
 	//////////////////////////////////////////////////////
-	////                  MAP - EVHS		        ////
+	////                  MAP - EVHS		          ////
 	//////////////////////////////////////////////////////
 
-	////////////////////////////////////////////////////// --  Map Display 12 KeyDown
-	//-- Prevent Bleeding of UI Eventhandlers
-	_var  = uiNamespace getVariable "A3C_INDEX_VAR_MAP_KEYD";
-	if (!isNil "_var") then {
-		(findDisplay 12 displayctrl 51) ctrlRemoveEventHandler ["KeyDown",_var];
-	} else {
-		if (!isNil "A3C_MAP_KEYBINDS_51_KD" && {A3C_MAP_KEYBINDS_51_KD != -1}) then {
-			(findDisplay 12 displayctrl 51) ctrlRemoveEventHandler ["KeyDown",A3C_MAP_KEYBINDS_51_KD];
-		};
-	};
-
-	//-- add EH >> ONLY RESPONSIBLE FOR ESCAPE KEY HANDLING BECAUSE THIS IS ARMA :)
-	A3C_MAP_KEYBINDS_51_KD = (findDisplay 12 displayctrl 51) ctrlAddEventHandler
+	//-- Map KeyDown
 	[
+		(findDisplay 12 displayctrl 51),
+		"A3C_UI_HANDLER_ID_MAP_KeyDown",
+		"ctrl",
 		"KeyDown",
 		{
 			disableSerialization;
 			private _return = _this call A3C_MAP_UI_HandlerFNC_KeyDown_Map;
 			_return	
 		}
-	];
-	uiNamespace setVariable ["A3C_INDEX_VAR_MAP_KEYD",A3C_MAP_KEYBINDS_51_KD];
+	] call A3C_UI_CreateSafeEventhandler;
 
-
-
-
-
-
-	////////////////////////////////////////////////////// --  Map Display 12 MouseButtonDown
-	//-- Prevent Bleeding of UI Eventhandlers
-	_var  = uiNamespace getVariable "A3C_INDEX_VAR_MAP_MOUSED";
-	if (!isNil "_var") then {
-		(findDisplay 12 displayctrl 51) ctrlRemoveEventHandler ["MouseButtonDown",_var];
-	} else {
-		if (!isNil "A3C_MAP_KEYBINDS_51_MD" && {A3C_MAP_KEYBINDS_51_MD != -1}) then {
-			(findDisplay 12 displayctrl 51) ctrlRemoveEventHandler ["MouseButtonDown",A3C_MAP_KEYBINDS_51_MD];
-		};
-	};
-
-
-	//-- add EH
-	A3C_MAP_KEYBINDS_51_MD = (findDisplay 12 displayctrl 51) ctrlAddEventhandler //displayAddEventHandler
+	//-- Map MouseButtonDown
 	[
+		(findDisplay 12 displayctrl 51),
+		"A3C_UI_HANDLER_ID_MAP_MouseButtonDown",
+		"ctrl",
 		"MouseButtonDown",
 		{
 			_return = false;
@@ -243,38 +102,22 @@ A3C_ADD_KEYBINDS =
 			};
 			_return
 		}
-	];
-	uiNamespace setVariable ["A3C_INDEX_VAR_MAP_MOUSED",A3C_MAP_KEYBINDS_51_MD];
+	] call A3C_UI_CreateSafeEventhandler;
 
-	////////////////////////////////////////////////////// --  Map Display 12 MouseButtonUp
-	//-- Prevent Bleeding of UI Eventhandlers
-	_var  = uiNamespace getVariable "A3C_INDEX_VAR_MAP_MOUSEU";
-	if (!isNil "_var") then {
-		(findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["MouseButtonUp",_var];
-	} else {
-		if (!isNil "A3C_MAP_KEYBINDS_51_MU" && {A3C_MAP_KEYBINDS_51_MU != -1}) then {
-			(findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["MouseButtonUp",A3C_MAP_KEYBINDS_51_MU];
-		};
-	};
-
-
-	//-- add EH
-	A3C_MAP_KEYBINDS_51_MU = (findDisplay 12 displayCtrl 51) ctrlAddEventHandler
+	//-- Map MouseButtonUp
 	[
+		(findDisplay 12 displayctrl 51),
+		"A3C_UI_HANDLER_ID_MAP_MouseButtonUp",
+		"ctrl",
 		"MouseButtonUp",
 		{
-
 			A3C_BOOL_MAP_MD = false;
 			if (visibleMap) then {
 				_this spawn A3C_MAP_UI_HandlerFNC_OnMouseButtonUp;
 				A3C_BOOL_MOUSEMOVING = false;
 			};
 		}
-	];
-	uiNamespace setVariable ["A3C_INDEX_VAR_MAP_MOUSEU",A3C_MAP_KEYBINDS_51_MU];
-
-	
-
+	] call A3C_UI_CreateSafeEventhandler;
 
 	if !(isNil "A3C_GRENADEHANDLER") then {(findDisplay 46) displayRemoveEventHandler ["MouseButtonUP",A3C_GRENADEHANDLER];};
 

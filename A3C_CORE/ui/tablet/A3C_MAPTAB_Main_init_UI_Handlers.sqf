@@ -1,6 +1,3 @@
-
-
-
 A3C_MAP_UI_HandlerFNC_OnMouseButtonDown = {
 
 	/*
@@ -2118,8 +2115,17 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonUp = {
 	};
 };
 
+A3C_MAP_UI_HandlerFNC_OnMouseMoving_Main = {
+	
+	if (isNull findDisplay 6998) then {
+		// player commandChat "A3C_MAP_UI_HandlerFNC_OnMouseMoving_Main";
+		A3C_MAP_X = _this select 1;
+		A3C_MAP_Y = _this select 2;
+	};
+};
 
-A3C_MAP_UI_HandlerFNC_OnMouseMoving = {
+A3C_MAP_UI_HandlerFNC_OnMouseMoving_Overlay = {
+	// player sideChat "A3C_MAP_UI_HandlerFNC_OnMouseMoving_Overlay";
 	params ["_display","_sX","_sY","_unUsed"];
 	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
 	private _ctls = [13,7071,7077,202020,709099,8009,8010,709109,709115,8007];
@@ -2141,69 +2147,6 @@ A3C_MAP_UI_HandlerFNC_OnMouseMoving = {
 	};
 	
 };
-
-A3C_MAP_UI_HandlerFNC_KeyDown_Map_BlockDefault = {
-	//-- FNC to determine if A3C_MAP_KEYBINDS_51_KD (A3C_MAP_UI_HandlerFNC_KeyDown_Map) should suppress default-keybind or not
-	//-->> We make an exception to set A3C_MODIFIER_SHIFT/A3C_MODIFIER_CTRL in this UI-Logic fnc
-	//-- NOTE: It seems that the functions for which we want to block Engine keybinds need to be executed in here.
-	
-	params ["_mapControl","_key","_shift","_ctrl","_alt"];
-	disableSerialization;
-
-	systemchat 'blockKey';
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
-	private _display = findDisplay _a3c_dsp;
-
-	
-	private _mapObjectSelector = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
-	if (ctrlShown _mapObjectSelector) exitWith {true}; //-- if ObjectSelector is open, block all default keybinds 
-	
-	
-	
-
-	private _groupContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT;
-	private _groupDashboardHC = _display displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT;
-	private _wpContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT;
-	switch (_key) do {
-		case 1 : {
-			switch (true) do {
-				case (ctrlShown _groupContextmenuHC) : {
-					// {
-					// 	_x ctrlShow false;
-					// } foreach [_groupContextmenuHC, _groupDashboardHC];
-					_return = true; 
-				};
-				case (ctrlShown _wpContextmenuHC) : {
-					// _wpContextmenuHC ctrlShow false;
-					_return = true; 
-				};
-			};
-		};
-		case 28: { // Enter
-			// if (ctrlShown _groupContextmenuHC) then {
-			// 	[] call A3C_Map_HC_groupContext_ButtonFnc_Confirm;
-			// };
-			_return = true;
-		};
-		case 29: {
-			_return = true;
-			A3C_MODIFIER_CTRL = true; //-- needed for UI (TREE EH's do not do CTL/SHIFT)
-		};
-		
-		case 42: {
-			_return = true; 
-			A3C_MODIFIER_SHIFT = true; //-- needed for UI (TREE EH's do not do CTL/SHIFT)
-		};
-		case 57: { // Spacebar
-			_return = true;
-			if ( A3C_HELI_INF_MODE in ["INF","AIR"] && {count groupselectedUnits player == 0}) then {
-				['ALL'] spawn A3C_Btn_fnc_Execute;
-			};
-		};
-	};
-	_return
-};
-
 
 
 A3C_MAP_UI_HandlerFNC_KeyDown_Map = { //-- This handler is needed because ESC behaves differently than ALL other keys

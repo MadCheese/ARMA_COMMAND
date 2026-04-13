@@ -3397,7 +3397,7 @@ A3C_GROUP_RESET = {
 		};
 	};
 
-	[] call A3C_ADD_KEYBINDS;
+	[] call A3C_UI_FNC_ADD_KEYBINDS;
 	[_a3c_dsp] call A3C_MAPTAB_TREE_LABEL; 
 
 	if (behaviour player != "AWARE") then {

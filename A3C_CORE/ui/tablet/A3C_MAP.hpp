@@ -76,7 +76,7 @@ class A3C_MAPDIALOG
 		class A3C_MAP_FULLSCREEN: A3C_RscButton_Invisible
 		{
 			idc = 12;
-			onMouseMoving = "_this call A3C_MAP_UI_HandlerFNC_OnMouseMoving";
+			onMouseMoving = "_this call A3C_MAP_UI_HandlerFNC_OnMouseMoving_Overlay";
 			x = safezoneX;
 			y = safezoneY;
 			w = safezoneW;
