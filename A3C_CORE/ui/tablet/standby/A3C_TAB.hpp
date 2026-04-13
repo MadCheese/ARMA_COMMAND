@@ -13,7 +13,7 @@ class A3C_SWPDIALOG
 {
 	idd  = 6999;
 	movingenable = true;
-	onKeyDown = "[6999,_this] call A3C_MapOverlayDefaultkeys";
+	onKeyDown = "[6999,_this] call A3C_MAP_UI_HandlerFNC_KeyDown_Overlay";
 	class ControlsBackground 
 	{		
 		class test_map: A3C_RscMapControl
@@ -77,7 +77,7 @@ class A3C_SWPDIALOG
 		};
 		
 		///----- ACTION BUTTONS: SUB-SETTINGS
-		class PRNT_ACTION_SUBSET_1: A3C_RscControlsGroup_NoScroll
+		class A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8009;
 			x = 0.289346 * safezoneW + safezoneX;
@@ -275,7 +275,7 @@ class A3C_SWPDIALOG
 		
 		
 		
-		class PRNT_ACTION_SUBSET_2: A3C_RscControlsGroup_NoScroll
+		class A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8010;
 			x = 0.289346 * safezoneW + safezoneX;
@@ -1543,7 +1543,7 @@ class A3C_SWPDIALOG
 			w = 0.114559 * safezoneW;
 			h = 0.0219929 * safezoneH;
 		};
-		class A3C_RC_Context_HC_WP: A3C_RscControlsGroup
+		class A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT: A3C_RscControlsGroup
 		{
 			// left: + right: -
 			// up: - down: + 
@@ -1619,7 +1619,7 @@ class A3C_SWPDIALOG
 				class A3C_RscText_1000_1: A3C_RscButton_Invisible
 				{
 					idc = 709136;
-					action = "[0] call A3C_OPEN_RC_HC_LB";
+					action = "[0] call A3C_Map_HC_waypointContext_OpenMenu_LB";
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
 					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 9.50718 * GUI_GRID_W;
@@ -1760,7 +1760,7 @@ class A3C_SWPDIALOG
 					y = 10.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 9.50718 * GUI_GRID_W;
 					h = 1.49975 * GUI_GRID_H;
-					action = "[1] call A3C_OPEN_RC_HC_LB";
+					action = "[1] call A3C_Map_HC_waypointContext_OpenMenu_LB";
 				};
 
 				class A3C_RscPicture_1200: A3C_RscPicture
@@ -1776,7 +1776,7 @@ class A3C_SWPDIALOG
 				{
 					idc = 709132;
 					text = "CONFIRM";
-					action = "[] spawn A3C_HC_RC_CONFIRM";
+					action = "[] spawn A3C_Map_HC_waypointContext_ButtonFnc_Confirm";
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
 					y = 12 * GUI_GRID_H + GUI_GRID_Y;
 					w = 4.85 * GUI_GRID_W;
@@ -1842,7 +1842,7 @@ class A3C_SWPDIALOG
 		};
 
 
-		class A3C_HC_GROUP_MENU_CTRLPARENT: A3C_RscControlsGroup_NoScroll
+		class A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8007;
 			x = 0;
@@ -1875,8 +1875,8 @@ class A3C_SWPDIALOG
 					autocomplete = "false";
 					colorSelection[] = {1,1,1,0.3};
 					colorDisabled[] = {0,0,0,0};
-					onSetFocus = "['GROUPNAME','ON'] call A3C_MAP_fnc_CT";
-					onKillFocus = "['GROUPNAME','OFF'] call A3C_MAP_fnc_CT";
+					onSetFocus = "['GROUPNAME','ON'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE";
+					onKillFocus = "['GROUPNAME','OFF'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE";
 					onKeyDown = "if (_this select 1 == 28) then {[] call A3C_Map_HC_groupContext_ButtonFnc_Confirm}";
 					x = GRIDX( 0 ); 
 					y = GRIDY( 0 );

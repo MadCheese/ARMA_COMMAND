@@ -8,7 +8,7 @@
 #define BAR_W (16 * GUI_GRID_W)
 #define BAR_H (15.5 * GUI_GRID_H)
 #define TREE_W (13 * GUI_GRID_W)
-#define TEAMCOL_FRAME_H ((0.03 * safezoneH) + ((safezoneY + safeZoneH) * 0.0141935))// (safezoneY + safeZoneH) * 0.0141935 should be A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y
+#define TEAMCOL_FRAME_H ((0.03 * safezoneH) + ((safezoneY + safeZoneH) * 0.0141935))// (safezoneY + safeZoneH) * 0.0141935 should be A3C_MAP_GAMEUI_PADDING_Y
 
 class A3C_MENU
 {
@@ -1044,7 +1044,7 @@ class A3C_MENU
 
 
 
-				class A3C_SELECTOR_TREE: A3C_CT_TREE
+				class A3C_SHARED_GAMEUI_TREE_CONTROL: A3C_CT_TREE
 				{
 					idc = 202020;
 

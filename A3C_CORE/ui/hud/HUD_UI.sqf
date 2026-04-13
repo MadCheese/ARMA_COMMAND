@@ -16,10 +16,10 @@ A3C_UI_ARSENAL_CREATELB = {
 	A3C_CurrentPlayerObject = player;
 	[] call A3C_RADIAL_CloseDisplay;
 	BR_A3C_DISABLE_RADIAL = true;
-	if (15 in A3C_HUD_DOWNKEYS) then {
+	if (15 in A3C_DOWNKEYS) then {
 		("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutRsc ["A3C_KEY_VIEWER_UI","PLAIN"];
 		((uiNamespace getVariable "A3C_KEY_VIEWER_UI") displayCtrl 11) ctrlSetText "Please release TAB";
-		waitUntil {!(15 in A3C_HUD_DOWNKEYS)};
+		waitUntil {!(15 in A3C_DOWNKEYS)};
 		("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutText ["","PLAIN"];
 
 	};
@@ -134,7 +134,7 @@ A3C_TOGGLE_KEYVIEWER = {
 			KEYVIEWER_VAL = 1;
 			//
 			while {KEYVIEWER_VAL == 1} do {
-				_downKeys = A3C_HUD_DOWNKEYS;
+				_downKeys = A3C_DOWNKEYS;
 				_MODIFIERS = [];
 				_text = "";
 				if (29 in _downKeys) then {_MODIFIERS pushBack "CTRL"};
@@ -377,7 +377,7 @@ A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG = {
 						//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 						//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 						(findDisplay 79996) closeDisplay 0;
-						A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [(_button select 0)];
+						A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 						{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 						A3C_UI_RADIAL_Current_Remfire_Units = [];
 					};
@@ -1391,7 +1391,7 @@ A3C_ObjectSelector_LB_Change = {
 					format
 					[
 						"
-							[(group this)] call A3C_HC_WP_COMPLETE;
+							[(group this)] call A3C_HC_FNC_CompleteWaypoint;
 							[[group this,'%1'], A3C_WP_ACTION_PlantExplosive_HC] remoteExec ['bis_fnc_call',0];
 						",
 						_magName
@@ -1580,7 +1580,7 @@ A3C_RADIAL_ACTION_HC_LANDING_FNC = {
 					[
 						"
 							[['%1',this,[['GoCode','%2'],'COMBATLANDING'],'LINE',(currentwaypoint (group this))],A3C_HC_INSERT_ACTION_WP,nil,false] remoteExec ['bis_fnc_call',0];
-							[(group this)] call A3C_HC_WP_COMPLETE
+							[(group this)] call A3C_HC_FNC_CompleteWaypoint
 						",
 						getPlayerUID player,
 						_subCondition
@@ -1592,7 +1592,7 @@ A3C_RADIAL_ACTION_HC_LANDING_FNC = {
 				};
 				case ("TRANSPORT UNLOAD") : {
 					_wp setWaypointType "TR UNLOAD";
-					_statements = "[(group this)] call A3C_HC_WP_COMPLETE;  ";
+					_statements = "[(group this)] call A3C_HC_FNC_CompleteWaypoint;  ";
 				};//deleteWaypoint [group this, currentWaypoint group this];
 				case ("FULL LANDING") : {
 					//systemchat str (_landingData select 0);
@@ -1600,7 +1600,7 @@ A3C_RADIAL_ACTION_HC_LANDING_FNC = {
 					[
 						"
 							[this,%1,'%2',[],true] spawn A3C_HC_WPACTION_LANDING_FULL;
-							[(group this)] call A3C_HC_WP_COMPLETE;
+							[(group this)] call A3C_HC_FNC_CompleteWaypoint;
 						",
 						_landingData select 0,
 						getPlayerUID player

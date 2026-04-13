@@ -9,40 +9,19 @@
 #define MAIN_WIDTH_GP 12
 #define MAIN_HEIGHT_GP 19
 
-#define A3C_MAPTAB_SUBSEL_BUTTON_H (0.08 * safezoneH)
-#define A3C_MAPTAB_SUBSEL_BUTTON_W (A3C_MAPTAB_SUBSEL_BUTTON_H * 0.75)
+#define A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H (0.08 * safezoneH)
+#define A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W (A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H * 0.75)
 
 class A3C_MAPDIALOG
 {
 	idd  = 6998;
 	movingenable = true;
-	//onSetfocus = 'systemchat '1' ";
-	//onKillfocus = 'systemchat '2' ";
-	//onKeyDown = "player sidechat str _this";
-	//onMouseButtonDown = "systemchat str (_this select 1)";
-	onKeyDown = "[6998,_this] call A3C_MapOverlayDefaultkeys";
+	onKeyDown = "_this call A3C_MAP_UI_HandlerFNC_KeyDown_Overlay;";
 
-	//onload = "systemchat 'load'";
-	//onunload = "systemchat 'unload'";
-
+			
 	class ControlsBackground 
 	{	
-//		class A3C_RscPicture_ControlFrame: A3C_RscPicture
-//		{
-//			idc = 10;
-//
-//			text = "A3C_CORE\ui\pictures\BG_Map_Overlay.paa";
-//			x = 0.202147 * safezoneW + safezoneX;
-//			y = 0.0229637 * safezoneH + safezoneY;
-//			w = 0.595707 * safezoneW;
-//			h = 0.979157 * safezoneH;
-//			colorText[] = {0,0,0,0.7};
-//		};
-		
-
-		
-		
-		
+	
 		//-- ctrlFrame - requires 
 		class A3C_RscPicture_ControlFrame: A3C_RscPicture
 		{
@@ -58,7 +37,6 @@ class A3C_MAPDIALOG
 		{
 			idc = 11;
 			onMouseEnter = "[] call A3C_MAP_DelLoopObs; ";
-			/////onMouseMoving = "(findDisplay 12 displayCtrl 51) ctrlEnable false;";
 			x = 0.21933 * safezoneW + safezoneX;
 			y = 100 * safezoneH + safezoneY;
 			w = 0.555611 * safezoneW;
@@ -98,8 +76,7 @@ class A3C_MAPDIALOG
 		class A3C_MAP_FULLSCREEN: A3C_RscButton_Invisible
 		{
 			idc = 12;
-			/////onMouseMoving = "(findDisplay 12 displayCtrl 51) ctrlEnable true;";
-			onMouseMoving = "_this call A3C_TAB_UI_Handlers_OnMouseMoving";
+			onMouseMoving = "_this call A3C_MAP_UI_HandlerFNC_OnMouseMoving";
 			x = safezoneX;
 			y = safezoneY;
 			w = safezoneW;
@@ -127,7 +104,7 @@ class A3C_MAPDIALOG
 		class START_TEXT: A3C_RscTEXT
 		{
 			idc = 404041;
-			text = ""; //--- ToDo: Localize;
+			text = "";
 			style = 0;
 			x = 14 * GUI_GRID_W + GUI_GRID_X;
 			y = 8.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -138,27 +115,20 @@ class A3C_MAPDIALOG
 		};
 
 		
-		class A3C_SELECTOR_TREE: A3C_CT_TREE
+		class A3C_SHARED_GAMEUI_TREE_CONTROL: A3C_CT_TREE
 		{
 			idc = 202020;
 
-			colorBackground[] = {0,0,0,0.6}; // Fill color
-			//onMouseEnter = "(findDisplay 12 displayCtrl 51) ctrlEnable false";
+			colorBackground[] = {0,0,0,0.6};
 			onMouseButtonDown = "_this call A3C_TREE_BOXCLICK;";
-			//x = 0.5; 
-			//y = 0.5;
 			x = 0 * safezoneW + safezoneX;
-			y = 100; //0.958963 * safezoneH + safezoneY;
-			//w = 0.159375 * safezoneW;
-			w = (8 * 0.03 / (getResolution select 5)); //0.14 * safezoneW; // ( 10 * ( pixelGrid * pixelW * 2.5 ))
-			h = 0.05 / (getResolution select 5); //0.0509959 * safezoneH;
-			//onTreeSelChanged = "player commandchat str _this";
-			//onTreeLButtonDown = "player commandchat str [_this select 1]; false";
+			y = 100;
+			w = (8 * 0.03 / (getResolution select 5));
+			h = 0.05 / (getResolution select 5);
 			onTreeLButtonDown = "_this call A3C_TREE_TVCHANGE; false";
 			onTreeCollapsed = "[_this,'COLLAPSE',false,0.1] spawn A3C_MAPTAB_TREE_OPEN_COLLAPSE;  false";
 			onTreeExpanded = "[_this,'OPEN',false,0.1] spawn A3C_MAPTAB_TREE_OPEN_COLLAPSE;  false";
 			sizeEx = 0.03 / (getResolution select 5);
-			// Scrollbar configuration
 
 		};
 
@@ -168,17 +138,15 @@ class A3C_MAPDIALOG
 
 			text = "#(argb,8,8,3)color(0,0,0,0.6)";
 			x = 0.288066 * safezoneW + safezoneX;
-			y = (safezoneH + safezoneY); //0.94007 * 
+			y = (safezoneH + safezoneY);
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
 		};
 		class A3C_TOP_ROW_BG_FRAME: A3C_RscFrame
 		{
 			idc = 7074;
-
-			//text = "#(argb,8,8,3)color(0,0,0,0.6)";
 			x = 0.288066 * safezoneW + safezoneX;
-			y = safezoneH + safezoneY; //0.94007 * 
+			y = safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
 			colorBackground[] = 
@@ -213,8 +181,6 @@ class A3C_MAPDIALOG
 		class A3C_TOP_TEAMCOLOR_FRAME: A3C_RscFrame
 		{
 			idc = 7079;
-
-			//text = "#(argb,8,8,3)color(0,0,0,0.6)";
 			x = 0.298066 * safezoneW + safezoneX;
 			y = safezoneH + safezoneY;
 			w = 0.03 * safezoneW;
@@ -241,8 +207,6 @@ class A3C_MAPDIALOG
 		class A3C_TAB_REDBOX: A3C_RscPicture
 		{
 			idc = 1000;
-
-			//text = "#(argb,8,8,3)color(0.5,0,0,1)";
 			x = 0.24797 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
@@ -257,13 +221,11 @@ class A3C_MAPDIALOG
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
 			h = 0.0110018 * safezoneH;
-			tooltip = "team red. LMB to select, Shift+LMB to add"; //--- ToDo: Localize;
+			tooltip = "team red. LMB to select, Shift+LMB to add";
 		};
 		class A3C_TAB_GREENBOX: A3C_RscPicture
 		{
 			idc = 1002;
-
-			//text = "#(argb,8,8,3)color(0,1,0,1)";
 			x = 0.33198 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
@@ -273,18 +235,15 @@ class A3C_MAPDIALOG
 		{
 			idc = 1003;
 			onMouseButtonDown = "['GREEN',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
-
 			x = 0.33198 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
 			h = 0.0110018 * safezoneH;
-			tooltip = "select team green. LMB to select, Shift+LMB to add"; //--- ToDo: Localize;
+			tooltip = "select team green. LMB to select, Shift+LMB to add";
 		};
 		class A3C_TAB_BLUEBOX: A3C_RscPicture
 		{
 			idc = 1004;
-
-			//text = "#(argb,8,8,3)color(0,0.3,0.6,1)";
 			x = 0.41599 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
@@ -299,13 +258,11 @@ class A3C_MAPDIALOG
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
 			h = 0.0110018 * safezoneH;
-			tooltip = "select team blue. LMB to select, Shift+LMB to add"; //--- ToDo: Localize;
+			tooltip = "select team blue. LMB to select, Shift+LMB to add";
 		};
 		class A3C_TAB_YELLOWBOX: A3C_RscPicture
 		{
 			idc = 1006;
-
-			//text = "#(argb,8,8,3)color(0.8,0.6,0,1)";
 			x = 0.5 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
@@ -320,13 +277,11 @@ class A3C_MAPDIALOG
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
 			h = 0.0110018 * safezoneH;
-			tooltip = "select team yellow. LMB to select, Shift+LMB to add"; //--- ToDo: Localize;
+			tooltip = "select team yellow. LMB to select, Shift+LMB to add";
 		};
 		class A3C_TAB_WHITEBOX: A3C_RscPicture
 		{
 			idc = 1008;
-
-			//text = "#(argb,8,8,3)color(1,1,1,1)";
 			x = 0.58401 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
@@ -341,14 +296,12 @@ class A3C_MAPDIALOG
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
 			h = 0.0110018 * safezoneH;
-			tooltip = "select team white. LMB to select, Shift+LMB to add"; //--- ToDo: Localize;
+			tooltip = "select team white. LMB to select, Shift+LMB to add";
 		};
 		
 		class A3C_TAB_PURPLEBOX: A3C_RscPicture
 		{
 			idc = 1010;
-
-			//text = "#(argb,8,8,3)color(0.5,0.2,0.6,0.6)";
 			x = 0.66802 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
@@ -363,7 +316,7 @@ class A3C_MAPDIALOG
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
 			h = 0.0110018 * safezoneH;
-			tooltip = "select all units. LMB to select, Shift+LMB to add"; //--- ToDo: Localize;
+			tooltip = "select all units. LMB to select, Shift+LMB to add";
 		};
 		
 		
@@ -373,8 +326,6 @@ class A3C_MAPDIALOG
 		class A3C_TIMEOUT_CHECKBOX1: A3C_RscPicture
 		{
 			idc = 7022;
-
-			//text = "#(argb,8,8,3)color(1,1,1,1)";
 			x = 0.545824 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
@@ -391,19 +342,10 @@ class A3C_MAPDIALOG
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
-			tooltip = "WP Condition: NONE (LMB to cycle through options)"; //--- ToDo: Localize;
+			tooltip = "WP Condition: NONE (LMB to cycle through options)";
 		};
-		//class A3C_TEXT_04: A3C_RscText
-		//{
-		//	idc = 7008;
 
-		//	text = "^"; //--- ToDo: Localize;
-		//	x = 0.563007 * safezoneW + safezoneX;
-		//	y = 0.818596 * safezoneH + safezoneY;
-		//	w = 0.0114559 * safezoneW;
-		//	h = 0.0220035 * safezoneH;
-		//};
-		class A3C_RC_TimeOut: A3C_CT_EDIT
+		class A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout: A3C_CT_EDIT
 		{
 			idc = 7009;
 			type = 2;
@@ -413,27 +355,18 @@ class A3C_MAPDIALOG
 			colorSelection[] = {1,1,1,1};
 			colorDisabled[] = {};
 			colorBackground[] = {0,0,0,0.6};
-			onSetFocus = "['TIMEOUT','ON'] call A3C_MAP_fnc_CT";
-			onKillFocus = "['TIMEOUT','OFF'] call A3C_MAP_fnc_CT";
+			onSetFocus = "['TIMEOUT','ON'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE";
+			onKillFocus = "['TIMEOUT','OFF'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE";
 			tooltip = "Set Timeout";
-			text = "05"; //--- ToDo: Localize;
+			text = "05";
 			x = 0.580191 * safezoneW + safezoneX;
-			y = safezoneH + safezoneY; //0.818596 * 
+			y = safezoneH + safezoneY;
 			w = 0.0229118 * safezoneW;
 			h = 0.0330053 * safezoneH;
 			colorText[] = {1,1,1,1};
 			sizeEx = "0.03 / (getResolution select 5)";	
 		};
-		//class A3C_TEXT_05: A3C_RscText
-		//{
-		//	idc = 7010;
 
-		//	text = "s )"; //--- ToDo: Localize;
-		//	x = 0.603103 * safezoneW + safezoneX;
-		//	y = 0.818596 * safezoneH + safezoneY;
-		//	w = 0.0171838 * safezoneW;
-		//	h = 0.0220035 * safezoneH;
-		//};
 		class A3C_TEXT_07: A3C_RscText
 		{
 			idc = 7014;
@@ -452,15 +385,15 @@ class A3C_MAPDIALOG
 			w = 0.183294 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
-		class A3C_WPD_BTN1: A3C_ShortcutButton //A3C_UnitButtonColorable //A3C_RscButton_Function
+		class A3C_WPD_BTN1: A3C_ShortcutButton
 		{
 			idc = 7018;
 			
 			action = "['ALL'] spawn A3C_Btn_fnc_Execute";
-			text = "COMMIT ALL"; //--- ToDo: Localize;
+			text = "COMMIT ALL";
 			
 			x = 0.517184 * safezoneW + safezoneX;
-			y = 2; //0.94007 * safezoneH + safezoneY;
+			y = 2;
 			w = 0.0973751 * safezoneW;
 			h = 0.044007 * safezoneH;
 			font = "TahomaB";
@@ -473,12 +406,10 @@ class A3C_MAPDIALOG
 		class A3C_WPD_BTN2: A3C_ShortcutButton
 		{
 			idc = 7019;
-			//action = "(findDisplay 6998) closeDisplay 0; A3C_SELECTED_UNITS = []; {_x setvariable ['A3C_PLOT_TEMP',[],true];} foreach units group player; openMap false; [1] call A3C_Btn_fnc_Cancel";
-			
 			action = "['SELECTED'] spawn A3C_Btn_fnc_Execute";
-			text = "COMMIT"; //--- ToDo: Localize;
+			text = "COMMIT";
 			x = 0.316706 * safezoneW + safezoneX;
-			y = 2; //0.94007 * safezoneH + safezoneY;
+			y = 2;
 			w = 0.160383 * safezoneW;
 			h = 0.044007 * safezoneH;
 			font = "TahomaB";
@@ -492,12 +423,9 @@ class A3C_MAPDIALOG
 		{
 			idc = 7020;
 			action = "(findDisplay 6998) closeDisplay 0; A3C_SELECTED_UNITS = []; {_x setvariable ['A3C_PLOT_TEMP',[],true];} foreach units group player; openMap false; [1] call A3C_Btn_fnc_Cancel";
-
-
-
-			text = "EXIT"; //--- ToDo: Localize;
+			text = "EXIT";
 			x = 0.517184 * safezoneW + safezoneX;
-			y = 2; //0.94007 * safezoneH + safezoneY;
+			y = 2;
 			w = 0.0973751 * safezoneW;
 			h = 0.044007 * safezoneH;
 			font = "TahomaB";
@@ -507,174 +435,10 @@ class A3C_MAPDIALOG
 			size = "0.04 / (getResolution select 5)";
 			sizeEx = "0.04 / (getResolution select 5)";	
 		};
-		/*
-		class A3C_UNIT_1: A3C_UnitButtonColorable
-		{
-			idc = 7025;
-			onMouseButtonDown = "[(1 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT";
 
-			x = 0.24797 * safezoneW + safezoneX;
-			y = 0.87406 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_2: A3C_UnitButtonColorable
-		{
-			idc = 7026;
-			onMouseButtonDown = "[(2 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT";
-
-			x = 0.310978 * safezoneW + safezoneX;
-			y = 0.87406 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_3: A3C_UnitButtonColorable
-		{
-			idc = 7027;
-			onMouseButtonDown = "[(3 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT";
-
-			x = 0.373985 * safezoneW + safezoneX;
-			y = 0.87406 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_4: A3C_UnitButtonColorable
-		{
-			idc = 7028;
-			onMouseButtonDown = "[(4 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-
-			x = 0.436993 * safezoneW + safezoneX;
-			y = 0.87406 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_5: A3C_UnitButtonColorable
-		{
-			idc = 7029;
-			onMouseButtonDown = "[(5 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-			
-			x = 0.5 * safezoneW + safezoneX;
-			y = 0.87406 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_6: A3C_UnitButtonColorable
-		{
-			idc = 7030;
-			onMouseButtonDown = "[(6 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-
-			x = 0.563007 * safezoneW + safezoneX;
-			y = 0.87406 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_7: A3C_UnitButtonColorable
-		{
-			idc = 7031;
-			onMouseButtonDown = "[(7 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-
-			x = 0.626015 * safezoneW + safezoneX;
-			y = 0.87406 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_8: A3C_UnitButtonColorable
-		{
-			idc = 7032;
-			onMouseButtonDown = "[(8 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-
-			x = 0.689022 * safezoneW + safezoneX;
-			y = 0.87406 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_9: A3C_UnitButtonColorable
-		{
-			idc = 7033;
-			onMouseButtonDown = "[(9 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-
-			x = 0.24797 * safezoneW + safezoneX;
-			y = 0.907065 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_10: A3C_UnitButtonColorable
-		{
-			idc = 7034;
-			onMouseButtonDown = "[(10 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-
-			x = 0.310978 * safezoneW + safezoneX;
-			y = 0.907065 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_11: A3C_UnitButtonColorable
-		{
-			idc = 7035;
-			onMouseButtonDown = "[(11 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-
-			x = 0.373985 * safezoneW + safezoneX;
-			y = 0.907065 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_12: A3C_UnitButtonColorable
-		{
-			idc = 7036;
-			onMouseButtonDown = "[(12 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-
-			x = 0.436993 * safezoneW + safezoneX;
-			y = 0.907065 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_13: A3C_UnitButtonColorable
-		{
-			idc = 7037;
-			onMouseButtonDown = "[(13 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-
-			x = 0.5 * safezoneW + safezoneX;
-			y = 0.907065 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_14: A3C_UnitButtonColorable
-		{
-			idc = 7038;
-			onMouseButtonDown = "[(14 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-
-			x = 0.563007 * safezoneW + safezoneX;
-			y = 0.907065 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_15: A3C_UnitButtonColorable
-		{
-			idc = 7039;
-			onMouseButtonDown = "[(15 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-
-			x = 0.626015 * safezoneW + safezoneX;
-			y = 0.907065 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_UNIT_16: A3C_UnitButtonColorable
-		{
-			idc = 7040;
-			onMouseButtonDown = "[(16 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT;";
-
-			x = 0.689022 * safezoneW + safezoneX;
-			y = 0.907065 * safezoneH + safezoneY;
-			w = 0.0572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		*/
-		
 		class A3C_map_undo_IMAGE: A3C_RscPicture
 		{
 			idc = 7092;
-
-			//text = "A3C_CORE\ui\pictures\icon_menu_undo.paa";
 			x = 0.620287 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
@@ -695,7 +459,6 @@ class A3C_MAPDIALOG
 		class RText_7042: A3C_RscText
 		{
 			idc = 7042;
-
 			x = 0 * GUI_GRID_W + GUI_GRID_X;
 			y = 1 * GUI_GRID_H + GUI_GRID_Y;
 			w = 7.5 * GUI_GRID_W;
@@ -705,8 +468,6 @@ class A3C_MAPDIALOG
 		class A3C_TAB_STANCE1: A3C_RscPicture
 		{
 			idc = 7044;
-
-			//text = "#(argb,8,8,3)color(1,1,1,1)";
 			x = 0.24797 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
@@ -722,13 +483,11 @@ class A3C_MAPDIALOG
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
-			tooltip = "stance while en route"; //--- ToDo: Localize;
+			tooltip = "stance while en route";
 		};
 		class A3C_TAB_STANCE2: A3C_RscPicture
 		{
 			idc = 7046;
-
-			//text = "#(argb,8,8,3)color(1,1,1,1)";
 			x = 0.339617 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
@@ -744,13 +503,11 @@ class A3C_MAPDIALOG
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
-			tooltip = "set stance upon arrival"; //--- ToDo: Localize;
+			tooltip = "set stance upon arrival";
 		};
 		class A3C_TAB_Speed: A3C_RscPicture
 		{
 			idc = 7048;
-
-			//text = "#(argb,8,8,3)color(1,1,1,1)";
 			x = 0.293794 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
@@ -766,13 +523,11 @@ class A3C_MAPDIALOG
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
-			tooltip = "set travel speed"; //--- ToDo: Localize;
+			tooltip = "set travel speed";
 		};
 		class A3C_TAB_FORMM: A3C_RscPicture
 		{
 			idc = 7050;
-
-			//text = "#(argb,8,8,3)color(1,1,1,1)";
 			x = 0.477088 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
@@ -788,15 +543,12 @@ class A3C_MAPDIALOG
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
-			tooltip = "set formation (connected tolooking-direction)"; //--- ToDo: Localize;
+			tooltip = "set formation (connected tolooking-direction)";
 		};
-		//[0.24797,0.33198,0.41599,0.5,0.58401,0.66802]
 		
 		class A3C_TAB_CMODE: A3C_RscPicture
 		{
 			idc = 7062;
-
-			//text = "\a3\ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa";
 			x = 0.385441 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
@@ -812,13 +564,11 @@ class A3C_MAPDIALOG
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
-			tooltip = "WP Combat-Mode: Default/Engage"; //--- ToDo: Localize;
+			tooltip = "WP Combat-Mode: Default/Engage";
 		};
 		class A3C_wpFiringMode: A3C_RscPicture
 		{
 			idc = 7064;
-
-			//text = "#(argb,8,8,3)color(1,1,1,1)";
 			x = 0.431265 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
@@ -834,7 +584,7 @@ class A3C_MAPDIALOG
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
-			tooltip = ""; //--- ToDo: Localize;
+			tooltip = "";
 		};
 		class spacing_input: A3C_CT_EDIT
 		{
@@ -843,86 +593,22 @@ class A3C_MAPDIALOG
 			style = 2;
 			font = "TahomaB";
 			autocomplete = "false";
-			onSetFocus = "['SPACING','ON'] call A3C_MAP_fnc_CT";
-			onKillFocus = "['SPACING','OFF'] call A3C_MAP_fnc_CT";
+			onSetFocus = "['SPACING','ON'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE";
+			onKillFocus = "['SPACING','OFF'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE";
 			colorSelection[] = {1,1,1,1};
 			colorDisabled[] = {};
 			sizeEx = "0.03 / (getResolution select 5)";
 			tooltip = "Set Unit-Spacing";	
 			x = 0.517184 * safezoneW + safezoneX;
-			y = safezoneH + safezoneY; //0.818596 * 
+			y = safezoneH + safezoneY;
 			w = 0.0229118 * safezoneW;
 			h = 0.0330053 * safezoneH;
 			colorText[] = {1,1,1,1};
 		};
-		/*
-		class A3C_TAB_slash2: A3C_RscText
-		{
-			idc = 7085;
 
-			text = "|"; //--- ToDo: Localize;
-			x = 0.368257 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.00572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_TAB_slash3: A3C_RscText
-		{
-			idc = 7086;
-
-			text = "|"; //--- ToDo: Localize;
-			x = 0.414081 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.00572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_TAB_slash4: A3C_RscText
-		{
-			idc = 7087;
-
-			text = "|"; //--- ToDo: Localize;
-			x = 0.459904 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.00572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_TAB_slash5: A3C_RscText
-		{
-			idc = 7088;
-
-			text = "|"; //--- ToDo: Localize;
-			x = 0.505728 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.00572795 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-
-		class A3C_HELI_INF: A3C_RscPicture
-		{
-			idc = 7067;
-
-			text = "A3C_CORE\ui\pictures\icon_Menu_page_aircraft.paa";
-			x = 0.259426 * safezoneW + safezoneX;
-			y = 0.94007 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-		};
-		class A3C_HELI_INF_1: A3C_RscButton_Invisible
-		{
-			idc = 7068;
-			action = "[] call A3C_SWITCH_COMMAND_PAGE";
-
-			x = 0.259426 * safezoneW + safezoneX;
-			y = 0.94007 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-		};
-		*/
 		class A3C_Cancel_Data: A3C_RscPicture
 		{
 			idc = 7069;
-
-			//text = "A3C_CORE\ui\pictures\icon_menu_cancel.paa";
 			x = 0.660383 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
@@ -947,8 +633,6 @@ class A3C_MAPDIALOG
 		class A3C_Refresh_Data_IMG: A3C_RscPicture
 		{
 			idc = 7072;
-
-			//text = "A3C_CORE\ui\pictures\icon_menu_refresh.paa";
 			x = 0.288066 * safezoneW + safezoneX;
 			y = 0.94007 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
@@ -963,17 +647,15 @@ class A3C_MAPDIALOG
 			y = 0.94007 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
-			tooltip = "refresh group"; //--- ToDo: Localize;
+			tooltip = "refresh group";
 		};
 
 
 		class A3C_Leavegroup_IMG: A3C_RscPicture
 		{
 			idc = 7075;
-
-			//text = "A3C_CORE\ui\pictures\icon_menu_hc_disband.paa";
 			x = 0.729118 * safezoneW + safezoneX;
-			y = safezoneY - (0.0220035 * safezoneH); //0.94007 * safezoneH + safezoneY;
+			y = safezoneY - (0.0220035 * safezoneH);
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
@@ -986,38 +668,13 @@ class A3C_MAPDIALOG
 			y = 0.94007 * safezoneH + safezoneY;
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
-			tooltip = "disband selected units to reserve"; //--- ToDo: Localize;
+			tooltip = "disband selected units to reserve";
 		};
-		/*
-		class A3C_Joingroup: A3C_RscPicture
-		{
-			idc = 7076XXX;
 
-			text = "A3C_CORE\ui\pictures\icon_menu_hc_rejoin.paa";
-			x = 0.729118 * safezoneW + safezoneX;
-			y = 0.973076 * safezoneH + safezoneY;
-			w = 0.0114559 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_Joingroup_1: A3C_RscButton_Invisible
-		{
-			idc = 7077XXX;
-			action = "[1,A3C_HC_DISBANDED] spawn A3C_BTN_HC";
-
-			x = 0.729118 * safezoneW + safezoneX;
-			y = 0.973076 * safezoneH + safezoneY;
-			w = 0.0114559 * safezoneW;
-			h = 0.0220035 * safezoneH;
-			tooltip = "re-join disbanded units"; //--- ToDo: Localize;
-		};
-		*/
 		class A3C_LISTBOX_1500: A3C_RscCombo
 		{
 			idc = 7078;
 			onLBSelChanged = "[A3C_LB_MODE,(_this select 1),6998] call A3C_LB_Change";
-			//onSetFocus = "(findDisplay 12 displayCtrl 51) ctrlEnable false";
-			//onKillFocus = "(findDisplay 12 displayCtrl 51) ctrlEnable true";
-
 			x = 0.00166839 * safezoneW + safezoneX;
 			y = 14 * safezoneH + safezoneY;
 			w = 0.0630074 * safezoneW;
@@ -1027,17 +684,14 @@ class A3C_MAPDIALOG
 		class A3C_IMG_TOGGLETRACKER_BG: A3C_RscPicture
 		{
 			idc = 1219;
-			//text = "#(argb,8,8,3)color(0,0,0,0.6)";
 			x = 0.746302 * safezoneW + safezoneX;
 			y = 0.94007 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
-			//colorText[] = {1,1,1,0.6};
 		};
 		class A3C_IMG_TOGGLETRACKER_IMG: A3C_RscPicture
 		{
 			idc = 1220;
-			//text = "A3C_CORE\ui\pictures\icon_menu_toggleForceTracker.paa"; 
 			x = 0.746302 * safezoneW + safezoneX;
 			y = 0.94007 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
@@ -1053,60 +707,15 @@ class A3C_MAPDIALOG
 			y = 0.94007 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
-			tooltip = "Toggle Force Tracking"; //--- ToDo: Localize;
+			tooltip = "Toggle Force Tracking";
 		};
-		/*
-		class A3C_pageFront_TAB: A3C_RscPicture
-		{
-			idc = 70981;
-
-			text = "A3C_CORE\ui\pictures\icon_menu_PageNext.paa";
-			x = 0.75203 * safezoneW + safezoneX;
-			y = 0.885062 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_pageFront_TAB_1: A3C_RscButton_Invisible
-		{
-			idc = 7097;
-			action = "['next',16] call A3C_SWITCHPAGE_TABLET";
-			
-		
-			x = 0.75203 * safezoneW + safezoneX;
-			y = 0.885062 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0220035 * safezoneH;
-			tooltip = "next page"; //--- ToDo: Localize;
-		};
-		class A3C_pageBack_TAB: A3C_RscPicture
-		{
-			idc = 70982;
-
-			text = "A3C_CORE\ui\pictures\icon_menu_PagePrev.paa";
-			x = 0.225058 * safezoneW + safezoneX;
-			y = 0.885062 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_pageBack_TAB_2: A3C_RscButton_Invisible
-		{
-			idc = 7098;
-			action = "['prev',16] call A3C_SWITCHPAGE_TABLET";
-
-			x = 0.225058 * safezoneW + safezoneX;
-			y = 0.885062 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0220035 * safezoneH;
-			tooltip = "previous page"; //--- ToDo: Localize;
-		};
-		*/
 		
 		class Order_GoCode_BG: A3C_RscPicture
 		{
 			idc = 709099;
 			text = "#(argb,8,8,3)color(0,0,0,0.6)";
 			x = 0.689022 * safezoneW + safezoneX;
-			y = safezoneY - (0.0220035 * safezoneH); // 0.94007 * safezoneH + safezoneY;
+			y = safezoneY - (0.0220035 * safezoneH);
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
@@ -1116,7 +725,7 @@ class A3C_MAPDIALOG
 
 			text = "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
 			x = 0.689022 * safezoneW + safezoneX;
-			y = safezoneY - (0.0220035 * safezoneH); // 0.94007 * safezoneH + safezoneY;
+			y = safezoneY - (0.0220035 * safezoneH);
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
@@ -1126,7 +735,7 @@ class A3C_MAPDIALOG
 			action = "['A'] call A3C_ACTIVATEGOCODE";
 
 			x = 0.689022 * safezoneW + safezoneX;
-			y = safezoneY - (0.0220035 * safezoneH); // 0.94007 * safezoneH + safezoneY;
+			y = safezoneY - (0.0220035 * safezoneH);
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
@@ -1136,7 +745,7 @@ class A3C_MAPDIALOG
 
 			text = "A3C_CORE\ui\pictures\icon_menu_gocode_B.paa";
 			x = 0.706206 * safezoneW + safezoneX;
-			y = safezoneY - (0.0220035 * safezoneH); // 0.94007 * safezoneH + safezoneY;
+			y = safezoneY - (0.0220035 * safezoneH);
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
@@ -1146,7 +755,7 @@ class A3C_MAPDIALOG
 			action = "['B'] call A3C_ACTIVATEGOCODE";
 
 			x = 0.706206 * safezoneW + safezoneX;
-			y = safezoneY - (0.0220035 * safezoneH); // 0.94007 * safezoneH + safezoneY;
+			y = safezoneY - (0.0220035 * safezoneH);
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
@@ -1156,7 +765,7 @@ class A3C_MAPDIALOG
 
 			text = "A3C_CORE\ui\pictures\icon_menu_gocode_C.paa";
 			x = 0.689022 * safezoneW + safezoneX;
-			y = safezoneY - (0.0220035 * safezoneH); // 0.973076 * safezoneH + safezoneY;
+			y = safezoneY - (0.0220035 * safezoneH);
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
@@ -1166,7 +775,7 @@ class A3C_MAPDIALOG
 			action = "['C'] call A3C_ACTIVATEGOCODE";
 
 			x = 0.689022 * safezoneW + safezoneX;
-			y = safezoneY - (0.0220035 * safezoneH); // 0.973076 * safezoneH + safezoneY;
+			y = safezoneY - (0.0220035 * safezoneH);
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
@@ -1176,7 +785,7 @@ class A3C_MAPDIALOG
 
 			text = "A3C_CORE\ui\pictures\icon_menu_gocode_D.paa";
 			x = 0.706206 * safezoneW + safezoneX;
-			y = safezoneY - (0.0220035 * safezoneH); // 0.973076 * safezoneH + safezoneY;
+			y = safezoneY - (0.0220035 * safezoneH);
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
@@ -1186,7 +795,7 @@ class A3C_MAPDIALOG
 			action = "['D'] call A3C_ACTIVATEGOCODE";
 
 			x = 0.706206 * safezoneW + safezoneX;
-			y = safezoneY - (0.0220035 * safezoneH); // 0.973076 * safezoneH + safezoneY;
+			y = safezoneY - (0.0220035 * safezoneH);
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
@@ -1205,7 +814,6 @@ class A3C_MAPDIALOG
 		{
 			idc = 8000;
 
-			//text = "A3C_CORE\ui\pictures\icon_menu_holdcont_hold.paa";
 			x = 0.626015 * safezoneW + safezoneX;
 			y = 0.94007 * safezoneH + safezoneY;
 			w = 0.0229118 * safezoneW;
@@ -1220,13 +828,11 @@ class A3C_MAPDIALOG
 			y = 0.94007 * safezoneH + safezoneY;
 			w = 0.0229118 * safezoneW;
 			h = 0.044007 * safezoneH;
-			tooltip = "Selected units STANDBY"; //--- ToDo: Localize;
+			tooltip = "Selected units STANDBY";
 		};
 		class RscMapCont: A3C_RscPicture
 		{
 			idc = 8002;
-
-			//text = "A3C_CORE\ui\pictures\icon_menu_HoldCont_Continue.paa";
 			x = 0.654655 * safezoneW + safezoneX;
 			y = 0.94007 * safezoneH + safezoneY;
 			w = 0.0229118 * safezoneW;
@@ -1241,235 +847,204 @@ class A3C_MAPDIALOG
 			y = 0.94007 * safezoneH + safezoneY;
 			w = 0.0229118 * safezoneW;
 			h = 0.044007 * safezoneH;
-			tooltip = "Selected units CONTINUE"; //--- ToDo: Localize;
+			tooltip = "Selected units CONTINUE";
 		};
 		
-		class MAP_BG_SUB_BG_1: A3C_RscPicture
+		class A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1: A3C_RscPicture
 		{
 			idc = 1010101;
 
 			text = "#(argb,8,8,3)color(0,0,0,0.6)";
 			x = 0.289346 * safezoneW + safezoneX;
-			y = 100; //0.511002 * safezoneH + safezoneY;
-			w = A3C_MAPTAB_SUBSEL_BUTTON_W * 10; //0.1223154?? * safezoneW; //WRONG
-			h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+			y = 100;
+			w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 10;
+			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 		};
 		
-		class MAP_BG_SUB_BG_2: A3C_RscPicture
+		class A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2: A3C_RscPicture
 		{
 			idc = 1010102;
 
 			text = "#(argb,8,8,3)color(0,0,0,0.6)";
 			x = 0.289346 * safezoneW + safezoneX;
-			y = 100; //0.511002 * safezoneH + safezoneY;
-			w = A3C_MAPTAB_SUBSEL_BUTTON_W * 10; //0.1223154?? * safezoneW; //WRONG
-			h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+			y = 100;
+			w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 10;
+			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 		};
 
-		//class A3C_LOGO: A3C_RscPicture
-		//{
-		//	idc = 1201;
-		//	text = "\a3\ui_f\data\GUI\Cfg\LoadingScreens\A3_LoadingLogo_ca.paa";
-		//	x = 0.482816 * safezoneW + safezoneX;
-		//	y = 0.94007 * safezoneH + safezoneY;
-		//	w = 0.0286397 * safezoneW;
-		//	h = 0.0550088 * safezoneH;
-		//	colorText[] = {1,1,1,0.3};
-		//};
-		
-		
-		
+
 		///----- ACTION BUTTONS: SUB-SETTINGS
-		class PRNT_ACTION_SUBSET_1: A3C_RscControlsGroup_NoScroll
+		class A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8009;
 			x = 0.289346 * safezoneW + safezoneX;
-			y = 100; //0.511002 * safezoneH + safezoneY;
-			w = A3C_MAPTAB_SUBSEL_BUTTON_W * 10;
-			h = A3C_MAPTAB_SUBSEL_BUTTON_H * 2;
+			y = 100;
+			w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 10;
+			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H * 2;
 			class Controls
 			{
 				class IMG_SUBSET_1_1: A3C_RscPicture
 				{
 					idc = 800901;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = 0;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_1_2: A3C_RscPicture
 				{
 					idc = 800902;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 1; // A3C_MAPTAB_SUBSEL_BUTTON_W * safezoneW;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 1;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_1_3: A3C_RscPicture
 				{
 					idc = 800903;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 2; // 0.0407715 * safezoneW;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 2;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_1_4: A3C_RscPicture
 				{
 					idc = 800904;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 3; // 0.0611573 * safezoneW;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 3;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_1_5: A3C_RscPicture
 				{
 					idc = 800905;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 4; // 0.0815435 * safezoneW;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 4;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_1_6: A3C_RscPicture
 				{
 					idc = 800906;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 5; // 0.1019294? * safezoneW;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 5;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				
 				
 				class IMG_SUBSET_1_7: A3C_RscPicture
 				{
 					idc = 800907;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 6;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 6;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_1_8: A3C_RscPicture
 				{
 					idc = 800908;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 7;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 7;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_1_9: A3C_RscPicture
 				{
 					idc = 800909;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 8;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 8;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_1_10: A3C_RscPicture
 				{
 					idc = 800910;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 9;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 9;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
-				
-				
-				
-				
-				
+
 				class BTN_SUBSET_1_1: A3C_RscButton_Invisible
 				{
 					idc = 800911;
 					x = 0* safezoneW;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_1_2: A3C_RscButton_Invisible
 				{
 					idc = 800912;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 1;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 1;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_1_3: A3C_RscButton_Invisible
 				{
 					idc = 800913;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 2;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 2;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_1_4: A3C_RscButton_Invisible
 				{
 					idc = 800914;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 3;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 3;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_1_5: A3C_RscButton_Invisible
 				{
 					idc = 800915;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 4;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 4;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_1_6: A3C_RscButton_Invisible
 				{
 					idc = 800916;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 5;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 5;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				
 				class BTN_SUBSET_1_7: A3C_RscButton_Invisible
 				{
 					idc = 800917;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 6;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 6;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_1_9: A3C_RscButton_Invisible
 				{
 					idc = 800918;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 7;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 7;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_1_0: A3C_RscButton_Invisible
 				{
 					idc = 800919;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 8;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 8;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_1_10: A3C_RscButton_Invisible
 				{
 					idc = 800920;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 9;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 9;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 			};
 		};
@@ -1477,13 +1052,13 @@ class A3C_MAPDIALOG
 		
 		
 		
-		class PRNT_ACTION_SUBSET_2: A3C_RscControlsGroup_NoScroll
+		class A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8010;
 			x = 0.289346 * safezoneW + safezoneX;
-			y = 100; //0.511002 * safezoneH + safezoneY;
-			w = A3C_MAPTAB_SUBSEL_BUTTON_W * 10;
-			h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+			y = 100;
+			w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 10;
+			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 			class Controls
 			{
 				class IMG_SUBSET_2_1: A3C_RscPicture
@@ -1492,169 +1067,169 @@ class A3C_MAPDIALOG
 					text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = 0;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_2_2: A3C_RscPicture
 				{
 					idc = 801002;
 					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 1;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 1;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_2_3: A3C_RscPicture
 				{
 					idc = 801003;
 					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 2;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 2;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_2_4: A3C_RscPicture
 				{
 					idc = 801004;
 					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 3;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 3;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_2_5: A3C_RscPicture
 				{
 					idc = 801005;
 					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 4;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 4;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_2_6: A3C_RscPicture
 				{
 					idc = 801006;
 					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 5;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 5;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_2_7: A3C_RscPicture
 				{
 					idc = 801007;
 					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 6;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 6;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_2_8: A3C_RscPicture
 				{
 					idc = 801008;
 					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 7;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 7;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_2_9: A3C_RscPicture
 				{
 					idc = 801009;
 					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 8;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 8;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class IMG_SUBSET_2_10: A3C_RscPicture
 				{
 					idc = 801010;
 					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 9;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 9;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_2_1: A3C_RscButton_Invisible
 				{
 					idc = 801011;
 					x = 0;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_2_2: A3C_RscButton_Invisible
 				{
 					idc = 801012;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 1;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 1;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_2_3: A3C_RscButton_Invisible
 				{
 					idc = 801013;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 2;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 2;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_2_4: A3C_RscButton_Invisible
 				{
 					idc = 801014;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 3;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 3;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_2_5: A3C_RscButton_Invisible
 				{
 					idc = 801015;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 4;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 4;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_2_6: A3C_RscButton_Invisible
 				{
 					idc = 801016;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 5;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 5;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_2_7: A3C_RscButton_Invisible
 				{
 					idc = 801017;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 6;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 6;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_2_8: A3C_RscButton_Invisible
 				{
 					idc = 801018;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 7;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 7;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_2_9: A3C_RscButton_Invisible
 				{
 					idc = 801019;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 8;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 8;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 				class BTN_SUBSET_2_10: A3C_RscButton_Invisible
 				{
 					idc = 801020;
-					x = A3C_MAPTAB_SUBSEL_BUTTON_W * 9;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 9;
 					y = 0;
-					w = A3C_MAPTAB_SUBSEL_BUTTON_W;
-					h = A3C_MAPTAB_SUBSEL_BUTTON_H;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
 			};
 		};
@@ -1665,10 +1240,8 @@ class A3C_MAPDIALOG
 		
 		
 		
-		class A3C_RC_Context: A3C_RscControlsGroup
+		class A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT: A3C_RscControlsGroup
 		{
-			// left: + right: -
-			// up: - down: + 
 			idc = 709109;
 			x = 62 * GUI_GRID_W + GUI_GRID_X;
 			y = -9.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -1677,15 +1250,7 @@ class A3C_MAPDIALOG
 	
 			class Controls
 			{
-				//class bs1 :  A3C_RscPicture
-				//{
-				//	idc = -1;
-				//	text = "#(argb,8,8,3)color(1,1,1,1)";
-				//	x = 0 * GUI_GRID_W + GUI_GRID_X;
-				//	y = 0 * GUI_GRID_H + GUI_GRID_Y;
-				//	w = 5.5 * GUI_GRID_W;
-				//	h = 2.5 * GUI_GRID_H;
-				//};
+
 				class ctg1 :  A3C_RscPicture
 				{
 					idc = 709110;
@@ -1725,7 +1290,6 @@ class A3C_MAPDIALOG
 				class ctg3 :  A3C_RscCombo
 				{
 					idc = 709112;
-					//text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
 					y = 0 * GUI_GRID_H + GUI_GRID_Y;
 					w = 5.5 * GUI_GRID_W;
@@ -1766,16 +1330,13 @@ class A3C_MAPDIALOG
 					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 1 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
-					//action = "(findDisplay 6999 displayCtrl 709109) ctrlShow false";
 					action = "['DELETE'] call A3C_CONTEXTBUTTON";
 				};
 			};
 		};
 
-		class A3C_RC_Context_HC_WP:  A3C_RscControlsGroup_NoScroll
+		class A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT:  A3C_RscControlsGroup_NoScroll
 		{
-			// left: + right: -
-			// up: - down: + 
 			idc = 709115;
 
 			x = 4 * GUI_GRID_W + GUI_GRID_X;
@@ -1793,8 +1354,6 @@ class A3C_MAPDIALOG
 					y = 0 * GUI_GRID_H;
 					w = 11.5 * GUI_GRID_W;
 					h = 28.5 * GUI_GRID_H;
-					////onMouseEnter = "(findDisplay 12 displayCtrl 51) ctrlEnable false";
-					////onMouseExit = "A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable 	true";
 				};
 			};
 			class Controls
@@ -1803,7 +1362,7 @@ class A3C_MAPDIALOG
 				
 				////////  -------------    R O W   1: GROUPNAME / CLOSE-X
 				
-				class GPN_BG: A3C_RscPicture ///
+				class GPN_BG: A3C_RscPicture
 				{
 					idc = 709116; // not referred
 					text = "#(argb,8,8,3)color(0,0,0,1)";
@@ -1814,18 +1373,18 @@ class A3C_MAPDIALOG
 				};
 
 
-				class GPN_TEXT: A3C_RscText ///
+				class GPN_TEXT: A3C_RscText
 				{
 					idc = 709121;
 					style = 0;
-					text = "GroupName"; //--- ToDo: Localize;
+					text = "GroupName";
 					x = 0 * GUI_GRID_W;
 					y = 0 * GUI_GRID_H;
 					w = 9 * GUI_GRID_W;
 					h = 1.5 * GUI_GRID_H;
 				};
 
-				class Close_BG: A3C_RscPicture ///
+				class Close_BG: A3C_RscPicture
 				{
 					idc = -1;
 					text = "#(argb,8,8,3)color(0.5,0,0,1)";
@@ -1834,7 +1393,7 @@ class A3C_MAPDIALOG
 					w = 2.00029 * GUI_GRID_W;
 					h = 1.50017 * GUI_GRID_H;
 				};
-				class Close_X: A3C_RscButton_Invisible ///
+				class Close_X: A3C_RscButton_Invisible
 				{
 					idc = -1;
 					text = "X";
@@ -1846,29 +1405,6 @@ class A3C_MAPDIALOG
 					h = 1.50017 * GUI_GRID_H;
 				};
 
-				////////  -------------    R O W   2: 'GENERAL'-BAR
-	//			class GENERAL_BG: A3C_RscPicture
-	//			{
-	//				idc = -1;
-//
-//					text = "#(argb,8,8,3)color(0,0,0,1)";
-//					x = 0 * GUI_GRID_W;
-//					y = 1.5 * GUI_GRID_H;
-//					w = 9 * GUI_GRID_W;
-//					h = 1 * GUI_GRID_H;
-//				};
-//				//SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.5)";
-//				class GENERAL_TEXT: A3C_RscText
-//				{
-//					idc = -1;
-//					style = 0;
-//					
-//					text = "GENERAL"; //--- ToDo: Localize;
-//					x = 0 * GUI_GRID_W;
-//					y = 1.5 * GUI_GRID_H;
-//					w = 9 * GUI_GRID_W;
-//					h = 1 * GUI_GRID_H;
-//				};
 				////////  -------------   BLOCK 1
 				
 
@@ -1890,7 +1426,7 @@ class A3C_MAPDIALOG
 					idc = -1;
 					style = 0;
 					SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.5)";
-					text = "BEHAVIOUR"; //--- ToDo: Localize;
+					text = "BEHAVIOUR";
 					x = 0 * GUI_GRID_W;
 					y = 2 * GUI_GRID_H;
 					w = 3 * GUI_GRID_W;
@@ -1941,7 +1477,7 @@ class A3C_MAPDIALOG
 					idc = -1;
 					style = 0;
 					SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.5)";
-					text = "COMBAT MODE"; //--- ToDo: Localize;
+					text = "COMBAT MODE";
 					x = 0 * GUI_GRID_W;
 					y = 4 * GUI_GRID_H;
 					w = 4 * GUI_GRID_W;
@@ -1990,7 +1526,7 @@ class A3C_MAPDIALOG
 					idc = -1;
 					style = 0;
 					SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.5)";
-					text = "SPEED"; //--- ToDo: Localize;
+					text = "SPEED";
 					x = 0 * GUI_GRID_W;
 					y = 6 * GUI_GRID_H;
 					w = 3 * GUI_GRID_W;
@@ -2006,7 +1542,7 @@ class A3C_MAPDIALOG
 					h = 0 * GUI_GRID_H;
 				};
 
-				class WP_SPEED: A3C_RscCombo_Dot /// 
+				class WP_SPEED: A3C_RscCombo_Dot 
 				{
 					idc = 709138;
 					
@@ -2018,7 +1554,6 @@ class A3C_MAPDIALOG
 					colorBackground[] = {0.6,0.6,0.6,1};
 					colorSelectBackground[] = {0.6,0.6,0.6,1};
 					tooltip = "WAYPOINT SPEED";
-					//sizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.81)";
 				};
 
 				//-- FORMATION
@@ -2039,7 +1574,7 @@ class A3C_MAPDIALOG
 					idc = -1;
 					style = 0;
 					SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.5)";
-					text = "FORMATION"; //--- ToDo: Localize;
+					text = "FORMATION";
 					x = 0 * GUI_GRID_W;
 					y = 8 * GUI_GRID_H;
 					w = 3 * GUI_GRID_W;
@@ -2055,7 +1590,7 @@ class A3C_MAPDIALOG
 					h = 0 * GUI_GRID_H;
 				};
 
-				class Form_1: A3C_RscCombo_Dot ///
+				class Form_1: A3C_RscCombo_Dot
 				{
 					idc = 709128;	
 					
@@ -2067,7 +1602,6 @@ class A3C_MAPDIALOG
 					colorBackground[] = {0.6,0.6,0.6,1};
 					colorSelectBackground[] = {0.6,0.6,0.6,1};
 					tooltip = "WAYPOINT FORMATION";
-					//sizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.81)";
 				};
 
 				
@@ -2075,8 +1609,6 @@ class A3C_MAPDIALOG
 				////////  -------------    R O W   5: 'COMPLETION'-Titlebar
 				class A3C_RC_GroupConrPreCtrls:  A3C_RscControlsGroup_NoScroll
 				{
-					// left: + right: -
-					// up: - down: + 
 					idc = 709202;
 
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
@@ -2102,7 +1634,7 @@ class A3C_MAPDIALOG
 							idc = 709143;
 							style = 0;
 							SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.5)";
-							text = "COMPLETION"; //--- ToDo: Localize;
+							text = "COMPLETION";
 							x = 0 * GUI_GRID_W;
 							y = 0 * GUI_GRID_H;
 							w = 4 * GUI_GRID_W;
@@ -2111,7 +1643,6 @@ class A3C_MAPDIALOG
 						class WP_COMPL_HEADER_Line: A3C_RscLine
 						{
 							idc = -1;
-							//style = 0;
 							x = 4 * GUI_GRID_W;
 							y = 0.25 * GUI_GRID_H;
 							w = 4 * GUI_GRID_W;
@@ -2121,7 +1652,7 @@ class A3C_MAPDIALOG
 
 						////////  -------------    R O W   6: 'COND-PRE'-Combo
 
-						class Cond_Type_PRE: A3C_RscCombo_Dot ///
+						class Cond_Type_PRE: A3C_RscCombo_Dot
 						{
 							idc = 709123;
 							onLBSelChanged = "[709123,(_this select 1),6998] call A3C_LB_HC";
@@ -2132,11 +1663,11 @@ class A3C_MAPDIALOG
 							colorBackground[] = {0.6,0.6,0.6,1};
 							colorSelectBackground[] = {0.6,0.6,0.6,1};
 							tooltip = "WAYPOINT COMPLETION: TYPE";
-							//sizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.81)";
+
 						};
 						////////  -------------   EXTRA: PRE-COND-VAL
 
-						class Cond_MODE_PRE: A3C_RscCombo_Dot ///
+						class Cond_MODE_PRE: A3C_RscCombo_Dot
 						{
 							idc = 709124;
 
@@ -2156,8 +1687,7 @@ class A3C_MAPDIALOG
 
 				class A3C_RC_GroupTpeActionCtrls:  A3C_RscControlsGroup_NoScroll
 				{
-					// left: + right: -
-					// up: - down: + 
+
 					idc = 709203;
 
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
@@ -2182,7 +1712,7 @@ class A3C_MAPDIALOG
 							idc = -1;
 							style = 0;
 							SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.5)";
-							text = "TYPE"; //--- ToDo: Localize;
+							text = "TYPE";
 							x = 0 * GUI_GRID_W;
 							y = 0 * GUI_GRID_H;
 							w = 3 * GUI_GRID_W;
@@ -2191,7 +1721,6 @@ class A3C_MAPDIALOG
 						class WP_Type_HEADER_Line: A3C_RscLine
 						{
 							idc = -1;
-							//style = 0;
 							x = 3 * GUI_GRID_W;
 							y = 0.25 * GUI_GRID_H;
 							w = 5 * GUI_GRID_W;
@@ -2223,7 +1752,7 @@ class A3C_MAPDIALOG
 
 				////////  -------------    R O W   7: COMFIRM/DELETE
 
-				class CONFIRM_BG: A3C_RscPicture ///
+				class CONFIRM_BG: A3C_RscPicture
 				{
 					idc = 709131;
 					text = "#(argb,8,8,3)color(0,1,0,1)";
@@ -2232,11 +1761,11 @@ class A3C_MAPDIALOG
 					w = 4.5 * GUI_GRID_W;
 					h = 1.5 * GUI_GRID_H;
 				};
-				class CONFIRM_TEXT: A3C_RscButton_Invisible ///
+				class CONFIRM_TEXT: A3C_RscButton_Invisible
 				{
 					idc = 709132;
-					action = "[] spawn A3C_HC_RC_CONFIRM";
-					text = "CONFIRM"; //--- ToDo: Localize;
+					action = "[] spawn A3C_Map_HC_waypointContext_ButtonFnc_Confirm";
+					text = "CONFIRM";
 					shadow = 0;
 					x = 0 * GUI_GRID_W;
 					y = 14 * GUI_GRID_H;
@@ -2244,7 +1773,7 @@ class A3C_MAPDIALOG
 					h = 1.5 * GUI_GRID_H;
 				};
 
-				class DELETE_BG: A3C_RscPicture ///
+				class DELETE_BG: A3C_RscPicture
 				{
 					idc = 709133;
 					text = "#(argb,8,8,3)color(0.5,0,0,1)";
@@ -2253,7 +1782,7 @@ class A3C_MAPDIALOG
 					w = 4.5 * GUI_GRID_W;
 					h = 1.5 * GUI_GRID_H;
 				};
-				class DELETE_TEXT: A3C_RscButton_Invisible ///
+				class DELETE_TEXT: A3C_RscButton_Invisible
 				{
 					idc = 709134;
 					text = "DELETE";
@@ -2271,8 +1800,7 @@ class A3C_MAPDIALOG
 
 				class A3C_RC_GroupActionCtrls:  A3C_RscControlsGroup_NoScroll
 				{
-					// left: + right: -
-					// up: - down: + 
+
 					idc = 709200;
 
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
@@ -2282,35 +1810,7 @@ class A3C_MAPDIALOG
 
 					class Controls
 					{
-			//			class ACT_SET_BG: A3C_RscPicture
-			//			{
-			//				idc = 709142;
-			//				text = "#(argb,8,8,3)color(0,0,0,1)";
-			//				x = 0 * GUI_GRID_W;
-			//				y = 0; //21.5 * GUI_GRID_H;
-			//				w = 9 * GUI_GRID_W;
-			//				h = 0.5 * GUI_GRID_H;
-			//			};
-			//			class ACT_SET_TEXT: A3C_RscText ///
-			//			{
-			//				idc = 709130;
-			//				style = 0;
-			//				text = "ACTION SETTINGS"; //--- ToDo: Localize;
-			//				SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.5)";
-			//				x = 0 * GUI_GRID_W;
-			//				y = 0; //21.5 * GUI_GRID_H;
-			//				w = 5 * GUI_GRID_W;
-			//				h = 0.5 * GUI_GRID_H;
-			//			};
-			//			class ACT_SET_LINE: A3C_RscLine
-			//			{
-			//				idc = -1;
-			//				//style = 0;
-			//				x = 5 * GUI_GRID_W;
-			//				y = 0.25 * GUI_GRID_H;
-			//				w = 3 * GUI_GRID_W;
-			//				h = 0 * GUI_GRID_H;
-			//			};
+		
 						//--FORM
 
 						class ACT_FORM_BG: A3C_RscPicture
@@ -2319,45 +1819,43 @@ class A3C_MAPDIALOG
 
 							text = "#(argb,8,8,3)color(0.8,0.6,0,1)";
 							x = 0 * GUI_GRID_W;
-							y = 0 * GUI_GRID_H; //21.5 * GUI_GRID_H;
+							y = 0 * GUI_GRID_H;
 							w = 9 * GUI_GRID_W;
 							h = 0.5 * GUI_GRID_H;
 						};
 
-						class ACT_FORM_TEXT: A3C_RscText ///
+						class ACT_FORM_TEXT: A3C_RscText
 						{
 							idc = -1;
 							style = 0;
-							text = "ACTION FORMATION"; //--- ToDo: Localize;
+							text = "ACTION FORMATION";
 							SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.5)";
 							x = 0 * GUI_GRID_W;
-							y = 0 * GUI_GRID_H; //21.5 * GUI_GRID_H;
+							y = 0 * GUI_GRID_H; 
 							w = 5 * GUI_GRID_W;
 							h = 0.5 * GUI_GRID_H;
 						};
 						class ACT_FORM_LINE: A3C_RscLine
 						{
 							idc = -1;
-							//style = 0;
 							x = 5 * GUI_GRID_W;
 							y = 0.25 * GUI_GRID_H;
 							w = 3 * GUI_GRID_W;
 							h = 0 * GUI_GRID_H;
 						};
 
-						class Form_2: A3C_RscCombo_Dot ///
+						class Form_2: A3C_RscCombo_Dot 
 						{
 							idc = 709129;
 							
 							onLBSelChanged = "[709129,(_this select 1),6998] call A3C_LB_HC";
 							x = 0 * GUI_GRID_W;
-							y = 0.5 * GUI_GRID_H; //22.5 * GUI_GRID_H;
+							y = 0.5 * GUI_GRID_H; 
 							w = 9 * GUI_GRID_W;
 							h = 1.5 * GUI_GRID_H;
 							colorBackground[] = {0.8,0.6,0,1};
 							colorSelectBackground[] = {0.8,0.6,0,1};
 							tooltip = "ACTION FORMATION";
-							//sizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.81)";
 						};
 
 						//--COND
@@ -2368,26 +1866,25 @@ class A3C_MAPDIALOG
 
 							text = "#(argb,8,8,3)color(0.8,0.6,0,1)";
 							x = 0 * GUI_GRID_W;
-							y = 2 * GUI_GRID_H; //21.5 * GUI_GRID_H;
+							y = 2 * GUI_GRID_H; 
 							w = 9 * GUI_GRID_W;
 							h = 0.5 * GUI_GRID_H;
 						};
 
-						class ACT_COND_TEXT: A3C_RscText ///
+						class ACT_COND_TEXT: A3C_RscText
 						{
 							idc = -1;
 							style = 0;
-							text = "ACTION COMPLETION"; //--- ToDo: Localize;
+							text = "ACTION COMPLETION";
 							SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.5)";
 							x = 0 * GUI_GRID_W;
-							y = 2 * GUI_GRID_H; //21.5 * GUI_GRID_H;
+							y = 2 * GUI_GRID_H; 
 							w = 5 * GUI_GRID_W;
 							h = 0.5 * GUI_GRID_H;
 						};
 						class ACT_COND_LINE: A3C_RscLine
 						{
 							idc = -1;
-							//style = 0;
 							x = 5 * GUI_GRID_W;
 							y = 2.25 * GUI_GRID_H;
 							w = 3 * GUI_GRID_W;
@@ -2395,7 +1892,7 @@ class A3C_MAPDIALOG
 						};
 
 
-						class Cond_Type_Post: A3C_RscCombo_Dot ///
+						class Cond_Type_Post: A3C_RscCombo_Dot
 						{
 							idc = 709125;
 
@@ -2403,16 +1900,15 @@ class A3C_MAPDIALOG
 							onLBSelChanged = "[709125,(_this select 1),6998] call A3C_LB_HC";
 							
 							x = 0 * GUI_GRID_W;
-							y = 2.5 * GUI_GRID_H; //24 * GUI_GRID_H;
+							y = 2.5 * GUI_GRID_H; 
 							w = 4.5 * GUI_GRID_W;
 							h = 1.5 * GUI_GRID_H;
 							colorBackground[] = {0.8,0.6,0,1};
 							colorSelectBackground[] = {0.8,0.6,0,1};
 							tooltip = "ACTION COMPLETION: TYPE";
-							//sizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.81)";
 						};
 
-						class Cond_Mode_Post: A3C_RscCombo_Dot ///
+						class Cond_Mode_Post: A3C_RscCombo_Dot
 						{
 							idc = 709126;
 
@@ -2420,7 +1916,7 @@ class A3C_MAPDIALOG
 							onLBSelChanged = "[709126,(_this select 1),6998] call A3C_LB_HC";
 							
 							x = 4.5 * GUI_GRID_W;
-							y = 2.5 * GUI_GRID_H; //24 * GUI_GRID_H;
+							y = 2.5 * GUI_GRID_H; 
 							w = 4.5 * GUI_GRID_W;
 							h = 1.5 * GUI_GRID_H;
 							colorBackground[] = {0.8,0.6,0,1};
@@ -2436,8 +1932,7 @@ class A3C_MAPDIALOG
 
 				class A3C_RC_GroupActionCtrls_2:  A3C_RscControlsGroup_NoScroll
 				{
-					// left: + right: -
-					// up: - down: + 
+
 					idc = 709201;
 
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
@@ -2448,7 +1943,6 @@ class A3C_MAPDIALOG
 					class Controls
 					{
 
-						//-- OPTION 1
 
 						class ACT2_1_BG: A3C_RscPicture
 						{
@@ -2456,45 +1950,43 @@ class A3C_MAPDIALOG
 
 							text = "#(argb,8,8,3)color(0.2,0.2,0.2,1)";
 							x = 0 * GUI_GRID_W;
-							y = 0 * GUI_GRID_H; //21.5 * GUI_GRID_H;
+							y = 0 * GUI_GRID_H;
 							w = 9 * GUI_GRID_W;
 							h = 0.5 * GUI_GRID_H;
 						};
 
-						class ACT2_1_TEXT: A3C_RscText ///
+						class ACT2_1_TEXT: A3C_RscText
 						{
 							idc = 709144;
 							style = 0;
-							text = "ACTION FORMATION"; //--- ToDo: Localize;
+							text = "ACTION FORMATION";
 							SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.5)";
 							x = 0 * GUI_GRID_W;
-							y = 0 * GUI_GRID_H; //21.5 * GUI_GRID_H;
+							y = 0 * GUI_GRID_H;
 							w = 5 * GUI_GRID_W;
 							h = 0.5 * GUI_GRID_H;
 						};
 						class ACT2_1_LINE: A3C_RscLine
 						{
 							idc = -1;
-							//style = 0;
+
 							x = 5 * GUI_GRID_W;
 							y = 0.25 * GUI_GRID_H;
 							w = 3 * GUI_GRID_W;
 							h = 0 * GUI_GRID_H;
 						};
 
-						class ACT2_1_COMBO: A3C_RscCombo_Dot ///aiai
+						class ACT2_1_COMBO: A3C_RscCombo_Dot
 						{
 							idc = 709145;
 							
 							onLBSelChanged = "[709145,(_this select 1),6998] call A3C_LB_HC";
 							x = 0 * GUI_GRID_W;
-							y = 0.5 * GUI_GRID_H; //22.5 * GUI_GRID_H;
+							y = 0.5 * GUI_GRID_H;
 							w = 9 * GUI_GRID_W;
 							h = 1.5 * GUI_GRID_H;
 							colorBackground[] = {0.2,0.2,0.2,1};
 							colorSelectBackground[] = {0.2,0.2,0.2,1};
-							//tooltip = "ACTION FORMATION";
-							//sizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.81)";
 						};
 
 						//--OPTION 2
@@ -2505,19 +1997,19 @@ class A3C_MAPDIALOG
 
 							text = "#(argb,8,8,3)color(0.2,0.2,0.2,1)";
 							x = 0 * GUI_GRID_W;
-							y = 2 * GUI_GRID_H; //21.5 * GUI_GRID_H;
+							y = 2 * GUI_GRID_H;
 							w = 9 * GUI_GRID_W;
 							h = 0.5 * GUI_GRID_H;
 						};
 
-						class ACT2_2_TEXT: A3C_RscText ///
+						class ACT2_2_TEXT: A3C_RscText
 						{
 							idc = 709146;
 							style = 0;
-							text = "ACTION COMPLETION"; //--- ToDo: Localize;
+							text = "ACTION COMPLETION";
 							SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.5)";
 							x = 0 * GUI_GRID_W;
-							y = 2 * GUI_GRID_H; //21.5 * GUI_GRID_H;
+							y = 2 * GUI_GRID_H;
 							w = 5 * GUI_GRID_W;
 							h = 0.5 * GUI_GRID_H;
 						};
@@ -2532,7 +2024,7 @@ class A3C_MAPDIALOG
 						};
 
 
-						class ACT2_2_COMBO: A3C_RscCombo_Dot ///
+						class ACT2_2_COMBO: A3C_RscCombo_Dot 
 						{
 							idc = 709147;
 
@@ -2540,13 +2032,12 @@ class A3C_MAPDIALOG
 							onLBSelChanged = "[709147,(_this select 1),6998] call A3C_LB_HC";
 							
 							x = 0 * GUI_GRID_W;
-							y = 2.5 * GUI_GRID_H; //24 * GUI_GRID_H;
+							y = 2.5 * GUI_GRID_H;
 							w = 9 * GUI_GRID_W;
 							h = 1.5 * GUI_GRID_H;
 							colorBackground[] = {0.2,0.2,0.2,1};
 							colorSelectBackground[] = {0.2,0.2,0.2,1};
-							//tooltip = "ACTION COMPLETION: TYPE";
-							//sizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.81)";
+
 						};
 					};
 				};
@@ -2558,56 +2049,20 @@ class A3C_MAPDIALOG
 
 
 
-		class A3C_HC_GROUP_MENU_CTRLPARENT: A3C_RscControlsGroup_NoScroll
+		class A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8007;
 			x = 0;
-			y = 200;//x = 0.5 - (GRIDX( MAIN_WIDTH_GP ) / 2); //x = 100 * safezoneW + safezoneX;
-			//y = (( safezoneY + safezoneH ) * 0.97) - GRIDY( MAIN_HEIGHT_GP); // y = 100 * safezoneH + safezoneY;
-			//w = 0.213156 * safezoneW;
-			//h = 0.340895 * safezoneH;	
+			y = 200;
+
 			w = GRIDX( MAIN_WIDTH_GP );
 			h = GRIDY( MAIN_HEIGHT_GP);
 
-			//onUnload = "systemchat 'ha'; (findDisplay 12 displayCtrl 51) ctrlEnable true;";
+
+
 			class Controls
 			{
-				///0,0,0,0.4
-				/// 0.18,0.25,0.38,0.7 becomes 
-
-
-				////////////
-				//class A3C_HC_GROUP_MENU_Box_GroupName: A3C_RscPicture
-				//{
-				//	idc = -1;
-				//	///text = "#(argb,8,8,3)color(0.18,0.25,0.38,0.7)";
-				//	text = "#(argb,8,8,3)color(0,0,0,0.7)";
-				//	x = GRIDX( 0 ); 
-				//	y = GRIDY( 0 );
-				//	w = GRIDX( 8 );
-				//	h = GRIDY( 2 );
-				//};
-				//class A3C_HC_GROUP_MENU_Box_Groupname_CT: A3C_CT_Edit
-				//{
-					
-				//	idc = 800713;
-				//	type = 2;
-				//	style = 0;
-				//	//font = "PuristaLight";
-				//	sizeEx = 0.040;
-				//	autocomplete = "false";
-				//	colorSelection[] = {1,1,1,0.3};
-				//	colorDisabled[] = {0,0,0,0};
-				//	onSetFocus = "['GROUPNAME','ON'] call A3C_MAP_fnc_CT";
-				//	onKillFocus = "['GROUPNAME','OFF'] call A3C_MAP_fnc_CT";
-				//	onKeyDown = "if (_this select 1 == 28) then {[] call A3C_Map_HC_groupContext_ButtonFnc_Confirm}";
-				//	x = GRIDX( 0 ); 
-				//	y = GRIDY( 0 );
-				//	w = GRIDX( 8 );
-				//	h = GRIDY( 2 );
-				//};
 				
-				////////////////////
 				
 				class A3C_HC_GROUP_MENU_BG_STANCES: A3C_RscPicture
 				{
@@ -2705,8 +2160,7 @@ class A3C_MAPDIALOG
 				};
 				
 				
-				
-				///
+
 				
 				
 				class A3C_HC_GROUP_MENU_Box_Behaviour: A3C_LISTBOX
@@ -2764,50 +2218,7 @@ class A3C_MAPDIALOG
 					//colorBackground[] = {0.25,0.25,0.25,0.7};
 					colorBackground[] = {0.6,0.6,0.6,0.7};
 				};
-				//class A3C_HC_GROUP_MENU_BG_Rejoin: A3C_RscPicture
-				//{
-				//	idc = 800705;
-				//	text = "#(argb,8,8,3)color(0,1,1,1)";
-					
-				//	x = GRIDX( 0 ); 
-				//	y = GRIDY( 12 );
-				//	w = GRIDX( 4 );
-				//	h = GRIDY( 1.5 );
-				//};
-				
-				//class A3C_HC_GROUP_MENU_Button_Rejoin: A3C_RscButton_Invisible
-				//{
-				//	idc = 800709;
-				//	text = "REJOIN";
-				//	sizeEx = 0.03;
-				//	action = "[A3C_SELECTED_HC_GROUPS_SETTINGS] call A3C_fnc_SecuRejoin_fnc";
-				//	x = GRIDX( 0 ); 
-				//	y = GRIDY( 12 );
-				//	w = GRIDX( 4 );
-				//	h = GRIDY( 1.5 );
-				//};
-				
-				//class A3C_HC_GROUP_MENU_BG_Convoy: A3C_RscPicture
-				//{
-				//	idc = 800706;
-				//	text = "#(argb,8,8,3)color(1,1,0,1)";
-				//	x = GRIDX( 4 ); 
-				//	y = GRIDY( 12 );
-				//	w = GRIDX( 4 );
-				//	h = GRIDY( 1.5 );
-				//};
-				
-				//class A3C_HC_GROUP_MENU_Button_Convoy: A3C_RscButton_Invisible
-				//{
-				//	idc = 800710;
-				//	text = "CONVOY";
-				//	sizeEx = 0.03;
-				//	action = "[] spawn A3C_Map_HC_groupContext_ButtonFnc_Convoy";
-				//	x = GRIDX( 4 ); 
-				//	y = GRIDY( 12 );
-				//	w = GRIDX( 4 );
-				//	h = GRIDY( 1.5 );
-				//};
+	
 				
 				class A3C_HC_GROUP_MENU_BG_Confirm: A3C_RscPicture
 				{
@@ -2833,28 +2244,7 @@ class A3C_MAPDIALOG
 					w = GRIDX( 8 );
 					h = GRIDY( 2 );	
 				};
-				//class A3C_HC_GROUP_MENU_BG_FocusGroup: A3C_RscPicture
-				//{
-				//	idc = 800714;
-				//	text = "#(argb,8,8,3)color(0,0.3,0.6,0.2)";
-				//	x = GRIDX( 4 ); 
-				//	y = GRIDY( 13.5 );
-				//	w = GRIDX( 4 );
-				//	h = GRIDY( 1.5 );
-				//};
-				//class A3C_HC_GROUP_MENU_Button_FocusGroup: A3C_RscButton_Invisible
-				//{
-				//	idc = 800715;
-				//	text = "FOCUS GROUP";
-				//	//sizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.8)";
-				//	sizeEx = 0.03;
-				//	
-				//	action = "[] call A3C_MAP_HC_setFocusGroup";
-				//	x = GRIDX( 4 ); 
-				//	y = GRIDY( 13.5 );
-				//	w = GRIDX( 4 );
-				//	h = GRIDY( 1.5 );
-				//};
+
 				class A3C_HC_GROUP_MENU_BG_Cancel: A3C_RscPicture
 				{
 					idc = 800708;
@@ -2868,7 +2258,7 @@ class A3C_MAPDIALOG
 				{
 					idc = 800712;
 					text = "X";
-					action = "(findDisplay 6998 displayCtrl 8007) ctrlShow false; A3C_SELECTED_HC_GROUPS_SETTINGS = []; (findDisplay 6998 displayCtrl 303030) ctrlShow false;";
+					action = "(findDisplay 6998 displayCtrl 8007) ctrlShow false; A3C_SELECTED_HC_GROUPS_SETTINGS = []; (findDisplay 6998 displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;";
 					x = GRIDX( 8 ); 
 					y = GRIDY( 0 );
 					w = GRIDX( 2 );
@@ -3185,7 +2575,7 @@ class A3C_MAPDIALOG
 			};
 		};
 		
-		class A3C_ObjectSelector_Parent: A3C_RscControlsGroup_NoScroll
+		class A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8008;
 			
@@ -3193,6 +2583,7 @@ class A3C_MAPDIALOG
 			y = 20 * safezoneH + safezoneY;
 			w = 0.192528 * safezoneW;
 			h = 0.143016 * safezoneH;
+			
 			class Controls
 			{
 				
@@ -3208,7 +2599,7 @@ class A3C_MAPDIALOG
 				class A3C_HC_ObjectSelector_Description_Text: A3C_RscText
 				{
 					idc = 800802;
-					//text = "TEST"; //--- ToDo: Localize;
+					//text = "TEST";
 					x = 0;
 					y = 0;
 					w = 0.192528 * safezoneW;
@@ -3232,14 +2623,13 @@ class A3C_MAPDIALOG
 		{
 			idc = 303030;
 			x = 33.5 * GUI_GRID_W + GUI_GRID_X;
-			//x = 0.716008 * safezoneW + safezoneX;
-			y = 100; //0.414993 * safezoneH + safezoneY;
+
+			y = 100; 
 			w = 0.240009 * safezoneW;
 			h = 0.289024 * safezoneH + (1.5 * (0.021 / (getResolution select 5)));
-			//x = 33.5 * GUI_GRID_W + GUI_GRID_X;
-			//y = 10 * GUI_GRID_H + GUI_GRID_Y;
-			//w = 15 * GUI_GRID_W;
-			//h = 7.99999 * GUI_GRID_H;
+			
+			
+
 			class Controls
 			{
 				
@@ -3247,6 +2637,7 @@ class A3C_MAPDIALOG
 				{
 					idc = 11015;
 					text = "#(argb,8,8,3)color(1,1,1,0.6)";
+					
 					x = 4.9593e-007 * safezoneW;
 					y = 0 * safezoneH;
 					w = 0.240009 * safezoneW;
@@ -3256,7 +2647,7 @@ class A3C_MAPDIALOG
 				class DASH_TEXT_GROUPNAME: A3C_RscText
 				{
 					idc = 11001;
-					text = ""; //--- ToDo: Localize;
+					text = "";
 					style = 0;
 					x = -5.72227e-008 * safezoneW;
 					y = -2.21673e-008 * safezoneH;
@@ -3274,13 +2665,9 @@ class A3C_MAPDIALOG
 					sizeEx = "0.04 / (getResolution select 5)";
 					autocomplete = "false";
 
-					onSetFocus = "['GROUPNAME','ON'] call A3C_MAP_fnc_CT; ['ON'] call A3C_MAP_fnc_CT_DASHBOARD;";
-					onKillFocus = "['GROUPNAME','OFF'] call A3C_MAP_fnc_CT; ['OFF'] call A3C_MAP_fnc_CT_DASHBOARD;";
-					onKeyDown = "if (_this select 1 == 28) then {[] call A3C_Map_HC_groupContext_ButtonFnc_Confirm}";
-					//x = GRIDX( 0 ); 
-					//y = GRIDY( 0 );
-					//w = GRIDX( 8 );
-					//h = GRIDY( 2 );
+					onSetFocus = "['GROUPNAME','ON'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE; ['ON'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE_DASHBOARD;";
+					onKillFocus = "['GROUPNAME','OFF'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE; ['OFF'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE_DASHBOARD;";
+
 					x = 0;
 					y = 0;
 					w = 0.14 * safezoneW;
@@ -3304,7 +2691,7 @@ class A3C_MAPDIALOG
 				class DASH_TEXT_UNITSIZE: A3C_RscText
 				{
 					idc = 11003;
-					text = "Unit Size:"; //--- ToDo: Localize;
+					text = "Unit Size:";
 					style = 0;
 					x = -5.72227e-008 * safezoneW;
 					y = (-2.21673e-008 * safezoneH) + (0.0340028 * safezoneH) + (0.005 / (getResolution select 5));
@@ -3316,7 +2703,7 @@ class A3C_MAPDIALOG
 				class DASH_text_Location_1: A3C_RscText
 				{
 					idc = 11004;
-					text = "Location:"; //--- ToDo: Localize;
+					text = "Location:";
 					style = 0;
 					x = -5.72227e-008 * safezoneW;
 					y = (-2.21673e-008 * safezoneH) + (0.0340028 * safezoneH) + (0.005 / (getResolution select 5)) + (1.1 * (0.021 / (getResolution select 5)) );
@@ -3327,7 +2714,7 @@ class A3C_MAPDIALOG
 				class DASH_TEXT_TASK: A3C_RscText
 				{
 					idc = 11005;
-					text = "Current Task:"; //--- ToDo: Localize;
+					text = "Current Task:";
 					style = 0;
 					x = -5.72227e-008 * safezoneW;
 					y = (-2.21673e-008 * safezoneH) + (0.0340028 * safezoneH) + (0.005 / (getResolution select 5))  + (2.2 * (0.021 / (getResolution select 5)) );
@@ -3351,7 +2738,7 @@ class A3C_MAPDIALOG
 				class DASH_text_Health: A3C_RscText
 				{
 					idc = 12000;
-					text = "Health (Soldiers)"; //--- ToDo: Localize;
+					text = "Health (Soldiers)";
 					style = 0;
 					x = -3.81485e-008 * safezoneW;
 					y = (0.136011 * safezoneH) - ( 0.021 / (getResolution select 5));
@@ -3369,32 +2756,12 @@ class A3C_MAPDIALOG
 					h = 0.0085007 * safezoneH;
 				};
 
-		//		class DASH_TEXT_AMMO: A3C_RscText
-		//		{
-		//			idc = 12002;
-		//			text = "Ammunition"; //--- ToDo: Localize;
-		//			style = 0;
-		//			x = -5.72227e-008 * safezoneW;
-		//			y = (0.136011 * safezoneH) + (0.5 * (0.021 / (getResolution select 5)));
-		//			w = 0.0800031 * safezoneW;
-		//			h = 0.021 / (getResolution select 5);
-		//			sizeEx = "0.021 / (getResolution select 5)"; //"0.011 * safezoneH"
-		//		};
 
-				
-		//		class DASH_BAR_AMMUNITION: A3C_RscProgress
-		//		{
-		//			idc = 12003;
-		//			x = (0.00800027 - 0.002) * safezoneW;
-		//			y = (0.136011 * safezoneH) + (1.5 * (0.021 / (getResolution select 5)));
-		//			w = 0.0800031 * safezoneW;
-		//			h = 0.0085007 * safezoneH;
-		//		};
 
 				class DASH_TEXT_UNITS: A3C_RscText
 				{
 					idc = 11012;
-					text = "Roster"; //--- ToDo: Localize;
+					text = "Roster";
 					style = 0;
 					x = 0.0960037 * safezoneW;
 					y = (0.136011 * safezoneH) - ( 0.021 / (getResolution select 5));
@@ -3402,15 +2769,7 @@ class A3C_MAPDIALOG
 					h = 0.021 / (getResolution select 5); //0.0085007 * safezoneH;
 					sizeEx = "0.021 / (getResolution select 5)";
 				};
-		//		class DASH_TEXTBOX_UNITS_BG: A3C_RscPicture
-		//		{
-		//			idc = 11013;
-		//			text = "#(argb,8,8,3)color(0,0,0,1)";
-		//			x = 0.104004 * safezoneW;
-		//			y = 0.136011 * safezoneH;
-		//			w = 0.136005 * safezoneW;
-		//			h = 0.085007 * safezoneH;
-		//		};
+
 				class DASH_TEXTBOX_UNITS_STRCT: A3C_RscStructuredText
 				{
 					idc = 11014;
@@ -3418,8 +2777,6 @@ class A3C_MAPDIALOG
 					y = 0.136011 * safezoneH;
 					w = 0.136005 * safezoneW;
 					h = 0.085007 * safezoneH + (1.5 * (0.021 / (getResolution select 5)));
-					//sizeEx = 1.5 * GUI_GRID_H;
-					//size = 0.2 * GUI_GRID_H;
 				};
 			};
 		};						          	

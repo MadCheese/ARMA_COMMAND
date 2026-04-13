@@ -4,8 +4,11 @@ if (is3DEN) exitwith {};
 //--- A3C init
 
 //-- Server And/Or Client
-call compile preprocessFileLineNumbers "A3C_CORE\A3C_fncs_Main.sqf";
+
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_Init_VALUES.sqf";
+
+call compile preprocessFileLineNumbers "A3C_CORE\A3C_fncs_Main.sqf";
+
 
 if (A3C_IsAICommand && {!isDedicated}) exitWith {
 	waituntil {alive player};
@@ -106,11 +109,14 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_ROE.sqf";
 if (A3C_EHM) then {
 	call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_EHM.sqf";
 };
-call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_INIT.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_Init_SquadActions.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\tablet\A3C_MAPTAB_Main_init.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\tablet\A3C_MAPTAB_Main_init_UI_Handlers.sqf";
+
+call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_INIT.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_Init_SquadActions.sqf";
+
+
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\tablet\A3C_MAPTAB_TREE_init.sqf";

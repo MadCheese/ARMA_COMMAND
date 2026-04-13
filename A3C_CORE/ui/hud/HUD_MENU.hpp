@@ -315,7 +315,7 @@ class HUD_Display_ObjectSelector
 
 	class Controls
 	{
-		class A3C_ObjectSelector_Parent: A3C_RscControlsGroup_NoScroll
+		class A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8008;
 			x = 0.383108 * safezoneW + safezoneX;

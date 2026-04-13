@@ -1,15 +1,78 @@
+////////////////////////  GETTERS
+/////////////////////////////////////////////////////////
+A3C_HC_getConditionFromStatements = {
+	params ["_cond","_timeOut"];
+	_cond = toLower _cond;
+	
+	private _condMode = "";
+	private _condVal = "";
+	switch (true) do {
+		case ("gocode" in _cond) : {
+			_condMode = "GOCODE";
+			_condVal = switch (true) do {
+				case ("activate_a" in _cond) : {"A"};
+				case ("activate_b" in _cond) : {"B"};
+				case ("activate_c" in _cond) : {"C"};
+				case ("activate_d" in _cond) : {"D"};
+			};
+		};
+		case ("time" in _cond) : {
+			if ("timeout" in _cond) then {
+				_condMode = "TIMEOUT";
+				_condVal = _timeOut select 1;
+			} else {
+				_condMode = "DAYTIME";
+				_cond = _cond splitString """[],";
+				_condVal = _cond select {
+					_st = _x;
+					({typeName (call compile _x) == "SCALAR"} count (_st splitString "")) == count _st
+				};
+				_condVal = _condVal joinString ":";
+		
+			};
+		};
+	};
+	[_condMode,_condVal]
+};
 
-
-
-/////////////////////
-
-A3C_HC_isGroupIdle = {
-	params ["_group"];
-	{_x select 1 == currentWaypoint _group} count (waypoints _group) == 0
+A3C_HC_getFullCrew = {
+	params ["_vehicle"];
+	private _vicVar = _vehicle getVariable ["A3C_AssignedVehicleCrew",[]];
+	private _emptyPositions = 
+	(
+		(fullcrew [_vehicle,"driver",true]) 
+		+ (fullcrew [_vehicle,"gunner",true])
+		+ (fullcrew [_vehicle,"commander",true])
+		+ (fullcrew [_vehicle,"turret",true])
+		+ (fullcrew [_vehicle,"cargo",true])  
+	);
+	_emptyPositions = _emptyPositions select {
+		_x params ["_occupyingUnit","_role","_CargoIndex","_turretPath"];
+		private _seatIndexPath = if (tolower _role == "turret" ) then {_turretPath} else {_CargoIndex};
+		(isNull _occupyingUnit OR {!alive _occupyingUnit} ) && 
+		{
+			{
+				_x params ["_refUnit","_refRole","_refSeatIndex"];
+				!(_refUnit in _boardUnits) && {[_role,_seatIndexPath] isEqualto [_refRole,_refSeatIndex]} 
+			} count _vicVar == 0
+		}
+	};
+	_emptyPositions
 };
 
 
 
+
+////////////////////////  STATE GETTERS
+/////////////////////////////////////////////////////////
+
+A3C_HC_getState_isGroupIdle = {
+	params ["_group"];
+	{_x select 1 == currentWaypoint _group} count (waypoints _group) == 0
+};
+
+////////////////////////  ACTIONS
+/////////////////////////////////////////////////////////
 
 A3C_HC_ACTION_ASSEMBLE_UAV = {
 	params ["_leader","_activeWpos","_callerUID"];
@@ -30,25 +93,11 @@ A3C_HC_ACTION_ASSEMBLE_UAV = {
 				[_u,"ainvpknlmstpslaywrfldnon_medic"] remoteExec ["playMove",_u];
 				sleep 2;
 				removeBackPackGlobal _u;
-				//_dummyy = _backPack createVehicleLocal (_u getPos [1,getDir _u]);
-				//_dummyy = createVehicle [_backPack, (_u getPos [1,getDir _u]), [], 0, "NONE"];
 				sleep 5;
 				if (animationState _u == "ainvpknlmstpslaywrfldnon_medic") then {
 					[_u,"amovpknlmstpslowwrfldnon"] remoteExec ["playMove",_u];
 				};
 				if (alive _u) then {
-					
-					//_spawnPos = getPos _dummyy;
-					//systemchat str [(typeof _dummyy)];
-					//for "_i" from 1 to 10 do {
-					//	_dummyy spawn {
-					//		sleep 0.1;
-					//	deletevehicle _this;
-					//};
-					//	systemchat str time;
-					//	sleep 0.1;
-					//};
-					
 					_uavObject = _uavType createVehicle (_u getPos [1.5,getDir _u]);
 					createvehicleCrew _uavObject;
 					_uavObject flyinHeight 500;
@@ -67,7 +116,7 @@ A3C_isLoiterCompleted = {
 	params ["_wp"];
 	
 	private _group = _wp select 0;
-	private _precond = [((waypointStatements _wp) select 0), waypointTimeout _wp] call A3C_GetConditionFromStatements;
+	private _precond = [((waypointStatements _wp) select 0), waypointTimeout _wp] call A3C_HC_getConditionFromStatements;
 	_precond params ["_condMode","_condVal"];
 	
 	_leaderVic = vehicle leader _group;
@@ -77,8 +126,6 @@ A3C_isLoiterCompleted = {
 	{
 		_leaderVic distance2d (waypointPosition _wp) < ((waypointLoiterRadius _wp) + _tolerance)
 	};
-	// systemchat str [_wp, _precond, _exitCondition, call compile format ["A3C_GoCode_Activate_%1",_condVal], time];
-	
 	if (_exitCondition) then {
 		_exitCondition = switch (_condMode) do {
 			case ("TIMEOUT") : {
@@ -115,72 +162,11 @@ A3C_isLoiterCompleted = {
 		_group setCurrentWaypoint [_group, (currentWaypoint _group) + 1];
 		if ((currentWaypoint _group) == (_wp select 1)) then {
 			_wp call A3C_HC_REMOVE_WP_RC;
-			// systemchat "fncsHC - delete loiter";
 		};
 	};
 };
 
-A3C_GetConditionFromStatements = {
-	params ["_cond","_timeOut"];
-	_cond = toLower _cond;
-	
-	private _condMode = "";
-	private _condVal = "";
-	switch (true) do {
-		case ("gocode" in _cond) : {
-			_condMode = "GOCODE";
-			_condVal = switch (true) do {
-				case ("activate_a" in _cond) : {"A"};
-				case ("activate_b" in _cond) : {"B"};
-				case ("activate_c" in _cond) : {"C"};
-				case ("activate_d" in _cond) : {"D"};
-			};
-		};
-		case ("time" in _cond) : {
-			if ("timeout" in _cond) then {
-				_condMode = "TIMEOUT";
-				_condVal = _timeOut select 1;
-			} else {
-				_condMode = "DAYTIME";
-				_cond = _cond splitString """[],";
-				_condVal = _cond select {
-					_st = _x;
-					({typeName (call compile _x) == "SCALAR"} count (_st splitString "")) == count _st
-				}; //{parseNumber _x > 0};
-				_condVal = _condVal joinString ":";
-				//_cond = _cond select {":" in _x};				
-			};
-		};
-	};
-	//systemchat str [_condMode,_condVal];
-	[_condMode,_condVal]
-};
 
-A3C_getFullCrew = {
-	params ["_vehicle"];
-	private _vicVar = _vehicle getVariable ["A3C_AssignedVehicleCrew",[]];
-	private _emptyPositions = 
-	(
-		(fullcrew [_vehicle,"driver",true]) 
-		+ (fullcrew [_vehicle,"gunner",true])
-		+ (fullcrew [_vehicle,"commander",true])
-		+ (fullcrew [_vehicle,"turret",true])
-		+ (fullcrew [_vehicle,"cargo",true])  
-	);
-	//systemChat str _emptyPositions;
-	_emptyPositions = _emptyPositions select {
-		_x params ["_occupyingUnit","_role","_CargoIndex","_turretPath"];
-		private _seatIndexPath = if (tolower _role == "turret" ) then {_turretPath} else {_CargoIndex};
-		(isNull _occupyingUnit OR {!alive _occupyingUnit} ) && 
-		{
-			{
-				_x params ["_refUnit","_refRole","_refSeatIndex"];
-				!(_refUnit in _boardUnits) && {[_role,_seatIndexPath] isEqualto [_refRole,_refSeatIndex]} 
-			} count _vicVar == 0
-		}
-	};
-	_emptyPositions
-};
 
 
 A3C_HC_AssignVehicle = { //--#TODO: change from call to spawn and add delay if group is does not share clientOwner with vehicle driver. then make a short server fnc to transfer ownership back and forth after ordergetIn
@@ -193,7 +179,7 @@ A3C_HC_AssignVehicle = { //--#TODO: change from call to spawn and add delay if g
 		private _vicVar = _selectedVehicle getVariable ["A3C_AssignedVehicleCrew",[]];
 		_boardUnits = (units _Bgroup) select {isNull objectParent _x};
 
-		_emptyPositions = [_selectedVehicle] call A3C_getFullCrew;
+		_emptyPositions = [_selectedVehicle] call A3C_HC_getFullCrew;
 
 		if (count _boardUnits > 0 && {count _boardUnits <= count _emptyPositions}) then {
 			{
@@ -686,7 +672,7 @@ A3C_HC_INSERT_ACTION_WP = {
 			params ["_group","_wpI"];
 			if (isDedicated) exitWith {};
 			if (isNil 'A3C_HC_ACTIVEGROUP') exitWith {};
-			if ({ctrlShown (findDisplay _x displayCtrl A3C_RC_Context_HC_WP)} count [6998,6999] > 0 ) then {
+			if ({ctrlShown (findDisplay _x displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT)} count [6998,6999] > 0 ) then {
 				if (A3C_HC_ACTIVEGROUP == _group) then {
 					if (_wpI < A3C_HC_ACTIVE_IND) then {
 						A3C_HC_ACTIVE_IND = A3C_HC_ACTIVE_IND + 1;
@@ -694,7 +680,7 @@ A3C_HC_INSERT_ACTION_WP = {
 					};
 					if (_wpI == A3C_HC_ACTIVE_IND) then {
 						{
-							(findDisplay _x displayCtrl A3C_RC_Context_HC_WP) ctrlShow false;
+							(findDisplay _x displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT) ctrlShow false;
 						} foreach [6998,6999];
 					};
 				};
@@ -1110,8 +1096,29 @@ A3C_HC_ADD_WP = {
 	_wp select 1 //-- return wp
 };
 
+A3C_HC_FNC_MoveToWayPointPosition = {
+	params ["_group","_wpi"];
 
-A3C_HC_WP_COMPLETE = {
+	// systemchat str ["MVTWPS",time];
+	private _leader = leader _group;
+	if (!isPlayer leader _group) then {
+		//_group setCurrentWaypoint [_group,(currentWaypoint _group)];
+		sleep 1.5;
+		[_leader,waypointposition [_group,_wpi]] call A3C_DOMOVE;
+		sleep 1;
+		_leader setDestination [waypointposition [_group,_wpi],"FORMATION PLANNED",true];
+		//private _grunts = ((units _group) - [_leader]) select {!isPlayer _x && {isNull objectParent _x}};
+		//_grunts doFollow (leader _group);
+	};
+};
+
+A3C_HC_FNC_SYNC_WP = {
+	params ["_wp","_syncData"];
+	_wp synchronizeWaypoint _syncData;
+};
+
+
+A3C_HC_FNC_CompleteWaypoint = {
 	private ["_group","_waypoints"];
 	
 	//if (true) exitwith {};
@@ -1121,9 +1128,9 @@ A3C_HC_WP_COMPLETE = {
 	//systemchat str ({_x == driver vehicle _x && {vehicle _x iskindof "AIR"}} count units _group);
 	private _currentWaypoint = currentWaypoint _group;
 	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
-	if (ctrlShown (findDisplay _a3c_dsp displayctrl A3C_RC_Context_HC_WP)) then {
+	if (ctrlShown (findDisplay _a3c_dsp displayctrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT)) then {
 		if ([_group,_currentWaypoint] isEqualTo [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]) then {
-			(findDisplay _a3c_dsp displayctrl A3C_RC_Context_HC_WP) ctrlShow false;
+			(findDisplay _a3c_dsp displayctrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT) ctrlShow false;
 		};
 	};
 	//systemchat format ["current waypoint is %1",currentWaypoint _group];
@@ -1192,7 +1199,7 @@ A3C_WP_STATEMENTS = {
 			format 
 			[
 				"
-					if !(%2) then {[(group this)] call A3C_HC_WP_COMPLETE};
+					if !(%2) then {[(group this)] call A3C_HC_FNC_CompleteWaypoint};
 					 
 				",
 				_stance2,
@@ -1270,8 +1277,8 @@ A3C_HC_VEHICLEBOARD = {
 	//systemchat 'ay';
 
 	//-- Boarding HC-units via map-ui pt 1
-	(findDisplay _a3c_dsp displayCtrl A3C_HC_GROUP_MENU_CTRLPARENT) ctrlShow false;
-	(findDisplay _a3c_dsp displayCtrl 303030) ctrlShow false;
+	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
+	(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
 	if (_button == 0) then {
 		if (!isNull (findDisplay 7999)) then {
 			BR_A3C_DISABLE_RADIAL = true;
@@ -1329,7 +1336,7 @@ A3C_HC_VEHICLEBOARD = {
 				A3C_UI_MAPICONS_HC_VICS = [];
 				A3C_BOOL_MOUSEMOVING = true;
 				A3C_MMCode = {
-					_this spawn A3C_TAB_UI_Handlers_MouseDrag;
+					_this spawn A3C_MAP_UI_HandlerFNC_MouseDrag;
 				};
 				A3C_BOOL_DRAGLINE = true;
 				A3C_CONNECTING_MODE = "HCBOARD";
@@ -1513,7 +1520,7 @@ A3C_HC_REMOVE_WP_RC = {
 				// player sidechat format ['last waypoint deleted - if current waypoint, then unit should stop. _isCurrentWP: %1', _isCurrentWP];
 			};
 			// [units _group] remoteExec ["commandStop",_group];
-			// [_group, _activeWPindex] spawn A3C_BEHAVIOUR_HC_MoveToWayPointPosition; //-- not correct, should STOP!
+			// [_group, _activeWPindex] spawn A3C_HC_FNC_MoveToWayPointPosition; //-- not correct, should STOP!
 		} else {
 			if (_isCurrentWP) then {
 				private _leaderVic = vehicle leader _group;

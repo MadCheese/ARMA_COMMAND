@@ -63,8 +63,9 @@ A3C_DSP_FindControlSafePos = {
 A3C_HC_ACTIVE_WPOS = [0,0,0];
 
 
+A3C_Map_HC_waypointContext_OpenMenu = {
 
-A3C_OPEN_RC_HC = {
+
 	params ["_gp","_wpiC","_mode","_a3c_dsp","_ctrlPosWPM"];
 	private ["_act","_wpiA","_wpA","_wpMenu","_lbWpType","_condition","_actionScript","_lbV2","_lbV3","_lbV4","_lbV5","_lbV6","_lbArray2","_lbArra 0y4"];
 
@@ -80,9 +81,11 @@ A3C_OPEN_RC_HC = {
 	
 
 
-	(findDisplay _a3c_dsp displayCtrl A3C_RC_Context_HC_WP) ctrlShow true;
+	private _wpMenuCtrlsGroup = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT;
+	
+	_wpMenuCtrlsGroup ctrlShow true;
 
-
+	
 
 	_wpiA = -1;
 	A3C_HC_ACTIVEGROUP = _gp;
@@ -135,7 +138,7 @@ A3C_OPEN_RC_HC = {
 	// systemchat 'open menu wp';
 	{
 		(finddisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-	} foreach [709124,A3C_MAPTAB_WPMENU_ActionSubCtrls,A3C_MAPTAB_WPMENU_ActionAddCtrls]; //-- default: hide precondition val,  actions group and extra selections
+	} foreach [709124,A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls,A3C_MAP_OVERLAY_GAMEUI_ActionAddCtrls]; //-- default: hide precondition val,  actions group and extra selections
 	
 
 
@@ -228,7 +231,7 @@ A3C_OPEN_RC_HC = {
 		_actionScript = _actionScript splitString ";";
 		{
 			
-			if ("A3C_HC_WP_COMPLETE" in _x) then {
+			if ("A3C_HC_FNC_CompleteWaypoint" in _x) then {
 				_actionScript = _actionScript - [_x];
 			};
 		} foreach _actionScript;
@@ -674,14 +677,14 @@ A3C_OPEN_RC_HC = {
 
 
 	if (_wpHasPostCondition) then {
-		(finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionSubCtrls) ctrlShow true;
+		(finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls) ctrlShow true;
 	};
 	//(findDisplay _a3c_dsp displayCtrl 709122) ctrlSetText "Move-Timing";
 	
 	if (_isLimitedWP) then {
 		//{
 		//	(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-		//} foreach [A3C_MAPTAB_WPMENU_ActionSubCtrls]; //709136,709137,709128
+		//} foreach [A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls]; //709136,709137,709128
 		//_wpHasPostCondition = false;
 
 		//A3C_HC_ACTIVE_PRE_COND_MODE = "ARRIVAL";
@@ -722,8 +725,8 @@ A3C_OPEN_RC_HC = {
 	_refY = (_refPos select 1) + _refH;
 
 	//-- ADJUST TYPE-ACTION and PRE-COND / CAS boxes
-	_ref1 = if (A3C_HC_EDIT_ACTION == "CAS-STRIKE") then {A3C_MAPTAB_WPMENU_ActionTypeGroup} else {A3C_MAPTAB_WPMENU_PreCondCtrls};
-	_ref2 = if (A3C_HC_EDIT_ACTION == "CAS-STRIKE") then {A3C_MAPTAB_WPMENU_PreCondCtrls} else {A3C_MAPTAB_WPMENU_ActionTypeGroup};
+	_ref1 = if (A3C_HC_EDIT_ACTION == "CAS-STRIKE") then {A3C_MAP_OVERLAY_GAMEUI_WPMENU_ActionTypeGroup} else {A3C_MAP_OVERLAY_GAMEUI_WPMENU_PreCondCtrls};
+	_ref2 = if (A3C_HC_EDIT_ACTION == "CAS-STRIKE") then {A3C_MAP_OVERLAY_GAMEUI_WPMENU_PreCondCtrls} else {A3C_MAP_OVERLAY_GAMEUI_WPMENU_ActionTypeGroup};
 		
 	//-- box1
 	_box =  (finddisplay _a3c_dsp displayCtrl _ref1);
@@ -742,15 +745,15 @@ A3C_OPEN_RC_HC = {
 
 
 	//-- adjust type controls
-	private _condMacro = (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_PreCondCtrls);
+	private _condMacro = (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_WPMENU_PreCondCtrls);
 	//if (true) exitWith {};
 
 	if (_wpHasSubSelection) then {
 		
-		private _box = (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionAddCtrls);
+		private _box = (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ActionAddCtrls);
 		_ctrlPos = ctrlPosition _box;
 
-		_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionTypeGroup);
+		_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_WPMENU_ActionTypeGroup);
 		_refH = _refPos select 3;
 		_refY = (_refPos select 1) + _refH;
 		_ctrlPos set [1,_refY];
@@ -842,8 +845,8 @@ A3C_OPEN_RC_HC = {
 		
 		
 	//} else {
-	//	_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_PreCondCtrls);
-	//	private _box = (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionTypeGroup);
+	//	_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_WPMENU_PreCondCtrls);
+	//	private _box = (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_WPMENU_ActionTypeGroup);
 	//	_refH = _refPos select 3;
 	//	_refY = (_refPos select 1) + _refH;
 	//	_refPos set [1,_refY];
@@ -853,20 +856,20 @@ A3C_OPEN_RC_HC = {
 
 	//-- ADJUST POSTCONDITION
 	if (_wpHasPostCondition) then {
-		_refCtrl = if (_wpHasSubSelection) then {A3C_MAPTAB_WPMENU_ActionAddCtrls} else {A3C_MAPTAB_WPMENU_ActionTypeGroup};
+		_refCtrl = if (_wpHasSubSelection) then {A3C_MAP_OVERLAY_GAMEUI_ActionAddCtrls} else {A3C_MAP_OVERLAY_GAMEUI_WPMENU_ActionTypeGroup};
 		_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl _refCtrl);
 		_refH = _refPos select 3;
 		_refY = (_refPos select 1) + _refH;
 		_refPos set [1,_refY];
 	
-		_ctrl = (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionSubCtrls);
+		_ctrl = (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls);
 		_ctrlPos = ctrlPosition _ctrl;
 		
 		//_add = if (_foreachIndex == 0) then {
 		//	//-- action ctrlsGroup -> do nothing
 		//	0
 		//} else {
-		//	(ctrlPosition (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionSubCtrls)) select 3;
+		//	(ctrlPosition (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls)) select 3;
 		//};
 		
 		_ctrlPos set [1,_refY]; // + _add
@@ -881,9 +884,9 @@ A3C_OPEN_RC_HC = {
 	//-- ADJUST CONFIRM / DELETE BUTTONS
 
 	_refCtrl = switch (true) do {
-		case (_wpHasPostCondition) : {A3C_MAPTAB_WPMENU_ActionSubCtrls};
-		case (_wpHasSubSelection) : {A3C_MAPTAB_WPMENU_ActionAddCtrls};
-		default {if (A3C_HC_EDIT_ACTION != "CAS-STRIKE") then {A3C_MAPTAB_WPMENU_ActionTypeGroup} else {A3C_MAPTAB_WPMENU_PreCondCtrls}};
+		case (_wpHasPostCondition) : {A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls};
+		case (_wpHasSubSelection) : {A3C_MAP_OVERLAY_GAMEUI_ActionAddCtrls};
+		default {if (A3C_HC_EDIT_ACTION != "CAS-STRIKE") then {A3C_MAP_OVERLAY_GAMEUI_WPMENU_ActionTypeGroup} else {A3C_MAP_OVERLAY_GAMEUI_WPMENU_PreCondCtrls}};
 	};
 	//systemchat str _wpHasSubSelection;
 	
@@ -901,7 +904,7 @@ A3C_OPEN_RC_HC = {
 		_ctrlPos set [1,_refY];
 		_ctrl ctrlSetPosition _ctrlPos;
 		_ctrl ctrlCommit 0;
-	} foreach A3C_MAPTAB_WPMENU_MacroConfirm;
+	} foreach A3C_MAP_OVERLAY_GAMEUI_WPMENU_MacroConfirm;
 
 
 	//----------------------------------- APPLY LABELS
@@ -1002,9 +1005,9 @@ A3C_OPEN_RC_HC = {
 		[finddisplay _a3c_dsp displayCtrl 709126, _x] call A3C_addLbEntry;
 	} foreach _lbArray4;
 
-	_ctrlPosWPM = [_a3c_dsp,A3C_RC_Context_HC_WP,_ctrlPosWPM] call A3C_DSP_FindControlSafePos;
-	(findDisplay _a3c_dsp displayCtrl A3C_RC_Context_HC_WP) ctrlSetPosition _ctrlPosWPM;
-	(findDisplay _a3c_dsp displayCtrl A3C_RC_Context_HC_WP) ctrlCommit 0;
+	_ctrlPosWPM = [_a3c_dsp,A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,_ctrlPosWPM] call A3C_DSP_FindControlSafePos;
+	_wpMenuCtrlsGroup ctrlSetPosition _ctrlPosWPM;
+	_wpMenuCtrlsGroup ctrlCommit 0;
 	[finddisplay _a3c_dsp displayCtrl 709126, _lbV4] call A3C_setCurSel;
 	[finddisplay _a3c_dsp displayCtrl 709128, _lbV5] call A3C_setCurSel;
 	[finddisplay _a3c_dsp displayCtrl 709129, _lbV6] call A3C_setCurSel;
@@ -1067,21 +1070,22 @@ A3C_OPEN_RC_HC = {
 		"FIRE & ENGAGE"
 	];
 
-	//A3C_HC_ACTIVE_POST_COND_VAL = false;
 
+	//-- set focus to ctrlsGroup parent 
+	ctrlSetFocus _wpMenuCtrlsGroup;
 	
 };
 
 
 
 
-A3C_HC_RC_CONFIRM = {
+A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
 	private ["_group","_wp","_condition","_statements","_statementsINS","_indSel","_indSelActive","_indAdd","_dirTo","_wpCount","_wpsActive","_wpCountActive","_wpA","_wpC","_wpS","_wpI","_polygon","_var","_tPos","_dirTo","_dist"];
 	_group = A3C_HC_ACTIVEGROUP; //_this select 0;
 
 	
-
+	private _wpMenuCtrlsGroup = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT;
 
 
 	_tPos = [];
@@ -1091,7 +1095,7 @@ A3C_HC_RC_CONFIRM = {
 	private _actionCtrl = (findDisplay _a3c_dsp displayCtrl 709141);
 	private _actionText = _actionCtrl lbText (lbCurSel _actionCtrl);
 
-	(findDisplay _a3c_dsp displayCtrl A3C_RC_Context_HC_WP) ctrlShow false;
+	_wpMenuCtrlsGroup ctrlShow false;
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 
 	private _leader = leader _group;
@@ -1658,7 +1662,7 @@ A3C_HC_RC_CONFIRM = {
 		private _cargoGroups = ([A3C_HC_ACTIVEGROUP] call MCSS_fnc_getCargoGroups) select {private _gp = _x; (waypointPosition [_gp, currentWaypoint _gp]) distance2D [0,0,0] == 0};
 		if !(_cargoGroups isEqualTo []) then { //-- here we check for existing cargo units that can have waypoints assigned.
 			//-- Prompt user to select desired option
-			_parent = findDisplay _a3c_dsp displayCtrl A3C_ObjectSelector_Parent;
+			_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 			_text = findDisplay _a3c_dsp displayCtrl 800802;
 			_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 
@@ -1689,6 +1693,7 @@ A3C_HC_RC_CONFIRM = {
 	};
 
 };
+
 
 
 
@@ -1873,7 +1878,7 @@ A3C_MAPTAB_WPMENU_ADDACTIONS = {
 	//
 };
 
-A3C_OPEN_RC_HC_LB = { //-- no longer used
+A3C_Map_HC_waypointContext_OpenMenu_LB = { //-- no longer used
 
 	private ["_LBmode","_a3c_dsp","_wpMenu","_lb","_array","_landingTypes"];
 	_LBmode = _this select 0;
@@ -2224,7 +2229,7 @@ A3C_LB_HC = {
 						private _refH = _refPos select 3;
 						private _refY = (_refPos select 1) + _refH;
 						//-- precond/castype box
-						_box =  (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_PreCondCtrls);
+						_box =  (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_WPMENU_PreCondCtrls);
 						_ctrlPos = ctrlPosition _box;
 						_ctrlPos set [1,_refY];
 						_box ctrlSetPosition _ctrlPos;
@@ -2232,7 +2237,7 @@ A3C_LB_HC = {
 						
 						//-- type box
 						_refY = _refY + (_ctrlPos select 3);
-						_box =  (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionTypeGroup);
+						_box =  (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_WPMENU_ActionTypeGroup);
 						_ctrlPos = ctrlPosition _box;
 						_ctrlPos set [1,_refY];
 						_box ctrlSetPosition _ctrlPos;
@@ -2387,9 +2392,9 @@ A3C_LB_HC = {
 					case ("DEMOLITION") : {
 						A3C_HC_EDIT_ACTION = "DEMOLITION";
 						_ctrlText = "DEMOLITION";
-						(findDisplay _a3c_dsp displayCtrl A3C_RC_Context_HC_WP) ctrlShow false;
+						(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT) ctrlShow false;
 						(findDisplay 12 displayCtrl 51) ctrlEnable true;
-						_parent = findDisplay _a3c_dsp displayCtrl A3C_ObjectSelector_Parent;
+						_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 						_text = findDisplay _a3c_dsp displayCtrl 800802;
 						_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 
@@ -2436,7 +2441,7 @@ A3C_LB_HC = {
 					case ("CAS-STRIKE") : {
 						A3C_HC_EDIT_ACTION = "CAS-STRIKE";
 						_ctrlText = "CAS-STRIKE";
-						(finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionSubCtrls) ctrlShow false;
+						(finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls) ctrlShow false;
 						_header3Text = "CAS TYPE";
 						lbClear _preCondModeCtrl;
 
@@ -2468,14 +2473,14 @@ A3C_LB_HC = {
 						private _refH = _refPos select 3;
 						private _refY = (_refPos select 1) + _refH;
 						//-- type box
-						_box =  (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionTypeGroup);
+						_box =  (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_WPMENU_ActionTypeGroup);
 						_ctrlPos = ctrlPosition _box;
 						_ctrlPos set [1,_refY];
 						_box ctrlSetPosition _ctrlPos;
 						_box ctrlCommit 0;
 						//-- precond/castype box
 						_refY = _refY + (_ctrlPos select 3);
-						_box =  (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_PreCondCtrls);
+						_box =  (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_WPMENU_PreCondCtrls);
 						_ctrlPos = ctrlPosition _box;
 						_ctrlPos set [1,_refY];
 						_box ctrlSetPosition _ctrlPos;
@@ -2483,12 +2488,12 @@ A3C_LB_HC = {
 					};
 				};
 
-				_A3C_MAPTAB_WPMENU_ActionAddCtrls = (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionAddCtrls);
+				_A3C_MAP_OVERLAY_GAMEUI_ActionAddCtrls = (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ActionAddCtrls);
 				if (_requiresSubData) then {
-					_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionTypeGroup);
+					_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_WPMENU_ActionTypeGroup);
 					private _refH = _refPos select 3;
 					private _refY = (_refPos select 1) + _refH;
-					_box =  (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionAddCtrls);
+					_box =  (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ActionAddCtrls);
 					_ctrlPos = ctrlPosition _box;
 					_ctrlPos set [1,_refY];
 					_box ctrlSetPosition _ctrlPos;
@@ -2548,36 +2553,36 @@ A3C_LB_HC = {
 					};
 					
 
-					_A3C_MAPTAB_WPMENU_ActionAddCtrls ctrlShow true;
+					_A3C_MAP_OVERLAY_GAMEUI_ActionAddCtrls ctrlShow true;
 				} else {
-					_A3C_MAPTAB_WPMENU_ActionAddCtrls ctrlShow false;
+					_A3C_MAP_OVERLAY_GAMEUI_ActionAddCtrls ctrlShow false;
 				};
 
-				_A3C_MAPTAB_WPMENU_ActionSubCtrls = (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionSubCtrls);
+				_A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls = (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls);
 				if (_requiresPostData) then {
-					_refCtrl = if (_requiresSubData) then {A3C_MAPTAB_WPMENU_ActionAddCtrls} else {A3C_MAPTAB_WPMENU_ActionTypeGroup};
+					_refCtrl = if (_requiresSubData) then {A3C_MAP_OVERLAY_GAMEUI_ActionAddCtrls} else {A3C_MAP_OVERLAY_GAMEUI_WPMENU_ActionTypeGroup};
 						
 					_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl _refCtrl);
 					private _refH = _refPos select 3;
 					private _refY = (_refPos select 1) + _refH;
 
 					
-					_ActionctrlPos = ctrlPosition _A3C_MAPTAB_WPMENU_ActionSubCtrls;	
+					_ActionctrlPos = ctrlPosition _A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls;	
 					_ActionctrlPos set [1,_refY];
 					
-					_A3C_MAPTAB_WPMENU_ActionSubCtrls ctrlSetPosition _ActionctrlPos;
-					_A3C_MAPTAB_WPMENU_ActionSubCtrls ctrlCommit 0;	
-					_A3C_MAPTAB_WPMENU_ActionSubCtrls ctrlShow true;					
-					//if !(ctrlShown (finddisplay _a3c_dsp displayCtrl A3C_MAPTAB_WPMENU_ActionSubCtrls)) then { //-- postStuff is NOT shown
+					_A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls ctrlSetPosition _ActionctrlPos;
+					_A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls ctrlCommit 0;	
+					_A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls ctrlShow true;					
+					//if !(ctrlShown (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls)) then { //-- postStuff is NOT shown
 					//};		
 				} else {
-					_A3C_MAPTAB_WPMENU_ActionSubCtrls ctrlShow false;
+					_A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls ctrlShow false;
 				};
 				
 				_refCtrl = switch (true) do {
-					case (_requiresPostData) : {A3C_MAPTAB_WPMENU_ActionSubCtrls};
-					case (_requiresSubData) : {A3C_MAPTAB_WPMENU_ActionAddCtrls};
-					default {if (A3C_HC_EDIT_ACTION != "CAS-STRIKE") then {A3C_MAPTAB_WPMENU_ActionTypeGroup} else {A3C_MAPTAB_WPMENU_PreCondCtrls}};
+					case (_requiresPostData) : {A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls};
+					case (_requiresSubData) : {A3C_MAP_OVERLAY_GAMEUI_ActionAddCtrls};
+					default {if (A3C_HC_EDIT_ACTION != "CAS-STRIKE") then {A3C_MAP_OVERLAY_GAMEUI_WPMENU_ActionTypeGroup} else {A3C_MAP_OVERLAY_GAMEUI_WPMENU_PreCondCtrls}};
 				};
 				_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl _refCtrl);
 				private _refH = _refPos select 3;
@@ -2588,7 +2593,7 @@ A3C_LB_HC = {
 					_ctrlPos set [1,_refY]; 
 					_ctrl ctrlSetPosition _ctrlPos;
 					_ctrl ctrlCommit 0;
-				} foreach A3C_MAPTAB_WPMENU_MacroConfirm;
+				} foreach A3C_MAP_OVERLAY_GAMEUI_WPMENU_MacroConfirm;
 
 
 				
@@ -2640,10 +2645,10 @@ A3C_LB_HC = {
 		[_a3c_dsp,_ctrlPosWPM] spawn {
 			params ["_a3c_dsp","_ctrlPosWPM"];
 			sleep 0.1;
-			_ctrlPosWPM = ctrlPosition (finddisplay _a3c_dsp displayCtrl A3C_RC_Context_HC_WP);
-			_ctrlPosWPM = [_a3c_dsp,A3C_RC_Context_HC_WP,_ctrlPosWPM] call A3C_DSP_FindControlSafePos;
-			(findDisplay _a3c_dsp displayCtrl A3C_RC_Context_HC_WP) ctrlSetPosition _ctrlPosWPM;
-			(findDisplay _a3c_dsp displayCtrl A3C_RC_Context_HC_WP) ctrlCommit 0;
+			_ctrlPosWPM = ctrlPosition (finddisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT);
+			_ctrlPosWPM = [_a3c_dsp,A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,_ctrlPosWPM] call A3C_DSP_FindControlSafePos;
+			(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT) ctrlSetPosition _ctrlPosWPM;
+			(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT) ctrlCommit 0;
 		};
 		
 	};

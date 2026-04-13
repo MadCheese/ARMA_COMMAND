@@ -201,7 +201,7 @@ A3C_MAPTAB_TREE_LABEL = {
 	
 
 	
-	_CT_TREE = (findDisplay _a3c_dsp) displayctrl A3C_SELECTOR_TREE;
+	_CT_TREE = (findDisplay _a3c_dsp) displayctrl A3C_SHARED_GAMEUI_TREE_CONTROL;
 
 	tvClear _CT_TREE;
 	
@@ -486,18 +486,18 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
 	private _subEntryCount = (_ctrl tvCount _selectedParent);
 
 	private _minCtrlH = if (_a3c_dsp != 7999) then {
-		(A3C_MAPTAB_SETTINGSGROUP_H); 
+		(A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_H); 
 	} else {
 		(safeZoneY + safeZoneH) * 0.2
 	};
 	private _maxCtrlH = if (_a3c_dsp != 7999) then {
 
-		A3C_MAPTAB_SETTINGSGROUP_Y - 
-		A3C_MAPTAB_GAMEUI_REFERENCE_MENU_Y +//-
-		A3C_MAPTAB_Upper_buttonH +
-		A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y	
+		A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_Y - 
+		A3C_MAP_GAMEUI_MENU_Y +//-
+		A3C_MAP_GAMEUI_Upper_buttonH +
+		A3C_MAP_GAMEUI_PADDING_Y	
 	} else {
-		(safeZoneY + safeZoneH) - ((A3C_COMMANDBAR_H + A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y )* 2.5)
+		(safeZoneY + safeZoneH) - ((A3C_GAMEUI_COMMANDBAR_H + A3C_MAP_GAMEUI_PADDING_Y )* 2.5)
 	};
 
 	private _treePos = (ctrlPosition _ctrl);
@@ -507,9 +507,9 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
 
 	private _ctrlPosCollapsed = if (_a3c_dsp != 7999) then {
 		[
-			A3C_MAPTAB_SELECTOR_TREE_X,
-			(safezoneH + safezoneY) - A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y - _minCtrlH, 
-			A3C_MAPTAB_SELECTOR_TREE_W,
+			A3C_MAP_OVERLAY_GAMEUI_TREEX,
+			(safezoneH + safezoneY) - A3C_MAP_GAMEUI_PADDING_Y - _minCtrlH, 
+			A3C_MAP_OVERLAY_GAMEUI_TREEW,
 			_minCtrlH 
 		]
 	} else {
@@ -561,18 +561,18 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
 	} foreach _openTrees;
 
 	
-	private _effectiveH = (A3C_MAPTAB_SELECTOR_TREE_ROWHEIGHT_MAIN) * _shownEntryCount; 
+	private _effectiveH = (A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_MAIN) * _shownEntryCount; 
 	_effectiveH = (_effectiveH min _maxCtrlH) max _minCtrlH; //-- FIX CLIPPINGjijiji
 	//systemchat str [_shownEntryCount,_effectiveH];
 
 	if (_a3c_dsp != 7999) then {
-		A3C_MAPTAB_TREEBOX_Y = (safeZoneY + safeZoneH) - A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y - _effectiveH;
+		A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y = (safeZoneY + safeZoneH) - A3C_MAP_GAMEUI_PADDING_Y - _effectiveH;
 
 
 		_ctrl ctrlSetPosition
 		[
-			A3C_MAPTAB_SELECTOR_TREE_X,
-			A3C_MAPTAB_TREEBOX_Y,
+			A3C_MAP_OVERLAY_GAMEUI_TREEX,
+			A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y,
 			_ctrlPosCollapsed select 2,
 			_effectiveH
 		];
@@ -654,47 +654,47 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 	//copytoclipboard str _this;
 	
 	
-	//private _minCtrlH = (A3C_MAPTAB_SELECTOR_TREE_ROWHEIGHT_MAIN * _mainEntryCount) ; //-- tree should at minimum have the size of settings bar; 
+	//private _minCtrlH = (A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_MAIN * _mainEntryCount) ; //-- tree should at minimum have the size of settings bar; 
 	private _minCtrlH = if (_a3c_dsp != 7999) then {
-		(A3C_MAPTAB_SETTINGSGROUP_H); //(_minCtrlH + A3C_MAPTAB_SELECTOR_TREE_ROWHEIGHT_MAIN); // -- 1 extra to avoid scrollbar
+		(A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_H); //(_minCtrlH + A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_MAIN); // -- 1 extra to avoid scrollbar
 	} else {
 		(safeZoneY + safeZoneH) * 0.2
 	};
 	private _maxCtrlH = if (_a3c_dsp != 7999) then {
 
-		A3C_MAPTAB_SETTINGSGROUP_Y - 
-		A3C_MAPTAB_GAMEUI_REFERENCE_MENU_Y +//-
-		A3C_MAPTAB_Upper_buttonH +
-		A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y
-		//A3C_MAPTAB_teamcolorboxH
+		A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_Y - 
+		A3C_MAP_GAMEUI_MENU_Y +//-
+		A3C_MAP_GAMEUI_Upper_buttonH +
+		A3C_MAP_GAMEUI_PADDING_Y
+		//A3C_MAP_OVERLAY_GAMEUI_teamcolorboxH
 		
-		//(safeZoneH + A3C_MAPTAB_GAMEUI_REFERENCE_MENU_Y) -
+		//(safeZoneH + A3C_MAP_GAMEUI_MENU_Y) -
 		//(
 		//	(
-		//		A3C_MAPTAB_GOCODE_BUTTONPOS_ROOT_H + 
-		//		(A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y * 2) +
-		//		A3C_MAPTAB_Upper_buttonH +
-		//		A3C_MAPTAB_teamcolorboxH
+		//		A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_H + 
+		//		(A3C_MAP_GAMEUI_PADDING_Y * 2) +
+		//		A3C_MAP_GAMEUI_Upper_buttonH +
+		//		A3C_MAP_OVERLAY_GAMEUI_teamcolorboxH
 		//	)
 		//)
 			
 	} else {
-		(safeZoneY + safeZoneH) - ((A3C_COMMANDBAR_H + A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y )* 2.5)
+		(safeZoneY + safeZoneH) - ((A3C_GAMEUI_COMMANDBAR_H + A3C_MAP_GAMEUI_PADDING_Y )* 2.5)
 	};
 
 	private _treePos = (ctrlPosition _ctrl);
 	_treePos params ["_currentX","_currentY","_currentW","_currentH"];
 
 
-	private _differenceH =  (A3C_MAPTAB_SELECTOR_TREE_ROWHEIGHT_SUB * _subEntryCount);
+	private _differenceH =  (A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_SUB * _subEntryCount);
 	private _effectiveH = 0;
 
 
 	private _ctrlPosCollapsed = if (_a3c_dsp != 7999) then {
 		[
-			A3C_MAPTAB_SELECTOR_TREE_X,
-			(safezoneH + safezoneY) - A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y - _minCtrlH, 
-			A3C_MAPTAB_SELECTOR_TREE_W,
+			A3C_MAP_OVERLAY_GAMEUI_TREEX,
+			(safezoneH + safezoneY) - A3C_MAP_GAMEUI_PADDING_Y - _minCtrlH, 
+			A3C_MAP_OVERLAY_GAMEUI_TREEW,
 			_minCtrlH 
 		]
 	} else {
@@ -706,7 +706,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 		]
 	};
 
-	private _safetyPadding = 4 * A3C_MAPTAB_SELECTOR_TREE_ROWHEIGHT_SUB;
+	private _safetyPadding = 4 * A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_SUB;
 
 	//-- force initial UI-Background on initialized / refreshed calls
 	_currentH = _safetyPadding; //if (_isInit) then {_minCtrlH} else {_safetyPadding};
@@ -714,7 +714,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 	//systemChat str _isInit;
 
 	
-	//A3C_MAPTAB_TREEBOX_Y = _ctrlPosCollapsed select 1;
+	//A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y = _ctrlPosCollapsed select 1;
 	if (_mode == "OPEN") then {
 		if (count _openTrees == 0 OR {_isInit}) then {
 			_currentH = _safetyPadding;
@@ -747,7 +747,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 		{
 			_count = _ctrl tvCount _x;
 			
-			_openTreesH = _openTreesH + (_count * A3C_MAPTAB_SELECTOR_TREE_ROWHEIGHT_SUB);
+			_openTreesH = _openTreesH + (_count * A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_SUB);
 		} foreach (_openTrees -  [_selectedParent]);
 		_effectiveH = (( _openTreesH ) min _maxCtrlH) max _minCtrlH; // _minCtrlH +
 		_ctrl tvCollapse _selectedParent;
@@ -755,14 +755,14 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 	};
 
 	if (_a3c_dsp != 7999) then {
-		A3C_MAPTAB_TREEBOX_Y = (safeZoneY + safeZoneH) - A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y - _effectiveH;
+		A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y = (safeZoneY + safeZoneH) - A3C_MAP_GAMEUI_PADDING_Y - _effectiveH;
 		//((_ctrlPosCollapsed select 1) + _minCtrlH ) - _effectiveH;
 		_ctrl ctrlSetPosition
 		[
-			A3C_MAPTAB_SELECTOR_TREE_X,
-			A3C_MAPTAB_TREEBOX_Y, // max A3C_MAPTAB_SETTINGSGROUP_Y,
+			A3C_MAP_OVERLAY_GAMEUI_TREEX,
+			A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y, // max A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_Y,
 			_ctrlPosCollapsed select 2,
-			_effectiveH //max A3C_MAPTAB_SETTINGSGROUP_H
+			_effectiveH //max A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_H
 		];
 		_ctrl ctrlCommit _animTime; 
 		[_ctrl,_animTime] call A3C_MAPTAB_TREE_ADJUST_TOP_ROW;
@@ -808,7 +808,7 @@ A3C_MAPTAB_RESIZE_TEAMCOLORS_Y = {
 	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
 
 	//-- Hardcoded Values (from .hpp)
-	//private _ctrlX = A3C_MAPTAB_SELECTOR_TREE_X;
+	//private _ctrlX = A3C_MAP_OVERLAY_GAMEUI_TREEX;
 	private _ctrlH = 0.04 * safezoneH; //-- HARDCODED h value of first teamcolor box
 	
 	//--adjust height for teamcolor controls
@@ -823,9 +823,9 @@ A3C_MAPTAB_RESIZE_TEAMCOLORS_Y = {
 		 //- (_teamboxH / 2)
 		//  + ((_refFramePos select 3) / 4)  
 
-		 //- (A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y / 2) 
+		 //- (A3C_MAP_GAMEUI_PADDING_Y / 2) 
 	} else {
-		A3C_MAPTAB_TREEBOX_Y - _ctrlH - (A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y / 2)
+		A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y - _ctrlH - (A3C_MAP_GAMEUI_PADDING_Y / 2)
 	}; //0.85733 * safezoneH + safezoneY; //-- HARDCODED y value of first box
 
 	private _refUnits = (units player) - [player];
@@ -886,27 +886,27 @@ A3C_MAPTAB_TREE_ADJUST_TOP_ROW = { //asasas
 	params ["_ctrl","_animTime"];
 
 	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-	//private _ctrl = findDisplay _a3c_dsp displayCtrl A3C_SELECTOR_TREE;
+	//private _ctrl = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
 	//systemChat str (_a3c_dsp);
 	//-- not executed via radial - map only!
 	 
 	//-- Hardcoded Values (from .hpp)
-	private _ctrlX = A3C_MAPTAB_SELECTOR_TREE_X;
+	private _ctrlX = A3C_MAP_OVERLAY_GAMEUI_TREEX;
 	private _ctrlH = 0.034 * safezoneH; //-- HARDCODED h value of first teamcolor box
-	//private A3C_MAPTAB_Upper_buttonH = 0.04 * safezoneH; //0.0330053 * safezoneH;
-	private _totalW = (ctrlPosition (findDisplay _a3c_dsp displayCtrl A3C_SELECTOR_TREE)) select 2;
+	//private A3C_MAP_GAMEUI_Upper_buttonH = 0.04 * safezoneH; //0.0330053 * safezoneH;
+	private _totalW = (ctrlPosition (findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL)) select 2;
 	//--adjust height for teamcolor controls
 	[_animTime] call A3C_MAPTAB_RESIZE_TEAMCOLORS_Y;
-	_ctrlY = A3C_MAPTAB_TREEBOX_Y - _ctrlH - (A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y / 2); //0.85733 * safezoneH + safezoneY; //-- HARDCODED y value of first box
+	_ctrlY = A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y - _ctrlH - (A3C_MAP_GAMEUI_PADDING_Y / 2); //0.85733 * safezoneH + safezoneY; //-- HARDCODED y value of first box
 	//-- adjust teamcolor bg and frame
 	{
 		_btnCtrl = (findDisplay _a3c_dsp displayCtrl _x);
 		_btnCtrl ctrlSetPosition
 		[
 			_ctrlX,
-			A3C_MAPTAB_TREEBOX_Y - _ctrlH - A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y,
+			A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y - _ctrlH - A3C_MAP_GAMEUI_PADDING_Y,
 			_totalW,
-			_ctrlH + A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y
+			_ctrlH + A3C_MAP_GAMEUI_PADDING_Y
 
 		];
 		_btnCtrl ctrlCommit _animTime;
@@ -926,8 +926,8 @@ A3C_MAPTAB_TREE_ADJUST_TOP_ROW = { //asasas
 
 
 	//-- adjust height and pos for settings controls
-	_ctrlX = (A3C_MAPTAB_SELECTOR_TREE_X + A3C_MAPTAB_SELECTOR_TREE_W) - (3 * A3C_MAPTAB_Upper_buttonH); //--reset for left-falling top buttons
-	_ctrlY = _ctrlY - A3C_MAPTAB_Upper_buttonH - (A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y / 2);
+	_ctrlX = (A3C_MAP_OVERLAY_GAMEUI_TREEX + A3C_MAP_OVERLAY_GAMEUI_TREEW) - (3 * A3C_MAP_GAMEUI_Upper_buttonH); //--reset for left-falling top buttons
+	_ctrlY = _ctrlY - A3C_MAP_GAMEUI_Upper_buttonH - (A3C_MAP_GAMEUI_PADDING_Y / 2);
 
 	//-- adjust top button bg and frame
 	{
@@ -936,8 +936,8 @@ A3C_MAPTAB_TREE_ADJUST_TOP_ROW = { //asasas
 		[
 			_ctrlX, 
 			_ctrlY,
-			(A3C_MAPTAB_Upper_buttonH * 4) * 0.75,
-			A3C_MAPTAB_Upper_buttonH 
+			(A3C_MAP_GAMEUI_Upper_buttonH * 4) * 0.75,
+			A3C_MAP_GAMEUI_Upper_buttonH 
 
 		];
 		_btnCtrl ctrlCommit _animTime;
@@ -945,15 +945,15 @@ A3C_MAPTAB_TREE_ADJUST_TOP_ROW = { //asasas
 	
 	//private _macroSize = 
 	{
-		_xPos = _ctrlX + (A3C_MAPTAB_Upper_buttonH * _foreachIndex); //!!!! TEMP!
+		_xPos = _ctrlX + (A3C_MAP_GAMEUI_Upper_buttonH * _foreachIndex); //!!!! TEMP!
 		{
 			_btnCtrl = (findDisplay _a3c_dsp displayCtrl _x);
 			_btnCtrl ctrlSetPosition
 			[
 				_xPos, 
 				_ctrlY,
-				A3C_MAPTAB_Upper_buttonH * 0.75,
-				A3C_MAPTAB_Upper_buttonH 
+				A3C_MAP_GAMEUI_Upper_buttonH * 0.75,
+				A3C_MAP_GAMEUI_Upper_buttonH 
 
 			];
 			//systemchat str _animTime;
@@ -1204,92 +1204,10 @@ A3C_TREE_BOXCLICK = {
 	};
 };
 
-A3C_MAPTAB_RESIZE_TEAMCOLORS_XWH = {
-	params ["_a3c_dsp","_mode"];
-	
-
-	//-- DYNAMIC TEAMCOLOR BOXES
-	//if (true) exitwith {};
-	//for "_i" from 1000 to 1011 do {
-	//	_ctrl = (findDisplay _a3c_dsp displayCtrl _i);
-	//	_sz = [0.24797 * safezoneW + safezoneX,100,0.0782815 * safezoneW,0.0110018 * safezoneH];
-	//	_ctrl ctrlSetPosition _sz;
-	//	_ctrl ctrlCommit 0;
-	//};
-	
-	if (_mode == "HC") exitWith {}; //~~ TEMPORARY: Exit for HC after removing teamcolor Boxes. TO DO: Align HC Teamcolors with Default-Colors and add funtionality
-
-	//asasas
-	
-	
-	//-- Hardcoded Values (from .hpp)
-	_ctrlX = if (_a3c_dsp == 7999) then {
-		//((ctrlPosition (findDisplay _a3c_dsp displayCtrl 8071)) select 0) +
-		//((ctrlPosition (findDisplay _a3c_dsp displayCtrl 7077)) select 0)
-		0
-	} else {A3C_MAPTAB_SELECTOR_TREE_X}; //   0.24797 * safezoneW + safezoneX; //-- HARDCODED x value of first box
-	
-	_ctrlH = 0.0110018 * safezoneH; //-- HARDCODED h value of first teamcolor box
-	//_ctrlY = ((ctrlPosition (findDisplay _a3c_dsp displayCtrl A3C_SELECTOR_TREE)) select 1) - _ctrlH - (A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y / 2); //0.85733 * safezoneH + safezoneY; //-- HARDCODED y value of first box
 
 
-	_totalW = (ctrlPosition (findDisplay _a3c_dsp displayCtrl A3C_SELECTOR_TREE)) select 2; //((0.689022 * safezoneW + safezoneX) + (0.0572795 * safezoneW)) - _ctrlX; //-- (last unitselector's X-value + it's default W value) MINUS _ctrlX
 
-	_gapW = A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_Y / 2; //(0.310978 * safezoneW + safezoneX) - ((0.24797 * safezoneW + safezoneX) + (0.0572795 * safezoneW));
-
-	//_gapAmount = 0; //-- pre-define value to be overwritten later
-	//_dynamicButtonW = 0; //-- pre-define value to be overwritten later
-
-	_teamColors = [];
-	_grunts = ((units player) - [player]);
-	if (_mode == "HC") then {
-
-	} else {
-		{
-			_col = _x;
-			if ({private _assignedTeam = if (player == cameraOn) then {assignedTeam _x} else {_x getVariable ["A3C_ASSIGNEDTEAM","MAIN"]}; _assignedTeam == _col} count _grunts > 0) then {
-				_teamColors pushBack _col;
-			};
-		} foreach ["RED","GREEN","BLUE","YELLOW","MAIN"];
-		if (count _teamColors > 1) then {
-			_teamColors pushBack "PURPLE";
-		};
-	};
-
-	if (count _teamColors == 0) exitWith {};
-	
-	_gapAmount = (count _teamColors) - 1;
-	_dynamicButtonW = (_totalW - (_gapAmount * _gapW)) / (count _teamColors);
-
-
-	{
-		_color = _x;
-		_btnCtrls = switch (_color) do {
-			case ("RED") : {[1000,1001]};
-			case ("GREEN") : {[1002,1003]};
-			case ("BLUE") : {[1004,1005]};
-			case ("YELLOW") : {[1006,1007]};
-			case ("MAIN") : {[1008,1009]};
-			case ("PURPLE") : {[1010,1011]};
-		};
-		{
-			_ctrl = (findDisplay _a3c_dsp displayCtrl _x);
-			_ctrlY = if (_a3c_dsp == 7999) then {(ctrlPosition _ctrl) select 1} else {safeZoneY + safezoneH};
-			_ctrl ctrlSetPosition
-			[
-				_ctrlX,
-				_ctrlY,
-				_dynamicButtonW,
-				_ctrlH
-			];
-			_ctrl ctrlCommit 0;
-		} foreach _btnCtrls;
-		_ctrlX = _ctrlX + _dynamicButtonW + _gapW;
-	} foreach _teamColors;
-};
-
-// 
-A3C_MAPTAP_TREE_CtrlDelete = {
+A3C_MAP_UI_UnitTree_CtrlDelete = {
 	params ["_CT_TREE","_button","_mode"];
 	//systemchat str _this;
 	private _refArray = [];
@@ -1354,12 +1272,12 @@ A3C_MAPTAP_TREE_CtrlDelete = {
 };
 
 
-A3C_UI_MAPTAB_FSM_CHECKCHANGE = {
+A3C_MAP_UI_UnitTree_Sync = {
 
 	// if (true) exitWith {};
 	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
 	private _modes = if (_a3c_dsp == 7999) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
-	private _CT_TREE = findDisplay _a3c_dsp displayCtrl A3C_SELECTOR_TREE;
+	private _CT_TREE = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
 	private _mainTreeIndex = 0;
 	
 	private _refArray = [];
@@ -1396,7 +1314,7 @@ A3C_UI_MAPTAB_FSM_CHECKCHANGE = {
 						_buttonUnit = _refArray select _buttonValue;
 						if (_mode == "SQUAD") then {
 							if (isNull _buttonUnit ) then { //OR { !alive _buttonUnit }
-								[_CT_TREE,_button,"SQUAD"] call A3C_MAPTAP_TREE_CtrlDelete;
+								[_CT_TREE,_button,"SQUAD"] call A3C_MAP_UI_UnitTree_CtrlDelete;
 							} else {
 								if (alive _buttonUnit) then {
 									if (count _button > 2) then {
@@ -1404,10 +1322,10 @@ A3C_UI_MAPTAB_FSM_CHECKCHANGE = {
 										//-- vehicle button -> check for dismount
 										if (isNull objectParent _buttonUnit) then {
 											//player sideChat str [_buttonValue,_buttonUnit];
-											[_CT_TREE,_button,"SQUAD"] call A3C_MAPTAP_TREE_CtrlDelete;
+											[_CT_TREE,_button,"SQUAD"] call A3C_MAP_UI_UnitTree_CtrlDelete;
 											_ctrlParent = _button select [0,count _button -1];
 											if (_CT_TREE tvCount _ctrlParent == 0) then {
-												[_CT_TREE,_ctrlParent,"SQUAD"] call A3C_MAPTAP_TREE_CtrlDelete;
+												[_CT_TREE,_ctrlParent,"SQUAD"] call A3C_MAP_UI_UnitTree_CtrlDelete;
 											};
 											//_squadTreeCount = [_CT_TREE,_mainTreeIndex] call A3C_MAPTAB_TREE_getSubParentCount;
 											[_CT_TREE,"SQUAD_INF", [_buttonUnit],_mainTreeIndex, _CT_TREE tvCount [_mainTreeIndex] ] call A3C_MAPTAB_TREE_ADD_ITEM;
@@ -1415,7 +1333,7 @@ A3C_UI_MAPTAB_FSM_CHECKCHANGE = {
 									} else {
 										//-- infantry button -> check for boardings
 										if (!isNull objectParent _buttonUnit) then {
-											[_CT_TREE,_button,"SQUAD"] call A3C_MAPTAP_TREE_CtrlDelete;
+											[_CT_TREE,_button,"SQUAD"] call A3C_MAP_UI_UnitTree_CtrlDelete;
 											_vehicle = vehicle _buttonUnit;
 											//-- crew present needs to be in referred array and needs to have a crew-button assigned to it
 											_crewPresent = 
@@ -1473,7 +1391,7 @@ A3C_UI_MAPTAB_FSM_CHECKCHANGE = {
 						} else {
 							if (isNull _buttonUnit OR { {alive _x} count units _buttonUnit == 0}) then {
 								// systemchat "delete";
-								[_CT_TREE,_button,"HIGHCOMMAND"] call A3C_MAPTAP_TREE_CtrlDelete;
+								[_CT_TREE,_button,"HIGHCOMMAND"] call A3C_MAP_UI_UnitTree_CtrlDelete;
 							};
 						};
 						
@@ -1551,7 +1469,7 @@ A3C_UI_MAPTAB_FSM_CHECKCHANGE = {
 								// systemchat str [_changeCondition, _kindOfString];
 								//-- leadervehicle has changed. remove unit and add to _reinforcements for new group assignment
 								private _parent = _treeButton select [0, (count _treeButton) -1];
-								[_CT_TREE,_treeButton,"HIGHCOMMAND"] call A3C_MAPTAP_TREE_CtrlDelete;
+								[_CT_TREE,_treeButton,"HIGHCOMMAND"] call A3C_MAP_UI_UnitTree_CtrlDelete;
 								if (_CT_TREE tvCount _parent == 0) then {
 									_CT_TREE tvDelete _parent;
 								};

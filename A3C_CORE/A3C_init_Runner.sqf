@@ -212,7 +212,7 @@ A3C_is_Initialized = true;
 // 	sleep 1;
 // 	waituntil {alive player};
 // 	sleep 0.1;
-// 	A3C_HUD_DOWNKEYS = [];
+// 	A3C_DOWNKEYS = [];
 // 	[] call A3C_ADD_KEYBINDS;
 // 	A3C_LOADED_EVH = addMissionEventHandler ["Loaded",
 // 	{
@@ -222,7 +222,7 @@ A3C_is_Initialized = true;
 // 			sleep 1;
 // 			waituntil {alive player};
 
-// 			A3C_HUD_DOWNKEYS = [];
+// 			A3C_DOWNKEYS = [];
 // 			[] call A3C_ADD_KEYBINDS;
 // 			sleep 1;
 // 			//diag_log "LOADED";
@@ -318,7 +318,7 @@ A3C_is_Initialized = true;
 		sleep 0.1;
 		//diag_log format ["runner %1-2",_cycle];
 		_cycle = _cycle + 1;
-		A3C_HUD_DOWNKEYS = [];
+		A3C_DOWNKEYS = [];
 		[] call A3C_ADD_KEYBINDS;
 		A3C_LOADED_EVH = addMissionEventHandler ["Loaded",
 		{
@@ -328,7 +328,7 @@ A3C_is_Initialized = true;
 				sleep 1;
 				waituntil {alive player};
 
-				A3C_HUD_DOWNKEYS = [];
+				A3C_DOWNKEYS = [];
 				[] call A3C_ADD_KEYBINDS;
 				sleep 1;
 				//diag_log "LOADED";

@@ -2514,10 +2514,10 @@ A3C_TOGGLE_GOCODE_CTRLS = {
 
 	private _rootPos = if (isnull (findDisplay _a3c_dsp)) then {[]} else {//-- only for tablet
 		[
-			A3C_MAPTAB_GOCODE_BUTTONPOS_ROOT_X,
-			A3C_MAPTAB_GAMEUI_REFERENCE_MENU_Y,
-			A3C_MAPTAB_GOCODE_BUTTONPOS_ROOT_W,
-			A3C_MAPTAB_GOCODE_BUTTONPOS_ROOT_H
+			A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_X,
+			A3C_MAP_GAMEUI_MENU_Y,
+			A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_W,
+			A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_H
 		]
 	};
 	private _findGoCode = {
@@ -2621,7 +2621,7 @@ A3C_TOGGLE_GOCODE_CTRLS = {
 			};
 			if (_cond1 OR _cond2) then {
 				if !(isnull (findDisplay _a3c_dsp)) then {
-					_btnPos set [0, A3C_MAPTAB_GOCODE_BUTTONPOS_ROOT_X - (A3C_MAPTAB_GOCODE_BUTTONPOS_ROOT_W * _buttonsPlaced)];
+					_btnPos set [0, A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_X - (A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_W * _buttonsPlaced)];
 					{
 						_btnItem = findDisplay _a3c_dsp displayCtrl _x;
 						_btnItem ctrlSetPosition _btnPos;
@@ -2634,7 +2634,7 @@ A3C_TOGGLE_GOCODE_CTRLS = {
 				}
 			} else {
 				if !(isnull (findDisplay _a3c_dsp)) then {
-					_btnPos set [1,safeZoneY -A3C_MAPTAB_GOCODE_BUTTONPOS_ROOT_H];
+					_btnPos set [1,safeZoneY -A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_H];
 					{
 						_btnItem = findDisplay _a3c_dsp displayCtrl _x;
 						_btnItem ctrlShow false;
@@ -2648,13 +2648,13 @@ A3C_TOGGLE_GOCODE_CTRLS = {
 			if ( !isnull (findDisplay _a3c_dsp)) then {
 				private _bgControl = (findDisplay _a3c_dsp) displayCtrl 709099;
 				if (_buttonsPlaced > 0) then {		
-					private _bgWidth = A3C_MAPTAB_GOCODE_BUTTONPOS_ROOT_W * _buttonsPlaced;
+					private _bgWidth = A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_W * _buttonsPlaced;
 					private _bgPos = 
 					[
-						A3C_MAPTAB_GOCODE_BUTTONPOS_ROOT_X - (_bgWidth - A3C_MAPTAB_GOCODE_BUTTONPOS_ROOT_W),
-						A3C_MAPTAB_GAMEUI_REFERENCE_MENU_Y,
+						A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_X - (_bgWidth - A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_W),
+						A3C_MAP_GAMEUI_MENU_Y,
 						_bgWidth,
-						A3C_MAPTAB_GOCODE_BUTTONPOS_ROOT_H
+						A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_H
 					];
 					_bgControl ctrlSetPosition _bgPos;
 					_bgControl ctrlCommit 0;
@@ -2703,7 +2703,7 @@ A3C_LB_Change = {
 			[_lb] call A3C_SWITCHMARKER;
 		};
 		case (1) : {
-			{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_RC_Context];
+			{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 			if (count A3C_SELECTED_UNITS > 0) then {
 				if (typeName (A3C_SELECTED_UNITS select 0) == "GROUP") then {
 
@@ -2772,7 +2772,7 @@ A3C_LB_Change = {
 			};
 		};
 		case (2) :{
-			(findDisplay _a3c_dsp displayCtrl A3C_RC_Context) ctrlShow false;
+			(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow false;
 			_lb call A3C_GoCode_Switch;
 		};
 		case (3) : {
@@ -2816,13 +2816,13 @@ A3C_LB_Change = {
 				private _treeVar = _x getVariable ["A3C_TREESEL_INDEX",[]];
 				if (count _treeVar > 0) then {
 					private _btn = _treeVar select ((count _treeVar) -1); //-- make sure we fetch the sub-button
-					private _ct_tree1 = findDisplay _a3c_dsp displayCtrl A3C_SELECTOR_TREE;
+					private _ct_tree1 = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
 					_ct_tree1 tvSetColor [_btn,_backCol];
 				};
 			} foreach _compare;
 
 			if (_isTablet) then {
-				{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_RC_Context];
+				{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 				//if (A3C_HELI_INF_MODE != "HC") then {
 					
 				//};
@@ -2844,7 +2844,7 @@ A3C_LB_Change = {
 				//	};
 				//};
 			};
-			[_a3c_dsp,A3C_HELI_INF_MODE] call A3C_MAPTAB_RESIZE_TEAMCOLORS_XWH;
+			[_a3c_dsp,A3C_HELI_INF_MODE] call A3C_MAP_UI_Overlay_ResizeTeamColorsXWH;
 			[] spawn {
 				sleep 0.1;
 				[0] call A3C_MAPTAB_RESIZE_TEAMCOLORS_Y;
@@ -2859,7 +2859,7 @@ A3C_LB_Change = {
 			{
 				if !(_x in _gp) then {_gp pushback _x};
 			} foreach A3C_SELECTED_UNITS;
-			{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_RC_Context];
+			{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 			[1,_gp] spawn A3C_BTN_HC;
 		};
 		case (5) : {
@@ -3172,7 +3172,7 @@ A3C_GROUP_RESET = {
 	
 	if !(player == leader group player) exitWith {};
 
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_RC_Context];
+	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	
 	private _units = (units player) - [player];
 	
@@ -3422,6 +3422,89 @@ A3C_GROUP_RESET = {
 };
 
 
+A3C_getArtilleryAmmo = {
+	//-- _includeOrders: bolean to include planned orders or not
+	//-- _getDisplayName : bolean to convert/bundle array into displayName
+	params ["_includeOrders","_getDisplayName","_targetPos"]; 
+	
+	private _availableMagsAll= [];
+	{
+		private _artyPiece = _x;
+		private _artyMagTypes = getArtilleryAmmo [_artyPiece];
+		private _availableMagsVehicle = (magazinesAmmoFull _artyPiece) select
+		{
+			_x params ["_magType","_magAmount"];
+			_inRange = if (isNil '_targetPos' OR {_targetPos isEqualTo []}) then {true} else {_targetPos inRangeOfArtillery [[_artyPiece], _magType]};
+			_inRange && {_magType in _artyMagTypes}
+		};
+		{
+			_x params ["_magType","_magAmount"];
+			if ({_x select 0 == _magType} count _availableMagsAll == 0) then {
+				//-- create new entry
+				_availableMagsAll set
+				[
+					count _availableMagsAll,
+					[_magType,_magAmount]
+				];
+			} else {
+				//-- add to existing entry
+				{
+					_x params ["_magTypeRef","_magAmountRef"];
+					if (_magType == _magTypeRef) exitWith {
+						_x set [1, _magAmountRef + _magAmount];
+					};
+				} foreach _availableMagsAll;
+			};	
+		} foreach _availableMagsVehicle;
+		if (_includeOrders) then {
+			private _artyOrdersPlanned = _artyPiece getvariable ["A3C_ARTY_ORDERS",[]];
+			{
+				//-- filter for matching magtype
+				_x params ["_firePos","_magType","_orderCount"];
+				{
+					_x params ["_magTypeRef","_orderCountRef"];
+					if (_magTypeRef == _magType) exitWith {
+						(_availableMagsAll select _foreachIndex) set [1,_orderCountRef - _orderCount];
+					};
+				} foreach _availableMagsAll;
+			} foreach _artyOrdersPlanned;
+		};
+	} foreach MCSS_REMOTE_ARTILLERY_ARRAY;
+
+	
+	
+	_availableMagsAll = _availableMagsAll select {_x select 1 > 0}; //-- keep only those mags that can be shot
+	private _return = _availableMagsAll;
+	if (_getDisplayName) then {
+		
+		private _displayNameArray = [];
+		{
+			_x params ["_magType","_magAmount"];
+			private _displayName = getText (configfile >> "CfgMagazines" >> _magType >> "displayName");
+
+			if ({_x select 0 == _displayName} count _displayNameArray == 0) then {
+				//-- create new entry
+				_displayNameArray set
+				[
+					count _displayNameArray,
+					[_displayName,_magAmount]
+				];
+			} else {
+				//-- add to existing entry
+				{
+					_x params ["_displayNameRef","_magAmountRef"];
+					private _dspn = getText (configfile >> "CfgMagazines" >> _magType >> "displayName");
+					if (_displayNameRef == _displayName) exitWith {
+						_x set [1, _magAmountRef + _magAmount];
+					};
+				} foreach _displayNameArray;
+			};	
+		} foreach _availableMagsAll;
+		_return = _displayNameArray;
+	};	
+	_return
+};
+
 //-- ABORT ALL EXISTING ORDERS
 A3C_CANCELPLANS = {
 	private ["_data"];
@@ -3584,7 +3667,7 @@ A3C_DeleteGroup = {
 A3C_ACTIVATEGOCODE = {
 	_code = _this select 0;
 	_a3c_dsp = if (visibleMap) then {6998} else {6999};
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_RC_Context];
+	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	_ctrls = switch (_code) do {
 		case ("A") : {[709100,709101]};
 		case ("B") : {[709102,709103]};

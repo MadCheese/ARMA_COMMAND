@@ -59,7 +59,7 @@ _originalHud set [6,A3C_SHOWNHUD];
 if (dialog && {_display == 12}) exitwith {};
 if (!visibleMap && {_display == 12}) exitWith {};
 
-A3C_MAPTAB_OVERLAY_isUnFolded = false; //-- closed tree because no selection
+A3C_MAP_UI_Overlay_VAR_isUnFolded = false; //-- closed tree because no selection
 
 //-- close map if opened to prevent double map issues
 if (_display == 6999) then {
@@ -106,7 +106,7 @@ A3C_CLICKPOS_ROOT = [0,0,0];
 A3C_LINECOLOR_DIAG = [A3C_UI_COLOR_BLUE,1] call A3C_UI_Color_setOpacity;
 A3C_LINECOLOR_MAP = [A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_Color_setOpacity; //~~ check which of these vars are no longer needed
 
-A3C_GROUP_NAMEING_ACTIVE = nil;
+A3C_GROUP_NAMING_ACTIVE = nil;
 
 _exit = false;
 A3C_EXITLOOP = false;
@@ -116,7 +116,7 @@ A3C_BOOL_DISABLEMAPCTRL = false;
 
 A3C_HC_DETONATION_BOOL = false;
 
-A3C_MAP_BOOL_CT = false;
+A3C_MAP_BOOL_CT_EDIT_ACTIVE = false;
 
 
 A3C_TEMP_WP_ID_MAIN = "";
@@ -196,7 +196,7 @@ with uiNameSpace do {
 		(findDisplay 12 displayCtrl 51) ctrlMapCursor ["Track", "Arrow"];
 	};
 
-	//(findDisplay _display displayCtrl 303030) ctrlShow false;
+	//(findDisplay _display displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
 
 };
 
@@ -205,22 +205,17 @@ with uiNameSpace do {
 [
 	404040, //_startBar,
 	404041, //_startText,
-	A3C_RC_Context,
-	A3C_RC_Context_HC_WP,
-	A3C_HC_GROUP_MENU_CTRLPARENT,
-	A3C_ObjectSelector_Parent,
-	PRNT_ACTION_SUBSET_1,
-	PRNT_ACTION_SUBSET_2,
-	MAP_BG_SUB_BG_1,
-	MAP_BG_SUB_BG_2
+	A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT,
+	A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,
+	A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,
+	A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT,
+	A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT,
+	A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT,
+	A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1,
+	A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2
 ];
 
 
-//_startBar = findDisplay _display displayCtrl 404040;
-//_startText = findDisplay _display displayCtrl 404041;
-//{
-//	_x ctrlShow false;
-//} foreach [_startBar,_startText];
 
 
 
@@ -229,35 +224,27 @@ if (_ceil > A3C_BUTTONPAGE_TABLET) then {
 	A3C_BUTTONPAGE_TABLET = 0; //~~ no longer needed?
 };
 
-A3C_TAB_KEY_D = (findDisplay _display) displayAddEventHandler
-[
-	"KeyDown",
-	{
-		_this spawn A3C_TAB_UI_Handlers_OnKeyDown;
-	}
-];
 
-//sleep 3;
 
 
 [_display] call A3C_MAPTAB_TREE_LABEL; //-- can take long depending on amount of commanded units
 
 
 
-private _ct_tree = findDisplay _display displayCtrl A3C_SELECTOR_TREE;
+private _ct_tree = findDisplay _display displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
 //-- overlay step 1: spawn Selector Box
 
 
 if (_display == 6998 && {!visibleMap}) exitWith {(findDisplay _display) closeDisplay 0};
-//systemchat '4';
-[_display,"INF"] call A3C_MAPTAB_RESIZE_TEAMCOLORS_XWH;
+
+[_display,"INF"] call A3C_MAP_UI_Overlay_ResizeTeamColorsXWH;
 sleep 0.1;
 
 
 //systemchat '5';
 //-- overlay step 2: closed sidebar (waypoint settings)
 
-["COLLAPSE",0] call A3C_MAPTAB_OVERLAY_TOGGLE_FOLD;
+["COLLAPSE",0] call A3C_MAP_UI_Overlay_TOGGLE_FoldSquadControls;
 //-- overlay step 3: adjust upper-tree buttons
 sleep 0.1;
 
@@ -277,7 +264,7 @@ if (A3C_SELECTED_UNITS isEqualTo []) then {
 
 
 
-[0] call A3C_MAP_ResetMapClick;
+[0] call A3C_MAP_UI_FNC_ResetMapClick;
 
 
 
@@ -295,9 +282,6 @@ A3C_DIAG_ACTIVE = true;
 
 
 
-
-////////////////////////////       NEW BUTTONS !!!!!!!! ///////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -328,7 +312,7 @@ A3C_TAB_KEY_U = (findDisplay _display) displayAddEventHandler
 			};
 		//};
 		//systemchat str ["UP",_btn1,_shift,_ctrl];
-		A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS -  [_btn1];
+		A3C_DOWNKEYS = A3C_DOWNKEYS -  [_btn1];
 	}
 ];
 
@@ -340,11 +324,11 @@ A3C_TAB_KEY_U = (findDisplay _display) displayAddEventHandler
 A3C_BU_SAFE = (findDisplay _display displayCtrl 7043) ctrlAddEventHandler
 [
 	"MouseButtonUP",
-	"
+	{
 		if !(isnil 'A3C_BU2') then {
 			(findDisplay _display displayCtrl 7043) ctrlRemoveEventHandler ['MouseMoving',A3C_BU2];
 		};
-	"
+	}
 ];
 
 
@@ -381,7 +365,7 @@ _inVehicle = false;
 
 {
 	(findDisplay _display displayCtrl _x) ctrlShow false;
-} foreach [A3C_RC_Context,A3C_RC_Context_HC_WP];
+} foreach [A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT];
 
 [_display,_originalHud] execFSM "A3C_CORE\FSM\A3C_MON_MAPTAB.fsm";
 

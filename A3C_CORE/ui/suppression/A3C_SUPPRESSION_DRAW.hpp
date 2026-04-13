@@ -215,8 +215,7 @@ class A3C_SUPPRESSION_DRAW
 					style = 0;
 					font = "PuristaLight";
 					autocomplete = "false";
-					//onSetFocus = "['SPACING','ON'] call A3C_MAP_fnc_CT";
-					//onKillFocus = "['SPACING','OFF'] call A3C_MAP_fnc_CT";
+
 					onKeyDown = "['PERCENTAGE'] call A3C_SUP_SET_NUMSAFE";
 					colorSelection[] = {1,1,1,1};
 					colorDisabled[] = {};
@@ -234,8 +233,6 @@ class A3C_SUPPRESSION_DRAW
 					style = 0;
 					font = "PuristaLight";
 					autocomplete = "false";
-					//onSetFocus = "['SPACING','ON'] call A3C_MAP_fnc_CT";
-					//onKillFocus = "['SPACING','OFF'] call A3C_MAP_fnc_CT";
 					onKeyDown = "['MAGAZINE'] call A3C_SUP_SET_NUMSAFE";
 					colorSelection[] = {1,1,1,1};
 					colorDisabled[] = {};
@@ -254,8 +251,6 @@ class A3C_SUPPRESSION_DRAW
 					font = "PuristaLight";
 					autocomplete = "false";
 					onKeyDown = "['TIME'] call A3C_SUP_SET_NUMSAFE";
-					//onSetFocus = "['SPACING','ON'] call A3C_MAP_fnc_CT";
-					//onKillFocus = "['SPACING','OFF'] call A3C_MAP_fnc_CT";
 					colorSelection[] = {1,1,1,1};
 					colorDisabled[] = {};
 					colorText[] = {0,0,0,1};

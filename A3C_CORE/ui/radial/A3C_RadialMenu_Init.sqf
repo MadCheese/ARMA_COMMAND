@@ -28,7 +28,7 @@ A3C_UI_Radial_SQ_ROE_MAIN = {
                     BR_A3C_DISABLE_RADIAL = false;
                     A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
                     (findDisplay 79997) closeDisplay 0;
-                    A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [(_button select 0)];
+                    A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
                     {player groupSelectUnit [_x,false]} foreach units player; 
                     showCommandingMenu "";
                 };
@@ -224,7 +224,7 @@ A3C_UI_RADIAL_CTRLS_QUICKTOGGLE = {
 			};
 			
 		} else {
-			(findDisplay 7999 displayCtrl 303030) ctrlShow false; //-- hide HC-dashboard
+			(findDisplay 7999 displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false; //-- hide HC-dashboard
 			A3C_UI_RADIAL_CTRLS_SHOWN_ACTIVATED = false;
 			{
 				_x ctrlShow true;
@@ -270,7 +270,7 @@ A3C_Radial_DashBoard = {
 		A3C_Radial_DashBoard_ExtraControls = [];
 
 
-		_parent = (findDisplay _a3c_dsp displayCtrl 303030);
+		_parent = (findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT);
 
 		_parent ctrlSetPosition 
 		[
@@ -310,11 +310,11 @@ A3C_Radial_DashBoard = {
 			_mapBarDims params ["_mapBarX","_mapBarY","_mapBarW","_mapBarH"];
 			_mapBarY = _mapBarY + _mapBarH;
 
-			(ctrlPosition (findDisplay _a3c_dsp displayCtrl A3C_HC_GROUP_MENU_CTRLPARENT)) params ["_gpX","_gpY","_gpW","_gpH"];
+			(ctrlPosition (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT)) params ["_gpX","_gpY","_gpW","_gpH"];
 
 
 			_parentPos = ctrlPosition _parent;
-			_parentPos set [0, _gpX - (_parentPos select 2) ]; //[0,(safeZoneX + safeZoneW) - (_parentPos select 2) - A3C_MAPTAB_GAMEUI_REFERENCE_PADDING_X]; //
+			_parentPos set [0, _gpX - (_parentPos select 2) ]; //[0,(safeZoneX + safeZoneW) - (_parentPos select 2) - A3C_MAP_GAMEUI_PADDING_X]; //
 			_parentPos set [1,_gpY]; //safeZoneH + (_parentPos select 3)
 			_parent ctrlSetPosition _parentPos;
 		};
@@ -704,7 +704,7 @@ A3C_Radial_DashBoard = {
 					};
 					_ctrl ctrlSetPosition _ctrlPos;
 					_ctrl ctrlCommit 0;
-				} foreach [303030,11014,11015];
+				} foreach [A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT,11014,11015];
 			};
 			
 
@@ -726,12 +726,12 @@ A3C_Radial_DashBoard = {
 			];
 
 			//-- create new progress bar macro
-			_bg_ProgressBar  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",12003 + _macroIndex + 2, findDisplay _a3c_dsp displayCtrl 303030];
+			_bg_ProgressBar  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",12003 + _macroIndex + 2, findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 			_bg_ProgressBar ctrlSetPosition _ctrlPosBar;
 			_bg_ProgressBar ctrlSetText "#(argb,8,8,3)color(0.5,0.5,0.5,0.5)";
 
 			
-			_actualProgressBar  = (findDisplay _a3c_dsp) ctrlCreate ["RscProgress",12003 + _macroIndex + 1, findDisplay _a3c_dsp displayCtrl 303030];
+			_actualProgressBar  = (findDisplay _a3c_dsp) ctrlCreate ["RscProgress",12003 + _macroIndex + 1, findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 			_actualProgressBar ctrlSetPosition _ctrlPosBar;
 			//_actualProgressBar ctrlSetText "#(argb,8,8,3)color(1,1,1,1)";
 			
@@ -755,7 +755,7 @@ A3C_Radial_DashBoard = {
 			//_actualProgressBar ctrlSetTooltipColorBox _progressCol;
 			//_actualProgressBar ctrlSetTooltipColorShade [1,1,1,0.3];
 
-			_barTextCtrl = (findDisplay _a3c_dsp) ctrlCreate ["A3C_RscText_GroupDashboard",12003 + _macroIndex, findDisplay _a3c_dsp displayCtrl 303030]; //--12003 is the 'ammunition'-bar idc, we build up from here
+			_barTextCtrl = (findDisplay _a3c_dsp) ctrlCreate ["A3C_RscText_GroupDashboard",12003 + _macroIndex, findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT]; //--12003 is the 'ammunition'-bar idc, we build up from here
 			_barTextCtrl ctrlSetText _descriptionText;
 			
 			_barTextCtrl ctrlSetPosition _ctrlPosText;
@@ -857,7 +857,7 @@ A3C_Radial_DashBoard = {
 		];
 		
 		if (count ([units _group] call A3C_FINDMEDICS) > 0) then {
-			_healingCapableIcon  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",13000, findDisplay _a3c_dsp displayCtrl 303030];
+			_healingCapableIcon  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",13000, findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 			_healingCapableIcon ctrlSetPosition _supportButtonBasePos;
 			_healingCapableIcon ctrlSettext "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
 			_healingCapableIcon ctrlSetTextColor [1,1,1,0.6];
@@ -872,7 +872,7 @@ A3C_Radial_DashBoard = {
 				//_supportButtonBasePos set [0,0.134387 * safezoneW];
 				_supportButtonBasePos set [1,(3.09064e-006 * safezoneH) + (0.0340016 * safezoneH)];
 			};
-			_repairingCapableIcon  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",13001, findDisplay _a3c_dsp displayCtrl 303030];
+			_repairingCapableIcon  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",13001, findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 			_repairingCapableIcon ctrlSetPosition _supportButtonBasePos;
 			_repairingCapableIcon ctrlSettext "A3C_CORE\ui\pictures\icon_menu_action_repair_noBG.paa"; // "\a3c_ui\menu\icon_menu_action_repair.paa";
 			_repairingCapableIcon ctrlSetTextColor [1,1,1,0.6];
@@ -961,26 +961,25 @@ A3C_Radial_DashBoard = {
 
 
 
-		(findDisplay _a3c_dsp displayCtrl 303030) ctrlShow true;
+		(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow true;
 
 	} else {
-		(findDisplay _a3c_dsp displayCtrl 303030) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
 	};
 };
 
 
 
 
-A3C_UI_RADIAL_ALL_ButtonAreas =  [303030,8071]; //-- dashboard and selector-extension
 
 for "_i" from 9001 to 9028 do { //-- inner ring buttons
 	if (_i % 2 == 0) then {
-		A3C_UI_RADIAL_ALL_ButtonAreas pushBack _i;
+		A3C_RADIAL_GAMEUI_AllButtonAreas pushBack _i;
 	};
 };
 for "_i" from 10008 to 10039 do { //-- outer ring buttons
 	if (_i % 2 == 0) then {
-		A3C_UI_RADIAL_ALL_ButtonAreas pushBack _i;
+		A3C_RADIAL_GAMEUI_AllButtonAreas pushBack _i;
 	};
 };
 
@@ -1055,7 +1054,7 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 		[0] call A3C_GREN_DATA;
 		[] call A3C_GREN_VISUAL;
 
-		(findDisplay 7999 displayCtrl 303030) ctrlShow false;
+		(findDisplay 7999 displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
 
 	} else {
 		showHud ([true] + (shownhud select [1,10]));
@@ -1163,7 +1162,7 @@ A3C_UI_RADIAL_TOGGLE_LEFT_EXT = {
 					(findDisplay 7999 displayCtrl _x) ctrlShow true
 				} foreach [8071,8096,8097,8098,8099,9000];
 				(findDisplay 7999 displayCtrl 8095) ctrlShow false;
-				[7999,if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {"INF"} else {"HC"}] call A3C_MAPTAB_RESIZE_TEAMCOLORS_XWH;
+				[7999,if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {"INF"} else {"HC"}] call A3C_MAP_UI_Overlay_ResizeTeamColorsXWH;
 				[0] call A3C_MAPTAB_RESIZE_TEAMCOLORS_Y;
 				[7999,8071] execFSM "A3C_CORE\FSM\A3C_MON_RADIAL.fsm";
 
@@ -5505,7 +5504,7 @@ A3C_RadialMenu_FNC_TEAMCOLOR = {
 	};
 	
 
-	private _CT_TREE = findDisplay 7999 displayCtrl A3C_SELECTOR_TREE;
+	private _CT_TREE = findDisplay 7999 displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
 	_CT_TREE tvSetCurSel [-1];
 
 	A3C_RD_UNITS = groupselectedUnits player;
@@ -5613,7 +5612,7 @@ A3C_SETTINGS = {
 A3C_Open_SETTINGS = {
 
 	[] call A3C_RADIAL_CloseDisplay;
-	A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
+	A3C_DOWNKEYS = A3C_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
 
 	with uiNameSpace do {
 		A3C_DG_SETTINGS = (finddisplay 46) createDisplay "A3C_SETTINGS_MENU";

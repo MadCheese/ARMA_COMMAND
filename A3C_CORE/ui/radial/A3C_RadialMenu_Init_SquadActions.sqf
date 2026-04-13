@@ -661,8 +661,8 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 							{
 
 
-								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_HUD_DOWNKEYS) exitWith {};
-								//A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
+								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_DOWNKEYS) exitWith {};
+								//A3C_DOWNKEYS = A3C_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
 								A3C_HUD_UI_3D_TAG_reposition = false;
 								//[A3C_HUD_UI_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_HUD_UI_3D_TAG;
 								if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
@@ -771,8 +771,8 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 							},
 							{
 
-								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_HUD_DOWNKEYS) exitWith {};
-								//A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
+								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_DOWNKEYS) exitWith {};
+								//A3C_DOWNKEYS = A3C_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
 								A3C_HUD_UI_3D_TAG_reposition = false;
 								//[A3C_HUD_UI_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_HUD_UI_3D_TAG;
 								if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
@@ -810,7 +810,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 														(findDisplay 79996) closeDisplay 0;
-														A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [(_button select 0)];
+														A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 													};
 												};
@@ -820,7 +820,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 									};
 
 									private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
-									_parent = findDisplay _a3c_dsp displayCtrl A3C_ObjectSelector_Parent;
+									_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 									_text = findDisplay _a3c_dsp displayCtrl 800802;
 									_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 
@@ -977,14 +977,14 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 														BR_A3C_DISABLE_RADIAL = false;
 														(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 79996) closeDisplay 0;
-														A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [(_button select 0)];
+														A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 													};
 												};
 											}
 										];
 									};
-									_parent = findDisplay _a3c_dsp displayCtrl A3C_ObjectSelector_Parent;
+									_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 									_text = findDisplay _a3c_dsp displayCtrl 800802;
 									_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 									
@@ -1079,7 +1079,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 												BR_A3C_DISABLE_RADIAL = false;
 												(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 												(findDisplay 79996) closeDisplay 0;
-												A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [(_button select 0)];
+												A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 												{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 											};
 										};
@@ -1089,7 +1089,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 							};
 
 							private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
-							_parent = findDisplay _a3c_dsp displayCtrl A3C_ObjectSelector_Parent;
+							_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 							_text = findDisplay _a3c_dsp displayCtrl 800802;
 							_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 

@@ -2,7 +2,7 @@
 $[
 	1.063,
 	["A3C_HC_GROUP_MENU",[[0,0,1,1],0.025,0.04,"GUI_GRID"],0,0,0],
-	[2300,"A3C_HC_GROUP_MENU_CTRLPARENT",[1,"",["0.245588 * safezoneW + safezoneX","0.291019 * safezoneH + safezoneY","0.213156 * safezoneW","0.340895 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
+	[2300,"A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT",[1,"",["0.245588 * safezoneW + safezoneX","0.291019 * safezoneH + safezoneY","0.213156 * safezoneW","0.340895 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
 	[1500,"A3C_HC_GROUP_MENU_Box_Behaviour",[2300,"",["4.95907e-007 * safezoneW","0.0439747 * safezoneH","0.0893878 * safezoneW","0.0989911 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
 	[1501,"A3C_HC_GROUP_MENU_Box_CombatMode",[2300,"",["0.0893883 * safezoneW","0.0439747 * safezoneH","0.0893878 * safezoneW","0.0989911 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],
 	[1502,"A3C_HC_GROUP_MENU_Box_Formation",[2300,"",["4.95907e-007 * safezoneW","0.142978 * safezoneH","0.0893878 * safezoneW","0.0989911 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],[]],

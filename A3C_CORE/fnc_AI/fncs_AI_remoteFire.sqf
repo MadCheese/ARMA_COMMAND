@@ -468,7 +468,7 @@ A3C_ORDER_REMOTE_LAUNCH = {
 				//disableSerialization;
 				A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
 			};
-			["ARTY"] call A3C_OPEN_OBJECTSELECTOR_MAP;
+			["ARTY"] call A3C_MAP_UI_Overlay_OPEN_OBJECTSELECTOR_MAP;
 		};
 		case ("TANKSHOT") : {
 

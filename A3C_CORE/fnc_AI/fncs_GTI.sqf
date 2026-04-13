@@ -507,7 +507,7 @@ systemchat 'visual';
 	if (_mode == 0) then {
 		if (count A3C_AI_GREN_ARRAY > 0) then {
 			((findDisplay 7999) displayCtrl 9015) ctrlSetText (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "picture"));
-			((findDisplay 7999) displayCtrl A3C_HC_GROUP_MENU_CTRLPARENT) ctrlSetTooltip (format ["Hold LMB for %1, click RMB to change item", (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "displayNameShort"))]);
+			((findDisplay 7999) displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlSetTooltip (format ["Hold LMB for %1, click RMB to change item", (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "displayNameShort"))]);
 		} else {
 			((findDisplay 7999) displayCtrl 9015) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_GrenMain.paa";
 			((findDisplay 7999) displayCtrl 9016) ctrlSetTooltip "currently no items available";

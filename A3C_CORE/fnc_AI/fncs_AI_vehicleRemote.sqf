@@ -358,7 +358,7 @@ A3C_GP_RC_UIVehicleRemoteFnc = {
 
     if (visibleMap) then {
 
-        {(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_HC_GROUP_MENU_CTRLPARENT,303030];
+        {(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
         a3c_tank_remote_down = _disp ctrlAddEventHandler _a3c_rva1;
         a3c_tank_remote_up = _disp ctrlAddEventHandler _a3c_rva2;
         a3c_tank_remote_MD = _disp ctrlAddEventHandler _a3c_rva3;

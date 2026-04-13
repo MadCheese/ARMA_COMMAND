@@ -685,16 +685,7 @@ A3C_FNC_CBA_KEY = {
 				};
 			};
 		};
-		case ("INTERFACE") : {
-			if (_mode == "DOWN") then {
-				A3C_TAB_KEY_ID = [(_btnData select 1),(_btnData select 2),(_btnData select 3),(_btnData select 4)];
-				if (player == (leader group player)) then {
-					//if (visiblemap) then {
-						nul = [6999] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB.sqf";
-					//};
-				};
-			};
-		};
+		
 		//-- REAL BUTTON GRENADE PLAYER
 		case ("GREN_P") : {
 		//systemchat str _this;
@@ -921,8 +912,9 @@ A3C_FNC_CBA_KEY = {
 			};
 		};
 		case ("MAP") : {
+			//-- This bind controls the toggle of the map-overlay. 
 			profilenamespace setvariable ["A3C_MAP_KEY_ID",[(_btnData select 1),[(_btnData select 2),(_btnData select 3),(_btnData select 4)]]];
-			if !(A3C_MAP_BOOL_CT) then  {
+			if !(A3C_MAP_BOOL_CT_EDIT_ACTIVE) then  {
 				if (visibleMap) then {
 					if (_mode == "DOWN") then {
 						if (isnull (findDisplay 6998)) then {
@@ -940,11 +932,10 @@ A3C_FNC_CBA_KEY = {
 								profilenamespace setvariable ["A3C_MAP_VAR",false];
 							};
 						};
-					} else {
-
 					};
 				};
-			};		};
+			};
+		};
 		case ("ZEUS") : {
 			selectplayer A3C_ZEUS_UNIT;
 		};
@@ -1266,7 +1257,7 @@ A3C_GET_KEY_BOOL = {
 //-- HUD Main "KeyUp"
 A3C_HUD_KEYHANDLER_UP = {
 	_btn = _this select 1;
-	A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [_btn];
+	A3C_DOWNKEYS = A3C_DOWNKEYS - [_btn];
 	if (vehicle player isKindOf "HELICOPTER" && {player == (gunner vehicle player)}) then {
 		[] spawn {sleep 1; (vehicle player) flyInHeight((getPosATL (vehicle player)) select 2)};
 	};
@@ -1304,7 +1295,7 @@ A3C_HUD_F_KEYDOWN = {
 	//-- safety if user alt/tabs out of the game
 	if (_alt && {_btn == 15}) exitwith {
 		A3C_MODIFIER_CTRL = false;
-		A3C_HUD_DOWNKEYS = [];
+		A3C_DOWNKEYS = [];
 	};
 
 
@@ -1324,7 +1315,7 @@ A3C_HUD_F_KEYDOWN = {
 	_lowerCollectiveKeysArray = actionKeys "HeliCollectiveLower";
 	if (player == (gunner vehicle player) && {currentPilot vehicle player != player && {vehicle player isKindOf "HELICOPTER"}}) then {
 		//-- counter measures
-		if ({_x in A3C_HUD_DOWNKEYS} count _flareKeysArray == count _flareKeysArray) then {
+		if ({_x in A3C_DOWNKEYS} count _flareKeysArray == count _flareKeysArray) then {
 			if ((behaviour (driver vehicle player)) == "CARELESS") then {
 				_wpnsTurret = vehicle player weaponsTurret [-1];
 				private _flareMag = "";
@@ -1347,16 +1338,16 @@ A3C_HUD_F_KEYDOWN = {
 		};
 		_atlHeight = (getPosATL (vehicle player)) select 2;
 		//-- raise Collective
-		if ({_x in A3C_HUD_DOWNKEYS} count  _raiseCollectiveKeysArray == count _raiseCollectiveKeysArray) then {
-			A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [_btn];
+		if ({_x in A3C_DOWNKEYS} count  _raiseCollectiveKeysArray == count _raiseCollectiveKeysArray) then {
+			A3C_DOWNKEYS = A3C_DOWNKEYS - [_btn];
 			(vehicle player) flyInHeight (_atlHeight + 20);
 			_exit = true;
 			//systemchat "raise";
 		};
 		//-- lower Collective
-		if ({_x in A3C_HUD_DOWNKEYS} count  _lowerCollectiveKeysArray == count _lowerCollectiveKeysArray) then {
+		if ({_x in A3C_DOWNKEYS} count  _lowerCollectiveKeysArray == count _lowerCollectiveKeysArray) then {
 			(vehicle player) flyInHeight (_atlHeight - 20);
-			A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [_btn];
+			A3C_DOWNKEYS = A3C_DOWNKEYS - [_btn];
 			_exit = true;
 			//systemchat "lower";
 		};
@@ -1366,7 +1357,7 @@ A3C_HUD_F_KEYDOWN = {
 				_twist = if (_btn in [205,32]) then {0.5} else {-0.5};
 				(vehicle player) setDir ((getDir vehicle player) + _twist);
 				_exit = true;
-				A3C_HUD_DOWNKEYS = A3C_HUD_DOWNKEYS - [_btn];
+				A3C_DOWNKEYS = A3C_DOWNKEYS - [_btn];
 			};
 		};
 

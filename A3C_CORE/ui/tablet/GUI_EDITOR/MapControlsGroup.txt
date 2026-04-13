@@ -86,7 +86,7 @@ $[
 	[1010,"A3C_DIAGDEG",[1,"",["0.956791 * safezoneW + safezoneX","0.983759 * safezoneH + safezoneY","0.118647 * safezoneW","0.021989 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 709108;"]],
 	[1229,"A3C_TAB_PURPLEBOX",[1,"#(argb,8,8,3)color(0.5,0.2,0.6,0.6)",["0.523729 * safezoneW + safezoneX","0.0712139 * safezoneH + safezoneY","0.0296618 * safezoneW","0.0109945 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 7060;"]],
 	[1628,"A3C_TAB_PURPLEBOX_2",[1,"",["0.523729 * safezoneW + safezoneX","0.0712139 * safezoneH + safezoneY","0.0296618 * safezoneW","0.0109945 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"select all units. LMB to select, Shift+LMB to add","-1"],["idc = 7061;","onMouseButtonDown = |[^PURPLE^,(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR|;","onMouseEnter = |A3C_BOOL_DISABLEMAPCTRL = true; (findDisplay 12 displayCtrl 51) ctrlEnable false|;","onMouseExit = |if ([11] call A3C_InMapControls) then {A3C_BOOL_DISABLEMAPCTRL = false; (findDisplay 12 displayCtrl 51) ctrlEnable true;}|;"]],
-	[2301,"A3C_RC_Context",[1,"",["-0.0163421 * safezoneW + safezoneX","0.994753 * safezoneH + safezoneY","0.0652846 * safezoneW","0.0549726 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 709109;"]],
+	[2301,"A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT",[1,"",["-0.0163421 * safezoneW + safezoneX","0.994753 * safezoneH + safezoneY","0.0652846 * safezoneW","0.0549726 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 709109;"]],
 	[2302,"",[1,"",["0.731464 * safezoneW + safezoneX","0.478011 * safezoneH + safezoneY","0.0652846 * safezoneW","0.0549726 * safezoneH"],[-1,-1,-1,-1],[-1,-1,-1,-1],[-1,-1,-1,-1],"","-1"],["idc = 709109;"]]
 ]
 */

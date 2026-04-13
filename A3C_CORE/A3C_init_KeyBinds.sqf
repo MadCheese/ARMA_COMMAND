@@ -60,11 +60,13 @@ A3C_ADD_KEYBINDS =
 			if (_exit) exitwith {false};
 			
 			private _inputAction = inputAction "miniMapToggle";
-			if !((_this select 1) in A3C_HUD_DOWNKEYS) then {
+			if !((_this select 1) in A3C_DOWNKEYS) then {
 				if !(visibleMap) then {
+					//-- reveal Target
 					if (inputAction 'revealTarget' > 0) then {
 						[cameraOn, screentoworld [0.5,0.5]] call MCSS_fnc_RevealCursorPos;
 					};
+					//-- Open Map (Automatically open overlay if profileVar "A3C_MAP_VAR" is set to do so)
 					if ((_this select 1) in actionKeys "showmap") then {
 						if (_inputAction == 0) then {
 							if (A3C_BOOL_MAPFORCE) then {
@@ -73,10 +75,11 @@ A3C_ADD_KEYBINDS =
 										A3C_WeaponCurr = currentWeapon player;
 										A3C_BOOL_MAPFORCE= false;
 										nul = [6998] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB.sqf";
-										A3C_HELI_INF_MODE = "INF";
 										if (count units player > 0) then {
 											if (({(_x == (driver vehicle _x)) && {typeOf (vehicle _x) iskindOf "AIR"}} count (units player - [player])) >= ((count (units player - [player])) / 2)) then {
 												A3C_HELI_INF_MODE = "AIR";
+											} else {
+												A3C_HELI_INF_MODE = "INF";
 											};
 										} else {
 											A3C_HELI_INF_MODE = "HC";
@@ -90,12 +93,15 @@ A3C_ADD_KEYBINDS =
 
 				};
 			};
-			if !(_btn in A3C_HUD_DOWNKEYS) then {
-				if (_btn != 50) then { //-- map can not be added to downkeys since the 'UP' EH will not fire
-					A3C_HUD_DOWNKEYS pushback _btn;
+			if !(_btn in A3C_DOWNKEYS) then {
+				if (
+					!(_btn in [50]) && 
+					(_btn != 1 || {visibleMap})
+				) then {
+					A3C_DOWNKEYS pushBack _btn;
 				};
-				if (visiblemap) then {
-				} else {
+
+				if !(visibleMap) then {
 					_this call A3C_HUD_F_KEYDOWN;
 				};
 			};
@@ -196,45 +202,21 @@ A3C_ADD_KEYBINDS =
 		};
 	};
 
-	//-- add EH
+	//-- add EH >> ONLY RESPONSIBLE FOR ESCAPE KEY HANDLING BECAUSE THIS IS ARMA :)
 	A3C_MAP_KEYBINDS_51_KD = (findDisplay 12 displayctrl 51) ctrlAddEventHandler
 	[
 		"KeyDown",
 		{
-			_this params ["_ctrl","_btn1","_shift","_ctrl","_alt"];
-			
-			//if (_this call A3C_isOverlayClosed) exitwith {false};
-			
-			_return = false;
-			//-- close map: map part (partner edition in overlay EH)
-			if (_btn1 in ([1] + (actionKeys "hidemap"))) then {
-				if (!isNil "A3C_GROUP_NAMEING_ACTIVE") then {
-					_return = true;
-				} else {
-					openMap false;
-					[6998] call A3C_Close_Map_Overlay;
-				};	
-			};
-			
-			
-			if !(isnull (finddisplay 6998)) then {
-				//-- shift and ctrl checks - otherwise not available. CTRL does not fire from OVERLAY so it happens here instead
-				if (_btn1 == 42) then { 
-					A3C_MODIFIER_SHIFT = true; //-- needed for UI (TREE EH's do not do CTL/SHIFT)
-					_return = true
-				};
-				
-				if (_btn1 == 29) then {
-					A3C_MODIFIER_CTRL = true; //-- needed for UI (TREE EH's do not do CTL/SHIFT)
-					_return = true;
-				};
-			};
-			//systemchat str ["DOWN",_btn1,_shift,_ctrl];
-
-			_return
+			disableSerialization;
+			private _return = _this call A3C_MAP_UI_HandlerFNC_KeyDown_Map;
+			_return	
 		}
 	];
 	uiNamespace setVariable ["A3C_INDEX_VAR_MAP_KEYD",A3C_MAP_KEYBINDS_51_KD];
+
+
+
+
 
 
 	////////////////////////////////////////////////////// --  Map Display 12 MouseButtonDown
@@ -257,7 +239,7 @@ A3C_ADD_KEYBINDS =
 			_return = false;
 			A3C_BOOL_MAP_MD = true;
 			if (visibleMap) then {
-				_this spawn A3C_TAB_UI_Handlers_OnMouseButtonDown;
+				_this spawn A3C_MAP_UI_HandlerFNC_OnMouseButtonDown;
 			};
 			_return
 		}
@@ -284,7 +266,7 @@ A3C_ADD_KEYBINDS =
 
 			A3C_BOOL_MAP_MD = false;
 			if (visibleMap) then {
-				_this spawn A3C_TAB_UI_Handlers_OnMouseButtonUp;
+				_this spawn A3C_MAP_UI_HandlerFNC_OnMouseButtonUp;
 				A3C_BOOL_MOUSEMOVING = false;
 			};
 		}
@@ -302,15 +284,32 @@ A3C_ADD_KEYBINDS =
 	//------------------------------------------------------------------------------------------------
 
 
-	//["A3C", "A3C_KeyFnc_Interface", ["Open Tablet", "Open up planning device"], {["INTERFACE","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [15,[false,true,false]],true] call cba_fnc_addKeybind;
-
+	
 	["A3C", "A3C_KeyFnc_Menu", ["Open 3D Menu", "Open A3C Radial-Menu (Regular Selection)"], {[_this,false] call A3C_SPAWN_RADIAL}, {}, [15,[false,false,false]],true] call cba_fnc_addKeybind;
 	//
 	["A3C", "A3C_KeyFnc_Menu_cursor", ["Open 3D Menu (CursorObject)", "Open A3C Radial-Menu (CursorObject Selection)"], {[_this,true] call A3C_SPAWN_RADIAL}, {}, [15,[false,true,false]],true] call cba_fnc_addKeybind;
 
 	["A3C", "A3C_KeyFnc_HUD_MENU", ["Open HUD MENU controls", "Get access to your HUD MODE settings via mouse while key is pressed."], {[_this] call A3C_SPAWN_HUD_MENU}, {}, [42,[true,false,false]],true] call cba_fnc_addKeybind;
 
-	A3C_MAP_KEY_ID = ["A3C", "A3C_KeyFnc_MapControls", ["Open Map Controls", "Hold down this key to access Planning controls on map"], {["MAP","DOWN",_this] call A3C_FNC_CBA_KEY}, {["MAP","UP",_this] call A3C_FNC_CBA_KEY}, [46,[false,false,false]],false] call cba_fnc_addKeybind;
+	A3C_MAP_KEY_ID = [
+		"A3C",
+		"A3C_KeyFnc_MapControls",
+		[
+			"Open Map Controls",
+			"Hold down this key to access Planning controls on map"
+		],
+		{
+			["MAP","DOWN",_this] call A3C_FNC_CBA_KEY
+		},
+		{
+			// ["MAP","UP",_this] call A3C_FNC_CBA_KEY
+		},
+		[
+			46,
+			[false,false,false]
+		],
+		false
+	] call cba_fnc_addKeybind;
 
 	[
 		"A3C",

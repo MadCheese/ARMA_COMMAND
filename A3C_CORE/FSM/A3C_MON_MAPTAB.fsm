@@ -96,7 +96,7 @@ class FSM
                          "A3C_WAYPOINTS_TEMP =[];" \n
                          "A3C_DIAG_ACTIVE = false;" \n
                          "A3C_TAB_BUILDING_BOOL = false;" \n
-                         "A3C_MAP_BOOL_CT = false;" \n
+                         "A3C_MAP_BOOL_CT_EDIT_ACTIVE = false;" \n
                          "A3C_BOOL_DISABLEMAPCTRL = false;" \n
                          "A3C_BOOL_MOUSEMOVING = false;" \n
                          "A3C_BOOL_MAPFORCE = true;" \n
@@ -187,7 +187,7 @@ class FSM
                 {
                         name = "close_overlay";
                         itemno = 6;
-                        init = /*%FSM<STATEINIT""">*/"[6998] call A3C_Close_Map_Overlay;" \n
+                        init = /*%FSM<STATEINIT""">*/"[6998] call A3C_MAP_UI_FNC_CloseMapOverlay;" \n
                          "//systemchat 'fsm hide';"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
@@ -212,7 +212,7 @@ class FSM
                         name = "CHECK_DEAD";
                         itemno = 9;
                         init = /*%FSM<STATEINIT""">*/"//[] call A3C_CHECK_FOR_DEAD_WIP;" \n
-                         "[] call A3C_UI_MAPTAB_FSM_CHECKCHANGE;"/*%FSM</STATEINIT""">*/;
+                         "[] call A3C_MAP_UI_UnitTree_Sync;"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {
