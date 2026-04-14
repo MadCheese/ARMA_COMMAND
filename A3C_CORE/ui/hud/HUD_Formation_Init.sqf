@@ -28,12 +28,12 @@ A3C_C_FORM_SelectTeam = {
 		params ["_team"];
 		A3C_C_FORM_SelectedUnits = [];
 
-		(findDisplay 79994 displayCtrl 10) ctrlSetBackgroundColor [1,0,0,0.2];
-		(findDisplay 79994 displayCtrl 11) ctrlSetBackgroundColor [0,1,0,0.2];
-		(findDisplay 79994 displayCtrl 12) ctrlSetBackgroundColor [0,0,1,0.2];
-		(findDisplay 79994 displayCtrl 13) ctrlSetBackgroundColor [1,1,0,0.2];
-		(findDisplay 79994 displayCtrl 14) ctrlSetBackgroundColor [1,1,1,0.2];
-		(findDisplay 79994 displayCtrl 15) ctrlSetBackgroundColor [0.53,0.29,0.69,0.2];
+		(findDisplay 100080 displayCtrl 10) ctrlSetBackgroundColor [1,0,0,0.2];
+		(findDisplay 100080 displayCtrl 11) ctrlSetBackgroundColor [0,1,0,0.2];
+		(findDisplay 100080 displayCtrl 12) ctrlSetBackgroundColor [0,0,1,0.2];
+		(findDisplay 100080 displayCtrl 13) ctrlSetBackgroundColor [1,1,0,0.2];
+		(findDisplay 100080 displayCtrl 14) ctrlSetBackgroundColor [1,1,1,0.2];
+		(findDisplay 100080 displayCtrl 15) ctrlSetBackgroundColor [0.53,0.29,0.69,0.2];
 
 
 		{
@@ -46,29 +46,29 @@ A3C_C_FORM_SelectTeam = {
 		switch (_team) do {
 			case ("RED") : {
 				A3C_C_FORM_LineColor = "#(argb,8,8,3)color(1,0,0,1)";
-				(findDisplay 79994 displayCtrl 10) ctrlSetBackgroundColor [1,0,0,1];
+				(findDisplay 100080 displayCtrl 10) ctrlSetBackgroundColor [1,0,0,1];
 			};
 			case ("GREEN") : {
 				A3C_C_FORM_LineColor = "#(argb,8,8,3)color(0,1,0,1)";
-				(findDisplay 79994 displayCtrl 11) ctrlSetBackgroundColor [0,1,0,1];
+				(findDisplay 100080 displayCtrl 11) ctrlSetBackgroundColor [0,1,0,1];
 			};
 			case ("BLUE") : {
 				A3C_C_FORM_LineColor = "#(argb,8,8,3)color(0,0,1,1)";
-				(findDisplay 79994 displayCtrl 12) ctrlSetBackgroundColor [0,0,1,1];
+				(findDisplay 100080 displayCtrl 12) ctrlSetBackgroundColor [0,0,1,1];
 			};
 			case ("YELLOW") : {
 				A3C_C_FORM_LineColor = "#(argb,8,8,3)color(1,1,0,1)";
-				(findDisplay 79994 displayCtrl 13) ctrlSetBackgroundColor [1,1,0,1];
+				(findDisplay 100080 displayCtrl 13) ctrlSetBackgroundColor [1,1,0,1];
 			};
 			
 			case ("MAIN") : {
 				A3C_C_FORM_LineColor = "#(argb,8,8,3)color(1,1,1,1)";
-				(findDisplay 79994 displayCtrl 14) ctrlSetBackgroundColor [1,1,1,1];
+				(findDisplay 100080 displayCtrl 14) ctrlSetBackgroundColor [1,1,1,1];
 				
 			};
 			case ("ALL") : {
 				A3C_C_FORM_LineColor = "#(argb,8,8,3)color(0.53,0.29,0.69,1)";				
-				(findDisplay 79994 displayCtrl 15) ctrlSetBackgroundColor [0.53,0.29,0.69,1];
+				(findDisplay 100080 displayCtrl 15) ctrlSetBackgroundColor [0.53,0.29,0.69,1];
 			};
 		};		
 		//systemchat str A3C_C_FORM_SelectedUnits;
@@ -81,8 +81,8 @@ A3C_C_FORM_ActivateForm = {
 	if !(player == leader group player) exitWith {};
 	if (A3C_C_FORM_ACTIVE) then {
 		A3C_C_FORM_ACTIVE = false;
-		(findDisplay 79994 displayCtrl 16) ctrlSetTextColor [1,0,0,1];
-		(findDisplay 79994 displayCtrl 17) ctrlSetText "ACTIVATE FORMATION";
+		(findDisplay 100080 displayCtrl 16) ctrlSetTextColor [1,0,0,1];
+		(findDisplay 100080 displayCtrl 17) ctrlSetText "ACTIVATE FORMATION";
 		{
 			_x setVariable ["A3C_FORM_MEMBER",false,false];
 		} foreach (units player - [player]);
@@ -94,8 +94,8 @@ A3C_C_FORM_ActivateForm = {
 				sleep 2;
 				A3C_C_FORM_BOOL_ALLOW = false;
 			};
-			(findDisplay 79994 displayCtrl 16) ctrlSetTextColor [0,1,0,1];
-			(findDisplay 79994 displayCtrl 17) ctrlSetText "DEACTIVATE FORMATION";
+			(findDisplay 100080 displayCtrl 16) ctrlSetTextColor [0,1,0,1];
+			(findDisplay 100080 displayCtrl 17) ctrlSetText "DEACTIVATE FORMATION";
 			A3C_C_FORM_DIRECTION = getDir player;
 			//A3C_C_FORM_SelectedUnits = (units player) - [player];
 			//_units = if (_mode == 0) then {with uinamespace do {A3C_C_FORM_SelectedUnits}} else {units player - [player]};
@@ -236,8 +236,8 @@ A3C_C_FORM_Button_ClearForm = {
 		
 	};
 	A3C_C_FORM_ACTIVE = false;
-	(findDisplay 79994 displayCtrl 16) ctrlSetTextColor [1,0,0,1];
-	(findDisplay 79994 displayCtrl 17) ctrlSetText "ACTIVATE FORMATION";
+	(findDisplay 100080 displayCtrl 16) ctrlSetTextColor [1,0,0,1];
+	(findDisplay 100080 displayCtrl 17) ctrlSetText "ACTIVATE FORMATION";
 	{
 		_x setVariable ["A3C_FORM",[],false];
 		_x setVariable ["A3C_FORM_MEMBER",false,false];
@@ -305,7 +305,7 @@ A3C_C_FORM_SaveButton = {
 			//_doubleClick = true;
 			if !(with uiNameSpace do {A3C_C_FORM_Save_LB == 0}) then {
 				_profileData = profileNameSpace getVariable "A3C_C_FORMATIONS_SAVED";
-				_profileData deleteAt ((lbCurSel (findDisplay 79994 displayCtrl 18)) -1);
+				_profileData deleteAt ((lbCurSel (findDisplay 100080 displayCtrl 18)) -1);
 				profileNameSpace setVariable ["A3C_C_FORMATIONS_SAVED",_profileData];
 				with uiNamespace do {
 					A3C_C_FORM_Save_LB = 0;
@@ -341,12 +341,12 @@ A3C_C_FORM_SPAWNDIALOG = {
 		
 		_display = findDisplay 46 createDisplay "HUD_Formation_Menu"; //"RscDisplayEmpty";
 
-		(findDisplay 79994 displayCtrl 10) ctrlSetBackgroundColor [1,0,0,0.2];
-		(findDisplay 79994 displayCtrl 11) ctrlSetBackgroundColor [0,1,0,0.2];
-		(findDisplay 79994 displayCtrl 12) ctrlSetBackgroundColor [0,0,1,0.2];
-		(findDisplay 79994 displayCtrl 13) ctrlSetBackgroundColor [1,1,0,0.2];
-		(findDisplay 79994 displayCtrl 14) ctrlSetBackgroundColor [1,1,1,0.2];
-		(findDisplay 79994 displayCtrl 15) ctrlSetBackgroundColor [0.53,0.29,0.69,1];
+		(findDisplay 100080 displayCtrl 10) ctrlSetBackgroundColor [1,0,0,0.2];
+		(findDisplay 100080 displayCtrl 11) ctrlSetBackgroundColor [0,1,0,0.2];
+		(findDisplay 100080 displayCtrl 12) ctrlSetBackgroundColor [0,0,1,0.2];
+		(findDisplay 100080 displayCtrl 13) ctrlSetBackgroundColor [1,1,0,0.2];
+		(findDisplay 100080 displayCtrl 14) ctrlSetBackgroundColor [1,1,1,0.2];
+		(findDisplay 100080 displayCtrl 15) ctrlSetBackgroundColor [0.53,0.29,0.69,1];
 		
 		[] call A3C_C_FORM_Label_LB;
 		
@@ -358,7 +358,7 @@ A3C_C_FORM_SPAWNDIALOG = {
 		//_frame ctrlSetPosition [safezoneX,safezoneY,safezoneW,safezoneH]; //[0,0,1,1];
 		//_frame ctrlSetText "#(argb,8,8,3)color(0,0,0,0.5)";
 		//_frame ctrlCommit 0;
-		_frame1 = (findDisplay 79994 displayCtrl 9);//_display ctrlCreate ["RscEdit", 9];
+		_frame1 = (findDisplay 100080 displayCtrl 9);//_display ctrlCreate ["RscEdit", 9];
 		A3C_C_FORM_DISPLAY = _display;
 		//_frame1 ctrlSetPosition [safezoneX,safezoneY,safezoneW,safeZoneH]; //[0,0,1,1];
 		//_frame1 ctrlCommit 0;
@@ -571,11 +571,11 @@ A3C_C_FORM_SPAWNDIALOG = {
 		};
 	};
 	if (A3C_C_FORM_ACTIVE) then {			
-		(findDisplay 79994 displayCtrl 16) ctrlSettextColor [0,1,0,1];
-		(findDisplay 79994 displayCtrl 17) ctrlSetText "DEACTIVATE FORMATION";
+		(findDisplay 100080 displayCtrl 16) ctrlSettextColor [0,1,0,1];
+		(findDisplay 100080 displayCtrl 17) ctrlSetText "DEACTIVATE FORMATION";
 	} else {
-		(findDisplay 79994 displayCtrl 16) ctrlSetTextColor [1,0,0,1];
-		(findDisplay 79994 displayCtrl 17) ctrlSetText "ACTIVATE FORMATION";
+		(findDisplay 100080 displayCtrl 16) ctrlSetTextColor [1,0,0,1];
+		(findDisplay 100080 displayCtrl 17) ctrlSetText "ACTIVATE FORMATION";
 	};
 };
 A3C_C_FORM_Dots = [];
@@ -593,8 +593,8 @@ A3C_C_FORM_LB_Change = {
 	with uiNamespace do {
 		params ["_lb"];
 		//if (A3C_CurSel) exitwith {};
-		//player sidechat str (lbCurSel (findDisplay 79994 displayCtrl 18));
-		//_listbox = (findDisplay 79994 displayCtrl 18);
+		//player sidechat str (lbCurSel (findDisplay 100080 displayCtrl 18));
+		//_listbox = (findDisplay 100080 displayCtrl 18);
 		_data = ((profileNameSpace getVariable "A3C_C_FORMATIONS_SAVED") select (_lb - 1)) select 1;
 		_finish = (count (units player - [player])) - 1;
 		{
@@ -618,7 +618,7 @@ with uiNamespace do {
 	
 	A3C_C_FORM_Label_LB = {
 
-		_listbox = (findDisplay 79994 displayCtrl 18);
+		_listbox = (findDisplay 100080 displayCtrl 18);
 		lbClear _listBox;
 		[_listBox, "CUSTOM"] call A3C_addLbEntry;
 		{

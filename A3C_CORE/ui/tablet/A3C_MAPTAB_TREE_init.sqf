@@ -194,7 +194,7 @@ A3C_MAPTAB_TREE_LABEL = {
 
 	//systemChat "LABEL";
 	A3C_UI_SHARED_TREE_HC_AT_TICK = A3C_HCALLGROUPS_Current;
-	private _modes = if (_a3c_dsp == 7999) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
+	private _modes = if (_a3c_dsp == 100040) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
 	if (count A3C_UI_SHARED_TREE_HC_AT_TICK < 2 && {"HIGHCOMMAND" in _modes}) then {
 		_modes = _modes - ["HIGHCOMMAND"];
 	};
@@ -434,7 +434,7 @@ A3C_MAPTAB_TREE_LABEL = {
 	};
 	
 
-	private _openTrees = if (_a3c_dsp in [6998,6999]) then {
+	private _openTrees = if (_a3c_dsp in [100020,100030]) then {
 		A3C_MAPTAB_TREES_OPEN
 	} else {
 		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
@@ -469,10 +469,10 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
 	//-- _mode == "OPEN" or "COLLAPSE"
 	//-- _isInit == true (when initializing/refreshing tree) or false when toggled by player
 	_ctrlData params ["_ctrl","_selectedParent"];
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
 	private _isMainParent = count _selectedParent == 1;
 
-	private _openTrees = if (_a3c_dsp == 7999) then {
+	private _openTrees = if (_a3c_dsp == 100040) then {
 		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {A3C_RADIAL_TREES_OPEN_SQ} else {A3C_RADIAL_TREES_OPEN_HC}
 	} else {
 		A3C_MAPTAB_TREES_OPEN
@@ -485,12 +485,12 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
 	private _mainEntryCount = _ctrl tvCount [];
 	private _subEntryCount = (_ctrl tvCount _selectedParent);
 
-	private _minCtrlH = if (_a3c_dsp != 7999) then {
+	private _minCtrlH = if (_a3c_dsp != 100040) then {
 		(A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_H); 
 	} else {
 		(safeZoneY + safeZoneH) * 0.2
 	};
-	private _maxCtrlH = if (_a3c_dsp != 7999) then {
+	private _maxCtrlH = if (_a3c_dsp != 100040) then {
 
 		A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_Y - 
 		A3C_MAP_GAMEUI_MENU_Y +//-
@@ -505,7 +505,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
 
 
 
-	private _ctrlPosCollapsed = if (_a3c_dsp != 7999) then {
+	private _ctrlPosCollapsed = if (_a3c_dsp != 100040) then {
 		[
 			A3C_MAP_OVERLAY_GAMEUI_TREEX,
 			(safezoneH + safezoneY) - A3C_MAP_GAMEUI_PADDING_Y - _minCtrlH, 
@@ -565,7 +565,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
 	_effectiveH = (_effectiveH min _maxCtrlH) max _minCtrlH; //-- FIX CLIPPINGjijiji
 	//systemchat str [_shownEntryCount,_effectiveH];
 
-	if (_a3c_dsp != 7999) then {
+	if (_a3c_dsp != 100040) then {
 		A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y = (safeZoneY + safeZoneH) - A3C_MAP_GAMEUI_PADDING_Y - _effectiveH;
 
 
@@ -580,7 +580,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
 		[_ctrl,_animTime] call A3C_MAPTAB_TREE_ADJUST_TOP_ROW;
 		
 	} else {
-		private _ctrlGroup = findDisplay 7999 displayCtrl 8071;
+		private _ctrlGroup = findDisplay 100040 displayCtrl 8071;
 		private _ctrlGroupPos = ctrlPosition _ctrlGroup;
 
 		//-- to extend tree, extend the H value of Tree and Ctrlsgroup, then set y to (0.5 - ((realGroupH) * 0.5))
@@ -594,7 +594,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
 		_ctrlGroupPos set [1,0.5 - (_newCtrlH / 2)];
 		_ctrlGroupPos set [3,_newCtrlH];
 		{
-			_ct = (findDisplay 7999 displayCtrl _x);
+			_ct = (findDisplay 100040 displayCtrl _x);
 			_ct ctrlSetPosition _ctrlGroupPos;
 			_ct ctrlCommit _animTime; 
 		} foreach [8071,8096];
@@ -612,12 +612,12 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 	//-- _mode == "OPEN" or "COLLAPSE"
 	//-- _isInit == true (when initializing/refreshing tree) or false
 	_ctrlData params ["_ctrl","_selectedParent"];
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
 	private _isMainParent = count _selectedParent == 1;
 	
 	//if (_isInit && {!(_isMainParent)}) exitWith {};
 
-	private _openTrees = if (_a3c_dsp == 7999) then {
+	private _openTrees = if (_a3c_dsp == 100040) then {
 		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {A3C_RADIAL_TREES_OPEN_SQ} else {A3C_RADIAL_TREES_OPEN_HC}
 	} else {
 		A3C_MAPTAB_TREES_OPEN
@@ -627,7 +627,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 	//systemchat str _openTrees;
 
 	
-	//if (!isNull findDisplay 7999) exitWith {
+	//if (!isNull findDisplay 100040) exitWith {
 	//	if (_mode == "OPEN") then {
 	//		_ctrl tvExpand _selectedParent;
 	//		_openTrees pushBackUnique _selectedParent;
@@ -655,12 +655,12 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 	
 	
 	//private _minCtrlH = (A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_MAIN * _mainEntryCount) ; //-- tree should at minimum have the size of settings bar; 
-	private _minCtrlH = if (_a3c_dsp != 7999) then {
+	private _minCtrlH = if (_a3c_dsp != 100040) then {
 		(A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_H); //(_minCtrlH + A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_MAIN); // -- 1 extra to avoid scrollbar
 	} else {
 		(safeZoneY + safeZoneH) * 0.2
 	};
-	private _maxCtrlH = if (_a3c_dsp != 7999) then {
+	private _maxCtrlH = if (_a3c_dsp != 100040) then {
 
 		A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_Y - 
 		A3C_MAP_GAMEUI_MENU_Y +//-
@@ -690,7 +690,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 	private _effectiveH = 0;
 
 
-	private _ctrlPosCollapsed = if (_a3c_dsp != 7999) then {
+	private _ctrlPosCollapsed = if (_a3c_dsp != 100040) then {
 		[
 			A3C_MAP_OVERLAY_GAMEUI_TREEX,
 			(safezoneH + safezoneY) - A3C_MAP_GAMEUI_PADDING_Y - _minCtrlH, 
@@ -754,7 +754,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 			
 	};
 
-	if (_a3c_dsp != 7999) then {
+	if (_a3c_dsp != 100040) then {
 		A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y = (safeZoneY + safeZoneH) - A3C_MAP_GAMEUI_PADDING_Y - _effectiveH;
 		//((_ctrlPosCollapsed select 1) + _minCtrlH ) - _effectiveH;
 		_ctrl ctrlSetPosition
@@ -768,7 +768,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 		[_ctrl,_animTime] call A3C_MAPTAB_TREE_ADJUST_TOP_ROW;
 		
 	} else {
-		private _ctrlGroup = findDisplay 7999 displayCtrl 8071;
+		private _ctrlGroup = findDisplay 100040 displayCtrl 8071;
 		private _ctrlGroupPos = ctrlPosition _ctrlGroup;
 
 		//-- to extend tree, extend the H value of Tree and Ctrlsgroup, then set y to (0.5 - ((realGroupH) * 0.5))
@@ -783,7 +783,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 		_ctrlGroupPos set [1,0.5 - (_newCtrlH / 2)];
 		_ctrlGroupPos set [3,_newCtrlH];
 		{
-			_ct = (findDisplay 7999 displayCtrl _x);
+			_ct = (findDisplay 100040 displayCtrl _x);
 			_ct ctrlSetPosition _ctrlGroupPos;
 			_ct ctrlCommit _animTime; 
 		} foreach [8071,8096];
@@ -805,14 +805,14 @@ A3C_MAPTAB_RESIZE_TEAMCOLORS_Y = {
 
 
 
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
 
 	//-- Hardcoded Values (from .hpp)
 	//private _ctrlX = A3C_MAP_OVERLAY_GAMEUI_TREEX;
 	private _ctrlH = 0.04 * safezoneH; //-- HARDCODED h value of first teamcolor box
 	
 	//--adjust height for teamcolor controls
-	_ctrlY = if (_a3c_dsp == 7999) then 
+	_ctrlY = if (_a3c_dsp == 100040) then 
 	{
 		//_parentPos = ctrlPosition (findDisplay _a3c_dsp displayCtrl 8071);
 		_refFramePos = ctrlPosition (findDisplay _a3c_dsp displayCtrl 7077);
@@ -885,7 +885,7 @@ A3C_MAPTAB_RESIZE_TEAMCOLORS_Y = {
 A3C_MAPTAB_TREE_ADJUST_TOP_ROW = { //asasas
 	params ["_ctrl","_animTime"];
 
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
 	//private _ctrl = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
 	//systemChat str (_a3c_dsp);
 	//-- not executed via radial - map only!
@@ -912,7 +912,7 @@ A3C_MAPTAB_TREE_ADJUST_TOP_ROW = { //asasas
 		_btnCtrl ctrlCommit _animTime;
 	} foreach [7077,7079]; 
 
-	if (_a3c_dsp == 7999) exitWith {}; //-- radial menu does not have the same settings buttons and can exit UNNEXESSARY!!!
+	if (_a3c_dsp == 100040) exitWith {}; //-- radial menu does not have the same settings buttons and can exit UNNEXESSARY!!!
 
 	private _additionalbuttonCombos = 
 	[
@@ -968,8 +968,8 @@ A3C_TREE_TVCHANGE = {
 	params ["_control","_tvSelTo"];
 
 	_tvSelTo params ["_parentTo","_childTo"];
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-	private _isRadial = _a3c_dsp == 7999;
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+	private _isRadial = _a3c_dsp == 100040;
 	if (count _tvSelTo == 1) exitWith {}; //-- click on main category - no application
 	playsound "ReadOutHideClick1"; 
 	_tvSelFrom = tvCurSel _control;
@@ -978,7 +978,7 @@ A3C_TREE_TVCHANGE = {
 	_isSquadLevel = _tvSelTo select 0 == 0;
 
 
-	if (_a3c_dsp == 7999) then {
+	if (_a3c_dsp == 100040) then {
 		_isSquadLevel = _isSquadLevel && {A3C_CURRENT_COMMAND_LEVEL == "SQUAD"};
 	};
 
@@ -1146,7 +1146,7 @@ A3C_TREE_BOXCLICK = {
 	params ["_displayCtrl","_mouseButton","_sX","_sY","_shift","_ctrl","_alt"];
 	
 	private _left = _mouseButton == 0;
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	if (!(_left) && {count A3C_SELECTED_UNITS > 0}) then {
 		if (_shift && {A3C_HELI_INF_MODE != "HC"}) then { //~~ TO DO: ALIGN TEAMCOLORS THROUGH COMMAND LEVELS AND ALLOW FOR HC TEAMCOLOR VIA LISTBOX
 			//systemchat 'teamcolor shebang';
@@ -1275,8 +1275,8 @@ A3C_MAP_UI_UnitTree_CtrlDelete = {
 A3C_MAP_UI_UnitTree_Sync = {
 
 	// if (true) exitWith {};
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-	private _modes = if (_a3c_dsp == 7999) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+	private _modes = if (_a3c_dsp == 100040) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
 	private _CT_TREE = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
 	private _mainTreeIndex = 0;
 	
@@ -1496,7 +1496,7 @@ A3C_MAP_UI_UnitTree_Sync = {
 							};
 
 							private _mainEntryCount = _CT_TREE tvCount [];
-							if (_mainEntryCount == 1 && {_a3c_dsp != 7999}) then {
+							if (_mainEntryCount == 1 && {_a3c_dsp != 100040}) then {
 								_CT_TREE tvAdd [[], "HIGH COMMAND"];
 							};
 							_tvText = switch (true) do {
@@ -1570,7 +1570,7 @@ A3C_MAP_UI_UnitTree_Sync = {
 
 A3C_MAPTAB_TREE_REFRESH_BUTTONVALUES = { //~~ WIP
 	params ["_CT_TREE"];
-	private _modes = if (_a3c_dsp == 7999) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
+	private _modes = if (_a3c_dsp == 100040) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
 	private _mainTreeIndex = 0;
 	private _refArray = [];
 	if ("SQUAD" in _modes) then {

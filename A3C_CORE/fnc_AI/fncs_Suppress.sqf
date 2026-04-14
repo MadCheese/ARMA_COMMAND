@@ -403,9 +403,9 @@ A3C_SUP_SET_NUMSAFE = {
 	params ["_mode"];
 	private ["_control","_default"];
 	_ctrl = switch (_mode) do {
-		case ("PERCENTAGE") : {findDisplay 7998 displayCtrl 1401};
-		case ("MAGAZINE") : {findDisplay 7998 displayCtrl 1402};
-		case ("TIME") : {findDisplay 7998 displayCtrl 1403};
+		case ("PERCENTAGE") : {findDisplay 100070 displayCtrl 1401};
+		case ("MAGAZINE") : {findDisplay 100070 displayCtrl 1402};
+		case ("TIME") : {findDisplay 100070 displayCtrl 1403};
 	};
 	_default = switch (_mode) do {
 		case ("PERCENTAGE") : {(str (profileNameSpace getVariable ["A3C_SUP_VAL_PERCENTAGE", 25]))};
@@ -423,7 +423,7 @@ A3C_SUP_SETTINGS = {
 	private ["_idcSelected"];
 	//systemchat str time;
 	for "_i" from 1200 to 1203 do {
-		(findDisplay 7998 displayCtrl _i) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_checkbox_Unchecked.paa";
+		(findDisplay 100070 displayCtrl _i) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_checkbox_Unchecked.paa";
 	};
 	_idcSelected = switch (_mode) do {
 		case ("UNLIMITED") : {1200};
@@ -431,28 +431,28 @@ A3C_SUP_SETTINGS = {
 		case ("MAGAZINE") : {1202};
 		case ("TIME") : {1203};
 	};
-	(findDisplay 7998 displayCtrl _idcSelected) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_checkbox_Checked.paa";
-	//ctrlSetFocus (findDisplay 7998 displayCtrl 2);
+	(findDisplay 100070 displayCtrl _idcSelected) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_checkbox_Checked.paa";
+	//ctrlSetFocus (findDisplay 100070 displayCtrl 2);
 	if (_overRide) then {
-		profilenamespace setvariable ["A3C_SUP_VAL_PERCENTAGE",parseNumber (ctrlText (findDisplay 7998 displayCtrl 1401))];
-		profilenamespace setvariable ["A3C_SUP_VAL_MAGAZINE",parseNumber (ctrlText (findDisplay 7998 displayCtrl 1402))];
-		profilenamespace setvariable ["A3C_SUP_VAL_TIME",parseNumber (ctrlText (findDisplay 7998 displayCtrl 1403))];
-		//if !(ctrlShown (findDisplay 7998 displayCtrl 1401)) then {systemchat 'A3C: you can now let go of the keys and enter your desired values. Confirm or cancel order with the buttons.'};
+		profilenamespace setvariable ["A3C_SUP_VAL_PERCENTAGE",parseNumber (ctrlText (findDisplay 100070 displayCtrl 1401))];
+		profilenamespace setvariable ["A3C_SUP_VAL_MAGAZINE",parseNumber (ctrlText (findDisplay 100070 displayCtrl 1402))];
+		profilenamespace setvariable ["A3C_SUP_VAL_TIME",parseNumber (ctrlText (findDisplay 100070 displayCtrl 1403))];
+		//if !(ctrlShown (findDisplay 100070 displayCtrl 1401)) then {systemchat 'A3C: you can now let go of the keys and enter your desired values. Confirm or cancel order with the buttons.'};
 		
 		//for "_i" from 1401 to 1403 do {
-		//	(findDisplay 7998 displayCtrl _i) ctrlShow true;
+		//	(findDisplay 100070 displayCtrl _i) ctrlShow true;
 		//};
 	};
 	_modeData = switch (_mode) do {
 		case ("UNLIMITED") : {0};
-		case ("PERCENTAGE") : {parseNumber (ctrlText (findDisplay 7998 displayCtrl 1401))};
-		case ("MAGAZINE") : {parseNumber (ctrlText (findDisplay 7998 displayCtrl 1402))};
-		case ("TIME") : {parseNumber (ctrlText (findDisplay 7998 displayCtrl 1403))};
+		case ("PERCENTAGE") : {parseNumber (ctrlText (findDisplay 100070 displayCtrl 1401))};
+		case ("MAGAZINE") : {parseNumber (ctrlText (findDisplay 100070 displayCtrl 1402))};
+		case ("TIME") : {parseNumber (ctrlText (findDisplay 100070 displayCtrl 1403))};
 	};
-	(findDisplay 7998 displayCtrl 1401) ctrlSetText (str (profileNameSpace getVariable ["A3C_SUP_VAL_PERCENTAGE", 25]));
-	(findDisplay 7998 displayCtrl 1402) ctrlSetText (str (profileNameSpace getVariable ["A3C_SUP_VAL_MAGAZINE", 1]));
-	(findDisplay 7998 displayCtrl 1403) ctrlSetText (str (profileNameSpace getVariable ["A3C_SUP_VAL_TIME", 30]));
-	ctrlSetFocus (findDisplay 7998 displayCtrl 1601);
+	(findDisplay 100070 displayCtrl 1401) ctrlSetText (str (profileNameSpace getVariable ["A3C_SUP_VAL_PERCENTAGE", 25]));
+	(findDisplay 100070 displayCtrl 1402) ctrlSetText (str (profileNameSpace getVariable ["A3C_SUP_VAL_MAGAZINE", 1]));
+	(findDisplay 100070 displayCtrl 1403) ctrlSetText (str (profileNameSpace getVariable ["A3C_SUP_VAL_TIME", 30]));
+	ctrlSetFocus (findDisplay 100070 displayCtrl 1601);
 	profilenamespace setvariable ["A3C_SUP_RESTRICTIVE",[_mode,_modeData]];
 };
 
@@ -1182,7 +1182,7 @@ A3C_SUP_MouseDown = {
 	if (A3C_SUP_BOOL_MD) exitwith {};
 	
 	if (_this select 1 == 1) exitwith {
-		[] call A3C_SUP_CloseDisplay; //(findDisplay 7998) closeDisplay 0;
+		[] call A3C_SUP_CloseDisplay; //(findDisplay 100070) closeDisplay 0;
 	};
 	A3C_SUP_BOOL_MD = true;
 	A3C_SUP_CLICKPOS = [_this select 2,_this select 3];
@@ -1195,7 +1195,7 @@ A3C_SUP_MouseMoving = {
 	_mouseY = A3C_SUP_MOUSEPOS select 1;
 	if !(A3C_SUP_BOOL_MD) exitwith {};
 	
-	_ctrl = (findDisplay 7998 displayCtrl 3);
+	_ctrl = (findDisplay 100070 displayCtrl 3);
 	_cPos = ctrlPosition _ctrl;
 	_clickX = A3C_SUP_CLICKPOS select 0;
 	_clickY = A3C_SUP_CLICKPOS select 1;
@@ -1219,22 +1219,22 @@ A3C_SUP_KeyDown = {
 };
 
 A3C_SUP_CloseDisplay = {
-	profilenamespace setvariable ["A3C_SUP_VAL_PERCENTAGE",parseNumber (ctrlText (findDisplay 7998 displayCtrl 1401))];
-	profilenamespace setvariable ["A3C_SUP_VAL_MAGAZINE",parseNumber (ctrlText (findDisplay 7998 displayCtrl 1402))];
-	profilenamespace setvariable ["A3C_SUP_VAL_TIME",parseNumber (ctrlText (findDisplay 7998 displayCtrl 1403))];
+	profilenamespace setvariable ["A3C_SUP_VAL_PERCENTAGE",parseNumber (ctrlText (findDisplay 100070 displayCtrl 1401))];
+	profilenamespace setvariable ["A3C_SUP_VAL_MAGAZINE",parseNumber (ctrlText (findDisplay 100070 displayCtrl 1402))];
+	profilenamespace setvariable ["A3C_SUP_VAL_TIME",parseNumber (ctrlText (findDisplay 100070 displayCtrl 1403))];
 	
 	private _mode = (profilenamespace getvariable ["A3C_SUP_RESTRICTIVE",["UNLIMITED",0]]) select 0;
 	_modeData = switch (_mode) do {
 		case ("UNLIMITED") : {0};
-		case ("PERCENTAGE") : {parseNumber (ctrlText (findDisplay 7998 displayCtrl 1401))};
-		case ("MAGAZINE") : {parseNumber (ctrlText (findDisplay 7998 displayCtrl 1402))};
-		case ("TIME") : {parseNumber (ctrlText (findDisplay 7998 displayCtrl 1403))};
+		case ("PERCENTAGE") : {parseNumber (ctrlText (findDisplay 100070 displayCtrl 1401))};
+		case ("MAGAZINE") : {parseNumber (ctrlText (findDisplay 100070 displayCtrl 1402))};
+		case ("TIME") : {parseNumber (ctrlText (findDisplay 100070 displayCtrl 1403))};
 	};
 	//systemchat "ay";
 	profilenamespace setvariable ["A3C_SUP_RESTRICTIVE",[_mode,_modeData]];
 	
 	
-	(findDisplay 7998) closeDisplay 0;
+	(findDisplay 100070) closeDisplay 0;
 };
 
 
@@ -1246,16 +1246,16 @@ A3C_SUP_KeyUp = {
 		if !(A3C_SUP_DRAW_TOGGLE) then {
 			if (A3C_DRAW_ORDER_RELEASE) then {
 				_exit = true;
-				_cPos = (ctrlPosition (findDisplay 7998 displayCtrl 3));
-				profilenamespace setvariable ["A3C_SUP_VAL_PERCENTAGE",parseNumber (ctrlText (findDisplay 7998 displayCtrl 1401))];
-				profilenamespace setvariable ["A3C_SUP_VAL_MAGAZINE",parseNumber (ctrlText (findDisplay 7998 displayCtrl 1402))];
-				profilenamespace setvariable ["A3C_SUP_VAL_TIME",parseNumber (ctrlText (findDisplay 7998 displayCtrl 1403))];
+				_cPos = (ctrlPosition (findDisplay 100070 displayCtrl 3));
+				profilenamespace setvariable ["A3C_SUP_VAL_PERCENTAGE",parseNumber (ctrlText (findDisplay 100070 displayCtrl 1401))];
+				profilenamespace setvariable ["A3C_SUP_VAL_MAGAZINE",parseNumber (ctrlText (findDisplay 100070 displayCtrl 1402))];
+				profilenamespace setvariable ["A3C_SUP_VAL_TIME",parseNumber (ctrlText (findDisplay 100070 displayCtrl 1403))];
 				if ({_x > 0} count _cPos > 0) then {
 					[] spawn A3C_SUP_DRAW_SETORDER;
 				} else {
 					systemchat 'A3C: No Target Area received';
 					
-					[] call A3C_SUP_CloseDisplay; //(findDisplay 7998) closeDisplay 0;
+					[] call A3C_SUP_CloseDisplay; //(findDisplay 100070) closeDisplay 0;
 				};
 			};							
 		};
@@ -1267,7 +1267,7 @@ A3C_SUP_KeyUp = {
 A3C_SUP_DRAW_SETORDER = {
 	private ["_mainMark","_dirTo"];
 	disableSerialization;
-	_ctrl = (findDisplay 7998 displayCtrl 3);
+	_ctrl = (findDisplay 100070 displayCtrl 3);
 	
 	//-- get dimensions of Suppression-Area Indicator
 	_cPos = ctrlPosition _ctrl;
@@ -1326,7 +1326,7 @@ A3C_SUP_DRAW_SETORDER = {
 	};
 	
 	//-- close the display
-	[] call A3C_SUP_CloseDisplay; //(findDisplay 7998) closeDisplay 0;	
+	[] call A3C_SUP_CloseDisplay; //(findDisplay 100070) closeDisplay 0;	
 	//-- spawn Suppression
 	{
 		_x setvariable ["A3C_UNIT_POLYS",[A3C_SUP_MAIN_POLY],true];

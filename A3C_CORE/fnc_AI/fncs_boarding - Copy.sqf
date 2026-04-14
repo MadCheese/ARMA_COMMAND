@@ -266,7 +266,7 @@ A3C_AssignVehicleSeat = {
 
 	params ["_roleData","_mouseButton","_buttonImgIdc","_specifiedUnit","_refUnits","_vehicle"];
 	_roleData params ["_occupyingUnit","_role","_cargoIndex","_turretPath","_isFFV"];
-	private _buttonImg = findDisplay 7999 displayCtrl _buttonImgIdc;
+	private _buttonImg = findDisplay 100040 displayCtrl _buttonImgIdc;
 	private _vehicle = if (!isNil '_vehicle') then {_vehicle} else {A3C_TARGETVEH};
 	private _refUnits = if (!isNil '_refUnits') then {_refUnits} else {A3C_RD_UNITS};
 	if (count _refUnits == 0) exitWith {};
@@ -706,10 +706,10 @@ A3C_CREW_OLD = {
 				{		
 					if ((isnull objectparent _x) && ((count (assignedVehicleRole _x)) == 0) && (_x distance _vehicle < 200)) exitwith {
 						if !(_x in A3C_BOARD_UNITS_ACTIVE) then {
-							if (ctrlShown (findDisplay 7999 displayCtrl 8060)) then {
+							if (ctrlShown (findDisplay 100040 displayCtrl 8060)) then {
 								[_x,"driver",_vehicle] spawn A3C_BOARD;
 																														
-								{(findDisplay 7999 displayCtrl _x) ctrlSetTextColor  [0.8,0.6,0,0.6]} foreach [8059,8067];												
+								{(findDisplay 100040 displayCtrl _x) ctrlSetTextColor  [0.8,0.6,0,0.6]} foreach [8059,8067];												
 								A3C_BOARD_UNITS = A3C_BOARD_UNITS - [_x];
 							};
 						};
@@ -722,10 +722,10 @@ A3C_CREW_OLD = {
 						if !(_x in A3C_BOARD_UNITS_ACTIVE) then {
 							if ((count A3C_TURRETS) < (count (allturrets [_vehicle ,true]))) then {
 								_act = false;
-								if !(isnull (findDisplay 7999)) then {
-									if (ctrlShown (findDisplay 7999 displayCtrl 8062)) then {
+								if !(isnull (findDisplay 100040)) then {
+									if (ctrlShown (findDisplay 100040 displayCtrl 8062)) then {
 										_act = true;
-										{(findDisplay 7999 displayCtrl _x) ctrlSetTextColor  [0.8,0.6,0,0.6]} foreach [8061,8067];
+										{(findDisplay 100040 displayCtrl _x) ctrlSetTextColor  [0.8,0.6,0,0.6]} foreach [8061,8067];
 									};
 								} else {
 									_act = true;
@@ -744,10 +744,10 @@ A3C_CREW_OLD = {
 					if ((isnull objectparent _x) && ((count (assignedVehicleRole _x)) == 0) && (_x distance _vehicle < 200)) exitwith {
 						if !(_x in A3C_BOARD_UNITS_ACTIVE) then {
 							_act = false;
-							if !(isnull (findDisplay 7999)) then {
-								if (ctrlShown (findDisplay 7999 displayCtrl 8064)) then {
+							if !(isnull (findDisplay 100040)) then {
+								if (ctrlShown (findDisplay 100040 displayCtrl 8064)) then {
 									_act = true;
-									{(findDisplay 7999 displayCtrl _x) ctrlSetTextColor  [0.8,0.6,0,0.6]} foreach [8063,8067];
+									{(findDisplay 100040 displayCtrl _x) ctrlSetTextColor  [0.8,0.6,0,0.6]} foreach [8063,8067];
 								};
 							} else {
 								_act = true;
@@ -805,10 +805,10 @@ A3C_CREW_OLD = {
 						if !(_x in A3C_BOARD_UNITS_ACTIVE) then {
 							if ((_foreachIndex) <= (_ep - 1)) then {
 								_act = false;
-								if !(isnull (findDisplay 7999)) then {
-									if (ctrlShown (findDisplay 7999 displayCtrl 8066)) then {
+								if !(isnull (findDisplay 100040)) then {
+									if (ctrlShown (findDisplay 100040 displayCtrl 8066)) then {
 										_act = true;
-										{(findDisplay 7999 displayCtrl _x) ctrlSetTextColor  [0.8,0.6,0,0.6]} foreach [8065,8067];
+										{(findDisplay 100040 displayCtrl _x) ctrlSetTextColor  [0.8,0.6,0,0.6]} foreach [8065,8067];
 									};
 								} else {
 									_act = true;

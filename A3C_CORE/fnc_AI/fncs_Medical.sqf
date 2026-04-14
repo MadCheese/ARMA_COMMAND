@@ -309,7 +309,7 @@ A3C_MEDICAL_START = {
 			(group _healer) setVariable ["A3C_MEDICS_ACTIVE", _medics_active ]; 
 			//-- update UI
 			if (A3C_LBR_1 == 'MEDICAL') then {
-				if (ctrlShown (findDisplay 7999 displayCtrl 8056)) then {
+				if (ctrlShown (findDisplay 100040 displayCtrl 8056)) then {
 					[] spawn {
 						sleep 0.5;
 						[] call A3C_UPDATE_UI_MEDICAL;

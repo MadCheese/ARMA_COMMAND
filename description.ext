@@ -10,7 +10,7 @@
 //#include "A3C_CORE\ui\tablet\A3C_TAB.hpp"
 #include "A3C_CORE\ui\tablet\A3C_MAP.hpp"
 #include "A3C_CORE\ui\radial\A3C_RadialMenu.hpp"
-#include "A3C_CORE\ui\radial\A3C_FORMATION.hpp"
+// #include "A3C_CORE\ui\radial\A3C_FORMATION.hpp"
 #include "A3C_CORE\ui\radial\A3C_SETTINGS_DIALOG.hpp"
 #include "A3C_CORE\ui\suppression\A3C_SUPPRESSION_DRAW.hpp"
 #include "A3C_CORE\ui\HUD\HUD_MENU.hpp"

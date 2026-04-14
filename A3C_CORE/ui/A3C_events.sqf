@@ -584,7 +584,7 @@ A3C_FNC_CBA_KEY = {
 		case ("SUPPRESSION") : {
 
 			if (_mode == "DOWN") then {
-				if (!visibleMap && (isNull (findDisplay 6999))) then {
+				if (!visibleMap && (isNull (findDisplay 100030))) then {
 					if (player == (leader group player)) then {
 						if !(!isNull objectParent player && cameraView == "INTERNAL") then {
 							if ((count (groupSelectedUnits player)) == 0) then {
@@ -640,7 +640,7 @@ A3C_FNC_CBA_KEY = {
 				//-- prevent grenade throw when unit is unconscious
 				if !([player] call A3C_isUnconscious) then {
 					//-- prevent grenade throw when planning
-					if (!visibleMap && (isNull (findDisplay 6999))) then {
+					if (!visibleMap && (isNull (findDisplay 100030))) then {
 						//systemchat 'oi';
 						BR_A3C_DISABLE_RADIAL = true;
 						showCommandingMenu "";
@@ -690,7 +690,7 @@ A3C_FNC_CBA_KEY = {
 		case ("GREN_P") : {
 		//systemchat str _this;
 			//-- prevent grenade throw when planning
-			if (!visibleMap && (isNull (findDisplay 6999))) then {
+			if (!visibleMap && (isNull (findDisplay 100030))) then {
 
 				if (_mode == "DOWN") then {
 
@@ -917,16 +917,16 @@ A3C_FNC_CBA_KEY = {
 			if !(A3C_MAP_BOOL_CT_EDIT_ACTIVE) then  {
 				if (visibleMap) then {
 					if (_mode == "DOWN") then {
-						if (isnull (findDisplay 6998)) then {
+						if (isnull (findDisplay 100020)) then {
 							profilenamespace setvariable ["A3C_MAP_VAR",true];
 							A3C_OPACITY = 0.8;
-							nul = [6998] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB.sqf";
+							nul = [100020] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB.sqf";
 
 						} else {
 							A3C_OPACITY = 0;
 							[] spawn {
 								sleep 0.1;
-								(findDisplay 6998) closeDisplay 2;
+								(findDisplay 100020) closeDisplay 2;
 								A3C_SELECTED_UNITS = [];
 								{_x setvariable ["A3C_PLOT_TEMP",[],true];} foreach units group player;
 								profilenamespace setvariable ["A3C_MAP_VAR",false];
@@ -1040,7 +1040,7 @@ A3C_FNC_CBA_KEY = {
 
 				};
 				showHud _shownHud;
-				if (!isNull findDisplay 7999) then {
+				if (!isNull findDisplay 100040) then {
 					[A3C_CURRENT_COMMAND_LEVEL] call A3C_UI_RADIAL_LABEL_INNER_RING;
 					//[] call A3C_RD_LABEL_SELECTORS;
 				};
@@ -1255,7 +1255,6 @@ A3C_GET_KEY_BOOL = {
 //-- HUD Main "KeyDown"
 
 A3C_HUD_UI_HandlerFNC_KeyDown = {
-	
 	private ["_exit","_taoBind"];
 	private _key = _this select 1;
 	_shift = _this select 2;
@@ -1282,11 +1281,11 @@ A3C_HUD_UI_HandlerFNC_KeyDown = {
 			if ((_this select 1) in actionKeys "showmap") then {
 				if (_inputAction == 0) then {
 					if (A3C_BOOL_MAPFORCE) then {
-						if (isnull (findDisplay 6998)) then {
+						if (isnull (findDisplay 100020)) then {
 							if (profileNameSpace getVariable "A3C_MAP_VAR")  then {
 								A3C_WeaponCurr = currentWeapon player;
 								A3C_BOOL_MAPFORCE= false;
-								nul = [6998] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB.sqf";
+								nul = [100020] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB.sqf";
 								if (count units player > 0) then {
 									if (({(_x == (driver vehicle _x)) && {typeOf (vehicle _x) iskindOf "AIR"}} count (units player - [player])) >= ((count (units player - [player])) / 2)) then {
 										A3C_HELI_INF_MODE = "AIR";
@@ -1315,7 +1314,7 @@ A3C_HUD_UI_HandlerFNC_KeyDown = {
 		};
 
 		if !(visibleMap) then {
-			private ["_teamcolor","_exit","_alt"];
+			private ["_teamcolor","_exit"];
 			A3C_LASTUSED_KD = time;
 			if !(player == (leader group player)) exitwith {};
 
@@ -1399,10 +1398,13 @@ A3C_HUD_UI_HandlerFNC_KeyDown = {
 				};
 
 			};
+			
 			if (_exit) exitWith {};
 
 			if !(isnil "A3C_FORM_KEY_ID") then {
+				// systemchat STR  ([[_key,_shift,_ctrl,_alt], A3C_FORM_KEY_ID] );
 				if ([_key,_shift,_ctrl,_alt] isEqualTo A3C_FORM_KEY_ID) then {
+					
 					[] call A3C_C_FORM_SPAWNDIALOG;
 				};
 			};

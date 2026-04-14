@@ -14,7 +14,7 @@
 
 class A3C_MAPDIALOG
 {
-	idd  = 6998;
+	idd = 100020;
 	movingenable = true;
 	onKeyDown = "_this call A3C_MAP_UI_HandlerFNC_KeyDown_Overlay;";
 
@@ -422,7 +422,7 @@ class A3C_MAPDIALOG
 		class A3C_WPD_BTN3: A3C_ShortcutButton
 		{
 			idc = 7020;
-			action = "(findDisplay 6998) closeDisplay 0; A3C_SELECTED_UNITS = []; {_x setvariable ['A3C_PLOT_TEMP',[],true];} foreach units group player; openMap false; [1] call A3C_Btn_fnc_Cancel";
+			action = "(findDisplay 100020) closeDisplay 0; A3C_SELECTED_UNITS = []; {_x setvariable ['A3C_PLOT_TEMP',[],true];} foreach units group player; openMap false; [1] call A3C_Btn_fnc_Cancel";
 			text = "EXIT";
 			x = 0.517184 * safezoneW + safezoneX;
 			y = 2;
@@ -674,7 +674,7 @@ class A3C_MAPDIALOG
 		class A3C_LISTBOX_1500: A3C_RscCombo
 		{
 			idc = 7078;
-			onLBSelChanged = "[A3C_LB_MODE,(_this select 1),6998] call A3C_LB_Change";
+			onLBSelChanged = "[A3C_LB_MODE,(_this select 1),100020] call A3C_LB_Change";
 			x = 0.00166839 * safezoneW + safezoneX;
 			y = 14 * safezoneH + safezoneY;
 			w = 0.0630074 * safezoneW;
@@ -1294,7 +1294,7 @@ class A3C_MAPDIALOG
 					y = 0 * GUI_GRID_H + GUI_GRID_Y;
 					w = 5.5 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
-					onLBSelChanged = "[A3C_LB_MODE,(_this select 1),6998] call A3C_LB_Change; ";
+					onLBSelChanged = "[A3C_LB_MODE,(_this select 1),100020] call A3C_LB_Change; ";
 				};
 				class ctg4 :  A3C_RscPicture
 				{
@@ -1397,7 +1397,7 @@ class A3C_MAPDIALOG
 				{
 					idc = -1;
 					text = "X";
-					action = "(findDisplay 6998 displayCtrl 709115) ctrlShow false;";
+					action = "(findDisplay 100020 displayCtrl 709115) ctrlShow false;";
 					
 					x = 9 * GUI_GRID_W;
 					y = 0 * GUI_GRID_H;
@@ -1446,7 +1446,7 @@ class A3C_MAPDIALOG
 				class WP_BEHAVIOUR: A3C_RscCombo_Dot
 				{
 					idc = 709139;
-					onLBSelChanged = "[709139,(_this select 1),6998] call A3C_LB_HC";
+					onLBSelChanged = "[709139,(_this select 1),100020] call A3C_LB_HC";
 
 					x = 0 * GUI_GRID_W;
 					y = 2.5 * GUI_GRID_H;
@@ -1497,7 +1497,7 @@ class A3C_MAPDIALOG
 				class WP_COMBATMODE: A3C_RscCombo_Dot
 				{
 					idc = 709140;
-					onLBSelChanged = "[709140,(_this select 1),6998] call A3C_LB_HC";
+					onLBSelChanged = "[709140,(_this select 1),100020] call A3C_LB_HC";
 
 					x = 0 * GUI_GRID_W;
 					y = 4.5 * GUI_GRID_H;
@@ -1546,7 +1546,7 @@ class A3C_MAPDIALOG
 				{
 					idc = 709138;
 					
-					onLBSelChanged = "[709138,(_this select 1),6998] call A3C_LB_HC";
+					onLBSelChanged = "[709138,(_this select 1),100020] call A3C_LB_HC";
 					x = 0 * GUI_GRID_W;
 					y = 6.5 * GUI_GRID_H;
 					w = 9 * GUI_GRID_W;
@@ -1594,7 +1594,7 @@ class A3C_MAPDIALOG
 				{
 					idc = 709128;	
 					
-					onLBSelChanged = "[709128,(_this select 1),6998] call A3C_LB_HC";
+					onLBSelChanged = "[709128,(_this select 1),100020] call A3C_LB_HC";
 					x = 0 * GUI_GRID_W;
 					y = 8.5 * GUI_GRID_H;
 					w = 9 * GUI_GRID_W;
@@ -1655,7 +1655,7 @@ class A3C_MAPDIALOG
 						class Cond_Type_PRE: A3C_RscCombo_Dot
 						{
 							idc = 709123;
-							onLBSelChanged = "[709123,(_this select 1),6998] call A3C_LB_HC";
+							onLBSelChanged = "[709123,(_this select 1),100020] call A3C_LB_HC";
 							x = 0 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H;
 							w = 4.5 * GUI_GRID_W;
@@ -1672,7 +1672,7 @@ class A3C_MAPDIALOG
 							idc = 709124;
 
 							
-							onLBSelChanged = "[709124,(_this select 1),6998] call A3C_LB_HC";
+							onLBSelChanged = "[709124,(_this select 1),100020] call A3C_LB_HC";
 							x = 4.5 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H; //y = 18 * GUI_GRID_H;
 							w = 4.5 * GUI_GRID_W;
@@ -1730,7 +1730,7 @@ class A3C_MAPDIALOG
 						class WP_TYPEACTION: A3C_RscCombo_Dot
 						{
 							idc = 709141;
-							onLBSelChanged = "[709141,(_this select 1),6998] call A3C_LB_HC";
+							onLBSelChanged = "[709141,(_this select 1),100020] call A3C_LB_HC";
 
 							x = 0 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H;
@@ -1787,7 +1787,7 @@ class A3C_MAPDIALOG
 					idc = 709134;
 					text = "DELETE";
 					shadow = 0;
-					action = "[] call A3C_HC_REMOVE_WP_RC; (findDisplay 6998 displayCtrl 709115) ctrlShow false;";
+					action = "[] call A3C_HC_REMOVE_WP_RC; (findDisplay 100020 displayCtrl 709115) ctrlShow false;";
 					x = 4.5 * GUI_GRID_W;
 					y = 14 * GUI_GRID_H;
 					w = 4.5 * GUI_GRID_W;
@@ -1848,7 +1848,7 @@ class A3C_MAPDIALOG
 						{
 							idc = 709129;
 							
-							onLBSelChanged = "[709129,(_this select 1),6998] call A3C_LB_HC";
+							onLBSelChanged = "[709129,(_this select 1),100020] call A3C_LB_HC";
 							x = 0 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H; 
 							w = 9 * GUI_GRID_W;
@@ -1897,7 +1897,7 @@ class A3C_MAPDIALOG
 							idc = 709125;
 
 							
-							onLBSelChanged = "[709125,(_this select 1),6998] call A3C_LB_HC";
+							onLBSelChanged = "[709125,(_this select 1),100020] call A3C_LB_HC";
 							
 							x = 0 * GUI_GRID_W;
 							y = 2.5 * GUI_GRID_H; 
@@ -1913,7 +1913,7 @@ class A3C_MAPDIALOG
 							idc = 709126;
 
 							
-							onLBSelChanged = "[709126,(_this select 1),6998] call A3C_LB_HC";
+							onLBSelChanged = "[709126,(_this select 1),100020] call A3C_LB_HC";
 							
 							x = 4.5 * GUI_GRID_W;
 							y = 2.5 * GUI_GRID_H; 
@@ -1980,7 +1980,7 @@ class A3C_MAPDIALOG
 						{
 							idc = 709145;
 							
-							onLBSelChanged = "[709145,(_this select 1),6998] call A3C_LB_HC";
+							onLBSelChanged = "[709145,(_this select 1),100020] call A3C_LB_HC";
 							x = 0 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H;
 							w = 9 * GUI_GRID_W;
@@ -2029,7 +2029,7 @@ class A3C_MAPDIALOG
 							idc = 709147;
 
 							
-							onLBSelChanged = "[709147,(_this select 1),6998] call A3C_LB_HC";
+							onLBSelChanged = "[709147,(_this select 1),100020] call A3C_LB_HC";
 							
 							x = 0 * GUI_GRID_W;
 							y = 2.5 * GUI_GRID_H;
@@ -2172,7 +2172,7 @@ class A3C_MAPDIALOG
 					w = GRIDX( 4 );
 					h = GRIDY( 4 );
 					sizeEx = 0.03;
-					onLBSelChanged = "[800701,(_this select 1),6998] call A3C_Map_HC_groupContext_LB_Switch";
+					onLBSelChanged = "[800701,(_this select 1),100020] call A3C_Map_HC_groupContext_LB_Switch";
 					//colorBackground[] = {0.18,0.25,0.38,0.7};
 					colorBackground[] = {0.2,0.2,0.2,0.7};
 				};
@@ -2187,7 +2187,7 @@ class A3C_MAPDIALOG
 					w = GRIDX( 4 );
 					h = GRIDY( 4 );
 					sizeEx = 0.03;
-					onLBSelChanged = "[800702,(_this select 1),6998] call A3C_Map_HC_groupContext_LB_Switch";
+					onLBSelChanged = "[800702,(_this select 1),100020] call A3C_Map_HC_groupContext_LB_Switch";
 					//colorBackground[] = {0.34,0.45,0.54,0.7};
 					colorBackground[] = {0.6,0.6,0.6,0.7};
 				};
@@ -2201,7 +2201,7 @@ class A3C_MAPDIALOG
 					w = GRIDX( 4 );
 					h = GRIDY( 4 );
 					sizeEx = 0.03;
-					onLBSelChanged = "[800703,(_this select 1),6998] call A3C_Map_HC_groupContext_LB_Switch";
+					onLBSelChanged = "[800703,(_this select 1),100020] call A3C_Map_HC_groupContext_LB_Switch";
 					//colorBackground[] = {0,0,0,0.7};
 					colorBackground[] = {0.2,0.2,0.2,0.7};
 				};
@@ -2214,7 +2214,7 @@ class A3C_MAPDIALOG
 					w = GRIDX( 4 );
 					h = GRIDY( 4 );
 					sizeEx = 0.03;
-					onLBSelChanged = "[800704,(_this select 1),6998] call A3C_Map_HC_groupContext_LB_Switch";
+					onLBSelChanged = "[800704,(_this select 1),100020] call A3C_Map_HC_groupContext_LB_Switch";
 					//colorBackground[] = {0.25,0.25,0.25,0.7};
 					colorBackground[] = {0.6,0.6,0.6,0.7};
 				};
@@ -2258,7 +2258,7 @@ class A3C_MAPDIALOG
 				{
 					idc = 800712;
 					text = "X";
-					action = "(findDisplay 6998 displayCtrl 8007) ctrlShow false; A3C_SELECTED_HC_GROUPS_SETTINGS = []; (findDisplay 6998 displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;";
+					action = "(findDisplay 100020 displayCtrl 8007) ctrlShow false; A3C_SELECTED_HC_GROUPS_SETTINGS = []; (findDisplay 100020 displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;";
 					x = GRIDX( 8 ); 
 					y = GRIDY( 0 );
 					w = GRIDX( 2 );
@@ -2613,7 +2613,7 @@ class A3C_MAPDIALOG
 					y = 0.0440052 * safezoneH;
 					w = 0.192528 * safezoneW;
 					h = 0.0990114 * safezoneH;
-					onMouseEnter = "ctrlSetFocus (findDisplay 6998 displayCtrl 800803)";
+					onMouseEnter = "ctrlSetFocus (findDisplay 100020 displayCtrl 800803)";
 					onLBSelChanged = "[(_this select 1)] call A3C_ObjectSelector_LB_Change";
 					
 				};

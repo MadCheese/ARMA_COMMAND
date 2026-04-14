@@ -1,7 +1,7 @@
 
 class A3C_RadialMenu_FORM
 {
-	idd = 8100;
+	idd = 100120;
 	movingenable = false;
 	class ControlsBackground {
 		class A3C_RadialMenu_FORM_BG: A3C_RscPicture

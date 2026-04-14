@@ -34,7 +34,7 @@ A3C_UI_RADIAL_fnc_RemFire_EH = {
 		"
 			params ['_clickData','_specialParams'];
 
-			private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
+			private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
 
 			A3C_UI_RADIAL_Current_Remfire_Units = switch ('%3') do {
 				case ('TANKSHOT') : {+(A3C_REMFIRE_TankShot_Units)};
@@ -45,7 +45,7 @@ A3C_UI_RADIAL_fnc_RemFire_EH = {
 			};
 
 			if !(%1) then {
-				if (_a3c_dsp == 7999) then {
+				if (_a3c_dsp == 100040) then {
 					BR_A3C_DISABLE_RADIAL = true;
 					[] call A3C_RADIAL_CloseDisplay;
 					{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu '';
@@ -104,7 +104,7 @@ A3C_UI_RADIAL_fnc_RemFire_EH = {
 								[A3C_HUD_UI_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_HUD_UI_3D_TAG;
 								sleep 2;
 								waituntil {{_x getVariable ['A3C_unit_is_Remote_Firing',false] && {alive _x}} count _shooters == 0};
-								if (!isNull findDisplay 7999 && {(ctrlShown (findDisplay 7999 displayctrl 8001)) && {A3C_RADIALMODE in ['ACT','HC ACTIONS']}}) then {
+								if (!isNull findDisplay 100040 && {(ctrlShown (findDisplay 100040 displayctrl 8001)) && {A3C_RADIALMODE in ['ACT','HC ACTIONS']}}) then {
 									[A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 								};
 							};
@@ -163,7 +163,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 		(findDisplay _display displayCtrl (_x select 1)) ctrlSetToolTip "";
 		{(findDisplay _display displayCtrl _x) ctrlShow false} foreach _x;
 	} foreach _buttonContainers;
-	private _a3c_dsp = if (!isNull findDisplay 7999) then {7999} else {if (visibleMap) then {6998} else {6999}}; //-- placeholder for future re-use (currently only 7999 is used)
+	private _a3c_dsp = if (!isNull findDisplay 100040) then {100040} else {if (visibleMap) then {100020} else {100030}}; //-- placeholder for future re-use (currently only 100040 is used)
 	if (isNull findDisplay _a3c_dsp) exitWith {};
 
 
@@ -312,7 +312,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 	if ({_x in A3C_SUPPRESSION_UNITS_SQ} count A3C_RD_UNITS > 0) then {A3C_DYNAMIC_BUTTON_ACTIONS pushBack "SUPPRESSION_OFF";};
 	if ({!(_x in A3C_SUPPRESSION_UNITS_SQ)} count A3C_RD_UNITS > 0) then {A3C_DYNAMIC_BUTTON_ACTIONS pushBack "SUPPRESSION_ON";};
 
-	if (_a3c_dsp == 7999) then { //-- 3D-HUD Exclusive functions
+	if (_a3c_dsp == 100040) then { //-- 3D-HUD Exclusive functions
 		//-- REMFIRE ACTION CHECKS 3-6: Remote Projectiles
 
 		{
@@ -798,7 +798,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 									with uiNamespace do {
 										//disableSerialization;
 										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-										(findDisplay 79996) displayAddEventhandler
+										(findDisplay 100060) displayAddEventhandler
 										[
 											"KeyUp",
 											{
@@ -809,7 +809,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 														BR_A3C_DISABLE_RADIAL = false;
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-														(findDisplay 79996) closeDisplay 0;
+														(findDisplay 100060) closeDisplay 0;
 														A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 													};
@@ -819,7 +819,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 
 									};
 
-									private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+									private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 									_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 									_text = findDisplay _a3c_dsp displayCtrl 800802;
 									_listBox = findDisplay _a3c_dsp displayCtrl 800803;
@@ -851,7 +851,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 
 
 									[] spawn {
-										while {!isNull findDisplay 79996} do {
+										while {!isNull findDisplay 100060} do {
 
 											sleep 0.5;
 										};
@@ -914,7 +914,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 						_staticData = [_assemblingUnitSelection,"PLANNING"] call A3C_getSelectionBackpackStatics;
 						if (count _staticData > 0) then {
 
-							if (_display == 7999) then {
+							if (_display == 100040) then {
 								BR_A3C_DISABLE_RADIAL = true;
 								(findDisplay _display) closeDisplay 0;
 								[
@@ -958,14 +958,14 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 									true
 								] call A3C_UI_RADIAL_ADD_EH_MACROS;
 
-								private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}}; //~~ how does this differ from _display unless it's 79996?	
-								A3C_OBJECTSELECTOR_MODE = if (_a3c_dsp == 79996) then {"STATIC_ASSEMBLE_SQUAD"} else {"PLACEHOLDER"};
+								private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}}; //~~ how does this differ from _display unless it's 100060?	
+								A3C_OBJECTSELECTOR_MODE = if (_a3c_dsp == 100060) then {"STATIC_ASSEMBLE_SQUAD"} else {"PLACEHOLDER"};
 								if (count _staticData == 1) then {
 									[0] call A3C_ObjectSelector_LB_Change;
 								} else {
 									with uiNamespace do {
 										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-										(findDisplay 79996) displayAddEventhandler
+										(findDisplay 100060) displayAddEventhandler
 										[
 											"KeyUp",
 											{
@@ -976,7 +976,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 
 														BR_A3C_DISABLE_RADIAL = false;
 														(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-														(findDisplay 79996) closeDisplay 0;
+														(findDisplay 100060) closeDisplay 0;
 														A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 													};
@@ -1068,7 +1068,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 							with uiNamespace do {
 								//disableSerialization;
 								A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-								(findDisplay 79996) displayAddEventhandler
+								(findDisplay 100060) displayAddEventhandler
 								[
 									"KeyUp",
 									{
@@ -1078,7 +1078,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 											if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
 												BR_A3C_DISABLE_RADIAL = false;
 												(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-												(findDisplay 79996) closeDisplay 0;
+												(findDisplay 100060) closeDisplay 0;
 												A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 												{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 											};
@@ -1088,7 +1088,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 
 							};
 
-							private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+							private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 							_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 							_text = findDisplay _a3c_dsp displayCtrl 800802;
 							_listBox = findDisplay _a3c_dsp displayCtrl 800803;

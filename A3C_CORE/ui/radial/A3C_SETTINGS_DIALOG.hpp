@@ -1,7 +1,7 @@
 
 class A3C_SETTINGS_MENU
 {
-	idd = 79991;
+	idd = 100010;
 	movingenable = true;
 	class ControlsBackground 
 	{

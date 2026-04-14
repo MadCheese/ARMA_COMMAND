@@ -281,11 +281,11 @@ A3C_HUD_WPMODE_BUTTON = {
 	if (profilenamespace getvariable ['A3C_HUD_MENUOVERRIDE_VAR',true]) then {
 		profilenamespace setvariable ['A3C_HUD_MENUOVERRIDE_VAR',false];
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 16) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_Add.paa";
-		(findDisplay 79992 displayCtrl 11) ctrlSetTooltip "MODE: Add To Plans";
+		(findDisplay 100050 displayCtrl 11) ctrlSetTooltip "MODE: Add To Plans";
 	} else {
 		profilenamespace setvariable ['A3C_HUD_MENUOVERRIDE_VAR',true];
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 16) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa";
-		(findDisplay 79992 displayCtrl 11) ctrlSetTooltip "MODE: Override Plans";
+		(findDisplay 100050 displayCtrl 11) ctrlSetTooltip "MODE: Override Plans";
 	};
 	[1] call A3C_HUD_GoCode_BUTTON;
 };
@@ -295,11 +295,11 @@ A3C_HUD_UI_BUTTON = {
 	if (profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
 		profilenamespace setvariable ['A3C_HUD_MENUSHOW_VAR',false];
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 17) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_false.paa";
-		(findDisplay 79992 displayCtrl 13) ctrlSetTooltip "UI: Hidden";
+		(findDisplay 100050 displayCtrl 13) ctrlSetTooltip "UI: Hidden";
 	} else {
 		profilenamespace setvariable ['A3C_HUD_MENUSHOW_VAR',true];
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 17) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_true.paa";
-		(findDisplay 79992 displayCtrl 13) ctrlSetTooltip "UI: Shown";
+		(findDisplay 100050 displayCtrl 13) ctrlSetTooltip "UI: Shown";
 
 	};
 };
@@ -308,11 +308,11 @@ A3C_HUD_SPEED_BUTTON = {
 	if (profilenamespace getvariable ["A3C_HUD_SPEED_VAR",-1] == -1) then {
 		A3C_HUD_SPEED_ICON = "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
 		profilenamespace setvariable ["A3C_HUD_SPEED_VAR",2];
-		(findDisplay 79992 displayCtrl 15) ctrlSetTooltip "PACE: LIMITED";
+		(findDisplay 100050 displayCtrl 15) ctrlSetTooltip "PACE: LIMITED";
 	} else {
 		A3C_HUD_SPEED_ICON = "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
 		profilenamespace setvariable ["A3C_HUD_SPEED_VAR",-1];
-		(findDisplay 79992 displayCtrl 15) ctrlSetTooltip "PACE: FULL";
+		(findDisplay 100050 displayCtrl 15) ctrlSetTooltip "PACE: FULL";
 	};
 	((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 13) ctrlSetText A3C_HUD_SPEED_ICON;
 };
@@ -355,7 +355,7 @@ A3C_HUD_GoCode_BUTTON = {
 		A3C_HUD_GOCODE_ICON_COLOR = [1,1,1,0.2];
 		_toolTip = "Conditions not available in Override-Mode";
 	};
-	(findDisplay 79992 displayCtrl 18) ctrlSetTooltip _toolTip;
+	(findDisplay 100050 displayCtrl 18) ctrlSetTooltip _toolTip;
 	((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 14) ctrlSetText A3C_HUD_GOCODE_ICON;
 	((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 14) ctrlSetTextColor A3C_HUD_GOCODE_ICON_COLOR;
 };
@@ -365,7 +365,7 @@ A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG = {
 	with uiNamespace do {
 		//disableSerialization;
 		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-		(findDisplay 79996) displayAddEventhandler
+		(findDisplay 100060) displayAddEventhandler
 		[
 			"KeyUp",
 			{
@@ -376,7 +376,7 @@ A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG = {
 						BR_A3C_DISABLE_RADIAL = false;
 						//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 						//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-						(findDisplay 79996) closeDisplay 0;
+						(findDisplay 100060) closeDisplay 0;
 						A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 						{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 						A3C_UI_RADIAL_Current_Remfire_Units = [];
@@ -387,7 +387,7 @@ A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG = {
 
 	};
 	
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 	_parent = findDisplay _a3c_dsp displayCtrl 8008;
 	_text = findDisplay _a3c_dsp displayCtrl 800802;
 	_listBox = findDisplay _a3c_dsp displayCtrl 800803;
@@ -401,8 +401,8 @@ A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG = {
 
 //-- charge is null object in "A3C_UNIT_EXPLOSIVES" variable
 A3C_UI_RADIAL_OBJECTSELECTOR_LABEL_DETONATIONTARGETS = {
-	_parent = (findDisplay 79996 displayCtrl 8008);
-	_listBox = findDisplay 79996 displayCtrl 800803;
+	_parent = (findDisplay 100060 displayCtrl 8008);
+	_listBox = findDisplay 100060 displayCtrl 800803;
 	private _hcAll = A3C_HCALLGROUPS_Current;
 	_hcAll pushBackUnique (group player);
 	A3C_UI_RADIAL_Current_Remfire_Units = [];
@@ -484,7 +484,7 @@ A3C_isArtyAwaitingSuborder = false;
 A3C_ObjectSelector_LB_Change = {
 	params ["_lb"];
 	private ["_doubleClick","_tickTime"];
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 	//_vehicle = if (count _this > 1) then {_this select 1) else {};
 	_doubleClick = false;
 	_tickTime = (time - A3C_LB_TICKTIME);
@@ -522,7 +522,7 @@ A3C_ObjectSelector_LB_Change = {
 				_parent ctrlShow false;
 				(findDisplay _a3c_dsp displayCtrl 8008) ctrlShow false;
 				with uiNamespace do {
-					(findDisplay 79996) closeDisplay 0;
+					(findDisplay 100060) closeDisplay 0;
 				};
 				
 
@@ -792,7 +792,7 @@ A3C_ObjectSelector_LB_Change = {
 				private _var = (vehicle leader A3C_HC_ACTIVEGROUP ) getVariable ["A3C_Freeze_helicopter",[false,0]];
 				private _calledFromWaypointMenu = if (_var select 1 == -1) then {true} else {false}; //-- rather unconventional method of knowing if the action was called from wp-menu
 
-				if (_a3c_dsp in [6998,6999]) then {
+				if (_a3c_dsp in [100020,100030]) then {
 					_parent ctrlShow false;
 					if (_calledFromWaypointMenu) then {
 						
@@ -920,7 +920,7 @@ A3C_ObjectSelector_LB_Change = {
 
 				
 				with uiNamespace do {
-					(findDisplay 79996) closeDisplay 0;
+					(findDisplay 100060) closeDisplay 0;
 				};
 
 
@@ -944,7 +944,7 @@ A3C_ObjectSelector_LB_Change = {
 					};
 				};
 
-				//(findDIsplay 6998 displayCtrl 8008) ctrlSHow false;
+				//(findDIsplay 100020 displayCtrl 8008) ctrlSHow false;
 				{
 					private _soldier = _x;
 					{
@@ -1041,7 +1041,7 @@ A3C_ObjectSelector_LB_Change = {
 				} foreach (units _gp);
 				_parent ctrlShow false;
 				//with uiNamespace do {
-				//	(findDisplay 79996) closeDisplay 0;
+				//	(findDisplay 100060) closeDisplay 0;
 				//};
 			};
 			case ("LOITER_DIR") : {
@@ -1115,7 +1115,7 @@ A3C_ObjectSelector_LB_Change = {
 
 				_parent ctrlShow false;
 				with uiNamespace do {
-					(findDisplay 79996) closeDisplay 0;
+					(findDisplay 100060) closeDisplay 0;
 				};
 
 			};
@@ -1133,7 +1133,7 @@ A3C_ObjectSelector_LB_Change = {
 				[position _weapon,""] spawn A3C_HUD_UI_3D_TAG;
 
 				with uiNamespace do {
-					(findDisplay 79996) closeDisplay 0;
+					(findDisplay 100060) closeDisplay 0;
 				};
 
 			};
@@ -1167,7 +1167,7 @@ A3C_ObjectSelector_LB_Change = {
 
 				_parent ctrlShow false;
 				with uiNamespace do {
-					(findDisplay 79996) closeDisplay 0;
+					(findDisplay 100060) closeDisplay 0;
 				};
 
 			};
@@ -1265,7 +1265,7 @@ A3C_ObjectSelector_LB_Change = {
 
 				_parent ctrlShow false;
 				with uiNamespace do {
-					(findDisplay 79996) closeDisplay 0;
+					(findDisplay 100060) closeDisplay 0;
 				};
 
 				[_unit,_data] spawn {
@@ -1366,7 +1366,7 @@ A3C_ObjectSelector_LB_Change = {
 				[A3C_HUD_UI_3D_TAG_ICON_POS,"DEMOLITION"] spawn A3C_HUD_UI_3D_TAG; //A3C_HUD_UI_3D_TAG_ICON_POS
 
 				with uiNamespace do {
-					(findDisplay 79996) closeDisplay 0;
+					(findDisplay 100060) closeDisplay 0;
 				};
 			};
 			case ("PLACE_CHARGE_HC_MAP") : {

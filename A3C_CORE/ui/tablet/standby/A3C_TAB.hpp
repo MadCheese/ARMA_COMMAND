@@ -11,9 +11,9 @@
 
 class A3C_SWPDIALOG
 {
-	idd  = 6999;
+	idd = 100030;
 	movingenable = true;
-	onKeyDown = "[6999,_this] call A3C_MAP_UI_HandlerFNC_KeyDown_Overlay";
+	onKeyDown = "[100030,_this] call A3C_MAP_UI_HandlerFNC_KeyDown_Overlay";
 	class ControlsBackground 
 	{		
 		class test_map: A3C_RscMapControl
@@ -540,7 +540,7 @@ class A3C_SWPDIALOG
 					y = 0 * GUI_GRID_H + GUI_GRID_Y;
 					w = 5.5 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
-					onLBSelChanged = "[A3C_LB_MODE,(_this select 1),6999] call A3C_LB_Change; ";
+					onLBSelChanged = "[A3C_LB_MODE,(_this select 1),100030] call A3C_LB_Change; ";
 				};
 				class ctg4 :  A3C_RscPicture
 				{
@@ -576,7 +576,7 @@ class A3C_SWPDIALOG
 					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 1 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
-					//action = "(findDisplay 6999 displayCtrl 709109) ctrlShow false";
+					//action = "(findDisplay 100030 displayCtrl 709109) ctrlShow false";
 					action = "['DELETE'] call A3C_CONTEXTBUTTON";
 				};
 			};
@@ -594,7 +594,7 @@ class A3C_SWPDIALOG
 				//class A3C_UB_FAKE: A3C_RscPicture
 				//{
 				//	idc = 10000000;
-				//	onMouseEnter = "ctrlsetfocus (finddisplay 6999 displayctrl 2301); systemchat 'oii'";
+				//	onMouseEnter = "ctrlsetfocus (finddisplay 100030 displayctrl 2301); systemchat 'oii'";
 				//	text = "#(argb,8,8,3)color(1,1,1,1)"; //--- ToDo: Localize;
 				//	x = 0;
 				//	y = 0;
@@ -604,7 +604,7 @@ class A3C_SWPDIALOG
 				class A3C_LISTBOX_1500: A3C_RscCombo
 				{
 					idc = 7078;
-					onLBSelChanged = "[A3C_LB_MODE,(_this select 1),6999] call A3C_LB_Change";
+					onLBSelChanged = "[A3C_LB_MODE,(_this select 1),100030] call A3C_LB_Change";
 
 					text = "#(argb,8,8,3)color(1,0,1,1)"; //--- ToDo: Localize;
 					x = 100;
@@ -628,7 +628,7 @@ class A3C_SWPDIALOG
 					idc = 7026;
 					onMouseButtonDown = "[(2 + (A3C_BUTTONPAGE_TABLET * 16)),_this] call A3C_BTN_SELECT_UNIT";
 					onmousemoving = "_this spawn A3C_TAB_DROP";
-					//onMouseEnter = "ctrlsetfocus (finddisplay 6999 displayctrl 2301); systemchat 'oi'";	
+					//onMouseEnter = "ctrlsetfocus (finddisplay 100030 displayctrl 2301); systemchat 'oi'";	
 					x = 0 * safezoneW;
 					y = 0.03299 * safezoneH;
 					w = 0.0515515 * safezoneW;
@@ -797,14 +797,14 @@ class A3C_SWPDIALOG
 			y = 0.609965 * safezoneH + safezoneY;
 			w = 0.189022 * safezoneW;
 			h = 0.142954 * safezoneH;
-			//onMouseEnter = "ctrlsetfocus (finddisplay 6999 displayctrl 2302);";
+			//onMouseEnter = "ctrlsetfocus (finddisplay 100030 displayctrl 2302);";
 			class Controls
 			{
 				class A3C_WPD_BTN1: A3C_RscButton_Function
 				{
 					idc = 7018;
 					action = "[] spawn A3C_Btn_fnc_Execute";
-					//onMouseEnter = "ctrlsetfocus (finddisplay 6999 displayctrl 2302); systemchat str time;";
+					//onMouseEnter = "ctrlsetfocus (finddisplay 100030 displayctrl 2302); systemchat str time;";
 					text = "Commit"; //--- ToDo: Localize;
 					x = 0 * safezoneW;
 					y = 0.076975 * safezoneH;
@@ -1650,7 +1650,7 @@ class A3C_SWPDIALOG
 					idc = 709123;
 					colorBackground[] = {0.2,0.3,0.38,1};
 					
-					onLBSelChanged = "[709123,(_this select 1),6998] call A3C_LB_HC";
+					onLBSelChanged = "[709123,(_this select 1),100020] call A3C_LB_HC";
 					x = 0.5 * GUI_GRID_W + GUI_GRID_X;
 					y = 4.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 4 * GUI_GRID_W;
@@ -1663,7 +1663,7 @@ class A3C_SWPDIALOG
 					idc = 709124;
 					colorBackground[] = {0.2,0.3,0.38,1};
 					
-					onLBSelChanged = "[709124,(_this select 1),6998] call A3C_LB_HC";
+					onLBSelChanged = "[709124,(_this select 1),100020] call A3C_LB_HC";
 					x = 0.5 * GUI_GRID_W + GUI_GRID_X;
 					y = 6 * GUI_GRID_H + GUI_GRID_Y;
 					w = 4 * GUI_GRID_W;
@@ -1674,7 +1674,7 @@ class A3C_SWPDIALOG
 					idc = 709125;
 					colorBackground[] = {0.8,0.6,0,1};
 					
-					onLBSelChanged = "[709125,(_this select 1),6998] call A3C_LB_HC";
+					onLBSelChanged = "[709125,(_this select 1),100020] call A3C_LB_HC";
 					x = 5 * GUI_GRID_W + GUI_GRID_X;
 					y = 4.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 4 * GUI_GRID_W;
@@ -1687,7 +1687,7 @@ class A3C_SWPDIALOG
 					idc = 709126;
 					colorBackground[] = {0.8,0.6,0,1};
 					
-					onLBSelChanged = "[709126,(_this select 1),6998] call A3C_LB_HC";
+					onLBSelChanged = "[709126,(_this select 1),100020] call A3C_LB_HC";
 					x = 5 * GUI_GRID_W + GUI_GRID_X;
 					y = 6 * GUI_GRID_H + GUI_GRID_Y;
 					w = 4 * GUI_GRID_W;
@@ -1699,7 +1699,7 @@ class A3C_SWPDIALOG
 					idc = 709138;
 					colorBackground[] = {0.2,0.3,0.38,1};
 					
-					onLBSelChanged = "[709138,(_this select 1),6998] call A3C_LB_HC";
+					onLBSelChanged = "[709138,(_this select 1),100020] call A3C_LB_HC";
 					x = 0.5 * GUI_GRID_W + GUI_GRID_X;
 					y = 7.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 8.5 * GUI_GRID_W;
@@ -1722,7 +1722,7 @@ class A3C_SWPDIALOG
 					colorBackground[] = {0.2,0.3,0.38,1};
 					
 					
-					onLBSelChanged = "[709128,(_this select 1),6998] call A3C_LB_HC";
+					onLBSelChanged = "[709128,(_this select 1),100020] call A3C_LB_HC";
 					x = 0.5 * GUI_GRID_W + GUI_GRID_X;
 					y = 9 * GUI_GRID_H + GUI_GRID_Y;
 					w = 4 * GUI_GRID_W;
@@ -1734,7 +1734,7 @@ class A3C_SWPDIALOG
 					idc = 709129;
 					colorBackground[] = {0.8,0.6,0,1};
 					
-					onLBSelChanged = "[709129,(_this select 1),6998] call A3C_LB_HC";
+					onLBSelChanged = "[709129,(_this select 1),100020] call A3C_LB_HC";
 					x = 5 * GUI_GRID_W + GUI_GRID_X;
 					y = 9 * GUI_GRID_H + GUI_GRID_Y;
 					w = 4 * GUI_GRID_W;
@@ -1796,7 +1796,7 @@ class A3C_SWPDIALOG
 				{
 					idc = 709134;
 					text = "Delete";
-					action = "[] call A3C_HC_REMOVE_WP_RC; (findDisplay 6998 displayCtrl 709115) ctrlShow false;"
+					action = "[] call A3C_HC_REMOVE_WP_RC; (findDisplay 100020 displayCtrl 709115) ctrlShow false;"
 					x = 4.9 * GUI_GRID_W + GUI_GRID_X;
 					y = 12 * GUI_GRID_H + GUI_GRID_Y;
 					w = 4.6 * GUI_GRID_W;
@@ -1811,7 +1811,7 @@ class A3C_SWPDIALOG
 					colorBackground[] = {0.18,0.25,0.38,1};
 					colorSelectBackground[] = {0.18,0.25,0.38,1};
 					
-					onLBSelChanged = "[709135,(_this select 1),6998] call A3C_LB_HC";
+					onLBSelChanged = "[709135,(_this select 1),100020] call A3C_LB_HC";
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
 					y = 0 * GUI_GRID_H + GUI_GRID_Y;
 					w = 9.50718 * GUI_GRID_W;
@@ -1831,7 +1831,7 @@ class A3C_SWPDIALOG
 				{
 					idc = -1;
 					text = "X";
-					action = "(findDisplay 6999 displayCtrl 709115) ctrlShow false;"
+					action = "(findDisplay 100030 displayCtrl 709115) ctrlShow false;"
 					
 					x = 9.50718 * GUI_GRID_W + GUI_GRID_X;
 					y = 0 * GUI_GRID_H + GUI_GRID_Y;
@@ -1994,7 +1994,7 @@ class A3C_SWPDIALOG
 					w = GRIDX( 4 );
 					h = GRIDY( 4 );
 					sizeEx = 0.03;
-					onLBSelChanged = "[800701,(_this select 1),6999] call A3C_Map_HC_groupContext_LB_Switch";
+					onLBSelChanged = "[800701,(_this select 1),100030] call A3C_Map_HC_groupContext_LB_Switch";
 					colorBackground[] = 
 					{
 						0.18,
@@ -2014,7 +2014,7 @@ class A3C_SWPDIALOG
 					w = GRIDX( 4 );
 					h = GRIDY( 4 );
 					sizeEx = 0.03;
-					onLBSelChanged = "[800702,(_this select 1),6999] call A3C_Map_HC_groupContext_LB_Switch";
+					onLBSelChanged = "[800702,(_this select 1),100030] call A3C_Map_HC_groupContext_LB_Switch";
 					colorBackground[] = 
 					{
 						0.34,
@@ -2033,7 +2033,7 @@ class A3C_SWPDIALOG
 					w = GRIDX( 4 );
 					h = GRIDY( 4 );
 					sizeEx = 0.03;
-					onLBSelChanged = "[800703,(_this select 1),6999] call A3C_Map_HC_groupContext_LB_Switch";
+					onLBSelChanged = "[800703,(_this select 1),100030] call A3C_Map_HC_groupContext_LB_Switch";
 					colorBackground[] = 
 					{
 						0,
@@ -2051,7 +2051,7 @@ class A3C_SWPDIALOG
 					w = GRIDX( 4 );
 					h = GRIDY( 4 );
 					sizeEx = 0.03;
-					onLBSelChanged = "[800704,(_this select 1),6999] call A3C_Map_HC_groupContext_LB_Switch";
+					onLBSelChanged = "[800704,(_this select 1),100030] call A3C_Map_HC_groupContext_LB_Switch";
 					colorBackground[] = 
 					{
 						0.25,
@@ -2163,7 +2163,7 @@ class A3C_SWPDIALOG
 				{
 					idc = 800712;
 					text = "X";
-					action = "(findDisplay 6999 displayCtrl 8007) ctrlShow false; A3C_SELECTED_HC_GROUPS_SETTINGS = []";
+					action = "(findDisplay 100030 displayCtrl 8007) ctrlShow false; A3C_SELECTED_HC_GROUPS_SETTINGS = []";
 					x = GRIDX( 8 ); 
 					y = GRIDY( 0 );
 					w = GRIDX( 2 );

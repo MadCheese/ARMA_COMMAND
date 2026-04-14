@@ -1,9 +1,9 @@
 
 
 
-if  (!isnull (finddisplay 7999)) exitwith {};
-if  (!isnull (finddisplay 79991)) exitwith {};
-if  (!isnull (finddisplay 79992)) exitwith {};
+if  (!isnull (finddisplay 100040)) exitwith {};
+if  (!isnull (finddisplay 100010)) exitwith {};
+if  (!isnull (finddisplay 100050)) exitwith {};
 if ((count A3C_HUD_ARROWS) == 0) exitWith {};
 
 
@@ -43,7 +43,7 @@ if (profileNameSpace getVariable ["A3C_HUD_LAYOUT_CORNER", false]) then {
 	//-- Set all Controls to new positions
 	{
 		private ["_ctrl","_ctrlPos"];
-		_ctrl = findDisplay 79992 displayCtrl (_x select 0); 
+		_ctrl = findDisplay 100050 displayCtrl (_x select 0); 
 		_ctrlPos = ctrlPosition _ctrl;
 		_ctrlPos set [0,(_x select 1) select 0];
 		_ctrlPos set [1,(_x select 1) select 1];
@@ -64,27 +64,27 @@ if (profileNameSpace getVariable ["A3C_HUD_LAYOUT_CORNER", false]) then {
 };
 
 if (profilenamespace getvariable ["A3C_HUD_MENUOVERRIDE_VAR",true]) then {
-	(findDisplay 79992 displayCtrl 10) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa";
-	(findDisplay 79992 displayCtrl 11) ctrlSetTooltip "MODE: Override Plans";
+	(findDisplay 100050 displayCtrl 10) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa";
+	(findDisplay 100050 displayCtrl 11) ctrlSetTooltip "MODE: Override Plans";
 } else {
-	(findDisplay 79992 displayCtrl 10) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_Add.paa";
-	(findDisplay 79992 displayCtrl 11) ctrlSetTooltip "MODE: Add To Plans";
+	(findDisplay 100050 displayCtrl 10) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_Add.paa";
+	(findDisplay 100050 displayCtrl 11) ctrlSetTooltip "MODE: Add To Plans";
 };
 
 if (profilenamespace getvariable ["A3C_HUD_MENUSHOW_VAR",true]) then {
-	(findDisplay 79992 displayCtrl 12) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_true.paa";
-	(findDisplay 79992 displayCtrl 13) ctrlSetTooltip "UI: Shown";
+	(findDisplay 100050 displayCtrl 12) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_true.paa";
+	(findDisplay 100050 displayCtrl 13) ctrlSetTooltip "UI: Shown";
 } else {
-	(findDisplay 79992 displayCtrl 12) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_false.paa";
-	(findDisplay 79992 displayCtrl 13) ctrlSetTooltip "UI: Hidden";	
+	(findDisplay 100050 displayCtrl 12) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_false.paa";
+	(findDisplay 100050 displayCtrl 13) ctrlSetTooltip "UI: Hidden";	
 };
 
 if (profilenamespace getvariable ["A3C_HUD_SPEED_VAR",-1] == -1) then {
 	A3C_HUD_SPEED_ICON = "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
-	(findDisplay 79992 displayCtrl 15) ctrlSetTooltip "PACE: FULL";
+	(findDisplay 100050 displayCtrl 15) ctrlSetTooltip "PACE: FULL";
 } else {
 	A3C_HUD_SPEED_ICON = "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
-	(findDisplay 79992 displayCtrl 15) ctrlSetTooltip "PACE: LIMITED";
+	(findDisplay 100050 displayCtrl 15) ctrlSetTooltip "PACE: LIMITED";
 };
 {
 	[_x] call A3C_HUD_SETSTANCE;
@@ -104,13 +104,13 @@ if !(profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
 ["HUD_MENU"] call A3C_GET_UI_BG_COLOR;
 [0] call A3C_HUD_UI_FORM_BUTTON;
 
-A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 79992) displayAddEventHandler ["KeyUp", 
+A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 100050) displayAddEventHandler ["KeyUp", 
 {
 	_button = _this - [(_this select 0)];		
 	if ((_button select 0) == (A3C_HUD_MENU_KEY_ID select 0)) then {
-		(findDisplay 79992) closeDisplay 0;
+		(findDisplay 100050) closeDisplay 0;
 		showCommandingMenu "";	
-		(findDisplay 79992) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
+		(findDisplay 100050) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 		A3C_MODIFIER_CTRL = false;
 		
 		if (profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
@@ -122,7 +122,7 @@ A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 79992) displayAddEventHandler ["Key
 			profileNamespace setVariable ['A3C_HUD_isOpen',false];
 		};
 		//((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 15) ctrlSetText "";
-		//(findDisplay 79992) displayRemoveEventHandler ["MouseButtonDown", A3C_RAD_DEVH_MD];		
+		//(findDisplay 100050) displayRemoveEventHandler ["MouseButtonDown", A3C_RAD_DEVH_MD];		
 		//BR_A3C_DISABLE_RADIAL = false;
 		//if ((count A3C_HUD_ARROWS) > 0) then {
 		//	{inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];

@@ -211,7 +211,7 @@ A3C_create_wpWedgePositions = {
 	private _doWedge = true;
 	if (isOnRoad _pos) then {
 		_doWedge = false;
-		//_refArray1 = if (!isNull findDisplay 7999) then {A3C_RD_UNITS} else {A3C_SELECTED_UNITS};
+		//_refArray1 = if (!isNull findDisplay 100040) then {A3C_RD_UNITS} else {A3C_SELECTED_UNITS};
 		if (count _refArray1 > 0) then {
 			_usedRoads = [];
 			_refArray1 = [_refArray1,[],{(vehicle leader _x) distance _pos},"ASCEND"] call BIS_fnc_sortBy;
@@ -283,7 +283,7 @@ A3C_UI_Color_setOpacity =
 {
 	//-- fnc for map UI to add correct opacity to color array
 	params ["_colorArray","_opacity"];
-	//if ({!isNull findDisplay _x} count [6998,6999] > 0) then {
+	//if ({!isNull findDisplay _x} count [100020,100030] > 0) then {
 	//	_opacity = _opacity min A3C_OPACITY;
 	//};
 	_colorArray set [3,_opacity];
@@ -479,7 +479,7 @@ A3C_fnc_toggle_IR_STROBES = { //-- only for HC!
 		params ["_randomSleepMax"];
 		sleep (_randomSleepMax + 1);
 		A3C_Prevent_attach_IR = false;
-		_targetArray = if (!isNull findDisplay 7999) then {A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED} else {A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS};
+		_targetArray = if (!isNull findDisplay 100040) then {A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED} else {A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS};
 		//systemchat str _targetArray;
 		[_targetArray] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 	};
@@ -801,7 +801,7 @@ A3C_fnc_toggle_WeaponAttachMent = {
 		case ("FLASHLIGHT") : {A3C_Prevent_attach_Flashlight = true};
 	};
 	_refGroups = [];
-	_targetArray = if (!isNull findDisplay 7999) then {A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED} else {A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS};
+	_targetArray = if (!isNull findDisplay 100040) then {A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED} else {A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS};
 	[_targetArray] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 	[_totalSleep,_type,_mode] spawn {
 		params ["_totalSleep","_type","_mode"];
@@ -818,7 +818,7 @@ A3C_fnc_toggle_WeaponAttachMent = {
 			};
 		};
 		sleep 1;
-		_targetArray = if (!isNull findDisplay 7999) then {A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED} else {A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS};
+		_targetArray = if (!isNull findDisplay 100040) then {A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED} else {A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS};
 		[_targetArray] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 	};
 };
@@ -2408,10 +2408,10 @@ MCSS_fnc_RevealCursorPos = {
 
 
 A3C_BTN_COLOR_RESET = { //-- currently unused
-	//if (!(isnull (findDisplay 6998)) OR !(isnull (findDisplay 6999))) then {
+	//if (!(isnull (findDisplay 100020)) OR !(isnull (findDisplay 100030))) then {
 		//[A3C_HELI_INF_MODE] call A3C_LABEL_SELECTORS;
 	//};
-	if !(isnull (findDisplay 7999)) then {
+	if !(isnull (findDisplay 100040)) then {
 		[] call A3C_RD_LABEL_SELECTORS;
 	};
 };
@@ -2469,9 +2469,9 @@ A3C_GET_UI_BG_COLOR = {
 		switch (_mode) do {
 			case ("RADIAL") : {
 				{
-					((findDisplay 7999) displayCtrl _x) ctrlSetTextColor [0,0.5,0.8,0.6];
+					((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [0,0.5,0.8,0.6];
 				} foreach [8000,8001,8002,8003,8004,8053,8072];
-				((findDisplay 7999) displayCtrl 8096) ctrlSetTextColor [0,0.5,0.8,0.6];
+				((findDisplay 100040) displayCtrl 8096) ctrlSetTextColor [0,0.5,0.8,0.6];
 
 			};
 			case ("HUD_MENU") : {
@@ -2483,9 +2483,9 @@ A3C_GET_UI_BG_COLOR = {
 		switch (_mode) do {
 			case ("RADIAL") : {
 				{
-					((findDisplay 7999) displayCtrl _x) ctrlSetTextColor [0,0,0,0.6];
+					((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [0,0,0,0.6];
 				} foreach [8000,8001,8002,8003,8004,8053,8072];
-				((findDisplay 7999) displayCtrl 8096) ctrlSetTextColor [0,0,0,0.6];
+				((findDisplay 100040) displayCtrl 8096) ctrlSetTextColor [0,0,0,0.6];
 			};
 			case ("HUD_MENU") : {
 				((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 15) ctrlSetTextColor [0,0,0,0.4];
@@ -2509,7 +2509,7 @@ A3C_TOGGLE_GOCODE_CTRLS = {
 	if (isDedicated) exitWith {};
 
 	
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
 	if (isnull (findDisplay _a3c_dsp)) exitWith {};
 
 	private _rootPos = if (isnull (findDisplay _a3c_dsp)) then {[]} else {//-- only for tablet
@@ -2596,7 +2596,7 @@ A3C_TOGGLE_GOCODE_CTRLS = {
 		
 		([_mode] call _findGoCode) params ["_cond1","_cond2"];
 		
-		if (_a3c_dsp == 7999) then {
+		if (_a3c_dsp == 100040) then {
 			private _ctrl = switch (_mode) do {
 				case ("A") : {10016};
 				case ("B") : {10018};
@@ -2604,11 +2604,11 @@ A3C_TOGGLE_GOCODE_CTRLS = {
 				case ("D") : {10022};
 			};
 			if (_cond1 OR _cond2) then {
-				//((findDisplay 7999) displayctrl 9007) ctrlSetTextColor [0.8,0.6,0,0.6];
-				((findDisplay 7999) displayctrl _ctrl) ctrlSetTextColor [0.8,0.6,0,0.6];
+				//((findDisplay 100040) displayctrl 9007) ctrlSetTextColor [0.8,0.6,0,0.6];
+				((findDisplay 100040) displayctrl _ctrl) ctrlSetTextColor [0.8,0.6,0,0.6];
 			} else {
-				//((findDisplay 7999) displayctrl 9007) ctrlSetTextColor [1,1,1,0.2];
-				((findDisplay 7999) displayctrl _ctrl) ctrlSetTextColor [1,1,1,0.2];
+				//((findDisplay 100040) displayctrl 9007) ctrlSetTextColor [1,1,1,0.2];
+				((findDisplay 100040) displayctrl _ctrl) ctrlSetTextColor [1,1,1,0.2];
 			};
 
 		} else {
@@ -2630,7 +2630,7 @@ A3C_TOGGLE_GOCODE_CTRLS = {
 					} foreach _ctrls;
 					_buttonsPlaced = _buttonsPlaced + 1;
 				} else {
-					{((findDisplay 7999) displayCtrl _x) ctrlSetTextColor [0.8,0.6,0,0.6]} foreach _ctrls;
+					{((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [0.8,0.6,0,0.6]} foreach _ctrls;
 				}
 			} else {
 				if !(isnull (findDisplay _a3c_dsp)) then {
@@ -2642,7 +2642,7 @@ A3C_TOGGLE_GOCODE_CTRLS = {
 						_btnItem ctrlCommit 0;
 					} foreach _ctrls;
 				} else {
-					{((findDisplay 7999) displayCtrl _x) ctrlSetTextColor [1,1,1,0.2]} foreach _ctrls;
+					{((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [1,1,1,0.2]} foreach _ctrls;
 				};
 			};
 			if ( !isnull (findDisplay _a3c_dsp)) then {
@@ -2680,7 +2680,7 @@ A3C_LB_Change = {
 	private _lb = _this select 1;
 	private _doubleClick = false;
 	if (isnil "_mode") exitWith {};
-	private _a3c_dsp = if (count _this > 2) then {_this select 2} else {6999};
+	private _a3c_dsp = if (count _this > 2) then {_this select 2} else {100030};
 	private _btn = 0;
 	private _gp = objnull;
 	private _targetUnits = A3C_SELECTED_UNITS;
@@ -2780,7 +2780,7 @@ A3C_LB_Change = {
 			_color = "MAIN";
 			
 			_backCol = [1,1,1,1];
-			_isTablet = (isNull (findDisplay 7999));
+			_isTablet = (isNull (findDisplay 100040));
 			//systemchat str [_dest];
 			_compare = if (_isTablet) then {A3C_SELECTED_UNITS} else {A3C_RD_UNITS};
 			if (_dest in _compare) then {
@@ -2835,11 +2835,11 @@ A3C_LB_Change = {
 				//	};
 				//};
 			} else {
-				(findDisplay 7999 displayCtrl 8095) ctrlShow false;
+				(findDisplay 100040 displayCtrl 8095) ctrlShow false;
 				//for "_i" from 8073 to 8090 do {
-				//	if (ctrlShown (findDisplay 7999 displayCtrl _i)) then {
+				//	if (ctrlShown (findDisplay 100040 displayCtrl _i)) then {
 				//		if ( ((profileNamespace getvariable "A3C_GROUPUNITS") select ( (_i - 8072) + (A3C_BUTTONPAGE_TABLET * 18) )) in _units) then {
-				//			(findDisplay 7999 displayCtrl _i) ctrlSetBackgroundColor _backCol;
+				//			(findDisplay 100040 displayCtrl _i) ctrlSetBackgroundColor _backCol;
 				//		};
 				//	};
 				//};
@@ -3137,7 +3137,7 @@ A3C_GROUP_RESET = {
 	if (is3DEN) exitwith {};
 	setGroupIconsVisible [false,false];
 	private ["_units","_knowData","_recreateLogic"];
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
 
 	//////////////////////
 	//-- EXTRAS FIRST: unflip all vehicles
@@ -3513,7 +3513,7 @@ A3C_CANCELPLANS = {
 	_shift = _this select 1;
 	_ctrl = _this select 2;
 
-	_a3c_dsp = if (visibleMap) then {6998} else {6999};
+	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	_data = [];
 
 	if ( !(_shift) && !(_ctrl)  ) exitwith {
@@ -3544,7 +3544,7 @@ A3C_CANCELPLANS = {
 			[_x] spawn {
 				private ["_unit","_mainMark","_subMark","_dirMark"];
 				_unit = _this select 0;
-				_a3c_dsp = if (visibleMap) then {6998} else {6999};
+				_a3c_dsp = if (visibleMap) then {100020} else {100030};
 
 
 				if (count (_unit getVariable ["A3C_PLOT",[]]) > 0) then {
@@ -3623,7 +3623,7 @@ A3C_GET_OPAC = {
 	_return = _return select [0,3];
 	_op = 1;
 	if (visibleMap) then {
-		if (isNull (findDisplay 6998)) then {
+		if (isNull (findDisplay 100020)) then {
 			_op = 0;
 		};
 	};
@@ -3666,7 +3666,7 @@ A3C_DeleteGroup = {
 //-- Used by Radial and Tablet
 A3C_ACTIVATEGOCODE = {
 	_code = _this select 0;
-	_a3c_dsp = if (visibleMap) then {6998} else {6999};
+	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	_ctrls = switch (_code) do {
 		case ("A") : {[709100,709101]};

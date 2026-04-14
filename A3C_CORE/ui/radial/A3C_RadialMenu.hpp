@@ -12,7 +12,7 @@
 
 class A3C_MENU
 {
-	idd = 7999;
+	idd = 100040;
 	movingenable = false;
 
 	//onLoad =   "showHud ([false] + (shownhud select [1,10]))";
@@ -779,7 +779,7 @@ class A3C_MENU
 		//	y = 9.31 * GUI_GRID_H + GUI_GRID_Y;
 		//	w = 18.5 * GUI_GRID_W;
 		//	h = 2 * GUI_GRID_H;
-		//	//onLBSelChanged = "[A3C_LB_MODE,(_this select 1),7999] call A3C_LB_Change";
+		//	//onLBSelChanged = "[A3C_LB_MODE,(_this select 1),100040] call A3C_LB_Change";
 		//	text = "#(argb,8,8,3)color(1,1,1,1)";
 		//};
 		class ExtraFrame: A3C_RscPicture
@@ -798,7 +798,7 @@ class A3C_MENU
 			idc = 8054;
 			style = CT_LISTBOX;
 			//onLBSelChanged  = "[] spawn TUT_gui_VehInfo;";
-			onLBSelChanged  = "[BV_LB1,(_this select 1),7999] spawn A3C_LB_Change";
+			onLBSelChanged  = "[BV_LB1,(_this select 1),100040] spawn A3C_LB_Change";
 		//	colorText[] = {1,1,1,1};
 		//	colorDisabled[] = {1,1,1,0.25};
 		//	colorScrollbar[] = {1,1,1,1};
@@ -818,7 +818,7 @@ class A3C_MENU
 			idc = 8055;
 			style = CT_LISTBOX;   //CT_LISTNBOX  //ST_GROUP_BOX
 			//onLBSelChanged  = "[] spawn TUT_gui_VehInfo;";
-			onLBSelChanged  = "[BV_LB2,(_this select 1),7999] spawn A3C_LB_Change";
+			onLBSelChanged  = "[BV_LB2,(_this select 1),100040] spawn A3C_LB_Change";
 		//	colorText[] = {1,1,1,1};
 		//	colorDisabled[] = {1,1,1,0.25};
 		//	colorScrollbar[] = {1,1,1,1};
@@ -895,7 +895,7 @@ class A3C_MENU
 
 
 			onMouseEnter = "['OPEN'] call A3C_UI_RADIAL_TOGGLE_LEFT_EXT";
-			//onMouseExit = "if !(ctrlShown (findDisplay 7999 displayCtrl 8071)) then { playsound 'A3C_MenuSound1'; A3C_RD_BOOL_UNITS = false; {(findDisplay 7999 displayCtrl _x) ctrlShow true} foreach [8071,8096,8097,8098,8099,9000]; (findDisplay 7999 displayCtrl 8095) ctrlShow false; [] call A3C_RD_LABEL_SELECTORS;}";
+			//onMouseExit = "if !(ctrlShown (findDisplay 100040 displayCtrl 8071)) then { playsound 'A3C_MenuSound1'; A3C_RD_BOOL_UNITS = false; {(findDisplay 100040 displayCtrl _x) ctrlShow true} foreach [8071,8096,8097,8098,8099,9000]; (findDisplay 100040 displayCtrl 8095) ctrlShow false; [] call A3C_RD_LABEL_SELECTORS;}";
 		};
 		class L_ext_commandBar_BG: A3C_RscPicture
 		{
@@ -1434,7 +1434,7 @@ class A3C_MENU
 					y = 0 * GUI_GRID_H + GUI_GRID_Y;
 					w = 6.5 * GUI_GRID_W;
 					h = 5.1 * GUI_GRID_H;
-					onLBSelChanged = "[A3C_LB_MODE,(_this select 1),7999] call A3C_LB_Change";
+					onLBSelChanged = "[A3C_LB_MODE,(_this select 1),100040] call A3C_LB_Change";
 				};
    			};
     	};

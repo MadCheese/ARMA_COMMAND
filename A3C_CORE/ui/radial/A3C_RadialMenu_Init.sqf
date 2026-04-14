@@ -17,7 +17,7 @@ A3C_UI_Radial_SQ_ROE_MAIN = {
     _buttonsPerRow = 5;
     _rows = 2;
 
-    (findDisplay 79997) displayAddEventhandler
+    (findDisplay 100100) displayAddEventhandler
     [
         "KeyUp",
         {
@@ -27,7 +27,7 @@ A3C_UI_Radial_SQ_ROE_MAIN = {
                 if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
                     BR_A3C_DISABLE_RADIAL = false;
                     A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-                    (findDisplay 79997) closeDisplay 0;
+                    (findDisplay 100100) closeDisplay 0;
                     A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
                     {player groupSelectUnit [_x,false]} foreach units player; 
                     showCommandingMenu "";
@@ -42,7 +42,7 @@ A3C_UI_Radial_SQ_ROE_MAIN = {
     // Adjusted grid size based on scaling factor
     _grid = 12 * _scaleFactor;
 
-    private _controlsGroup = (findDisplay 79997) ctrlCreate ["RscControlsGroup", 100];
+    private _controlsGroup = (findDisplay 100100) ctrlCreate ["RscControlsGroup", 100];
     _controlsGroup ctrlSetPosition
     [
         (safeZoneX + (safeZoneW / 2)) - ( (A3C_UI_GRID_SIZE * (_grid / 2)) * ( pixelGridNoUIScale * pixelW * 2 )),
@@ -52,7 +52,7 @@ A3C_UI_Radial_SQ_ROE_MAIN = {
     ];
     _controlsGroup ctrlCommit 0;
 
-    private _ctrlImageG = (findDisplay 79997) ctrlCreate ["RscPicture", 101, _controlsGroup];
+    private _ctrlImageG = (findDisplay 100100) ctrlCreate ["RscPicture", 101, _controlsGroup];
     _ctrlImageG ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_CombatBehaviour.paa";
     _ctrlImageG ctrlSetPosition 
     [
@@ -114,14 +114,14 @@ A3C_UI_Radial_SQ_ROE_MAIN = {
         for "_t" from 0 to (_buttonsPerRow - 1) do {
             _xPos = _horizontalOffset + (_t * (_buttonDim + _horizontalSpacing)); // Adjust X position
 
-            private _ctrlImg = (findDisplay 79997) ctrlCreate ["RscPicture", -1, _controlsGroup];
+            private _ctrlImg = (findDisplay 100100) ctrlCreate ["RscPicture", -1, _controlsGroup];
             _ctrlImg ctrlSetText "A3C_CORE\ui\pictures\icon_menu_ROE_OPT.paa";
 			// "\a3\ui_f\data\IGUI\RscCustomInfo\Sensors\Targets\AssignedTarget_ca.paa";
             _ctrlImg ctrlSetTextColor (_colorPalettes select _t);
             _ctrlImg ctrlSetPosition [_xPos, _yPos, _buttonDim, _buttonDim];
             _ctrlImg ctrlCommit 0;
 
-            private _ctrlBtn = (findDisplay 79997) ctrlCreate ["A3C_RscButton_Invisible", -1, _controlsGroup];
+            private _ctrlBtn = (findDisplay 100100) ctrlCreate ["A3C_RscButton_Invisible", -1, _controlsGroup];
             _ctrlBtn ctrlSetPosition [_xPos, _yPos, _buttonDim, _buttonDim];
             private _tooltip = if (_i == 0) then {_behaviourTooltips select _t} else {_combatModeTooltips select _t};
             private _mode = if (_i == 0) then {"BEHAVIOUR"} else {"COMBATMODE"};
@@ -158,7 +158,7 @@ A3C_TempNVGLASER_TOGGLE = {
 		};
 	};
 	if (_btnImage != "") then {
-		(findDisplay 7999 displayCtrl 10026) ctrlSetText _btnImage;
+		(findDisplay 100040 displayCtrl 10026) ctrlSetText _btnImage;
 	};
 };
 
@@ -220,16 +220,16 @@ A3C_UI_RADIAL_CTRLS_QUICKTOGGLE = {
 						A3C_UI_RADIAL_CTRLS_SHOWN pushBackUnique _x;
 						_x ctrlShow false;
 					};
-				} foreach (allControls findDisplay 7999);
+				} foreach (allControls findDisplay 100040);
 			};
 			
 		} else {
-			(findDisplay 7999 displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false; //-- hide HC-dashboard
+			(findDisplay 100040 displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false; //-- hide HC-dashboard
 			A3C_UI_RADIAL_CTRLS_SHOWN_ACTIVATED = false;
 			{
 				_x ctrlShow true;
 			} foreach A3C_UI_RADIAL_CTRLS_SHOWN;
-			(findDisplay 7999 displayCtrl 8095) ctrlShow false;
+			(findDisplay 100040 displayCtrl 8095) ctrlShow false;
 			A3C_UI_RADIAL_CTRLS_SHOWN = [];
 			if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
 				[] call A3C_Radial_DashBoard;
@@ -246,13 +246,13 @@ A3C_Radial_DashBoard_ExtraControls = [];
 A3C_Radial_DashBoard = {
 
 	
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
 
 
 	(findDisplay _a3c_dsp displayCtrl 800713) ctrlSetTextColor [1,1,1,0]; //-- hide ct-edit box because of it's frame
 	
 
-	_ref_selected_units = if (_a3c_dsp == 7999) then {A3C_RD_UNITS} else {A3C_SELECTED_HC_GROUPS_SETTINGS};
+	_ref_selected_units = if (_a3c_dsp == 100040) then {A3C_RD_UNITS} else {A3C_SELECTED_HC_GROUPS_SETTINGS};
 
 
 	if (count _ref_selected_units == 1) then {
@@ -304,7 +304,7 @@ A3C_Radial_DashBoard = {
 
 		{(findDisplay _a3c_dsp displayCtrl _x) ctrlSetTextColor [1,1,1,1]} foreach [12000,12002];
 		
-		if (_a3c_dsp == 6998) then {
+		if (_a3c_dsp == 100020) then {
 
 			_mapBarDims = ctrlPosition (findDisplay 12 displayctrl 1020);
 			_mapBarDims params ["_mapBarX","_mapBarY","_mapBarW","_mapBarH"];
@@ -341,7 +341,7 @@ A3C_Radial_DashBoard = {
 		private _unitSize = format ["Unitsize: %1",count units _group];
 		
 
-		_bgColor = if (_a3c_dsp == 7999 && {sunOrMoon < 1}) then {[0,0.5,0.8,0.6]} else {[0,0,0,0.6]};
+		_bgColor = if (_a3c_dsp == 100040 && {sunOrMoon < 1}) then {[0,0.5,0.8,0.6]} else {[0,0,0,0.6]};
 		(findDisplay _a3c_dsp displayCtrl 11015) ctrlSetTextColor _bgColor;
 		//systemchat str _bgColor;
 		
@@ -697,7 +697,7 @@ A3C_Radial_DashBoard = {
 					_ctrlPos = ctrlPosition _ctrl;
 					_ctrlPosH = (_ctrlPos select 3) + (1.5 * (0.021 / (getResolution select 5)));
 					_ctrlPos set [3,_ctrlPosH];
-					if (_foreachindex == 0 && {_a3c_dsp == 7999}) then {
+					if (_foreachindex == 0 && {_a3c_dsp == 100040}) then {
 						//-- adjust parent Y
 						_ctrlPosY = (_ctrlPos select 1) - (0.75 * (0.021 / (getResolution select 5)));
 						_ctrlPos set [1,_ctrlPosY];
@@ -985,7 +985,7 @@ for "_i" from 10008 to 10039 do { //-- outer ring buttons
 
 A3C_RADIAL_CloseDisplay = {
 	showHud ([true]  + (shownhud select [1,10]));
-	(findDisplay 7999) closeDisplay 0;
+	(findDisplay 100040) closeDisplay 0;
 };
 
 
@@ -994,50 +994,50 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 
 	//-- clean wipe
 	for "_i" from 9001 to 9028 do { //-- inner ring buttons
-		(findDisplay 7999 displayCtrl _i) ctrlShow false;
+		(findDisplay 100040 displayCtrl _i) ctrlShow false;
 	};
 	for "_i" from 8001 to 8004 do { //-- outer ring backgrounds
-		(findDisplay 7999 displayCtrl _i) ctrlShow false;
+		(findDisplay 100040 displayCtrl _i) ctrlShow false;
 	};
 	for "_i" from 10008 to 10039 do { //-- outer ring buttons
-		(findDisplay 7999 displayCtrl _i) ctrlShow false;
+		(findDisplay 100040 displayCtrl _i) ctrlShow false;
 	};
 
 	//if (true) exitWith {};
 
 
-	{(findDisplay 7999 displayCtrl _x) ctrlShow false} foreach [8071,8096,8097,8098,8099,9000];
+	{(findDisplay 100040 displayCtrl _x) ctrlShow false} foreach [8071,8096,8097,8098,8099,9000];
 
 
 	//-- no need to reset formation stuff. WHen switched, RD_UNITS is [] anyways
 	//A3C_RADIAL_HOVER = false;
 	A3C_RADIAL_HOVER = true;
 
-	(findDisplay 7999 displayCtrl 9013) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_form_Wedge.Paa";
-	(findDisplay 7999 displayCtrl 9014) ctrlSetToolTip "FORMATIONS"; //-- move unstuck to it's own action
-	{(findDisplay 7999 displayCtrl _x) ctrlShow true} foreach [9013,9014];
+	(findDisplay 100040 displayCtrl 9013) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_form_Wedge.Paa";
+	(findDisplay 100040 displayCtrl 9014) ctrlSetToolTip "FORMATIONS"; //-- move unstuck to it's own action
+	{(findDisplay 100040 displayCtrl _x) ctrlShow true} foreach [9013,9014];
 	private _teamColorMode = "INF";
 	if (_commandLevel == "SQUAD") then {
 		showHud ([false] + (shownhud select [1,10]));
 
-		(findDisplay 7999 displayCtrl 21000) ctrlShow true;
-		(findDisplay 7999 displayCtrl 21001) ctrlShow true;
+		(findDisplay 100040 displayCtrl 21000) ctrlShow true;
+		(findDisplay 100040 displayCtrl 21001) ctrlShow true;
 
 
-		(findDisplay 7999 displayCtrl 9001) ctrlSetText  "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-		(findDisplay 7999 displayCtrl 9002) ctrlSetToolTip "AI Actions";
-		(findDisplay 7999 displayCtrl 9003) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_ROE_main.paa";
-		(findDisplay 7999 displayCtrl 9004) ctrlSetToolTip "RULES OF ENGAGEMENT";
+		(findDisplay 100040 displayCtrl 9001) ctrlSetText  "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+		(findDisplay 100040 displayCtrl 9002) ctrlSetToolTip "AI Actions";
+		(findDisplay 100040 displayCtrl 9003) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_ROE_main.paa";
+		(findDisplay 100040 displayCtrl 9004) ctrlSetToolTip "RULES OF ENGAGEMENT";
 
-		(findDisplay 7999 displayCtrl 9005) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_groupManagement.paa";
-		(findDisplay 7999 displayCtrl 9006) ctrlSetToolTip "AI AUTO_FUNCTIONS";
-		(findDisplay 7999 displayCtrl 9007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";
-		(findDisplay 7999 displayCtrl 9008) ctrlSetToolTip "AI STANCES (RMB: TOGGLE GOCODES)";
+		(findDisplay 100040 displayCtrl 9005) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_groupManagement.paa";
+		(findDisplay 100040 displayCtrl 9006) ctrlSetToolTip "AI AUTO_FUNCTIONS";
+		(findDisplay 100040 displayCtrl 9007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";
+		(findDisplay 100040 displayCtrl 9008) ctrlSetToolTip "AI STANCES (RMB: TOGGLE GOCODES)";
 
-		((findDisplay 7999) displayctrl 9009) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_rifle.paa";// ((getText (configfile >> "CfgWeapons" >> (primaryWeapon (A3C_RD_UNITS select 0)) >> "picture")));
-		(findDisplay 7999 displayCtrl 9010) ctrlSetToolTip "WEAPON ITEMS";
-		(findDisplay 7999 displayCtrl 9011) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_vehicleboard.paa";
-		(findDisplay 7999 displayCtrl 9012) ctrlSetToolTip "LMB: TOGGLE VEHICLE OPTIONS || RMB: DISMOUNT SELECTED UNITS";
+		((findDisplay 100040) displayctrl 9009) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_rifle.paa";// ((getText (configfile >> "CfgWeapons" >> (primaryWeapon (A3C_RD_UNITS select 0)) >> "picture")));
+		(findDisplay 100040 displayCtrl 9010) ctrlSetToolTip "WEAPON ITEMS";
+		(findDisplay 100040 displayCtrl 9011) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_vehicleboard.paa";
+		(findDisplay 100040 displayCtrl 9012) ctrlSetToolTip "LMB: TOGGLE VEHICLE OPTIONS || RMB: DISMOUNT SELECTED UNITS";
 
 		
 
@@ -1045,16 +1045,16 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 
 
 		for "_i" from 9001 to 9028 do {
-			(findDisplay 7999 displayCtrl _i) ctrlShow true;
+			(findDisplay 100040 displayCtrl _i) ctrlShow true;
 		};
 
 
-		(findDisplay 7999 displayCtrl 8005) ctrlSetText (toUpper (groupID group player));
+		(findDisplay 100040 displayCtrl 8005) ctrlSetText (toUpper (groupID group player));
 
 		[0] call A3C_GREN_DATA;
 		[] call A3C_GREN_VISUAL;
 
-		(findDisplay 7999 displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
+		(findDisplay 100040 displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
 
 	} else {
 		showHud ([true] + (shownhud select [1,10]));
@@ -1063,56 +1063,56 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 
 		
 
-		(findDisplay 7999 displayCtrl 21000) ctrlShow false;
-		(findDisplay 7999 displayCtrl 21001) ctrlShow false;
+		(findDisplay 100040 displayCtrl 21000) ctrlShow false;
+		(findDisplay 100040 displayCtrl 21001) ctrlShow false;
 		
 
-		//(findDisplay 7999 displayCtrl 8005) ctrlSetText "SELECT UNIT";
+		//(findDisplay 100040 displayCtrl 8005) ctrlSetText "SELECT UNIT";
 
-		(findDisplay 7999 displayCtrl 9001) ctrlShow true;
-		(findDisplay 7999 displayCtrl 9001) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_pin.paa";
-		(findDisplay 7999 displayCtrl 9002) ctrlShow true;
-		(findDisplay 7999 displayCtrl 9002) ctrlSetToolTip format ["MOVE - CONFIRM WITH 'Spacebar', CANCEL BY RELEASING %1",["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION];
+		(findDisplay 100040 displayCtrl 9001) ctrlShow true;
+		(findDisplay 100040 displayCtrl 9001) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_pin.paa";
+		(findDisplay 100040 displayCtrl 9002) ctrlShow true;
+		(findDisplay 100040 displayCtrl 9002) ctrlSetToolTip format ["MOVE - CONFIRM WITH 'Spacebar', CANCEL BY RELEASING %1",["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION];
 
-		(findDisplay 7999 displayCtrl 9003) ctrlShow true;
-		(findDisplay 7999 displayCtrl 9003) ctrlSetText "\a3\ui_f\data\GUI\Cfg\Ranks\colonel_gs.paa";
-		(findDisplay 7999 displayCtrl 9004) ctrlShow true;
-		(findDisplay 7999 displayCtrl 9004) ctrlSetToolTip "HC-ACTIONS";
+		(findDisplay 100040 displayCtrl 9003) ctrlShow true;
+		(findDisplay 100040 displayCtrl 9003) ctrlSetText "\a3\ui_f\data\GUI\Cfg\Ranks\colonel_gs.paa";
+		(findDisplay 100040 displayCtrl 9004) ctrlShow true;
+		(findDisplay 100040 displayCtrl 9004) ctrlSetToolTip "HC-ACTIONS";
 
-		(findDisplay 7999 displayCtrl 9005) ctrlShow true;
-		(findDisplay 7999 displayCtrl 9005) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
-		(findDisplay 7999 displayCtrl 9006) ctrlShow true;
-		(findDisplay 7999 displayCtrl 9006) ctrlSetToolTip "HC STANCES";
+		(findDisplay 100040 displayCtrl 9005) ctrlShow true;
+		(findDisplay 100040 displayCtrl 9005) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
+		(findDisplay 100040 displayCtrl 9006) ctrlShow true;
+		(findDisplay 100040 displayCtrl 9006) ctrlSetToolTip "HC STANCES";
 
-		(findDisplay 7999 displayCtrl 9007) ctrlShow true;
-		(findDisplay 7999 displayCtrl 9007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
-		(findDisplay 7999 displayCtrl 9008) ctrlShow true;
-		(findDisplay 7999 displayCtrl 9008) ctrlSetToolTip "GO CODES";
+		(findDisplay 100040 displayCtrl 9007) ctrlShow true;
+		(findDisplay 100040 displayCtrl 9007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
+		(findDisplay 100040 displayCtrl 9008) ctrlShow true;
+		(findDisplay 100040 displayCtrl 9008) ctrlSetToolTip "GO CODES";
 
 
 
-		(findDisplay 7999 displayCtrl 9009) ctrlShow true;
-		(findDisplay 7999 displayCtrl 9009) ctrlSetText "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\attack_ca.paa";
-		(findDisplay 7999 displayCtrl 9010) ctrlShow true;
-		(findDisplay 7999 displayCtrl 9010) ctrlSetToolTip "HC BEHAVIOUR";
+		(findDisplay 100040 displayCtrl 9009) ctrlShow true;
+		(findDisplay 100040 displayCtrl 9009) ctrlSetText "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\attack_ca.paa";
+		(findDisplay 100040 displayCtrl 9010) ctrlShow true;
+		(findDisplay 100040 displayCtrl 9010) ctrlSetToolTip "HC BEHAVIOUR";
 
-		(findDisplay 7999 displayCtrl 9011) ctrlShow true;
-		(findDisplay 7999 displayCtrl 9011) ctrlSetText "\a3\ui_f\data\Map\Markers\Military\dot_ca.paa";
-		(findDisplay 7999 displayCtrl 9012) ctrlShow true;
-		(findDisplay 7999 displayCtrl 9012) ctrlSetToolTip "HC COMBAT-MODE";
+		(findDisplay 100040 displayCtrl 9011) ctrlShow true;
+		(findDisplay 100040 displayCtrl 9011) ctrlSetText "\a3\ui_f\data\Map\Markers\Military\dot_ca.paa";
+		(findDisplay 100040 displayCtrl 9012) ctrlShow true;
+		(findDisplay 100040 displayCtrl 9012) ctrlSetToolTip "HC COMBAT-MODE";
 
 
 		A3C_RD_BOOL_UNITS = true;
 
-		{(findDisplay 7999 displayCtrl _x) ctrlShow true} foreach [8097,8098,8099,9000]; //8071,8096,
+		{(findDisplay 100040 displayCtrl _x) ctrlShow true} foreach [8097,8098,8099,9000]; //8071,8096,
 
 		//[] call A3C_TOGGLE_GOCODE_CTRLS;
 		//[] call A3C_RD_LABEL_SELECTORS;
 		
 	};
 
-	(findDisplay 7999 displayCtrl 8095) ctrlShow false; //-- teamcolor listbox - has to happen after UNIT SELECTOR group is opened
-	[7999] call A3C_MAPTAB_TREE_LABEL; 
+	(findDisplay 100040 displayCtrl 8095) ctrlShow false; //-- teamcolor listbox - has to happen after UNIT SELECTOR group is opened
+	[100040] call A3C_MAPTAB_TREE_LABEL; 
 };
 
 
@@ -1151,29 +1151,29 @@ A3C_HCALLGROUPS_ORGANIZED = {
 	
 A3C_UI_RADIAL_TOGGLE_LEFT_EXT = {
 	params ["_mode"];
-	//systemchat str [_mode,A3C_RD_BOOL_UNITS,!(ctrlShown (findDisplay 7999 displayCtrl 8071))];
+	//systemchat str [_mode,A3C_RD_BOOL_UNITS,!(ctrlShown (findDisplay 100040 displayCtrl 8071))];
 	
 	if (_mode == "OPEN") then {
 		if (A3C_RD_BOOL_UNITS) then {
-			if !(ctrlShown (findDisplay 7999 displayCtrl 8071)) then {
+			if !(ctrlShown (findDisplay 100040 displayCtrl 8071)) then {
 				playsound "ReadOutHideClick1"; 
 				A3C_RD_BOOL_UNITS = false;
 				{
-					(findDisplay 7999 displayCtrl _x) ctrlShow true
+					(findDisplay 100040 displayCtrl _x) ctrlShow true
 				} foreach [8071,8096,8097,8098,8099,9000];
-				(findDisplay 7999 displayCtrl 8095) ctrlShow false;
-				[7999,if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {"INF"} else {"HC"}] call A3C_MAP_UI_Overlay_ResizeTeamColorsXWH;
+				(findDisplay 100040 displayCtrl 8095) ctrlShow false;
+				[100040,if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {"INF"} else {"HC"}] call A3C_MAP_UI_Overlay_ResizeTeamColorsXWH;
 				[0] call A3C_MAPTAB_RESIZE_TEAMCOLORS_Y;
-				[7999,8071] execFSM "A3C_CORE\FSM\A3C_MON_RADIAL.fsm";
+				[100040,8071] execFSM "A3C_CORE\FSM\A3C_MON_RADIAL.fsm";
 
 				//[] call A3C_RD_LABEL_SELECTORS;
 			}
 		};
 	} else {
-		if (ctrlShown(findDisplay 7999 displayCtrl 8071)) then {
+		if (ctrlShown(findDisplay 100040 displayCtrl 8071)) then {
 			playsound "ReadOutHideClick1"; 
 			{
-				(findDisplay 7999 displayCtrl _x) ctrlShow false;
+				(findDisplay 100040 displayCtrl _x) ctrlShow false;
 			} foreach [8071,8096,8097,8098,8099,9000];
 			A3C_RD_BOOL_UNITS = false;
 		};
@@ -1194,7 +1194,7 @@ A3C_RD_LABEL_SELECTORS = { //~~ currently unused
 	_backCol = [1,1,1,0.7];
 	_u = objnull;
 	_unitIndex = -1;
-	_a3c_dsp = 7999;
+	_a3c_dsp = 100040;
 	_sub = 8000;
 	_from = 8073;
 	_to = 8090;
@@ -1205,20 +1205,20 @@ A3C_RD_LABEL_SELECTORS = { //~~ currently unused
 
 	_showHOLDCONT = if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {true} else {false};
 	for "_i" from 8097 to 9000 do {
-		(findDisplay 7999 displayCtrl _i) ctrlShow _showHOLDCONT;
+		(findDisplay 100040 displayCtrl _i) ctrlShow _showHOLDCONT;
 	};
 
 
 
 	/*
-	if !(isnull (findDisplay 6998)) then {
-		_a3c_dsp = 6998;
+	if !(isnull (findDisplay 100020)) then {
+		_a3c_dsp = 100020;
 		_sub = 8000;
 		_from = 7025;
 		_to = 7040;
 	};
-	if !(isnull (findDisplay 6999)) then {
-		_a3c_dsp = 6999;
+	if !(isnull (findDisplay 100030)) then {
+		_a3c_dsp = 100030;
 		_sub = 8000;
 		_from = 7025;
 		_to = 7040;
@@ -1303,7 +1303,7 @@ A3C_RD_LABEL_SELECTORS = { //~~ currently unused
 	};
 	if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
 		if (count A3C_RD_UNITS > 0 ) then {
-			if (ctrlShown (findDisplay 7999 displayCtrl 8001)) then {
+			if (ctrlShown (findDisplay 100040 displayCtrl 8001)) then {
 				["ROE",0] call A3C_RADIAL_BTN_FNC_RING_INNER;
 			};
 		};
@@ -1315,10 +1315,10 @@ A3C_UI_RADIAL_TOGGLE_OUTER_RING = {
 
 	params ["_bool"];
 	for "_i" from 10008 to 10039 do {
-		((findDisplay 7999) displayCtrl _i) ctrlShow _bool;
+		((findDisplay 100040) displayCtrl _i) ctrlShow _bool;
 	};
 	for "_i" from 8001 to 8004 do {
-		((findDisplay 7999) displayCtrl _i) ctrlShow _bool;
+		((findDisplay 100040) displayCtrl _i) ctrlShow _bool;
 	};
 };
 
@@ -1355,14 +1355,14 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 
 	A3C_LBR_1 = "";
 	for "_i" from 0 to 45 do {
-		if (ctrlType (findDisplay 7999 displayCtrl (10101 + _i)) != -1) then {
-			ctrlDelete (findDisplay 7999 displayCtrl (10101 + _i));
-			ctrlDelete (findDisplay 7999 displayCtrl (10101 + _i + 1));
+		if (ctrlType (findDisplay 100040 displayCtrl (10101 + _i)) != -1) then {
+			ctrlDelete (findDisplay 100040 displayCtrl (10101 + _i));
+			ctrlDelete (findDisplay 100040 displayCtrl (10101 + _i + 1));
 		};
 	};
 
 	for "_i" from 11101 to 11104 do {
-		ctrlDelete (findDisplay 7999 displayCtrl _i);
+		ctrlDelete (findDisplay 100040 displayCtrl _i);
 	};
 
 	
@@ -1391,11 +1391,11 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 					};
 					//-- reset outer ring buttons
 					for "_i" from 10008 to 10039 do { //BBBBBBB
-						(findDisplay 7999 displayCtrl _i) ctrlShow false;
+						(findDisplay 100040 displayCtrl _i) ctrlShow false;
 						if (_i % 2 == 0) then {
-							(findDisplay 7999 displayCtrl _i) ctrlSetText "";
+							(findDisplay 100040 displayCtrl _i) ctrlSetText "";
 						} else {
-							(findDisplay 7999 displayCtrl _i) ctrlSetTooltip "";
+							(findDisplay 100040 displayCtrl _i) ctrlSetTooltip "";
 						};
 					};
 
@@ -1406,10 +1406,10 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						_ind = _i - 8000;
 
 						if ( _ind <= ((ceil ((count _formations) / 4) ) min 3)    ) then {
-							(findDisplay 7999 displayCtrl _i) ctrlShow true; //-- outer circle backgroud shown
-							(findDisplay 7999 displayCtrl _i) ctrlSetText (format ["A3C_CORE\ui\pictures\BG_Radial_OuterRing_%1.paa",_outerRingBackGroundIDs select _ind]);
+							(findDisplay 100040 displayCtrl _i) ctrlShow true; //-- outer circle backgroud shown
+							(findDisplay 100040 displayCtrl _i) ctrlSetText (format ["A3C_CORE\ui\pictures\BG_Radial_OuterRing_%1.paa",_outerRingBackGroundIDs select _ind]);
 						} else {
-							(findDisplay 7999 displayCtrl _i) ctrlShow false; //-- outer circle backgroud hidden
+							(findDisplay 100040 displayCtrl _i) ctrlShow false; //-- outer circle backgroud hidden
 						};
 					};
 					
@@ -1432,8 +1432,8 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						_imgID = ((10039 - (_foreachIndex * 2)) - 1);
 						_buttonitem = 16 - _foreachIndex;
 						//systemchat str _btnID;
-						_btnClicker = findDisplay 7999 displayCtrl _btnID;
-						_btnImage = findDisplay 7999 displayCtrl _imgID;
+						_btnClicker = findDisplay 100040 displayCtrl _btnID;
+						_btnImage = findDisplay 100040 displayCtrl _imgID;
 						{_x ctrlShow true} foreach [_btnImage,_btnClicker];
 						_btnImagePath = format ["A3C_CORE\ui\pictures\icon_menu_form_%1.Paa",_imageStrings select _foreachIndex];
 						_btnImage ctrlSetText _btnImagePath;
@@ -1501,7 +1501,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 					[0] call A3C_GREN_DATA;
 					//-- hide right extension buttons - does this happen here??
 					for "_i" from 8053 to 8068 do {
-						(findDisplay 7999 displayCtrl _i) ctrlShow false;
+						(findDisplay 100040 displayCtrl _i) ctrlShow false;
 					};
 				} else {
 					BV_GREN = 0;
@@ -1527,9 +1527,9 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 
 					//-- hide right extension buttons - does this happen here??
 					for "_i" from 8053 to 8068 do {
-						(findDisplay 7999 displayCtrl _i) ctrlShow false;
+						(findDisplay 100040 displayCtrl _i) ctrlShow false;
 					};
-					[7999,A3C_RD_UNITS,A3C_UI_RADIAL_BTN_DATA_OUTER_RING] call A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS;
+					[100040,A3C_RD_UNITS,A3C_UI_RADIAL_BTN_DATA_OUTER_RING] call A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS;
 
 					//systemchat str A3C_DYNAMIC_BUTTON_ACTIONS;
 					_outerRingBackGroundIDs = ["Placeholder","Top","Right","bottom"];
@@ -1537,15 +1537,15 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						_ind = _i - 8000;
 						if ( _ind <= ((ceil ((count A3C_DYNAMIC_BUTTON_ACTIONS) / 4) ) min 3)    ) then {
 							//if (_doToggle) then {
-								(findDisplay 7999 displayCtrl _i) ctrlShow true; //-- outer circle backgroud shown
-								(findDisplay 7999 displayCtrl _i) ctrlSetText (format ["A3C_CORE\ui\pictures\BG_Radial_OuterRing_%1.paa",_outerRingBackGroundIDs select _ind]);
+								(findDisplay 100040 displayCtrl _i) ctrlShow true; //-- outer circle backgroud shown
+								(findDisplay 100040 displayCtrl _i) ctrlSetText (format ["A3C_CORE\ui\pictures\BG_Radial_OuterRing_%1.paa",_outerRingBackGroundIDs select _ind]);
 							//};
 						} else {
-							(findDisplay 7999 displayCtrl _i) ctrlShow false; //-- outer circle backgroud hidden
+							(findDisplay 100040 displayCtrl _i) ctrlShow false; //-- outer circle backgroud hidden
 						};
 					};
 					for "_i" from 10008 to 10039 do { //-- outer ring buttons
-						(findDisplay 7999 displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
+						(findDisplay 100040 displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
 					};
 				} else {
 					BV_ACT = 0;
@@ -1628,11 +1628,11 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 					
 				} else {
 					for "_i" from 10008 to 10039 do {
-						(findDisplay 7999 displayCtrl _i) ctrlShow false;
+						(findDisplay 100040 displayCtrl _i) ctrlShow false;
 					};
 					//-- outer ring backgrounds
 					for "_i" from 8001 to 8004 do {
-						(findDisplay 7999 displayCtrl _i) ctrlShow false; //-- outer circle backgroud hidden
+						(findDisplay 100040 displayCtrl _i) ctrlShow false; //-- outer circle backgroud hidden
 					};
 				};
 				
@@ -1655,18 +1655,18 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							BV_ROE = 1;
 						};
 
-						{((findDisplay 7999) displayCtrl _x) ctrlShow true} foreach [8001,8002]; //,8003,8004
-						((findDisplay 7999) displayCtrl 8001) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Top.paa";
-						((findDisplay 7999) displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right_Var1.paa";
-						// ((findDisplay 7999) displayCtrl 8003) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom_Var1.paa";
-						// ((findDisplay 7999) displayCtrl 8004) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Left.paa";
+						{((findDisplay 100040) displayCtrl _x) ctrlShow true} foreach [8001,8002]; //,8003,8004
+						((findDisplay 100040) displayCtrl 8001) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Top.paa";
+						((findDisplay 100040) displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right_Var1.paa";
+						// ((findDisplay 100040) displayCtrl 8003) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom_Var1.paa";
+						// ((findDisplay 100040) displayCtrl 8004) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Left.paa";
 
 						//-- TOP RING
 						for "_i" from 10008 to 10015 do {
-							((findDisplay 7999) displayCtrl _i) ctrlShow true;
+							((findDisplay 100040) displayCtrl _i) ctrlShow true;
 							if (_i % 2 == 0) then {
 								//-- ICONS
-								((findDisplay 7999) displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
+								((findDisplay 100040) displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
 								private _ico = switch _i do {
 									case (10008) : {"A3C_CORE\ui\pictures\icon_menu_ROE_FAW.paa"};
 									case (10010) : {"A3C_CORE\ui\pictures\icon_menu_ROE_FOT.paa"};
@@ -1679,7 +1679,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 										}
 									};
 								};
-								((findDisplay 7999) displayCtrl _i) ctrlSetText _ico;
+								((findDisplay 100040) displayCtrl _i) ctrlSetText _ico;
 							} else {
 								//-- BUTTONS
 								private _toolTip = switch _i do {
@@ -1694,7 +1694,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 										}
 									};
 								};
-								((findDisplay 7999) displayCtrl _i) ctrlSetTooltip _toolTip;
+								((findDisplay 100040) displayCtrl _i) ctrlSetTooltip _toolTip;
 							};
 						};
 
@@ -1710,21 +1710,21 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						//"\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\target_ca.paa"
 
 						for "_i" from 10016 to 10023 do {
-							((findDisplay 7999) displayCtrl _i) ctrlShow false;
+							((findDisplay 100040) displayCtrl _i) ctrlShow false;
 						};
 
 
 						// //-- RIGHT RING - COMBAT MODES / BEHAVIOUR MACRO SELECTOR
-						((findDisplay 7999) displayCtrl 10016) ctrlShow true;
-						((findDisplay 7999) displayCtrl 10017) ctrlShow true;
-						((findDisplay 7999) displayCtrl 10016) ctrlSetText _combatModeIcon;
-						((findDisplay 7999) displayCtrl 10017) ctrlSetTooltip "COMBAT MODES AND BEHAVIOUR";
-						((findDisplay 7999) displayCtrl 10016) ctrlSetTextColor [1,1,1,0.4];
+						((findDisplay 100040) displayCtrl 10016) ctrlShow true;
+						((findDisplay 100040) displayCtrl 10017) ctrlShow true;
+						((findDisplay 100040) displayCtrl 10016) ctrlSetText _combatModeIcon;
+						((findDisplay 100040) displayCtrl 10017) ctrlSetTooltip "COMBAT MODES AND BEHAVIOUR";
+						((findDisplay 100040) displayCtrl 10016) ctrlSetTextColor [1,1,1,0.4];
 						// SYSTEMCHAT STR time;
 
 
 						// for "_i" from 10016 to 10023 do {
-						// 	((findDisplay 7999) displayCtrl _i) ctrlShow true;
+						// 	((findDisplay 100040) displayCtrl _i) ctrlShow true;
 						// 	if (_i % 2 == 0) then {
 						// 		//-- ICONS
 
@@ -1736,8 +1736,8 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						// 			case (10020) : {[1,1,1,0.4]};
 						// 			case (10022) : {[0,1,0,0.4]};
 						// 		};
-						// 		((findDisplay 7999) displayCtrl _i) ctrlSetText _combatModeIcon;
-						// 		((findDisplay 7999) displayCtrl _i) ctrlSetTextColor _col;
+						// 		((findDisplay 100040) displayCtrl _i) ctrlSetText _combatModeIcon;
+						// 		((findDisplay 100040) displayCtrl _i) ctrlSetTextColor _col;
 
 						// 	} else {
 						// 		//-- BUTTONS
@@ -1747,27 +1747,27 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						// 			case (10021)  : {"ROE: Hold fire, engage at will"};
 						// 			case (10023) : {"ROE: Hold fire, defend only"};
 						// 		};
-						// 		((findDisplay 7999) displayCtrl _i) ctrlSetTooltip _toolTip;
+						// 		((findDisplay 100040) displayCtrl _i) ctrlSetTooltip _toolTip;
 						// 	};
 						// };
 
 
 						// //-- BOTTOM RING - SPLIT USAGE
-						// {(findDisplay 7999 displayCtrl _x) ctrlShow true} foreach [10024,10025,10030,10031]; //-- used buttons (1 and 4)
-						// {(findDisplay 7999 displayCtrl _x) ctrlShow false} foreach [10026,10027,10028,10029]; //-- unused buttons (2 and 3)
+						// {(findDisplay 100040 displayCtrl _x) ctrlShow true} foreach [10024,10025,10030,10031]; //-- used buttons (1 and 4)
+						// {(findDisplay 100040 displayCtrl _x) ctrlShow false} foreach [10026,10027,10028,10029]; //-- unused buttons (2 and 3)
 						// //-- combat mode: blue
-						// ((findDisplay 7999) displayCtrl 10024) ctrlSetText _combatModeIcon;
-						// ((findDisplay 7999) displayCtrl 10024) ctrlSetTextColor [0.17,0.86,0.92,0.6];
-						// ((findDisplay 7999) displayCtrl 10025) ctrlSetTooltip "ROE: Never Fire";
+						// ((findDisplay 100040) displayCtrl 10024) ctrlSetText _combatModeIcon;
+						// ((findDisplay 100040) displayCtrl 10024) ctrlSetTextColor [0.17,0.86,0.92,0.6];
+						// ((findDisplay 100040) displayCtrl 10025) ctrlSetTooltip "ROE: Never Fire";
 						// //-- behaviour: careless
-						// ((findDisplay 7999) displayCtrl 10030) ctrlSetText _behaviorIcon;
-						// ((findDisplay 7999) displayCtrl 10030) ctrlSetTextColor [0.17,0.86,0.92,0.6];
-						// ((findDisplay 7999) displayCtrl 10031) ctrlSetTooltip "BEHAVIOR: CARELESS";
+						// ((findDisplay 100040) displayCtrl 10030) ctrlSetText _behaviorIcon;
+						// ((findDisplay 100040) displayCtrl 10030) ctrlSetTextColor [0.17,0.86,0.92,0.6];
+						// ((findDisplay 100040) displayCtrl 10031) ctrlSetTooltip "BEHAVIOR: CARELESS";
 
 
 						// //-- LEFT RING - BEHAVIOUR
 						// for "_i" from 10032 to 10039 do {
-						// 	((findDisplay 7999) displayCtrl _i) ctrlShow true;
+						// 	((findDisplay 100040) displayCtrl _i) ctrlShow true;
 						// 	if (_i % 2 == 0) then {
 						// 		//-- ICONS
 						// 		private _col = [0,0,0,0];
@@ -1779,8 +1779,8 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						// 			case (10038) : {[0.5,0,0,0.4]};
 
 						// 		};
-						// 		((findDisplay 7999) displayCtrl _i) ctrlSetText _ico;
-						// 		((findDisplay 7999) displayCtrl _i) ctrlSetTextColor _col;
+						// 		((findDisplay 100040) displayCtrl _i) ctrlSetText _ico;
+						// 		((findDisplay 100040) displayCtrl _i) ctrlSetTextColor _col;
 						// 	} else {
 						// 		//-- BUTTONS
 						// 		private _toolTip = switch _i do {
@@ -1789,13 +1789,13 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						// 			case (10037)  : {"BEHAVIOR: AWARE"};
 						// 			case (10039) : {"BEHAVIOR: COMBAT"};
 						// 		};
-						// 		((findDisplay 7999) displayCtrl _i) ctrlSetTooltip _toolTip;
+						// 		((findDisplay 100040) displayCtrl _i) ctrlSetTooltip _toolTip;
 						// 	};
 						// };
 
 						//-- HIDE RIGHT EXTENTION
 						for "_i" from 8053 to 8068 do {
-							(findDisplay 7999 displayCtrl _i) ctrlShow false;
+							(findDisplay 100040 displayCtrl _i) ctrlShow false;
 						};
 						BV_MEDICAL = 0;
 						BV_CBMODE = 0;
@@ -1944,11 +1944,11 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 				_actions = [A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED,_doToggle] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 
 				for "_i" from 8001 to 8004 do {
-					(findDisplay 7999 displayCtrl _i) ctrlShow false;
+					(findDisplay 100040 displayCtrl _i) ctrlShow false;
 				};
 
 				for "_i" from 10008 to 10039 do { //-- outer ring buttons
-					(findDisplay 7999 displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
+					(findDisplay 100040 displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
 				};
 
 				if (count _actions > 0) then {
@@ -1959,9 +1959,9 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							case (3) : {"Bottom"};
 							case (4) : {"Left"};
 						};
-						(findDisplay 7999 displayCtrl (8000 + _i)) ctrlSetText format ["A3C_CORE\ui\pictures\BG_Radial_OuterRing_%1.paa",_imgString];
+						(findDisplay 100040 displayCtrl (8000 + _i)) ctrlSetText format ["A3C_CORE\ui\pictures\BG_Radial_OuterRing_%1.paa",_imgString];
 						if (_doToggle) then {
-							(findDisplay 7999 displayCtrl (8000 + _i)) ctrlShow true;
+							(findDisplay 100040 displayCtrl (8000 + _i)) ctrlShow true;
 						};
 					};
 
@@ -1979,7 +1979,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 				BV_LB2 = 7;
 				BV_GREN = 0;
 				_bv = "BV_BRAIN";
-				{((findDisplay 7999) displayCtrl _x) ctrlSetTextColor [1,1,1,0.6]} foreach [10016,10018,10020,10022];
+				{((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [1,1,1,0.6]} foreach [10016,10018,10020,10022];
 				if (_btn == 1) then {
 					//-- right click macro unit lookdir+unitpos reset
 					 player groupRadio "SentBehaviourSafe";
@@ -1989,47 +1989,47 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 					[false] call A3C_UI_RADIAL_TOGGLE_OUTER_RING;
 					if (BV_BRAIN == 0) then {
 
-						((findDisplay 7999) displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
-						((findDisplay 7999) displayCtrl 8002) ctrlShow true;
+						((findDisplay 100040) displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
+						((findDisplay 100040) displayCtrl 8002) ctrlShow true;
 						if (_btn != -1) then {
 							BV_BRAIN = 1;
 						};
-						{((findDisplay 7999) displayCtrl _x) ctrlShow false} foreach [8001,8003,8004];
+						{((findDisplay 100040) displayCtrl _x) ctrlShow false} foreach [8001,8003,8004];
 						for "_i" from 10016 to 10023 do {
-							((findDisplay 7999) displayCtrl _i) ctrlShow true;
+							((findDisplay 100040) displayCtrl _i) ctrlShow true;
 						};
 						for "_i" from 8053 to 8068 do {
-							(findDisplay 7999 displayCtrl _i) ctrlShow false;
+							(findDisplay 100040 displayCtrl _i) ctrlShow false;
 						};
 						BV_MEDICAL = 0;
 						BV_CBMODE = 0;
 						
 						//if ((currentVisionMode player) == 1) then {
-						//	{((findDisplay 7999) displayCtrl _x) ctrlSetTextColor [0,0.3,0.6,0.5]} foreach [10025,8049,8051,8053];
+						//	{((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [0,0.3,0.6,0.5]} foreach [10025,8049,8051,8053];
 						//};
-						((findDisplay 7999) displayCtrl 10016) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_resetWatchdir.paa";
-						((findDisplay 7999) displayCtrl 10017) ctrlSetTooltip "RESET WATCHDIR";
-						((findDisplay 7999) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
+						((findDisplay 100040) displayCtrl 10016) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_resetWatchdir.paa";
+						((findDisplay 100040) displayCtrl 10017) ctrlSetTooltip "RESET WATCHDIR";
+						((findDisplay 100040) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
 						//if (({getdammage _x > 0.1} count (units group player)) > 0) then {
 						if (profileNameSpace getVariable ["A3C_AUTOMEDIC", false]) then {
-							//((findDisplay 7999) displayCtrl 10018) ctrlSetTextColor [0,1,0,0.6];
-							((findDisplay 7999) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_medic_auto.paa";
-							((findDisplay 7999) displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
-							((findDisplay 7999) displayCtrl 10019) ctrlSetTooltip "AI Healing: LMB: open medical controls. || SHIFT+LMB: Closest Medic Heal Player || RMB: AUTO-MEDICS";
+							//((findDisplay 100040) displayCtrl 10018) ctrlSetTextColor [0,1,0,0.6];
+							((findDisplay 100040) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_medic_auto.paa";
+							((findDisplay 100040) displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
+							((findDisplay 100040) displayCtrl 10019) ctrlSetTooltip "AI Healing: LMB: open medical controls. || SHIFT+LMB: Closest Medic Heal Player || RMB: AUTO-MEDICS";
 						} else {
 							if ( {_u = _x; {_u getHitPointDamage _x > 0.2} count A3C_HUMAN_HITPOINTS > 0 } count (units player) > 0 ) then {
-								((findDisplay 7999) displayCtrl 10018) ctrlSetTextColor [1,0.3,0.3,0.6];
-								((findDisplay 7999) displayCtrl 10019) ctrlSetTooltip "AI Healing: LMB: open medical controls. || SHIFT+LMB: Closest Medic Heal Player || RMB: AUTO-MEDICS";
+								((findDisplay 100040) displayCtrl 10018) ctrlSetTextColor [1,0.3,0.3,0.6];
+								((findDisplay 100040) displayCtrl 10019) ctrlSetTooltip "AI Healing: LMB: open medical controls. || SHIFT+LMB: Closest Medic Heal Player || RMB: AUTO-MEDICS";
 							} else {
-								((findDisplay 7999) displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
-								((findDisplay 7999) displayCtrl 10019) ctrlSetTooltip "No units wounded";
+								((findDisplay 100040) displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
+								((findDisplay 100040) displayCtrl 10019) ctrlSetTooltip "No units wounded";
 							};
 						};
 
-						((findDisplay 7999) displayCtrl 10020) ctrlSetText "\a3\ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa"; //"A3C_CORE\ui\pictures\icon_menu_takeCover.paa";
-						((findDisplay 7999) displayCtrl 10021) ctrlSetTooltip "Behaviour & CombatMode";//"FIND COVER";
-						((findDisplay 7999) displayCtrl 10022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_reArm.paa";
-						((findDisplay 7999) displayCtrl 10023) ctrlSetTooltip "RE-ARM (LMB: choose target, RMB: find target)";
+						((findDisplay 100040) displayCtrl 10020) ctrlSetText "\a3\ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa"; //"A3C_CORE\ui\pictures\icon_menu_takeCover.paa";
+						((findDisplay 100040) displayCtrl 10021) ctrlSetTooltip "Behaviour & CombatMode";//"FIND COVER";
+						((findDisplay 100040) displayCtrl 10022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_reArm.paa";
+						((findDisplay 100040) displayCtrl 10023) ctrlSetTooltip "RE-ARM (LMB: choose target, RMB: find target)";
 
 						A3C_OUTER_RING_BTN_fnc_5 =
 						[
@@ -2067,12 +2067,12 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									if (profileNameSpace getVariable ["A3C_AUTOMEDIC", false]) then {
 										profileNameSpace setVariable ["A3C_AUTOMEDIC", false];
 										if ( {_u = _x; {_u getHitPointDamage _x > 0.2} count A3C_HUMAN_HITPOINTS > 0 } count (units player) > 0 ) then {
-											((findDisplay 7999) displayCtrl 10018) ctrlSetTextColor [1,0.3,0.3,0.6];
-											((findDisplay 7999) displayCtrl 10019) ctrlSetTooltip "AI Healing: LMB: open medical controls. SHIFT+LMB: Closest Medic Heal Player (AUTO-mode coming soon)";
+											((findDisplay 100040) displayCtrl 10018) ctrlSetTextColor [1,0.3,0.3,0.6];
+											((findDisplay 100040) displayCtrl 10019) ctrlSetTooltip "AI Healing: LMB: open medical controls. SHIFT+LMB: Closest Medic Heal Player (AUTO-mode coming soon)";
 										} else {
-											((findDisplay 7999) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
-											((findDisplay 7999) displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
-											((findDisplay 7999) displayCtrl 10019) ctrlSetTooltip "No units wounded";
+											((findDisplay 100040) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
+											((findDisplay 100040) displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
+											((findDisplay 100040) displayCtrl 10019) ctrlSetTooltip "No units wounded";
 										};
 									};
 									//--
@@ -2088,8 +2088,8 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 											A3C_LBR_1 = "MEDICAL";
 											//systemchat str _override;
 											//if (_overRide) then {
-												(findDisplay 7999 displayCtrl 8053) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
-												{lbCLear (findDisplay 7999 displayCtrl _x)} foreach [8054,8055];
+												(findDisplay 100040 displayCtrl 8053) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
+												{lbCLear (findDisplay 100040 displayCtrl _x)} foreach [8054,8055];
 												// systemchat "MEDICAL LB";
 												["MEDICAL"] call A3C_LABEL_LB;
 												
@@ -2097,7 +2097,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 										} else {
 											BV_MEDICAL = 0;
 											for "_i" from 8053 to 8058 do {
-												(findDisplay 7999 displayCtrl _i) ctrlShow false;
+												(findDisplay 100040 displayCtrl _i) ctrlShow false;
 											};
 										};
 									} else {
@@ -2128,11 +2128,11 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									//-- right click: toggle auto-medic
 									if !(profileNameSpace getVariable "A3C_AUTOMEDIC") then {
 										profileNameSpace setVariable ["A3C_AUTOMEDIC", true];
-										//((findDisplay 7999) displayCtrl 10018) ctrlSetTextColor [0,1,0,0.6];
-										((findDisplay 7999) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_medic_auto.paa";
-										((findDisplay 7999) displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
+										//((findDisplay 100040) displayCtrl 10018) ctrlSetTextColor [0,1,0,0.6];
+										((findDisplay 100040) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_medic_auto.paa";
+										((findDisplay 100040) displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
 										for "_i" from 8053 to 8068 do {
-											(findDisplay 7999 displayCtrl _i) ctrlShow false;
+											(findDisplay 100040 displayCtrl _i) ctrlShow false;
 										};
 										[] spawn A3C_HEAL_AUTOLOOP;
 									};
@@ -2150,7 +2150,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 
 
 								for "_i" from 8053 to 8058 do {
-									(findDisplay 7999 displayCtrl _i) ctrlShow false;
+									(findDisplay 100040 displayCtrl _i) ctrlShow false;
 								};
 
 
@@ -2163,15 +2163,15 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									//systemchat str _override;
 									//if (_overRide) then {
 										//-- open right extension: combat mode
-										(findDisplay 7999 displayCtrl 8053) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
-										{lbCLear (findDisplay 7999 displayCtrl _x)} foreach [8054,8055];
+										(findDisplay 100040 displayCtrl 8053) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
+										{lbCLear (findDisplay 100040 displayCtrl _x)} foreach [8054,8055];
 										["CBMODE"] call A3C_LABEL_LB;
 									//};
 								} else {
 									//-- close right extension: combat mode
 									BV_CBMODE = 0;
 									for "_i" from 8053 to 8058 do {
-										(findDisplay 7999 displayCtrl _i) ctrlShow false;
+										(findDisplay 100040 displayCtrl _i) ctrlShow false;
 									};
 								};
 							}
@@ -2187,7 +2187,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 								BV_MEDICAL = 0; //-- reset button values for functions that spawn extensions, close extension
 								BV_CBMODE = 0;
 								for "_i" from 8053 to 8058 do {
-									(findDisplay 7999 displayCtrl _i) ctrlShow false;
+									(findDisplay 100040 displayCtrl _i) ctrlShow false;
 								};
 								A3C_LBR_1 = "REARM";
 								if (_button == 0) then {
@@ -2213,12 +2213,12 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 				//-- wipe outer ring
 
 				{
-					(findDisplay 7999 displayCtrl _x) ctrlShow false;
+					(findDisplay 100040 displayCtrl _x) ctrlShow false;
 				} foreach [8001,8002,8003,8004];
 				{
-					(findDisplay 7999 displayCtrl (_x select 0)) ctrlSetText "";
-					(findDisplay 7999 displayCtrl (_x select 1)) ctrlSetToolTip "";
-					{(finddisplay 7999 displayCtrl _x) ctrlShow false} foreach _x;
+					(findDisplay 100040 displayCtrl (_x select 0)) ctrlSetText "";
+					(findDisplay 100040 displayCtrl (_x select 1)) ctrlSetToolTip "";
+					{(finddisplay 100040 displayCtrl _x) ctrlShow false} foreach _x;
 				} foreach A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED;
 				_img = "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
 				_color = [1,1,1,0.5]; //momo
@@ -2232,8 +2232,8 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							case 4 : {"A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa"};
 							case 6 : {"A3C_CORE\ui\pictures\icon_menu_Stance_Prone_RAD.paa"};
 						};
-						(finddisplay 7999 displayCtrl _i) ctrlSetText _img;
-						(finddisplay 7999 displayCtrl _i) ctrlSetTextColor _color;
+						(finddisplay 100040 displayCtrl _i) ctrlSetText _img;
+						(finddisplay 100040 displayCtrl _i) ctrlSetTextColor _color;
 					} else {
 						_toolTip = switch (_i - 10016) do {
 							case 1 : {"AUTO"};
@@ -2241,14 +2241,14 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							case 5 : {"CROUCH"};
 							case 7 : {"PRONE"};
 						};
-						(finddisplay 7999 displayCtrl _i) ctrlSetTooltip _toolTip;
+						(finddisplay 100040 displayCtrl _i) ctrlSetTooltip _toolTip;
 
 					};
-					(finddisplay 7999 displayCtrl _i) ctrlShow true;
+					(finddisplay 100040 displayCtrl _i) ctrlShow true;
 				};
 
-				(findDisplay 7999 displayCtrl 8002) ctrlShow true;
-				(findDisplay 7999 displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
+				(findDisplay 100040 displayCtrl 8002) ctrlShow true;
+				(findDisplay 100040 displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
 				A3C_OUTER_RING_BTN_fnc_5 =
 				[
 					"AUTO",
@@ -2314,23 +2314,23 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 			if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
 				_bv = "BV_STANCES";
 
-				((findDisplay 7999) displayCtrl 8002) ctrlShow true;
-				((findDisplay 7999) displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
-				{((findDisplay 7999) displayCtrl _x) ctrlShow false} foreach [8001,8003,8004];
+				((findDisplay 100040) displayCtrl 8002) ctrlShow true;
+				((findDisplay 100040) displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
+				{((findDisplay 100040) displayCtrl _x) ctrlShow false} foreach [8001,8003,8004];
 
 
 				for "_i" from 10016 to 10023 do {
-					((findDisplay 7999) displayCtrl _i) ctrlShow true;
+					((findDisplay 100040) displayCtrl _i) ctrlShow true;
 				};
 				for "_i" from 10008 to 10015 do {
-					((findDisplay 7999) displayCtrl _i) ctrlShow false;
+					((findDisplay 100040) displayCtrl _i) ctrlShow false;
 				};
 
 				for "_i" from 10024 to 10039 do {
-					((findDisplay 7999) displayCtrl _i) ctrlShow false;
+					((findDisplay 100040) displayCtrl _i) ctrlShow false;
 				};
 				for "_i" from 8053 to 8068 do {
-					(findDisplay 7999 displayCtrl _i) ctrlShow false;
+					(findDisplay 100040 displayCtrl _i) ctrlShow false;
 				};
 				BV_MEDICAL = 0;
 				BV_CBMODE = 0;
@@ -2344,15 +2344,15 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						["STANCE",0] call A3C_RADIAL_BTN_FNC_RING_INNER;
 					} else {
 						BV_STANCES = 3;
-						((findDisplay 7999) displayctrl 10007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
-						((findDisplay 7999) displayCtrl 10016) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
-						((findDisplay 7999) displayCtrl 10017) ctrlSetTooltip "GoCode A";
-						((findDisplay 7999) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_B.paa";
-						((findDisplay 7999) displayCtrl 10019) ctrlSetTooltip "GoCode B";
-						((findDisplay 7999) displayCtrl 10020) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_C.paa";
-						((findDisplay 7999) displayCtrl 10021) ctrlSetTooltip "GoCode C";
-						((findDisplay 7999) displayCtrl 10022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_D.paa";
-						((findDisplay 7999) displayCtrl 10023) ctrlSetTooltip "GoCode D";
+						((findDisplay 100040) displayctrl 10007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
+						((findDisplay 100040) displayCtrl 10016) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
+						((findDisplay 100040) displayCtrl 10017) ctrlSetTooltip "GoCode A";
+						((findDisplay 100040) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_B.paa";
+						((findDisplay 100040) displayCtrl 10019) ctrlSetTooltip "GoCode B";
+						((findDisplay 100040) displayCtrl 10020) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_C.paa";
+						((findDisplay 100040) displayCtrl 10021) ctrlSetTooltip "GoCode C";
+						((findDisplay 100040) displayCtrl 10022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_D.paa";
+						((findDisplay 100040) displayCtrl 10023) ctrlSetTooltip "GoCode D";
 						[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
 
 						A3C_OUTER_RING_BTN_fnc_5 =
@@ -2412,18 +2412,18 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							BV_STANCES = 1;
 						};
 						
-						((findDisplay 7999) displayctrl 9007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";
+						((findDisplay 100040) displayctrl 9007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";
 
-						((findDisplay 7999) displayCtrl 10016) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_auto.paa";
-						((findDisplay 7999) displayCtrl 10017) ctrlSetTooltip "AUTO";
-						((findDisplay 7999) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";
-						((findDisplay 7999) displayCtrl 10019) ctrlSetTooltip "STAND";
-						((findDisplay 7999) displayCtrl 10020) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";
-						((findDisplay 7999) displayCtrl 10021) ctrlSetTooltip "CROUCH";
-						((findDisplay 7999) displayCtrl 10022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_Stance_Prone_RAD.paa";
-						((findDisplay 7999) displayCtrl 10023) ctrlSetTooltip "PRONE";
+						((findDisplay 100040) displayCtrl 10016) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_auto.paa";
+						((findDisplay 100040) displayCtrl 10017) ctrlSetTooltip "AUTO";
+						((findDisplay 100040) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";
+						((findDisplay 100040) displayCtrl 10019) ctrlSetTooltip "STAND";
+						((findDisplay 100040) displayCtrl 10020) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";
+						((findDisplay 100040) displayCtrl 10021) ctrlSetTooltip "CROUCH";
+						((findDisplay 100040) displayCtrl 10022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_Stance_Prone_RAD.paa";
+						((findDisplay 100040) displayCtrl 10023) ctrlSetTooltip "PRONE";
 						{
-							((findDisplay 7999) displayCtrl _x)ctrlSetTextColor [1,1,1,0.6];
+							((findDisplay 100040) displayCtrl _x)ctrlSetTextColor [1,1,1,0.6];
 						} foreach [9007,10016,10018,10020,10022];
 
 						A3C_OUTER_RING_BTN_fnc_5 =
@@ -2477,9 +2477,9 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 					} else {
 						BV_STANCES = 0;
 						for "_i" from 10016 to 10023 do {
-							((findDisplay 7999) displayCtrl _i) ctrlShow false;
+							((findDisplay 100040) displayCtrl _i) ctrlShow false;
 						};
-						((findDisplay 7999) displayCtrl 8002) ctrlShow false;
+						((findDisplay 100040) displayCtrl 8002) ctrlShow false;
 					};
 				};
 			} else {
@@ -2487,12 +2487,12 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 				A3C_RADIALMODE = "HC GOCODE";
 				//-- wipe outer ring
 				{
-					(findDisplay 7999 displayCtrl _x) ctrlShow false;
+					(findDisplay 100040 displayCtrl _x) ctrlShow false;
 				} foreach [8001,8002,8003,8004];
 				{
-					(findDisplay 7999 displayCtrl (_x select 0)) ctrlSetText "";
-					(findDisplay 7999 displayCtrl (_x select 1)) ctrlSetToolTip "";
-					{(finddisplay 7999 displayCtrl _x) ctrlShow false} foreach _x;
+					(findDisplay 100040 displayCtrl (_x select 0)) ctrlSetText "";
+					(findDisplay 100040 displayCtrl (_x select 1)) ctrlSetToolTip "";
+					{(finddisplay 100040 displayCtrl _x) ctrlShow false} foreach _x;
 				} foreach A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED;
 				_img = "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
 
@@ -2508,7 +2508,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							case 6 : {"A3C_CORE\ui\pictures\icon_menu_gocode_D.paa"};
 						};
 
-						(finddisplay 7999 displayCtrl _i) ctrlSetText _img;
+						(finddisplay 100040 displayCtrl _i) ctrlSetText _img;
 					} else {
 						_toolTip = switch (_i - 10016) do {
 							case 1 : {"GOCODE A"};
@@ -2516,15 +2516,15 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							case 5 : {"GOCODE C"};
 							case 7 : {"GOCODE D"};
 						};
-						(finddisplay 7999 displayCtrl _i) ctrlSetTooltip _toolTip;
+						(finddisplay 100040 displayCtrl _i) ctrlSetTooltip _toolTip;
 
 					};
-					(finddisplay 7999 displayCtrl _i) ctrlShow true;
+					(finddisplay 100040 displayCtrl _i) ctrlShow true;
 				};
 				[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0]; //-- check gocodes and assign color
 
-				(findDisplay 7999 displayCtrl 8002) ctrlShow true;
-				(findDisplay 7999 displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa"; //-- aiai
+				(findDisplay 100040 displayCtrl 8002) ctrlShow true;
+				(findDisplay 100040 displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa"; //-- aiai
 				A3C_OUTER_RING_BTN_fnc_5 =
 				[
 					"A",
@@ -2619,12 +2619,12 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 
 				//systemchat str _itemCategories;
 
-				{((findDisplay 7999) displayCtrl _x) ctrlShow false} foreach [8001,8002,8003,8004]; //-- hide all outer curcle bg's
+				{((findDisplay 100040) displayCtrl _x) ctrlShow false} foreach [8001,8002,8003,8004]; //-- hide all outer curcle bg's
 
 
 
 				for "_i" from 10008 to 10039 do {
-					((findDisplay 7999) displayCtrl _i) ctrlShow false; //-- hide all outer curcle buttons
+					((findDisplay 100040) displayCtrl _i) ctrlShow false; //-- hide all outer curcle buttons
 				};
 
 
@@ -2635,19 +2635,19 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						BV_ITEMS = 1;
 					};
 					
-					((findDisplay 7999) displayCtrl 8003) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
-					((findDisplay 7999) displayCtrl 8003) ctrlShow true;
+					((findDisplay 100040) displayCtrl 8003) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
+					((findDisplay 100040) displayCtrl 8003) ctrlShow true;
 
 					for "_i" from 8053 to 8068 do {
-						(findDisplay 7999 displayCtrl _i) ctrlShow false; //-- hide other UI if shown
+						(findDisplay 100040 displayCtrl _i) ctrlShow false; //-- hide other UI if shown
 					};
 					{
 
 
 						switch (true) do {
 							case (_foreachIndex == 4) : {
-								(findDisplay 7999 displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
-								(findDisplay 7999 displayCtrl 8002) ctrlShow true;
+								(findDisplay 100040 displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
+								(findDisplay 100040 displayCtrl 8002) ctrlShow true;
 							};
 						};
 
@@ -2669,10 +2669,10 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									_SwitchWeaponToolTip = "Switch To Rifle";
 								};
 
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetText _SwitchWeaponImage;
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlShow true;
-								((findDisplay 7999) displayCtrl _buttonClickerID) ctrlSetToolTip _SwitchWeaponToolTip;
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetText _SwitchWeaponImage;
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlShow true;
+								((findDisplay 100040) displayCtrl _buttonClickerID) ctrlSetToolTip _SwitchWeaponToolTip;
 								//
 
 								_fnc = {
@@ -2684,7 +2684,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									_tooltip = "";
 									A3C_Prevent_SwitchWeapon = true;
 									_totalStandBy = 0;
-									(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
+									(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 									{
 										_u = _x;
 
@@ -2718,23 +2718,23 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 
 
 									//if (_btnImage != "") then {
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetText _btnImage;
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlSetToolTip _toolTip;
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetText _btnImage;
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlSetToolTip _toolTip;
 									//};
 									sleep (_totalStandBy);
 									A3C_Prevent_SwitchWeapon = false;
-									if (ctrlShown (findDisplay 7999 displayCtrl _buttonImgID) && {"switch" in (ctrlText (findDisplay 7999 displayCtrl _buttonImgID))}) then {
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlShow true;
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
+									if (ctrlShown (findDisplay 100040 displayCtrl _buttonImgID) && {"switch" in (ctrlText (findDisplay 100040 displayCtrl _buttonImgID))}) then {
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlShow true;
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
 									};
 								};
 
 								[_buttonImgID,_buttonClickerID] spawn {
 									params ["_buttonImgID","_buttonClickerID"];
 									waituntil {!(A3C_Prevent_SwitchWeapon)};
-									if (ctrlShown (findDisplay 7999 displayCtrl _buttonImgID) && {"switch" in (ctrlText (findDisplay 7999 displayCtrl _buttonImgID))}) then {
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlShow true;
+									if (ctrlShown (findDisplay 100040 displayCtrl _buttonImgID) && {"switch" in (ctrlText (findDisplay 100040 displayCtrl _buttonImgID))}) then {
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlShow true;
 									};
 								};
 
@@ -2750,10 +2750,10 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									_strobeToolTip = "Remove IR-Strobe";
 								};
 
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetText _strobeImage;
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlShow true;
-								((findDisplay 7999) displayCtrl _buttonClickerID) ctrlSetToolTip _strobeToolTip;
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetText _strobeImage;
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlShow true;
+								((findDisplay 100040) displayCtrl _buttonClickerID) ctrlSetToolTip _strobeToolTip;
 
 								_fnc = {
 									params ["_btnData","_inputParams"];
@@ -2765,7 +2765,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									
 									A3C_Prevent_attach_IR = true;
 									_totalStandBy = 0;
-									(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
+									(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 									{
 										_u = _x;
 
@@ -2820,23 +2820,23 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 
 
 									//if (_btnImage != "") then {
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetText _btnImage;
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlSetToolTip _toolTip;
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetText _btnImage;
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlSetToolTip _toolTip;
 									//};
 									sleep (_totalStandBy);
 									A3C_Prevent_attach_IR = false;
-									if (ctrlShown (findDisplay 7999 displayCtrl _buttonImgID) && {"IRstrobe" in (ctrlText (findDisplay 7999 displayCtrl _buttonImgID))}) then {
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlShow true;
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
+									if (ctrlShown (findDisplay 100040 displayCtrl _buttonImgID) && {"IRstrobe" in (ctrlText (findDisplay 100040 displayCtrl _buttonImgID))}) then {
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlShow true;
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
 									};
 								};
 
 								[_buttonImgID,_buttonClickerID] spawn {
 									params ["_buttonImgID","_buttonClickerID"];
 									waituntil {!(A3C_Prevent_attach_IR)};
-									if (ctrlShown (findDisplay 7999 displayCtrl _buttonImgID) && {"IRstrobe" in (ctrlText (findDisplay 7999 displayCtrl _buttonImgID))}) then {
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlShow true;
+									if (ctrlShown (findDisplay 100040 displayCtrl _buttonImgID) && {"IRstrobe" in (ctrlText (findDisplay 100040 displayCtrl _buttonImgID))}) then {
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlShow true;
 									};
 								};
 
@@ -2851,10 +2851,10 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									_nvgToolTip = "Turn NVG OFF";
 								};
 
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetText _nvgImage;
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlShow true;
-								((findDisplay 7999) displayCtrl _buttonClickerID) ctrlSetToolTip _nvgToolTip;
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetText _nvgImage;
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlShow true;
+								((findDisplay 100040) displayCtrl _buttonClickerID) ctrlSetToolTip _nvgToolTip;
 
 								_fnc = {
 									params ["_btnData","_inputParams"];
@@ -2865,7 +2865,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									_tooltip = "";
 									A3C_Prevent_attach_NVG = true;
 									_totalStandBy = 0;
-									(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
+									(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 									{
 										_u = _x;
 
@@ -2926,22 +2926,22 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 
 
 									//if (_btnImage != "") then {
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetText _btnImage;
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlSetToolTip _toolTip;
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetText _btnImage;
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlSetToolTip _toolTip;
 									//};
 									sleep (_totalStandBy + 2);
 									A3C_Prevent_attach_NVG = false;
-									if (ctrlShown (findDisplay 7999 displayCtrl _buttonImgID) && {"NVG" in (ctrlText (findDisplay 7999 displayCtrl _buttonImgID))}) then {
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlShow true;
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
+									if (ctrlShown (findDisplay 100040 displayCtrl _buttonImgID) && {"NVG" in (ctrlText (findDisplay 100040 displayCtrl _buttonImgID))}) then {
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlShow true;
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
 									};
 								};
 								[_buttonImgID,_buttonClickerID] spawn {
 									params ["_buttonImgID","_buttonClickerID"];
 									waituntil {!(A3C_Prevent_attach_NVG)};
-									if (ctrlShown (findDisplay 7999 displayCtrl _buttonImgID) && {"NVG" in (ctrlText (findDisplay 7999 displayCtrl _buttonImgID))}) then {
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlShow true;
+									if (ctrlShown (findDisplay 100040 displayCtrl _buttonImgID) && {"NVG" in (ctrlText (findDisplay 100040 displayCtrl _buttonImgID))}) then {
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlShow true;
 									};
 								};
 							};
@@ -2959,10 +2959,10 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									_flashlightToolTip = "Turn Flashlight OFF";
 								};
 
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetText _flashlightImage;
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlShow true;
-								((findDisplay 7999) displayCtrl _buttonClickerID) ctrlSetToolTip _flashlightToolTip;
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetText _flashlightImage;
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlShow true;
+								((findDisplay 100040) displayCtrl _buttonClickerID) ctrlSetToolTip _flashlightToolTip;
 
 
 								_fnc = {
@@ -2975,7 +2975,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									private _phrase = "SentLightsOn";
 									A3C_Prevent_attach_Flashlight = true;
 									_totalStandBy = 0;
-									(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
+									(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 									{
 										_u = _x;
 
@@ -3053,21 +3053,21 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 
 
 									//if (_btnImage != "") then {
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetText _btnImage;
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlSetToolTip _toolTip;
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetText _btnImage;
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlSetToolTip _toolTip;
 									//};
 									sleep (_totalStandBy);
 									A3C_Prevent_attach_Flashlight = false;
-									if (ctrlShown (findDisplay 7999 displayCtrl _buttonImgID) && {"FlashLight" in (ctrlText (findDisplay 7999 displayCtrl _buttonImgID))}) then {
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlShow true;
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
+									if (ctrlShown (findDisplay 100040 displayCtrl _buttonImgID) && {"FlashLight" in (ctrlText (findDisplay 100040 displayCtrl _buttonImgID))}) then {
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlShow true;
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
 									};
 
 									//-- switch LASER icon if necessary
 									if ({_x isIRLaserOn (currentWeapon _x)} count _units == 0) then {
 										for "_i" from 10031 to 10008 step - 1 do {
-											if ("IRlaser" in ctrlText (findDisplay 7999 displayCtrl _i)) then {
-												(findDisplay 7999 displayCtrl _i) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_IRlaser_OFF.paa";
+											if ("IRlaser" in ctrlText (findDisplay 100040 displayCtrl _i)) then {
+												(findDisplay 100040 displayCtrl _i) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_IRlaser_OFF.paa";
 											};
 										};
 									};
@@ -3078,9 +3078,9 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 								[_buttonImgID,_buttonClickerID] spawn {
 									params ["_buttonImgID","_buttonClickerID"];
 									waituntil {!(A3C_Prevent_attach_Flashlight)};
-									if (ctrlShown (findDisplay 7999 displayCtrl _buttonImgID) && {"FlashLight" in (ctrlText (findDisplay 7999 displayCtrl _buttonImgID))}) then {
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlShow true;
+									if (ctrlShown (findDisplay 100040 displayCtrl _buttonImgID) && {"FlashLight" in (ctrlText (findDisplay 100040 displayCtrl _buttonImgID))}) then {
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlShow true;
 									};
 								};
 
@@ -3097,10 +3097,10 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									_LaserToolTip = "ITurn IR-LASER OFF";
 								};
 
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetText _LaserImage;
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlShow true;
-								((findDisplay 7999) displayCtrl _buttonClickerID) ctrlSetToolTip _LaserToolTip;
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetText _LaserImage;
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlShow true;
+								((findDisplay 100040) displayCtrl _buttonClickerID) ctrlSetToolTip _LaserToolTip;
 
 
 								_fnc = {
@@ -3112,7 +3112,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									_tooltip = "";
 									A3C_Prevent_attach_IR_Laser = true;
 									_totalStandBy = 0;
-									(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
+									(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 									private _phrase = "SentPointersOn";
 									{
 										_u = _x;
@@ -3191,21 +3191,21 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									} foreach _units;
 									player groupradio _phrase; 
 									//if (_btnImage != "") then {
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetText _btnImage;
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlSetToolTip _toolTip;
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetText _btnImage;
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlSetToolTip _toolTip;
 									//};
 									sleep (_totalStandBy + 1.2);
 									A3C_Prevent_attach_IR_Laser = false;
-									if (ctrlShown (findDisplay 7999 displayCtrl _buttonImgID) && {"IRlaser" in (ctrlText (findDisplay 7999 displayCtrl _buttonImgID))}) then {
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlShow true;
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
+									if (ctrlShown (findDisplay 100040 displayCtrl _buttonImgID) && {"IRlaser" in (ctrlText (findDisplay 100040 displayCtrl _buttonImgID))}) then {
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlShow true;
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
 									};
 
 									//-- switch FLASHLIGHT icon if necessary
 									if ({_x isFlashlightOn (currentWeapon _x)} count _units == 0) then {
 										for "_i" from 10031 to 10008 step - 1 do {
-											if ("FlashLight" in ctrlText (findDisplay 7999 displayCtrl _i)) then {
-												(findDisplay 7999 displayCtrl _i) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_FlashLight_OFF.paa";
+											if ("FlashLight" in ctrlText (findDisplay 100040 displayCtrl _i)) then {
+												(findDisplay 100040 displayCtrl _i) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_FlashLight_OFF.paa";
 											};
 										};
 									};
@@ -3213,9 +3213,9 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 								[_buttonImgID,_buttonClickerID] spawn {
 									params ["_buttonImgID","_buttonClickerID"];
 									waituntil {!(A3C_Prevent_attach_IR_Laser)};
-									if (ctrlShown (findDisplay 7999 displayCtrl _buttonImgID) && {"IRlaser" in (ctrlText (findDisplay 7999 displayCtrl _buttonImgID))}) then {
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlShow true;
+									if (ctrlShown (findDisplay 100040 displayCtrl _buttonImgID) && {"IRlaser" in (ctrlText (findDisplay 100040 displayCtrl _buttonImgID))}) then {
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlShow true;
 									};
 								};
 
@@ -3232,10 +3232,10 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									_silencerToolTip = "Remove Suppressor";
 								};
 
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetText _silencerImage;
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
-								(findDisplay 7999 displayCtrl _buttonImgID) ctrlShow true;
-								((findDisplay 7999) displayCtrl _buttonClickerID) ctrlSetToolTip _silencerToolTip;
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetText _silencerImage;
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
+								(findDisplay 100040 displayCtrl _buttonImgID) ctrlShow true;
+								((findDisplay 100040) displayCtrl _buttonClickerID) ctrlSetToolTip _silencerToolTip;
 
 								_fnc = {
 									params ["_btnData","_inputParams"];
@@ -3246,7 +3246,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									_tooltip = "";
 									A3C_Prevent_attach_Silencer = true;
 									_totalStandBy = 0;
-									(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
+									(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 									{
 
 										if ({[_x,"SILENCER"] call A3C_doesUnitHaveWeaponItem} count A3C_RD_UNITS > 0) then {
@@ -3315,23 +3315,23 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									} foreach _units;
 
 									//if (_btnImage != "") then {
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetText _btnImage;
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlSetToolTip _toolTip;
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetText _btnImage;
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlSetToolTip _toolTip;
 									//};
 									sleep (_totalStandBy + 1.2);
 									A3C_Prevent_attach_Silencer = false;
-									if (ctrlShown (findDisplay 7999 displayCtrl _buttonImgID) && {"Silencer" in (ctrlText (findDisplay 7999 displayCtrl _buttonImgID))}) then {
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlShow true;
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
+									if (ctrlShown (findDisplay 100040 displayCtrl _buttonImgID) && {"Silencer" in (ctrlText (findDisplay 100040 displayCtrl _buttonImgID))}) then {
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlShow true;
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
 									};
 								};
 
 								[_buttonImgID,_buttonClickerID] spawn {
 									params ["_buttonImgID","_buttonClickerID"];
 									waituntil {!(A3C_Prevent_attach_Silencer)};
-									if (ctrlShown (findDisplay 7999 displayCtrl _buttonImgID) && {"Silencer" in (ctrlText (findDisplay 7999 displayCtrl _buttonImgID))}) then {
-										(findDisplay 7999 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
-										(findDisplay 7999 displayCtrl _buttonClickerID) ctrlShow true;
+									if (ctrlShown (findDisplay 100040 displayCtrl _buttonImgID) && {"Silencer" in (ctrlText (findDisplay 100040 displayCtrl _buttonImgID))}) then {
+										(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.6];
+										(findDisplay 100040 displayCtrl _buttonClickerID) ctrlShow true;
 									};
 								};
 
@@ -3377,12 +3377,12 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						_units = call compile _units;
 						if (({(currentweapon _x) == (handGunWeapon _x)} count _units) > 0) then {
 							{_x selectWeapon (primaryWeapon _x)} foreach _units;
-							((findDisplay 7999) displayCtrl 9028) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_pistol_switch.paa"; //((getText (configfile >> "CfgWeapons" >> (HandGunWeapon (_units select 0)) >> "picture")));
-							((findDisplay 7999) displayCtrl 9029) ctrlSetToolTip "Switch To HandGun";
+							((findDisplay 100040) displayCtrl 9028) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_pistol_switch.paa"; //((getText (configfile >> "CfgWeapons" >> (HandGunWeapon (_units select 0)) >> "picture")));
+							((findDisplay 100040) displayCtrl 9029) ctrlSetToolTip "Switch To HandGun";
 						} else {
 							{_x selectWeapon (handgunWeapon _x)} foreach A3C_RD_UNITS;
-							((findDisplay 7999) displayCtrl 9028) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_rifle_switch.paa"; //((getText (configfile >> "CfgWeapons" >> (primaryWeapon (_units select 0)) >> "picture")));
-							((findDisplay 7999) displayCtrl 9029) ctrlSetToolTip "Switch To Main Weapon";
+							((findDisplay 100040) displayCtrl 9028) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_rifle_switch.paa"; //((getText (configfile >> "CfgWeapons" >> (primaryWeapon (_units select 0)) >> "picture")));
+							((findDisplay 100040) displayCtrl 9029) ctrlSetToolTip "Switch To Main Weapon";
 						};
 					}
 				];
@@ -3433,7 +3433,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							};
 						} foreach ([player] + _units);
 						if (_btnImage != "") then {
-							(findDisplay 7999 displayCtrl 10030) ctrlSetText _btnImage;
+							(findDisplay 100040 displayCtrl 10030) ctrlSetText _btnImage;
 						};
 					}
 				];
@@ -3443,12 +3443,12 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 				A3C_RADIALMODE = "HC BEHAVIOUR";
 
 				{
-					(findDisplay 7999 displayCtrl _x) ctrlShow false;
+					(findDisplay 100040 displayCtrl _x) ctrlShow false;
 				} foreach [8001,8002,8004];
 				{
-					(findDisplay 7999 displayCtrl (_x select 0)) ctrlSetText "";
-					(findDisplay 7999 displayCtrl (_x select 1)) ctrlSetToolTip "";
-					{(finddisplay 7999 displayCtrl _x) ctrlShow false} foreach _x;
+					(findDisplay 100040 displayCtrl (_x select 0)) ctrlSetText "";
+					(findDisplay 100040 displayCtrl (_x select 1)) ctrlSetToolTip "";
+					{(finddisplay 100040 displayCtrl _x) ctrlShow false} foreach _x;
 				} foreach A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED;
 				_img = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\attack_ca.paa";
 				_color = [1,1,1,0]; //momo
@@ -3463,8 +3463,8 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							case 6 : {[0.17,0.86,0.92,0.5]};
 							default {[1,1,1,0.5]};
 						};
-						(finddisplay 7999 displayCtrl _i) ctrlSetText _img;
-						(finddisplay 7999 displayCtrl _i) ctrlSetTextColor _color;
+						(finddisplay 100040 displayCtrl _i) ctrlSetText _img;
+						(finddisplay 100040 displayCtrl _i) ctrlSetTextColor _color;
 					} else {
 						_toolTip = switch (_i - 10024) do {
 							case 1 : {"SAFE"};
@@ -3472,14 +3472,14 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							case 5 : {"COMBAT"};
 							case 7 : {"STEALTH"};
 						};
-						(finddisplay 7999 displayCtrl _i) ctrlSetTooltip _toolTip;
+						(finddisplay 100040 displayCtrl _i) ctrlSetTooltip _toolTip;
 
 					};
-					(finddisplay 7999 displayCtrl _i) ctrlShow true;
+					(finddisplay 100040 displayCtrl _i) ctrlShow true;
 				};
 
-				(findDisplay 7999 displayCtrl 8003) ctrlShow true;
-				(findDisplay 7999 displayCtrl 8003) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
+				(findDisplay 100040 displayCtrl 8003) ctrlShow true;
+				(findDisplay 100040 displayCtrl 8003) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
 				A3C_OUTER_RING_BTN_fnc_9 =
 				[
 					"SAFE",
@@ -3534,7 +3534,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 
 		case ("VEHICLES") : {
 
-			//{((findDisplay 7999) displayCtrl _x) ctrlSetTextColor [1,1,1,0.6]} foreach [10016,10018,10020,10022];
+			//{((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [1,1,1,0.6]} foreach [10016,10018,10020,10022];
 			if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
 				A3C_RADIALMODE = 'VEHS';
 				BV_LB1 = 8;
@@ -3552,22 +3552,22 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 					player groupradio "SentCmdGetOut"; 
 				} else {
 					for "_i" from 8001 to 8004 do { //-- outer ring backgrounds
-						(findDisplay 7999 displayCtrl _i) ctrlShow false;
+						(findDisplay 100040 displayCtrl _i) ctrlShow false;
 					};
 					for "_i" from 10008 to 10039 do {
-						((findDisplay 7999) displayCtrl _i) ctrlShow false;
-						((findDisplay 7999) displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
+						((findDisplay 100040) displayCtrl _i) ctrlShow false;
+						((findDisplay 100040) displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
 					};
 					BV_MEDICAL = 0;
 					BV_CBMODE = 0;
 					if (BV_VEHS == 0) then {
-						((findDisplay 7999) displayCtrl 8003) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
-						((findDisplay 7999) displayCtrl 8003) ctrlShow true;
+						((findDisplay 100040) displayCtrl 8003) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
+						((findDisplay 100040) displayCtrl 8003) ctrlShow true;
 						if (_btn != -1) then {
 							BV_VEHS = 1;
 						};
-						{((findDisplay 7999) displayCtrl _x) ctrlShow false} foreach [8001,8002,8004];
-						{((findDisplay 7999) displayCtrl _x) ctrlShow false} foreach [8001,8002,8004];
+						{((findDisplay 100040) displayCtrl _x) ctrlShow false} foreach [8001,8002,8004];
+						{((findDisplay 100040) displayCtrl _x) ctrlShow false} foreach [8001,8002,8004];
 
 						private _classes = [];
 						private _classArray = ["CAR","TANK","HELICOPTER","PLANE","SHIP","STATICWEAPON"];
@@ -3590,14 +3590,14 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						private _btnId = 12;
 						private _classIndex = 0;
 						if (_classCount > 0) then {
-							(findDisplay 7999 displayCtrl 8003) ctrlShow true;
+							(findDisplay 100040 displayCtrl 8003) ctrlShow true;
 							if (_classCount > 4) then {
-								(findDisplay 7999 displayCtrl 8002) ctrlShow true;
-								(findDisplay 7999 displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
+								(findDisplay 100040 displayCtrl 8002) ctrlShow true;
+								(findDisplay 100040 displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
 							};
 							for "_i" from 10031 to (10031 - ((_classCount - 1) * 2)) step - 2 do {
-								private _btClicker = (findDisplay 7999 displayCtrl _i);
-								private _btnImg = (findDisplay 7999 displayCtrl (_i - 1));
+								private _btClicker = (findDisplay 100040 displayCtrl _i);
+								private _btnImg = (findDisplay 100040 displayCtrl (_i - 1));
 								private _currentClass = _classes select _classIndex;
 								private _btnData = switch (_currentClass) do { //-- [_icon,_toolTip]
 									case ("CAR") : {
@@ -3690,17 +3690,17 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 
 						//ushushush
 						for "_i" from 10008 to 10039 do {
-							((findDisplay 7999) displayCtrl _i) ctrlShow false;
+							((findDisplay 100040) displayCtrl _i) ctrlShow false;
 						};
 						for "_i" from 10024 to 10031 do {
-							((findDisplay 7999) displayCtrl _i) ctrlShow true;
+							((findDisplay 100040) displayCtrl _i) ctrlShow true;
 						};
 						for "_i" from 8053 to 8068 do {
-							(findDisplay 7999 displayCtrl _i) ctrlShow false;
+							(findDisplay 100040 displayCtrl _i) ctrlShow false;
 						};
 						
 						//if ((currentVisionMode player) == 1) then {
-						//	{((findDisplay 7999) displayCtrl _x) ctrlSetTextColor [0,0.3,0.6,0.5]} foreach [10025,8049,8051,8053];
+						//	{((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [0,0.3,0.6,0.5]} foreach [10025,8049,8051,8053];
 						//};
 						["VEHS"] call A3C_BTN_REINIT;
 						*/
@@ -3714,12 +3714,12 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 				A3C_RADIALMODE = "HC COMBAT";
 
 				{
-					(findDisplay 7999 displayCtrl _x) ctrlShow false;
+					(findDisplay 100040 displayCtrl _x) ctrlShow false;
 				} foreach [8001,8002,8003,8004];
 				{
-					(findDisplay 7999 displayCtrl (_x select 0)) ctrlSetText "";
-					(findDisplay 7999 displayCtrl (_x select 1)) ctrlSetToolTip "";
-					{(finddisplay 7999 displayCtrl _x) ctrlShow false} foreach _x;
+					(findDisplay 100040 displayCtrl (_x select 0)) ctrlSetText "";
+					(findDisplay 100040 displayCtrl (_x select 1)) ctrlSetToolTip "";
+					{(finddisplay 100040 displayCtrl _x) ctrlShow false} foreach _x;
 				} foreach A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED;
 				_img = "\a3\ui_f\data\Map\Markers\Military\dot_ca.paa";
 				_color = [1,1,1,0]; //momo
@@ -3733,8 +3733,8 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							case 6 : {[0,1,0,0.5]};
 							case 8 : {[0,0,1,0.5]};
 						};
-						(finddisplay 7999 displayCtrl _i) ctrlSetText _img;
-						(finddisplay 7999 displayCtrl _i) ctrlSetTextColor _color;
+						(finddisplay 100040 displayCtrl _i) ctrlSetText _img;
+						(finddisplay 100040 displayCtrl _i) ctrlSetTextColor _color;
 					} else {
 						_toolTip = switch (_i - 10022) do {
 							case 1 : {"RED || Fire at will, engage at will"};
@@ -3743,19 +3743,19 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 							case 7 : {"GREEN || Hold fire - defend only"};
 							case 9 : {"BLUE || Never fire"};
 						};
-						(finddisplay 7999 displayCtrl _i) ctrlSetTooltip _toolTip;
+						(finddisplay 100040 displayCtrl _i) ctrlSetTooltip _toolTip;
 
 					};
 
-					(finddisplay 7999 displayCtrl _i) ctrlShow true;
+					(finddisplay 100040 displayCtrl _i) ctrlShow true;
 				};
 				{
-					(findDisplay 7999 displayCtrl _x) ctrlShow false;
+					(findDisplay 100040 displayCtrl _x) ctrlShow false;
 				} foreach [8002,8003];
-				(findDisplay 7999 displayCtrl 8002) ctrlShow true;
-				(findDisplay 7999 displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
-				(findDisplay 7999 displayCtrl 8003) ctrlShow true;
-				(findDisplay 7999 displayCtrl 8003) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
+				(findDisplay 100040 displayCtrl 8002) ctrlShow true;
+				(findDisplay 100040 displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
+				(findDisplay 100040 displayCtrl 8003) ctrlShow true;
+				(findDisplay 100040 displayCtrl 8003) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
 				A3C_OUTER_RING_BTN_fnc_8 =
 				[
 					"RED",
@@ -3825,38 +3825,38 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 			_bv = "BV_FORM";
 
 			for "_i" from 10008 to 10031 do {
-				((findDisplay 7999) displayCtrl _i) ctrlShow false;
+				((findDisplay 100040) displayCtrl _i) ctrlShow false;
 			};
 			for "_i" from 8053 to 8068 do {
-				(findDisplay 7999 displayCtrl _i) ctrlShow false;
+				(findDisplay 100040 displayCtrl _i) ctrlShow false;
 			};
 			BV_MEDICAL = 0;
 			BV_CBMODE = 0;
-			{((findDisplay 7999) displayCtrl _x) ctrlShow false} foreach [8001,8002,8003,8004];
+			{((findDisplay 100040) displayCtrl _x) ctrlShow false} foreach [8001,8002,8003,8004];
 			if (BV_FORM == 0) then {
-				((findDisplay 7999) displayCtrl 80311) ctrlShow false;
+				((findDisplay 100040) displayCtrl 80311) ctrlShow false;
 				if (_btn != -1) then {
 					BV_FORM = 1;
 				};
 				
 				for "_i" from 8033 to 8052 do {
 					//if !(_i == 8033) then {
-						((findDisplay 7999) displayCtrl _i) ctrlShow true;
+						((findDisplay 100040) displayCtrl _i) ctrlShow true;
 					//};
 				};
 
 			} else {
 				BV_FORM = 0;
 				for "_i" from 10008 to 10039 do {
-					((findDisplay 7999) displayCtrl _i) ctrlShow false;
+					((findDisplay 100040) displayCtrl _i) ctrlShow false;
 				};
 				for "_i" from 8032 to 8052 do {
 					if !(_i == 8032) then {
-						((findDisplay 7999) displayCtrl _i) ctrlShow false;
+						((findDisplay 100040) displayCtrl _i) ctrlShow false;
 					};
 				};
-				((findDisplay 7999) displayCtrl 8033) ctrlShow false;
-				((findDisplay 7999) displayCtrl 80311) ctrlShow true;
+				((findDisplay 100040) displayCtrl 8033) ctrlShow false;
+				((findDisplay 100040) displayCtrl 80311) ctrlShow true;
 			};
 		};
 		*/
@@ -3949,11 +3949,11 @@ A3C_RADIAL_RESET_DYNAMIC_BTNS = {
 	A3C_OUTER_RING_BTN_fnc_16 = [[],{}]; //-- Left							 Ring Button 4
 
 	for "_i" from 10008 to 10039 do { //BBBBBBB
-		//(findDisplay 7999 displayCtrl _i) ctrlShow false;
+		//(findDisplay 100040 displayCtrl _i) ctrlShow false;
 		if (_i % 2 == 0) then {
-			(findDisplay 7999 displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
+			(findDisplay 100040 displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
 		//} else {
-		//	(findDisplay 7999 displayCtrl _i) ctrlSetTooltip "";
+		//	(findDisplay 100040 displayCtrl _i) ctrlSetTooltip "";
 		};
 	};
 
@@ -4027,7 +4027,7 @@ A3C_LAYERFUNC = { //-- the outer ring button function
 							A3C_BOARD_UNITS = [_d] + A3C_BOARD_UNITS;
 							A3C_RD_UNITS pushbackUnique _d;
 							player groupSelectUnit [_d,true];
-							(findDisplay 7999 displayCtrl 8059) ctrlSetTextColor  [1,1,1,0.6];
+							(findDisplay 100040 displayCtrl 8059) ctrlSetTextColor  [1,1,1,0.6];
 						};
 					};
 				};
@@ -4046,7 +4046,7 @@ A3C_LAYERFUNC = { //-- the outer ring button function
 					{
 						_vH = (assignedVehicleRole _x); //-- using assignedvehicleRole: we are checking the crew of a vehicle (roles assigned)
 						if (_x == (gunner (vehicle _x))) then {
-							(findDisplay 7999 displayCtrl 8061) ctrlSetTextColor  [1,1,1,0.6];
+							(findDisplay 100040 displayCtrl 8061) ctrlSetTextColor  [1,1,1,0.6];
 							[_x] spawn MCSS_fnc_GetOut;
 							A3C_BOARD_UNITS = [_x] + A3C_BOARD_UNITS;
 						} else {
@@ -4061,14 +4061,14 @@ A3C_LAYERFUNC = { //-- the outer ring button function
 											if (A3C_TARGETVEH iskindof "air") then {
 												if (_ind < count _turrs) then {
 													if ( (getnumber (configfile >> "CfgVehicles" >> (typeof A3C_TARGETVEH) >> "Turrets" >> (configname (_turrs select _ind)) >> "hasgunner")) > 0) then {
-														(findDisplay 7999 displayCtrl 8061) ctrlSetTextColor  [1,1,1,0.6];
+														(findDisplay 100040 displayCtrl 8061) ctrlSetTextColor  [1,1,1,0.6];
 														[_x] spawn MCSS_fnc_GetOut;
 														A3C_BOARD_UNITS = [_x] + A3C_BOARD_UNITS;
 													};
 												};
 											} else {
 												if ( (getnumber (configfile >> "CfgVehicles" >> (typeof A3C_TARGETVEH) >> "Turrets" >> (configname (_turrs select _ind)) >> "hasgunner")) > 0) then {
-													(findDisplay 7999 displayCtrl 8061) ctrlSetTextColor  [1,1,1,0.6];
+													(findDisplay 100040 displayCtrl 8061) ctrlSetTextColor  [1,1,1,0.6];
 													[_x] spawn MCSS_fnc_GetOut;
 													A3C_BOARD_UNITS = [_x] + A3C_BOARD_UNITS;
 												};
@@ -4093,7 +4093,7 @@ A3C_LAYERFUNC = { //-- the outer ring button function
 						_vH = (assignedVehicleRole _x); //-- using assignedvehicleRole: we are checking the crew of a vehicle (roles assigned)
 						if ((_vH select 0) == "commander") then {
 							[_x] spawn MCSS_fnc_GetOut;
-							(findDisplay 7999 displayCtrl 8063) ctrlSetTextColor  [1,1,1,0.6];
+							(findDisplay 100040 displayCtrl 8063) ctrlSetTextColor  [1,1,1,0.6];
 							A3C_BOARD_UNITS = [_x] + A3C_BOARD_UNITS;
 						};
 						if ((_vH select 0) == "turret") then {
@@ -4103,7 +4103,7 @@ A3C_LAYERFUNC = { //-- the outer ring button function
 									if (A3C_TARGETVEH isKindOf "AIR") then {
 										if ((_turr select 0) == 0) then {
 											//-- commander
-											(findDisplay 7999 displayCtrl 8063) ctrlSetTextColor  [1,1,1,0.6];
+											(findDisplay 100040 displayCtrl 8063) ctrlSetTextColor  [1,1,1,0.6];
 											[_x] spawn MCSS_fnc_GetOut;
 											A3C_BOARD_UNITS = [_x] + A3C_BOARD_UNITS;
 
@@ -4111,7 +4111,7 @@ A3C_LAYERFUNC = { //-- the outer ring button function
 									} else {
 										if !((_turr select 0) == 0) then {
 											//-- commander
-											(findDisplay 7999 displayCtrl 8063) ctrlSetTextColor  [1,1,1,0.6];
+											(findDisplay 100040 displayCtrl 8063) ctrlSetTextColor  [1,1,1,0.6];
 											[_x] spawn MCSS_fnc_GetOut;
 											A3C_BOARD_UNITS = [_x] + A3C_BOARD_UNITS;
 
@@ -4121,7 +4121,7 @@ A3C_LAYERFUNC = { //-- the outer ring button function
 								};
 							} else {
 								if !(_x == (gunner vehicle _x)) then {
-									(findDisplay 7999 displayCtrl 8063) ctrlSetTextColor  [1,1,1,0.6];
+									(findDisplay 100040 displayCtrl 8063) ctrlSetTextColor  [1,1,1,0.6];
 									[_x] spawn MCSS_fnc_GetOut;
 									A3C_BOARD_UNITS = [_x] + A3C_BOARD_UNITS;
 								};
@@ -4150,7 +4150,7 @@ A3C_LAYERFUNC = { //-- the outer ring button function
 							};
 							_act = false;
 							if ( (count _vH == 0) OR {(_vh select 0) == "cargo"}) then { //-- if role is cargo or EMPTY
-								//(findDisplay 7999 displayCtrl 8065) ctrlSetTextColor  [1,1,1,0.6];
+								//(findDisplay 100040 displayCtrl 8065) ctrlSetTextColor  [1,1,1,0.6];
 								[_x] spawn MCSS_fnc_GetOut;
 								A3C_BOARD_UNITS = [_x] + A3C_BOARD_UNITS;
 								_act = true;
@@ -4188,7 +4188,7 @@ A3C_LAYERFUNC = { //-- the outer ring button function
 								} foreach ((crew _veh) - [_u]);
 							};
 							if (_act) then {
-								(findDisplay 7999 displayCtrl 8065) ctrlSetTextColor  [1,1,1,0.6];
+								(findDisplay 100040 displayCtrl 8065) ctrlSetTextColor  [1,1,1,0.6];
 							};
 						};
 					} foreach crew A3C_TARGETVEH;
@@ -4214,7 +4214,7 @@ A3C_LAYERFUNC = { //-- the outer ring button function
 					};
 				} else {
 					{
-						(findDisplay 7999 displayCtrl _x) ctrlSetTextColor  [1,1,1,0.6];
+						(findDisplay 100040 displayCtrl _x) ctrlSetTextColor  [1,1,1,0.6];
 					} foreach [8059,8061,8063,8065,8067];
 
 					{
@@ -4225,7 +4225,7 @@ A3C_LAYERFUNC = { //-- the outer ring button function
 
 					//{
 					//	if ((A3C_TARGETVEH emptyPositions (_x select 0)) > 0) then {
-					//		(findDisplay 7999 displayCtrl (_x select 2)) ctrlShow true;
+					//		(findDisplay 100040 displayCtrl (_x select 2)) ctrlShow true;
 					//	};
 					//} foreach [["driver",8059,8060],["gunner",8061,8062],["commander",8063,8064],["cargo",8065,8066]];
 				};
@@ -4260,13 +4260,13 @@ A3C_LABEL_LB = {
 	_lbText2 = "";
 	_array1 = [];
 	_array2 = [];
-	(findDisplay 7999 displayCtrl 8053) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
-	{(findDisplay 7999 displayCtrl _x) ctrlShow true} foreach [8053,8054];
+	(findDisplay 100040 displayCtrl 8053) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
+	{(findDisplay 100040 displayCtrl _x) ctrlShow true} foreach [8053,8054];
 	for "_i" from 8057 to 8058 do {
-		(findDisplay 7999 displayCtrl _i) ctrlShow true;
+		(findDisplay 100040 displayCtrl _i) ctrlShow true;
 	};
 	for "_i" from 8059 to 8068 do {
-		(findDisplay 7999 displayCtrl _i) ctrlShow false;
+		(findDisplay 100040 displayCtrl _i) ctrlShow false;
 	};
 	
 	
@@ -4294,8 +4294,8 @@ A3C_LABEL_LB = {
 				//systemchat str (name _selectedPatient);
 			};
 
-			{(findDisplay 7999 displayCtrl _x) ctrlShow true} foreach [8055,8056,8057];
-			{lbCLear (findDisplay 7999 displayCtrl _x)} foreach [8054,8055];
+			{(findDisplay 100040 displayCtrl _x) ctrlShow true} foreach [8055,8056,8057];
+			{lbCLear (findDisplay 100040 displayCtrl _x)} foreach [8054,8055];
 			//private _squadAI = (units player - [player]);
 			//{
 			//	_u = _x;
@@ -4310,8 +4310,8 @@ A3C_LABEL_LB = {
 			private _multiMedic = (count _medics) > 1;
 			
 			if (_multiMedic) then {
-				[["ALL MEDICS","",objnull,(findDisplay 7999 displayCtrl 8054),"A3C_CORE\ui\pictures\icon_menu_Medical.paa"]] call A3C_LB_ADD;
-				(findDisplay 7999 displayCtrl 8054) lbSetColor [0, [0, 1, 0, 1]];
+				[["ALL MEDICS","",objnull,(findDisplay 100040 displayCtrl 8054),"A3C_CORE\ui\pictures\icon_menu_Medical.paa"]] call A3C_LB_ADD;
+				(findDisplay 100040 displayCtrl 8054) lbSetColor [0, [0, 1, 0, 1]];
 			};
 
 			//_squadAI = [_squadAI,[],{(getNumber ( configFile >> "CfgVehicles" >> typeOf _x >> "attendant" ))},"DESCEND"] call BIS_fnc_sortBy;
@@ -4329,7 +4329,7 @@ A3C_LABEL_LB = {
 						(format ["%1 (%2)",([_x] call MCSS_fnc_NAMESTRING),if (_x == player) then {""} else {getText (configfile >> "CfgVehicles" >> (typeOf _x) >> "displayName")}]),
 						(typeOf _x),
 						_x,
-						(findDisplay 7999 displayCtrl 8054),
+						(findDisplay 100040 displayCtrl 8054),
 						_img
 					]
 				] call A3C_LB_ADD;
@@ -4347,17 +4347,17 @@ A3C_LABEL_LB = {
 					};
 				};
 				private _add = if (_multiMedic) then {1} else {0};
-				(findDisplay 7999 displayCtrl 8054) lbSetColor [_foreachIndex + _add, _c];
+				(findDisplay 100040 displayCtrl 8054) lbSetColor [_foreachIndex + _add, _c];
 
 			} foreach _medics; // _squadAI
 
 			
-			//ctrlsetfocus (findDisplay 7999 displayCtrl 8055);
+			//ctrlsetfocus (findDisplay 100040 displayCtrl 8055);
 			_patients = [group player] call A3C_FINDPATIENTS;
 			private _multiPatient = (count _patients) > 1;
 			if (_multiPatient) then {
-				[["HEAL ALL","",objnull,(findDisplay 7999 displayCtrl 8055),""]] call A3C_LB_ADD;
-				(findDisplay 7999 displayCtrl 8055) lbSetColor [0, [0, 1, 0, 1]];
+				[["HEAL ALL","",objnull,(findDisplay 100040 displayCtrl 8055),""]] call A3C_LB_ADD;
+				(findDisplay 100040 displayCtrl 8055) lbSetColor [0, [0, 1, 0, 1]];
 			};
 			{
 				private _c = [0.99,0.5,0.49,1];
@@ -4372,12 +4372,12 @@ A3C_LABEL_LB = {
 						(format ["%1 (%2)",([_x] call MCSS_fnc_NAMESTRING),getText (configfile >> "CfgVehicles" >> (typeOf _x) >> "displayName")]),
 						(typeOf _x),
 						_x,
-						(findDisplay 7999 displayCtrl 8055),
+						(findDisplay 100040 displayCtrl 8055),
 						""
 					]
 				] call A3C_LB_ADD;
 				private _add = if (_multiPatient) then {1} else {0};
-				(findDisplay 7999 displayCtrl 8055) lbSetColor [_foreachIndex + _add, _c];
+				(findDisplay 100040 displayCtrl 8055) lbSetColor [_foreachIndex + _add, _c];
 			} foreach _patients;
 
 			_mSel = 0;
@@ -4405,14 +4405,14 @@ A3C_LABEL_LB = {
 					};
 				} foreach _patients;
 			};
-			[findDisplay 7999 displayCtrl 8054, _mSel, true] call A3C_setCurSel;
-			[findDisplay 7999 displayCtrl 8055, _pSel, true] call A3C_setCurSel;	
+			[findDisplay 100040 displayCtrl 8054, _mSel, true] call A3C_setCurSel;
+			[findDisplay 100040 displayCtrl 8055, _pSel, true] call A3C_setCurSel;	
 		};
 		case ("CBMODE") : {
 			_orderText = "Unit States";
 			_lbText1 = "Behaviour";
 			_lbText2 = "Combat Mode";
-			{(findDisplay 7999 displayCtrl _x) ctrlShow true} foreach [8054,8055,8057]; // ,8056
+			{(findDisplay 100040 displayCtrl _x) ctrlShow true} foreach [8054,8055,8057]; // ,8056
 			{
 				_c = switch _forEachINdex do {
 					case 0 : {[0.5,0.5,0.5,1]};
@@ -4426,11 +4426,11 @@ A3C_LABEL_LB = {
 						_x, //_x,
 						''				,
 						objnull,
-						(findDisplay 7999 displayCtrl 8054),
+						(findDisplay 100040 displayCtrl 8054),
 						"\a3\ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa" //_img
 					]
 				] call A3C_LB_ADD; //["_label","_class","_obj","_cbo","_img"];
-				(findDisplay 7999 displayCtrl 8054) lbSetColor [_foreachIndex, _c];
+				(findDisplay 100040 displayCtrl 8054) lbSetColor [_foreachIndex, _c];
 			} foreach ["CARELESS","SAFE","AWARE","COMBAT","STEALTH"];
 												;
 			{
@@ -4446,11 +4446,11 @@ A3C_LABEL_LB = {
 						_x, //_x,
 						'',
 						objNull,
-						(findDisplay 7999 displayCtrl 8055),
+						(findDisplay 100040 displayCtrl 8055),
 						"\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\target_ca.paa" //_img
 					]
 				] call A3C_LB_ADD; //["_label","_class","_obj","_cbo","_img"];
-				(findDisplay 7999 displayCtrl 8055) lbSetColor [_foreachIndex, _c];
+				(findDisplay 100040 displayCtrl 8055) lbSetColor [_foreachIndex, _c];
 			} foreach ["Never Fire","Hold fire, defend only","Hold fire, engage at will","Fire At Will","Fire at will, engage at will"];
 
 
@@ -4472,8 +4472,8 @@ A3C_LABEL_LB = {
 				params ["_lbBehaviour","_lbCBMode"];
 				
 				sleep 0.1;
-				[findDisplay 7999 displayCtrl 8054, _lbBehaviour] call A3C_setCurSel;
-				[findDisplay 7999 displayCtrl 8055, _lbCBMode] call A3C_setCurSel;
+				[findDisplay 100040 displayCtrl 8054, _lbBehaviour] call A3C_setCurSel;
+				[findDisplay 100040 displayCtrl 8055, _lbCBMode] call A3C_setCurSel;
 				sleep 0.1;
 				
 			};
@@ -4488,14 +4488,14 @@ A3C_LABEL_LB = {
 
 
 			for "_i" from 0 to 45 do {
-				if (ctrlType (findDisplay 7999 displayCtrl (10101 + _i)) != -1) then {
-					ctrlDelete (findDisplay 7999 displayCtrl (10101 + _i));
-					ctrlDelete (findDisplay 7999 displayCtrl (10101 + _i + 1));
+				if (ctrlType (findDisplay 100040 displayCtrl (10101 + _i)) != -1) then {
+					ctrlDelete (findDisplay 100040 displayCtrl (10101 + _i));
+					ctrlDelete (findDisplay 100040 displayCtrl (10101 + _i + 1));
 				};
 			};
 
 			for "_i" from 11101 to 11104 do {
-				ctrlDelete (findDisplay 7999 displayCtrl _i);
+				ctrlDelete (findDisplay 100040 displayCtrl _i);
 			};
 
 			if (!isNil 'A3C_TARGETVEH') then {
@@ -4544,8 +4544,8 @@ A3C_LABEL_LB = {
 					private _buttonColor = [1,1,1,1];
 
 					private _fei = _foreachIndex;
-					private _btnImg  = (findDisplay 7999) ctrlCreate ["A3C_RscPicture", 10101 + (_fei * 2)];
-					private _btnClicker  = (findDisplay 7999) ctrlCreate ["A3C_RscButton_Invisible", 10101 + (_fei * 2) + 1];
+					private _btnImg  = (findDisplay 100040) ctrlCreate ["A3C_RscPicture", 10101 + (_fei * 2)];
+					private _btnClicker  = (findDisplay 100040) ctrlCreate ["A3C_RscButton_Invisible", 10101 + (_fei * 2) + 1];
 					_btnIcon = "";
 					_btnTooltip = "";
 
@@ -4677,8 +4677,8 @@ A3C_LABEL_LB = {
 					//-- macro buttons
 					for "_i" from 0 to 1 do {
 
-						private _btnImg  = (findDisplay 7999) ctrlCreate ["A3C_RscPicture", 11101 + (_i * 2)];
-						private _btnClicker  = (findDisplay 7999) ctrlCreate ["A3C_RscButton_Invisible", 11101 + (_i * 2) + 1];
+						private _btnImg  = (findDisplay 100040) ctrlCreate ["A3C_RscPicture", 11101 + (_i * 2)];
+						private _btnClicker  = (findDisplay 100040) ctrlCreate ["A3C_RscButton_Invisible", 11101 + (_i * 2) + 1];
 
 						_btnIcon = switch (_i) do {
 							case (0) : {"\a3\ui_f\data\IGUI\Cfg\Cursors\getIn_ca.paa"};
@@ -4747,7 +4747,7 @@ A3C_LABEL_LB = {
 								],
 							(typeOf _x),
 							_x,
-							(findDisplay 7999 displayCtrl 8054),
+							(findDisplay 100040 displayCtrl 8054),
 							""
 							]
 						] call A3C_LB_ADD;
@@ -4759,9 +4759,9 @@ A3C_LABEL_LB = {
 		};
 	};
 
-	(findDisplay 7999 displayCtrl 8056) ctrlSetText _orderText;
-	(findDisplay 7999 displayCtrl 8057) ctrlSetText _lbText1;
-	(findDisplay 7999 displayCtrl 8058) ctrlSetText _lbText2;
+	(findDisplay 100040 displayCtrl 8056) ctrlSetText _orderText;
+	(findDisplay 100040 displayCtrl 8057) ctrlSetText _lbText1;
+	(findDisplay 100040 displayCtrl 8058) ctrlSetText _lbText2;
 	// systemchat format ["haiyoa cursel %1", A3C_CurSel];
 	
 
@@ -4826,9 +4826,9 @@ A3C_FINDVEHS = {
 
 
 	if ((count A3C_VEHSAV) == 0) then { //~~ probably no longer used
-		[["NO VEHICLES","",objnull,(findDisplay 7999 displayCtrl 8054),""]] call A3C_LB_ADD;
+		[["NO VEHICLES","",objnull,(findDisplay 100040 displayCtrl 8054),""]] call A3C_LB_ADD;
 	};
-	{lbCLear (findDisplay 7999 displayCtrl _x)} foreach [8054,8055];
+	{lbCLear (findDisplay 100040 displayCtrl _x)} foreach [8054,8055];
 
 	
 	
@@ -4838,12 +4838,12 @@ A3C_FINDVEHS = {
 		sleep 0.1;
 		
 		if (cursortarget in A3C_VEHSAV) then {
-			[findDisplay 7999 displayCtrl 8054, [cursorTarget,A3C_VEHSAV] call MCSS_fnc_GetArrayIndex, true] call A3C_setCurSel;
+			[findDisplay 100040 displayCtrl 8054, [cursorTarget,A3C_VEHSAV] call MCSS_fnc_GetArrayIndex, true] call A3C_setCurSel;
 		//ashash
 		} else {
 			//
 			{
-				[findDisplay 7999 displayCtrl _x, 0] call A3C_setCurSel;
+				[findDisplay 100040 displayCtrl _x, 0] call A3C_setCurSel;
 			} foreach [8054,8055];
 		};	
 	};
@@ -4906,8 +4906,8 @@ A3C_FINDVEHROLES = {
 
 	if (_all) then {
 		//-- toggle on "BOARD ALL"
-		{(findDisplay 7999 displayCtrl _x) ctrlShow true} foreach [8067,8068];
-		(findDisplay 7999 displayCtrl 8067) ctrlSetTextColor  [1,1,1,0.6];
+		{(findDisplay 100040 displayCtrl _x) ctrlShow true} foreach [8067,8068];
+		(findDisplay 100040 displayCtrl 8067) ctrlSetTextColor  [1,1,1,0.6];
 	};
 
 
@@ -4958,7 +4958,7 @@ A3C_BTN_REINIT = {
 	} foreach A3C_RD_UNITS;
 
 
-	((findDisplay 7999) displayctrl 9009) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_rifle.paa"; //((getText (configfile >> "CfgWeapons" >> (primaryWeapon (A3C_RD_UNITS select 0)) >> "picture")));
+	((findDisplay 100040) displayctrl 9009) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_rifle.paa"; //((getText (configfile >> "CfgWeapons" >> (primaryWeapon (A3C_RD_UNITS select 0)) >> "picture")));
 	//A3C_AI_GREN_ARRAY = [];
 	[0] call A3C_GREN_DATA;
 	{
@@ -4985,11 +4985,11 @@ A3C_BTN_REINIT = {
 				_t = "Hand Gun";
 			};
 
-			((findDisplay 7999) displayCtrl 10028) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_pistol_switch.paa";
-			((findDisplay 7999) displayCtrl 10029) ctrlSetToolTip (format ["Switch to %1",_t]);
+			((findDisplay 100040) displayCtrl 10028) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_pistol_switch.paa";
+			((findDisplay 100040) displayCtrl 10029) ctrlSetToolTip (format ["Switch to %1",_t]);
 
-			((findDisplay 7999) displayCtrl 10030) ctrlSetText "";
-			((findDisplay 7999) displayCtrl 10031) ctrlSetToolTip "";
+			((findDisplay 100040) displayCtrl 10030) ctrlSetText "";
+			((findDisplay 100040) displayCtrl 10031) ctrlSetToolTip "";
 			BV_MEDICAL = 0;
 			BV_CBMODE = 0;
 
@@ -5000,8 +5000,8 @@ A3C_BTN_REINIT = {
 			} else {
 				"A3C_CORE\ui\pictures\icon_menu_item_IRlaser_OFF.paa"
 			};
-			((findDisplay 7999) displayCtrl 10026) ctrlSetText _laserImage;
-			((findDisplay 7999) displayCtrl 10027) ctrlSetToolTip "LMB: ENABLE IR (requires 'DANGER') , RMB: DISABLE IR";
+			((findDisplay 100040) displayCtrl 10026) ctrlSetText _laserImage;
+			((findDisplay 100040) displayCtrl 10027) ctrlSetToolTip "LMB: ENABLE IR (requires 'DANGER') , RMB: DISABLE IR";
 
 
 
@@ -5012,8 +5012,8 @@ A3C_BTN_REINIT = {
 				"A3C_CORE\ui\pictures\icon_menu_item_IRstrobe_OFF.paa"
 			};
 
-			((findDisplay 7999) displayCtrl 10030) ctrlSetText _strobeImage;
-			((findDisplay 7999) displayCtrl 10031) ctrlSetToolTip "LMB: ATTACH IR-STROBES , RMB: DETACH IR-STROBES";
+			((findDisplay 100040) displayCtrl 10030) ctrlSetText _strobeImage;
+			((findDisplay 100040) displayCtrl 10031) ctrlSetToolTip "LMB: ATTACH IR-STROBES , RMB: DETACH IR-STROBES";
 
 
 
@@ -5029,8 +5029,8 @@ A3C_BTN_REINIT = {
 					_add = true;
 				};
 				if (_add) exitwith {
-					((findDisplay 7999) displayCtrl 10030) ctrlSetText (getText (configfile >> "CfgMagazines" >> "B_IR_Grenade" >> "picture"));
-					((findDisplay 7999) displayCtrl 10031) ctrlSetToolTip "LMB: ATTACH IR-STROBES , RMB: DETACH IR-STROBES";
+					((findDisplay 100040) displayCtrl 10030) ctrlSetText (getText (configfile >> "CfgMagazines" >> "B_IR_Grenade" >> "picture"));
+					((findDisplay 100040) displayCtrl 10031) ctrlSetToolTip "LMB: ATTACH IR-STROBES , RMB: DETACH IR-STROBES";
 				};
 			} foreach (A3C_RD_UNITS - [player]);
 			*/
@@ -5041,17 +5041,17 @@ A3C_BTN_REINIT = {
 			BV_CBMODE = 0;
 
 
-			((findDisplay 7999) displayCtrl 10024) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\plane_ca.paa";
-			((findDisplay 7999) displayCtrl 10025) ctrlSetToolTip "JET";
-			((findDisplay 7999) displayCtrl 10026) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\helicopter_ca.paa";
-			((findDisplay 7999) displayCtrl 10027) ctrlSetToolTip "HELI";
-			((findDisplay 7999) displayCtrl 10028) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\tank_ca.paa";
-			((findDisplay 7999) displayCtrl 10029) ctrlSetToolTip "TRACKED";
-			((findDisplay 7999) displayCtrl 10030) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\car_ca.paa";
-			((findDisplay 7999) displayCtrl 10031) ctrlSetToolTip "WHEELED";
+			((findDisplay 100040) displayCtrl 10024) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\plane_ca.paa";
+			((findDisplay 100040) displayCtrl 10025) ctrlSetToolTip "JET";
+			((findDisplay 100040) displayCtrl 10026) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\helicopter_ca.paa";
+			((findDisplay 100040) displayCtrl 10027) ctrlSetToolTip "HELI";
+			((findDisplay 100040) displayCtrl 10028) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\tank_ca.paa";
+			((findDisplay 100040) displayCtrl 10029) ctrlSetToolTip "TRACKED";
+			((findDisplay 100040) displayCtrl 10030) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\car_ca.paa";
+			((findDisplay 100040) displayCtrl 10031) ctrlSetToolTip "WHEELED";
 
 			for "_i"from 10024 to 10031 step 2 do {
-				((findDisplay 7999) displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
+				((findDisplay 100040) displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
 			};
 
 		};
@@ -5120,9 +5120,9 @@ A3C_RD_BTN_UNIT = { // -- currently unused after CT_TREE introduction
 							};
 							if (_index < (count _unitArray)) then {
 								if ((_unitArray select _index) in A3C_RD_UNITS) then {
-									(findDisplay 7999 displayCtrl _t) ctrlSetTextColor [1,1,1,1];
+									(findDisplay 100040 displayCtrl _t) ctrlSetTextColor [1,1,1,1];
 								} else {
-									(findDisplay 7999 displayCtrl _t) ctrlSetTextColor [1,1,1,0.5];
+									(findDisplay 100040 displayCtrl _t) ctrlSetTextColor [1,1,1,0.5];
 								};
 							};
 						};
@@ -5133,7 +5133,7 @@ A3C_RD_BTN_UNIT = { // -- currently unused after CT_TREE introduction
 						if (!isPlayer _unit) then {
 							player groupSelectUnit [_unit,true];
 							A3C_RD_UNITS pushbackUnique _unit;
-							(findDisplay 7999 displayCtrl (8072 + _button)) ctrlSetTextColor [1,1,1,0.6];
+							(findDisplay 100040 displayCtrl (8072 + _button)) ctrlSetTextColor [1,1,1,0.6];
 						} else {
 							player groupSelectUnit [_unit,false];
 						};
@@ -5152,19 +5152,19 @@ A3C_RD_BTN_UNIT = { // -- currently unused after CT_TREE introduction
 					if (!(_unit in A3C_RD_UNITS) && {!isPlayer _unit}) then {
 						player groupSelectUnit [_unit,true];
 						A3C_RD_UNITS pushbackUnique _unit;
-						(findDisplay 7999 displayCtrl (8072 + _button)) ctrlSetTextColor [1,1,1,1];
+						(findDisplay 100040 displayCtrl (8072 + _button)) ctrlSetTextColor [1,1,1,1];
 					} else {
 						player groupSelectUnit [_unit,false];
 						A3C_RD_UNITS = A3C_RD_UNITS - [_unit];
-						(findDisplay 7999 displayCtrl (8072 + _button)) ctrlSetTextColor [1,1,1,0.5];
+						(findDisplay 100040 displayCtrl (8072 + _button)) ctrlSetTextColor [1,1,1,0.5];
 					};
 				} else {
 					if !(_unit in A3C_RD_UNITS) then {
 						A3C_RD_UNITS pushbackUnique _unit;
-						(findDisplay 7999 displayCtrl (8072 + _button)) ctrlSetTextColor [1,1,1,1];
+						(findDisplay 100040 displayCtrl (8072 + _button)) ctrlSetTextColor [1,1,1,1];
 					} else {
 						A3C_RD_UNITS = A3C_RD_UNITS - [_unit];
-						(findDisplay 7999 displayCtrl (8072 + _button)) ctrlSetTextColor [1,1,1,0.5];
+						(findDisplay 100040 displayCtrl (8072 + _button)) ctrlSetTextColor [1,1,1,0.5];
 
 					};
 				};
@@ -5173,12 +5173,12 @@ A3C_RD_BTN_UNIT = { // -- currently unused after CT_TREE introduction
 					if (_i == (8072 + _button)) then {
 						_cond = if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {!isPlayer _unit} else {true};
 						if (_cond) then {
-							(findDisplay 7999 displayCtrl _i) ctrlSetTextColor [1,1,1,1];
+							(findDisplay 100040 displayCtrl _i) ctrlSetTextColor [1,1,1,1];
 						} else {
-							(findDisplay 7999 displayCtrl _i) ctrlSetTextColor [1,1,1,0.5]
+							(findDisplay 100040 displayCtrl _i) ctrlSetTextColor [1,1,1,0.5]
 						};
 					} else {
-						(findDisplay 7999 displayCtrl _i) ctrlSetTextColor [1,1,1,0.5]
+						(findDisplay 100040 displayCtrl _i) ctrlSetTextColor [1,1,1,0.5]
 					};
 				};
 				if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
@@ -5212,20 +5212,20 @@ A3C_RD_BTN_UNIT = { // -- currently unused after CT_TREE introduction
 			if (_shift) then {
 				if (alive (_unitArray select _unitIndex) ) then {
 					A3C_BUTTON_UNIT = (_unitArray select _unitIndex);
-					lbClear ((findDisplay 7999) displayCtrl 8095);
-					((findDisplay 7999) displayCtrl 8095) ctrlShow true;
-					ctrlsetfocus (finddisplay 7999 displayctrl 8095);
+					lbClear ((findDisplay 100040) displayCtrl 8095);
+					((findDisplay 100040) displayCtrl 8095) ctrlShow true;
+					ctrlsetfocus (finddisplay 100040 displayctrl 8095);
 					A3C_LB_MODE = 3;
-					//_cP = (ctrlPosition (findDisplay 7999 displayCtrl (7072 + _button)));
+					//_cP = (ctrlPosition (findDisplay 100040 displayCtrl (7072 + _button)));
 					//_sX = _cP select 0;
 					//_sY = _cP select 1;
-					//_sX1 = _sX min ((ctrlPos (findDisplay 7999 displayCtrl 8074)) select 0 );
+					//_sX1 = _sX min ((ctrlPos (findDisplay 100040 displayCtrl 8074)) select 0 );
 
 					//-- adjust listox x- and y-coordinates
-					_sX = _sX min  ( (ctrlPosition (findDisplay 7999 displayCtrl 8074)) select 0 );
-					_sY = _sY min  ( (ctrlPosition (findDisplay 7999 displayCtrl 8084)) select 1 );
+					_sX = _sX min  ( (ctrlPosition (findDisplay 100040 displayCtrl 8074)) select 0 );
+					_sY = _sY min  ( (ctrlPosition (findDisplay 100040 displayCtrl 8084)) select 1 );
 
-					private _teamBox = (findDisplay 7999 displayCtrl 8095);
+					private _teamBox = (findDisplay 100040 displayCtrl 8095);
 					
 					_teamBox ctrlSetPosition [_sX,_sY];
 					_teamBox ctrlCommit 0;
@@ -5326,14 +5326,14 @@ A3C_RD_BTN_UNIT = { // -- currently unused after CT_TREE introduction
 	} else {
 
 		if (count A3C_RD_UNITS == 0) then {
-			(findDisplay 7999 displayCtrl 8005) ctrlSetText "SELECT UNIT";
+			(findDisplay 100040 displayCtrl 8005) ctrlSetText "SELECT UNIT";
 
 		} else {
 			if (count A3C_RD_UNITS == 1) then {
 				
-				(findDisplay 7999 displayCtrl 8005) ctrlSetText (groupID (A3C_RD_UNITS select 0));
+				(findDisplay 100040 displayCtrl 8005) ctrlSetText (groupID (A3C_RD_UNITS select 0));
 			} else {
-				(findDisplay 7999 displayCtrl 8005) ctrlSetText "MULTIPLE GROUPS";
+				(findDisplay 100040 displayCtrl 8005) ctrlSetText "MULTIPLE GROUPS";
 			};
 
 		};
@@ -5346,7 +5346,7 @@ A3C_RD_BTN_UNIT = { // -- currently unused after CT_TREE introduction
 
 A3C_RADIAL_TREE_MouseDown = {
 	params ["_ctrl","_btn","_sX","_sY","_shift","_ctrl","_alt"];
-	_boxPos = ctrlPosition (findDisplay 7999 displayCtrl 8071);
+	_boxPos = ctrlPosition (findDisplay 100040 displayCtrl 8071);
 	_sX = _sX - (_boxPos select 0);
 	_sY = _sY - (_boxPos select 1);
 	if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
@@ -5368,7 +5368,7 @@ A3C_RADIAL_TREE_MouseDown = {
 				//if (alive (_unitArray select _unitIndex) ) then {
 				//	A3C_BUTTON_UNIT = (_unitArray select _unitIndex);
 
-					private _teamBox = (findDisplay 7999 displayCtrl 8095);
+					private _teamBox = (findDisplay 100040 displayCtrl 8095);
 
 					lbClear _teamBox;
 					_teamBox ctrlShow true;
@@ -5490,7 +5490,7 @@ A3C_RadialMenu_FNC_TEAMCOLOR = {
 			{
 				// if (_btn == 1) then {
 				// 	if !(_x in A3C_HUD_UNITS) then {
-				// 		//if !(isnull (findDisplay 7999)) then {[] call A3C_RADIAL_CloseDisplay}; // ~ obsolete, TAB is held down and will open radial again
+				// 		//if !(isnull (findDisplay 100040)) then {[] call A3C_RADIAL_CloseDisplay}; // ~ obsolete, TAB is held down and will open radial again
 				// 		[_x,_x getvariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
 				// 	};
 				// } else {
@@ -5504,7 +5504,7 @@ A3C_RadialMenu_FNC_TEAMCOLOR = {
 	};
 	
 
-	private _CT_TREE = findDisplay 7999 displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+	private _CT_TREE = findDisplay 100040 displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
 	_CT_TREE tvSetCurSel [-1];
 
 	A3C_RD_UNITS = groupselectedUnits player;
@@ -5520,9 +5520,9 @@ A3C_RadialMenu_FNC_TEAMCOLOR = {
 		_index = ((_t - 8072) + (A3C_BUTTONPAGE_TABLET * 18));
 		if (_index < (count _unitArray)) then {
 			if ((_unitArray select _index) in A3C_RD_UNITS) then {
-				(findDisplay 7999 displayCtrl _t) ctrlSetTextColor [1,1,1,0.6];
+				(findDisplay 100040 displayCtrl _t) ctrlSetTextColor [1,1,1,0.6];
 			} else {
-				(findDisplay 7999 displayCtrl _t) ctrlSetTextColor [1,1,1,0.5];
+				(findDisplay 100040 displayCtrl _t) ctrlSetTextColor [1,1,1,0.5];
 			};
 		};
 	};
@@ -5566,7 +5566,7 @@ A3C_SETTINGS = {
 		profilenamespace setvariable [_var,true];
 		_mode ="ON";
 	};
-	((findDisplay 79991) displayCtrl _val) ctrlSetText _mode;
+	((findDisplay 100010) displayCtrl _val) ctrlSetText _mode;
 	switch (_var) do {
 		case ("A3C_NUM_VAR") : {
 			if (_mode == "ON") then {
@@ -5618,57 +5618,57 @@ A3C_Open_SETTINGS = {
 		A3C_DG_SETTINGS = (finddisplay 46) createDisplay "A3C_SETTINGS_MENU";
 	};
 
-	((findDisplay 79991) displayCtrl 1000) ctrlSetText format
+	((findDisplay 100010) displayCtrl 1000) ctrlSetText format
 	[
 		"A3C SETTINGS (%1):",
 		profileNameSpace getvariable "A3C_CHECKVERSION"
 	];
 
 	if (profileNameSpace getVariable "A3C_NUM_VAR") then {
-		((findDisplay 79991) displayCtrl 1601) ctrlSetText "ON";
+		((findDisplay 100010) displayCtrl 1601) ctrlSetText "ON";
 	} else {
-		((findDisplay 79991) displayCtrl 1601) ctrlSetText "OFF";
+		((findDisplay 100010) displayCtrl 1601) ctrlSetText "OFF";
 	};
 
 	if (profileNameSpace getVariable "A3C_SKILL_VAR") then {
-		((findDisplay 79991) displayCtrl 1600) ctrlSetText "ON";
+		((findDisplay 100010) displayCtrl 1600) ctrlSetText "ON";
 	} else {
-		((findDisplay 79991) displayCtrl 1600) ctrlSetText "OFF";
+		((findDisplay 100010) displayCtrl 1600) ctrlSetText "OFF";
 	};
 
 	if (profileNameSpace getVariable "A3C_HUD_RES_VAR") then {
-		((findDisplay 79991) displayCtrl 1602) ctrlSetText "ON";
+		((findDisplay 100010) displayCtrl 1602) ctrlSetText "ON";
 	} else {
-		((findDisplay 79991) displayCtrl 1602) ctrlSetText "OFF";
+		((findDisplay 100010) displayCtrl 1602) ctrlSetText "OFF";
 	};
 	if (profileNameSpace getVariable "A3C_FORCERAIL_VAR") then {
-		((findDisplay 79991) displayCtrl 1603) ctrlSetText "ON";
+		((findDisplay 100010) displayCtrl 1603) ctrlSetText "ON";
 	} else {
-		((findDisplay 79991) displayCtrl 1603) ctrlSetText "OFF";
+		((findDisplay 100010) displayCtrl 1603) ctrlSetText "OFF";
 	};
 
 	if (profileNameSpace getVariable "A3C_HUD_LAYOUT_CORNER") then {
-		((findDisplay 79991) displayCtrl 1605) ctrlSetText "ON";
+		((findDisplay 100010) displayCtrl 1605) ctrlSetText "ON";
 	} else {
-		((findDisplay 79991) displayCtrl 1605) ctrlSetText "OFF";
+		((findDisplay 100010) displayCtrl 1605) ctrlSetText "OFF";
 	};
 	if (profileNameSpace getVariable "A3C_HUD_OBJECTS") then {
-		((findDisplay 79991) displayCtrl 1606) ctrlSetText "ON";
+		((findDisplay 100010) displayCtrl 1606) ctrlSetText "ON";
 	} else {
-		((findDisplay 79991) displayCtrl 1606) ctrlSetText "OFF";
+		((findDisplay 100010) displayCtrl 1606) ctrlSetText "OFF";
 	};
 
 
 	if ((profileNameSpace getVariable "A3C_TABLET_IMG") == "A3C_CORE\ui\pictures\BG_Tablet_Tough.paa") then {
-		((findDisplay 79991) displayCtrl 1604) ctrlSetText "REG";
+		((findDisplay 100010) displayCtrl 1604) ctrlSetText "REG";
 	} else {
-		((findDisplay 79991) displayCtrl 1604) ctrlSetText "SMALL";
+		((findDisplay 100010) displayCtrl 1604) ctrlSetText "SMALL";
 	};
 
 	if (profileNameSpace getVariable "HC_GROUP_RESPONSE") then {
-		((findDisplay 79991) displayCtrl 1607) ctrlSetText "ON";
+		((findDisplay 100010) displayCtrl 1607) ctrlSetText "ON";
 	} else {
-		((findDisplay 79991) displayCtrl 1607) ctrlSetText "OFF";
+		((findDisplay 100010) displayCtrl 1607) ctrlSetText "OFF";
 	};
 
 
@@ -5681,20 +5681,20 @@ A3C_Open_SETTINGS = {
 
 
 	[
-		79991,
+		100010,
 		'RADIAL',
 		{true},
 		{},
 		{
-			(findDisplay 79991) closeDisplay 0;
+			(findDisplay 100010) closeDisplay 0;
 			showCommandingMenu "";
-			(findDisplay 79991) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
+			(findDisplay 100010) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 		},
 		true
 	] call A3C_UI_RADIAL_ADD_EH_MACROS;
 
 
-	while {!isnull (findDisplay 79991)} do {
+	while {!isnull (findDisplay 100010)} do {
 		sleep 0.5;
 	};
 };
@@ -5707,21 +5707,21 @@ A3C_SETTINGS_DIALOG = {
 	};
 
 	if (profileNameSpace getVariable "A3C_NUM_VAR") then {
-		((findDisplay 79991) displayCtrl 1601) ctrlSetText "ON";
+		((findDisplay 100010) displayCtrl 1601) ctrlSetText "ON";
 	} else {
-		((findDisplay 79991) displayCtrl 1601) ctrlSetText "OFF";
+		((findDisplay 100010) displayCtrl 1601) ctrlSetText "OFF";
 	};
 
 	if (profileNameSpace getVariable "A3C_SKILL_VAR") then {
-		((findDisplay 79991) displayCtrl 1600) ctrlSetText "ON";
+		((findDisplay 100010) displayCtrl 1600) ctrlSetText "ON";
 	} else {
-		((findDisplay 79991) displayCtrl 1600) ctrlSetText "OFF";
+		((findDisplay 100010) displayCtrl 1600) ctrlSetText "OFF";
 	};
 
 	if (profileNameSpace getVariable "A3C_HUD_RES_VAR") then {
-		((findDisplay 79991) displayCtrl 1602) ctrlSetText "ON";
+		((findDisplay 100010) displayCtrl 1602) ctrlSetText "ON";
 	} else {
-		((findDisplay 79991) displayCtrl 1602) ctrlSetText "OFF";
+		((findDisplay 100010) displayCtrl 1602) ctrlSetText "OFF";
 	};
 };
 
@@ -5729,9 +5729,9 @@ A3C_SETTINGS_DIALOG = {
 A3C_UPDATE_UI_MEDICAL = {
 	// player sidechat 'update UI';
 	if (A3C_LBR_1 == 'MEDICAL') then {
-		if (ctrlShown (findDisplay 7999 displayCtrl 8056)) then {
+		if (ctrlShown (findDisplay 100040 displayCtrl 8056)) then {
 
-			{lbCLear (findDisplay 7999 displayCtrl _x)} foreach [8054,8055];
+			{lbCLear (findDisplay 100040 displayCtrl _x)} foreach [8054,8055];
 			["MEDICAL"] call A3C_LABEL_LB;
 
 			

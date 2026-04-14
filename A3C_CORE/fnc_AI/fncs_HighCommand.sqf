@@ -672,7 +672,7 @@ A3C_HC_INSERT_ACTION_WP = {
 			params ["_group","_wpI"];
 			if (isDedicated) exitWith {};
 			if (isNil 'A3C_HC_ACTIVEGROUP') exitWith {};
-			if ({ctrlShown (findDisplay _x displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT)} count [6998,6999] > 0 ) then {
+			if ({ctrlShown (findDisplay _x displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT)} count [100020,100030] > 0 ) then {
 				if (A3C_HC_ACTIVEGROUP == _group) then {
 					if (_wpI < A3C_HC_ACTIVE_IND) then {
 						A3C_HC_ACTIVE_IND = A3C_HC_ACTIVE_IND + 1;
@@ -681,7 +681,7 @@ A3C_HC_INSERT_ACTION_WP = {
 					if (_wpI == A3C_HC_ACTIVE_IND) then {
 						{
 							(findDisplay _x displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT) ctrlShow false;
-						} foreach [6998,6999];
+						} foreach [100020,100030];
 					};
 				};
 			};
@@ -1127,7 +1127,7 @@ A3C_HC_FNC_CompleteWaypoint = {
 	//systemchat format ["%1 has completed a waypoint",groupId _group];
 	//systemchat str ({_x == driver vehicle _x && {vehicle _x iskindof "AIR"}} count units _group);
 	private _currentWaypoint = currentWaypoint _group;
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	if (ctrlShown (findDisplay _a3c_dsp displayctrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT)) then {
 		if ([_group,_currentWaypoint] isEqualTo [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]) then {
 			(findDisplay _a3c_dsp displayctrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT) ctrlShow false;
@@ -1272,7 +1272,7 @@ A3C_HC_VEHICLEBOARD = {
 	params ["_button","_ctrl"];
 	private ["_group","_a3c_dsp"];
 	//if !(count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) exitWith {systemchat 'A3C: Boarding/Dismount function is only compatible with single selections'};
-	_a3c_dsp = if (visibleMap) then {6998} else {6999};
+	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	
 	//systemchat 'ay';
 
@@ -1280,7 +1280,7 @@ A3C_HC_VEHICLEBOARD = {
 	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
 	(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
 	if (_button == 0) then {
-		if (!isNull (findDisplay 7999)) then {
+		if (!isNull (findDisplay 100040)) then {
 			BR_A3C_DISABLE_RADIAL = true;
 			[] call A3C_RADIAL_CloseDisplay;
 			A3C_UI_HUD_ASSIGNVEHICLE = true;

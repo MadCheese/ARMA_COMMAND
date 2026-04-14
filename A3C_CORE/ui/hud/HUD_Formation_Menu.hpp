@@ -1,6 +1,6 @@
 class HUD_Formation_Menu
 {
-	idd = 79994;
+	idd = 100080;
 	movingenable = false;
 	class ControlsBackground {
 		class A3C_HUD_FORM_BG : A3C_RscPicture
@@ -165,7 +165,7 @@ class HUD_Formation_Menu
 
 class HUD_Formation_Menu_Save
 {
-	idd = 79995;
+	idd = 100090;
 	movingenable = false;
 	class ControlsBackground {
 

@@ -303,10 +303,10 @@ A3C_UI_RADIAL_fnc_RemFire_VTOL_EH = {
 		"
 			params ['_clickData','_specialParams'];
 
-			private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
+			private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
 
 			if !(%1) then {
-				if (_a3c_dsp == 7999) then {
+				if (_a3c_dsp == 100040) then {
 					BR_A3C_DISABLE_RADIAL = true;
 					[] call A3C_RADIAL_CloseDisplay;
 					{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu '';
@@ -336,7 +336,7 @@ A3C_UI_RADIAL_fnc_RemFire_VTOL_EH = {
 							[A3C_HUD_UI_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_HUD_UI_3D_TAG;
 							sleep 2;
 							waituntil {true};
-							if (!isNull findDisplay 7999 && {(ctrlShown (findDisplay 7999 displayctrl 8001)) && {A3C_RADIALMODE in ['ACT','HC ACTIONS']}}) then {
+							if (!isNull findDisplay 100040 && {(ctrlShown (findDisplay 100040 displayctrl 8001)) && {A3C_RADIALMODE in ['ACT','HC ACTIONS']}}) then {
 								[A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 							};
 							

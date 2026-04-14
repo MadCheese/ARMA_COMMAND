@@ -139,8 +139,8 @@ A3C_TOGGLEDANGER = {
 			A3C_DANGER_UNITS pushback _x;
 		} foreach _units;
 		hint format ["AUTOCOMBAT DISABLED FOR %1", _unitNames];
-		((findDisplay 7999) displayCtrl 10014) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_autocombat_disabled.paa";
-		((findDisplay 7999) displayCtrl 10015) ctrlSetTooltip "ENABLE AUTOCOMBAT";
+		((findDisplay 100040) displayCtrl 10014) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_autocombat_disabled.paa";
+		((findDisplay 100040) displayCtrl 10015) ctrlSetTooltip "ENABLE AUTOCOMBAT";
 		sleep 2;
 		hint "";
 	} else {
@@ -154,8 +154,8 @@ A3C_TOGGLEDANGER = {
 
 		} foreach _units;
 		hint format ["AUTOCOMBAT ENABLED FOR %1", _unitNames];
-		((findDisplay 7999) displayCtrl 10014) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_autocombat_enabled.paa";
-		((findDisplay 7999) displayCtrl 10015) ctrlSetTooltip "DISABLE AUTOCOMBAT";
+		((findDisplay 100040) displayCtrl 10014) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_autocombat_enabled.paa";
+		((findDisplay 100040) displayCtrl 10015) ctrlSetTooltip "DISABLE AUTOCOMBAT";
 		sleep 2;
 		hint "";
 	};

@@ -1,6 +1,6 @@
 class A3C_SUPPRESSION_DRAW
 {
-	idd = 7998;
+	idd = 100070;
 	movingenable = false;
 	
 	

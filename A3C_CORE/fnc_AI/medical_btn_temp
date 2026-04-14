@@ -196,7 +196,7 @@ A3C_BTN_HEAL = {
 			A3C_MEDICS_ACTIVE = A3C_MEDICS_ACTIVE - [_healer];
 			//-- update UI
 			if (A3C_LBR_1 == 'MEDICAL') then {
-				if (ctrlShown (findDisplay 7999 displayCtrl 8056)) then {
+				if (ctrlShown (findDisplay 100040 displayCtrl 8056)) then {
 					[] spawn {
 						sleep 0.5;
 						[] call A3C_UPDATE_UI_MEDICAL;

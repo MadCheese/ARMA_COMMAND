@@ -13,11 +13,11 @@ if (isNil 'A3C_is_Initialized') exitWith {
 
 //if (visiblemap) exitWith {};
 if  (!isnull (findDisplay 602)) exitwith {};
-if  (!isnull (finddisplay 6998)) exitwith {};
-if  (!isnull (finddisplay 6999)) exitwith {};
-if  (!isnull (finddisplay 7999)) exitwith {};
-if  (!isnull (finddisplay 79991)) exitwith {};
-if  (!isnull (finddisplay 79992)) exitwith {};
+if  (!isnull (finddisplay 100020)) exitwith {};
+if  (!isnull (finddisplay 100030)) exitwith {};
+if  (!isnull (finddisplay 100040)) exitwith {};
+if  (!isnull (finddisplay 100010)) exitwith {};
+if  (!isnull (finddisplay 100050)) exitwith {};
 
 
 
@@ -172,7 +172,7 @@ if (_cursorObjectSelection) then {
 
 //
 
-A3C_CBA_DOWN_MENU = (findDisplay 7999) displayAddEventHandler
+A3C_CBA_DOWN_MENU = (findDisplay 100040) displayAddEventHandler
 [
 	"KeyDown",
 	{
@@ -201,7 +201,7 @@ A3C_CBA_DOWN_MENU = (findDisplay 7999) displayAddEventHandler
 ];
 
 
-A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 7999) displayAddEventHandler
+A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 100040) displayAddEventHandler
 [
 	"KeyUp",
 	{
@@ -211,8 +211,8 @@ A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 7999) displayAddEventHandler
 			[] call A3C_RADIAL_CloseDisplay;
 			A3C_DOWNKEYS = A3C_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
 			showCommandingMenu "";
-			(findDisplay 7999) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-			(findDisplay 7999) displayRemoveEventHandler ["MouseButtonDown", A3C_RAD_DEVH_MD];
+			(findDisplay 100040) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
+			(findDisplay 100040) displayRemoveEventHandler ["MouseButtonDown", A3C_RAD_DEVH_MD];
 			BR_A3C_DISABLE_RADIAL = false;
 			if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
 				A3C_RD_UNITS = [];
@@ -247,7 +247,7 @@ A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 7999) displayAddEventHandler
 
 //
 
-A3C_RAD_DEVH_MD = (findDisplay 7999) displayAddEventHandler
+A3C_RAD_DEVH_MD = (findDisplay 100040) displayAddEventHandler
 [
 	"MouseButtonDown",
 	{
@@ -272,7 +272,7 @@ A3C_RAD_DEVH_MD = (findDisplay 7999) displayAddEventHandler
 
 
 
-		if ({ _ctrl = finddisplay 7999 displayctrl _x; ctrlShown _ctrl && {[[_sX,_sY],_ctrl] call MCSS_fnc_isClickPosInCTRLArea}} count A3C_RADIAL_GAMEUI_AllButtonAreas > 0) exitWith {};
+		if ({ _ctrl = finddisplay 100040 displayctrl _x; ctrlShown _ctrl && {[[_sX,_sY],_ctrl] call MCSS_fnc_isClickPosInCTRLArea}} count A3C_RADIAL_GAMEUI_AllButtonAreas > 0) exitWith {};
 
 		_unitDetected = false;
 		if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
@@ -310,13 +310,13 @@ A3C_RAD_DEVH_MD = (findDisplay 7999) displayAddEventHandler
 				//[] call A3C_RD_LABEL_SELECTORS;
 				
 				if (count A3C_RD_UNITS == 0) then {
-					(findDisplay 7999 displayCtrl 8005) ctrlSetText "SELECT UNIT";
+					(findDisplay 100040 displayCtrl 8005) ctrlSetText "SELECT UNIT";
 
 				} else {
 					if (count A3C_RD_UNITS == 1) then {
-						(findDisplay 7999 displayCtrl 8005) ctrlSetText (groupID (A3C_RD_UNITS select 0));
+						(findDisplay 100040 displayCtrl 8005) ctrlSetText (groupID (A3C_RD_UNITS select 0));
 					} else {
-						(findDisplay 7999 displayCtrl 8005) ctrlSetText "MULTIPLE GROUPS";
+						(findDisplay 100040 displayCtrl 8005) ctrlSetText "MULTIPLE GROUPS";
 					};
 
 				};
@@ -360,7 +360,7 @@ A3C_RAD_DEVH_MD = (findDisplay 7999) displayAddEventHandler
 
 		if (_unitDetected) then {
 			
-			_CT_TREE = findDisplay 7999 displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+			_CT_TREE = findDisplay 100040 displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
 			_CT_TREE tvSetCurSel [-1];
 			if (count A3C_RD_UNITS == 1) then {
 				
@@ -378,21 +378,21 @@ A3C_RAD_DEVH_MD = (findDisplay 7999) displayAddEventHandler
 //-- set Menu Color according to dayTime
 //for "_i" from 8000 to 8004 do {
 //	if (sunormoon < 1) then {
-//		((findDisplay 7999) displayCtrl _i) ctrlSetTextColor [0,0.5,0.8,0.6];
+//		((findDisplay 100040) displayCtrl _i) ctrlSetTextColor [0,0.5,0.8,0.6];
 //	} else {
-//		((findDisplay 7999) displayCtrl _i) ctrlSetTextColor [0,0,0,0.9];
+//		((findDisplay 100040) displayCtrl _i) ctrlSetTextColor [0,0,0,0.9];
 //	};
 //};
 ["RADIAL"] call A3C_GET_UI_BG_COLOR;
 
 for "_i" from 10008 to 10039 do {
-	((findDisplay 7999) displayCtrl _i) ctrlShow false;
+	((findDisplay 100040) displayCtrl _i) ctrlShow false;
 };
 
 
-((findDisplay 7999) displayCtrl 8005) ctrlSetText (toUpper (groupId (group player)));
+((findDisplay 100040) displayCtrl 8005) ctrlSetText (toUpper (groupId (group player)));
 {
-	((findDisplay 7999) displayCtrl _x) ctrlShow false
+	((findDisplay 100040) displayCtrl _x) ctrlShow false
 } foreach [8054,8055,8067,8068,8071,8095,8096];
 
 
@@ -541,8 +541,8 @@ if (_cursorObjectSelection && {!isNull _cursorTarget && {side _cursorTarget in [
 
 
 //if (profileNameSpace getVariable "A3C_NUM_VAR") then {
-//	((findDisplay 7999) displayCtrl 8027) ctrlSetTextColor [0,1,0,0.6];
+//	((findDisplay 100040) displayCtrl 8027) ctrlSetTextColor [0,1,0,0.6];
 //} else {
-//	((findDisplay 7999) displayCtrl 8027) ctrlSetTextColor [1,0,0,0.6];
+//	((findDisplay 100040) displayCtrl 8027) ctrlSetTextColor [1,0,0,0.6];
 //};
 

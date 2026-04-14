@@ -162,7 +162,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 			"Open suppression display"
 		],
 		{
-			if (visibleMap OR (!isNull (findDisplay 6999))) exitWith {};
+			if (visibleMap OR (!isNull (findDisplay 100030))) exitWith {};
 			if !(player == leader group player) exitWith {};
 			if ((count groupSelectedUnits player) == 0) then {
 				{
@@ -189,7 +189,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 					_mode = (profileNameSpace getVariable ["A3C_SUP_RESTRICTIVE", ["UNLIMITED",0]]) select 0;
 					[_mode,false] call A3C_SUP_SETTINGS;
 					//for "_i" from 1401 to 1403 do {
-					//	(findDisplay 7998 displayCtrl _i) ctrlShow false;
+					//	(findDisplay 100070 displayCtrl _i) ctrlShow false;
 					//};
 				};
 			} else {

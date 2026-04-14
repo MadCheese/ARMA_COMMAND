@@ -37,8 +37,8 @@ A3C_DSP_FindControlSafePos = {
 	params ["_display","_control","_ctrlPos"];
 	private ["_borders","_dimensions","_height","_width"];
 	_borders = switch (_display) do {
-		case (6998) : {[safezoneW + safeZoneX,safezoneH + safeZoneY]}; //-- Main Map Overlay, full screen
-		case (6999) : {[0.62 * safezoneW,0.6 * safezoneH]}; //-- Tablet (dimensions from A3C_TAB.hpp
+		case (100020) : {[safezoneW + safeZoneX,safezoneH + safeZoneY]}; //-- Main Map Overlay, full screen
+		case (100030) : {[0.62 * safezoneW,0.6 * safezoneH]}; //-- Tablet (dimensions from A3C_TAB.hpp
 	};
 	_dimensions = ctrlPosition (findDisplay _display displayCtrl _control);
 	if (_control == 709115) then {
@@ -1080,7 +1080,7 @@ A3C_Map_HC_waypointContext_OpenMenu = {
 
 
 A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	private ["_group","_wp","_condition","_statements","_statementsINS","_indSel","_indSelActive","_indAdd","_dirTo","_wpCount","_wpsActive","_wpCountActive","_wpA","_wpC","_wpS","_wpI","_polygon","_var","_tPos","_dirTo","_dist"];
 	_group = A3C_HC_ACTIVEGROUP; //_this select 0;
 
@@ -1703,7 +1703,7 @@ A3C_HC_CASMODES = [];
 
 
 A3C_MAPTAB_WPMENU_ADDACTIONS = {
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	private _actionTypeCombo = (findDisplay _a3c_dsp displayCtrl 709141);
 
 	private _leader = leader A3C_HC_ACTIVEGROUP;
@@ -1882,7 +1882,7 @@ A3C_Map_HC_waypointContext_OpenMenu_LB = { //-- no longer used
 
 	private ["_LBmode","_a3c_dsp","_wpMenu","_lb","_array","_landingTypes"];
 	_LBmode = _this select 0;
-	_a3c_dsp = if (visibleMap) then {6998} else {6999};
+	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	if (ctrlshown (findDisplay _a3c_dsp displayCtrl 709135)) exitWith {};
 	_lb = if (_LBmode == 0) then {A3C_HC_LB_IND select 0} else {A3C_HC_LB_IND select 1};
 	_wpMenu = (findDisplay _a3c_dsp displayCtrl 709135);
@@ -1922,7 +1922,7 @@ A3C_LB_HC = {
 	// systemchat str [_mode];
 	
 	if (isnil "_mode") exitWith {};
-	_a3c_dsp = if (count _this > 2) then {_this select 2} else {6999};
+	_a3c_dsp = if (count _this > 2) then {_this select 2} else {100030};
 
 	// systemchat format ["A3C_LB_HC, A3C_HC_ACTIVE_POST_COND_MODE %1, _mode %2", A3C_HC_ACTIVE_POST_COND_MODE, _mode];
 

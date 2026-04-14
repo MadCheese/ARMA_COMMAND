@@ -16,7 +16,7 @@ if (isDedicated) exitwith {};
 if (isMultiplayer && isServer && !(hasInterface)) exitwith {};
 if !(player == leader group player) exitwith {};
 
-if (!isNull findDisplay 7999) exitWith {};
+if (!isNull findDisplay 100040) exitWith {};
 if (BR_A3C_DISABLE_RADIAL) exitWith {};
 
 _display = _this select 0;
@@ -42,7 +42,7 @@ if (_exit) exitWith {};
 
 {[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS; //-- close eventual HUD selection
 
-_tD = if (_display == 12) then {6998} else {_display};
+_tD = if (_display == 12) then {100020} else {_display};
 
 if  (!isnull (finddisplay _display)) exitwith {};
 
@@ -62,7 +62,7 @@ if (!visibleMap && {_display == 12}) exitWith {};
 A3C_MAP_UI_Overlay_VAR_isUnFolded = false; //-- closed tree because no selection
 
 //-- close map if opened to prevent double map issues
-if (_display == 6999) then {
+if (_display == 100030) then {
 	if (visibleMap) then {
 		openMap false;
 		sleep 0.2;
@@ -166,10 +166,10 @@ A3C_MAP_Y = 0.5;
 
 with uiNameSpace do {
 
-	if (_display == 6999) then {
+	if (_display == 100030) then {
 
 		A3C_TABLET = (finddisplay 46) createDisplay "A3C_SWPDIALOG";
-		(findDisplay 6999 displayCtrl 7043) ctrlAddEventHandler
+		(findDisplay 100030 displayCtrl 7043) ctrlAddEventHandler
 		[
 			"Draw",
 			{
@@ -178,11 +178,11 @@ with uiNameSpace do {
 		];
 
 		if (["tactical",goggles player] call BIS_fnc_instring) then {
-			(findDisplay 6999 displayCtrl 10) ctrlSetText "";
-			(findDisplay 6999 displayCtrl 7043) ctrlSetBackgroundColor [0.9, 0.9, 0.9, 0.5];
+			(findDisplay 100030 displayCtrl 10) ctrlSetText "";
+			(findDisplay 100030 displayCtrl 7043) ctrlSetBackgroundColor [0.9, 0.9, 0.9, 0.5];
 		} else {
-			(findDisplay 6999 displayCtrl 10) ctrlSetText (profileNameSpace getVariable "A3C_TABLET_IMG");
-			(findDisplay 6999 displayCtrl 7043) ctrlSetBackgroundColor [0.9, 0.9, 0.9, 1];
+			(findDisplay 100030 displayCtrl 10) ctrlSetText (profileNameSpace getVariable "A3C_TABLET_IMG");
+			(findDisplay 100030 displayCtrl 7043) ctrlSetBackgroundColor [0.9, 0.9, 0.9, 1];
 		};
 	} else {
 		_hudStatus = shownHud;
@@ -235,7 +235,7 @@ private _ct_tree = findDisplay _display displayCtrl A3C_SHARED_GAMEUI_TREE_CONTR
 //-- overlay step 1: spawn Selector Box
 
 
-if (_display == 6998 && {!visibleMap}) exitWith {(findDisplay _display) closeDisplay 0};
+if (_display == 100020 && {!visibleMap}) exitWith {(findDisplay _display) closeDisplay 0};
 
 [_display,"INF"] call A3C_MAP_UI_Overlay_ResizeTeamColorsXWH;
 sleep 0.1;
@@ -301,7 +301,7 @@ A3C_TAB_KEY_U = (findDisplay _display) displayAddEventHandler
 		//if (_btn1 == 42) then {
 		//	A3C_BUTTON_SHIFT = false;
 		//};
-		//if !(isnull (finddisplay 6998)) then {
+		//if !(isnull (finddisplay 100020)) then {
 			//-- shift and ctrl checks - otherwise not available. CTRL does not fire from OVERLAY so it happens here instead
 			if (_btn1 == 42) then { 
 				A3C_MODIFIER_SHIFT = false; //-- needed for UI (TREE EH's do not do CTL/SHIFT)

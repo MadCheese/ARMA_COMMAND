@@ -124,11 +124,11 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 	//-- unstuck
 	//A3C_SELECTED_HC_GROUPS_SETTINGS
 
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
-	if (!isNull findDisplay 7999) then {
-		_a3c_dsp = 7999;
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
+	if (!isNull findDisplay 100040) then {
+		_a3c_dsp = 100040;
 	};
-	if ({!isNull findDisplay _x} count [6998,6999,7999] == 0) exitWith {};
+	if ({!isNull findDisplay _x} count [100020,100030,100040] == 0) exitWith {};
 	//-- wipe action controls
 
 	[] call A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_WIPE;
@@ -203,7 +203,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		private _gp = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
 		_leaderVic = vehicle (leader _gp);
 
-		if (_a3c_dsp == 7999 && {typeOf _leaderVic in ["B_T_VTOL_01_armed_F", "B_T_VTOL_01_armed_fixed_F"]}) then {
+		if (_a3c_dsp == 100040 && {typeOf _leaderVic in ["B_T_VTOL_01_armed_F", "B_T_VTOL_01_armed_fixed_F"]}) then {
 			_actions PushBack "VTOL_CANNON";
 			_actions PushBack "VTOL_GATLING";
 			if (typeOf _leaderVic == "B_T_VTOL_01_armed_fixed_F") then {
@@ -256,7 +256,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		
 
 		if !(_isConvoyGroup) then {
-			if (_a3c_dsp == 6998) then {
+			if (_a3c_dsp == 100020) then {
 				_actions PushBack "JOIN GROUP";
 			};
 		};
@@ -277,7 +277,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 
 		//-- add FPV drone to 3D Menu   /// unitIsUAV _leaderVic
-		if ( ( (typeOf _leaderVic) in ["B_Crocus_AT", "B_Crocus_AP"]) && {_a3c_dsp == 7999}) then {
+		if ( ( (typeOf _leaderVic) in ["B_Crocus_AT", "B_Crocus_AP"]) && {_a3c_dsp == 100040}) then {
 			if !("uav_fpv" in (toLower (waypointScript [_gp, currentwaypoint _gp]))) then {
 				_actions pushBackUnique "UAV_FPV";
 			};
@@ -295,7 +295,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					if (A3C_IsRappel) then {
 
 						if (_isRotor && {isPlayer (leader _gp) OR {{group _x != _gp} count (crew _leaderVic) > 0}}) then {
-							//if (isNull findDisplay 7999 OR {}) then {
+							//if (isNull findDisplay 100040 OR {}) then {
 								_actions pushBackUnique "RAPPEL";
 							//};
 
@@ -305,7 +305,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				//if ([_leaderVic] call A3C_isAttackHelicopter ) then {
 				private _var = (_leaderVic) getVariable ["A3C_Freeze_helicopter",[false,0]];
 				if (_var select 0) then {
-					if (_a3c_dsp != 7999) then { //~~ TEMPORARY - MAKE THIS ACCESSIBLE VIA RADIAL AS WELL!
+					if (_a3c_dsp != 100040) then { //~~ TEMPORARY - MAKE THIS ACCESSIBLE VIA RADIAL AS WELL!
 						_actions pushBackUnique "HELI_OVERWATCH";
 					};		
 				};
@@ -316,7 +316,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					//-- vehicle can load an object(s)
 					_actions pushBackUnique "PARALOAD";
 				};
-				if (!isNull findDisplay 7999 && {A3C_israppel}) then {
+				if (!isNull findDisplay 100040 && {A3C_israppel}) then {
 					if (_isRotor && {{((assignedVehicleRole _x) select 0) == "cargo"} count crew _leaderVic > 0}) then {
 						_actions pushBackUnique "RAPPEL";
 					};
@@ -324,7 +324,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			};
 			if (!(_isRotor) && {_leaderVic isKindOf "PLANE"}) then {
 				_casModes = [typeof _leaderVic] call MCSS_fnc_getCASmodes;
-				if (count _casModes > 0 && {_a3c_dsp == 7999}) then {
+				if (count _casModes > 0 && {_a3c_dsp == 100040}) then {
 					_actions pushBackUnique "CAS-STRIKE";
 				};
 			};
@@ -341,7 +341,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			
 
 
-			if (!isNull findDisplay 7999) then {
+			if (!isNull findDisplay 100040) then {
 
 				
 
@@ -559,11 +559,11 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				!(_leaderVic getVariable ["A3C_ParadropActive",false])
 			} &&
 			{
-				_a3c_dsp == 7999 OR {((getPosATL _leaderVic) select 2) > 1}
+				_a3c_dsp == 100040 OR {((getPosATL _leaderVic) select 2) > 1}
 			}
 		} count A3C_SELECTED_HC_GROUPS_SETTINGS > 0
 	) then {
-		if (_a3c_dsp == 7999) then {
+		if (_a3c_dsp == 100040) then {
 			_actions pushBackUnique "LANDING"; //-- aircraft landings: further evaluation is to be made when action is CALLED
 		};
 	};
@@ -575,7 +575,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		};
 	};
 
-	if (!isNull findDisplay 7999) then {
+	if (!isNull findDisplay 100040) then {
 		private _HCunits = units player - [player];
 		{
 			{
@@ -672,7 +672,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						A3C_HC_LightsOnUnits pushbackUnique (group _u);
 					};
 				};
-				if ((!isNull findDisplay 7999) && {_x == (gunner vehicle _x)}) then {
+				if ((!isNull findDisplay 100040) && {_x == (gunner vehicle _x)}) then {
 					if (isNull objectParent _x) then {
 						if ([_x] call A3C_HasAT) then {
 							A3C_REMFIRE_ATShot_Units pushBackUnique _x;
@@ -882,8 +882,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_convoyStop.paa";
 					_button_toolTip = "HALT ALL CURRENT CONVOYS";
 					_buttonFnc = {
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-						private _isRadial = _a3c_dsp == 7999;
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+						private _isRadial = _a3c_dsp == 100040;
 
 						if (_isRadial) then {
 							BR_A3C_DISABLE_RADIAL = true;
@@ -905,7 +905,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
 						} else {
-							{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+							{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 						};
 
 						hint format ["%1 convoy(s) have been ordered to halt!", count A3C_GROUP_CONVOYS];
@@ -965,8 +965,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_Menu_trash.paa";
 					_button_toolTip = "Delete Group And Vehicles";
 					_buttonFnc = {
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-						private _isRadial = _a3c_dsp == 7999;
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+						private _isRadial = _a3c_dsp == 100040;
 
 						if (_isRadial) then {
 							BR_A3C_DISABLE_RADIAL = true;
@@ -988,7 +988,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
 						} else {
-							{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+							{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 						};
 
 						if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
@@ -1027,8 +1027,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip = "Remote Control Vehicle";
 					_buttonFnc = {
 						// (findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-						// private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-						// private _isRadial = _a3c_dsp == 7999;
+						// private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+						// private _isRadial = _a3c_dsp == 100040;
 						// if (_isRadial) then {
 						// 	//-- no actual action - just close menu
 						// 	BR_A3C_DISABLE_RADIAL = true;
@@ -1048,7 +1048,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						// 		true
 						// 	] call A3C_UI_RADIAL_ADD_EH_MACROS;
 						// } else {
-						// 	{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+						// 	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 						// 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 						// };
 						[] call A3C_GP_RC_UIVehicleRemoteFnc;
@@ -1059,8 +1059,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_refresh.paa";
 
 					_buttonFnc = {
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-						private _isRadial = _a3c_dsp == 7999;
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+						private _isRadial = _a3c_dsp == 100040;
 						if (_isRadial) then {
 							//-- no actual action - just close menu
 							BR_A3C_DISABLE_RADIAL = true;
@@ -1080,7 +1080,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
 						} else {
-							{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+							{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 							(findDisplay 12 displayCtrl 51) ctrlEnable true;
 						};
 						//systemchat 'ayyyy heyooo';
@@ -1185,8 +1185,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_params = [];
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_convoy_create.paa";
 					_buttonFnc = {
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-						private _isRadial = _a3c_dsp == 7999;
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+						private _isRadial = _a3c_dsp == 100040;
 						if (_isRadial) then {
 							//-- no actual action - just close menu
 							BR_A3C_DISABLE_RADIAL = true;
@@ -1208,7 +1208,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
 						} else {
-							{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+							{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 							(findDisplay 12 displayCtrl 51) ctrlEnable true;
 						};
 						[] spawn A3C_Map_HC_groupContext_ButtonFnc_Convoy;
@@ -1219,8 +1219,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_params = [];
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_convoy_reJoin.paa";
 					_buttonFnc = {
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-						private _isRadial = _a3c_dsp == 7999;
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+						private _isRadial = _a3c_dsp == 100040;
 						if (_isRadial) then {
 							//-- no actual action - just close menu
 							BR_A3C_DISABLE_RADIAL = true;
@@ -1242,7 +1242,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
 						} else {
-							{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+							{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 							(findDisplay 12 displayCtrl 51) ctrlEnable true;
 						};
 						[] spawn A3C_Map_HC_groupContext_ButtonFnc_Convoy;
@@ -1254,10 +1254,10 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_params = [];
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_rejoinToPlayer.paa";
 					_buttonFnc = {
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-						private _isRadial = _a3c_dsp == 7999;
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+						private _isRadial = _a3c_dsp == 100040;
 						if !(_isRadial) then {
-							{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+							{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 							(findDisplay 12 displayCtrl 51) ctrlEnable true;
 						} else {
 							//-- no actual action - just close menu
@@ -1289,7 +1289,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_params = [];
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_joinGroup.paa";
 					_buttonFnc = {
-						{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+						{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 						(findDisplay 12 displayCtrl 51) ctrlEnable true;
 						A3C_isMergeGroupActive = true;
 						waituntil {!visibleMap OR {!(A3C_isMergeGroupActive)}};
@@ -1302,11 +1302,11 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_groupSpeed.paa";
 					_buttonFnc = {
 						A3C_OBJECTSELECTOR_MODE = "SPEEDLIMIT";
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-						private _isRadial = _a3c_dsp == 7999;
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+						private _isRadial = _a3c_dsp == 100040;
 
 						if (_isRadial) then {
-							_a3c_dsp = 79996;
+							_a3c_dsp = 100060;
 						};
 
 						_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
@@ -1319,12 +1319,12 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							with uiNamespace do {
 								//disableSerialization;
 								A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-								(findDisplay 79996 displayCtrl 800802) ctrlSetText "Select Max Speed";
+								(findDisplay 100060 displayCtrl 800802) ctrlSetText "Select Max Speed";
 								
 								
-								_parent = findDisplay 79996 displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
-								_text = findDisplay 79996 displayCtrl 800802;
-								_listBox = findDisplay 79996 displayCtrl 800803; //~~ WHY DO I HAVE TO DO IT THIS WAY HERE?
+								_parent = findDisplay 100060 displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
+								_text = findDisplay 100060 displayCtrl 800802;
+								_listBox = findDisplay 100060 displayCtrl 800803; //~~ WHY DO I HAVE TO DO IT THIS WAY HERE?
 
 								_parent ctrlShow true;
 								_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
@@ -1345,7 +1345,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								
 								
 								
-								(findDisplay 79996) displayAddEventhandler
+								(findDisplay 100060) displayAddEventhandler
 								[
 									"KeyUp",
 									{
@@ -1356,7 +1356,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 												BR_A3C_DISABLE_RADIAL = false;
 												//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 												//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-												(findDisplay 79996) closeDisplay 0;
+												(findDisplay 100060) closeDisplay 0;
 												A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 												{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 											};
@@ -1367,7 +1367,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							};
 							
 						} else {
-							{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+							{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 							(findDisplay 12 displayCtrl 51) ctrlEnable true;
 							_parent ctrlShow true;
 							_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
@@ -1594,8 +1594,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_params = [];
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_reBoard.paa";
 					_buttonFnc = {
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-						private _isRadial = _a3c_dsp == 7999;
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+						private _isRadial = _a3c_dsp == 100040;
 						if (_isRadial) then {
 							//-- no actual action - just close menu
 							BR_A3C_DISABLE_RADIAL = true;
@@ -1617,7 +1617,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
 						} else {
-							{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+							{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 							(findDisplay 12 displayCtrl 51) ctrlEnable true;
 						};
 						[A3C_SELECTED_HC_GROUPS_SETTINGS] spawn A3C_HC_REBOARD;
@@ -1630,8 +1630,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_params = [];
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_changeBattery.paa";
 					_buttonFnc = {
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-						private _isRadial = _a3c_dsp == 7999;
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+						private _isRadial = _a3c_dsp == 100040;
 						if (_isRadial) then {
 							//-- no actual action - just close menu
 							BR_A3C_DISABLE_RADIAL = true;
@@ -1653,7 +1653,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
 						} else {
-							{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+							{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 							(findDisplay 12 displayCtrl 51) ctrlEnable true;
 						};
 						if (isClass (configFile >> "CfgVehicles" >> "mavic_3_BLU")) then {
@@ -1680,8 +1680,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
 						private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
-						private _isRadial = _a3c_dsp == 7999;
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+						private _isRadial = _a3c_dsp == 100040;
 						
 						private _var = (vehicle leader _group) getVariable ["A3C_Freeze_helicopter",[false,0]];
 
@@ -1689,7 +1689,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						if (_var select 0) then {
 							//-- cancel action
 							if !(_isRadial) then {
-								{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+								{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 								(findDisplay 12 displayCtrl 51) ctrlEnable true;
 							};
 							{
@@ -1712,7 +1712,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								with uiNamespace do {
 								//disableSerialization;
 								A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-								(findDisplay 79996) displayAddEventhandler
+								(findDisplay 100060) displayAddEventhandler
 									[
 										"KeyUp",
 										{
@@ -1723,7 +1723,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 													BR_A3C_DISABLE_RADIAL = false;
 													(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 													(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-													(findDisplay 79996) closeDisplay 0;
+													(findDisplay 100060) closeDisplay 0;
 													A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 													{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 												};
@@ -1947,7 +1947,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						);
 
 						if (_doSpecifyLandingPos) then {
-							if (!isNull findDisplay 7999) then {
+							if (!isNull findDisplay 100040) then {
 								A3C_HUD_UI_3D_TAG_ICON_TYPE =  "";
 								A3C_HUD_UI_3D_TAG_ICON_COL = [1,1,1,0.7];
 								BR_A3C_DISABLE_RADIAL = true;
@@ -2005,7 +2005,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 										with uiNamespace do {
 											//disableSerialization;
 											A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-											(findDisplay 79996) displayAddEventhandler
+											(findDisplay 100060) displayAddEventhandler
 											[
 												"KeyUp",
 												{
@@ -2016,7 +2016,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 															BR_A3C_DISABLE_RADIAL = false;
 															(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 															(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-															(findDisplay 79996) closeDisplay 0;
+															(findDisplay 100060) closeDisplay 0;
 															A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 															{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 														};
@@ -2027,7 +2027,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 										};
 
 
-										private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+										private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 										_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 										_text = findDisplay _a3c_dsp displayCtrl 800802;
 										_listBox = findDisplay _a3c_dsp displayCtrl 800803;
@@ -2264,7 +2264,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
 
-						if (!isNull findDisplay 7999) then {
+						if (!isNull findDisplay 100040) then {
 							A3C_HUD_UI_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_CAS.paa';
 							A3C_HUD_UI_3D_TAG_ICON_COL = [1,1,1,0.7];
 							BR_A3C_DISABLE_RADIAL = true;
@@ -2282,7 +2282,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									with uiNamespace do {
 										//disableSerialization;
 										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-										(findDisplay 79996) displayAddEventhandler
+										(findDisplay 100060) displayAddEventhandler
 										[
 											"KeyUp",
 											{
@@ -2293,7 +2293,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 														BR_A3C_DISABLE_RADIAL = false;
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-														(findDisplay 79996) closeDisplay 0;
+														(findDisplay 100060) closeDisplay 0;
 														A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 														A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
@@ -2305,7 +2305,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									};
 
 
-									private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+									private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 									_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 									_text = findDisplay _a3c_dsp displayCtrl 800802;
 									_listBox = findDisplay _a3c_dsp displayCtrl 800803;
@@ -2398,7 +2398,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
 
-						if (!isNull findDisplay 7999) then {
+						if (!isNull findDisplay 100040) then {
 							A3C_HUD_UI_3D_TAG_ICON_TYPE = "\A3C_UI\menu\icon_menu_action_Rappel.paa";
 							A3C_HUD_UI_3D_TAG_ICON_COL = [1,1,1,0.7];
 							BR_A3C_DISABLE_RADIAL = true;
@@ -2537,7 +2537,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
 					_button_toolTip = "";
-					if (_a3c_dsp == 7999) then {
+					if (_a3c_dsp == 100040) then {
 						_button_toolTip =  format
 						[
 							"RAPPEL CARGO - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1. Creates wp on destination and origin.",
@@ -2570,13 +2570,13 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
 						//[] spawn A3C_HC_GroupMenu_fnc_SUPPRESSION; //-- button up??  / _specialParams_specialParams?
-						private _group = if (!isNull findDisplay 7999) then {A3C_RD_UNITS select 0} else {A3C_SELECTED_HC_GROUPS_SETTINGS select 0}; //~~ same same??
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+						private _group = if (!isNull findDisplay 100040) then {A3C_RD_UNITS select 0} else {A3C_SELECTED_HC_GROUPS_SETTINGS select 0}; //~~ same same??
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 
 
 
 
-						if (_a3c_dsp == 79996) then {
+						if (_a3c_dsp == 100060) then {
 
 							[
 								46,
@@ -2588,7 +2588,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								{
 								},
 								{
-									(findDisplay 79996) closeDisplay 0;
+									(findDisplay 100060) closeDisplay 0;
 									(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 								},
 								true
@@ -2596,7 +2596,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 							with uiNameSpace do {
 								A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-								(findDisplay 79996) displayAddEventhandler
+								(findDisplay 100060) displayAddEventhandler
 								[
 									"KeyUp",
 									{
@@ -2604,7 +2604,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											_button = _this select 0;
 											_button = _button - [(_button select 0)];
 											if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-												(findDisplay 79996) closeDisplay 0;
+												(findDisplay 100060) closeDisplay 0;
 												(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 												BR_A3C_DISABLE_RADIAL = false;
 												A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
@@ -2623,7 +2623,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						_text = findDisplay _a3c_dsp displayCtrl 800802;
 						_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 
-						{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+						{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 						(findDisplay 12 displayCtrl 51) ctrlEnable true;
 						A3C_OBJECTSELECTOR_MODE = "flyInHeight"; //-- !! CHECK IF STILL NEEDED!
 						lbClear _listBox;
@@ -2658,7 +2658,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_suppression.paa";
 					_button_toolTip = "";
-					if (_a3c_dsp == 7999) then {
+					if (_a3c_dsp == 100040) then {
 						_button_toolTip =  format
 						[
 							"SUPPRESSIVE FIRE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
@@ -2694,9 +2694,9 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
 
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 
-						if (!isNull findDisplay 7999) then {
+						if (!isNull findDisplay 100040) then {
 							BR_A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							A3C_HUD_UI_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_remote_Artillery.paa';
@@ -2714,7 +2714,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									with uiNamespace do {
 										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
 									};
-									(findDisplay 79996) displayAddEventhandler
+									(findDisplay 100060) displayAddEventhandler
 									[
 										"KeyUp",
 										{
@@ -2722,7 +2722,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 												_button = _this select 0;
 												_button = _button - [(_button select 0)];
 												if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-													(findDisplay 79996) closeDisplay 0;
+													(findDisplay 100060) closeDisplay 0;
 													A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 													{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 												};
@@ -2732,7 +2732,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									A3C_HC_FOCUS_ARTY_POS = +(A3C_HUD_UI_3D_TAG_ICON_POS);
 									["ARTY"] call A3C_MAP_UI_Overlay_OPEN_OBJECTSELECTOR_MAP;
 									[] spawn {
-										while {!isNull findDisplay 79996} do {
+										while {!isNull findDisplay 100060} do {
 											sleep 0.5;
 										};
 										A3C_HUD_UI_3D_TAG_reposition = false;
@@ -2821,7 +2821,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					};
 					_button_IMG = "a3c_ui\menu\icon_menu_action_Artillery.paa";
 					_button_toolTip = "";
-					if (_a3c_dsp == 7999) then {
+					if (_a3c_dsp == 100040) then {
 						_button_toolTip =  format
 						[
 							"FIRE ARTILLERY - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
@@ -2843,9 +2843,9 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						
 						{[_x] spawn A3C_ReArm_Auto_Evaluate} foreach (units _gp);
 						player groupradio 'SentCmdRearm';
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 
-						if (!isNull findDisplay 7999) then {
+						if (!isNull findDisplay 100040) then {
 							BR_A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 46) displayAddEventHandler
@@ -2877,9 +2877,9 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
 						[A3C_SELECTED_HC_GROUPS_SETTINGS select 0] call A3C_MEDICAL_START_HC;
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 
-						if (!isNull findDisplay 7999) then {
+						if (!isNull findDisplay 100040) then {
 							BR_A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 46) displayAddEventHandler
@@ -2925,9 +2925,9 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						};
 
 						[[clientOwner, _group], _transferFnc] remoteExec ['bis_fnc_call', 2];
-						private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 
-						if (!isNull findDisplay 7999) then {
+						if (!isNull findDisplay 100040) then {
 							BR_A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 46) displayAddEventHandler
@@ -3001,7 +3001,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									with uiNamespace do {
 										//disableSerialization;
 										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-										(findDisplay 79996) displayAddEventhandler
+										(findDisplay 100060) displayAddEventhandler
 										[
 											"KeyUp",
 											{
@@ -3013,7 +3013,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 														A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-														(findDisplay 79996) closeDisplay 0;
+														(findDisplay 100060) closeDisplay 0;
 														A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 													};
@@ -3023,7 +3023,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 									};
 
-									private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+									private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 									_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 									_text = findDisplay _a3c_dsp displayCtrl 800802;
 									_listBox = findDisplay _a3c_dsp displayCtrl 800803;
@@ -3054,7 +3054,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 									[] spawn {
 										sleep 0.1;
-										while {!isNull findDisplay 79996} do {
+										while {!isNull findDisplay 100060} do {
 
 											sleep 0.5;
 										};
@@ -3233,7 +3233,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							with uiNamespace do {
 								//disableSerialization;
 								A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-								(findDisplay 79996) displayAddEventhandler
+								(findDisplay 100060) displayAddEventhandler
 								[
 									"KeyUp",
 									{
@@ -3244,7 +3244,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 												BR_A3C_DISABLE_RADIAL = false;
 												A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
 												(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-												(findDisplay 79996) closeDisplay 0;
+												(findDisplay 100060) closeDisplay 0;
 												A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 												{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 											};
@@ -3253,7 +3253,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								];
 							};
 
-							private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+							private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 							_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 							_text = findDisplay _a3c_dsp displayCtrl 800802;
 							_listBox = findDisplay _a3c_dsp displayCtrl 800803;
@@ -3502,7 +3502,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				//};
 
 			//};
-			if (_a3c_dsp == 7999) then {
+			if (_a3c_dsp == 100040) then {
 
 				_buttonFnc = (str _buttonFnc) splitString "";
 				_buttonFnc deleteAt 0;
@@ -3546,11 +3546,11 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	private _refUnits = A3C_SELECTED_UNITS;
 	_remFire_units = [];
-	if (!isNull findDisplay 7999) then {
-		_a3c_dsp = 7999;
+	if (!isNull findDisplay 100040) then {
+		_a3c_dsp = 100040;
 		_refUnits = A3C_RD_UNITS; //~~ has to be RD becasue it can also be called on squad units (subideal, maybe just have one array for everything. A3C_SELECTED_UNITS)
 	};
 	private _chatMessageParts = [];
@@ -3570,7 +3570,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 		//		[_currentlySuppressingUnits,"SUPPRESSION"] call A3C_POLY_ACTION_OFF;
 		//	};
 		//};
-		if (_a3c_dsp in [6998,6999]) then {
+		if (_a3c_dsp in [100020,100030]) then {
 			if (_group in _refUnits) then { //~~ ?? what does this do ecxactly? making sure that group menu switches the button pages?
 				["HC"] call A3C_START_TABMODE;
 			};
@@ -3621,12 +3621,12 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 
 	//-- give new suppression order via the appropriate medium
 
-	if (_a3c_dsp in [6998,6999]) then {
+	if (_a3c_dsp in [100020,100030]) then {
 
 		systemchat "A3C: Please relay map-coordinates via mapclick!";
 		sleep 0.5; //~~ small delay needed for mapclick
 		A3C_HC_GroupMenu_SuppressionRequested = true;
-		{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 		[
 			"A3C_SUP_MAPCLICK",
@@ -3711,7 +3711,7 @@ A3C_Map_HC_groupContext_OpenMenu = {
 	private ["_a3c_dsp"];
 	A3C_HC_NearStatics = [];
 
-	_a3c_dsp = if (visibleMap) then {6998} else {6999};
+	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 
 	
 	
@@ -3974,10 +3974,10 @@ A3C_Map_HC_groupContext_OpenMenu = {
 A3C_GP_Btn_Para = {//mumu
 	params ["_call"];
 	private ["_vehicle","_cargoObjects"];
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 
 
-	//_targetVehicle = if (!isNull findDisplay 7999) then {} else {};
+	//_targetVehicle = if (!isNull findDisplay 100040) then {} else {};
 
 	_vehicle = if (isNull _call) then {
 
@@ -3991,7 +3991,7 @@ A3C_GP_Btn_Para = {//mumu
 
 		_vehicle setVariable ["A3C_ParadropActive",true,true];
 		_targetArray = A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS;
-		if (!isNull findDisplay 7999) then {
+		if (!isNull findDisplay 100040) then {
 			_targetArray = A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED;
 		};
 		[_targetArray] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
@@ -4005,7 +4005,7 @@ A3C_GP_Btn_Para = {//mumu
 		if (count _cargoObjects > 0) then {
 
 			A3C_OBJECTSELECTOR_MODE = "PARALOAD";
-			if (!isNull findDisplay 7999) then {
+			if (!isNull findDisplay 100040) then {
 				BR_A3C_DISABLE_RADIAL = true;
 				[] call A3C_RADIAL_CloseDisplay;
 
@@ -4015,7 +4015,7 @@ A3C_GP_Btn_Para = {//mumu
 					{true},
 					{},
 					{
-						(findDisplay 79996) closeDisplay 0;
+						(findDisplay 100060) closeDisplay 0;
 						(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 					},
 					true
@@ -4023,7 +4023,7 @@ A3C_GP_Btn_Para = {//mumu
 
 				with uiNameSpace do {
 					A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-					(findDisplay 79996) displayAddEventhandler
+					(findDisplay 100060) displayAddEventhandler
 					[
 						"KeyUp",
 						{
@@ -4031,7 +4031,7 @@ A3C_GP_Btn_Para = {//mumu
 								_button = _this select 0;
 								_button = _button - [(_button select 0)];
 								if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-									(findDisplay 79996) closeDisplay 0;
+									(findDisplay 100060) closeDisplay 0;
 									(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 									BR_A3C_DISABLE_RADIAL = false;
 									A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
@@ -4043,7 +4043,7 @@ A3C_GP_Btn_Para = {//mumu
 				};
 
 			} else {
-				{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 				(findDisplay 12 displayCtrl 51) ctrlEnable true;
 			};
 
@@ -4085,19 +4085,19 @@ A3C_fnc_SecuRejoin_fnc = {
 	params ["_groupArray"];
 	if (count _groupArray == 0) exitWith {};
 	A3C_SELECTED_HC_GROUPS_SETTINGS = +(_groupArray);
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 	
 
-	{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	if (count _groupArray <= 1) then {
 		[_groupArray] spawn A3C_REJOIN_GROUPS;
 	} else {
-		if (_a3c_dsp == 79996) then {
+		if (_a3c_dsp == 100060) then {
 			with uiNamespace do {
 				//disableSerialization;
 				A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-				(findDisplay 79996) displayAddEventhandler
+				(findDisplay 100060) displayAddEventhandler
 				[
 					"KeyUp",
 					{
@@ -4107,7 +4107,7 @@ A3C_fnc_SecuRejoin_fnc = {
 							if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
 								BR_A3C_DISABLE_RADIAL = false;
 								(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-								(findDisplay 79996) closeDisplay 0;
+								(findDisplay 100060) closeDisplay 0;
 								A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 								{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 							};
@@ -4607,12 +4607,12 @@ A3C_HC_UnassembleWeapon = {
 	_wpn = if (_mode == 0) then {objNull} else {_this select 1};
 
 
-	private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {79996}};
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 
 
 
 	//-- main display EH to disable radial until key is let go
-	if (!isNull findDisplay 7999 && _a3c_dsp == 79996 ) then {
+	if (!isNull findDisplay 100040 && _a3c_dsp == 100060 ) then {
 
 		[
 			46,
@@ -4629,7 +4629,7 @@ A3C_HC_UnassembleWeapon = {
 		[] call A3C_RADIAL_CloseDisplay;
 	};
 
-	if (_a3c_dsp == 79996 && { {(vehicle _x) isKindOf "staticweapon"} count units _group == 0 }) then {
+	if (_a3c_dsp == 100060 && { {(vehicle _x) isKindOf "staticweapon"} count units _group == 0 }) then {
 		with uiNamespace do {
 			//disableSerialization;
 			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
@@ -4640,27 +4640,27 @@ A3C_HC_UnassembleWeapon = {
 	_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 	_text = findDisplay _a3c_dsp displayCtrl 800802;
 	_listBox = findDisplay _a3c_dsp displayCtrl 800803;
-	{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 
 
 	if ( (_mode == 0) && (count A3C_HC_NearStatics > 0) && { {(vehicle _x) isKindOf "staticweapon"} count units _group == 0 }) exitWith {
 		//-- open object selector || static
-		if (_a3c_dsp == 79996) then {
+		if (_a3c_dsp == 100060) then {
 			//if (count A3C_RD_UNITS > 0) then {
 
 
 
 				//-- display EH: needed as 46 UP will not fire
-				A3C_UI_RADIAL_EH_KEYUP_CANCEL1 = (findDisplay 79996) displayAddEventHandler
+				A3C_UI_RADIAL_EH_KEYUP_CANCEL1 = (findDisplay 100060) displayAddEventHandler
 				[
 					"KeyUp",
 					{
 						_button = _this - [(_this select 0)];
 						if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-							(findDisplay 79996) closeDisplay 0;
+							(findDisplay 100060) closeDisplay 0;
 
-							(findDisplay 79996) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL1];
+							(findDisplay 100060) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL1];
 
 
 							if ((count A3C_HUD_ARROWS) > 0) then {
@@ -4693,10 +4693,10 @@ A3C_HC_UnassembleWeapon = {
 		
 	};
 
-	if (_a3c_dsp == 79996 && { {(vehicle _x) isKindOf "staticweapon"} count units _group == 0 }) then { //-- radial menu HC-disassemble: close menu
+	if (_a3c_dsp == 100060 && { {(vehicle _x) isKindOf "staticweapon"} count units _group == 0 }) then { //-- radial menu HC-disassemble: close menu
 
-		(findDisplay 79996) closeDisplay 0;
-		//(findDisplay 79996) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL1]; //-- not neede
+		(findDisplay 100060) closeDisplay 0;
+		//(findDisplay 100060) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL1]; //-- not neede
 		//BR_A3C_DISABLE_RADIAL = false;
 	};
 
@@ -4798,7 +4798,7 @@ A3C_Map_HC_groupContext_LB_Switch = {
 A3C_GROUP_STANCE_Selected = "AUTO";
 A3C_GP_Btns_Stances = {
 	params ["_stance","_mode"]; //-- #TODO: _mode is always 1
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	A3C_GROUP_STANCE_Selected = _stance;
 	if (profileNameSpace getVariable ["HC_GROUP_RESPONSE", false]) then {
 		{
@@ -4824,7 +4824,7 @@ A3C_GP_Btns_Stances = {
 A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 
 
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
 
 	private _showPlayerHint = false;
@@ -4897,14 +4897,14 @@ A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 	};
 
 
-	{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 };
 
 A3C_HC_FocusGroup = grpNull;
 
 A3C_MAP_HC_setFocusGroup = {
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	if !(count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) exitWith {};
 	private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
 	if ( {isPlayer _x} count units _group > 0) exitWith {
@@ -4926,7 +4926,7 @@ A3C_MAP_HC_setFocusGroup = {
 A3C_CONVOY_GROUPORDER = [];
 
 A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
 		//-- rejoin Convoy to former groups
 		{
@@ -4936,7 +4936,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 				_leaders = [];
 				_subs = [];
 
-				{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 				(findDisplay 12 displayCtrl 51) ctrlEnable true;
 				A3C_ConvoyGroups = A3C_ConvoyGroups - [_entry];
 				private _groupArrays = [];
@@ -4969,7 +4969,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 	} else {
 		//-- create new convoy in order
 		if (count A3C_SELECTED_HC_GROUPS_SETTINGS >= 2) then {
-			{(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+			{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 			(findDisplay 12 displayCtrl 51) ctrlEnable true;
 			private ["_drivers","_nonDrivers"];
 			_drivers = [];

@@ -3,8 +3,6 @@
 #define GRIDY( num ) ( num * ( pixelGrid * pixelH * 2 ))
 
 //NoUIScale
-
-
 //UI element sizes
 #define MAIN_WIDTH 40
 #define MAIN_HEIGHT 40
@@ -14,11 +12,11 @@
 //-- LAYER 2: DIALOG (Invisible Buttons Only)
 class A3C_HUD_MENU
 {
-	idd = 79992;
+	idd = 100050;
 	movingenable = false;
 
 
-	onKeyDown = "_refKey = ((['A3C', 'A3C_KeyFnc_Hud_Order_Reg'] call CBA_fnc_getKeybind) select 5) select 0;if (_refKey == _this select 1) then {[false,false] spawn A3C_Setorder_HUD; (findDisplay 79992) closeDisplay 0;};";
+	onKeyDown = "_refKey = ((['A3C', 'A3C_KeyFnc_Hud_Order_Reg'] call CBA_fnc_getKeybind) select 5) select 0;if (_refKey == _this select 1) then {[false,false] spawn A3C_Setorder_HUD; (findDisplay 100050) closeDisplay 0;};";
 
 
 	class ControlsBackground {
@@ -148,42 +146,68 @@ class A3C_HUD_MENU
 	};
 };
 
-//("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutRsc ["A3C_KEY_VIEWER_UI","PLAIN"];
+class HUD_Display_ObjectSelector
+{
+	idd = 100060;
+	movingenable = true;
+	class ControlsBackground {
+	};
+
+	class Controls
+	{
+		class A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT: A3C_RscControlsGroup_NoScroll
+		{
+			idc = 8008;
+			x = 0.383108 * safezoneW + safezoneX;
+			y =  0.378986 * safezoneH + safezoneY;
+			w = 0.192528 * safezoneW;
+			h = 0.143016 * safezoneH;
+			class Controls
+			{
+
+				class A3C_HUD_ObjectSelector_Description_BG: A3C_RscPicture
+				{
+					idc = 800801;
+					text = "#(argb,8,8,3)color(0,0.3,0.6,1)";
+					x = 1.8033e-007 * safezoneW;
+					y = -1.80325e-007 * safezoneH;
+					w = 0.192528 * safezoneW;
+					h = 0.0440051 * safezoneH;
+				};
+				class A3C_HUD_ObjectSelector_Description_Text: A3C_RscText
+				{
+					idc = 800802;
+					text = "TEST"; //--- ToDo: Localize;
+					x = 2.45904e-007 * safezoneW;
+					y = -3.77043e-007 * safezoneH;
+					w = 0.192528 * safezoneW;
+					h = 0.0440051 * safezoneH;
+				};
+				class A3C_HUD_ObjectSelector_ListBox: A3C_LISTBOX
+				{
+					idc = 800803;
+					style = CT_LISTBOX;
+					x = 2.45904e-007 * safezoneW;
+					y = 0.0440052 * safezoneH;
+					w = 0.192528 * safezoneW;
+					h = 0.0990114 * safezoneH;
+					onLBSelChanged = "[(_this select 1)] call A3C_ObjectSelector_LB_Change";
+				};
+			};
+		};
+
+	};
+};
 
 //-- LAYER 1: VISIBLE UI (Feedback Images Only)
 class RscTitles
 {
 
-	class A3C_KEY_VIEWER_UI
-	{
-		idd = 101010101010101010;
-		duration = 1000000000000;
-		fadeIn = 0;
-		fadeOut = 0;
-		name = "A3C_KEY_VIEWER_UI";
-		onLoad = "uiNamespace setVariable['A3C_KEY_VIEWER_UI',_this select 0];";
-		onUnload = "uiNamespace setVariable['A3C_KEY_VIEWER_UI', displayNull]";
-		onDestroy =  "uiNamespace setVariable['A3C_KEY_VIEWER_UI', displayNull]";
-		class Controls
-		{
-			class A3C_HUD_UI_BG: A3C_RscText
-			{
-				idc = 11;
-
-				x = 0.5 - (GRIDX( MAIN_WIDTH ) / 2); //-- center ctrlsGroup
-				y = (( safezoneY + safezoneH ) * 0.4) - GRIDY( MAIN_HEIGHT);
-				w = GRIDX( MAIN_WIDTH );
-				h = GRIDY( MAIN_HEIGHT );
-
-				text = "Hello Hello Hello Hello";
-				SizeEx = "(((((safezoneW / safezoneH) min 0.1) / 0.1) / 25) * 2)";
-			};
-		};
-	};
+	
 
 	class A3C_HUD_MENU_UI
 	{
-		idd = 79993983847;
+		idd = 200010;
 		duration = 1000000000000;
 		fadeIn = 0;
 		fadeOut = 0;
@@ -207,15 +231,10 @@ class RscTitles
 				y = (( safezoneY + safezoneH ) * 0.97) - GRIDY( MAIN_HEIGHT);
 				w = GRIDX( MAIN_WIDTH );
 				h = GRIDY( MAIN_HEIGHT);
-
-
-				//onUnload = "[ 'VARS', 'SAVE' ] call LARs_fnc_colorPalette";
-
 				class controls
 				{
 
 					//-- Background
-
 					class A3C_HUD_UI_BG: A3C_RscPicture
 					{
 						idc = 15;
@@ -244,14 +263,10 @@ class RscTitles
 					class A3C_HUD_UI_TRAVEL_BOX : A3C_RscPicture
 					{
 						idc = 10;
-						//text = "A3C_CORE\ui\pictures\icon_menu_stance_Auto.paa";
 						x = GRIDX( 1 );
 						y = GRIDY( 32 );
 						w = GRIDX( 4 );
 						h = GRIDY( 4 );
-						//toolTipColorShade[] = {0.5,0.2,0.6,0.6};
-						//tooltip = "Change Stance: TRAVEL";
-						//action = "[0,_this select 1] call A3C_HUD_UI_STANCE_BUTTONS";
 					};
 					class A3C_HUD_UI_SPEED_BOX : A3C_RscPicture
 					{
@@ -303,61 +318,37 @@ class RscTitles
 			};
 		};
 	};
-};
 
-
-class HUD_Display_ObjectSelector
-{
-	idd = 79996;
-	movingenable = true;
-	class ControlsBackground {
-	};
-
-	class Controls
+	class A3C_KEY_VIEWER_UI
 	{
-		class A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT: A3C_RscControlsGroup_NoScroll
+		idd = 200020;
+		duration = 1000000000000;
+		fadeIn = 0;
+		fadeOut = 0;
+		name = "A3C_KEY_VIEWER_UI";
+		onLoad = "uiNamespace setVariable['A3C_KEY_VIEWER_UI',_this select 0];";
+		onUnload = "uiNamespace setVariable['A3C_KEY_VIEWER_UI', displayNull]";
+		onDestroy =  "uiNamespace setVariable['A3C_KEY_VIEWER_UI', displayNull]";
+		class Controls
 		{
-			idc = 8008;
-			x = 0.383108 * safezoneW + safezoneX;
-			y =  0.378986 * safezoneH + safezoneY;
-			w = 0.192528 * safezoneW;
-			h = 0.143016 * safezoneH;
-			class Controls
+			class A3C_HUD_UI_BG: A3C_RscText
 			{
+				idc = 11;
 
-				class A3C_HUD_ObjectSelector_Description_BG: A3C_RscPicture
-				{
-					idc = 800801;
-					text = "#(argb,8,8,3)color(0,0.3,0.6,1)";
-					x = 1.8033e-007 * safezoneW;
-					y = -1.80325e-007 * safezoneH;
-					w = 0.192528 * safezoneW;
-					h = 0.0440051 * safezoneH;
-				};
-				class A3C_HUD_ObjectSelector_Description_Text: A3C_RscText
-				{
-					idc = 800802;
-					text = "TEST"; //--- ToDo: Localize;
-					x = 2.45904e-007 * safezoneW;
-					y = -3.77043e-007 * safezoneH;
-					w = 0.192528 * safezoneW;
-					h = 0.0440051 * safezoneH;
-				};
-				class A3C_HUD_ObjectSelector_ListBox: A3C_LISTBOX
-				{
-					idc = 800803;
-					style = CT_LISTBOX;
-					x = 2.45904e-007 * safezoneW;
-					y = 0.0440052 * safezoneH;
-					w = 0.192528 * safezoneW;
-					h = 0.0990114 * safezoneH;
-					onLBSelChanged = "[(_this select 1)] call A3C_ObjectSelector_LB_Change";
-				};
+				x = 0.5 - (GRIDX( MAIN_WIDTH ) / 2); //-- center ctrlsGroup
+				y = (( safezoneY + safezoneH ) * 0.4) - GRIDY( MAIN_HEIGHT);
+				w = GRIDX( MAIN_WIDTH );
+				h = GRIDY( MAIN_HEIGHT );
+
+				text = "Hello Hello Hello Hello";
+				SizeEx = "(((((safezoneW / safezoneH) min 0.1) / 0.1) / 25) * 2)";
 			};
 		};
-
 	};
 };
+
+
+
 
 
 

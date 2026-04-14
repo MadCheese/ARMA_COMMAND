@@ -1042,7 +1042,7 @@ if (isDedicated) exitWith {};
 /////////////////  U I  -  F U N C T I O N S
 
 A3C_UPDATE_UI_REARM = {
-	private _display = findDisplay 7999;
+	private _display = findDisplay 100040;
 	if (isNull _display) exitWith {};
 
 	private _listboxSources = _display displayCtrl 8054;
@@ -1055,7 +1055,7 @@ A3C_UPDATE_UI_REARM = {
 		private _currentLBCurSelSource = lbCurSel _listboxSources;
 		private _currentLBCurSelContent = lbCurSel _listboxContent;
 		if (_currentLBCurSelSource >= 0) then {
-			[_currentLBCurSelSource, 7999] call A3C_Rearm_LBChange_Source;
+			[_currentLBCurSelSource, 100040] call A3C_Rearm_LBChange_Source;
 		};
 
 		if (_currentLBCurSelContent >= 0 && {_currentLBCurSelContent < lbSize _listboxContent}) then {
@@ -1073,16 +1073,16 @@ A3C_ReArm_OpenUI = {
 	BV_LB2 = 11;
 
 	//-- Populate UI headers
-	(findDisplay 7999 displayCtrl 8057) ctrlSetText "Containers";
+	(findDisplay 100040 displayCtrl 8057) ctrlSetText "Containers";
 	if (_isSingleUnit) then {
-		(findDisplay 7999 displayCtrl 8058) ctrlSetText "Content: DoubleClick to equip";
+		(findDisplay 100040 displayCtrl 8058) ctrlSetText "Content: DoubleClick to equip";
 	} else {
-		(findDisplay 7999 displayCtrl 8058) ctrlSetText "Content (info only)";
+		(findDisplay 100040 displayCtrl 8058) ctrlSetText "Content (info only)";
 	};
-	(findDisplay 7999 displayCtrl 8053) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
-	(findDisplay 7999 displayCtrl 8056) ctrlSetText "Re-Arm";
-	{lbCLear (findDisplay 7999 displayCtrl _x)} foreach [8054, 8055];
-	{(findDisplay 7999 displayCtrl _x) ctrlShow true} foreach [8053,8054,8055,8056,8057,8058];
+	(findDisplay 100040 displayCtrl 8053) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
+	(findDisplay 100040 displayCtrl 8056) ctrlSetText "Re-Arm";
+	{lbCLear (findDisplay 100040 displayCtrl _x)} foreach [8054, 8055];
+	{(findDisplay 100040 displayCtrl _x) ctrlShow true} foreach [8053,8054,8055,8056,8057,8058];
 
 
 	//-- Find and sort re-Arm sources
@@ -1139,12 +1139,12 @@ A3C_ReArm_OpenUI = {
 				(getText (configfile >> "CfgVehicles" >> (typeOf _x) >> "displayName")) + _addString,
 				(typeOf _v),
 				_v,
-				(findDisplay 7999 displayCtrl 8054),
+				(findDisplay 100040 displayCtrl 8054),
 				_img
 			]
 		] call A3C_LB_ADD;
 	} foreach A3C_ReArm_Options;
-	[findDisplay 7999 displayCtrl 8054, 0, true] call A3C_setCurSel;		
+	[findDisplay 100040 displayCtrl 8054, 0, true] call A3C_setCurSel;		
 };
 
 

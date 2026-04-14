@@ -23,8 +23,8 @@ A3C_GP_RC_RemoveHandlers = {
 
 A3C_GP_RC_UIVehicleRemoteFnc = {
 
-    private _a3c_dsp = if (visibleMap) then {6998} else {if (!isNull findDisplay 6999) then {6999} else {7999}};
-    private _isRadial = _a3c_dsp == 7999;
+    private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+    private _isRadial = _a3c_dsp == 100040;
 
     if (_isRadial) then {
         BR_A3C_DISABLE_RADIAL = true;
@@ -358,7 +358,7 @@ A3C_GP_RC_UIVehicleRemoteFnc = {
 
     if (visibleMap) then {
 
-        {(findDisplay 6998 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+        {(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
         a3c_tank_remote_down = _disp ctrlAddEventHandler _a3c_rva1;
         a3c_tank_remote_up = _disp ctrlAddEventHandler _a3c_rva2;
         a3c_tank_remote_MD = _disp ctrlAddEventHandler _a3c_rva3;

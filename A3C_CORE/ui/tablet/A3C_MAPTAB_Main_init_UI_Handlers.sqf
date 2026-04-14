@@ -8,7 +8,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonDown = {
 	*/
 	params ["_displayCtrl","_mouseButton","_sX","_sY","_shift","_ctrl","_alt"];
 	private ["_mouseOverIcon","_groupControls","_isHCMark"];
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	disableserialization;
 
 	
@@ -32,7 +32,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonDown = {
 	if ({[[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea} count _ctls > 0) exitWith {};
 
 	private _unitArray = (profileNamespace getvariable "A3C_GROUPUNITS");
-	private _map1 = if (_a3c_dsp == 6998) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
+	private _map1 = if (_a3c_dsp == 100020) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
 	private _sPos = (_map1 posscreentoworld [_sx,_sy]);
 	private _clickdata = (ctrlMapMouseOver _map1); //~~ IS THIS STILL USED?
 	private _isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
@@ -191,9 +191,9 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonDown = {
 					A3C_MMCode = {
 						_this spawn {
 							params ["_clickData","_sX","_sY"];
-							_a3c_dsp = if (visibleMap) then {6998} else {6999};
+							_a3c_dsp = if (visibleMap) then {100020} else {100030};
 							if (isNull findDisplay _a3c_dsp) exitWith {};
-							_map1 = if (_a3c_dsp == 6998) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
+							_map1 = if (_a3c_dsp == 100020) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
 							A3C_DRAGPOS = (_map1 posscreentoworld [_sx,_sy]);
 						};
 					};
@@ -333,7 +333,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonDown = {
 							_CT_TREE tvSetCurSel _button;
 							[
 								[
-									findDisplay 6998 displayCtrl 202020,
+									findDisplay 100020 displayCtrl 202020,
 									_button select [0,(count _button) - 1]
 								],
 								"OPEN",
@@ -416,7 +416,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonDown = {
 						_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 						_text = findDisplay _a3c_dsp displayCtrl 800802;
 						_listBox = findDisplay _a3c_dsp displayCtrl 800803;
-						//(findDisplay 6998 displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
+						//(findDisplay 100020 displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
 						A3C_OBJECTSELECTOR_MODE = "PARALOAD_SQ";
 						_parent ctrlShow true;
 						_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
@@ -460,7 +460,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonDown = {
 								_CT_TREE tvSetCurSel _button;
 								[
 									[
-										findDisplay 6998 displayCtrl 202020,
+										findDisplay 100020 displayCtrl 202020,
 										_button select [0,(count _button) - 1]
 									],
 									"OPEN",
@@ -663,7 +663,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonDown = {
 	if (_exit) exitwith {};
 
 	if (visibleMap) then {
-		if !(isnull (findDisplay 6998 displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT)) then {
+		if !(isnull (findDisplay 100020 displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT)) then {
 			if ([_a3c_dsp] call A3C_InMapControls) then {
 				_exit = true;
 			};
@@ -1093,7 +1093,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonUp = {
 
 	//A3C_ConvoyUnits = [];
 
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	_sX = _this select 2;
 	_sY = _this select 3;
 	private _shift = _this select 4;
@@ -1102,7 +1102,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonUp = {
 
 	
 
-	private _map1 = if (_a3c_dsp == 6998) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
+	private _map1 = if (_a3c_dsp == 100020) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
 	private _sPos = (_map1 posscreentoworld [_sx,_sy]);
 
 	private _isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
@@ -1157,7 +1157,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonUp = {
 					_CT_TREE tvSetCurSel _button;
 					[
 						[
-							findDisplay 6998 displayCtrl 202020,
+							findDisplay 100020 displayCtrl 202020,
 							_button select [0,(count _button) - 1]
 						],
 						"OPEN",
@@ -1540,7 +1540,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonUp = {
 						_CT_TREE tvSetCurSel _button;
 						[
 							[
-								findDisplay 6998 displayCtrl 202020,
+								findDisplay 100020 displayCtrl 202020,
 								_button select [0,(count _button) - 1]
 							],
 							"OPEN",
@@ -1745,7 +1745,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonUp = {
 
 	if (A3C_BOOL_DISABLEMAPCTRL && !((typename (_this select 0)) == "SCALAR") ) exitwith {};
 
-	_a3c_dsp = if (visibleMap) then {6998} else {6999};
+	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 
 	if !(A3C_BOOL_MOUSEUP) exitwith {};
 
@@ -2117,7 +2117,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseButtonUp = {
 
 A3C_MAP_UI_HandlerFNC_OnMouseMoving_Main = {
 	
-	if (isNull findDisplay 6998) then {
+	if (isNull findDisplay 100020) then {
 		// player commandChat "A3C_MAP_UI_HandlerFNC_OnMouseMoving_Main";
 		A3C_MAP_X = _this select 1;
 		A3C_MAP_Y = _this select 2;
@@ -2127,7 +2127,7 @@ A3C_MAP_UI_HandlerFNC_OnMouseMoving_Main = {
 A3C_MAP_UI_HandlerFNC_OnMouseMoving_Overlay = {
 	// player sideChat "A3C_MAP_UI_HandlerFNC_OnMouseMoving_Overlay";
 	params ["_display","_sX","_sY","_unUsed"];
-	private _a3c_dsp = if (visibleMap) then {6998} else {6999};
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	private _ctls = [13,7071,7077,202020,709099,8009,8010,709109,709115,8007];
 	A3C_MAP_X = _this select 1;
 	A3C_MAP_Y = _this select 2;
@@ -2155,7 +2155,7 @@ A3C_MAP_UI_HandlerFNC_KeyDown_Map = { //-- This handler is needed because ESC be
 	
 	// player sidechat format ["Display %1, A3C_MAP_UI_HandlerFNC_KeyDown_Map - %2 %3",_mapControl, keyName (_this select 1), round time];
 	
-	private _display = findDisplay 6998;
+	private _display = findDisplay 100020;
 	if (_key == 1) exitWith {
 		private _groupContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT;
 		private _groupDashboardHC = _display displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT;
@@ -2339,9 +2339,9 @@ A3C_MAP_UI_HandlerFNC_MouseDrag = {
 
 	_sx = _this select 1;
 	_sy = _this select 2;
-	_a3c_dsp = if (visibleMap) then {6998} else {6999};
+	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	disableSerialization;
-	_map1 = if (_a3c_dsp == 6998) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
+	_map1 = if (_a3c_dsp == 100020) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
 	_sPos = (_map1 posscreentoworld [_sx,_sy]);
 
 	if (A3C_MAP_DRAGPLANNING_ACTIVE) then {
@@ -2403,9 +2403,9 @@ A3C_MAP_UI_HandlerFNC_MouseDrag_HCWP = {
 
 
 
-	_a3c_dsp = if (visibleMap) then {6998} else {6999};
+	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	disableSerialization;
-	_map1 = if (_a3c_dsp == 6998) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
+	_map1 = if (_a3c_dsp == 100020) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
 	_posi = _map1 posscreentoworld [(_data select 1),(_data select 2)];
 
 	if !(_waypoint in A3C_Selection_MultiWaypoint) then {
@@ -2448,7 +2448,7 @@ A3C_MAP_UI_HandlerFNC_MouseDrag_MapItem = {
 	_sx = _data select 1;
 	_sy = _data select 2;
 
-	_a3c_dsp = if (visibleMap) then {6998} else {6999};
+	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	_map1 = if (visibleMap) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
 	
 
@@ -2632,9 +2632,9 @@ A3C_MAP_UI_HandlerFNC_MouseButtonDown_Loop = {
 	_units = [];
 	_data = [];
 	A3C_LOOPSYNC_START = ["",[0,0,0]];
-	_a3c_dsp = if (visibleMap) then {6998} else {6999};
+	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	disableSerialization;
-	_map1 = if (_a3c_dsp == 6998) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
+	_map1 = if (_a3c_dsp == 100020) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
 
 	private _waypointIDS = [];
 	private _squadWaypoints = (["SQ_WP_DOT",_sx,_sy] call A3C_MAP_UI_Overlay_getIconsAtMapPos);
@@ -2752,12 +2752,12 @@ A3C_MAP_UI_HandlerFNC_MouseButtonUp_Loop = {
 	_units = [];
 	_checkVar = "A3C_PLOT_TEMP";
 	_dragMode = "LOOP";
-	_a3c_dsp = if (visibleMap) then {6998} else {6999};
+	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	_unitArray = (profileNamespace getvariable "A3C_GROUPUNITS") - [player];
 
 	
 	disableSerialization;
-	_map1 = if (_a3c_dsp == 6998) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
+	_map1 = if (_a3c_dsp == 100020) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
 
 	_clickedItem = (ctrlMapMouseOver _map1);
 	_marker = "";

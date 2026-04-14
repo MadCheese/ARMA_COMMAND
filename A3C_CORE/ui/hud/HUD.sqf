@@ -152,14 +152,14 @@ A3C_HUD_SETSTANCE = {
 		A3C_BOOL_STANCE_ICON_TRAVEL = _data select 3;
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 10) ctrlSetText A3C_HUD_STANCE_ICON_TRAVEL;
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 10) ctrlSetTextColor [1,1,1,1]; //A3C_HUD_STANCE_ICON_COLOR_TRAVEL;
-		(findDisplay 79992 displayCtrl 16) ctrlSetTooltip _toolTip;
+		(findDisplay 100050 displayCtrl 16) ctrlSetTooltip _toolTip;
 	} else {
 		_toolTip = "End " + _toolTip;
 		A3C_HUD_STANCE_ICON_DESTINATION= _data select 0;
 		//if !(_data select 1 == "") then {A3C_HUD_STANCE_FINAL = _data select 1};
 		A3C_HUD_STANCE_ICON_COLOR_DESTINATION= _data select 2;
 		A3C_BOOL_STANCE_ICON_DESTINATION = _data select 3;
-		(findDisplay 79992 displayCtrl 17) ctrlSetTooltip _toolTip;
+		(findDisplay 100050 displayCtrl 17) ctrlSetTooltip _toolTip;
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 11) ctrlSetText A3C_HUD_STANCE_ICON_DESTINATION;
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 11) ctrlSetTextColor [1,1,1,1]; //A3C_HUD_STANCE_ICON_COLOR_DESTINATION;
 	};
@@ -219,7 +219,7 @@ A3C_SWITCHSTANCE = {
 //screenToWorld [0.4,0.4]
 A3C_DRAW_3D_ICONS = { //-- no longer used, replaced with drawHudUI
 	/*
-	if ((profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) OR (!isnull (findDIsplay 79992))) then {
+	if ((profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) OR (!isnull (findDIsplay 100050))) then {
 		drawIcon3D
 		[
 			A3C_HUD_STANCE_ICON_TRAVEL,
@@ -455,17 +455,17 @@ A3C_HUD_OPEN_MENU = {
 
 	if (profilenamespace getvariable ['A3C_HUD_MENUOVERRIDE_VAR',true]) then {
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 16) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa";
-		(findDisplay 79992 displayCtrl 11) ctrlSetTooltip "MODE: Override Plans";
+		(findDisplay 100050 displayCtrl 11) ctrlSetTooltip "MODE: Override Plans";
 	} else {
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 16) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_Add.paa";
-		(findDisplay 79992 displayCtrl 11) ctrlSetTooltip "MODE: Add To Plans";
+		(findDisplay 100050 displayCtrl 11) ctrlSetTooltip "MODE: Add To Plans";
 	};
 	if (profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 17) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_true.paa";
-		(findDisplay 79992 displayCtrl 13) ctrlSetTooltip "UI: Shown";
+		(findDisplay 100050 displayCtrl 13) ctrlSetTooltip "UI: Shown";
 	} else {
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 17) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_false.paa";
-		(findDisplay 79992 displayCtrl 13) ctrlSetTooltip "UI: Hidden";
+		(findDisplay 100050 displayCtrl 13) ctrlSetTooltip "UI: Hidden";
 	};
 	["HUD_MENU"] call A3C_GET_UI_BG_COLOR;
 	[1] call A3C_HUD_GoCode_BUTTON;

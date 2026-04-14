@@ -327,8 +327,8 @@ A3C_GREN_DATA = {
 	_doChange = if (count _this > 1) then {_this select 1} else {true};
 	_unit = objnull;
 	_mags = [];
-	_units = if !(isnull (finddisplay 7999)) then {A3C_RD_UNITS} else {A3C_SELECTED_UNITS};
-	_display = if (visibleMap) then {6998} else {6999};
+	_units = if !(isnull (finddisplay 100040)) then {A3C_RD_UNITS} else {A3C_SELECTED_UNITS};
+	_display = if (visibleMap) then {100020} else {100030};
 
 	//{
 	//	if ((vehicle _x) isKindOf "AIR") then {
@@ -400,7 +400,7 @@ A3C_GREN_DATA = {
 		};
 	};
 
-	if !(isnull (finddisplay 7999)) then {
+	if !(isnull (finddisplay 100040)) then {
 		[A3C_GREN_MUZZLE,0,_doChange] call A3C_GREN_VISUAL;
 	} else {
 		(findDisplay _display displayCtrl 7064) ctrlSetTextColor [1,1,1,1];
@@ -418,9 +418,9 @@ A3C_GREN_VISUAL = {
 
 	//-- label parent button
 	private _col = if (count A3C_AI_GREN_ARRAY == 0) then {[1,1,1,0.3]} else{[1,1,1,0.6]};
-	(findDisplay 7999 displayCtrl 9015) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_grenade.paa";
-	(findDisplay 7999 displayCtrl 9015) ctrlSetTextColor _col;
-	(findDisplay 7999 displayCtrl 9016) ctrlSetToolTip "AI Grenades";
+	(findDisplay 100040 displayCtrl 9015) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_grenade.paa";
+	(findDisplay 100040 displayCtrl 9015) ctrlSetTextColor _col;
+	(findDisplay 100040 displayCtrl 9016) ctrlSetToolTip "AI Grenades";
 
 
 	//-- sort grenades by usability
@@ -446,11 +446,11 @@ A3C_GREN_VISUAL = {
 	if (A3C_RADIALMODE == "GRENADE" ) then {//&& {BV_GREN == 0}
 		//-- reset outer ring buttons
 		for "_i" from 10008 to 10039 do {
-			(findDisplay 7999 displayCtrl _i) ctrlShow false;
+			(findDisplay 100040 displayCtrl _i) ctrlShow false;
 			if (_i % 2 == 0) then {
-				(findDisplay 7999 displayCtrl _i) ctrlSetText "";
+				(findDisplay 100040 displayCtrl _i) ctrlSetText "";
 			} else {
-				(findDisplay 7999 displayCtrl _i) ctrlSetTooltip "";
+				(findDisplay 100040 displayCtrl _i) ctrlSetTooltip "";
 			};
 		};
 
@@ -461,10 +461,10 @@ A3C_GREN_VISUAL = {
 			_ind = _i - 8000;
 
 			if ( _ind <= ((ceil ((count A3C_AI_GREN_ARRAY) / 4) ) min 3)    ) then {
-				(findDisplay 7999 displayCtrl _i) ctrlShow true; //-- outer circle backgroud shown
-				(findDisplay 7999 displayCtrl _i) ctrlSetText (format ["A3C_CORE\ui\pictures\BG_Radial_OuterRing_%1.paa",_outerRingBackGroundIDs select _ind]);
+				(findDisplay 100040 displayCtrl _i) ctrlShow true; //-- outer circle backgroud shown
+				(findDisplay 100040 displayCtrl _i) ctrlSetText (format ["A3C_CORE\ui\pictures\BG_Radial_OuterRing_%1.paa",_outerRingBackGroundIDs select _ind]);
 			} else {
-				(findDisplay 7999 displayCtrl _i) ctrlShow false; //-- outer circle backgroud hidden
+				(findDisplay 100040 displayCtrl _i) ctrlShow false; //-- outer circle backgroud hidden
 			};
 		};
 		if (count A3C_AI_GREN_ARRAY == 0) exitWith {};
@@ -474,8 +474,8 @@ A3C_GREN_VISUAL = {
 			_imgID = ((10039 - (_foreachIndex * 2)) - 1);
 			_buttonitem = 16 - _foreachIndex;
 			//systemchat str _btnID;
-			_btnClicker = findDisplay 7999 displayCtrl _btnID;
-			_btnImage = findDisplay 7999 displayCtrl _imgID;
+			_btnClicker = findDisplay 100040 displayCtrl _btnID;
+			_btnImage = findDisplay 100040 displayCtrl _imgID;
 			{_x ctrlShow true} foreach [_btnImage,_btnClicker];
 			_btnImage ctrlSetText (gettext (configfile >> "CfgMagazines" >> _x >> "picture"));
 			_btnClicker ctrlSetToolTip (gettext (configfile >> "CfgMagazines" >> _x >> "displayNameShort"));
@@ -502,20 +502,20 @@ A3C_GREN_VISUAL = {
 A3C_GREN_VISUAL_1 = {
 	params ["_muzzle","_mode","_doChange"];
 systemchat 'visual';
-	_display = if (visibleMap) then {6998} else {6999};
+	_display = if (visibleMap) then {100020} else {100030};
 	if (A3C_HELI_INF_MODE == "HC") exitWith {};
 	if (_mode == 0) then {
 		if (count A3C_AI_GREN_ARRAY > 0) then {
-			((findDisplay 7999) displayCtrl 9015) ctrlSetText (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "picture"));
-			((findDisplay 7999) displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlSetTooltip (format ["Hold LMB for %1, click RMB to change item", (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "displayNameShort"))]);
+			((findDisplay 100040) displayCtrl 9015) ctrlSetText (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "picture"));
+			((findDisplay 100040) displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlSetTooltip (format ["Hold LMB for %1, click RMB to change item", (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "displayNameShort"))]);
 		} else {
-			((findDisplay 7999) displayCtrl 9015) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_GrenMain.paa";
-			((findDisplay 7999) displayCtrl 9016) ctrlSetTooltip "currently no items available";
+			((findDisplay 100040) displayCtrl 9015) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_GrenMain.paa";
+			((findDisplay 100040) displayCtrl 9016) ctrlSetTooltip "currently no items available";
 		};
 	} else {
 		if (_doChange) then {
 			if !(A3C_GREN_MUZZLE == "") then {
-				((findDisplay 7999) displayCtrl 9016) ctrlSetTooltip (format ["LMB: activate/deactivate %1. Shift+LMB: activate suppressive fire", (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "displayNameShort"))]);
+				((findDisplay 100040) displayCtrl 9016) ctrlSetTooltip (format ["LMB: activate/deactivate %1. Shift+LMB: activate suppressive fire", (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "displayNameShort"))]);
 				(findDisplay _display displayCtrl 7064) ctrlsettext (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "picture"));
 				(findDisplay _display displayCtrl 7065) ctrlSetToolTip ( "Throw " + (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "displayNameShort")) + " || Hold SHIFT to cycle through grenade types");
 				A3C_TEMP_ACTION = ["GRENADE",A3C_GREN_MUZZLE];
@@ -551,7 +551,7 @@ A3C_RadialMenu_GREN = {
 	{[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS;
 
 	if (isnil "A3C_GREN_MUZZLE") exitwith {
-		((findDisplay 7999) displayCtrl 9016) ctrlSetTooltip "currently no items available";
+		((findDisplay 100040) displayCtrl 9016) ctrlSetTooltip "currently no items available";
 	};
 	BR_A3C_TACV_throwTheta = 45;
 	BR_A3C_TACV_throwTheta_Add = 0;

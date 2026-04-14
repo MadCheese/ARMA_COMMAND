@@ -58,7 +58,7 @@ A3C_MAPTAB_fnc_drawMapUI = {
 	*/
 
 	//systemchat str _this;
-	//if (visibleMap && {isnull (findDisplay 6998)}) exitWith {};
+	//if (visibleMap && {isnull (findDisplay 100020)}) exitWith {};
 	//if (A3C_OPACITY == 0) exitwith {};
 	private _ctrlMapScale = ctrlMapScale (_this select 0);
 
