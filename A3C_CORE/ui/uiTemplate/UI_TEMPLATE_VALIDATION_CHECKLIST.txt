@@ -1,0 +1,173 @@
+UI_TEMPLATE_VALIDATION_CHECKLIST.txt
+
+0. COPY + RENAME
+
+[ ] Template folder copied to correct UI location  
+[ ] Folder renamed to real dialog name  
+[ ] All TEMPLATE path remnants removed  
+
+--------------------------------------------------
+
+1. COMPONENT SETUP (script_component.hpp)
+
+[ ] COMPONENT renamed correctly  
+[ ] COMPONENT_BEAUTIFIED updated  
+
+[ ] Function prefix resolves correctly:
+    FUNC(onLoad) → A3C_<component>_fnc_onLoad
+
+[ ] Namespace variables resolve correctly:
+    QGVAR(display) → "A3C_<component>_display"
+
+--------------------------------------------------
+
+2. ID DEFINITIONS (dialog_defines.hpp)
+
+[ ] IDD_* is unique  
+[ ] All interactive controls have IDC_* defines  
+[ ] No raw numeric IDs used in logic files  
+[ ] Static-only controls use idc = -1  
+
+--------------------------------------------------
+
+3. DIALOG CONFIG (dialog.hpp)
+
+[ ] Dialog class renamed  
+[ ] Layout updated (no template leftovers)  
+
+[ ] All buttons use:
+    onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+
+[ ] Lifecycle hooks present:
+    onLoad   = QUOTE(_this call FUNC(onLoad));
+    onUnload = QUOTE(_this call FUNC(onUnload));
+
+--------------------------------------------------
+
+4. FUNCTION LOADER (initFunctions.sqf)
+
+[ ] All function paths updated  
+[ ] All function names updated to component naming  
+[ ] No TEMPLATE references remain  
+[ ] Handler functions compiled  
+[ ] Public functions compiled  
+
+[ ] Every .sqf file is referenced in initFunctions.sqf  
+
+--------------------------------------------------
+
+5. INTERNAL FUNCTION LAYER
+
+[ ] fnc_onLoad sets display via uiNamespace  
+[ ] fnc_cacheControls stores controls  
+[ ] fnc_ctrl returns correct controls  
+[ ] fnc_refresh updates UI state  
+[ ] fnc_onUnload cleans namespace  
+
+Runtime checks:
+[ ] No displayNull issues  
+[ ] No missing control errors  
+[ ] No undefined variables  
+
+--------------------------------------------------
+
+6. HANDLERS (handlers/)
+
+[ ] Handler receives _control  
+[ ] ctrlIDC resolves correctly  
+[ ] IDC → variable mapping correct  
+[ ] Handler calls another function  
+
+Rule:
+[ ] No heavy logic inside handler  
+
+--------------------------------------------------
+
+7. PUBLIC FUNCTIONS (public/)
+
+[ ] Example files renamed (no example* left)  
+[ ] Naming convention correct:
+    A3C_<component>_fnc_<name>
+
+[ ] No template placeholder logic remains  
+[ ] Functions callable externally  
+
+--------------------------------------------------
+
+8. INIT REGISTRATION
+
+[ ] initFunctions.sqf is compiled in init:
+
+    call compile preprocessFileLineNumbers "...\functions\initFunctions.sqf";
+
+[ ] No duplicate init calls  
+
+--------------------------------------------------
+
+9. CALLER INTEGRATION
+
+[ ] External calls updated  
+[ ] No legacy function names remain  
+[ ] No missing function errors in RPT  
+
+--------------------------------------------------
+
+10. RUNTIME TESTS
+
+Basic:
+[ ] Dialog opens  
+[ ] Dialog closes  
+[ ] No RPT errors  
+
+UI:
+[ ] Buttons react visually  
+[ ] Clicks trigger handler  
+[ ] State toggles correctly  
+[ ] Text updates (ON/OFF)  
+
+Logic:
+[ ] profileNamespace updates  
+[ ] Side effects execute  
+[ ] No repeated execution bugs  
+
+--------------------------------------------------
+
+11. CLEANUP
+
+[ ] No unused files  
+[ ] No legacy scripts  
+[ ] No duplicate logic  
+
+Structure:
+dialog/
+functions/
+    handlers/
+    public/
+
+--------------------------------------------------
+
+12. FINAL SANITY CHECK
+
+[ ] No TEMPLATE strings  
+[ ] No old hardcoded paths  
+[ ] Naming convention consistent  
+[ ] UI fully self-contained  
+
+--------------------------------------------------
+
+FAILURE PATTERNS (QUICK DEBUG)
+
+Buttons do nothing
+→ handler not wired OR wrong function name
+
+UI opens but empty
+→ cacheControls failed OR wrong IDC
+
+Undefined variable error
+→ function not compiled in initFunctions
+
+UI flickers but no change
+→ handler runs but does not call logic
+
+Macro / bracket error
+→ missing #include "script_component.hpp"

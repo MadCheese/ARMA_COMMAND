@@ -1,77 +1,212 @@
-STANDARD OPERATING PROCEDURE - CREATE A REAL DIALOG FROM uiTemplate
+HOW TO USE THIS TEMPLATE
+OVERVIEW
 
-1. Create a new dialog subfolder in the correct UI family folder.
-   Example:
-   A3C_Core\ui\radial\settingsMenu\
+This template creates one dialog module with:
 
-2. Copy the full contents of uiTemplate into the new dialog folder.
+dialog config (dialog.hpp)
+dialog ID defines (dialog_defines.hpp)
+component macros (script_component.hpp)
+one-file-per-function system
+initFunctions.sqf as the loader
+handlers/ for UI event entry points
+public/ for externally callable functions (examples only)
+root functions/ for internal dialog mechanics
+STANDARD FOLDER FLOW
+Copy the full uiTemplate folder into the correct UI family location.
+Rename the dialog folder to the real dialog name.
+Edit script_component.hpp first.
+Edit dialog_defines.hpp second.
+Edit dialog.hpp third.
+Edit initFunctions.sqf and replace all TEMPLATE paths.
+Edit the files in functions/, handlers/, and public/.
+Add the initFunctions.sqf compile line to the correct init script.
+Update any callers to use the new public function names.
+Test the new dialog before removing old files.
+STEP 1 - RENAME THE COMPONENT
 
-3. Do NOT delete any template files yet.
-   Keep the full scaffold until the dialog works.
+Open script_component.hpp.
 
-4. Edit script_component.hpp first.
-   - Set PREFIX
-   - Set COMPONENT
-   - Set COMPONENT_BEAUTIFIED
+Change:
 
-5. Edit dialog_defines.hpp next.
-   - Set the real IDD
-   - Define all runtime-used IDC values
-   - Do NOT define decorative controls unless they are accessed in code
+COMPONENT
+COMPONENT_BEAUTIFIED
 
-6. Edit dialog.hpp next.
-   - Rename the dialog class
-   - Set idd from the defines
-   - Set onLoad and onUnload
-   - Replace template controls with the real dialog controls
-   - Keep static-only controls at idc = -1
-   - Route button presses to functions, not inline logic
+Example:
 
-7. Implement runtime caching.
-   - Edit fnc_cacheGroups.sqf if controls groups are used
-   - Edit fnc_cacheControls.sqf to cache all important runtime controls
-   - Use semantic names in the control map
+#define COMPONENT UI_settingsMenu
 
-8. Implement initialization and state update.
-   - Edit fnc_onLoad.sqf to store the display in uiNamespace
-   - Cache groups and controls
-   - Store any dialog-specific metadata
-   - Call fnc_refresh.sqf
+This controls function names and namespace keys.
 
-9. Implement fnc_refresh.sqf.
-   - Read the authoritative setting/state values
-   - Update all dynamic control text/state/visibility
-   - Do not manually duplicate UI update logic elsewhere
+Example expansions:
 
-10. Implement click handling.
-    - Prefer one generic click handler if multiple buttons share a pattern
-    - Map clicked IDC -> semantic action
-    - Perform logic
-    - Call refresh afterward
+FUNC(onLoad) → A3C_UI_settingsMenu_fnc_onLoad
+QGVAR(display) → "A3C_UI_settingsMenu_display"
+STEP 2 - DEFINE IDS
 
-11. Implement fnc_open.sqf.
-    - Keep it minimal
-    - Open the dialog
-    - Let onLoad do initialization
+Open dialog_defines.hpp.
 
-12. Implement fnc_onUnload.sqf.
-    - Clear uiNamespace cached data
-    - Remove temporary state if needed
+Set the real dialog IDD
+Define all runtime-used IDC_* values
 
-13. Test the new dialog while the legacy dialog still exists.
+Rule:
 
-14. Only after the new dialog works:
-    - switch callers/references to the new version
-    - remove obsolete legacy code
-    - optionally remove truly unused template files
+Use idc = -1 for static controls
+Only assign IDs to controls that are accessed in code
+STEP 3 - BUILD THE DIALOG
 
+Open dialog.hpp.
+
+Replace:
+
+dialog class name
+control layout
+template labels
+button IDs
+tooltips and text
+
+Keep:
+
+onLoad = QUOTE(_this call FUNC(onLoad));
+onUnload = QUOTE(_this call FUNC(onUnload));
+onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+STEP 4 - FIX THE LOADER
+
+Open functions/initFunctions.sqf.
+
+Replace:
+
+all A3C_UI_templateDialog_* names with your component name
+all TEMPLATE paths with your real folder path
+
+This file is the registration layer.
+
+IMPORTANT:
+
+A function file does nothing unless it is compiled here.
+
+STEP 5 - INTERNAL FUNCTIONS (CORE LAYER)
+
+The root functions/ folder contains dialog internals.
+
+Typical files:
+
+fnc_cacheGroups.sqf
+fnc_cacheControls.sqf
+fnc_ctrl.sqf
+fnc_groupCtrl.sqf (optional)
+fnc_onLoad.sqf
+fnc_onUnload.sqf
+fnc_refresh.sqf
+
+Use this layer for:
+
+storing display reference
+caching controls
+caching groups (if used)
+control lookup by name
+UI refresh logic
+dialog lifecycle
+STEP 6 - HANDLERS (UI ENTRY POINTS)
+
+handlers/ contains functions directly called from dialog.hpp.
+
+Example:
+
+onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+
+Handlers should:
+
+receive UI event (_control, _this, etc.)
+identify which control triggered it
+translate it into a semantic action
+call a public or internal function
+
+Rule:
+
+Keep handlers thin. No heavy logic here.
+
+STEP 7 - PUBLIC FUNCTIONS (EXTERNAL API)
+
+public/ contains externally callable functions.
+
+These are entry points into your dialog system.
+
+Typical use cases:
+
+open dialog
+trigger actions from outside
+apply settings
+integrate with other systems
+IMPORTANT
+
+The template files in public/ are examples only.
+
+They are named:
+
+fnc_exampleOpen.sqf
+fnc_exampleAction.sqf
+
+They exist to demonstrate structure and must be:
+
+renamed
+replaced with real logic
+
+Example final naming:
+
+A3C_UI_settingsMenu_fnc_openSettings
+A3C_UI_settingsMenu_fnc_changeSettings
+
+Rule:
+
+Do not keep template example logic in production.
+
+STEP 8 - ADD THE INIT LINE
+
+In your init (e.g. A3C_Init.sqf):
+
+call compile preprocessFileLineNumbers "PATH_TO_DIALOG_FOLDER\functions\initFunctions.sqf";
+
+Without this:
+
+functions exist on disk
+but are NOT registered
+and will not work
+STEP 9 - UPDATE CALLERS
+
+Replace old calls with new public function names.
+
+Example:
+
+[] call A3C_UI_settingsMenu_fnc_openSettings;
+
+If the dialog is self-contained, this step may be minimal.
+
+STEP 10 - TEST ORDER
+
+Test in this exact order:
+
+dialog opens
+dialog closes correctly
+controls initialize correctly
+button clicks trigger handlers
+state updates correctly
+UI refresh works
+side effects work
 RULES
-
-- Keep the old dialog as reference until replacement is tested
-- Use named defines for all runtime-used IDs
-- Do not use raw ID numbers in behavior code
-- Cache display and controls once
-- Use refresh as the single source of UI state updates
-- Static-only controls should usually remain idc = -1
-- Controls groups must be handled through cached group references
-- Keep folder structure consistent across dialogs
+Always terminate SQF statements with ;
+One function per file
+All functions must be compiled in initFunctions.sqf
+handlers/ = UI-bound functions
+public/ = external API
+root functions/ = internal mechanics
+Never hardcode IDC numbers in logic (use defines)
+Cache controls once, reuse via fnc_ctrl
+Keep UI refresh centralized in fnc_refresh.sqf
+Keep handlers minimal
+Remove legacy structures after migration
+NOTES
+fnc_groupCtrl.sqf can remain a stub if unused
+The template contains no radial-specific logic
+Public functions are intentionally generic examples
+You are expected to design your own API per dialog
+The template reflects a fully modular, ACE-style function structure without CfgFunctions
