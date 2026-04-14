@@ -3712,7 +3712,7 @@ A3C_ACTIVATEGOCODE = {
 ////////////////////////////////////////////////////////////////////
 
 
-//-- Change group-formation according to input. Used by radial and formation-menu
+//-- Change group-formation according to input. Used by radial formation section
 A3C_FNC_FORMMENU = {
 	private _formation = _this select 0;
 	private _groups= if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {[group player]} else {A3C_RD_UNITS};

@@ -27,8 +27,6 @@ class Extended_PreInit_EventHandlers
 
 #include "ui\A3C_BaseClasses.hpp"
 
-// #include "ui\MapOverlay\A3C_MapControls.hpp"
-// #include "ui\MapOverlay\A3C_TAB.hpp"
 #include "ui\MapOverlay\UI_DSP_MAP.hpp"
 #include "ui\radial\A3C_RadialMenu.hpp"
 #include "ui\HUD\HUD_MENU.hpp"
@@ -36,7 +34,7 @@ class Extended_PreInit_EventHandlers
 #include "ui\HUD\HUD_Formation_Menu.hpp"
 #include "ui\HUD\HUD_CAM_UI.hpp"
 // #include "ui\radial\A3C_FORMATION.hpp"
-// #include "ui\radial\UI_DSP_SettingsMenu.hpp"
+
 #include "ui\radial\settingsMenu\dialog.hpp"
 #include "ui\suppression\A3C_SUPPRESSION_DRAW.hpp"
 #include "cfgsounds.hpp"

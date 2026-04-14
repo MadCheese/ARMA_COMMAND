@@ -1,25 +1,17 @@
-#include "..\dialog_defines.hpp"
+params ["_var"];
 
-params ["_control"];
-
-private _idc = ctrlIDC _control;
-private _var = "";
-
-switch (_idc) do {
-    case IDC_SETTINGS_MENU_BTN_SKILL: { _var = "A3C_SKILL_VAR"; };
-    case IDC_SETTINGS_MENU_BTN_NUM: { _var = "A3C_NUM_VAR"; };
-    case IDC_SETTINGS_MENU_BTN_HUD_RESET: { _var = "A3C_HUD_RES_VAR"; };
-    case IDC_SETTINGS_MENU_BTN_AI_RAIL: { _var = "A3C_FORCERAIL_VAR"; };
-    case IDC_SETTINGS_MENU_BTN_HUD_LAYOUT: { _var = "A3C_HUD_LAYOUT_CORNER"; };
-    case IDC_SETTINGS_MENU_BTN_HUD_OBJECTS: { _var = "A3C_HUD_OBJECTS"; };
-    case IDC_SETTINGS_MENU_BTN_HC_RESPONSE: { _var = "HC_GROUP_RESPONSE"; };
-};
-
-if (_var isEqualTo "") exitWith {};
+if !(_var in [
+    "A3C_SKILL_VAR",
+    "A3C_NUM_VAR",
+    "A3C_HUD_RES_VAR",
+    "A3C_FORCERAIL_VAR",
+    "A3C_HUD_LAYOUT_CORNER",
+    "A3C_HUD_OBJECTS",
+    "HC_GROUP_RESPONSE"
+]) exitWith {};
 
 private _newValue = !(profileNamespace getVariable [_var, false]);
 profileNamespace setVariable [_var, _newValue];
-
 
 switch (_var) do {
     case "A3C_SKILL_VAR": {
@@ -50,4 +42,4 @@ switch (_var) do {
     };
 };
 
-[] call A3C_settingsMenu_fnc_refresh;
+[] call A3C_UI_settingsMenu_fnc_refresh;

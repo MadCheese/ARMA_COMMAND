@@ -44,7 +44,7 @@ class A3C_MENU
 			w = 0.0354167 * safezoneW;
 			h = 0.0679966 * safezoneH;
 			tooltip = "Access A3C Settings";
-			action = "[] spawn A3C_UI_SETTINGS_FNC_OpenSettings";
+			action = "[] spawn A3C_UI_settingsMenu_fnc_openSettings";
 		};
 
 		//-- Radial BG: OUTER RING PARTS

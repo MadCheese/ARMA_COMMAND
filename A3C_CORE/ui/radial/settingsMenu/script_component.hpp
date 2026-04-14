@@ -1,5 +1,5 @@
 #define PREFIX A3C
-#define COMPONENT settingsMenu
+#define COMPONENT UI_settingsMenu
 #define COMPONENT_BEAUTIFIED Settings Menu
 
 #define QUOTE(var1) #var1

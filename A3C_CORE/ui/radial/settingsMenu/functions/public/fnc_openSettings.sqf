@@ -1,4 +1,4 @@
-#include "..\dialog_defines.hpp"
+#include "..\..\dialog_defines.hpp"
 
 [] call A3C_RADIAL_CloseDisplay;
 A3C_DOWNKEYS = A3C_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
