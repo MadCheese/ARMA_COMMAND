@@ -38,7 +38,7 @@ A3C_CONVOY_SLOWDOWN_VICS = [];
 A3C_UI_HUDICONS_HC_GROUP = [];
 
 
-A3C_HCALLGROUPS_Current = [];
+A3C_HC_getAllGroups_Player_Current = [];
 
 
 

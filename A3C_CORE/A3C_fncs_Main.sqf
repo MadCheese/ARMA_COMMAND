@@ -1467,7 +1467,7 @@ A3C_ExitRoute_isWpAborted = {
 	};
 	//~~ HC Groups abort anything that is NOT in all HC groups (WHAT EXATLY IS THIS?)
 	if !((group _unit) == (group player)) then {
-		if !((group _unit) in A3C_HCALLGROUPS_CURRENT) then {
+		if !((group _unit) in A3C_HC_getAllGroups_Player_CURRENT) then {
 			_abort = true;
 		};
 	};
@@ -2580,7 +2580,7 @@ A3C_TOGGLE_GOCODE_CTRLS = {
 					};
 				} foreach [_wpCond,_actionScript];
 			} foreach _wpts;
-		} foreach A3C_HCALLGROUPS_Current;
+		} foreach A3C_HC_getAllGroups_Player_Current;
 		[_cond1,_cond2]
 	};
 
@@ -2855,7 +2855,7 @@ A3C_LB_Change = {
 			//[] call A3C_BTN_COLOR_RESET;
 		};
 		case (4) : {
-			_gp = [A3C_HCALLGROUPS_Current select (_btn - 1)];
+			_gp = [A3C_HC_getAllGroups_Player_Current select (_btn - 1)];
 			{
 				if !(_x in _gp) then {_gp pushback _x};
 			} foreach A3C_SELECTED_UNITS;
@@ -3155,7 +3155,7 @@ A3C_GROUP_RESET = {
 				};
 			};
 		} foreach (units _x);
-	} foreach ([(group player)] + A3C_HCALLGROUPS_Current);
+	} foreach ([(group player)] + A3C_HC_getAllGroups_Player_Current);
 	{
 		if (isTouchingGround _x) then {
 			_x setPosASL (getPosASL _x);
@@ -3311,7 +3311,7 @@ A3C_GROUP_RESET = {
 	if (_stayLeader) then {(group player) selectLeader player};
 	for "_i" from 7025 to 7040 do {(findDisplay _a3c_dsp displayCtrl _i) ctrlShow false};
 	if (A3C_MAP_CommandMode == "HC") then {
-		if ((count A3C_HCALLGROUPS_Current ) > 0) then {
+		if ((count A3C_HC_getAllGroups_Player_Current ) > 0) then {
 			//["HC"] call A3C_LABEL_SELECTORS;
 		} else {
 			A3C_MAP_CommandMode = "INF";
@@ -3385,7 +3385,7 @@ A3C_GROUP_RESET = {
 				};
 			};
 		} foreach (units _x);
-	} foreach ([group player] +  A3C_HCALLGROUPS_Current);
+	} foreach ([group player] +  A3C_HC_getAllGroups_Player_Current);
 	if (player == driver vehicle player) then {
 		[] spawn {
 			sleep 1;
@@ -3758,7 +3758,7 @@ A3C_getSideName = {
 };
 
 //-- get all HC-Groups (real, disbanded, custom HC)
-A3C_HCALLGROUPS = {
+A3C_HC_getAllGroups_Player = {
 	private ["_hcArray","_configurationMode","_side","_addAll"];
 
 	_side =  (getNumber (configfile >> "CfgFactionClasses" >> (faction player) >> "side"));

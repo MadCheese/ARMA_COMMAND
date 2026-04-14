@@ -1026,7 +1026,7 @@ A3C_MOVE = {
 			};
 		};
 
-
+		
 		//-- set WP-details (speed/stance)
 		_unit setunitpos _unitPosTravel;
 		if !(_wpSpeed == -1) then {

@@ -581,7 +581,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			{
 				_HCunits pushbackUnique _x;
 			} foreach units _x;
-		} foreach A3C_HCALLGROUPS_Current;
+		} foreach A3C_HC_getAllGroups_Player_Current;
 		{
 
 			if ((count (_x getvariable ["A3C_UNIT_EXPLOSIVES",[]])) > 0) then {
@@ -5046,7 +5046,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 			{
 				//-- add vehicle crew to group as well
 				{
-					//if ((group _x) in A3C_HCALLGROUPS_Current) then {
+					//if ((group _x) in A3C_HC_getAllGroups_Player_Current) then {
 						//if !(isPlayer (leader group _x)) then {
 							_A3C_ConvoyUnits pushBackUnique _x;
 						//};

@@ -14,7 +14,7 @@
 
 
 
-class HUD_BHV_CBM
+class A3C_DSP_HUD_DYNAMIC
 {
 	idd = 100100;
 	movingenable = false;

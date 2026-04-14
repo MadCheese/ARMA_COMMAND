@@ -36,7 +36,7 @@ MAP_UI_fnc_drawMapUI = {
 	_plotMain = [];
 	_isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
 	
-	_allGroupsHC = A3C_HCALLGROUPS_Current;
+	_allGroupsHC = A3C_HC_getAllGroups_Player_Current;
 	if !(group player in _allGroupsHC) then {
 		_allGroupsHC = [group player] + _allGroupsHC; //-- add player group (player does not carry tablet item, but we need to show it in UI
 	};

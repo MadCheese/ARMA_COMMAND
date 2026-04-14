@@ -17,7 +17,7 @@
 
 #include "A3C_CORE\ui\suppression\A3C_SUPPRESSION_DRAW.hpp"
 #include "A3C_CORE\ui\HUD\HUD_MENU.hpp"
-#include "A3C_CORE\ui\HUD\HUD_BHV_CBM.hpp"
+#include "A3C_CORE\ui\HUD\A3C_DSP_HUD_DYNAMIC.hpp"
 #include "A3C_CORE\ui\HUD\HUD_Formation_Menu.hpp"
 #include "A3C_CORE\ui\HUD\HUD_CAM_UI.hpp"
 

@@ -6,7 +6,7 @@ A3C_fnc_drawHudUI = {
 	_posArray = +(A3C_HUD_DRAW_POSARRAY);
 
 	
-	private _hcAllGroups = A3C_HCALLGROUPS_Current; // [group player] + 
+	private _hcAllGroups = A3C_HC_getAllGroups_Player_Current; // [group player] + 
 	//{
 	//	//[_x,["lightOff", vehicle _x]] remoteExec ["action",_x]
 	//	_x action ["lightOff", vehicle _x];

@@ -60,7 +60,34 @@ A3C_HC_getFullCrew = {
 	_emptyPositions
 };
 
+A3C_HC_getAllGroups_Player_ORGANIZED = {
+	private _hcAll = +A3C_HC_getAllGroups_Player_Current;
+	_hcAll = [_hcAll,[],{vehicle leader _x distance2D player},"ASCEND"] call BIS_fnc_sortBy;
+	_closestUnits = _hcAll select [0,4];
+	_hcAll = _hcAll - _closestUnits;
+	_tankGroups = [];
+	_infantryGroups = [];
+	_wheeledGroups = [];
+	_heliGroups = [];
+	_jetGroups = [];
+	_boatGroups = [];
+	_staticGroups = [];
+	{
+		_leaderVic = vehicle leader _x;
+		switch (true) do {
+			case (_leaderVic isKindOf "MAN") : {_infantryGroups pushBack _x};
+			case (_leaderVic isKindOf "CAR") : {_wheeledGroups pushBack _x};
+			case (_leaderVic isKindOf "SHIP") : {_boatGroups pushBack _x};
+			case (_leaderVic isKindOf "TANK") : {_tankGroups pushBack _x};
+			case (_leaderVic isKindOf "HELICOPTER") : {_heliGroups pushBack _x};
+			case (_leaderVic isKindOf "PLANE") : {_jetGroups pushBack _x};
+			case (_leaderVic isKindOf "STATICWEAPON") : {_staticGroups pushBack _x};
+		};
+	} foreach _hcAll;
 
+	_hcAll = _closestUnits + _infantryGroups + _staticGroups + _wheeledGroups + _boatGroups + _tankGroups + _heliGroups + _jetGroups;
+	_hcAll 
+};
 
 
 ////////////////////////  STATE GETTERS
@@ -1540,7 +1567,7 @@ A3C_HC_REMOVE_WP_RC = {
 
 
 A3C_HC_LINE = {
-	_group = A3C_HCALLGROUPS_Current select (_this select 0);
+	_group = A3C_HC_getAllGroups_Player_Current select (_this select 0);
 	_mode = _this select 1;	
 	_wp = (waypoints _group) select ((_this select 2) -1);
 	_return = position (leader _group);

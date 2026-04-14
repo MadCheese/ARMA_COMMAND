@@ -193,7 +193,7 @@ A3C_UI_MAP_TREE_LABEL = {
 
 
 	//systemChat "LABEL";
-	A3C_UI_SHARED_TREE_HC_AT_TICK = A3C_HCALLGROUPS_Current;
+	A3C_UI_SHARED_TREE_HC_AT_TICK = A3C_HC_getAllGroups_Player_Current;
 	private _modes = if (_a3c_dsp == 100040) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
 	if (count A3C_UI_SHARED_TREE_HC_AT_TICK < 2 && {"HIGHCOMMAND" in _modes}) then {
 		_modes = _modes - ["HIGHCOMMAND"];
@@ -1430,7 +1430,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 				};
 				case ("HIGHCOMMAND") : {
 					//-- _reInforcementsWIP: groups that have no button yet
-					private _reInforcementsWIP = (A3C_HCALLGROUPS_Current ) select {_treeButtonVar = _x getVariable ["A3C_TREESEL_INDEX",[]]; count _treeButtonVar == 0}; //- _refArray
+					private _reInforcementsWIP = (A3C_HC_getAllGroups_Player_Current ) select {_treeButtonVar = _x getVariable ["A3C_TREESEL_INDEX",[]]; count _treeButtonVar == 0}; //- _refArray
 					
 					
 					{

@@ -1454,7 +1454,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 				//};
 				
 			};
-		} foreach A3C_HCALLGROUPS_Current;
+		} foreach A3C_HC_getAllGroups_Player_Current;
 
 		private _infantryOnly = true;
 		{
@@ -2497,7 +2497,7 @@ A3C_UI_MAP_HandlerFNC_MouseDrag_MapItem = {
 					_x setVariable ["A3C_UNIT_POLYS",_va,true];
 				};
 			};
-		} foreach (A3C_HCALLGROUPS_Current + (units player - [player]));
+		} foreach (A3C_HC_getAllGroups_Player_Current + (units player - [player]));
 	};
 
 

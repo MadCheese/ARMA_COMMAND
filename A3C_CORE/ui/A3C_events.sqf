@@ -1024,7 +1024,7 @@ A3C_FNC_CBA_KEY = {
 
 		case ("COMMAND_LEVEL") : {
 			// systemchat str time;
-			if (count A3C_HCALLGROUPS_Current > 0 OR {[player] call A3C_isUnconscious}) then {
+			if (count A3C_HC_getAllGroups_Player_Current > 0 OR {[player] call A3C_isUnconscious}) then {
 				{player groupSelectUnit [_x,false]} foreach (units player - [player]);
 				showCommandingMenu "";
 				A3C_RD_UNITS = [];

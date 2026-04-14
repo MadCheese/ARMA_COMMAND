@@ -30,7 +30,7 @@ class Extended_PreInit_EventHandlers
 #include "ui\MapOverlay\UI_DSP_MAP.hpp"
 #include "ui\radial\A3C_RadialMenu.hpp"
 #include "ui\HUD\HUD_MENU.hpp"
-#include "ui\HUD\HUD_BHV_CBM.hpp"
+#include "ui\HUD\A3C_DSP_HUD_DYNAMIC.hpp"
 #include "ui\HUD\HUD_Formation_Menu.hpp"
 #include "ui\HUD\HUD_CAM_UI.hpp"
 // #include "ui\radial\A3C_FORMATION.hpp"

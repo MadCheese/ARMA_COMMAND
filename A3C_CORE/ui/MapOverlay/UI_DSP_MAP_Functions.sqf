@@ -675,7 +675,7 @@ A3C_Adjust_Poly_Edge = {
 				_u setVariable ["A3C_UNIT_POLYS",_va,true];
 			};
 		} foreach _va;
-	} foreach (A3C_HCALLGROUPS_Current + (units player - [player]));
+	} foreach (A3C_HC_getAllGroups_Player_Current + (units player - [player]));
 };
 
 A3C_ADJUST_POLY = {
@@ -847,7 +847,7 @@ A3C_GetTrackerMarkSize = {
 	_valX = 0.5;
 	_valY = 0.5;
 	_return = [];
-	if (_group in A3C_HCALLGROUPS_Current) then {
+	if (_group in A3C_HC_getAllGroups_Player_Current) then {
 		_valX = 1.5;
 		_valY = 1;
 	} else {
@@ -952,7 +952,7 @@ A3C_LABEL_SELECTORS = {
 		call compile format ["(findDisplay _a3c_dsp displayCtrl %1) ctrlShow false;",_i];
 	};
 	_limit = if (_mode == "HC") then {
-		24 + ( (count A3C_HCALLGROUPS_CURRENT) - (A3C_BUTTONPAGE_TABLET * 16) )
+		24 + ( (count A3C_HC_getAllGroups_Player_CURRENT) - (A3C_BUTTONPAGE_TABLET * 16) )
 	} else {
 		24 + ((count((profileNamespace getvariable "A3C_GROUPUNITS") - [player])) - (A3C_BUTTONPAGE_TABLET * 16))
 	};
@@ -1152,15 +1152,15 @@ A3C_LABEL_SELECTORS = {
 			} else {
 				//-- Mode: High Command
 				_unitIndex = ( (_i - 24) + (A3C_BUTTONPAGE_TABLET * 16) );
-				//if ( ({alive _x} count (units (A3C_HCALLGROUPS_CURRENT select ((_i - 25) + (A3C_BUTTONPAGE_TABLET * 16))))) == 0 ) then {
+				//if ( ({alive _x} count (units (A3C_HC_getAllGroups_Player_CURRENT select ((_i - 25) + (A3C_BUTTONPAGE_TABLET * 16))))) == 0 ) then {
 				//	_text = 'N/A';
 				////	_textCol = [0.5,0.5,0.5,1];
 					(findDisplay _a3c_dsp displayCtrl (7000 + _i)) ctrlSetBackgroundColor [0,0,0,0.7];
 				//} else {
 					_buttonMode = 0;
-					///_hcGroups= A3C_HCALLGROUPS_Current_ORGANIZED; 
+					///_hcGroups= A3C_HC_getAllGroups_Player_Current_ORGANIZED; 
 					///A3C_HC_MENU_REFERENCE_UNITS = _hcGroups;
-					_hcGroups = A3C_HCALLGROUPS_Current;
+					_hcGroups = A3C_HC_getAllGroups_Player_Current;
 					if (( (_hcGroups) select ((_i - 25) + (A3C_BUTTONPAGE_TABLET * 16) )) in A3C_SELECTED_UNITS) then {
 						_textCol = [0.21,0.63,0,1];
 						_buttonMode = 1;
@@ -1775,7 +1775,7 @@ A3C_START_TABMODE = {
 
 	if (count A3C_SELECTED_UNITS > 0) then {
 		private _refItem = A3C_SELECTED_UNITS select 0;
-		private _refArray = if (_mode != "HC") then {profileNamespace getvariable "A3C_GROUPUNITS"} else {A3C_HCALLGROUPS_Current};
+		private _refArray = if (_mode != "HC") then {profileNamespace getvariable "A3C_GROUPUNITS"} else {A3C_HC_getAllGroups_Player_Current};
 		private _refDif = if (_mode != "HC") then {-1} else {0}; //-- on squad level, buttons exclude the player. Therefore, 1 needs to be substracted from refr
 		private _refIndex = [_refItem, _refArray] call MCSS_fnc_getArrayIndex;
 		A3C_BUTTONPAGE_TABLET = (floor ( (_refIndex + _refDif) / 16)) max 0;
@@ -2021,7 +2021,7 @@ A3C_SWITCHPAGE_TABLET = {
 	_mode = _this select 0;
 	_amount = _this select 1;
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
-	private _hcAll = A3C_HCALLGROUPS_Current;
+	private _hcAll = A3C_HC_getAllGroups_Player_Current;
 	if (!isNull findDisplay 100040) then {
 		_a3c_dsp = 100040;
 	};
@@ -3632,7 +3632,7 @@ A3C_BTN_SELECT_HC = { //~~ #unused
 	_shift = _data select 4; //false;  //-- disabled for now _data select 4;
 	_ctrl = _data select 5;
 	_alt = _data select 6;
-	private _unitArray =  A3C_HCALLGROUPS_Current; //+(A3C_HC_MENU_REFERENCE_UNITS); 
+	private _unitArray =  A3C_HC_getAllGroups_Player_Current; //+(A3C_HC_MENU_REFERENCE_UNITS); 
 	private _unit = _unitArray select _unitIndex;
 	systemchat 'ayayay';
 	_a3c_dsp = if (visibleMap) then {100020} else {100030};
@@ -3686,20 +3686,20 @@ A3C_BTN_SELECT_HC = { //~~ #unused
 			if (_ctrl) then {
 				for "_i" from 25 to 40 do {
 					if ((_i - 24) == _button) then { //~~ #unused is this still used?
-						if ((A3C_HCALLGROUPS_CURRENT select _unitIndex) in A3C_SELECTED_UNITS) then {
+						if ((A3C_HC_getAllGroups_Player_CURRENT select _unitIndex) in A3C_SELECTED_UNITS) then {
 							((findDisplay _a3c_dsp) displayCtrl (7000 + _i) ) ctrlSetTextColor [0.9,0.9,0,1];
-							A3C_SELECTED_UNITS = A3C_SELECTED_UNITS - [(A3C_HCALLGROUPS_CURRENT select _unitIndex)];
-							player hcSelectGroup [(A3C_HCALLGROUPS_CURRENT select _unitIndex),false];
+							A3C_SELECTED_UNITS = A3C_SELECTED_UNITS - [(A3C_HC_getAllGroups_Player_CURRENT select _unitIndex)];
+							player hcSelectGroup [(A3C_HC_getAllGroups_Player_CURRENT select _unitIndex),false];
 						} else {
 							((findDisplay _a3c_dsp) displayCtrl (7024 + _button) ) ctrlSetTextColor [0,1,0,1];
-							A3C_SELECTED_UNITS pushback (A3C_HCALLGROUPS_CURRENT select _unitIndex);
-							player hcselectgroup [A3C_HCALLGROUPS_CURRENT select _unitIndex,true];
+							A3C_SELECTED_UNITS pushback (A3C_HC_getAllGroups_Player_CURRENT select _unitIndex);
+							player hcselectgroup [A3C_HC_getAllGroups_Player_CURRENT select _unitIndex,true];
 						};
 					};
 				};
 			} else {
-				A3C_SELECTED_UNITS = [A3C_HCALLGROUPS_CURRENT select _unitIndex];
-				player hcselectgroup [A3C_HCALLGROUPS_CURRENT select _unitIndex,true];
+				A3C_SELECTED_UNITS = [A3C_HC_getAllGroups_Player_CURRENT select _unitIndex];
+				player hcselectgroup [A3C_HC_getAllGroups_Player_CURRENT select _unitIndex,true];
 
 				//systemchat str _unitindex;
 				for "_i" from 25 to 40 do { //~~ #unused is this still used?
@@ -3716,14 +3716,14 @@ A3C_BTN_SELECT_HC = { //~~ #unused
 			//-- center map on group leader
 			if (visiblemap) then {
 				(findDisplay 12 displayCtrl 51) ctrlEnable true;
-				(findDisplay 12 displayCtrl 51) ctrlMapAnimAdd [0.1,(ctrlMapScale (findDisplay 12 displayCtrl 51)),(position (leader (A3C_HCALLGROUPS_CURRENT select _unitIndex)))];
+				(findDisplay 12 displayCtrl 51) ctrlMapAnimAdd [0.1,(ctrlMapScale (findDisplay 12 displayCtrl 51)),(position (leader (A3C_HC_getAllGroups_Player_CURRENT select _unitIndex)))];
 				ctrlMapAnimCommit (findDisplay 12 displayCtrl 51);
 				[] spawn {
 					sleep 0.2;
 					(findDisplay 12 displayCtrl 51) ctrlEnable false;
 				};
 			} else {
-				(findDisplay 100030 displayCtrl 7043) ctrlMapAnimAdd [0.1,(ctrlMapScale (findDisplay 100030 displayCtrl 7043)),(position (leader (A3C_HCALLGROUPS_CURRENT select _unitIndex)))];
+				(findDisplay 100030 displayCtrl 7043) ctrlMapAnimAdd [0.1,(ctrlMapScale (findDisplay 100030 displayCtrl 7043)),(position (leader (A3C_HC_getAllGroups_Player_CURRENT select _unitIndex)))];
 				ctrlMapAnimCommit (findDisplay 100030 displayCtrl 7043);
 			};
 		} else {
@@ -3994,7 +3994,7 @@ A3C_BTN_HC = {
 	private ["_isHighCommand","_isLoop","_loopPos","_loopDest","_params"];
 
 	_mode = _this select 0;
-	_groups = if ((count _this) > 1) then {_this select 1} else {A3C_HCALLGROUPS_Current };
+	_groups = if ((count _this) > 1) then {_this select 1} else {A3C_HC_getAllGroups_Player_Current };
 	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	_unit = objnull;
@@ -4007,7 +4007,7 @@ A3C_BTN_HC = {
 	_loopDest = [0,0,0];
 	if ( (_mode == 0) && ((count A3C_SELECTED_UNITS) == 0)) exitwith {};
 	if ( (_mode == 0) && (A3C_MAP_CommandMode == "HC") ) exitwith {};
-	if ( (_mode == 1) && ((count A3C_HCALLGROUPS_Current ) == 0)) exitwith {};
+	if ( (_mode == 1) && ((count A3C_HC_getAllGroups_Player_Current ) == 0)) exitwith {};
 	if ( (_mode == 1) && A3C_BOOL_REJOINING) exitwith {};
 	_data = [];
 	_fnc_Tracker = {
@@ -4051,7 +4051,7 @@ A3C_BTN_HC = {
 			if (["A3C-",groupID _x] call BIS_fnc_instring) then {
 				_disbandedPhonetics pushBackUnique _x;
 			};
-		} foreach A3C_HCALLGROUPS_Current;
+		} foreach A3C_HC_getAllGroups_Player_Current;
 		_newGroup setGroupIDGlobal [ format ["A3C-%1",[(count _disbandedPhonetics + 1) max 1] call A3C_HC_getPhonetic] ];
 		_unit = (A3C_SELECTED_UNITS select 0);
 		_loopPos = position _unit;
@@ -4907,7 +4907,7 @@ A3C_RC_Menu_Inf = {
 			_statements = "";
 			_stance1 = "";
 			_stance2 = "";
-			if ( (parseNumber ((_marker splitstring "_") select 3)) == ([_gp,A3C_HCALLGROUPS_CURRENT] call MCSS_fnc_GetArrayIndex)   ) exitWith {
+			if ( (parseNumber ((_marker splitstring "_") select 3)) == ([_gp,A3C_HC_getAllGroups_Player_CURRENT] call MCSS_fnc_GetArrayIndex)   ) exitWith {
 				_wp = [_gp,((parseNumber ((_marker splitstring "_") select 4)) - 1)];
 				_statements = ((waypointstatements _wp) select 1) splitstring ";";
 				_stance1 = (((_statements select 0) splitstring "'") select 1);
@@ -4930,7 +4930,7 @@ A3C_RC_Menu_Inf = {
 
 
 			};
-		} foreach A3C_HCALLGROUPS_CURRENT;
+		} foreach A3C_HC_getAllGroups_Player_CURRENT;
 	};
 
 	if (_mode == "HC") exitWith {

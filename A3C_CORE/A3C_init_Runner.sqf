@@ -234,7 +234,7 @@ A3C_is_Initialized = true;
 
 // 	//-- In game loop - once per second
 	// while {!isNull player && {!isNull (findDisplay 46)}} do {
-	// 	A3C_HCALLGROUPS_Current = [] call A3C_HCALLGROUPS;
+	// 	A3C_HC_getAllGroups_Player_Current = [] call A3C_HC_getAllGroups_Player;
 	// 	sleep 1;
 	// };
 
@@ -251,7 +251,7 @@ A3C_is_Initialized = true;
 	while {!isNull player && {!isNull (findDisplay 46)}} do {
 		
 		//-- fetch all HC groups once per second so it does not fire on each frame in draw handler
-		A3C_HCALLGROUPS_Current = [] call A3C_HCALLGROUPS;
+		A3C_HC_getAllGroups_Player_Current = [] call A3C_HC_getAllGroups_Player;
 
 		//-- clean up completed wp's from A3C_Selection_MultiWaypoint
 		if !(A3C_Selection_MultiWaypoint isEqualTo []) then {

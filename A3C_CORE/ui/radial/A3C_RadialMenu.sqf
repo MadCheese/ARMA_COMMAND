@@ -51,7 +51,7 @@ if (!isNil 'A3C_UI_RADIAL_EH_KEYUP_CONFIRM') then {
 
 
 
-_hcAll = A3C_HCALLGROUPS_Current;
+_hcAll = A3C_HC_getAllGroups_Player_Current;
 
 _cursortarget = cursortarget;
 
@@ -278,7 +278,7 @@ A3C_RAD_DEVH_MD = (findDisplay 100040) displayAddEventHandler
 		if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
 
 			
-			_hcAll = A3C_HCALLGROUPS_Current;
+			_hcAll = A3C_HC_getAllGroups_Player_Current;
 			private _group = grpNull;
 			private _refGroup = group driver _clickedVehicle;
 			if (_refGroup in _hcAll) then {

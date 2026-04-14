@@ -1138,7 +1138,7 @@ A3C_SUP_REMOVE_POLY = {
 			};
 		};
 		
-	} foreach ( (_units - [_unit]) ); //A3C_HCALLGROUPS_Current + 
+	} foreach ( (_units - [_unit]) ); //A3C_HC_getAllGroups_Player_Current + 
 	
 	if (_delPoly) then {
 		{

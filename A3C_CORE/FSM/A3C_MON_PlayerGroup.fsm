@@ -308,7 +308,7 @@ class FSM
                          "	if (_kn > 1.5) then {" \n
                          "		{" \n
                          "				_x reveal [_t,_kn];" \n
-                         "		} foreach A3C_HCALLGROUPS_Current;" \n
+                         "		} foreach A3C_HC_getAllGroups_Player_Current;" \n
                          "	};" \n
                          "} foreach _tgts;" \n
                          "" \n
@@ -387,7 +387,7 @@ class FSM
                          "		//	];" \n
                          "		////};" \n
                          "	} foreach _tgts;" \n
-                         "} foreach A3C_HCALLGROUPS_Current;"/*%FSM</STATEINIT""">*/;
+                         "} foreach A3C_HC_getAllGroups_Player_Current;"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {
@@ -570,7 +570,7 @@ class FSM
                          "			};" \n
                          "		};" \n
                          "	} foreach (units _gp);" \n
-                         "} foreach (A3C_HCALLGROUPS_Current + [group player]);"/*%FSM</STATEINIT""">*/;
+                         "} foreach (A3C_HC_getAllGroups_Player_Current + [group player]);"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {

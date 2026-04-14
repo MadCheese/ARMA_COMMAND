@@ -403,7 +403,7 @@ A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG = {
 A3C_UI_RADIAL_OBJECTSELECTOR_LABEL_DETONATIONTARGETS = {
 	_parent = (findDisplay 100060 displayCtrl 8008);
 	_listBox = findDisplay 100060 displayCtrl 800803;
-	private _hcAll = A3C_HCALLGROUPS_Current;
+	private _hcAll = A3C_HC_getAllGroups_Player_Current;
 	_hcAll pushBackUnique (group player);
 	A3C_UI_RADIAL_Current_Remfire_Units = [];
 	{

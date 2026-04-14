@@ -294,7 +294,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 		{
 			_units pushbackUnique _x;
 		} foreach units _x;
-	} foreach A3C_HCALLGROUPS_Current;
+	} foreach A3C_HC_getAllGroups_Player_Current;
 
 	if (({(count (_x getvariable ["A3C_UNIT_EXPLOSIVES",[]])) > 0} count _units) > 0) then {
 		A3C_DYNAMIC_BUTTON_ACTIONS pushbackUnique "ORDER_DETO";
