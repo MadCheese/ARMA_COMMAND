@@ -11,7 +11,10 @@
 #include "A3C_CORE\ui\MapOverlay\UI_DSP_MAP.hpp"
 #include "A3C_CORE\ui\radial\A3C_RadialMenu.hpp"
 // #include "A3C_CORE\ui\radial\A3C_FORMATION.hpp"
-#include "A3C_CORE\ui\radial\UI_DSP_SettingsMenu.hpp"
+
+// #include "A3C_CORE\ui\radial\UI_DSP_SettingsMenu.hpp"
+#include "A3C_CORE\ui\radial\settingsMenu\dialog.hpp"
+
 #include "A3C_CORE\ui\suppression\A3C_SUPPRESSION_DRAW.hpp"
 #include "A3C_CORE\ui\HUD\HUD_MENU.hpp"
 #include "A3C_CORE\ui\HUD\HUD_BHV_CBM.hpp"

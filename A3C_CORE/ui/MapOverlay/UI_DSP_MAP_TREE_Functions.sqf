@@ -1041,17 +1041,17 @@ A3C_TREE_TVCHANGE = {
 		_infModeFrom = "HC"; //-- default
 		_infModeTo = if ((vehicle _endUnit) isKindOf "AIR") then {"AIR"} else {"INF"};
 		_doSwitchPage = true;
-		//systemchat str [_infModeTo,A3C_HELI_INF_MODE,111111];
+		//systemchat str [_infModeTo,A3C_MAP_CommandMode,111111];
 		if (_clickedFromSquad) then { //-- click from High Command to squad - start_tab
-			if (_infModeTo == A3C_HELI_INF_MODE) then {
+			if (_infModeTo == A3C_MAP_CommandMode) then {
 				_doSwitchPage = false;
 			};
 			
 		};
-		//systemchat str [_infModeTo , A3C_HELI_INF_MODE, _startUnit, _endUnit, typeof vehicle _endunit];
+		//systemchat str [_infModeTo , A3C_MAP_CommandMode, _startUnit, _endUnit, typeof vehicle _endunit];
 		if (_doSwitchPage) then {
 			//systemchat str ['switch',_control];
-			A3C_HELI_INF_MODE = _infModeTo;
+			A3C_MAP_CommandMode = _infModeTo;
 			A3C_SELECTED_UNITS = []; //-- reset arrays on pure left click
 			A3C_RD_UNITS = [];
 			A3C_SELECTED_HC_GROUPS_SETTINGS = [];
@@ -1061,7 +1061,7 @@ A3C_TREE_TVCHANGE = {
 		};
 	} else {
 		_refArray = A3C_UI_SHARED_TREE_HC_AT_TICK; //-- copy the current HC array so we can address groups even if the hc-structure has changed while planning
-		A3C_HELI_INF_MODE = "HC";	
+		A3C_MAP_CommandMode = "HC";	
 	};
 
 	_buttonValues = [];
@@ -1148,7 +1148,7 @@ A3C_TREE_BOXCLICK = {
 	private _left = _mouseButton == 0;
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	if (!(_left) && {count A3C_SELECTED_UNITS > 0}) then {
-		if (_shift && {A3C_HELI_INF_MODE != "HC"}) then { //~~ TO DO: ALIGN TEAMCOLORS THROUGH COMMAND LEVELS AND ALLOW FOR HC TEAMCOLOR VIA LISTBOX
+		if (_shift && {A3C_MAP_CommandMode != "HC"}) then { //~~ TO DO: ALIGN TEAMCOLORS THROUGH COMMAND LEVELS AND ALLOW FOR HC TEAMCOLOR VIA LISTBOX
 			//systemchat 'teamcolor shebang';
 			//A3C_BUTTON_UNIT = _unit;
 			lbClear ((findDisplay _a3c_dsp) displayCtrl 7078);

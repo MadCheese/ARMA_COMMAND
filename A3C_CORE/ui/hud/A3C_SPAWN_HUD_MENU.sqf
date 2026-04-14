@@ -4,7 +4,7 @@
 if  (!isnull (finddisplay 100040)) exitwith {};
 if  (!isnull (findDisplay 100010)) exitwith {};
 if  (!isnull (finddisplay 100050)) exitwith {};
-if ((count A3C_HUD_ARROWS) == 0) exitWith {};
+if ((count A3C_HUD_UnitIndicators) == 0) exitWith {};
 
 
 _exit = false;
@@ -124,7 +124,7 @@ A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 100050) displayAddEventHandler ["Ke
 		//((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 15) ctrlSetText "";
 		//(findDisplay 100050) displayRemoveEventHandler ["MouseButtonDown", A3C_RAD_DEVH_MD];		
 		//BR_A3C_DISABLE_RADIAL = false;
-		//if ((count A3C_HUD_ARROWS) > 0) then {
+		//if ((count A3C_HUD_UnitIndicators) > 0) then {
 		//	{inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];
 		//} else {
 		//	{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];

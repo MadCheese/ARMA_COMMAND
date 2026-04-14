@@ -958,9 +958,6 @@ A3C_Radial_DashBoard = {
 
 		_structuredText = parseText _structuredText; 
 		(findDisplay _a3c_dsp displayCtrl 11014) ctrlSetStructuredText _structuredText;
-
-
-
 		(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow true;
 
 	} else {

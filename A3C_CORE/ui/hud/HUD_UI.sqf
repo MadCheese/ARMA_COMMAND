@@ -543,12 +543,12 @@ A3C_ObjectSelector_LB_Change = {
 						[_cargoGroups] spawn {
 							params ["_cargoGroups"];
 							private _storedSelection = +(A3C_SELECTED_UNITS); //A3C_SELECTED_HC_GROUPS_SETTINGS
-							private _storedMode = A3C_HELI_INF_MODE;
+							private _storedMode = A3C_MAP_CommandMode;
 							// systemchat str _cargoGroups;
 							private _doExit = false;
 							{
 								private _gpRef = _x;
-								A3C_HELI_INF_MODE = "HC";
+								A3C_MAP_CommandMode = "HC";
 								A3C_SELECTED_HC_GROUPS_SETTINGS = [_gpRef];
 								A3C_SELECTED_UNITS = [_gpRef];
 								private _str = format ["PLACE WAYPOINT FOR %1  %2", groupID _gpRef, A3C_SELECTED_HC_GROUPS_SETTINGS];
@@ -564,7 +564,7 @@ A3C_ObjectSelector_LB_Change = {
 							if !(_doExit) then {
 								A3C_SELECTED_UNITS = _storedSelection; //-- only override if map was not closed
 								A3C_SELECTED_HC_GROUPS_SETTINGS = _storedSelection; //-- only override if map was not closed
-								A3C_HELI_INF_MODE = _storedMode;
+								A3C_MAP_CommandMode = _storedMode;
 								hint "Done!";
 								sleep 2;
 								hintSilent "";

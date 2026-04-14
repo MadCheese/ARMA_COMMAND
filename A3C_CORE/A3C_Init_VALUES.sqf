@@ -335,7 +335,7 @@ A3C_HC_REM_INDICATOR = objNull;
 
 A3C_BOOL_DRAGLINE = false;
 
-A3C_HELI_INF_MODE = "INF";
+A3C_MAP_CommandMode = "INF";
 //A3C_VAL_SPACING = 4;
 
 
@@ -423,17 +423,17 @@ A3C_HUD_Snap = false;
 A3C_HUD_FORM = 0; // 0 = Line, 1 = L-Form
 A3C_HUD_SPACING = 2;
 A3C_SUPPRESSIONHEIGHT = 0;
-A3C_HUD_ARROW_TEXT_INDEX = 0;
+A3C_HUD_UnitIndicator_TEXT_INDEX = 0;
 A3C_HUD_RADIUS = 0;
 A3C_HUD_RADIUS_MIN = 0;
-A3C_HUD_ARROW_TEXTCOUNT = 1;
-A3C_HUD_ARROWINDEX = 1;
+A3C_HUD_UnitIndicator_TEXTCOUNT = 1;
+A3C_HUD_UnitIndicatorINDEX = 1;
 
 A3C_SCROLLTIME = time;
 A3C_FORMATION_DIR = [player,(screenToWorld [0.5,0.5])] call BIS_fnc_dirto;
 
 A3C_HUD_UNITS = [];
-A3C_HUD_ARROWS = [];
+A3C_HUD_UnitIndicators= [];
 A3C_DOWNKEYS = [];
 A3C_SPLIT_UNITS = [];
 A3C_TAKEN_WEAPONS = [];
@@ -473,7 +473,7 @@ A3C_MODIFIER_CTRL = false;
 A3C_MODIFIER_SHIFT = false; //-- not really a customizable modifier - just adding functionality to CT-TREE clicks
 A3C_MODIFIER_LOCK = false;
 A3C_MOUSEWHEEL_ACTIVE = false;
-A3C_HUD_ARROWS_IN_BUILDING = false;
+A3C_HUD_UnitIndicators_IN_BUILDING = false;
 A3C_360_out = true;
 A3C_BOOL_ROE_3 = false;
 

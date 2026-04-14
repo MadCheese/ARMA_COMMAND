@@ -18,7 +18,7 @@ class A3C_DSP_SettingsMenu
 	class Controls 
 	{
 		//-- HEADER
-		class A3C_DSP_SettingsMenu_HEADER: A3C_RscText
+		class HEADER: A3C_RscText
 		{
 			idc = -1;
 			text = "A3C - GLOBAL SETTINGS:"; 
@@ -28,7 +28,8 @@ class A3C_DSP_SettingsMenu
 			h = 2 * GUI_GRID_H;
 			SizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.8)";
 		};
-		class A3C_RscText_1001: A3C_RscText
+		//-- AI Skill Reset
+		class SKILL_TXT: A3C_RscText
 		{
 			idc = -1;
 			text = "AI-SKILL RESET:"; 
@@ -38,7 +39,20 @@ class A3C_DSP_SettingsMenu
 			w = 9 * GUI_GRID_W;
 			h = 2 * GUI_GRID_H;
 		};
-		class A3C_RscText_1002: A3C_RscText
+		class SKILL_BTN: A3C_RscButton_Function
+		{
+			idc = 100;
+			text = ""; 
+			tooltip = "BOOST AI-SKILL";
+			action = "['A3C_SKILL_VAR'] call A3C_UI_SettingsMenu_FNC_ChangeSettings";
+			sizeEx = 0.04;
+			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
+			y = 9 * GUI_GRID_H + GUI_GRID_Y;
+			w = 1.5 * GUI_GRID_W;
+			h = 1 * GUI_GRID_H;
+		};
+		//-- NUM Controls
+		class NUM_TXT: A3C_RscText
 		{
 			idc = -1;
 			text = "NUM-CONTROLS:"; 
@@ -48,7 +62,20 @@ class A3C_DSP_SettingsMenu
 			w = 9 * GUI_GRID_W;
 			h = 2 * GUI_GRID_H;
 		};
-		class A3C_RscText_1003: A3C_RscText
+		class NUM_BTN: A3C_RscButton_Function
+		{
+			idc = 101;
+			text = "";
+			tooltip = "TOGGLE NUMPAD FUNCTIONS";
+			action = "['A3C_NUM_VAR'] call A3C_SETTINGS";
+			sizeEx = 0.04;
+			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
+			y = 11.5 * GUI_GRID_H + GUI_GRID_Y;
+			w = 1.5 * GUI_GRID_W;
+			h = 1 * GUI_GRID_H;
+		};
+		//-- Auto Reset Hud
+		class HUD_RESET_TXT: A3C_RscText
 		{
 			idc = -1;
 			text = "AUTO RESET HUD:"; 
@@ -58,7 +85,20 @@ class A3C_DSP_SettingsMenu
 			w = 9 * GUI_GRID_W;
 			h = 2 * GUI_GRID_H;
 		};
-		class A3C_RscText_1004: A3C_RscText
+		class HUD_RESET_BTN: A3C_RscButton_Function
+		{
+			idc = 102;
+			text = ""; 
+			tooltip = "Reset HUD-formation to line when opening";
+			action = "['A3C_HUD_RES_VAR'] call A3C_UI_SettingsMenu_FNC_ChangeSettings";
+			sizeEx = 0.04;
+			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
+			y = 14 * GUI_GRID_H + GUI_GRID_Y;
+			w = 2 * GUI_GRID_W;
+			h = 1 * GUI_GRID_H;
+		};
+		//-- AI-RAIL
+		class AI_RAIL_TXT: A3C_RscText
 		{
 			idc = -1;
 			text = "AI RAIL:"; 
@@ -68,140 +108,84 @@ class A3C_DSP_SettingsMenu
 			w = 9 * GUI_GRID_W;
 			h = 2 * GUI_GRID_H;
 		};
-		class A3C_RscText_1005: A3C_RscText
+		class AI_RAIL_BTN: A3C_RscButton_Function
 		{
-			idc = -1;
-			text = "TABLET STYLE"; 
-			style = 0;
-			x = 14 * GUI_GRID_W + GUI_GRID_X;
-			y = 18.5 * GUI_GRID_H + GUI_GRID_Y;
-			w = 9 * GUI_GRID_W;
-			h = 2 * GUI_GRID_H;
-		};
-		class A3C_RscText_1006: A3C_RscText
-		{
-			idc = -1;
-			text = "HUD-CORNER-UI"; 
-			style = 0;
-			x = 14 * GUI_GRID_W + GUI_GRID_X;
-			y = 21 * GUI_GRID_H + GUI_GRID_Y;
-			w = 9 * GUI_GRID_W;
-			h = 2 * GUI_GRID_H;
-		};
-		class A3C_RscText_HUDOBJECTS: A3C_RscText
-		{
-			idc = -1;
-			text = "USE UNIT-HUD"; 
-			style = 0;
-			x = 14 * GUI_GRID_W + GUI_GRID_X;
-			y = 23 * GUI_GRID_H + GUI_GRID_Y;
-			w = 9 * GUI_GRID_W;
-			h = 2 * GUI_GRID_H;
-		};
-		class A3C_RscText_HCGROUP_ACTIONMODE: A3C_RscText
-		{
-			idc = -1;
-			text = "HC-CT-RESPONSE"; 
-			style = 0;
-			x = 14 * GUI_GRID_W + GUI_GRID_X;
-			y = 25 * GUI_GRID_H + GUI_GRID_Y;
-			w = 9 * GUI_GRID_W;
-			h = 2 * GUI_GRID_H;
-		};
-
-		class Switch_Skill: A3C_RscButton_Function
-		{
-			idc = 1600;
-			text = ""; 
-			tooltip = "BOOST AI-SKILL";
-			action = "['A3C_SKILL_VAR'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
-			sizeEx = 0.04;
-			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
-			y = 9 * GUI_GRID_H + GUI_GRID_Y;
-			w = 1.5 * GUI_GRID_W;
-			h = 1 * GUI_GRID_H;
-		};
-		class Switch_NUM: A3C_RscButton_Function
-		{
-			idc = 1601;
-			text = ""; 
-			tooltip = "TOGGLE NUMPAD FUNCTIONS";
-			action = "['A3C_NUM_VAR'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
-			sizeEx = 0.04;
-			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
-			y = 11.5 * GUI_GRID_H + GUI_GRID_Y;
-			w = 1.5 * GUI_GRID_W;
-			h = 1 * GUI_GRID_H;
-		};
-		class switch_sup: A3C_RscButton_Function
-		{
-			idc = 1602;
-			text = ""; 
-			tooltip = "Reset HUD-formation to line when opening";
-			action = "['A3C_HUD_RES_VAR'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
-			sizeEx = 0.04;
-			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
-			y = 14 * GUI_GRID_H + GUI_GRID_Y;
-			w = 2 * GUI_GRID_W;
-			h = 1 * GUI_GRID_H;
-		};
-		class switch_RAIL: A3C_RscButton_Function
-		{
-			idc = 1603;
+			idc = 103;
 			text = ""; 
 			tooltip = "Final 'railing' towards destination (experimental)";
-			action = "['A3C_FORCERAIL_VAR'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
+			action = "['A3C_FORCERAIL_VAR'] call A3C_UI_SettingsMenu_FNC_ChangeSettings";
 			sizeEx = 0.04;
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 16.5 * GUI_GRID_H + GUI_GRID_Y;
 			w = 2 * GUI_GRID_W;
 			h = 1 * GUI_GRID_H;
 		};
-		class switch_TAB_IMG: A3C_RscButton_Function
+		//-- HUD UI: NORMAL / CORNER
+		class HUD_MENU_STYLE_TXT: A3C_RscText
 		{
-			idc = 1604;
+			idc = -1;
+			text = "HUD-CORNER-UI"; 
+			style = 0;
+			x = 14 * GUI_GRID_W + GUI_GRID_X;
+			y = 18.5 * GUI_GRID_H + GUI_GRID_Y;
+			w = 9 * GUI_GRID_W;
+			h = 2 * GUI_GRID_H;
+		};
+		class HUD_MENU_STYLE_BTN: A3C_RscButton_Function
+		{
+			idc = 104;
 			text = ""; 
-			tooltip = "select tablet style";
-			action = "[] call A3C_SwitchTabletImage";
-			sizeEx = 0.02;
+			tooltip = "select HUD layout";
+			action = "['A3C_HUD_LAYOUT_CORNER'] call A3C_UI_SettingsMenu_FNC_ChangeSettings";
+			sizeEx = 0.04;
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 19 * GUI_GRID_H + GUI_GRID_Y;
 			w = 2 * GUI_GRID_W;
 			h = 1 * GUI_GRID_H;
 		};
-		class switch_HUD_UI: A3C_RscButton_Function
+		//-- HUD-INDICATORS: UNIT OR DISK
+		class HUD_OBJ_STYLE_TXT: A3C_RscText
 		{
-			idc = 1605;
+			idc = -1;
+			text = "USE UNIT-HUD"; 
+			style = 0;
+			x = 14 * GUI_GRID_W + GUI_GRID_X;
+			y = 21 * GUI_GRID_H + GUI_GRID_Y;
+			w = 9 * GUI_GRID_W;
+			h = 2 * GUI_GRID_H;
+		};
+		class HUD_OBJ_STYLE_BTN: A3C_RscButton_Function
+		{
+			idc = 105;
 			text = ""; 
-			tooltip = "select HUD layout";
-			action = "['A3C_HUD_LAYOUT_CORNER'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
+			tooltip = "select HUD objects (OFF: indicators, ON: units)";
+			action = "['A3C_HUD_OBJECTS'] call A3C_UI_SettingsMenu_FNC_ChangeSettings";
 			sizeEx = 0.04;
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 21.5 * GUI_GRID_H + GUI_GRID_Y;
 			w = 2 * GUI_GRID_W;
 			h = 1 * GUI_GRID_H;
 		};
-		class switch_HUD_Objects: A3C_RscButton_Function
+		//-- HC-GP Menu (Map) : Immediate response or manual confirm
+		class HC_GP_MENU_RESPONSE_TXT: A3C_RscText
 		{
-			idc = 1606;
+			idc = -1;
+			text = "HC-CT-RESPONSE"; 
+			style = 0;
+			x = 14 * GUI_GRID_W + GUI_GRID_X;
+			y = 23 * GUI_GRID_H + GUI_GRID_Y;
+			w = 9 * GUI_GRID_W;
+			h = 2 * GUI_GRID_H;
+		};
+		class HC_GP_MENU_RESPONSE_BTN: A3C_RscButton_Function
+		{
+			idc = 106;
 			text = ""; 
-			tooltip = "select HUD objects (OFF: indicators, ON: units)";
-			action = "['A3C_HUD_OBJECTS'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
+			tooltip = "HC-Group Menu Response (OFF: CONFIRM, ON: IMMEDIATE)";
+			action = "['HC_GROUP_RESPONSE'] call A3C_UI_SettingsMenu_FNC_ChangeSettings";
 			sizeEx = 0.04;
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 23.5 * GUI_GRID_H + GUI_GRID_Y;
-			w = 2 * GUI_GRID_W;
-			h = 1 * GUI_GRID_H;
-		};
-		class switch_HCGROUP_ACTIONMODE: A3C_RscButton_Function
-		{
-			idc = 1607;
-			text = ""; 
-			tooltip = "HC-Group Menu Response (OFF: CONFIRM, ON: IMMEDIATE)";
-			action = "['HC_GROUP_RESPONSE'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
-			sizeEx = 0.04;
-			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
-			y = 25.5 * GUI_GRID_H + GUI_GRID_Y;
 			w = 2 * GUI_GRID_W;
 			h = 1 * GUI_GRID_H;
 

@@ -503,7 +503,7 @@ A3C_GREN_VISUAL_1 = {
 	params ["_muzzle","_mode","_doChange"];
 systemchat 'visual';
 	_display = if (visibleMap) then {100020} else {100030};
-	if (A3C_HELI_INF_MODE == "HC") exitWith {};
+	if (A3C_MAP_CommandMode == "HC") exitWith {};
 	if (_mode == 0) then {
 		if (count A3C_AI_GREN_ARRAY > 0) then {
 			((findDisplay 100040) displayCtrl 9015) ctrlSetText (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "picture"));

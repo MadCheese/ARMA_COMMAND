@@ -1218,7 +1218,7 @@ A3C_GET_KEY_BOOL = {
 	};
 
 	if ( ([_key] + [_modifiers]) isEqualTo (profileNameSpace getVariable "A3C_ORDER_REG_KEY_ID") ) then {
-		if (count A3C_HUD_ARROWS > 0 ) then {
+		if (count A3C_HUD_UnitIndicators> 0 ) then {
 			_return = true;
 			[false,false] spawn A3C_Setorder_HUD;
 
@@ -1229,7 +1229,7 @@ A3C_GET_KEY_BOOL = {
 		};
 	};
 	if ( ([_key] + [_modifiers]) isEqualTo (profileNameSpace getVariable "A3C_ORDER_FW_KEY_ID") ) then {
-		if (count A3C_HUD_ARROWS > 0 ) then {
+		if (count A3C_HUD_UnitIndicators> 0 ) then {
 			_return = true;
 			[false,true] spawn A3C_Setorder_HUD;
 			//systemchat 'fwd';
@@ -1238,7 +1238,7 @@ A3C_GET_KEY_BOOL = {
 	};
 	if ( ([_key] + [_modifiers]) isEqualTo (profileNameSpace getVariable "A3C_ORDER_BW_KEY_ID") ) then {
 
-		if (count A3C_HUD_ARROWS > 0 ) then {
+		if (count A3C_HUD_UnitIndicators> 0 ) then {
 			//systemchat 'bwd';
 			[true,false] spawn A3C_Setorder_HUD;
 		};
@@ -1288,12 +1288,12 @@ A3C_UI_HUD_HandlerFNC_KeyDown = {
 								nul = [100020] execVM "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_OpenOverlay.sqf";
 								if (count units player > 0) then {
 									if (({(_x == (driver vehicle _x)) && {typeOf (vehicle _x) iskindOf "AIR"}} count (units player - [player])) >= ((count (units player - [player])) / 2)) then {
-										A3C_HELI_INF_MODE = "AIR";
+										A3C_MAP_CommandMode = "AIR";
 									} else {
-										A3C_HELI_INF_MODE = "INF";
+										A3C_MAP_CommandMode = "INF";
 									};
 								} else {
-									A3C_HELI_INF_MODE = "HC";
+									A3C_MAP_CommandMode = "HC";
 								};
 								A3C_SELECTED_UNITS = [];
 							};
@@ -1683,7 +1683,7 @@ A3C_UI_HUD_HandlerFNC_MouseButtonDown = {
 			//systemchat "remove from select";
 
 			if !(A3C_MODIFIER_CTRL) then {
-				if ((count A3C_HUD_ARROWS) > 0) then {
+				if ((count A3C_HUD_UnitIndicators) > 0) then {
 					{[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS;
 					//systemchat "cancelled";
 				};
@@ -1763,7 +1763,7 @@ A3C_Setorder_HUD = {
 		A3C_PEELING = true;
 	};
 
-	_storeData = [_storeData,[],{(_x select 0) distance (A3C_HUD_ARROWS select 0)},_runningOrder] call BIS_fnc_sortBy;
+	_storeData = [_storeData,[],{(_x select 0) distance (A3C_HUD_UnitIndicators select 0)},_runningOrder] call BIS_fnc_sortBy;
 	{_movingUnits pushback (_x select 0)} foreach _storeData;
 
 	
@@ -1774,14 +1774,14 @@ A3C_Setorder_HUD = {
 	if (profilenamespace getvariable ['A3C_HUD_MENUOVERRIDE_VAR',true]) then {
 		//-- hide UI 
 		terminate A3C_HUD_L; //-- terminate positioning loop
-		{deletevehicle _x} foreach A3C_HUD_ARROWS;
+		{deletevehicle _x} foreach A3C_HUD_UnitIndicators;
 		{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];
 		A3C_HUD_UNITS = [];
-		A3C_HUD_ARROWS = [];
+		A3C_HUD_UnitIndicators= [];
 		//['A3C_HUD_ICONS', "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
 		("A3C_HUD_MENU_UI" call BIS_fnc_rscLayer) cutText ["","PLAIN"];
 		profileNamespace setVariable ['A3C_HUD_isOpen',false];
-		{_x hideobject true} foreach A3C_HUD_ARROWS;
+		{_x hideobject true} foreach A3C_HUD_UnitIndicators;
 		{_x setvariable ["A3C_HUD_DATA",[],true]} foreach A3C_HUD_UNITS;
 		
 	} else {
@@ -1795,7 +1795,7 @@ A3C_Setorder_HUD = {
 					sleep 0.1;
 				};
 			};
-		} foreach A3C_HUD_ARROWS;
+		} foreach A3C_HUD_UnitIndicators;
 	};
 
 	
@@ -1926,7 +1926,7 @@ A3C_UI_HUD_HandlerFNC_MouseZChanged = {
 		};
 	} foreach [A3C_SUPPRESSION_INDICATOR,A3C_SQ_REM_INDICATOR,A3C_HC_REM_INDICATOR];
 	if (_exit) exitWith {true};
-	if ((count A3C_HUD_ARROWS) == 0 && {isNull A3C_OBJECTPLACER}) exitwith {false};
+	if ((count A3C_HUD_UnitIndicators) == 0 && {isNull A3C_OBJECTPLACER}) exitwith {false};
 
 	if ( A3C_MODIFIER_CTRL) exitWith {
 		if (A3C_HUD_FORM == 7) then {

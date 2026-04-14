@@ -4663,7 +4663,7 @@ A3C_HC_UnassembleWeapon = {
 							(findDisplay 100060) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL1];
 
 
-							if ((count A3C_HUD_ARROWS) > 0) then {
+							if ((count A3C_HUD_UnitIndicators) > 0) then {
 								{inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];
 							} else {
 								{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];
@@ -4877,7 +4877,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 							_CT_TREE tvSetText [_button, _ctrlText];
 						};
 					};
-					if (A3C_HELI_INF_MODE == "HC") then {
+					if (A3C_MAP_CommandMode == "HC") then {
 						["HC"] call A3C_START_TABMODE;
 					};
 				};
@@ -5099,7 +5099,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 			} foreach units _newGroup;
 			private _lV = objNull;
 			systemchat "A3C: New convoy group created";
-			A3C_HELI_INF_MODE = "HC";
+			A3C_MAP_CommandMode = "HC";
 			A3C_SELECTED_UNITS = [_newGroup];
 			["HC"] call A3C_START_TABMODE; //-- refresh table if open
 			A3C_SELECTED_HC_GROUPS_SETTINGS = [];

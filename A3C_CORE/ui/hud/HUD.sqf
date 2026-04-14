@@ -172,7 +172,7 @@ A3C_HUD_SETSTANCE = {
 			};
 		} foreach (units player - [player]);
 
-	} foreach A3C_HUD_ARROWS;
+	} foreach A3C_HUD_UnitIndicators;
 };
 
 {[_x] call A3C_HUD_SETSTANCE} foreach [0,1];
@@ -215,7 +215,7 @@ A3C_SWITCHSTANCE = {
 	player groupRadio _stmnt;
 	//if !(_snt == "") then {player  _snt};
 };
-//(A3C_HUD_ARROWS select 0)
+//(A3C_HUD_UnitIndicators select 0)
 //screenToWorld [0.4,0.4]
 A3C_DRAW_3D_ICONS = { //-- no longer used, replaced with drawHudUI
 	/*
@@ -335,24 +335,24 @@ A3C_HUD_ADD_SELECTED = {
 	[
 		"
 
-			A3C_HUD_ARROW_%1 = A3C_HUD_OBJECT_TYPE createVehicleLocal (position %2);
-			A3C_HUD_ARROW_%1 disableCollisionWith %6;
-			%6 disableCollisionWith A3C_HUD_ARROW_%1;
-			A3C_HUD_ARROW_%1 enableSimulation false;
+			A3C_HUD_UnitIndicator_%1 = A3C_HUD_OBJECT_TYPE createVehicleLocal (position %2);
+			A3C_HUD_UnitIndicator_%1 disableCollisionWith %6;
+			%6 disableCollisionWith A3C_HUD_UnitIndicator_%1;
+			A3C_HUD_UnitIndicator_%1 enableSimulation false;
 			if (profileNameSpace getVariable ['A3C_HUD_OBJECTS',false]) then {
-				A3C_HUD_ARROW_%1 addWeapon (primaryWeapon %2);
-				A3C_HUD_ARROW_%1 addWeapon (secondaryWeapon %2);
-				A3C_HUD_ARROW_%1 addBackPack (backPack %2);
-				A3C_HUD_ARROW_%1 addHeadgear (headgear %2);
-				A3C_HUD_ARROW_%1 addVest (vest %2);
-				[A3C_HUD_ARROW_%1,%2] call A3C_HUD_OBJECT_SWITCHSTANCE;
-				A3C_HUD_ARROW_%1 disableCollisionWith cameraOn;
+				A3C_HUD_UnitIndicator_%1 addWeapon (primaryWeapon %2);
+				A3C_HUD_UnitIndicator_%1 addWeapon (secondaryWeapon %2);
+				A3C_HUD_UnitIndicator_%1 addBackPack (backPack %2);
+				A3C_HUD_UnitIndicator_%1 addHeadgear (headgear %2);
+				A3C_HUD_UnitIndicator_%1 addVest (vest %2);
+				[A3C_HUD_UnitIndicator_%1,%2] call A3C_HUD_OBJECT_SWITCHSTANCE;
+				A3C_HUD_UnitIndicator_%1 disableCollisionWith cameraOn;
 			};
-			A3C_HUD_ARROW_%1 allowDamage false;
+			A3C_HUD_UnitIndicator_%1 allowDamage false;
 
-			A3C_HUD_ARROW_%1 setvariable ['A3C_ARROW_BPOS',[0,0],true];
-			A3C_HUD_ARROWS pushback A3C_HUD_ARROW_%1;
-			%2 setvariable ['A3C_HUD_DATA',[A3C_HUD_ARROW_%1,'%4'],true];
+			A3C_HUD_UnitIndicator_%1 setvariable ['A3C_ARROW_BPOS',[0,0],true];
+			A3C_HUD_UnitIndicators pushback A3C_HUD_UnitIndicator_%1;
+			%2 setvariable ['A3C_HUD_DATA',[A3C_HUD_UnitIndicator_%1,'%4'],true];
 			if ((count A3C_HUD_UNITS) == 1) then {
 				if (profileNameSpace getVariable 'A3C_HUD_RES_VAR') then {
 					private _p1 = AGLToASL positionCameraToWorld [0,0,0];
@@ -363,22 +363,22 @@ A3C_HUD_ADD_SELECTED = {
 					[0] call A3C_UI_HUD_FORM_BUTTON;
 				};
 				if (A3C_HUD_OBJECT_TYPE == 'MCSS_ASM_INDICATOR_F') then {
-					A3C_HUD_ARROW_%1 setObjectTextureGlobal[0,'#(argb,8,8,3)color(0,1,0,0.1)'];
+					A3C_HUD_UnitIndicator_%1 setObjectTextureGlobal[0,'#(argb,8,8,3)color(0,1,0,0.1)'];
 				};
 
 
 			} else {
 				if (A3C_HUD_OBJECT_TYPE == 'MCSS_ASM_INDICATOR_F') then {
-					A3C_HUD_ARROW_%1 setObjectTextureGlobal[0,'#(argb,8,8,3)color(0.9,0.8,0,0.1)'];
+					A3C_HUD_UnitIndicator_%1 setObjectTextureGlobal[0,'#(argb,8,8,3)color(0.9,0.8,0,0.1)'];
 				};
 
 			};
 
 		",
-		A3C_HUD_ARROWINDEX,
+		A3C_HUD_UnitIndicatorINDEX,
 		_unit,
 		_btn,
-		A3C_HUD_ARROW_TEXTCOUNT,
+		A3C_HUD_UnitIndicator_TEXTCOUNT,
 		(_unit getvariable 'A3C_FORMATION_INDEX'),
 		_camVic
 	];
@@ -398,8 +398,8 @@ A3C_HUD_ADD_SELECTED = {
 
 
 	};
-	A3C_HUD_ARROW_TEXTCOUNT = A3C_HUD_ARROW_TEXTCOUNT + 1;
-	A3C_HUD_ARROWINDEX = A3C_HUD_ARROWINDEX + 1;
+	A3C_HUD_UnitIndicator_TEXTCOUNT = A3C_HUD_UnitIndicator_TEXTCOUNT + 1;
+	A3C_HUD_UnitIndicatorINDEX = A3C_HUD_UnitIndicatorINDEX + 1;
 };
 
 A3C_HUD_OPEN_MENU = {
@@ -498,7 +498,7 @@ A3C_HUD_REMOVE_SELECTED = {
 	private _hudData = (_unit getvariable 'A3C_HUD_DATA');
 	_hudData params ["_indicator"];
 	deletevehicle _indicator;
-	A3C_HUD_ARROWS = A3C_HUD_ARROWS - [_indicator];
+	A3C_HUD_UnitIndicators= A3C_HUD_UnitIndicators- [_indicator];
 	A3C_HUD_UNITS = A3C_HUD_UNITS - [_unit];
 	_unit setvariable ["A3C_HUD_DATA",[],true];
 
@@ -549,7 +549,7 @@ A3C_HUD_SNAP_FORMATION = {
 	private _objectDir = getDir _object;
 	private _directionOption1 = [_normalDirAZM + 90] call MCSS_fnc_CorrectDir; //+ A3C_HUD_Snap_DIR
 	private _directionOption2 = [_directionOption1 + 180] call MCSS_fnc_CorrectDir;
-	private _endUnitSpacingCount = count A3C_HUD_ARROWS;
+	private _endUnitSpacingCount = count A3C_HUD_UnitIndicators;
 	_endUnitSpacingCount = switch (true) do {
 		case (A3C_HUD_FORM in [0,1,2,8]) : {_endUnitSpacingCount};
 		case (A3C_HUD_FORM in [3,4]) : {(ceil (_endUnitSpacingCount/2)) + 1};
@@ -572,7 +572,7 @@ A3C_HUD_SNAP_FORMATION = {
 		params ["_object","_cursorPos","_objectHeight","_testDir","_endUnitSpacingCount","_watchOverDir","_excludeObjects","_mode"];
 		private _allCovered = [true,0];
 		_objectHeight = _objectHeight min 2;
-		private _refPos = (getposASL (A3C_HUD_ARROWS select 0)) vectorAdd [0,0,0.5]; //_objectHeight
+		private _refPos = (getposASL (A3C_HUD_UnitIndicators select 0)) vectorAdd [0,0,0.5]; //_objectHeight
 		if (_mode != 0) then {
 			_refPos = _refPos vectorAdd [0,0,0.2];
 		};
@@ -638,7 +638,7 @@ A3C_HUD_SNAP_FORMATION = {
 
 	//-- Finally repeaat above priority 1 check to flip formation if direction intersects with building
 
-	_refPos = (getposASL (A3C_HUD_ARROWS select 0)) vectorAdd [0,0,_objectHeight];
+	_refPos = (getposASL (A3C_HUD_UnitIndicators select 0)) vectorAdd [0,0,_objectHeight];
 
 	_ins = lineIntersectsSurfaces [
 		_refPos,
@@ -755,7 +755,7 @@ A3C_HUD_SNAP_FORMATION = {
 		//-- we need to subtract 2 as we were currently scanning ahead of the formation and exclude the leader
 		_endUnitSpacingCount = _endUnitSpacingCount - 2; 
 		private _testDir = [_A3C_FORMATION_DIR + 180] call MCSS_fnc_CorrectDir;
-		_refPos = (getposASL (A3C_HUD_ARROWS select 0)) vectorAdd [0,0,_objectHeight];
+		_refPos = (getposASL (A3C_HUD_UnitIndicators select 0)) vectorAdd [0,0,_objectHeight];
 		private _refPos1 = 
 		[
 			_refPos,
@@ -833,20 +833,20 @@ A3C_HUD_LOOP = {
 	A3C_HUD_TRAVEL_DIR = 0;
 	A3C_HUD_CHECKPOS = A3C_HUD_POS_PAST;
 	{inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];
-	while {(count A3C_HUD_ARROWS) > 0} do {
+	while {(count A3C_HUD_UnitIndicators) > 0} do {
 		_useCursorPos = true;
 		_exit = false;
 		_aimingHeight = 0;
 		A3C_HUD_COLLIDER = objnull;
-		if ((count A3C_HUD_ARROWS) == 0) exitwith {};
-		private _excludeObjects = nearestTerrainObjects [position (A3C_HUD_ARROWS select 0), ["BUSH"], (count A3C_HUD_ARROWS) * A3C_HUD_SPACING];
+		if ((count A3C_HUD_UnitIndicators) == 0) exitwith {};
+		private _excludeObjects = nearestTerrainObjects [position (A3C_HUD_UnitIndicators select 0), ["BUSH"], (count A3C_HUD_UnitIndicators) * A3C_HUD_SPACING];
 		//hintsilent str _excludeObjects;
 		if !(A3C_MODIFIER_LOCK) then {
 			//////~~~~~~ THIS WHOLE THING IS A MESS, STRUCTURE THE LINEINTERSECTSSURFACES COMMANDS AND USE AIMPOS /AIMINGHEIGHT ACCORDINGLY
 			_objectCollision = lineIntersectsSurfaces [AGLToASL positionCameraToWorld [0,0,0],AGLToASL positionCameraToWorld [0,0,viewDistance],vehicle player,objNull,true,-1,"GEOM","NONE"];
 			_objectCollision = _objectCollision select {
 				private _obj = _x select 2;
-				!(_obj in (_excludeObjects + A3C_HUD_ARROWS))
+				!(_obj in (_excludeObjects + A3C_HUD_UnitIndicators))
 			};
 
 			//hintSilent str (_objectCollision);
@@ -872,7 +872,7 @@ A3C_HUD_LOOP = {
 								_useCursorPos = true;
 							} else {
 								_useCursorPos = false;
-								A3C_HUD_ARROWS_IN_BUILDING = true;
+								A3C_HUD_UnitIndicators_IN_BUILDING = true;
 
 								[cursorTarget,_aimPos] call A3C_HUD_CREATEFORMATION_BUILDING;
 							};
@@ -884,11 +884,11 @@ A3C_HUD_LOOP = {
 				};
 			};
 			if (_useCursorPos) then {
-				A3C_HUD_ARROWS_IN_BUILDING = false;
-				(A3C_HUD_ARROWS select 0) setdir ([(A3C_FORMATION_DIR + 180)] call MCSS_fnc_CorrectDir);
+				A3C_HUD_UnitIndicators_IN_BUILDING = false;
+				(A3C_HUD_UnitIndicators select 0) setdir ([(A3C_FORMATION_DIR + 180)] call MCSS_fnc_CorrectDir);
 				{
 					_x setvariable ['A3C_ARROW_BPOS',[0,0],true];
-				} foreach A3C_HUD_ARROWS;
+				} foreach A3C_HUD_UnitIndicators;
 				//-- default: player looking in the open, sensor searches for Objects
 				if !(A3C_MODIFIER_LOCK) then {
 					//-- Security Deadzone for object sensor
@@ -898,19 +898,19 @@ A3C_HUD_LOOP = {
 
 					};
 					A3C_HUD_POS_PAST = (screenToWorld [0.5,0.5]);
-			////		_objectCollision = lineIntersectsSurfaces [AGLToASL positionCameraToWorld [0,0,0],AGLToASL positionCameraToWorld [0,0,viewDistance],vehicle player,(A3C_HUD_ARROWS select 0),true,1,"GEOM","NONE"];
+			////		_objectCollision = lineIntersectsSurfaces [AGLToASL positionCameraToWorld [0,0,0],AGLToASL positionCameraToWorld [0,0,viewDistance],vehicle player,(A3C_HUD_UnitIndicators select 0),true,1,"GEOM","NONE"];
 					
 					A3C_HUD_COLLIDER = (_objectCollision select 0) select 2;
 					if (!isnil 'A3C_HUD_COLLIDER' && {!isnull A3C_HUD_COLLIDER && {speed A3C_HUD_COLLIDER < 0.2}}) then {
 						A3C_HUD_Snap_DIR = 0;
 						A3C_HUD_Snap = true;
 						A3C_HUD_FormDir_Old = A3C_FORMATION_DIR;
-						while {(count A3C_HUD_ARROWS) > 0} do {
-							private _excludeObjects = nearestTerrainObjects [position (A3C_HUD_ARROWS select 0), ["BUSH"], (count A3C_HUD_ARROWS) * A3C_HUD_SPACING];
+						while {(count A3C_HUD_UnitIndicators) > 0} do {
+							private _excludeObjects = nearestTerrainObjects [position (A3C_HUD_UnitIndicators select 0), ["BUSH"], (count A3C_HUD_UnitIndicators) * A3C_HUD_SPACING];
 							_objectCollision = lineIntersectsSurfaces [AGLToASL positionCameraToWorld [0,0,0],AGLToASL positionCameraToWorld [0,0,viewDistance],vehicle player,objNull,true,-1,"GEOM","NONE"];
 							_objectCollision = _objectCollision select {
 								private _obj = _x select 2;
-								!(_obj in (_excludeObjects + A3C_HUD_ARROWS))
+								!(_obj in (_excludeObjects + A3C_HUD_UnitIndicators))
 
 							};
 							if (count _objectCollision > 0) then {
@@ -942,7 +942,7 @@ A3C_HUD_LOOP = {
 
 
 							[] call A3C_HUD_Orient_Indicators;
-							//_arrowASL = (getposASL (A3C_HUD_ARROWS select 0));
+							//_arrowASL = (getposASL (A3C_HUD_UnitIndicators select 0));
 
 							if ((count _objectCollision) == 0) then {_exit = true};
 							if (!isNil 'A3C_HUD_COLLIDER' && {speed A3C_HUD_COLLIDER > 1}) then {_exit = true};
@@ -994,13 +994,13 @@ A3C_HUD_LOOP = {
 					_objectCollision= [];
 				};
 			};
-			//if ((count A3C_HUD_ARROWS) > 0) then {
+			//if ((count A3C_HUD_UnitIndicators) > 0) then {
 				[] call A3C_HUD_Orient_Indicators;
 
 			//};
 			sleep 0.05;
 		} else {
-			if !(A3C_HUD_ARROWS_IN_BUILDING) then {
+			if !(A3C_HUD_UnitIndicators_IN_BUILDING) then {
 				[(screenToWorld [0.5,0.5])] call A3C_HUD_CREATEFORMATION;
 			};
 		};
@@ -1155,12 +1155,12 @@ A3C_HUD_Orient_Indicators = {
 
 	//-- rotate UI icon
 	if !(A3C_HUD_FORM in [7,8]) then {
-		if (count A3C_HUD_ARROWS > 0) then {
+		if (count A3C_HUD_UnitIndicators> 0) then {
 			//_relPos =
 			//[
-			//	A3C_HUD_ARROWS select 0,
+			//	A3C_HUD_UnitIndicators select 0,
 			//	50000,
-			//	A3C_FORMATION_DIR //([(getDir (A3C_HUD_ARROWS select 0)) + 90] call MCSS_fnc_CorrectDir)
+			//	A3C_FORMATION_DIR //([(getDir (A3C_HUD_UnitIndicators select 0)) + 90] call MCSS_fnc_CorrectDir)
 			//] call BIS_fnc_relPos;
 			//_relDir = (cameraon getRelDir _relPos); // - 90;
 			private _p1 = AGLToASL positionCameraToWorld [0,0,0];
@@ -1171,7 +1171,7 @@ A3C_HUD_Orient_Indicators = {
 			};
 			private _relDir = [A3C_FORMATION_DIR + 180 - _playerDir] call MCSS_fnc_CorrectDir;
 			//systemchat str [_playerDir,_relDir];
-			//_rela = ([] call BIS_fnc_dirTo) - (getDir (A3C_HUD_ARROWS select 0)) ;
+			//_rela = ([] call BIS_fnc_dirTo) - (getDir (A3C_HUD_UnitIndicators select 0)) ;
 			//if (_relDir > 180) then {_relDir = (360 - _relDir) * -1};
 			//hint str _reldir;
 			((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 12) ctrlSetAngle [_relDir, 0.5, 0.5];
@@ -1191,85 +1191,85 @@ A3C_HUD_CREATEFORMATION = {
 	private ["_cursorPos","_offset","_amount"];
 	_cursorPos = _this select 0;
 	if (A3C_MODIFIER_LOCK) then {
-		_cursorPos = (position (A3C_HUD_ARROWS select 0));
+		_cursorPos = (position (A3C_HUD_UnitIndicators select 0));
 	};
 	_offset = A3C_HUD_SPACING;
-	_amount = count A3C_HUD_ARROWS;
+	_amount = count A3C_HUD_UnitIndicators;
 	_watchdir = ((A3C_FORMATION_DIR + A3C_NUM_DIR) + 180);
 	_dirParams = 0;
 	_switchMode = 0;
 	switch (A3C_HUD_FORM) do {
 		case (0) : {
 			//-- Line Formation Right
-			for "_i" from 0 to ((count A3C_HUD_ARROWS) -1) do {
-				if (_i < (count A3C_HUD_ARROWS)) then {
+			for "_i" from 0 to ((count A3C_HUD_UnitIndicators) -1) do {
+				if (_i < (count A3C_HUD_UnitIndicators)) then {
 					if (_i == 0) then {
-						(A3C_HUD_ARROWS select _i) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
+						(A3C_HUD_UnitIndicators select _i) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
 					} else {
-						(A3C_HUD_ARROWS select _i) setpos ([(A3C_HUD_ARROWS select 0), (_offset * _i), (A3C_FORMATION_DIR + A3C_NUM_DIR)] call BIS_fnc_relPos);
-						//(A3C_HUD_ARROWS select _i) setpos ((A3C_HUD_ARROWS select 0) getRelPos [(_offset * _i),(A3C_FORMATION_DIR + A3C_NUM_DIR)]);
+						(A3C_HUD_UnitIndicators select _i) setpos ([(A3C_HUD_UnitIndicators select 0), (_offset * _i), (A3C_FORMATION_DIR + A3C_NUM_DIR)] call BIS_fnc_relPos);
+						//(A3C_HUD_UnitIndicators select _i) setpos ((A3C_HUD_UnitIndicators select 0) getRelPos [(_offset * _i),(A3C_FORMATION_DIR + A3C_NUM_DIR)]);
 					};
 				};
 			};
 		};
 		case (1) : {
 			//-- Line Formation Left
-			for "_i" from 0 to ((count A3C_HUD_ARROWS) -1) do {
-				if (_i < (count A3C_HUD_ARROWS)) then {
+			for "_i" from 0 to ((count A3C_HUD_UnitIndicators) -1) do {
+				if (_i < (count A3C_HUD_UnitIndicators)) then {
 					if (_i == 0) then {
-						(A3C_HUD_ARROWS select _i) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
+						(A3C_HUD_UnitIndicators select _i) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
 					} else {
-						(A3C_HUD_ARROWS select _i) setpos ([(A3C_HUD_ARROWS select 0), (_offset * _i), (A3C_FORMATION_DIR + A3C_NUM_DIR)] call BIS_fnc_relPos);
-						//(A3C_HUD_ARROWS select _i) setpos ((A3C_HUD_ARROWS select 0) getRelPos [(_offset * _i),(A3C_FORMATION_DIR + A3C_NUM_DIR)]);
+						(A3C_HUD_UnitIndicators select _i) setpos ([(A3C_HUD_UnitIndicators select 0), (_offset * _i), (A3C_FORMATION_DIR + A3C_NUM_DIR)] call BIS_fnc_relPos);
+						//(A3C_HUD_UnitIndicators select _i) setpos ((A3C_HUD_UnitIndicators select 0) getRelPos [(_offset * _i),(A3C_FORMATION_DIR + A3C_NUM_DIR)]);
 					};
 				};
 			};
 		};
 		//-- Line Front
 		case (2) : {
-			for "_i" from 0 to ((count A3C_HUD_ARROWS) -1) do {
-				if (_i < (count A3C_HUD_ARROWS)) then {
+			for "_i" from 0 to ((count A3C_HUD_UnitIndicators) -1) do {
+				if (_i < (count A3C_HUD_UnitIndicators)) then {
 					if (_i == 0) then {
-						(A3C_HUD_ARROWS select _i) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
+						(A3C_HUD_UnitIndicators select _i) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
 					} else {
-						(A3C_HUD_ARROWS select _i) setpos ([(A3C_HUD_ARROWS select 0), (_offset * _i), (A3C_FORMATION_DIR + A3C_NUM_DIR)] call BIS_fnc_relPos);
-						//(A3C_HUD_ARROWS select _i) setpos ((A3C_HUD_ARROWS select 0) getRelPos [(_offset * _i),(A3C_FORMATION_DIR + A3C_NUM_DIR)]);
+						(A3C_HUD_UnitIndicators select _i) setpos ([(A3C_HUD_UnitIndicators select 0), (_offset * _i), (A3C_FORMATION_DIR + A3C_NUM_DIR)] call BIS_fnc_relPos);
+						//(A3C_HUD_UnitIndicators select _i) setpos ((A3C_HUD_UnitIndicators select 0) getRelPos [(_offset * _i),(A3C_FORMATION_DIR + A3C_NUM_DIR)]);
 					};
 				};
 			};
 		};
 		case (3) : {
 			//-- L Formation Right
-			(A3C_HUD_ARROWS select 0) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
+			(A3C_HUD_UnitIndicators select 0) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
 			for "_i" from 1 to (_amount - 1) do {
-				if (_i < (count A3C_HUD_ARROWS)) then {
+				if (_i < (count A3C_HUD_UnitIndicators)) then {
 					if (_i >= (_amount /2)) then {_dirParams = ((A3C_FORMATION_DIR + A3C_NUM_DIR) - 90)} else {_dirParams = ((A3C_FORMATION_DIR + A3C_NUM_DIR))};
-					(A3C_HUD_ARROWS select _i) setpos ([(A3C_HUD_ARROWS select (_i - 1)), (_offset * 1), _dirParams] call BIS_fnc_relPos);
+					(A3C_HUD_UnitIndicators select _i) setpos ([(A3C_HUD_UnitIndicators select (_i - 1)), (_offset * 1), _dirParams] call BIS_fnc_relPos);
 				};
 			};
 		};
 		case (4) : {
 			//-- L Formation Left
-			(A3C_HUD_ARROWS select 0) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
+			(A3C_HUD_UnitIndicators select 0) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
 			for "_i" from 1 to (_amount - 1) do {
-				if (_i < (count A3C_HUD_ARROWS)) then {
+				if (_i < (count A3C_HUD_UnitIndicators)) then {
 					if (_i >= (_amount /2)) then {_dirParams = ((A3C_FORMATION_DIR + A3C_NUM_DIR) + 90)} else {_dirParams = ((A3C_FORMATION_DIR + A3C_NUM_DIR))};
-					(A3C_HUD_ARROWS select _i) setpos ([(A3C_HUD_ARROWS select (_i - 1)), (_offset * 1), _dirParams] call BIS_fnc_relPos);
+					(A3C_HUD_UnitIndicators select _i) setpos ([(A3C_HUD_UnitIndicators select (_i - 1)), (_offset * 1), _dirParams] call BIS_fnc_relPos);
 				};
 			};
 		};
 		case (5) : {
 			//-- Cube Formation Right
-			(A3C_HUD_ARROWS select 0) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
+			(A3C_HUD_UnitIndicators select 0) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
 			for "_i" from 1 to (_amount - 1) do {
-				if (_i < (count A3C_HUD_ARROWS)) then {
+				if (_i < (count A3C_HUD_UnitIndicators)) then {
 					if (_switchMode == 0) then {
 						_dirParams = ((A3C_FORMATION_DIR + A3C_NUM_DIR) - 90);
-						(A3C_HUD_ARROWS select _i) setpos ([(A3C_HUD_ARROWS select (_i - 1)), (_offset * 1), _dirParams] call BIS_fnc_relPos);
+						(A3C_HUD_UnitIndicators select _i) setpos ([(A3C_HUD_UnitIndicators select (_i - 1)), (_offset * 1), _dirParams] call BIS_fnc_relPos);
 						_switchMode = 1;
 					} else {
 						_dirParams = ((A3C_FORMATION_DIR + A3C_NUM_DIR));
-						(A3C_HUD_ARROWS select _i) setpos ([(A3C_HUD_ARROWS select (_i - 2)), (_offset * 1), _dirParams] call BIS_fnc_relPos);
+						(A3C_HUD_UnitIndicators select _i) setpos ([(A3C_HUD_UnitIndicators select (_i - 2)), (_offset * 1), _dirParams] call BIS_fnc_relPos);
 						_switchMode = 0;
 					};
 				};
@@ -1277,16 +1277,16 @@ A3C_HUD_CREATEFORMATION = {
 		};
 		case (6) : {
 			//-- Cube Formation Left
-			(A3C_HUD_ARROWS select 0) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
+			(A3C_HUD_UnitIndicators select 0) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
 			for "_i" from 1 to (_amount - 1) do {
-				if (_i < (count A3C_HUD_ARROWS)) then {
+				if (_i < (count A3C_HUD_UnitIndicators)) then {
 					if (_switchMode == 0) then {
 						_dirParams = ((A3C_FORMATION_DIR + A3C_NUM_DIR) + 90);
-						(A3C_HUD_ARROWS select _i) setpos ([(A3C_HUD_ARROWS select (_i - 1)), (_offset * 1), _dirParams] call BIS_fnc_relPos);
+						(A3C_HUD_UnitIndicators select _i) setpos ([(A3C_HUD_UnitIndicators select (_i - 1)), (_offset * 1), _dirParams] call BIS_fnc_relPos);
 						_switchMode = 1;
 					} else {
 						_dirParams = ((A3C_FORMATION_DIR + A3C_NUM_DIR));
-						(A3C_HUD_ARROWS select _i) setpos ([(A3C_HUD_ARROWS select (_i - 2)), (_offset * 1), _dirParams] call BIS_fnc_relPos);
+						(A3C_HUD_UnitIndicators select _i) setpos ([(A3C_HUD_UnitIndicators select (_i - 2)), (_offset * 1), _dirParams] call BIS_fnc_relPos);
 						_switchMode = 0;
 					};
 				};
@@ -1295,10 +1295,10 @@ A3C_HUD_CREATEFORMATION = {
 		case (7) : {
 			//-- 360 Security || Circle Formation
 			_pos = [(_cursorPos select 0),(_cursorPos select 1),0];
-			_step = 360 / (count A3C_HUD_ARROWS);
+			_step = 360 / (count A3C_HUD_UnitIndicators);
 			_count = 360 / _step;
 			A3C_HUD_RADIUS_MIN = 1;
-			if (count A3C_HUD_ARROWS > 1) then {
+			if (count A3C_HUD_UnitIndicators> 1) then {
 				while {true} do {
 					if ((([_pos,A3C_HUD_RADIUS_MIN,0] call BIS_fnc_RelPos) distance2D ([_pos,A3C_HUD_RADIUS_MIN,_step] call BIS_fnc_RelPos)) > 2) exitwith {};
 					A3C_HUD_RADIUS_MIN = A3C_HUD_RADIUS_MIN + 1;
@@ -1306,26 +1306,26 @@ A3C_HUD_CREATEFORMATION = {
 			};
 			if (A3C_HUD_RADIUS < A3C_HUD_RADIUS_MIN) then {A3C_HUD_RADIUS = A3C_HUD_RADIUS_MIN};
 			//_range = 2*pi*r;
-			//(A3C_HUD_ARROWS select 0) setpos ([_pos,A3C_HUD_RADIUS,0] call BIS_fnc_RelPos);
+			//(A3C_HUD_UnitIndicators select 0) setpos ([_pos,A3C_HUD_RADIUS,0] call BIS_fnc_RelPos);
 			for "_i" from 0 to (_amount - 1) do {
-				if (_i < (count A3C_HUD_ARROWS)) then {
+				if (_i < (count A3C_HUD_UnitIndicators)) then {
 					_acPos = ([_pos,A3C_HUD_RADIUS,(_i * _step)] call BIS_fnc_RelPos);
 					_arr = if (A3C_360_out) then {[_pos,_acPos]} else {[_acPos,_pos]};
-					(A3C_HUD_ARROWS select _i) setpos _acPos;
-					(A3C_HUD_ARROWS select _i) setdir 	(_arr call BIS_fnc_dirTo);
+					(A3C_HUD_UnitIndicators select _i) setpos _acPos;
+					(A3C_HUD_UnitIndicators select _i) setdir 	(_arr call BIS_fnc_dirTo);
 				};
 			};
 		};
 
 		case (8) : {
 			//-- Enhanced Movement: Units will move to position, face the object and climb ontop or over it
-			for "_i" from 0 to ((count A3C_HUD_ARROWS) -1) do {
-				if (_i < (count A3C_HUD_ARROWS)) then {
+			for "_i" from 0 to ((count A3C_HUD_UnitIndicators) -1) do {
+				if (_i < (count A3C_HUD_UnitIndicators)) then {
 					if (_i == 0) then {
-						(A3C_HUD_ARROWS select _i) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
+						(A3C_HUD_UnitIndicators select _i) setpos [(_cursorPos select 0),(_cursorPos select 1),0];
 					} else {
-						(A3C_HUD_ARROWS select _i) setpos ([(A3C_HUD_ARROWS select 0), (_offset * _i), (A3C_FORMATION_DIR + A3C_NUM_DIR)] call BIS_fnc_relPos);
-						//(A3C_HUD_ARROWS select _i) setpos ((A3C_HUD_ARROWS select 0) getRelPos [(_offset * _i),(A3C_FORMATION_DIR + A3C_NUM_DIR)]);
+						(A3C_HUD_UnitIndicators select _i) setpos ([(A3C_HUD_UnitIndicators select 0), (_offset * _i), (A3C_FORMATION_DIR + A3C_NUM_DIR)] call BIS_fnc_relPos);
+						//(A3C_HUD_UnitIndicators select _i) setpos ((A3C_HUD_UnitIndicators select 0) getRelPos [(_offset * _i),(A3C_FORMATION_DIR + A3C_NUM_DIR)]);
 					};
 				};
 			};
@@ -1372,7 +1372,7 @@ A3C_HUD_CREATEFORMATION_BUILDING = {
 				};
 			};
 		};
-	} foreach A3C_HUD_ARROWS;
+	} foreach A3C_HUD_UnitIndicators;
 };
 
 //-- Function to find building-positions on the floor that player is looking at
@@ -1539,7 +1539,7 @@ A3C_HUD_CREATEFORMATION_BUILDING_OLD = {
 				};
 			};
 		};
-	} foreach A3C_HUD_ARROWS;
+	} foreach A3C_HUD_UnitIndicators;
 };
 
 
@@ -1590,7 +1590,7 @@ A3C_HUD_MOVE = {
 
 	private _action = if (_ehm == 8) then {["EHM",[]]} else {["NONE",[]]};
 
-	//if (A3C_HUD_ARROWS_IN_BUILDING) then {
+	//if (A3C_HUD_UnitIndicators_IN_BUILDING) then {
 
 	//	if ( (typename _bpos) == "ARRAY" ) then {
 	//		_dest = _bPos;
@@ -1683,7 +1683,7 @@ A3C_HUD_MOVE = {
 	//_unit forcespeed -1;
 
 
-	if (A3C_HUD_ARROWS_IN_BUILDING) then {
+	if (A3C_HUD_UnitIndicators_IN_BUILDING) then {
 		//[_unit,_dest] spawn A3C_DOMOVE;
 		//_unit lookat ([_ATLpos, 100,_WatchDir] call BIS_fnc_relPos);
 	} else {

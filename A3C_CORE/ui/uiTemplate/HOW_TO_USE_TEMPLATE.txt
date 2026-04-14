@@ -1,0 +1,77 @@
+STANDARD OPERATING PROCEDURE - CREATE A REAL DIALOG FROM uiTemplate
+
+1. Create a new dialog subfolder in the correct UI family folder.
+   Example:
+   A3C_Core\ui\radial\settingsMenu\
+
+2. Copy the full contents of uiTemplate into the new dialog folder.
+
+3. Do NOT delete any template files yet.
+   Keep the full scaffold until the dialog works.
+
+4. Edit script_component.hpp first.
+   - Set PREFIX
+   - Set COMPONENT
+   - Set COMPONENT_BEAUTIFIED
+
+5. Edit dialog_defines.hpp next.
+   - Set the real IDD
+   - Define all runtime-used IDC values
+   - Do NOT define decorative controls unless they are accessed in code
+
+6. Edit dialog.hpp next.
+   - Rename the dialog class
+   - Set idd from the defines
+   - Set onLoad and onUnload
+   - Replace template controls with the real dialog controls
+   - Keep static-only controls at idc = -1
+   - Route button presses to functions, not inline logic
+
+7. Implement runtime caching.
+   - Edit fnc_cacheGroups.sqf if controls groups are used
+   - Edit fnc_cacheControls.sqf to cache all important runtime controls
+   - Use semantic names in the control map
+
+8. Implement initialization and state update.
+   - Edit fnc_onLoad.sqf to store the display in uiNamespace
+   - Cache groups and controls
+   - Store any dialog-specific metadata
+   - Call fnc_refresh.sqf
+
+9. Implement fnc_refresh.sqf.
+   - Read the authoritative setting/state values
+   - Update all dynamic control text/state/visibility
+   - Do not manually duplicate UI update logic elsewhere
+
+10. Implement click handling.
+    - Prefer one generic click handler if multiple buttons share a pattern
+    - Map clicked IDC -> semantic action
+    - Perform logic
+    - Call refresh afterward
+
+11. Implement fnc_open.sqf.
+    - Keep it minimal
+    - Open the dialog
+    - Let onLoad do initialization
+
+12. Implement fnc_onUnload.sqf.
+    - Clear uiNamespace cached data
+    - Remove temporary state if needed
+
+13. Test the new dialog while the legacy dialog still exists.
+
+14. Only after the new dialog works:
+    - switch callers/references to the new version
+    - remove obsolete legacy code
+    - optionally remove truly unused template files
+
+RULES
+
+- Keep the old dialog as reference until replacement is tested
+- Use named defines for all runtime-used IDs
+- Do not use raw ID numbers in behavior code
+- Cache display and controls once
+- Use refresh as the single source of UI state updates
+- Static-only controls should usually remain idc = -1
+- Controls groups must be handled through cached group references
+- Keep folder structure consistent across dialogs

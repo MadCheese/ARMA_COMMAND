@@ -814,7 +814,7 @@ class A3C_SWPDIALOG
 				class A3C_WPD_BTN2: A3C_RscButton_Function
 				{
 					idc = 7019;
-					action = "[1] call A3C_Btn_fnc_Cancel; A3C_HELI_INF_MODE = 'INF'; A3C_SELECTED_UNITS = [];";
+					action = "[1] call A3C_Btn_fnc_Cancel; A3C_MAP_CommandMode = 'INF'; A3C_SELECTED_UNITS = [];";
 
 					text = "Exit"; //--- ToDo: Localize;
 					x = 0 * safezoneW;

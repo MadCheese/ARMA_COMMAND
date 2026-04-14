@@ -373,8 +373,8 @@ A3C_fnc_drawHudUI = {
 	
 	//if (count A3C_HUD_UNITS > 0) then {
 	if (!isNil 'A3C_HUD_L' && {!isnull A3C_HUD_L}) then {
-		if (count A3C_HUD_ARROWS > 0) then {
-			private _ignorObj2 = if (cursortarget in A3C_HUD_ARROWS) then {cursorTarget} else {A3C_HUD_ARROWS select 0};
+		if (count A3C_HUD_UnitIndicators> 0) then {
+			private _ignorObj2 = if (cursortarget in A3C_HUD_UnitIndicators) then {cursorTarget} else {A3C_HUD_UnitIndicators select 0};
 			private _intersects = false;
 
 			{
@@ -391,7 +391,7 @@ A3C_fnc_drawHudUI = {
 					_intersects = true;
 				};
 				_x disableCollisionWith (vehicle cameraOn);
-			} foreach A3C_HUD_ARROWS;
+			} foreach A3C_HUD_UnitIndicators;
 			{
 				private _data = _x getvariable ['A3C_HUD_DATA', [objNull,-1] ];
 				_data params ["_arrow"];
@@ -405,10 +405,10 @@ A3C_fnc_drawHudUI = {
 					_textSize = linearConversion [ 0, _furthestDistance, player distance2D _arrow, 0.05, _minTextSize, true ];
 					
 					_minOpacity = 1;
-					_opacity = linearConversion [ 0, 300, (player distance2d (A3C_HUD_ARROWS select 0)) - 30, 0, 0.7, true ];
+					_opacity = linearConversion [ 0, 300, (player distance2d (A3C_HUD_UnitIndicators select 0)) - 30, 0, 0.7, true ];
 					if (_opacity > 0) then {_opacity = _opacity max 0.2};
 					
-					//_objectCollision = lineIntersectsSurfaces [AGLToASL positionCameraToWorld [0,0,0],AGLToASL positionCameraToWorld [0,0,viewDistance],vehicle player,(A3C_HUD_ARROWS select 0),true,1,"GEOM","NONE"];	
+					//_objectCollision = lineIntersectsSurfaces [AGLToASL positionCameraToWorld [0,0,0],AGLToASL positionCameraToWorld [0,0,viewDistance],vehicle player,(A3C_HUD_UnitIndicators select 0),true,1,"GEOM","NONE"];	
 					
 					_atlPos = getPosATL _arrow;
 					_addHeight = 0;

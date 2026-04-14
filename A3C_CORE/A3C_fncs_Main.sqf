@@ -640,7 +640,7 @@ A3C_UI_RADIAL_ADD_EH_MACROS = {
 						if ([] call %1) then {
 							[] spawn %2;
 						};
-						if ((count A3C_HUD_ARROWS) > 0) then {
+						if ((count A3C_HUD_UnitIndicators) > 0) then {
 							{inGameUISetEventHandler [_x, 'true']} foreach ['PrevAction','NextAction'];
 						} else {
 							{inGameUISetEventHandler [_x, 'false']} foreach ['PrevAction','NextAction'];
@@ -674,7 +674,7 @@ A3C_UI_RADIAL_ADD_EH_MACROS = {
 						if ([] call %1) then {
 							[] spawn %2;
 						};
-						if ((count A3C_HUD_ARROWS) > 0) then {
+						if ((count A3C_HUD_UnitIndicators) > 0) then {
 							{inGameUISetEventHandler [_x, 'true']} foreach ['PrevAction','NextAction'];
 						} else {
 							{inGameUISetEventHandler [_x, 'false']} foreach ['PrevAction','NextAction'];
@@ -2409,7 +2409,7 @@ MCSS_fnc_RevealCursorPos = {
 
 A3C_BTN_COLOR_RESET = { //-- currently unused
 	//if (!(isnull (findDisplay 100020)) OR !(isnull (findDisplay 100030))) then {
-		//[A3C_HELI_INF_MODE] call A3C_LABEL_SELECTORS;
+		//[A3C_MAP_CommandMode] call A3C_LABEL_SELECTORS;
 	//};
 	if !(isnull (findDisplay 100040)) then {
 		[] call A3C_RD_LABEL_SELECTORS;
@@ -2441,7 +2441,7 @@ A3C_UNIT_HOLD = {
 	[_coverUnits,1] spawn A3C_FindCover;
 	player groupchat  _unitNames + " HOLD";
 	//[] call A3C_BTN_COLOR_RESET; //~~ STILL USED?
-	[A3C_HELI_INF_MODE] call A3C_UI_MAP_REFRESH_BARCONTROLS;
+	[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 };
 
 A3C_UNIT_CONTINUE = {
@@ -2458,7 +2458,7 @@ A3C_UNIT_CONTINUE = {
 	} foreach _units;
 	player groupchat  _unitNames + " MOVE";
 	//[] call A3C_BTN_COLOR_RESET; //~~ STILL USED?
-	[A3C_HELI_INF_MODE] call A3C_UI_MAP_REFRESH_BARCONTROLS;
+	[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 };
 
 
@@ -2823,7 +2823,7 @@ A3C_LB_Change = {
 
 			if (_isTablet) then {
 				{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
-				//if (A3C_HELI_INF_MODE != "HC") then {
+				//if (A3C_MAP_CommandMode != "HC") then {
 					
 				//};
 				
@@ -2844,7 +2844,7 @@ A3C_LB_Change = {
 				//	};
 				//};
 			};
-			[_a3c_dsp,A3C_HELI_INF_MODE] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
+			[_a3c_dsp,A3C_MAP_CommandMode] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
 			[] spawn {
 				sleep 0.1;
 				[0] call A3C_UI_MAP_RESIZE_TEAMCOLORS_Y;
@@ -3090,8 +3090,8 @@ A3C_JOIN_UNIT = {
 	{
 		[_x] call A3C_UNIT_INIT;
 	} foreach _initArray;
-	//systemchat str A3C_HELI_INF_MODE;
-	[A3C_HELI_INF_MODE] call A3C_START_TABMODE; //-- refresh table if open
+	//systemchat str A3C_MAP_CommandMode;
+	[A3C_MAP_CommandMode] call A3C_START_TABMODE; //-- refresh table if open
 };
 
 
@@ -3310,15 +3310,15 @@ A3C_GROUP_RESET = {
 	{_x setvariable ["A3C_FORMATION_INDEX", [_x] call A3C_GETUNITINDEX, true];} foreach (units group player);
 	if (_stayLeader) then {(group player) selectLeader player};
 	for "_i" from 7025 to 7040 do {(findDisplay _a3c_dsp displayCtrl _i) ctrlShow false};
-	if (A3C_HELI_INF_MODE == "HC") then {
+	if (A3C_MAP_CommandMode == "HC") then {
 		if ((count A3C_HCALLGROUPS_Current ) > 0) then {
 			//["HC"] call A3C_LABEL_SELECTORS;
 		} else {
-			A3C_HELI_INF_MODE = "INF";
+			A3C_MAP_CommandMode = "INF";
 			["INF"] call A3C_START_TABMODE;
 		};
 	} else {
-		//[A3C_HELI_INF_MODE] call A3C_LABEL_SELECTORS;
+		//[A3C_MAP_CommandMode] call A3C_LABEL_SELECTORS;
 	};
 
 	{
@@ -3508,7 +3508,7 @@ A3C_getArtilleryAmmo = {
 //-- ABORT ALL EXISTING ORDERS
 A3C_CANCELPLANS = {
 	private ["_data"];
-	if (A3C_HELI_INF_MODE == "HC") exitWith {};
+	if (A3C_MAP_CommandMode == "HC") exitWith {};
 	_selectedUnits = _this select 0;
 	_shift = _this select 1;
 	_ctrl = _this select 2;
@@ -3526,7 +3526,7 @@ A3C_CANCELPLANS = {
 		A3C_WAYPOINTS_TEMP = [];
 		(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow false;
 		(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,0.2];
-		[A3C_HELI_INF_MODE] call A3C_UI_MAP_REFRESH_BARCONTROLS;
+		[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 	};
 
 	if (_shift) then {
@@ -3610,7 +3610,7 @@ A3C_CANCELPLANS = {
 	};
 	[] spawn {
 		sleep 0.5;
-		[A3C_HELI_INF_MODE] call A3C_UI_MAP_REFRESH_BARCONTROLS;
+		[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 	};
 	
 };

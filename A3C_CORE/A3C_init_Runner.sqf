@@ -79,7 +79,7 @@ A3C_SlotItemChanged_HandlerFnc = {
 A3C_KILLED_EVH = { //-- only used by player
 	_body = _this select 0;
 	_groupUnits = (profileNamespace getvariable "A3C_GROUPUNITS");
-	if ((count A3C_HUD_ARROWS) > 0) then {
+	if ((count A3C_HUD_UnitIndicators) > 0) then {
 		{[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS ;
 	};
 

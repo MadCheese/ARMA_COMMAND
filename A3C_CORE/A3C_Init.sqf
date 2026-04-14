@@ -130,7 +130,8 @@ if (A3C_EHM) then {
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_INIT.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_Init_SquadActions.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\UI_DSP_SettingsMenu_Functions.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\settingsMenu\functions\initFunctions.sqf";
+
 
 
 

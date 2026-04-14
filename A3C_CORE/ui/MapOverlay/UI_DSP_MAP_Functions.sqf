@@ -497,7 +497,7 @@ A3C_UI_MAP_FNC_CloseMapOverlay = {
 	(findDisplay _display) closeDisplay 0;
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	[1] call A3C_Btn_fnc_Cancel;
-	A3C_HELI_INF_MODE = "INF"; A3C_SELECTED_UNITS = [];
+	A3C_MAP_CommandMode = "INF"; A3C_SELECTED_UNITS = [];
 	A3C_SELECTED_UNITS = [];
 	{_x setvariable ["A3C_PLOT_TEMP",[],true];} foreach units group player;
 	[1] call A3C_UI_MAP_FNC_ResetMapClick;
@@ -578,7 +578,7 @@ A3C_UNITSEL_REFRESH_UI = {
 	private _commandMode = if (_a3c_dsp == 100040) then {
 		A3C_CURRENT_COMMAND_LEVEL
 	} else {
-		if (A3C_HELI_INF_MODE == "HC") then {
+		if (A3C_MAP_CommandMode == "HC") then {
 			"HIGHCOMMAND"
 		} else {
 			"SQUAD"
@@ -1424,7 +1424,7 @@ A3C_TAB_TOGGLE_CONTROLS = {
 					(findDisplay _a3c_dsp displayCtrl _i) ctrlShow true;
 				",_i];
 			};
-			//[A3C_HELI_INF_MODE] call A3C_LABEL_SELECTORS;
+			//[A3C_MAP_CommandMode] call A3C_LABEL_SELECTORS;
 
 			if (count A3C_WAYPOINTS_TEMP > 0) then {
 				//{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true} foreach [7041,7092];
@@ -1462,7 +1462,7 @@ A3C_UI_MAP_BARSETTINGS_LABEL = {
 	params ["_mode"];
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	//-- hide subselection controls
-	if (_mode != A3C_HELI_INF_MODE) then {
+	if (_mode != A3C_MAP_CommandMode) then {
 		//-- TOGGLE SUBSELECTION OFF ON MODESWITCHs
 		{
 			(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
@@ -1516,7 +1516,7 @@ A3C_UI_MAP_REFRESH_BARCONTROLS = {
 		
 		_a3c_dsp spawn {
 			sleep 0.5;
-			_spacing = if (A3C_HELI_INF_MODE == "AIR") then {A3C_SPACING_AIR} else {A3C_SPACING_INF max 2};
+			_spacing = if (A3C_MAP_CommandMode == "AIR") then {A3C_SPACING_AIR} else {A3C_SPACING_INF max 2};
 			_spacing = if (_spacing < 10) then {"0" + (str _spacing)} else {str _spacing};
 			(findDisplay _this displayCtrl 7066) ctrlSetText _spacing;	
 		};
@@ -1539,7 +1539,7 @@ A3C_START_TABMODE = {
 	
 	//--  asasas
 	
-	//if (_mode != A3C_HELI_INF_MODE) then {
+	//if (_mode != A3C_MAP_CommandMode) then {
 		{
 			(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
 		} foreach [A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2];
@@ -1582,7 +1582,7 @@ A3C_START_TABMODE = {
 		case ("INF") : {
 			if (typeName A3C_WP_SPEED_TEMP == "STRING") then {A3C_WP_SPEED_TEMP = -1};
 			_stance2Col = [1,1,1,0.3];
-			//if (A3C_HELI_INF_MODE == "INF") then {
+			//if (A3C_MAP_CommandMode == "INF") then {
 			//	_pn = (parsenumber (ctrlText (findDisplay _a3c_dsp displayCtrl 7066)));
 			//	if (_pn > 0) then {
 			//		A3C_SPACING_INF = _pn;
@@ -1600,7 +1600,7 @@ A3C_START_TABMODE = {
 				(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true;
 			} foreach [7007,7022]; //7010,7066
 
-			if (A3C_HELI_INF_MODE == "HC") then {
+			if (A3C_MAP_CommandMode == "HC") then {
 				//(findDisplay _a3c_dsp displayCtrl 7008) ctrlSetText "^";
 				{
 					(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
@@ -1653,7 +1653,7 @@ A3C_START_TABMODE = {
 			_stanceLand = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
 			_stance2Col = [1,1,1,0.8]; //[0,0.3,0.6,0.8]; //  [0.5,0.5,0.5,0.8];
 			_smokeBool = false;
-			//if (A3C_HELI_INF_MODE == "AIR") then {
+			//if (A3C_MAP_CommandMode == "AIR") then {
 			//	_pn = (parsenumber (ctrlText (findDisplay _a3c_dsp displayCtrl 7066)));
 			//	if (_pn > 0) then {
 			//		A3C_SPACING_AIR = _pn;
@@ -1677,7 +1677,7 @@ A3C_START_TABMODE = {
 			} foreach [7007,7022]; //7010,7066
 
 
-			if (A3C_HELI_INF_MODE == "HC") then {
+			if (A3C_MAP_CommandMode == "HC") then {
 				//(findDisplay _a3c_dsp displayCtrl 7008) ctrlSetText "^";
 				{
 					(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
@@ -1788,20 +1788,20 @@ A3C_SWITCH_COMMAND_PAGE = {
 	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	A3C_SELECTED_UNITS = [];
-	switch (A3C_HELI_INF_MODE) do {
+	switch (A3C_MAP_CommandMode) do {
 		case ("INF") : {
 			["AIR"] call A3C_START_TABMODE;
-			A3C_HELI_INF_MODE = "AIR";
+			A3C_MAP_CommandMode = "AIR";
 		};
 		case ("AIR") : {
 			A3C_BUTTONPAGE_TABLET = 0;
 			["HC"] call A3C_START_TABMODE;
-			A3C_HELI_INF_MODE = "HC";
+			A3C_MAP_CommandMode = "HC";
 		};
 		case ("HC") : {
 			A3C_BUTTONPAGE_TABLET = 0;
 			["INF"] call A3C_START_TABMODE;
-			A3C_HELI_INF_MODE = "INF";
+			A3C_MAP_CommandMode = "INF";
 		};
 	};
 };
@@ -2029,12 +2029,12 @@ A3C_SWITCHPAGE_TABLET = {
 	if !(isnull (findDisplay _a3c_dsp)) then {
 		{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	};
-	_groupCount =  if (A3C_HELI_INF_MODE == "HIGHCOMMAN") then {count _hcAll} else {};
+	_groupCount =  if (A3C_MAP_CommandMode == "HIGHCOMMAN") then {count _hcAll} else {};
 	_groupCount = 0;
 	if (_a3c_dsp == 100040) then {
 		_groupCount = count _hcAll;
 	} else {
-		if (A3C_HELI_INF_MODE == "HC") then {
+		if (A3C_MAP_CommandMode == "HC") then {
 			_groupCount = count _hcAll;
 		} else {
 			_groupCount = (count(profileNamespace getvariable "A3C_GROUPUNITS")) -1 ;
@@ -2061,7 +2061,7 @@ A3C_SWITCHPAGE_TABLET = {
 			};
 		} else {
 			if !(isnull (findDisplay _a3c_dsp)) then {
-				//[A3C_HELI_INF_MODE] call A3C_LABEL_SELECTORS;
+				//[A3C_MAP_CommandMode] call A3C_LABEL_SELECTORS;
 			};
 		};
 
@@ -2214,7 +2214,7 @@ A3C_BTN_FNC_TEAMCOLOR = {
 		private ["_remove"];
 		_remove = false;
 		if !(_x == (driver (vehicle _x))) then {_remove = true};
-		if (A3C_HELI_INF_MODE == 'AIR') then {
+		if (A3C_MAP_CommandMode == 'AIR') then {
 			if !((vehicle _x) isKindOf "AIR") then {_remove = true};
 		} else {
 			if ((vehicle _x) isKindOf "AIR") then {_remove = true};
@@ -2244,7 +2244,7 @@ A3C_BTN_FNC_TEAMCOLOR = {
 	_switch = false;
 	if (_teamColor == "PURPLE") then {
 		_cond = {};
-		switch (A3C_HELI_INF_MODE) do {
+		switch (A3C_MAP_CommandMode) do {
 			case ("INF") : {
 				_cond = {_return = typeOf (vehicle _this) iskindOf "AIR"; _return};
 			};
@@ -2267,7 +2267,7 @@ A3C_BTN_FNC_TEAMCOLOR = {
 	};
 	if (_switch) then {
 		if (({(_x == (driver vehicle _x)) && {typeOf (vehicle _x) iskindOf "AIR"}} count A3C_SELECTED_UNITS) > ((count A3C_SELECTED_UNITS) / 2)) then {
-			A3C_HELI_INF_MODE = "AIR";
+			A3C_MAP_CommandMode = "AIR";
 			//private _spacing = str A3C_SPACING_AIR;
 			//if (A3C_SPACING_AIR < 10) then {
 			//	_spacing = "0" + _spacing;
@@ -2284,7 +2284,7 @@ A3C_BTN_FNC_TEAMCOLOR = {
 					A3C_SELECTED_UNITS = A3C_SELECTED_UNITS - [_x];
 				};
 			} foreach A3C_SELECTED_UNITS;
-			A3C_HELI_INF_MODE = "INF";
+			A3C_MAP_CommandMode = "INF";
 			//private _spacing = str A3C_SPACING_INF;
 			//if (A3C_SPACING_INF < 10) then {
 			//	_spacing = "0" + _spacing;
@@ -2293,7 +2293,7 @@ A3C_BTN_FNC_TEAMCOLOR = {
 		};
 	};
 	A3C_SPLIT_UNITS = A3C_SELECTED_UNITS;
-	[A3C_HELI_INF_MODE] call A3C_START_TABMODE;
+	[A3C_MAP_CommandMode] call A3C_START_TABMODE;
 	[] call A3C_UNITSEL_REFRESH_UI;
 };
 
@@ -2303,7 +2303,7 @@ A3C_STANCE_BTN_1 = {
 	if (_mode > 1) then {_mode = 1};
 	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
-	if (A3C_HELI_INF_MODE in ["INF","HC"]) then {
+	if (A3C_MAP_CommandMode in ["INF","HC"]) then {
 		switch (A3C_STANCE1_TEMP) do {
 			case ("DOWN") : {
 				if (_mode == 0) then {
@@ -2442,7 +2442,7 @@ A3C_TOGGLE_SUBSELECTION = {
 	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout) ctrlShow false;
 
 	//-- re-assign STANCE2 to ACTION if on AIRCRAFT PAGE
-	if (A3C_HELI_INF_MODE == "AIR") then {
+	if (A3C_MAP_CommandMode == "AIR") then {
 		if (_actionButton == "SQ_STANCE_1") then {
 			_actionButton = "SQ_HELIHEIGHT";
 		};
@@ -2600,13 +2600,13 @@ A3C_TOGGLE_SUBSELECTION = {
 			};
 
 			_actionArray = [];
-			if (A3C_HELI_INF_MODE == "INF") then {
+			if (A3C_MAP_CommandMode == "INF") then {
 				_subsetActionStrings pushbackUnique "SQ_ACTION_NONE";
 				_buttonImages = ["\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa"];
 				//_actionArray = [0,false,false] call A3C_BUTTON_wpFiringMode;
 				_actionArray = [A3C_SELECTED_UNITS] call A3C_getActionsArray;
 			};
-			if (A3C_HELI_INF_MODE == "AIR") then {
+			if (A3C_MAP_CommandMode == "AIR") then {
 				_actionArray = ["SQ_AIR_MOVE","SQ_LAND_PICKUP","SQ_LAND_DROPOFF","SQ_RAPPELL","SQ_PARADROP","SQ_SLING","SQ_LAND_FULL"];
 			};
 
@@ -3266,7 +3266,7 @@ A3C_STANCE_BTN_2 = {
 	if (_mode > 1) then {_mode = 1};
 	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
-	if (A3C_HELI_INF_MODE in ["INF","HC"]) then {
+	if (A3C_MAP_CommandMode in ["INF","HC"]) then {
 		switch (A3C_STANCE2_TEMP) do {
 			case ("DOWN") : {
 				if (_mode == 0) then {
@@ -3745,7 +3745,7 @@ A3C_BTN_SELECT_HC = { //~~ #unused
 A3C_BTN_SELECT_UNIT = { //-- currently unused?
 	private ["_unit","_unitIndex","_unitArray","_a3c_dsp","_mB","_sX","_sY","_shift","_ctrl"];
 
-//systemchat str [A3C_HELI_INF_MODE,A3C_SELECTED_UNITS]; 
+//systemchat str [A3C_MAP_CommandMode,A3C_SELECTED_UNITS]; 
 
 	_unitIndex = _this select 0;
 	//systemChat str _unitIndex;
@@ -3753,7 +3753,7 @@ A3C_BTN_SELECT_UNIT = { //-- currently unused?
 	_data = _this select 1;
 	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
-	if (A3C_HELI_INF_MODE == "HC") exitwith {[_unitIndex,_button,_data] call A3C_BTN_SELECT_HC};
+	if (A3C_MAP_CommandMode == "HC") exitwith {[_unitIndex,_button,_data] call A3C_BTN_SELECT_HC};
 	_mB = _data select 1;
 	_sX = _data select 2;
 	_sY = _data select 3;
@@ -3782,7 +3782,7 @@ A3C_BTN_SELECT_UNIT = { //-- currently unused?
 						for "_i" from _unitIndex to _destIndex step _step do {
 							_add = false; //~~??
 
-							if (A3C_HELI_INF_MODE == 'AIR') then {
+							if (A3C_MAP_CommandMode == 'AIR') then {
 								if ( ((_unitArray select _i)== driver vehicle (_unitArray select _i)) OR (isNull (driver vehicle (_unitArray select _i))) ) then {
 								//if ((_unitArray select _i)== (driver (vehicle (_unitArray select _i))) ) then {
 									if ((vehicle (_unitArray select _i)) isKindOf 'AIR') then {
@@ -3849,7 +3849,7 @@ A3C_BTN_SELECT_UNIT = { //-- currently unused?
 				call compile format ["
 					if (A3C_UNIT_%1_BV == 0) then {
 						if (alive (_unitArray select %1) ) then {
-							if (A3C_HELI_INF_MODE == 'AIR') then {
+							if (A3C_MAP_CommandMode == 'AIR') then {
 								if ( (%2== driver vehicle %2) OR (isNull (driver vehicle %2)) ) then {
 									if ((vehicle %2) isKindOf 'AIR') then {
 										[%1] call A3C_BTN_FNC_NOSHIFT;
@@ -3863,7 +3863,7 @@ A3C_BTN_SELECT_UNIT = { //-- currently unused?
 									} else {
 										A3C_SELECTED_UNITS = [%2];
 										['INF'] call A3C_START_TABMODE;
-										A3C_HELI_INF_MODE = 'INF';
+										A3C_MAP_CommandMode = 'INF';
 									};
 								};
 							} else {
@@ -3880,14 +3880,14 @@ A3C_BTN_SELECT_UNIT = { //-- currently unused?
 									} else {
 										A3C_SELECTED_UNITS = [%2];
 										['AIR'] call A3C_START_TABMODE;
-										A3C_HELI_INF_MODE = 'AIR';
+										A3C_MAP_CommandMode = 'AIR';
 									};
 								};
 							};
 						};
 					} else {
 						if (alive (_unitArray select %1) ) then {
-							if (A3C_HELI_INF_MODE == 'AIR') then {
+							if (A3C_MAP_CommandMode == 'AIR') then {
 								if ( (%2== driver vehicle %2) OR (isNull (driver vehicle %2)) ) then {
 									if ((vehicle %2) isKindOf 'AIR') then {
 										[%1] call A3C_BTN_FNC_NOSHIFT;
@@ -3920,7 +3920,7 @@ A3C_BTN_SELECT_UNIT = { //-- currently unused?
 			};
 		};
 
-		[A3C_HELI_INF_MODE] call A3C_START_TABMODE;
+		[A3C_MAP_CommandMode] call A3C_START_TABMODE;
 	} else {
 		//-- right click
 		//if (alive _unit) then {
@@ -3961,7 +3961,7 @@ A3C_BTN_FNC_NOSHIFT = { //-- currently unnused?
 
 						call compile format ["
 
-							switch (A3C_HELI_INF_MODE) do {
+							switch (A3C_MAP_CommandMode) do {
 								case ('INF') : {
 									if ( (%2 == driver vehicle %2) OR (isNull (driver vehicle %2)) ) then {
 										if !((vehicle %2) isKindOf 'AIR') then {
@@ -4006,7 +4006,7 @@ A3C_BTN_HC = {
 	_loopPos = [0,0,0];
 	_loopDest = [0,0,0];
 	if ( (_mode == 0) && ((count A3C_SELECTED_UNITS) == 0)) exitwith {};
-	if ( (_mode == 0) && (A3C_HELI_INF_MODE == "HC") ) exitwith {};
+	if ( (_mode == 0) && (A3C_MAP_CommandMode == "HC") ) exitwith {};
 	if ( (_mode == 1) && ((count A3C_HCALLGROUPS_Current ) == 0)) exitwith {};
 	if ( (_mode == 1) && A3C_BOOL_REJOINING) exitwith {};
 	_data = [];
@@ -4194,10 +4194,10 @@ A3C_BTN_HC = {
 			hcShowBar true;
 		};
 
-		if (A3C_HELI_INF_MODE in ["INF","AIR"]) then {
+		if (A3C_MAP_CommandMode in ["INF","AIR"]) then {
 			if ((count units group player) == 1) then {
 				["HC"] call A3C_START_TABMODE;
-				A3C_HELI_INF_MODE = "HC";
+				A3C_MAP_CommandMode = "HC";
 			};
 		};
 
@@ -4219,10 +4219,10 @@ A3C_BTN_HC = {
 
 	sleep 0.2;
 
-	if (A3C_HELI_INF_MODE == "HC") then {
+	if (A3C_MAP_CommandMode == "HC") then {
 		if ((count units group player) == 1) then {
 			["HC"] call A3C_START_TABMODE;
-			A3C_HELI_INF_MODE = "HC";
+			A3C_MAP_CommandMode = "HC";
 		};
 	};
 	A3C_BOOL_MAP_MD = false;
@@ -4411,7 +4411,7 @@ A3C_CHECK_FOR_DEAD_WIP = { //-- currently unused
 					[_x] join grpnull;
 					//waituntil {!(_x in (units group player))}; //--how's this working in 'call' scope?
 					A3C_SELECTED_UNITS = A3C_SELECTED_UNITS - [_x];
-					//[A3C_HELI_INF_MODE] call A3C_LABEL_SELECTORS;
+					//[A3C_MAP_CommandMode] call A3C_LABEL_SELECTORS;
 				};
 			};
 		};
@@ -4716,7 +4716,7 @@ A3C_SET_ORDER_WIP = {
 				_x setvariable ["A3C_PLOT_TEMP",_switchData,true];
 			} foreach _units;
 		};
-		[A3C_HELI_INF_MODE] call A3C_UI_MAP_REFRESH_BARCONTROLS;
+		[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 	} else {
 		[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
 	};
@@ -5294,7 +5294,7 @@ A3C_UI_MAP_FNC_CTEDIT_ACTIVATE = {
 			};
 			case ("SPACING") : {
 				//systemchat 'spacingf';
-				switch (A3C_HELI_INF_MODE) do {
+				switch (A3C_MAP_CommandMode) do {
 					case ("INF") : {
 						A3C_SPACING_INF = (parsenumber (ctrlText (findDisplay _a3c_dsp displayCtrl 7066))) max 2;
 					};

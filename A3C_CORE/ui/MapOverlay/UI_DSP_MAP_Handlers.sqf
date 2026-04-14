@@ -167,7 +167,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 
 	
 
-	if (A3C_HELI_INF_MODE in ["INF","AIR"]) then {
+	if (A3C_MAP_CommandMode in ["INF","AIR"]) then {
 		["SPACING","OFF"] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE;
 	};
 
@@ -303,7 +303,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 				deleteGroup _gp1;
 				A3C_isMergeGroupActive = false;
 			} else {
-				A3C_HELI_INF_MODE = "HC";
+				A3C_MAP_CommandMode = "HC";
 				_resetSelection = false;
 				if (_ctrl) then {
 					A3C_SELECTED_UNITS = if (_gp in A3C_SELECTED_UNITS) then {
@@ -469,7 +469,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 								] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE
 							};
 						};
-						//if ( ((A3C_SELECTED_UNITS select 0) == A3C_SQ_CLICKED_UNIT) && (A3C_HELI_INF_MODE == "INF") ) then {
+						//if ( ((A3C_SELECTED_UNITS select 0) == A3C_SQ_CLICKED_UNIT) && (A3C_MAP_CommandMode == "INF") ) then {
 						if (count A3C_SELECTED_UNITS > 0) then {
 							A3C_MAP_DRAGPLANNING_ACTIVE = true;
 							A3C_BOOL_MOUSEMOVING = true;
@@ -485,10 +485,10 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 					[_foldMode,0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
 					//A3C_SELECTED_UNITS = [A3C_SQ_CLICKED_UNIT];
 					if (vehicle A3C_SQ_CLICKED_UNIT isKindOf "AIR") then {
-						A3C_HELI_INF_MODE = "AIR";
+						A3C_MAP_CommandMode = "AIR";
 						["AIR"] call A3C_START_TABMODE;
 					} else {
-						A3C_HELI_INF_MODE = "INF";
+						A3C_MAP_CommandMode = "INF";
 						["INF"] call A3C_START_TABMODE;
 					};
 				};
@@ -683,7 +683,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 				A3C_SELECTED_UNITS = [];
 				A3C_SELECTED_HC_GROUPS_SETTINGS = [];
 				["COLLAPSE",0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
-				[A3C_HELI_INF_MODE] call A3C_START_TABMODE;
+				[A3C_MAP_CommandMode] call A3C_START_TABMODE;
 			};
 		};
 	};
@@ -693,7 +693,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 
 	// //-- LeftClick on A3-HC marker //~~??
 	// if (_isHighCommand) then {
-	// 	if (A3C_HELI_INF_MODE == "HC") then {
+	// 	if (A3C_MAP_CommandMode == "HC") then {
 	// 		if (count (["HC_WP",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos) > 0) then {
 	// 			systemchat "ALERT! PLEASE REPORT IF YOU SEE THIS ERROR: MAP_LEFTDOWN_OLD_HC";
 	// 			A3C_BOOL_MOUSEUP = true;
@@ -727,7 +727,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 
 
 	//-- Current Mode is HC
-	if (A3C_HELI_INF_MODE == "HC" && !(_ctrl)) exitWith {
+	if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 		if ((count A3C_SELECTED_UNITS) > 0) then {
 			if !(ctrlShown (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT)) then {
 				if (_alt) then {
@@ -883,7 +883,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 	A3C_CLICKPOS_ORIG = A3C_CLICKPOS_1;
 	A3C_TAB_BUILDING = (nearestBuilding A3C_CLICKPOS_1);
 
-	if (A3C_HELI_INF_MODE == "INF") then {
+	if (A3C_MAP_CommandMode == "INF") then {
 		if !(A3C_FORMMODE_TEMP == 5) then {
 			if ([A3C_CLICKPOS_1,A3C_TAB_BUILDING] call A3C_fnc_INSIDE) then {
 				if ((count A3C_SELECTED_UNITS) > ([A3C_TAB_BUILDING] call MCSS_fnc_countBPos)) then {
@@ -1133,7 +1133,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 		
 		 //-- #TODO: this whole 'A3C_SELECTED_HC_GROUPS_SETTINGS', 'A3C_SELECTED_HC_GROUPS_SETTINGS', 'RD_UNITS' layout is a mess boiiii! IMPROVE
 		A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS;
-		A3C_HELI_INF_MODE = "HC";
+		A3C_MAP_CommandMode = "HC";
 
 
 		[] call A3C_UNITSEL_REFRESH_UI;
@@ -1477,7 +1477,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 		} foreach (units player - [player]);
 		private _pageMode = "INF";
 
-		if (A3C_HELI_INF_MODE == "HC" && {count (_gps - [group player]) > 0}) then {
+		if (A3C_MAP_CommandMode == "HC" && {count (_gps - [group player]) > 0}) then {
 			_squadUnits = []; //~~ sure this could be done better than resetting the value. try to avoid check instead
 		} else {
 			if (count _squadUnits > 0) then {
@@ -1550,7 +1550,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 					};
 				};
 			};
-			A3C_HELI_INF_MODE = _pageMode;
+			A3C_MAP_CommandMode = _pageMode;
 			//-- toggle or collapse wpsettings bar
 			_foldMode = if (count A3C_SELECTED_UNITS > 0 && {_pageMode != "HC"}) then {"OPEN"} else {"COLLAPSE"};
 			[_foldMode,0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
@@ -1593,7 +1593,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 			} else {
 				if (count A3C_SELECTED_UNITS == 1) then {
 					private _unit = A3C_SELECTED_UNITS select 0;
-					if ( (_unit == A3C_SQ_CLICKED_UNIT) && (A3C_HELI_INF_MODE == "INF") ) then {
+					if ( (_unit == A3C_SQ_CLICKED_UNIT) && (A3C_MAP_CommandMode == "INF") ) then {
 						//_unit setvariable ["A3C_PLOT_TEMP",[],true];
 						if (count (_unit getVariable ["A3C_PLOT",[]]) > 0 ) then {
 							[[_unit],true,true] call A3C_CANCELPLANS;
@@ -1628,8 +1628,8 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 				};
 			};
 		} else {
-			//if (A3C_HELI_INF_MODE == "HC") then {
-				_groupsToAssign = if (count A3C_SELECTED_UNITS > 0 && A3C_HELI_INF_MODE == "HC") then {+(A3C_SELECTED_UNITS)} else {[A3C_SQ_CLICKED_UNIT]};
+			//if (A3C_MAP_CommandMode == "HC") then {
+				_groupsToAssign = if (count A3C_SELECTED_UNITS > 0 && A3C_MAP_CommandMode == "HC") then {+(A3C_SELECTED_UNITS)} else {[A3C_SQ_CLICKED_UNIT]};
 				
 				//if (count A3C_SELECTED_UNITS > 0) then {
 
@@ -1975,7 +1975,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 	};
 
 	//-- exit: Mode is HC
-	if (A3C_HELI_INF_MODE == "HC") exitWith {
+	if (A3C_MAP_CommandMode == "HC") exitWith {
 		A3C_BOOL_MOUSEUP = false;
 	};
 
@@ -2242,32 +2242,32 @@ A3C_UI_MAP_HandlerFNC_KeyDown_Overlay = {
 	};
 
 
-	//-- 4: Numbers 1-3 (Overlay Commanding Mode A3C_HELI_INF_MODE)
+	//-- 4: Numbers 1-3 (Overlay Commanding Mode A3C_MAP_CommandMode)
 	if (commandingMenu == "") then {
 		switch (_key) do {
 			case 2: {
-				if !(A3C_HELI_INF_MODE == "INF") then {
+				if !(A3C_MAP_CommandMode == "INF") then {
 					A3C_SELECTED_UNITS = [];
 				};
 
 				["INF"] call A3C_START_TABMODE;
-				A3C_HELI_INF_MODE = "INF";
+				A3C_MAP_CommandMode = "INF";
 			};
 			case 3: {
-				if !(A3C_HELI_INF_MODE == "AIR") then {
+				if !(A3C_MAP_CommandMode == "AIR") then {
 					A3C_SELECTED_UNITS = [];
 				};
 
 				["AIR"] call A3C_START_TABMODE;
-				A3C_HELI_INF_MODE = "AIR";
+				A3C_MAP_CommandMode = "AIR";
 			};
 			case 4: {
-				if !(A3C_HELI_INF_MODE == "HC") then {
+				if !(A3C_MAP_CommandMode == "HC") then {
 					A3C_SELECTED_UNITS = [];
 				};
 
 				["HC"] call A3C_START_TABMODE;
-				A3C_HELI_INF_MODE = "HC";
+				A3C_MAP_CommandMode = "HC";
 			};
 		};
 	};
@@ -2299,7 +2299,7 @@ A3C_UI_MAP_HandlerFNC_KeyDown_Overlay = {
 		};
 		case 57: { // Spacebar
 			_blockDefault = true;
-			if ( A3C_HELI_INF_MODE in ["INF","AIR"] && {count groupselectedUnits player == 0}) then {
+			if ( A3C_MAP_CommandMode in ["INF","AIR"] && {count groupselectedUnits player == 0}) then {
 				['ALL'] spawn A3C_Btn_fnc_Execute;
 			};
 		};

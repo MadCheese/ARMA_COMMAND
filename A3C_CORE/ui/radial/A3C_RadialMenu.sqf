@@ -217,7 +217,7 @@ A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 100040) displayAddEventHandler
 			if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
 				A3C_RD_UNITS = [];
 			};
-			if ((count A3C_HUD_ARROWS) > 0) then {
+			if ((count A3C_HUD_UnitIndicators) > 0) then {
 				{inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];
 			} else {
 				{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];
