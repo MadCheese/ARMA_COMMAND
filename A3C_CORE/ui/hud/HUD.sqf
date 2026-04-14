@@ -360,7 +360,7 @@ A3C_HUD_ADD_SELECTED = {
 					private _startDir = _p1 getDir _p2;
 					A3C_FORMATION_DIR = [(_startDir - 180)] call MCSS_fnc_CorrectDir;
 					A3C_HUD_FORM = 0;
-					[0] call A3C_HUD_UI_FORM_BUTTON;
+					[0] call A3C_UI_HUD_FORM_BUTTON;
 				};
 				if (A3C_HUD_OBJECT_TYPE == 'MCSS_ASM_INDICATOR_F') then {
 					A3C_HUD_ARROW_%1 setObjectTextureGlobal[0,'#(argb,8,8,3)color(0,1,0,0.1)'];

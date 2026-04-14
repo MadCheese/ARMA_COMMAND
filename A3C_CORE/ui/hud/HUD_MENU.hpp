@@ -51,8 +51,8 @@ class A3C_HUD_MENU
 					h = GRIDY( 12 );
 					//toolTipColorShade[] = {0.5,0.2,0.6,0.6};
 					tooltip = "Change Formation";
-					onMouseButtonDown = "[1,_this select 1] call A3C_HUD_UI_FORM_BUTTON";
-					onMouseZChanged = "if ((_this select 1) < 0) then {[1,0] call A3C_HUD_UI_FORM_BUTTON} else {[1,1] call A3C_HUD_UI_FORM_BUTTON};";
+					onMouseButtonDown = "[1,_this select 1] call A3C_UI_HUD_FORM_BUTTON";
+					onMouseZChanged = "if ((_this select 1) < 0) then {[1,0] call A3C_UI_HUD_FORM_BUTTON} else {[1,1] call A3C_UI_HUD_FORM_BUTTON};";
 				};
 
 
@@ -137,7 +137,7 @@ class A3C_HUD_MENU
 					h = GRIDY( 4 );
 					//toolTipColorShade[] = {0.5,0.2,0.6,0.6};
 					//tooltip = "Change Formation";
-					action = "[] call A3C_HUD_UI_BUTTON";
+					action = "[] call A3C_UI_HUD_BUTTON";
 				};
 
 			};
@@ -223,7 +223,7 @@ class RscTitles
 
 
 			//[0.124999,0.100052,0.900222,1.20014]
-			class A3C_HUD_UI_CtrlsGroup : A3C_RscControlsGroup_NoScroll
+			class A3C_UI_HUD_CtrlsGroup : A3C_RscControlsGroup_NoScroll
 			{
 				idc = 11111;
 
@@ -235,7 +235,7 @@ class RscTitles
 				{
 
 					//-- Background
-					class A3C_HUD_UI_BG: A3C_RscPicture
+					class A3C_UI_HUD_BG: A3C_RscPicture
 					{
 						idc = 15;
 
@@ -246,7 +246,7 @@ class RscTitles
 					};
 
 					//-- FormSector icon (center circle)
-					class A3C_HUD_UI_FORM_BOX: A3C_RscPicture
+					class A3C_UI_HUD_FORM_BOX: A3C_RscPicture
 					{
 						idc = 12;
 
@@ -260,7 +260,7 @@ class RscTitles
 						//text = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
 					};
 					//-- left of formSector
-					class A3C_HUD_UI_TRAVEL_BOX : A3C_RscPicture
+					class A3C_UI_HUD_TRAVEL_BOX : A3C_RscPicture
 					{
 						idc = 10;
 						x = GRIDX( 1 );
@@ -268,7 +268,7 @@ class RscTitles
 						w = GRIDX( 4 );
 						h = GRIDY( 4 );
 					};
-					class A3C_HUD_UI_SPEED_BOX : A3C_RscPicture
+					class A3C_UI_HUD_SPEED_BOX : A3C_RscPicture
 					{
 						idc = 13;
 						x = GRIDX( 5 );
@@ -276,7 +276,7 @@ class RscTitles
 						w = GRIDX( 4 );
 						h = GRIDY( 4 );
 					};
-					class A3C_HUD_UI_DESTINATION_BOX : A3C_RscPicture
+					class A3C_UI_HUD_DESTINATION_BOX : A3C_RscPicture
 					{
 						idc = 11;
 						x = GRIDX( 10 );
@@ -286,7 +286,7 @@ class RscTitles
 					};
 
 					//-- right side of FormSector
-					class A3C_HUD_UI_GOCODE_BOX : A3C_RscPicture
+					class A3C_UI_HUD_GOCODE_BOX : A3C_RscPicture
 					{
 						idc = 14;
 						x = GRIDX( 26 );
@@ -331,7 +331,7 @@ class RscTitles
 		onDestroy =  "uiNamespace setVariable['A3C_KEY_VIEWER_UI', displayNull]";
 		class Controls
 		{
-			class A3C_HUD_UI_BG: A3C_RscText
+			class A3C_UI_HUD_BG: A3C_RscText
 			{
 				idc = 11;
 

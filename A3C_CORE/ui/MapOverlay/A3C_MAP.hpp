@@ -16,7 +16,7 @@ class A3C_MAPDIALOG
 {
 	idd = 100020;
 	movingenable = true;
-	onKeyDown = "_this call A3C_MAP_UI_HandlerFNC_KeyDown_Overlay;";
+	onKeyDown = "_this call A3C_UI_MAP_HandlerFNC_KeyDown_Overlay;";
 
 			
 	class ControlsBackground 
@@ -76,7 +76,7 @@ class A3C_MAPDIALOG
 		class A3C_MAP_FULLSCREEN: A3C_RscButton_Invisible
 		{
 			idc = 12;
-			onMouseMoving = "_this call A3C_MAP_UI_HandlerFNC_OnMouseMoving_Overlay";
+			onMouseMoving = "_this call A3C_UI_MAP_HandlerFNC_OnMouseMoving_Overlay";
 			x = safezoneX;
 			y = safezoneY;
 			w = safezoneW;
@@ -355,8 +355,8 @@ class A3C_MAPDIALOG
 			colorSelection[] = {1,1,1,1};
 			colorDisabled[] = {};
 			colorBackground[] = {0,0,0,0.6};
-			onSetFocus = "['TIMEOUT','ON'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE";
-			onKillFocus = "['TIMEOUT','OFF'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE";
+			onSetFocus = "['TIMEOUT','ON'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE";
+			onKillFocus = "['TIMEOUT','OFF'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE";
 			tooltip = "Set Timeout";
 			text = "05";
 			x = 0.580191 * safezoneW + safezoneX;
@@ -593,8 +593,8 @@ class A3C_MAPDIALOG
 			style = 2;
 			font = "TahomaB";
 			autocomplete = "false";
-			onSetFocus = "['SPACING','ON'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE";
-			onKillFocus = "['SPACING','OFF'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE";
+			onSetFocus = "['SPACING','ON'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE";
+			onKillFocus = "['SPACING','OFF'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE";
 			colorSelection[] = {1,1,1,1};
 			colorDisabled[] = {};
 			sizeEx = "0.03 / (getResolution select 5)";
@@ -2665,8 +2665,8 @@ class A3C_MAPDIALOG
 					sizeEx = "0.04 / (getResolution select 5)";
 					autocomplete = "false";
 
-					onSetFocus = "['GROUPNAME','ON'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE; ['ON'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE_DASHBOARD;";
-					onKillFocus = "['GROUPNAME','OFF'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE; ['OFF'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE_DASHBOARD;";
+					onSetFocus = "['GROUPNAME','ON'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE; ['ON'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE_DASHBOARD;";
+					onKillFocus = "['GROUPNAME','OFF'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE; ['OFF'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE_DASHBOARD;";
 
 					x = 0;
 					y = 0;

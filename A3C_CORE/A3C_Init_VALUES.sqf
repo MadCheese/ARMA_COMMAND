@@ -67,13 +67,13 @@ A3C_MISSIONENDED = false;
 A3C_UI_HUD_ASSIGNVEHICLE = false;
 A3C_UI_HUD_ASSIGNVEHICLE_OBJECTS = [];
 
-A3C_HUD_UI_3D_TAG_reposition = false;
-A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-A3C_HUD_UI_3D_TAG_ICON_SIZE = 3;
-A3C_HUD_UI_3D_TAG_ICON_POS = [0,0,0];
-A3C_HUD_UI_3D_TAG_ICON_COL = [1,1,1,0.7];
+A3C_UI_HUD_3D_TAG_reposition = false;
+A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+A3C_UI_HUD_3D_TAG_ICON_SIZE = 3;
+A3C_UI_HUD_3D_TAG_ICON_POS = [0,0,0];
+A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
 
-A3C_HUD_UI_3D_TAG_ICON_MOD = "NONE"; //-- for modifier
+A3C_UI_HUD_3D_TAG_ICON_MOD = "NONE"; //-- for modifier
 
 A3C_UI_MAP_BOOL_isHCWaypointPosEdit = false; //-- different from A3C_BOOL_MOVINGHC (for default Arma HC module)
 
@@ -634,7 +634,7 @@ BLUE_LINES = [];
 
 
 A3C_MAPTAB_UNITBUTTONCEIL = 16;
-A3C_MAP_UI_Overlay_VAR_isUnFolded = false;
+A3C_UI_MAP_Overlay_VAR_isUnFolded = false;
 A3C_SQ_CLICKED_UNIT = objNull;
 A3C_BOOL_MOUSEMOVING = false;
 A3C_MAP_DRAGPLANNING_POSITIONS = [];

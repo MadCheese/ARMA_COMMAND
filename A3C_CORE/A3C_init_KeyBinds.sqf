@@ -2,14 +2,14 @@ if (isDedicated) exitwith {};
 
 
 
-A3C_UI_HANDLER_ID_HUD_KeyDown = -1;
-A3C_UI_HANDLER_ID_HUD_KeyUp = -1;
-A3C_UI_HANDLER_ID_HUD_MouseButtonDown = -1;
-A3C_UI_HANDLER_ID_HUD_MouseZChanged = -1;
+A3C_UI_HUD_KeyDown_EHID = -1;
+A3C_UI_HUD_KeyUp_EHID = -1;
+A3C_UI_HUD_MouseButtonDown_EHID = -1;
+A3C_UI_HUD_MouseZChanged_EHID = -1;
 
-A3C_UI_HANDLER_ID_MAP_KeyDown = -1;
-A3C_UI_HANDLER_ID_MAP_MouseButtonDown = -1;
-A3C_UI_HANDLER_ID_MAP_MouseButtonUp = -1;
+A3C_UI_MAP_KeyDown_EHID = -1;
+A3C_UI_MAP_MouseButtonDown_EHID = -1;
+A3C_UI_MAP_MouseButtonUp_EHID = -1;
 
 
 
@@ -25,11 +25,11 @@ A3C_UI_FNC_ADD_KEYBINDS =
 	//-- HUD KeyDown
 	[
 		findDisplay 46,
-		"A3C_UI_HANDLER_ID_HUD_KeyDown",
+		"A3C_UI_HUD_KeyDown_EHID",
 		"display",
 		"KeyDown",
 		{
-			private _blockDefaultKey = _this call A3C_HUD_UI_HandlerFNC_KeyDown;
+			private _blockDefaultKey = _this call A3C_UI_HUD_HandlerFNC_KeyDown;
 			_blockDefaultKey
 		}
 	] call A3C_UI_CreateSafeEventhandler;
@@ -37,11 +37,11 @@ A3C_UI_FNC_ADD_KEYBINDS =
 	//-- HUD KeyUp
 	[
 		findDisplay 46,
-		"A3C_UI_HANDLER_ID_HUD_KeyUp",
+		"A3C_UI_HUD_KeyUp_EHID",
 		"display",
 		"KeyUp",
 		{
-			_this call A3C_HUD_UI_HandlerFNC_KeyUp;
+			_this call A3C_UI_HUD_HandlerFNC_KeyUp;
 			false
 		}
 	] call A3C_UI_CreateSafeEventhandler;
@@ -50,11 +50,11 @@ A3C_UI_FNC_ADD_KEYBINDS =
 	//-- HUD MouseButtonDown
 	[
 		findDisplay 46,
-		"A3C_UI_HANDLER_ID_HUD_MouseButtonDown",
+		"A3C_UI_HUD_MouseButtonDown_EHID",
 		"display",
 		"MouseButtonDown",
 		{
-			_this spawn A3C_HUD_UI_HandlerFNC_MouseButtonDown;
+			_this spawn A3C_UI_HUD_HandlerFNC_MouseButtonDown;
 			false
 		}
 	] call A3C_UI_CreateSafeEventhandler;
@@ -62,11 +62,11 @@ A3C_UI_FNC_ADD_KEYBINDS =
 	//-- HUD MouseZChanged
 	[
 		findDisplay 46,
-		"A3C_UI_HANDLER_ID_HUD_MouseZChanged",
+		"A3C_UI_HUD_MouseZChanged_EHID",
 		"display",
 		"MouseZChanged",
 		{
-			private _blockDefaultKey = _this call A3C_HUD_UI_HandlerFNC_MouseZChanged;
+			private _blockDefaultKey = _this call A3C_UI_HUD_HandlerFNC_MouseZChanged;
 			_blockDefaultKey
 		}
 	] call A3C_UI_CreateSafeEventhandler;
@@ -78,12 +78,12 @@ A3C_UI_FNC_ADD_KEYBINDS =
 	//-- Map KeyDown
 	[
 		(findDisplay 12 displayctrl 51),
-		"A3C_UI_HANDLER_ID_MAP_KeyDown",
+		"A3C_UI_MAP_KeyDown_EHID",
 		"ctrl",
 		"KeyDown",
 		{
 			disableSerialization;
-			private _return = _this call A3C_MAP_UI_HandlerFNC_KeyDown_Map;
+			private _return = _this call A3C_UI_MAP_HandlerFNC_KeyDown_Map;
 			_return	
 		}
 	] call A3C_UI_CreateSafeEventhandler;
@@ -91,14 +91,14 @@ A3C_UI_FNC_ADD_KEYBINDS =
 	//-- Map MouseButtonDown
 	[
 		(findDisplay 12 displayctrl 51),
-		"A3C_UI_HANDLER_ID_MAP_MouseButtonDown",
+		"A3C_UI_MAP_MouseButtonDown_EHID",
 		"ctrl",
 		"MouseButtonDown",
 		{
 			_return = false;
 			A3C_BOOL_MAP_MD = true;
 			if (visibleMap) then {
-				_this spawn A3C_MAP_UI_HandlerFNC_OnMouseButtonDown;
+				_this spawn A3C_UI_MAP_HandlerFNC_OnMouseButtonDown;
 			};
 			_return
 		}
@@ -107,18 +107,19 @@ A3C_UI_FNC_ADD_KEYBINDS =
 	//-- Map MouseButtonUp
 	[
 		(findDisplay 12 displayctrl 51),
-		"A3C_UI_HANDLER_ID_MAP_MouseButtonUp",
+		"A3C_UI_MAP_MouseButtonUp_EHID",
 		"ctrl",
 		"MouseButtonUp",
 		{
 			A3C_BOOL_MAP_MD = false;
 			if (visibleMap) then {
-				_this spawn A3C_MAP_UI_HandlerFNC_OnMouseButtonUp;
+				_this spawn A3C_UI_MAP_HandlerFNC_OnMouseButtonUp;
 				A3C_BOOL_MOUSEMOVING = false;
 			};
 		}
 	] call A3C_UI_CreateSafeEventhandler;
 
+	// #TODO: Remove grenade handler and add to main handler
 	if !(isNil "A3C_GRENADEHANDLER") then {(findDisplay 46) displayRemoveEventHandler ["MouseButtonUP",A3C_GRENADEHANDLER];};
 
 

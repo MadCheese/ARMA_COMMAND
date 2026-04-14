@@ -899,8 +899,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								},
 								{
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-									A3C_HUD_UI_3D_TAG_reposition = false;
+									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+									A3C_UI_HUD_3D_TAG_reposition = false;
 								},
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -982,8 +982,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								},
 								{
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-									A3C_HUD_UI_3D_TAG_reposition = false;
+									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+									A3C_UI_HUD_3D_TAG_reposition = false;
 								},
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -1013,7 +1013,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								};
 							};
 							
-							["DELETE"] call A3C_MAP_UI_Overlay_OPEN_OBJECTSELECTOR_MAP;
+							["DELETE"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
 						};
 
 						
@@ -1202,8 +1202,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								},
 								{
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-									A3C_HUD_UI_3D_TAG_reposition = false;
+									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+									A3C_UI_HUD_3D_TAG_reposition = false;
 								},
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -1236,8 +1236,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								},
 								{
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-									A3C_HUD_UI_3D_TAG_reposition = false;
+									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+									A3C_UI_HUD_3D_TAG_reposition = false;
 								},
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -1274,8 +1274,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								},
 								{
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-									A3C_HUD_UI_3D_TAG_reposition = false;
+									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+									A3C_UI_HUD_3D_TAG_reposition = false;
 								},
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -1611,8 +1611,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								},
 								{
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-									A3C_HUD_UI_3D_TAG_reposition = false;
+									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+									A3C_UI_HUD_3D_TAG_reposition = false;
 								},
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -1647,8 +1647,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								},
 								{
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-									A3C_HUD_UI_3D_TAG_reposition = false;
+									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+									A3C_UI_HUD_3D_TAG_reposition = false;
 								},
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -1773,7 +1773,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						params ["_clickData","_buttonArray","_specialParams"];
 						BR_A3C_DISABLE_RADIAL = true;
 						[] call A3C_RADIAL_CloseDisplay;
-						A3C_HUD_UI_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa'; //"\a3c_ui\menu\icon_menu_action_repair.paa";
+						A3C_UI_HUD_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa'; //"\a3c_ui\menu\icon_menu_action_repair.paa";
 
 
 						[
@@ -1784,9 +1784,9 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								count A3C_RD_UNITS > 0
 							},
 							{
-								_wpPos = +(A3C_HUD_UI_3D_TAG_ICON_POS);
+								_wpPos = +(A3C_UI_HUD_3D_TAG_ICON_POS);
 
-								[_wpPos,''] spawn A3C_HUD_UI_3D_TAG;
+								[_wpPos,''] spawn A3C_UI_HUD_3D_TAG;
 								private _group = A3C_RD_UNITS select 0;
 								//-- delete current waypoints
 								while {(count (waypoints _group)) > 1} do {
@@ -1815,7 +1815,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							{
 								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 								//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-								A3C_HUD_UI_3D_TAG_reposition = false;
+								A3C_UI_HUD_3D_TAG_reposition = false;
 							},
 							false
 						] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -1830,17 +1830,17 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							{
 							},
 							{
-								if (A3C_HUD_UI_3D_TAG_ICON_TYPE != "") then {
+								if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "") then {
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 								};
 								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-								A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-								A3C_HUD_UI_3D_TAG_reposition = false;
+								A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+								A3C_UI_HUD_3D_TAG_reposition = false;
 								A3C_UI_RADIAL_Current_Remfire_Units = [];
 							},
 							true
 						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-						A3C_HUD_UI_3D_TAG_reposition = true;
+						A3C_UI_HUD_3D_TAG_reposition = true;
 
 
 
@@ -1863,7 +1863,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						params ["_clickData","_buttonArray","_specialParams"];
 						BR_A3C_DISABLE_RADIAL = true;
 						[] call A3C_RADIAL_CloseDisplay;
-						A3C_HUD_UI_3D_TAG_ICON_TYPE =  "\a3c_ui\menu\icon_menu_action_repair.paa";
+						A3C_UI_HUD_3D_TAG_ICON_TYPE =  "\a3c_ui\menu\icon_menu_action_repair.paa";
 
 
 						[
@@ -1874,9 +1874,9 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								count A3C_RD_UNITS > 0
 							},
 							{
-								_wpPos = +(A3C_HUD_UI_3D_TAG_ICON_POS);
+								_wpPos = +(A3C_UI_HUD_3D_TAG_ICON_POS);
 
-								[_wpPos,''] spawn A3C_HUD_UI_3D_TAG;
+								[_wpPos,''] spawn A3C_UI_HUD_3D_TAG;
 								private _group = A3C_RD_UNITS select 0;
 								//-- delete current waypoints
 								while {(count (waypoints _group)) > 1} do {
@@ -1893,7 +1893,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							{
 								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 								//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-								A3C_HUD_UI_3D_TAG_reposition = false;
+								A3C_UI_HUD_3D_TAG_reposition = false;
 							},
 							false
 						] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -1908,17 +1908,17 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							{
 							},
 							{
-								if (A3C_HUD_UI_3D_TAG_ICON_TYPE != "") then {
+								if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "") then {
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 								};
 								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-								A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-								A3C_HUD_UI_3D_TAG_reposition = false;
+								A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+								A3C_UI_HUD_3D_TAG_reposition = false;
 								A3C_UI_RADIAL_Current_Remfire_Units = [];
 							},
 							true
 						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-						A3C_HUD_UI_3D_TAG_reposition = true;
+						A3C_UI_HUD_3D_TAG_reposition = true;
 
 
 
@@ -1948,8 +1948,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 						if (_doSpecifyLandingPos) then {
 							if (!isNull findDisplay 100040) then {
-								A3C_HUD_UI_3D_TAG_ICON_TYPE =  "";
-								A3C_HUD_UI_3D_TAG_ICON_COL = [1,1,1,0.7];
+								A3C_UI_HUD_3D_TAG_ICON_TYPE =  "";
+								A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
 								BR_A3C_DISABLE_RADIAL = true;
 
 
@@ -2210,7 +2210,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									{
 										deleteVehicle A3C_OBJECTPLACER; //A3C_OBJECTPLACER = nil;
 										(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-										A3C_HUD_UI_3D_TAG_reposition = false;
+										A3C_UI_HUD_3D_TAG_reposition = false;
 									},
 									false
 								] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -2227,18 +2227,18 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									{
 										if (!isNull A3C_OBJECTPLACER) then {
 											deleteVehicle A3C_OBJECTPLACER; //A3C_OBJECTPLACER = nil;
-											A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+											A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 											(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 										};
-										//A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+										//A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 
 										(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 
-										A3C_HUD_UI_3D_TAG_reposition = false;
+										A3C_UI_HUD_3D_TAG_reposition = false;
 									},
 									true
 								] call A3C_UI_RADIAL_ADD_EH_MACROS;
-								A3C_HUD_UI_3D_TAG_reposition = true;
+								A3C_UI_HUD_3D_TAG_reposition = true;
 							} else {
 								//-- specify mapclick
 							};
@@ -2265,8 +2265,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						params ["_clickData","_buttonArray","_specialParams"];
 
 						if (!isNull findDisplay 100040) then {
-							A3C_HUD_UI_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_CAS.paa';
-							A3C_HUD_UI_3D_TAG_ICON_COL = [1,1,1,0.7];
+							A3C_UI_HUD_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_CAS.paa';
+							A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
 							BR_A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							[
@@ -2296,7 +2296,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 														(findDisplay 100060) closeDisplay 0;
 														A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
-														A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+														A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 													};
 												};
 											}
@@ -2349,7 +2349,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								},
 								{
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-									A3C_HUD_UI_3D_TAG_reposition = false;
+									A3C_UI_HUD_3D_TAG_reposition = false;
 								},
 								false
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -2364,20 +2364,20 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								{
 								},
 								{
-									if (A3C_HUD_UI_3D_TAG_ICON_TYPE != "") then {
+									if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "") then {
 										(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 									};
-									if !(A3C_HUD_UI_3D_TAGGING) then {
-										A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+									if !(A3C_UI_HUD_3D_TAGGING) then {
+										A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 									};
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-									A3C_HUD_UI_3D_TAG_reposition = false;
+									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+									A3C_UI_HUD_3D_TAG_reposition = false;
 									A3C_UI_RADIAL_Current_Remfire_Units = [];
 								},
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
-							A3C_HUD_UI_3D_TAG_reposition = true;
+							A3C_UI_HUD_3D_TAG_reposition = true;
 
 						} else {
 							//-- specify mapclick
@@ -2399,8 +2399,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						params ["_clickData","_buttonArray","_specialParams"];
 
 						if (!isNull findDisplay 100040) then {
-							A3C_HUD_UI_3D_TAG_ICON_TYPE = "\A3C_UI\menu\icon_menu_action_Rappel.paa";
-							A3C_HUD_UI_3D_TAG_ICON_COL = [1,1,1,0.7];
+							A3C_UI_HUD_3D_TAG_ICON_TYPE = "\A3C_UI\menu\icon_menu_action_Rappel.paa";
+							A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
 							BR_A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							A3C_OBJECTPLACER = "A3C_HeliPad" createvehicleLocal [0,0,0]; // "Land_JumpTarget_F"
@@ -2411,13 +2411,13 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 									count A3C_RD_UNITS > 0 &&
 									{
-										A3C_HUD_UI_3D_TAG_ICON_TYPE != ''
+										A3C_UI_HUD_3D_TAG_ICON_TYPE != ''
 										&&
 										{count A3C_RD_UNITS > 0}
 									}
 								},
 								{
-									[A3C_HUD_UI_3D_TAG_ICON_POS,''] spawn A3C_HUD_UI_3D_TAG;
+									[A3C_UI_HUD_3D_TAG_ICON_POS,''] spawn A3C_UI_HUD_3D_TAG;
 									{
 										private _gp = _x;
 
@@ -2442,7 +2442,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 										
 										//-- add new waypoints
 										private _leaderVic = (vehicle leader _gp);
-										private _rappelWPos = +(A3C_HUD_UI_3D_TAG_ICON_POS);
+										private _rappelWPos = +(A3C_UI_HUD_3D_TAG_ICON_POS);
 										private _startPos = getpos _leaderVic;
 										private _landOnReturn = !isEngineOn _leaderVic;
 										_wp =
@@ -2450,7 +2450,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											_gp,
 											_rappelWPos
 										] call A3C_HC_ADD_WP;
-										if (A3C_HUD_UI_3D_TAG_ICON_POS distance2D _leaderVic > 50) then {
+										if (A3C_UI_HUD_3D_TAG_ICON_POS distance2D _leaderVic > 50) then {
 											_wp2 =
 											[
 												_gp,
@@ -2488,7 +2488,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								{
 									deleteVehicle A3C_OBJECTPLACER; //A3C_OBJECTPLACER = nil;
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-									A3C_HUD_UI_3D_TAG_reposition = false;
+									A3C_UI_HUD_3D_TAG_reposition = false;
 								},
 								false
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -2505,18 +2505,18 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								{
 									if (!isNull A3C_OBJECTPLACER) then {
 										deleteVehicle A3C_OBJECTPLACER; //A3C_OBJECTPLACER = nil;
-										A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+										A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 										(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 									};
-									//A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+									//A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 
-									A3C_HUD_UI_3D_TAG_reposition = false;
+									A3C_UI_HUD_3D_TAG_reposition = false;
 								},
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
-							A3C_HUD_UI_3D_TAG_reposition = true;
+							A3C_UI_HUD_3D_TAG_reposition = true;
 						} else {
 							//-- map mode: immideate rappel for stationary vics (change to mapclick)
 							{
@@ -2699,14 +2699,14 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						if (!isNull findDisplay 100040) then {
 							BR_A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
-							A3C_HUD_UI_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_remote_Artillery.paa';
-							A3C_HUD_UI_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
+							A3C_UI_HUD_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_remote_Artillery.paa';
+							A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
 							[
 								46,
 								'SPACE',
 								{
 
-									(count A3C_RD_UNITS > 0 && {A3C_HUD_UI_3D_TAG_ICON_TYPE != ""})
+									(count A3C_RD_UNITS > 0 && {A3C_UI_HUD_3D_TAG_ICON_TYPE != ""})
 								},
 								{
 									A3C_HC_FOCUS_ARTY = objNull;
@@ -2729,34 +2729,34 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											};
 										}
 									];
-									A3C_HC_FOCUS_ARTY_POS = +(A3C_HUD_UI_3D_TAG_ICON_POS);
-									["ARTY"] call A3C_MAP_UI_Overlay_OPEN_OBJECTSELECTOR_MAP;
+									A3C_HC_FOCUS_ARTY_POS = +(A3C_UI_HUD_3D_TAG_ICON_POS);
+									["ARTY"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
 									[] spawn {
 										while {!isNull findDisplay 100060} do {
 											sleep 0.5;
 										};
-										A3C_HUD_UI_3D_TAG_reposition = false;
+										A3C_UI_HUD_3D_TAG_reposition = false;
 										private _iconType = '\a3c_ui\crosshairs\icon_crosshair_remote_Artillery.paa';
 										//-- mini flicker
 										for "_i" from 1 to 2 do {
-											A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+											A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 											sleep 0.1;
-											A3C_HUD_UI_3D_TAG_ICON_TYPE = _iconType;
+											A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
 											sleep 0.1;
 										};
 										if (BR_A3C_DISABLE_RADIAL) then {
 											//-- Radial key not released - reIssue the icon for repeated orders
-											A3C_HUD_UI_3D_TAG_ICON_TYPE = _iconType;
-											A3C_HUD_UI_3D_TAG_reposition = true;
+											A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
+											A3C_UI_HUD_3D_TAG_reposition = true;
 										} else {
 											//-- Radial key released - abort
-											A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-											A3C_HUD_UI_3D_TAG_reposition = false;
+											A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+											A3C_UI_HUD_3D_TAG_reposition = false;
 										}
 
 									};
 									
-									// A3C_HUD_UI_3D_TAG_reposition = false;
+									// A3C_UI_HUD_3D_TAG_reposition = false;
 								},
 								{
 									
@@ -2776,12 +2776,12 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									//-- in order to allow multiple successive arty orders, we remove confirm keybind when MENU key is released 
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 									(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									A3C_HUD_UI_3D_TAG_reposition = false;
-									A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+									A3C_UI_HUD_3D_TAG_reposition = false;
+									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 								},
 								true
 							] call A3C_UI_RADIAL_ADD_EH_MACROS;
-							A3C_HUD_UI_3D_TAG_reposition = true;
+							A3C_UI_HUD_3D_TAG_reposition = true;
 						} else {
 							[_a3c_dsp] spawn {
 								params ["_a3c_dsp"];
@@ -2806,7 +2806,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											if !(_shift) then {
 												A3C_isArtyAwaitingSuborder = false;
 											};
-											["ARTY"] call A3C_MAP_UI_Overlay_OPEN_OBJECTSELECTOR_MAP;
+											["ARTY"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
 											
 										} 
 									] call BIS_fnc_addStackedEventHandler;
@@ -2967,8 +2967,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						params ["_clickData","_buttonArray","_specialParams"];
 
 
-						A3C_HUD_UI_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa';
-						A3C_HUD_UI_3D_TAG_ICON_COL = [1,1,1,0.7];
+						A3C_UI_HUD_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa';
+						A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
 						BR_A3C_DISABLE_RADIAL = true;
 						[] call A3C_RADIAL_CloseDisplay;
 
@@ -2982,7 +2982,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 								count A3C_RD_UNITS > 0 &&
 								{
-									A3C_HUD_UI_3D_TAG_ICON_TYPE != ''
+									A3C_UI_HUD_3D_TAG_ICON_TYPE != ''
 									&&
 									{count A3C_RD_UNITS > 0}
 								}
@@ -2991,7 +2991,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_DOWNKEYS) exitWith {};
 								//A3C_DOWNKEYS = A3C_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
-								//A3C_HUD_UI_3D_TAG_reposition = false;
+								//A3C_UI_HUD_3D_TAG_reposition = false;
 
 
 								if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
@@ -3010,7 +3010,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 													_button = _button - [(_button select 0)];
 													if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
 														BR_A3C_DISABLE_RADIAL = false;
-														A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+														A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 														(findDisplay 100060) closeDisplay 0;
@@ -3058,20 +3058,20 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 											sleep 0.5;
 										};
-										if (A3C_HUD_UI_3D_TAG_ICON_TYPE == "\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\cargoPut_ca.paa") then {
-											A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+										if (A3C_UI_HUD_3D_TAG_ICON_TYPE == "\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\cargoPut_ca.paa") then {
+											A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 										};
 									};
 
 								} else {
-									A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 								};
 
 							},
 							{
 
 								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-								A3C_HUD_UI_3D_TAG_reposition = false;
+								A3C_UI_HUD_3D_TAG_reposition = false;
 							},
 							false
 						] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -3085,24 +3085,24 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							},
 							{
 
-								//[A3C_HUD_UI_3D_TAG_ICON_POS,''] spawn A3C_HUD_UI_3D_TAG;
+								//[A3C_UI_HUD_3D_TAG_ICON_POS,''] spawn A3C_UI_HUD_3D_TAG;
 							},
 							{
-								if (A3C_HUD_UI_3D_TAG_ICON_TYPE != "") then {
+								if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "") then {
 									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 								};
-								if !(A3C_HUD_UI_3D_TAGGING) then {
-									A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+								if !(A3C_UI_HUD_3D_TAGGING) then {
+									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 								};
 								
 								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 
-								A3C_HUD_UI_3D_TAG_reposition = false;
+								A3C_UI_HUD_3D_TAG_reposition = false;
 								A3C_UI_RADIAL_Current_Remfire_Units = [];
 							},
 							true
 						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-						A3C_HUD_UI_3D_TAG_reposition = true;
+						A3C_UI_HUD_3D_TAG_reposition = true;
 
 					};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_explosives_Place.paa";
@@ -3196,9 +3196,9 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 										//-- create waypoint
 
-										A3C_HUD_UI_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  _weapon >> "picture");
-										A3C_HUD_UI_3D_TAG_ICON_MOD = "ON";
-										[screentoWorld [0.5,0.5],""] spawn A3C_HUD_UI_3D_TAG;
+										A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  _weapon >> "picture");
+										A3C_UI_HUD_3D_TAG_ICON_MOD = "ON";
+										[screentoWorld [0.5,0.5],""] spawn A3C_UI_HUD_3D_TAG;
 										player commandRadio "SentAssemble";
 
 									};
@@ -3242,7 +3242,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											_button = _button - [(_button select 0)];
 											if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
 												BR_A3C_DISABLE_RADIAL = false;
-												A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+												A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 												(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 												(findDisplay 100060) closeDisplay 0;
 												A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
@@ -3645,8 +3645,8 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 	} else {
 		BR_A3C_DISABLE_RADIAL = true;
 		[] call A3C_RADIAL_CloseDisplay;
-		A3C_HUD_UI_3D_TAG_ICON_TYPE = "\a3c_ui\menu\icon_menu_action_suppression.paa";//
-		A3C_HUD_UI_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
+		A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\menu\icon_menu_action_suppression.paa";//
+		A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
 
 		[
 			46,
@@ -3654,17 +3654,17 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 			{true},
 			{},
 			{
-				if (count A3C_RD_UNITS > 0 && {A3C_HUD_UI_3D_TAG_ICON_TYPE != ""}) then {
+				if (count A3C_RD_UNITS > 0 && {A3C_UI_HUD_3D_TAG_ICON_TYPE != ""}) then {
 					{
-						[_x,A3C_HUD_UI_3D_TAG_ICON_POS] call A3C_HC_Suppression_Immediate;
+						[_x,A3C_UI_HUD_3D_TAG_ICON_POS] call A3C_HC_Suppression_Immediate;
 					} foreach A3C_UI_RADIAL_Current_Remfire_Units;
 				};
 				// systemchat 'WHooo';
 				(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 
 				A3C_HC_GroupMenu_SuppressionRequested = false;
-				A3C_HUD_UI_3D_TAG_reposition = false;
-				[A3C_HUD_UI_3D_TAG_ICON_POS,"SUPPRESSION"] spawn A3C_HUD_UI_3D_TAG;
+				A3C_UI_HUD_3D_TAG_reposition = false;
+				[A3C_UI_HUD_3D_TAG_ICON_POS,"SUPPRESSION"] spawn A3C_UI_HUD_3D_TAG;
 			},
 			false
 		] call A3C_UI_RADIAL_ADD_EH_MACROS;
@@ -3675,17 +3675,17 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 			{true},
 			{},
 			{
-				if (A3C_HUD_UI_3D_TAG_ICON_TYPE != "") then {
+				if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "") then {
 					(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 				};
 				(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-				A3C_HUD_UI_3D_TAG_reposition = false;
-				A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+				A3C_UI_HUD_3D_TAG_reposition = false;
+				A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 			},
 			true
 		] call A3C_UI_RADIAL_ADD_EH_MACROS;
 
-		A3C_HUD_UI_3D_TAG_reposition = true;
+		A3C_UI_HUD_3D_TAG_reposition = true;
 	};
 };
 
@@ -4713,9 +4713,9 @@ A3C_HC_UnassembleWeapon = {
 			//if ({ (backPack _x == "") && (_x distance (vehicle _u) < 30) && (isNull objectParent _x) } count _groupUnits > 0) then {
 			if ([units _group,_wpn,true] call A3C_HC_canSelectionPickUpStatic) then {
 				player commandRadio "SentDisAssemble";
-				A3C_HUD_UI_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  (typeOf _wpn) >> "picture");
-				A3C_HUD_UI_3D_TAG_ICON_MOD = "OFF";
-				[position _wpn,""] spawn A3C_HUD_UI_3D_TAG;
+				A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  (typeOf _wpn) >> "picture");
+				A3C_UI_HUD_3D_TAG_ICON_MOD = "OFF";
+				[position _wpn,""] spawn A3C_UI_HUD_3D_TAG;
 
 				systemchat format
 				[

@@ -5,7 +5,7 @@ if (isDedicated) exitwith {};
 /////////////////////////////   DRAW FNCS (MOVE TO OWN SCRIPT WITH UI FNCS)    ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////  
 
-A3C_MAP_UI_DRAW_MACRO_VEHICON = {
+A3C_UI_MAP_DRAW_MACRO_VEHICON = {
 	params ["_ctrl","_vehicle","_size","_color","_text"];
 	private _iconType = (gettext(configfile >> "CfgVehicles" >> (typeof _vehicle) >> "Icon"));
 	private _iconPos = getPos _vehicle;
@@ -32,7 +32,7 @@ A3C_MAP_UI_DRAW_MACRO_VEHICON = {
 };
 
 
-A3C_MAP_UI_DRAW_THICC_LINE = {
+A3C_UI_MAP_DRAW_THICC_LINE = {
 	params ["_ctrl","_root","_wPos","_thickness","_color"];
 	_dir = _root getDir _wpos;
 	_selPoses =
@@ -58,7 +58,7 @@ A3C_MAP_UI_DRAW_THICC_LINE = {
 	];
 };
 
-A3C_MAP_UI_DRAW_Polyframe = {
+A3C_UI_MAP_DRAW_Polyframe = {
 	params ["_ctrl","_positions","_thickness","_color"];
 	//hint str _this;
 	_dotLength = 5;
@@ -105,7 +105,7 @@ A3C_MAP_UI_DRAW_Polyframe = {
 
 /////////////////////////////   UI FNCS (MOVE TO OWN SCRIPT)    ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////   
-A3C_MAP_UI_Overlay_ResizeTeamColorsXWH = {
+A3C_UI_MAP_Overlay_ResizeTeamColorsXWH = {
 	params ["_a3c_dsp","_mode"];
 	
 
@@ -180,20 +180,20 @@ A3C_MAP_UI_Overlay_ResizeTeamColorsXWH = {
 /////////////////////////////   MAP OVERLAY FNCS    ////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////// 
 
-A3C_MAP_UI_Overlay_TOGGLE_FoldSquadControls = {
+A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls = {
 	params ["_mode","_animTime"];
 	private _doExit = false;
 	if (_mode == "OPEN") then {
-		if (A3C_MAP_UI_Overlay_VAR_isUnFolded) then {
+		if (A3C_UI_MAP_Overlay_VAR_isUnFolded) then {
 			if (count A3C_SELECTED_UNITS == 0) then {
-				A3C_MAP_UI_Overlay_VAR_isUnFolded = false;
+				A3C_UI_MAP_Overlay_VAR_isUnFolded = false;
 			};
 			_doExit = true;
 		} else {
-			A3C_MAP_UI_Overlay_VAR_isUnFolded = true;
+			A3C_UI_MAP_Overlay_VAR_isUnFolded = true;
 		};
 	} else {
-		A3C_MAP_UI_Overlay_VAR_isUnFolded = false;
+		A3C_UI_MAP_Overlay_VAR_isUnFolded = false;
 	};
 	if (_doExit) exitWith {};
 
@@ -323,7 +323,7 @@ A3C_MAP_UI_Overlay_TOGGLE_FoldSquadControls = {
 
 
 
-A3C_MAP_UI_Overlay_OPEN_OBJECTSELECTOR_MAP = {
+A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP = {
 	params ["_mode"];
 	
 	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
@@ -469,7 +469,7 @@ A3C_MAP_UI_Overlay_OPEN_OBJECTSELECTOR_MAP = {
 
 
 
-A3C_MAP_UI_FNC_ResetMapClick = {
+A3C_UI_MAP_FNC_ResetMapClick = {
 	params ["_mode"];
 	if (_mode == 0) then {
 		onMapSingleClick {
@@ -492,7 +492,7 @@ A3C_MAP_UI_FNC_ResetMapClick = {
 	};
 };
 
-A3C_MAP_UI_FNC_CloseMapOverlay = {
+A3C_UI_MAP_FNC_CloseMapOverlay = {
 	params ["_display"];
 	(findDisplay _display) closeDisplay 0;
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
@@ -500,11 +500,11 @@ A3C_MAP_UI_FNC_CloseMapOverlay = {
 	A3C_HELI_INF_MODE = "INF"; A3C_SELECTED_UNITS = [];
 	A3C_SELECTED_UNITS = [];
 	{_x setvariable ["A3C_PLOT_TEMP",[],true];} foreach units group player;
-	[1] call A3C_MAP_UI_FNC_ResetMapClick;
+	[1] call A3C_UI_MAP_FNC_ResetMapClick;
 };
 
 
-A3C_MAP_UI_FNC_CloseSyncCircleMenu = {
+A3C_UI_MAP_FNC_CloseSyncCircleMenu = {
 	//-- closes the little circle menu to select sync/board when syncing waypoints
 	params ["_a3c_dsp","_ctrlID"];
 	{
@@ -521,7 +521,7 @@ A3C_MAP_UI_FNC_CloseSyncCircleMenu = {
 
 
 
-A3C_MAP_UI_FNC_SYNC_LoadGroupInVehicle = {
+A3C_UI_MAP_FNC_SYNC_LoadGroupInVehicle = {
 	private ["_wp","_syncWps"];
 
 	_wp = [A3C_UI_MAPTAB_SYNC_HOSTGROUP,A3C_UI_MAPTAB_SYNC_HostWPI];
@@ -543,7 +543,7 @@ A3C_MAP_UI_FNC_SYNC_LoadGroupInVehicle = {
 };
 
 
-A3C_MAP_UI_FNC_SYNC_LoadVehicleInVehicle = {
+A3C_UI_MAP_FNC_SYNC_LoadVehicleInVehicle = {
 	private ["_wp","_syncWps"];
 
 	_wp = [A3C_UI_MAPTAB_SYNC_HOSTGROUP,A3C_UI_MAPTAB_SYNC_HostWPI];
@@ -640,12 +640,12 @@ A3C_UNITSEL_REFRESH_UI = {
 				private _infModeTo = if (vehicle (A3C_SELECTED_UNITS select 0) isKindOf "AIR") then {"AIR"} else {"INF"};
 				[_infModeTo] call A3C_MAPTAB_REFRESH_BARCONTROLS;
 			};
-			[_mode,0.1] call A3C_MAP_UI_Overlay_TOGGLE_FoldSquadControls;
+			[_mode,0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
 
 			
 		} else {
 			//-- map/tablet - high command
-			["COLLAPSE",0.1] call A3C_MAP_UI_Overlay_TOGGLE_FoldSquadControls;
+			["COLLAPSE",0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
 		};
 
 	};
@@ -1195,7 +1195,7 @@ A3C_LABEL_SELECTORS = {
 			",_i];
 		};
 	};
-	[_a3c_dsp,_mode] call A3C_MAP_UI_Overlay_ResizeTeamColorsXWH;
+	[_a3c_dsp,_mode] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
 };
 
 
@@ -1685,8 +1685,8 @@ A3C_START_TABMODE = {
 			};
 		};
 		case ("HC") : {
-			if (A3C_MAP_UI_Overlay_VAR_isUnFolded) then {
-				["COLLAPSE",0.1] call A3C_MAP_UI_Overlay_TOGGLE_FoldSquadControls;
+			if (A3C_UI_MAP_Overlay_VAR_isUnFolded) then {
+				["COLLAPSE",0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
 			};
 
 			_ctrlShowLowerBar = false;
@@ -2079,7 +2079,7 @@ A3C_Btn_fnc_Cancel = {
 	};
 	//(findDisplay _a3c_dsp) closeDisplay 0;
 	if (_mode == 0) then {
-		[_a3c_dsp] call A3C_MAP_UI_FNC_CloseMapOverlay;
+		[_a3c_dsp] call A3C_UI_MAP_FNC_CloseMapOverlay;
 	};
 	if (_a3c_dsp == 100030) then {
 		(findDisplay _a3c_dsp) closeDisplay 0; //~~~~ YOU MESSY BOY, CLEAN THIS SHIT UP WILL U? make coherent modes.
@@ -2097,7 +2097,7 @@ A3C_MAP_DelLoopObs = {
 	if (A3C_BOOL_MAP_MD) then {
 		A3C_BOOL_MAP_MD = false;
 		if (A3C_BOOL_DRAGLINE) then {
-			[0,0,0,0,false,false,false] spawn A3C_MAP_UI_HandlerFNC_OnMouseButtonUp;
+			[0,0,0,0,false,false,false] spawn A3C_UI_MAP_HandlerFNC_OnMouseButtonUp;
 		};
 	};
 };
@@ -5249,7 +5249,7 @@ A3C_CONTEXTBUTTON = {
 A3C_MAP_BOOL_CT_EDIT_ACTIVE = false;
 
 
-A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE_DASHBOARD = {
+A3C_UI_MAP_FNC_CTEDIT_ACTIVATE_DASHBOARD = {
 	params ["_mode"];
 
 	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
@@ -5273,7 +5273,7 @@ A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE_DASHBOARD = {
 	};
 };
 
-A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE = {
+A3C_UI_MAP_FNC_CTEDIT_ACTIVATE = {
 	//-- This function fires when the player is using a CT-Edit UI-control
 	params ["_controlType","_mode"];
 	private ["_a3c_dsp"];
@@ -5314,7 +5314,7 @@ A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE = {
 /////////////////////////////   GETTERS    ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////   
 
-A3C_MAP_UI_Overlay_getIconsAtMapPos = {
+A3C_UI_MAP_Overlay_getIconsAtMapPos = {
 	params ["_mode","_mapPositionX","_mapPositionY"];
 	private ["_iconArray","_iconAtPositionFound","_iconsAtPosition","_iconsNotAtPosition"];
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
@@ -5373,9 +5373,9 @@ STANDBY: TABLET SPECIFIC FUNCTIONS (DISBANDED)
 A3C_SwitchTabletImage = {
 	if ((profileNameSpace getVariable "A3C_TABLET_IMG") == "A3C_CORE\ui\pictures\BG_Tablet_Tough.paa") then {
 		profileNameSpace setVariable ["A3C_TABLET_IMG","A3C_CORE\ui\pictures\BG_Tablet_Small.paa"];
-		((findDisplay 100010) displayCtrl 1604) ctrlSetText "SMALL";
+		(findDisplay 100010 displayCtrl 1604) ctrlSetText "SMALL";
 	} else {
 		profileNameSpace setVariable ["A3C_TABLET_IMG","A3C_CORE\ui\pictures\BG_Tablet_Tough.paa"];
-		((findDisplay 100010) displayCtrl 1604) ctrlSetText "REG";
+		(findDisplay 100010 displayCtrl 1604) ctrlSetText "REG";
 	};
 };

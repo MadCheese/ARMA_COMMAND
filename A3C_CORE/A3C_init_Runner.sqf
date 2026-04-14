@@ -229,7 +229,7 @@ A3C_is_Initialized = true;
 // 		};
 // 	}];
 
-// 	[] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB_fnc_drawMapUI.sqf";
+// 	[] execVM "A3C_CORE\ui\MapOverlay\A3C_MAPTAB_fnc_drawMapUI.sqf";
 // 	[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
 
 // 	//-- In game loop - once per second
@@ -335,7 +335,7 @@ A3C_is_Initialized = true;
 			};
 		}];
 
-		[] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB_fnc_drawMapUI.sqf";
+		[] execVM "A3C_CORE\ui\MapOverlay\A3C_MAPTAB_fnc_drawMapUI.sqf";
 		[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
 
 		waitUntil {isNull (findDisplay 46)};

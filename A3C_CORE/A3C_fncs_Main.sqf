@@ -2844,7 +2844,7 @@ A3C_LB_Change = {
 				//	};
 				//};
 			};
-			[_a3c_dsp,A3C_HELI_INF_MODE] call A3C_MAP_UI_Overlay_ResizeTeamColorsXWH;
+			[_a3c_dsp,A3C_HELI_INF_MODE] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
 			[] spawn {
 				sleep 0.1;
 				[0] call A3C_MAPTAB_RESIZE_TEAMCOLORS_Y;
@@ -3410,7 +3410,7 @@ A3C_GROUP_RESET = {
 	//systemchat 'hey';
 	
 	//-- refresh map UI and HUD UI
-	[] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB_fnc_drawMapUI.sqf";
+	[] execVM "A3C_CORE\ui\MapOverlay\A3C_MAPTAB_fnc_drawMapUI.sqf";
 	[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
 
 

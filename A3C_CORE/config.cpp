@@ -29,9 +29,9 @@ class Extended_PreInit_EventHandlers
 // #include "ui\defines.hpp"
 #include "ui\A3C_BaseClasses.hpp"
 
-#include "ui\tablet\A3C_MapControls.hpp"
-// #include "ui\tablet\A3C_TAB.hpp"
-#include "ui\tablet\A3C_MAP.hpp"
+#include "ui\MapOverlay\A3C_MapControls.hpp"
+// #include "ui\MapOverlay\A3C_TAB.hpp"
+#include "ui\MapOverlay\A3C_MAP.hpp"
 #include "ui\radial\A3C_RadialMenu.hpp"
 #include "ui\HUD\HUD_MENU.hpp"
 #include "ui\HUD\HUD_BHV_CBM.hpp"

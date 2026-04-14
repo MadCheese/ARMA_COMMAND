@@ -13,7 +13,7 @@ class A3C_SWPDIALOG
 {
 	idd = 100030;
 	movingenable = true;
-	onKeyDown = "[100030,_this] call A3C_MAP_UI_HandlerFNC_KeyDown_Overlay";
+	onKeyDown = "[100030,_this] call A3C_UI_MAP_HandlerFNC_KeyDown_Overlay";
 	class ControlsBackground 
 	{		
 		class test_map: A3C_RscMapControl
@@ -1875,8 +1875,8 @@ class A3C_SWPDIALOG
 					autocomplete = "false";
 					colorSelection[] = {1,1,1,0.3};
 					colorDisabled[] = {0,0,0,0};
-					onSetFocus = "['GROUPNAME','ON'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE";
-					onKillFocus = "['GROUPNAME','OFF'] call A3C_MAP_UI_FNC_CT_EDIT_ACTIVATE";
+					onSetFocus = "['GROUPNAME','ON'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE";
+					onKillFocus = "['GROUPNAME','OFF'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE";
 					onKeyDown = "if (_this select 1 == 28) then {[] call A3C_Map_HC_groupContext_ButtonFnc_Confirm}";
 					x = GRIDX( 0 ); 
 					y = GRIDY( 0 );

@@ -116,7 +116,7 @@ A3C_fnc_drawHudUI = {
 				A3C_OBJECTPLACER setVectorUp [0,0,1];
 			};
 			
-			A3C_HUD_UI_3D_TAG_ICON_POS = ASLtoAGL _intsPos; 
+			A3C_UI_HUD_3D_TAG_ICON_POS = ASLtoAGL _intsPos; 
 		};
 		
 	};
@@ -466,10 +466,10 @@ A3C_fnc_drawHudUI = {
 	};
 	
 	
-	if (typeName A3C_HUD_UI_3D_TAG_ICON_TYPE == "STRING") then {
-		if (A3C_HUD_UI_3D_TAG_ICON_TYPE != "") then {
+	if (typeName A3C_UI_HUD_3D_TAG_ICON_TYPE == "STRING") then {
+		if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "") then {
 			//systemchat str time;
-			if (A3C_HUD_UI_3D_TAG_reposition) then {
+			if (A3C_UI_HUD_3D_TAG_reposition) then {
 				
 				_ins = lineIntersectsSurfaces
 				[
@@ -482,55 +482,55 @@ A3C_fnc_drawHudUI = {
 					"NONE"
 				];
 				if (count _ins == 0) then {
-					A3C_HUD_UI_3D_TAG_ICON_POS = screenToWorld [0.5,0.5];
+					A3C_UI_HUD_3D_TAG_ICON_POS = screenToWorld [0.5,0.5];
 				} else {
 				//	A3C_UI_RAPPEL_HELIPAD setVectorUp (_ins select 0 select 1);
-					A3C_HUD_UI_3D_TAG_ICON_POS = ASLtoAGL((_ins select 0) select 0);
+					A3C_UI_HUD_3D_TAG_ICON_POS = ASLtoAGL((_ins select 0) select 0);
 
-					if ({_x in toLower A3C_HUD_UI_3D_TAG_ICON_TYPE} count ["movepos","building"] > 0) then {
+					if ({_x in toLower A3C_UI_HUD_3D_TAG_ICON_TYPE} count ["movepos","building"] > 0) then {
 						private _eligibleForBuildingSearch = (count A3C_RD_UNITS == 1) && {{!isNull objectParent _x && {(assignedVehicleRole _x) select 0 != "cargo"}} count (units (A3C_RD_UNITS select 0)) == 0};
 						
 						if (_eligibleForBuildingSearch && {cursorTarget isKindOf "HOUSE" && {([cursortarget] call MCSS_fnc_countBPos) > 0}}) then {
-							A3C_HUD_UI_3D_TAG_ICON_TYPE = "a3c_ui\markers\building.paa";
-							A3C_HUD_UI_3D_TAG_ICON_COL = [1,1,1,0.7];
+							A3C_UI_HUD_3D_TAG_ICON_TYPE = "a3c_ui\markers\building.paa";
+							A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
 						} else {
-							A3C_HUD_UI_3D_TAG_ICON_TYPE = "\a3c_ui\hud\icon_HUD_movePos.paa";
-							A3C_HUD_UI_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0.5] call A3C_UI_Color_setOpacity;
+							A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\hud\icon_HUD_movePos.paa";
+							A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0.5] call A3C_UI_Color_setOpacity;
 						};
 					};
 				};
 				//if (!isNil 'A3C_UI_RAPPEL_HELIPAD' && {!isNull A3C_UI_RAPPEL_HELIPAD}) then {
-				//	A3C_UI_RAPPEL_HELIPAD setPosASL (AGLtoASL A3C_HUD_UI_3D_TAG_ICON_POS);	
+				//	A3C_UI_RAPPEL_HELIPAD setPosASL (AGLtoASL A3C_UI_HUD_3D_TAG_ICON_POS);	
 				//};
 				
 				//_minSize = 0.6;
 				//_furthestDistance = 300;
-				_dist = (player distance2D (ASLtoAGL A3C_HUD_UI_3D_TAG_ICON_POS));
-				//A3C_HUD_UI_3D_TAG_ICON_SIZE = linearConversion [0, _furthestDistance, _dist, 4, _minSize, true ];
+				_dist = (player distance2D (ASLtoAGL A3C_UI_HUD_3D_TAG_ICON_POS));
+				//A3C_UI_HUD_3D_TAG_ICON_SIZE = linearConversion [0, _furthestDistance, _dist, 4, _minSize, true ];
 				
 				_minSize = 0.25;
 				_furthestDistance = 500;
 				
-				A3C_HUD_UI_3D_TAG_ICON_SIZE = (linearConversion [ 0, _furthestDistance, _dist, 1.1, _minSize, true ]) *2;	
-				//hintsilent str [player distance2D (ASLtoAGL A3C_HUD_UI_3D_TAG_ICON_POS),A3C_HUD_UI_3D_TAG_ICON_SIZE];
+				A3C_UI_HUD_3D_TAG_ICON_SIZE = (linearConversion [ 0, _furthestDistance, _dist, 1.1, _minSize, true ]) *2;	
+				//hintsilent str [player distance2D (ASLtoAGL A3C_UI_HUD_3D_TAG_ICON_POS),A3C_UI_HUD_3D_TAG_ICON_SIZE];
 			};
-			//systemchat str [A3C_HUD_UI_3D_TAG_ICON_TYPE,A3C_HUD_UI_3D_TAG_ICON_POS,A3C_HUD_UI_3D_TAG_ICON_COL,A3C_HUD_UI_3D_TAG_ICON_SIZE];
-			//player setpos A3C_HUD_UI_3D_TAG_ICON_POS;
+			//systemchat str [A3C_UI_HUD_3D_TAG_ICON_TYPE,A3C_UI_HUD_3D_TAG_ICON_POS,A3C_UI_HUD_3D_TAG_ICON_COL,A3C_UI_HUD_3D_TAG_ICON_SIZE];
+			//player setpos A3C_UI_HUD_3D_TAG_ICON_POS;
 			drawIcon3D 
 			[
-				A3C_HUD_UI_3D_TAG_ICON_TYPE,
-				A3C_HUD_UI_3D_TAG_ICON_COL,
-				A3C_HUD_UI_3D_TAG_ICON_POS,
-				A3C_HUD_UI_3D_TAG_ICON_SIZE,
-				A3C_HUD_UI_3D_TAG_ICON_SIZE,
+				A3C_UI_HUD_3D_TAG_ICON_TYPE,
+				A3C_UI_HUD_3D_TAG_ICON_COL,
+				A3C_UI_HUD_3D_TAG_ICON_POS,
+				A3C_UI_HUD_3D_TAG_ICON_SIZE,
+				A3C_UI_HUD_3D_TAG_ICON_SIZE,
 				0, //-- dir relates to screen, not to world. needs same function that FORMDIR indicator uses
 				'',
 				1,
 				0.05
 			];
 
-			if (A3C_HUD_UI_3D_TAG_ICON_MOD != "NONE") then {
-				private _modIcon = if (A3C_HUD_UI_3D_TAG_ICON_MOD == "ON") then {
+			if (A3C_UI_HUD_3D_TAG_ICON_MOD != "NONE") then {
+				private _modIcon = if (A3C_UI_HUD_3D_TAG_ICON_MOD == "ON") then {
 					"\a3c_ui\markers\icon_Rad_3D_Modifier_ON.paa"
 				} else {
 					"\a3c_ui\markers\icon_Rad_3D_Modifier_OFF.paa"
@@ -539,9 +539,9 @@ A3C_fnc_drawHudUI = {
 				[
 					_modIcon,
 					[1,1,1,1],
-					A3C_HUD_UI_3D_TAG_ICON_POS,
-					A3C_HUD_UI_3D_TAG_ICON_SIZE * 1.7,
-					A3C_HUD_UI_3D_TAG_ICON_SIZE * 1.7,
+					A3C_UI_HUD_3D_TAG_ICON_POS,
+					A3C_UI_HUD_3D_TAG_ICON_SIZE * 1.7,
+					A3C_UI_HUD_3D_TAG_ICON_SIZE * 1.7,
 					0, //-- dir relates to screen, not to world. needs same function that FORMDIR indicator uses
 					'',
 					1,

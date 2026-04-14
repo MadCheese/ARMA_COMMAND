@@ -26,7 +26,7 @@ A3C_UI_Radial_SQ_ROE_MAIN = {
                 _button = _button - [(_button select 0)];
                 if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
                     BR_A3C_DISABLE_RADIAL = false;
-                    A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+                    A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
                     (findDisplay 100100) closeDisplay 0;
                     A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
                     {player groupSelectUnit [_x,false]} foreach units player; 
@@ -1162,7 +1162,7 @@ A3C_UI_RADIAL_TOGGLE_LEFT_EXT = {
 					(findDisplay 100040 displayCtrl _x) ctrlShow true
 				} foreach [8071,8096,8097,8098,8099,9000];
 				(findDisplay 100040 displayCtrl 8095) ctrlShow false;
-				[100040,if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {"INF"} else {"HC"}] call A3C_MAP_UI_Overlay_ResizeTeamColorsXWH;
+				[100040,if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {"INF"} else {"HC"}] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
 				[0] call A3C_MAPTAB_RESIZE_TEAMCOLORS_Y;
 				[100040,8071] execFSM "A3C_CORE\FSM\A3C_MON_RADIAL.fsm";
 
@@ -1555,23 +1555,23 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 				if (_btn == 0) then {
 					BR_A3C_DISABLE_RADIAL = true;
 					[] call A3C_RADIAL_CloseDisplay;
-					A3C_HUD_UI_3D_TAG_ICON_TYPE = "\a3c_ui\hud\icon_HUD_movePos.paa"; //"\a3\ui_f\data\IGUI\Cfg\Cursors\waypointMark_ca.paa";
-					A3C_HUD_UI_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0] call A3C_UI_Color_setOpacity;
-					A3C_HUD_UI_3D_TAG_reposition = true;
+					A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\hud\icon_HUD_movePos.paa"; //"\a3\ui_f\data\IGUI\Cfg\Cursors\waypointMark_ca.paa";
+					A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0] call A3C_UI_Color_setOpacity;
+					A3C_UI_HUD_3D_TAG_reposition = true;
 					[
 						46,
 						'SPACE',
-						{count A3C_RD_UNITS > 0 && {A3C_HUD_UI_3D_TAG_ICON_TYPE != ""}},
+						{count A3C_RD_UNITS > 0 && {A3C_UI_HUD_3D_TAG_ICON_TYPE != ""}},
 						{
 							if (count A3C_RD_UNITS > 1) then {
 								
 								private _units = +(A3C_RD_UNITS);
-								[_units,A3C_HUD_UI_3D_TAG_ICON_POS] spawn A3C_FNCS_CONVOY_MULTIGROUP;
+								[_units,A3C_UI_HUD_3D_TAG_ICON_POS] spawn A3C_FNCS_CONVOY_MULTIGROUP;
 							} else {
 								{
 									private _gp = _x;
-									private _wpParams = [_gp,A3C_HUD_UI_3D_TAG_ICON_POS];
-									private _eligibleForBuildingSearch = A3C_HUD_UI_3D_TAG_ICON_TYPE == "a3c_ui\markers\building.paa"; //({!isNull objectParent _x && {(assignedVehicleRole _x) select 0 != "cargo"}} count (units _gp) == 0);
+									private _wpParams = [_gp,A3C_UI_HUD_3D_TAG_ICON_POS];
+									private _eligibleForBuildingSearch = A3C_UI_HUD_3D_TAG_ICON_TYPE == "a3c_ui\markers\building.paa"; //({!isNull objectParent _x && {(assignedVehicleRole _x) select 0 != "cargo"}} count (units _gp) == 0);
 									if (_eligibleForBuildingSearch) then {// && {cursorTarget isKindOf "HOUSE" && {([cursortarget] call MCSS_fnc_countBPos) > 0}}) then {
 										_wpParams set [1, cursorTarget buildingPos 0];
 										_wpParams set [2,[]];
@@ -1587,22 +1587,22 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						},
 						{
 							private _iconType = "\a3c_ui\hud\icon_HUD_movePos.paa";
-							A3C_HUD_UI_3D_TAG_reposition = false;
+							A3C_UI_HUD_3D_TAG_reposition = false;
 							//-- mini flicker
 							for "_i" from 1 to 2 do {
-								A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+								A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 								sleep 0.1;
-								A3C_HUD_UI_3D_TAG_ICON_TYPE = _iconType;
+								A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
 								sleep 0.1;
 							};
 							if (BR_A3C_DISABLE_RADIAL) then {
 								//-- Radial key not released - reIssue the icon for repeated orders
-								A3C_HUD_UI_3D_TAG_ICON_TYPE = _iconType;
-								A3C_HUD_UI_3D_TAG_reposition = true;
+								A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
+								A3C_UI_HUD_3D_TAG_reposition = true;
 							} else {
 								//-- Radial key released - abort
-								A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-								A3C_HUD_UI_3D_TAG_reposition = false;
+								A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+								A3C_UI_HUD_3D_TAG_reposition = false;
 							}
 
 							
@@ -1617,9 +1617,9 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 						{
 							//-- here, we need to remove the keybind upon release of TAB, not the main thingy
 							(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-							if (A3C_HUD_UI_3D_TAG_reposition) then {
-								A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
-								A3C_HUD_UI_3D_TAG_reposition = false;
+							if (A3C_UI_HUD_3D_TAG_reposition) then {
+								A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+								A3C_UI_HUD_3D_TAG_reposition = false;
 							};
 						},
 						true
@@ -5566,7 +5566,7 @@ A3C_SETTINGS = {
 		profilenamespace setvariable [_var,true];
 		_mode ="ON";
 	};
-	((findDisplay 100010) displayCtrl _val) ctrlSetText _mode;
+	(findDisplay 100010 displayCtrl _val) ctrlSetText _mode;
 	switch (_var) do {
 		case ("A3C_NUM_VAR") : {
 			if (_mode == "ON") then {
@@ -5618,57 +5618,57 @@ A3C_Open_SETTINGS = {
 		A3C_DG_SETTINGS = (finddisplay 46) createDisplay "A3C_SETTINGS_MENU";
 	};
 
-	((findDisplay 100010) displayCtrl 1000) ctrlSetText format
+	(findDisplay 100010 displayCtrl 1000) ctrlSetText format
 	[
 		"A3C SETTINGS (%1):",
 		profileNameSpace getvariable "A3C_CHECKVERSION"
 	];
 
 	if (profileNameSpace getVariable "A3C_NUM_VAR") then {
-		((findDisplay 100010) displayCtrl 1601) ctrlSetText "ON";
+		(findDisplay 100010 displayCtrl 1601) ctrlSetText "ON";
 	} else {
-		((findDisplay 100010) displayCtrl 1601) ctrlSetText "OFF";
+		(findDisplay 100010 displayCtrl 1601) ctrlSetText "OFF";
 	};
 
 	if (profileNameSpace getVariable "A3C_SKILL_VAR") then {
-		((findDisplay 100010) displayCtrl 1600) ctrlSetText "ON";
+		(findDisplay 100010 displayCtrl 1600) ctrlSetText "ON";
 	} else {
-		((findDisplay 100010) displayCtrl 1600) ctrlSetText "OFF";
+		(findDisplay 100010 displayCtrl 1600) ctrlSetText "OFF";
 	};
 
 	if (profileNameSpace getVariable "A3C_HUD_RES_VAR") then {
-		((findDisplay 100010) displayCtrl 1602) ctrlSetText "ON";
+		(findDisplay 100010 displayCtrl 1602) ctrlSetText "ON";
 	} else {
-		((findDisplay 100010) displayCtrl 1602) ctrlSetText "OFF";
+		(findDisplay 100010 displayCtrl 1602) ctrlSetText "OFF";
 	};
 	if (profileNameSpace getVariable "A3C_FORCERAIL_VAR") then {
-		((findDisplay 100010) displayCtrl 1603) ctrlSetText "ON";
+		(findDisplay 100010 displayCtrl 1603) ctrlSetText "ON";
 	} else {
-		((findDisplay 100010) displayCtrl 1603) ctrlSetText "OFF";
+		(findDisplay 100010 displayCtrl 1603) ctrlSetText "OFF";
 	};
 
 	if (profileNameSpace getVariable "A3C_HUD_LAYOUT_CORNER") then {
-		((findDisplay 100010) displayCtrl 1605) ctrlSetText "ON";
+		(findDisplay 100010 displayCtrl 1605) ctrlSetText "ON";
 	} else {
-		((findDisplay 100010) displayCtrl 1605) ctrlSetText "OFF";
+		(findDisplay 100010 displayCtrl 1605) ctrlSetText "OFF";
 	};
 	if (profileNameSpace getVariable "A3C_HUD_OBJECTS") then {
-		((findDisplay 100010) displayCtrl 1606) ctrlSetText "ON";
+		(findDisplay 100010 displayCtrl 1606) ctrlSetText "ON";
 	} else {
-		((findDisplay 100010) displayCtrl 1606) ctrlSetText "OFF";
+		(findDisplay 100010 displayCtrl 1606) ctrlSetText "OFF";
 	};
 
 
 	if ((profileNameSpace getVariable "A3C_TABLET_IMG") == "A3C_CORE\ui\pictures\BG_Tablet_Tough.paa") then {
-		((findDisplay 100010) displayCtrl 1604) ctrlSetText "REG";
+		(findDisplay 100010 displayCtrl 1604) ctrlSetText "REG";
 	} else {
-		((findDisplay 100010) displayCtrl 1604) ctrlSetText "SMALL";
+		(findDisplay 100010 displayCtrl 1604) ctrlSetText "SMALL";
 	};
 
 	if (profileNameSpace getVariable "HC_GROUP_RESPONSE") then {
-		((findDisplay 100010) displayCtrl 1607) ctrlSetText "ON";
+		(findDisplay 100010 displayCtrl 1607) ctrlSetText "ON";
 	} else {
-		((findDisplay 100010) displayCtrl 1607) ctrlSetText "OFF";
+		(findDisplay 100010 displayCtrl 1607) ctrlSetText "OFF";
 	};
 
 
@@ -5707,21 +5707,21 @@ A3C_SETTINGS_DIALOG = {
 	};
 
 	if (profileNameSpace getVariable "A3C_NUM_VAR") then {
-		((findDisplay 100010) displayCtrl 1601) ctrlSetText "ON";
+		(findDisplay 100010 displayCtrl 1601) ctrlSetText "ON";
 	} else {
-		((findDisplay 100010) displayCtrl 1601) ctrlSetText "OFF";
+		(findDisplay 100010 displayCtrl 1601) ctrlSetText "OFF";
 	};
 
 	if (profileNameSpace getVariable "A3C_SKILL_VAR") then {
-		((findDisplay 100010) displayCtrl 1600) ctrlSetText "ON";
+		(findDisplay 100010 displayCtrl 1600) ctrlSetText "ON";
 	} else {
-		((findDisplay 100010) displayCtrl 1600) ctrlSetText "OFF";
+		(findDisplay 100010 displayCtrl 1600) ctrlSetText "OFF";
 	};
 
 	if (profileNameSpace getVariable "A3C_HUD_RES_VAR") then {
-		((findDisplay 100010) displayCtrl 1602) ctrlSetText "ON";
+		(findDisplay 100010 displayCtrl 1602) ctrlSetText "ON";
 	} else {
-		((findDisplay 100010) displayCtrl 1602) ctrlSetText "OFF";
+		(findDisplay 100010 displayCtrl 1602) ctrlSetText "OFF";
 	};
 };
 

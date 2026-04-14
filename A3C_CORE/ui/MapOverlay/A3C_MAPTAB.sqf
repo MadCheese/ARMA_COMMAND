@@ -59,7 +59,7 @@ _originalHud set [6,A3C_SHOWNHUD];
 if (dialog && {_display == 12}) exitwith {};
 if (!visibleMap && {_display == 12}) exitWith {};
 
-A3C_MAP_UI_Overlay_VAR_isUnFolded = false; //-- closed tree because no selection
+A3C_UI_MAP_Overlay_VAR_isUnFolded = false; //-- closed tree because no selection
 
 //-- close map if opened to prevent double map issues
 if (_display == 100030) then {
@@ -237,14 +237,14 @@ private _ct_tree = findDisplay _display displayCtrl A3C_SHARED_GAMEUI_TREE_CONTR
 
 if (_display == 100020 && {!visibleMap}) exitWith {(findDisplay _display) closeDisplay 0};
 
-[_display,"INF"] call A3C_MAP_UI_Overlay_ResizeTeamColorsXWH;
+[_display,"INF"] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
 sleep 0.1;
 
 
 //systemchat '5';
 //-- overlay step 2: closed sidebar (waypoint settings)
 
-["COLLAPSE",0] call A3C_MAP_UI_Overlay_TOGGLE_FoldSquadControls;
+["COLLAPSE",0] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
 //-- overlay step 3: adjust upper-tree buttons
 sleep 0.1;
 
@@ -264,7 +264,7 @@ if (A3C_SELECTED_UNITS isEqualTo []) then {
 
 
 
-[0] call A3C_MAP_UI_FNC_ResetMapClick;
+[0] call A3C_UI_MAP_FNC_ResetMapClick;
 
 
 

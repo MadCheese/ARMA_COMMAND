@@ -102,10 +102,10 @@ A3C_STATIC_ASSEMBLE_3D = {
 				_unit setvariable ["A3C_PLOT",_data,true];
 				_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE);
 			} foreach _units;
-			A3C_HUD_UI_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  _weapon >> "picture");
-			A3C_HUD_UI_3D_TAG_ICON_MOD = "ON";
+			A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  _weapon >> "picture");
+			A3C_UI_HUD_3D_TAG_ICON_MOD = "ON";
 			private _tagPos = +(position A3C_OBJECTPLACER);
-			[_tagPos,""] spawn A3C_HUD_UI_3D_TAG;
+			[_tagPos,""] spawn A3C_UI_HUD_3D_TAG;
 
 		};
 	} foreach A3C_STATIC_PACKS;

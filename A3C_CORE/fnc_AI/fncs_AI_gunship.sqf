@@ -310,8 +310,8 @@ A3C_UI_RADIAL_fnc_RemFire_VTOL_EH = {
 					BR_A3C_DISABLE_RADIAL = true;
 					[] call A3C_RADIAL_CloseDisplay;
 					{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu '';
-					A3C_HUD_UI_3D_TAG_ICON_TYPE = '%2';
-					A3C_HUD_UI_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
+					A3C_UI_HUD_3D_TAG_ICON_TYPE = '%2';
+					A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
 					[
 						46,
 						'SPACE',
@@ -319,21 +319,21 @@ A3C_UI_RADIAL_fnc_RemFire_VTOL_EH = {
 
 							count A3C_RD_UNITS > 0 &&
 							{
-								A3C_HUD_UI_3D_TAG_ICON_TYPE != ''
+								A3C_UI_HUD_3D_TAG_ICON_TYPE != ''
 								&&
 								{count A3C_RD_UNITS > 0}
 							}
 						},
 						{
 
-							A3C_HUD_UI_3D_TAG_reposition = false;
+							A3C_UI_HUD_3D_TAG_reposition = false;
 							
-							private _aimpos = ATLtoASL(A3C_HUD_UI_3D_TAG_ICON_POS);
+							private _aimpos = ATLtoASL(A3C_UI_HUD_3D_TAG_ICON_POS);
 							private _gp = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
 							private _leaderVic = vehicle (leader _gp);
 							private _array = [side player, _leaderVic, _aimpos, '%3', objNull];
 							[_array, A3C_REMOTE_BLACKFISH] remoteExec ['bis_fnc_spawn', _leaderVic];
-							[A3C_HUD_UI_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_HUD_UI_3D_TAG;
+							[A3C_UI_HUD_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_UI_HUD_3D_TAG;
 							sleep 2;
 							waituntil {true};
 							if (!isNull findDisplay 100040 && {(ctrlShown (findDisplay 100040 displayctrl 8001)) && {A3C_RADIALMODE in ['ACT','HC ACTIONS']}}) then {
@@ -357,8 +357,8 @@ A3C_UI_RADIAL_fnc_RemFire_VTOL_EH = {
 						{
 							(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 							(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-							A3C_HUD_UI_3D_TAG_ICON_TYPE = '';
-							A3C_HUD_UI_3D_TAG_reposition = false;
+							A3C_UI_HUD_3D_TAG_ICON_TYPE = '';
+							A3C_UI_HUD_3D_TAG_reposition = false;
 							A3C_UI_RADIAL_Current_Remfire_Units = [];
 						},
 						{
@@ -368,7 +368,7 @@ A3C_UI_RADIAL_fnc_RemFire_VTOL_EH = {
 					] call A3C_UI_RADIAL_ADD_EH_MACROS;
 
 
-					A3C_HUD_UI_3D_TAG_reposition = true;
+					A3C_UI_HUD_3D_TAG_reposition = true;
 				};
 			} else {
 				systemchat 'A3C: Plase wait for your last order to complete';

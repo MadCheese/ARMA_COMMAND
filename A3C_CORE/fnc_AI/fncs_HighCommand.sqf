@@ -1300,10 +1300,10 @@ A3C_HC_VEHICLEBOARD = {
 				},
 				{
 					[ A3C_RD_UNITS select {!isPlayer leader _x}, cursortarget] call A3C_HC_AssignVehicle;			
-					A3C_HUD_UI_3D_TAG_ICON_TYPE = (gettext (configfile >> "CfgVehicles" >> typeof cursortarget >> "picture"));
+					A3C_UI_HUD_3D_TAG_ICON_TYPE = (gettext (configfile >> "CfgVehicles" >> typeof cursortarget >> "picture"));
 					_uiPos = getPosASL cursortarget;
 					_uiPos set [2,(((boundingBoxReal cursortarget) select 1) select 2) / 2];
-					[_uiPos,"BOARD"] spawn A3C_HUD_UI_3D_TAG;
+					[_uiPos,"BOARD"] spawn A3C_UI_HUD_3D_TAG;
 					A3C_UI_MAPICONS_HC_VICS = [];	
 				},
 				{ 
@@ -1336,7 +1336,7 @@ A3C_HC_VEHICLEBOARD = {
 				A3C_UI_MAPICONS_HC_VICS = [];
 				A3C_BOOL_MOUSEMOVING = true;
 				A3C_MMCode = {
-					_this spawn A3C_MAP_UI_HandlerFNC_MouseDrag;
+					_this spawn A3C_UI_MAP_HandlerFNC_MouseDrag;
 				};
 				A3C_BOOL_DRAGLINE = true;
 				A3C_CONNECTING_MODE = "HCBOARD";

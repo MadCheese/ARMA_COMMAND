@@ -619,7 +619,7 @@ A3C_RadialMenu_GREN = {
 		},
 		true
 	] call A3C_UI_RADIAL_ADD_EH_MACROS;
-	A3C_HUD_UI_3D_TAG_reposition = true;
+	A3C_UI_HUD_3D_TAG_reposition = true;
 	showCommandingMenu "";
 };
 

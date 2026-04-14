@@ -920,7 +920,7 @@ A3C_FNC_CBA_KEY = {
 						if (isnull (findDisplay 100020)) then {
 							profilenamespace setvariable ["A3C_MAP_VAR",true];
 							A3C_OPACITY = 0.8;
-							nul = [100020] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB.sqf";
+							nul = [100020] execVM "A3C_CORE\ui\MapOverlay\A3C_MAPTAB.sqf";
 
 						} else {
 							A3C_OPACITY = 0;
@@ -1244,7 +1244,7 @@ A3C_GET_KEY_BOOL = {
 		};
 	};
 	if (_key == 57) then {
-		if (A3C_HUD_UI_3D_TAG_ICON_TYPE != "" OR {count A3C_UI_HUD_ASSIGNVEHICLE_OBJECTS > 0 OR {!isNull A3C_GTI_UNIT}}) then {
+		if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "" OR {count A3C_UI_HUD_ASSIGNVEHICLE_OBJECTS > 0 OR {!isNull A3C_GTI_UNIT}}) then {
 			_return = true;
 		};
 	};
@@ -1254,7 +1254,7 @@ A3C_GET_KEY_BOOL = {
 
 //-- HUD Main "KeyDown"
 
-A3C_HUD_UI_HandlerFNC_KeyDown = {
+A3C_UI_HUD_HandlerFNC_KeyDown = {
 	private ["_exit","_taoBind"];
 	private _key = _this select 1;
 	_shift = _this select 2;
@@ -1285,7 +1285,7 @@ A3C_HUD_UI_HandlerFNC_KeyDown = {
 							if (profileNameSpace getVariable "A3C_MAP_VAR")  then {
 								A3C_WeaponCurr = currentWeapon player;
 								A3C_BOOL_MAPFORCE= false;
-								nul = [100020] execVM "A3C_CORE\ui\tablet\A3C_MAPTAB.sqf";
+								nul = [100020] execVM "A3C_CORE\ui\MapOverlay\A3C_MAPTAB.sqf";
 								if (count units player > 0) then {
 									if (({(_x == (driver vehicle _x)) && {typeOf (vehicle _x) iskindOf "AIR"}} count (units player - [player])) >= ((count (units player - [player])) / 2)) then {
 										A3C_HELI_INF_MODE = "AIR";
@@ -1593,7 +1593,7 @@ A3C_HUD_UI_HandlerFNC_KeyDown = {
 
 
 //-- HUD Main "KeyUp"
-A3C_HUD_UI_HandlerFNC_KeyUp = {
+A3C_UI_HUD_HandlerFNC_KeyUp = {
 	_btn = _this select 1;
 	A3C_BOOL_MAPFORCE = true; //!!!!~~~~~~~~~
 	if !(player == (leader group player)) exitwith {};
@@ -1614,7 +1614,7 @@ A3C_HUD_UI_HandlerFNC_KeyUp = {
 
 
 
-A3C_HUD_UI_HandlerFNC_MouseButtonDown = {
+A3C_UI_HUD_HandlerFNC_MouseButtonDown = {
 	private ["_bttn","_shft","_alt","_ctrl","_divisor","_exit"];
 	_bttn = (_this select 1);
 	_shft = (_this select 4);
@@ -1893,7 +1893,7 @@ A3C_Setorder_HUD = {
 
 // Wheel
 //~~ NOTE: RE WRITE ALL THESE DOUBLE FUNCTIONS INTO SINGLE ONES
-A3C_HUD_UI_HandlerFNC_MouseZChanged = {
+A3C_UI_HUD_HandlerFNC_MouseZChanged = {
 	private _return = false;
 	if (!isNull A3C_GTI_UNIT) exitWith {
 		if ((_this select 1) > 0) then {

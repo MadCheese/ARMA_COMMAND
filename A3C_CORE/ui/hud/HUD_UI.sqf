@@ -160,7 +160,7 @@ A3C_TOGGLE_KEYVIEWER = {
 };
 
 
-A3C_HUD_UI_FORM_BUTTON = {
+A3C_UI_HUD_FORM_BUTTON = {
 	params ["_mode","_btn"];
 	if (_mode == 1) then {
 		private ["_handled"];
@@ -290,7 +290,7 @@ A3C_HUD_WPMODE_BUTTON = {
 	[1] call A3C_HUD_GoCode_BUTTON;
 };
 
-A3C_HUD_UI_BUTTON = {
+A3C_UI_HUD_BUTTON = {
 
 	if (profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
 		profilenamespace setvariable ['A3C_HUD_MENUSHOW_VAR',false];
@@ -598,7 +598,7 @@ A3C_ObjectSelector_LB_Change = {
 
 
 			case ("CAS") : {
-				_casPos = +(A3C_HUD_UI_3D_TAG_ICON_POS);
+				_casPos = +(A3C_UI_HUD_3D_TAG_ICON_POS);
 				_lbText = _listBox lbText _lb;
 				//systemchat str _lbText;
 				_casModeNumeric = switch (_lbText) do {
@@ -610,7 +610,7 @@ A3C_ObjectSelector_LB_Change = {
 
 
 
-				[A3C_HUD_UI_3D_TAG_ICON_POS,''] spawn A3C_HUD_UI_3D_TAG;
+				[A3C_UI_HUD_3D_TAG_ICON_POS,''] spawn A3C_UI_HUD_3D_TAG;
 				private _groups = +(A3C_SELECTED_HC_GROUPS_SETTINGS);
 				//systemchat str _groups;
 				(findDisplay _a3c_dsp displayCtrl 8008) ctrlShow false;
@@ -675,7 +675,7 @@ A3C_ObjectSelector_LB_Change = {
 						"
 							[this,%1,%2,'%3'] remoteExec ['A3C_HC_distribute_CAS', this];
 						",
-						A3C_HUD_UI_3D_TAG_ICON_POS,
+						A3C_UI_HUD_3D_TAG_ICON_POS,
 						_casModeNumeric,
 						getPlayerUID player
 					];
@@ -1128,9 +1128,9 @@ A3C_ObjectSelector_LB_Change = {
 					_weapon
 				] spawn A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING;
 				
-				A3C_HUD_UI_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  typeOf _weapon >> "picture");
-				A3C_HUD_UI_3D_TAG_ICON_MOD = "OFF";
-				[position _weapon,""] spawn A3C_HUD_UI_3D_TAG;
+				A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  typeOf _weapon >> "picture");
+				A3C_UI_HUD_3D_TAG_ICON_MOD = "OFF";
+				[position _weapon,""] spawn A3C_UI_HUD_3D_TAG;
 
 				with uiNamespace do {
 					(findDisplay 100060) closeDisplay 0;
@@ -1208,7 +1208,7 @@ A3C_ObjectSelector_LB_Change = {
 
 
 				_detoObject = if ({cursorTarget isKindOf _x} count ["AIR","CAR","TANK","WHEELED","ARMORED","MOTORCYCLE"] > 0) then {cursorTarget} else {objNull};
-				_detoPosition =  A3C_HUD_UI_3D_TAG_ICON_POS;//if (!isNull cursorTarget) then {position cursortarget} else {screentoWorld [0.5,0.5]};
+				_detoPosition =  A3C_UI_HUD_3D_TAG_ICON_POS;//if (!isNull cursorTarget) then {position cursortarget} else {screentoWorld [0.5,0.5]};
 				
 				
 				/////////////////////////////////////////////
@@ -1297,8 +1297,8 @@ A3C_ObjectSelector_LB_Change = {
 				};
 				private _magPic = getText (configfile >> "CfgMagazines" >>  _magName >> "picture");
 				//systemchat str [_magPic];
-				A3C_HUD_UI_3D_TAG_ICON_TYPE = if (_magPic == "") then {A3C_HUD_UI_3D_TAG_ICON_TYPE} else {_magPic};
-				[ _detoPosition,"DEMOLITION"] spawn A3C_HUD_UI_3D_TAG; //A3C_HUD_UI_3D_TAG_ICON_POS
+				A3C_UI_HUD_3D_TAG_ICON_TYPE = if (_magPic == "") then {A3C_UI_HUD_3D_TAG_ICON_TYPE} else {_magPic};
+				[ _detoPosition,"DEMOLITION"] spawn A3C_UI_HUD_3D_TAG; //A3C_UI_HUD_3D_TAG_ICON_POS
 			};
 			case ("PLACE_CHARGE_HC") : {
 				private _magName = "";
@@ -1336,7 +1336,7 @@ A3C_ObjectSelector_LB_Change = {
 					_wp =
 					[
 						_gp,
-						ASLtoATL A3C_HUD_UI_3D_TAG_ICON_POS
+						ASLtoATL A3C_UI_HUD_3D_TAG_ICON_POS
 					] call A3C_HC_ADD_WP;
 
 					_cursorObject = if (!isNull cursortarget && {{cursorTarget isKindOf _x} count ["CAR","TANK","SHIP","AIR","MOTORCYCLE"] > 0}) then {cursorTarget} else {objNull};
@@ -1362,8 +1362,8 @@ A3C_ObjectSelector_LB_Change = {
 
 				player groupradio "SentCmdPlaceCharge";
 				private _magPic = getText (configfile >> "CfgMagazines" >>  _magName >> "picture");
-				A3C_HUD_UI_3D_TAG_ICON_TYPE = if (_magPic == "") then {A3C_HUD_UI_3D_TAG_ICON_TYPE} else {_magPic};
-				[A3C_HUD_UI_3D_TAG_ICON_POS,"DEMOLITION"] spawn A3C_HUD_UI_3D_TAG; //A3C_HUD_UI_3D_TAG_ICON_POS
+				A3C_UI_HUD_3D_TAG_ICON_TYPE = if (_magPic == "") then {A3C_UI_HUD_3D_TAG_ICON_TYPE} else {_magPic};
+				[A3C_UI_HUD_3D_TAG_ICON_POS,"DEMOLITION"] spawn A3C_UI_HUD_3D_TAG; //A3C_UI_HUD_3D_TAG_ICON_POS
 
 				with uiNamespace do {
 					(findDisplay 100060) closeDisplay 0;
@@ -1441,7 +1441,7 @@ A3C_ObjectSelector_LB_Change = {
 
 A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
 
-//A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+//A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 
 A3C_RADIAL_ACTION_HC_LANDING_FNC = {
 	params ["_landingRailType","_condition"];
@@ -1451,14 +1451,14 @@ A3C_RADIAL_ACTION_HC_LANDING_FNC = {
 	A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
 	_landingData params ["_landingPosRoot","_landingVector","_forceDefaultLanding"];
 
-	A3C_HUD_UI_3D_TAG_ICON_TYPE =  "\a3c_ui\markers\HeliPad.paa";
-	[A3C_HUD_UI_3D_TAG_ICON_POS,''] spawn A3C_HUD_UI_3D_TAG;
+	A3C_UI_HUD_3D_TAG_ICON_TYPE =  "\a3c_ui\markers\HeliPad.paa";
+	[A3C_UI_HUD_3D_TAG_ICON_POS,''] spawn A3C_UI_HUD_3D_TAG;
 	private _groups = +(A3C_SELECTED_HC_GROUPS_SETTINGS);
 
 	_distributedPositions = [_landingPosRoot,_groups,count _groups,_landingPosRoot getDir (leader (_groups select 0)),100 ] call A3C_create_wpWedgePositions;
 
-	private _occupiedLandingPoses = [_landingPosRoot]; //[A3C_HUD_UI_3D_TAG_ICON_POS];
-	//private _landingPosRoot = +(A3C_HUD_UI_3D_TAG_ICON_POS);
+	private _occupiedLandingPoses = [_landingPosRoot]; //[A3C_UI_HUD_3D_TAG_ICON_POS];
+	//private _landingPosRoot = +(A3C_UI_HUD_3D_TAG_ICON_POS);
 	{
 		private _gp = _x;
 		private _leader = leader _gp;
@@ -1621,35 +1621,35 @@ A3C_RADIAL_ACTION_HC_LANDING_FNC = {
 };
 
 
-A3C_HUD_UI_3D_TAGGING = false;
-A3C_HUD_UI_3D_TAG = {
+A3C_UI_HUD_3D_TAGGING = false;
+A3C_UI_HUD_3D_TAG = {
 	params ["_pos","_mode"];
-	A3C_HUD_UI_3D_TAGGING = true;
-	_iconType = A3C_HUD_UI_3D_TAG_ICON_TYPE;
+	A3C_UI_HUD_3D_TAGGING = true;
+	_iconType = A3C_UI_HUD_3D_TAG_ICON_TYPE;
 	//private _iconType = switch (_mode) do {
 	//	case ("DEMOLITION") : {"\a3\ui_f\data\IGUI\Cfg\Cursors\explosive_ca.paa"};
-	//	default {A3C_HUD_UI_3D_TAG_ICON_TYPE};
+	//	default {A3C_UI_HUD_3D_TAG_ICON_TYPE};
 	//};
-	A3C_HUD_UI_3D_TAG_ICON_COL = switch (_mode) do {
+	A3C_UI_HUD_3D_TAG_ICON_COL = switch (_mode) do {
 		case ("DEMOLITION") : {[1,1,1,0.7]};
 		//case ("HC_WP") : {[A3C_UI_COLOR_BLUE,0.7] call A3C_UI_Color_setOpacity};
 		case ("BOARD") : {[A3C_UI_COLOR_YELLOW,0.7] call A3C_UI_Color_setOpacity};
 		case ("SUPPRESSION") : {[A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity};
-		default {A3C_HUD_UI_3D_TAG_ICON_COL};
+		default {A3C_UI_HUD_3D_TAG_ICON_COL};
 	};
 	if (!isNull cursorTarget && {(_mode in ["DEMOLITION","BOARD"])}) then {
 		_pos = getPos cursorTarget;
 		_pos set [2,((boundingbox cursortarget select 1) select 2) / 2];
 	};
 
-//	A3C_HUD_UI_3D_TAG_ICON_POS = _pos;
+//	A3C_UI_HUD_3D_TAG_ICON_POS = _pos;
 //	private _max = 50;
 //	private _sz = 5;
 	//if (_mode in ["HC_WP","SUPPRESSION"]) then {
 	//	_sz = 3;
 //
-//		while {A3C_HUD_UI_3D_TAG_ICON_SIZE < _sZ} do {
-//			A3C_HUD_UI_3D_TAG_ICON_SIZE = A3C_HUD_UI_3D_TAG_ICON_SIZE + 0.2;
+//		while {A3C_UI_HUD_3D_TAG_ICON_SIZE < _sZ} do {
+//			A3C_UI_HUD_3D_TAG_ICON_SIZE = A3C_UI_HUD_3D_TAG_ICON_SIZE + 0.2;
 //			sleep 0.01;
 //		};
 //	};
@@ -1659,34 +1659,34 @@ A3C_HUD_UI_3D_TAG = {
 		_timer = time;
 		_animLength = 3;
 		while {time - _timer < _animLength} do {
-			A3C_HUD_UI_3D_TAG_ICON_POS = _pos;
+			A3C_UI_HUD_3D_TAG_ICON_POS = _pos;
 			_t = (_animLength - (time - _timer)) / _animLength;
-			A3C_HUD_UI_3D_TAG_ICON_SIZE = (4 * _t) max 2;
-			if (A3C_HUD_UI_3D_TAG_ICON_SIZE == 2) exitWith {};
-			//hintSilent str A3C_HUD_UI_3D_TAG_ICON_SIZE;
+			A3C_UI_HUD_3D_TAG_ICON_SIZE = (4 * _t) max 2;
+			if (A3C_UI_HUD_3D_TAG_ICON_SIZE == 2) exitWith {};
+			//hintSilent str A3C_UI_HUD_3D_TAG_ICON_SIZE;
 		};
 	};
 
 	//if !(_mode in ["HC_WP","SUPPRESSION"]) then {
 	//	for "_i" from 1 to _max do {
 	//		sleep 0.01;
-	//		A3C_HUD_UI_3D_TAG_ICON_SIZE = _sz - ((_sZ - 2) * (_i / _max));
+	//		A3C_UI_HUD_3D_TAG_ICON_SIZE = _sz - ((_sZ - 2) * (_i / _max));
 	//
 	//	};
 	//};
 	
 	//-- end flicker
 	for "_i" from 1 to 4 do {
-		A3C_HUD_UI_3D_TAG_ICON_TYPE = _iconType;
+		A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
 		sleep 0.1;
-		A3C_HUD_UI_3D_TAG_ICON_TYPE = "";
+		A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 		sleep 0.1;
 	};
 	//-- reset vars to default
-	A3C_HUD_UI_3D_TAG_ICON_COL = [1,1,1,0.7];
-	A3C_HUD_UI_3D_TAG_ICON_SIZE = 3;
-	A3C_HUD_UI_3D_TAG_ICON_POS = [0,0,0];
-	A3C_HUD_UI_3D_TAG_ICON_MOD = "NONE";
-	A3C_HUD_UI_3D_TAGGING = false;
+	A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
+	A3C_UI_HUD_3D_TAG_ICON_SIZE = 3;
+	A3C_UI_HUD_3D_TAG_ICON_POS = [0,0,0];
+	A3C_UI_HUD_3D_TAG_ICON_MOD = "NONE";
+	A3C_UI_HUD_3D_TAGGING = false;
 };
 

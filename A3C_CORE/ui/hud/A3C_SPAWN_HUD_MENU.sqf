@@ -2,7 +2,7 @@
 
 
 if  (!isnull (finddisplay 100040)) exitwith {};
-if  (!isnull (finddisplay 100010)) exitwith {};
+if  (!isnull (findDisplay 100010)) exitwith {};
 if  (!isnull (finddisplay 100050)) exitwith {};
 if ((count A3C_HUD_ARROWS) == 0) exitWith {};
 
@@ -102,7 +102,7 @@ if !(profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
 //((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 15) ctrlSetText "A3C_CORE\ui\pictures\BG_HUD_Menu.paa";
 
 ["HUD_MENU"] call A3C_GET_UI_BG_COLOR;
-[0] call A3C_HUD_UI_FORM_BUTTON;
+[0] call A3C_UI_HUD_FORM_BUTTON;
 
 A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 100050) displayAddEventHandler ["KeyUp", 
 {

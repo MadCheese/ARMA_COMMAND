@@ -117,7 +117,7 @@ class FSM
                         name = "CHECK_DEAD";
                         itemno = 8;
                         init = /*%FSM<STATEINIT""">*/"//[] call A3C_CHECK_FOR_DEAD_WIP;" \n
-                         "[] call A3C_MAP_UI_UnitTree_Sync;"/*%FSM</STATEINIT""">*/;
+                         "[] call A3C_UI_MAP_UnitTree_Sync;"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {

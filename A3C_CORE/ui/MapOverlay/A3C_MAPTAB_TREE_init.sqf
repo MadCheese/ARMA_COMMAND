@@ -1207,7 +1207,7 @@ A3C_TREE_BOXCLICK = {
 
 
 
-A3C_MAP_UI_UnitTree_CtrlDelete = {
+A3C_UI_MAP_UnitTree_CtrlDelete = {
 	params ["_CT_TREE","_button","_mode"];
 	//systemchat str _this;
 	private _refArray = [];
@@ -1272,7 +1272,7 @@ A3C_MAP_UI_UnitTree_CtrlDelete = {
 };
 
 
-A3C_MAP_UI_UnitTree_Sync = {
+A3C_UI_MAP_UnitTree_Sync = {
 
 	// if (true) exitWith {};
 	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
@@ -1314,7 +1314,7 @@ A3C_MAP_UI_UnitTree_Sync = {
 						_buttonUnit = _refArray select _buttonValue;
 						if (_mode == "SQUAD") then {
 							if (isNull _buttonUnit ) then { //OR { !alive _buttonUnit }
-								[_CT_TREE,_button,"SQUAD"] call A3C_MAP_UI_UnitTree_CtrlDelete;
+								[_CT_TREE,_button,"SQUAD"] call A3C_UI_MAP_UnitTree_CtrlDelete;
 							} else {
 								if (alive _buttonUnit) then {
 									if (count _button > 2) then {
@@ -1322,10 +1322,10 @@ A3C_MAP_UI_UnitTree_Sync = {
 										//-- vehicle button -> check for dismount
 										if (isNull objectParent _buttonUnit) then {
 											//player sideChat str [_buttonValue,_buttonUnit];
-											[_CT_TREE,_button,"SQUAD"] call A3C_MAP_UI_UnitTree_CtrlDelete;
+											[_CT_TREE,_button,"SQUAD"] call A3C_UI_MAP_UnitTree_CtrlDelete;
 											_ctrlParent = _button select [0,count _button -1];
 											if (_CT_TREE tvCount _ctrlParent == 0) then {
-												[_CT_TREE,_ctrlParent,"SQUAD"] call A3C_MAP_UI_UnitTree_CtrlDelete;
+												[_CT_TREE,_ctrlParent,"SQUAD"] call A3C_UI_MAP_UnitTree_CtrlDelete;
 											};
 											//_squadTreeCount = [_CT_TREE,_mainTreeIndex] call A3C_MAPTAB_TREE_getSubParentCount;
 											[_CT_TREE,"SQUAD_INF", [_buttonUnit],_mainTreeIndex, _CT_TREE tvCount [_mainTreeIndex] ] call A3C_MAPTAB_TREE_ADD_ITEM;
@@ -1333,7 +1333,7 @@ A3C_MAP_UI_UnitTree_Sync = {
 									} else {
 										//-- infantry button -> check for boardings
 										if (!isNull objectParent _buttonUnit) then {
-											[_CT_TREE,_button,"SQUAD"] call A3C_MAP_UI_UnitTree_CtrlDelete;
+											[_CT_TREE,_button,"SQUAD"] call A3C_UI_MAP_UnitTree_CtrlDelete;
 											_vehicle = vehicle _buttonUnit;
 											//-- crew present needs to be in referred array and needs to have a crew-button assigned to it
 											_crewPresent = 
@@ -1391,7 +1391,7 @@ A3C_MAP_UI_UnitTree_Sync = {
 						} else {
 							if (isNull _buttonUnit OR { {alive _x} count units _buttonUnit == 0}) then {
 								// systemchat "delete";
-								[_CT_TREE,_button,"HIGHCOMMAND"] call A3C_MAP_UI_UnitTree_CtrlDelete;
+								[_CT_TREE,_button,"HIGHCOMMAND"] call A3C_UI_MAP_UnitTree_CtrlDelete;
 							};
 						};
 						
@@ -1469,7 +1469,7 @@ A3C_MAP_UI_UnitTree_Sync = {
 								// systemchat str [_changeCondition, _kindOfString];
 								//-- leadervehicle has changed. remove unit and add to _reinforcements for new group assignment
 								private _parent = _treeButton select [0, (count _treeButton) -1];
-								[_CT_TREE,_treeButton,"HIGHCOMMAND"] call A3C_MAP_UI_UnitTree_CtrlDelete;
+								[_CT_TREE,_treeButton,"HIGHCOMMAND"] call A3C_UI_MAP_UnitTree_CtrlDelete;
 								if (_CT_TREE tvCount _parent == 0) then {
 									_CT_TREE tvDelete _parent;
 								};

@@ -135,7 +135,7 @@ A3C_MAPTAB_fnc_drawMapUI = {
 					25,
 					[A3C_UI_COLOR_RED,1] call A3C_UI_Color_setOpacity,
 					(gettext(configFile >> "CfgVehicles" >> typeof _x >> "displayName"))
-				] call A3C_MAP_UI_DRAW_MACRO_VEHICON;		
+				] call A3C_UI_MAP_DRAW_MACRO_VEHICON;		
 				A3C_UI_MAPICONS_DEMO_VICS pushBack [_x,[25,25],getpos _x];
 			} foreach _demolition_snapObjects;
 		} else {
@@ -296,7 +296,7 @@ A3C_MAPTAB_fnc_drawMapUI = {
 							(_this select 0) drawline [_root,_wPos, _color];
 						} else {
 							//-- draw THICC wp-lines
-							[_this select 0,_root,_wPos,0.5,_color] call A3C_MAP_UI_DRAW_THICC_LINE;
+							[_this select 0,_root,_wPos,0.5,_color] call A3C_UI_MAP_DRAW_THICC_LINE;
 						};
 						
 
@@ -768,14 +768,14 @@ A3C_MAPTAB_fnc_drawMapUI = {
 						};
 						
 						if (!isNil '_wpAttachedVehicle' && {!isNull _wpAttachedVehicle && {alive _wpAttachedVehicle && {!(_wpAttachedVehicle in units _group)}}}) then {
-							[_this select 0,_wPos,getPos _wpAttachedVehicle,0.5,[1,1,1,0.8]] call A3C_MAP_UI_DRAW_THICC_LINE;
+							[_this select 0,_wPos,getPos _wpAttachedVehicle,0.5,[1,1,1,0.8]] call A3C_UI_MAP_DRAW_THICC_LINE;
 							[
 								_this select 0,
 								_wpAttachedVehicle,
 								17,
 								[0.13,0.13,0.13,0.5],
 								(gettext(configFile >> "CfgVehicles" >> typeof _wpAttachedVehicle >> "displayName"))
-							] call A3C_MAP_UI_DRAW_MACRO_VEHICON;
+							] call A3C_UI_MAP_DRAW_MACRO_VEHICON;
 						};	
 
 						//-- draw WP Lines
@@ -784,7 +784,7 @@ A3C_MAPTAB_fnc_drawMapUI = {
 								(_this select 0) drawline [_gpIconPos,waypointPosition _wp, _iconColorArray];
 							} else {
 								//-- draw THICC wp-lines
-								[_this select 0,_gpIconPos,waypointPosition _wp,0.5,_iconColorArray] call A3C_MAP_UI_DRAW_THICC_LINE;
+								[_this select 0,_gpIconPos,waypointPosition _wp,0.5,_iconColorArray] call A3C_UI_MAP_DRAW_THICC_LINE;
 							};
 							
 							
@@ -792,12 +792,12 @@ A3C_MAPTAB_fnc_drawMapUI = {
 								_startPos = (waypointPosition _wp);
 								_endPos = (waypointPosition [_group,(_foreachIndex + 1)]);
 								//(_this select 0) drawline [_startPos,_endPos,_iconColorArray];
-								[_this select 0,_startPos,_endPos,0.5,_iconColorArray] call A3C_MAP_UI_DRAW_THICC_LINE;
+								[_this select 0,_startPos,_endPos,0.5,_iconColorArray] call A3C_UI_MAP_DRAW_THICC_LINE;
 							};
 						} else {
 							if (_count > (_forEachIndex + 1)) then {
 								//(_this select 0) drawline [(waypointPosition _wp),(waypointPosition [_group,(_foreachIndex + 1)]),_iconColorArray];
-								[_this select 0,waypointPosition _wp,waypointPosition [_group,(_foreachIndex + 1)],0.5,_iconColorArray] call A3C_MAP_UI_DRAW_THICC_LINE;
+								[_this select 0,waypointPosition _wp,waypointPosition [_group,(_foreachIndex + 1)],0.5,_iconColorArray] call A3C_UI_MAP_DRAW_THICC_LINE;
 							};
 						};
 						//-- draw WP-ICON
@@ -1300,7 +1300,7 @@ A3C_MAPTAB_fnc_drawMapUI = {
 				_drawName = (isPlayer (leader _group)) OR {_groupIsSel};
 				if !(_drawName) then {
 					if (_doFindIconGroup) then {
-						private _groupIconsMouseUnder = (["HC_GP",A3C_MAP_X,A3C_MAP_Y] call A3C_MAP_UI_Overlay_getIconsAtMapPos);
+						private _groupIconsMouseUnder = (["HC_GP",A3C_MAP_X,A3C_MAP_Y] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
 						// hintsilent str _groupIconsMouseUnder;
 						if ({_group == _x select 0} count _groupIconsMouseUnder > 0) then {
 							_drawName = true;
@@ -1698,7 +1698,7 @@ A3C_MAPTAB_fnc_drawMapUI = {
 					A3C_UI_MAPICONS_POLYGON_EDGE pushBackUnique [_polyID,[_sizeEdge,_sizeEdge],_x] ;
 				} foreach _polyPoses;
 			
-				[_this select 0,_polyPoses,0.5,_color] call A3C_MAP_UI_DRAW_Polyframe;
+				[_this select 0,_polyPoses,0.5,_color] call A3C_UI_MAP_DRAW_Polyframe;
 			};
 
 			A3C_UI_MAPICONS_POLYGON_MAIN pushback [_polyID,[_sizeMain,_sizeMain],(_x select 0) select 0];  //-- [_polyID,[_sizeMain,_sizeMain],_polyCenter,_polyPoses,_sizeEdge]. Edge Icons have to be generated/tested in TAB_INIT.
@@ -1776,7 +1776,7 @@ A3C_MAPTAB_fnc_drawMapUI = {
 				25,
 				[A3C_UI_COLOR_BLUE,1] call A3C_UI_Color_setOpacity,
 				(gettext(configFile >> "CfgVehicles" >> typeof _v >> "displayName"))
-			] call A3C_MAP_UI_DRAW_MACRO_VEHICON;	
+			] call A3C_UI_MAP_DRAW_MACRO_VEHICON;	
 			A3C_UI_MAPICONS_PICKUP pushbackUnique [_x,[25,25], getPosASL _x];
 		} foreach A3C_PICKUP_OBJECTS;
 	};
@@ -1788,7 +1788,7 @@ A3C_MAPTAB_fnc_drawMapUI = {
 				32.5,
 				[A3C_UI_COLOR_BLUE,1] call A3C_UI_Color_setOpacity,
 				""
-			] call A3C_MAP_UI_DRAW_MACRO_VEHICON;
+			] call A3C_UI_MAP_DRAW_MACRO_VEHICON;
 		} foreach A3C_UI_MAPICONS_HC_VICS;
 
 	};
@@ -1844,6 +1844,6 @@ A3C_EVH_DRAW1 = (findDisplay 12 displayCtrl 51) ctrlAddEventHandler
 					25,
 					[A3C_UI_COLOR_RED,1] call A3C_UI_Color_setOpacity,
 					""
-				] call A3C_MAP_UI_DRAW_MACRO_VEHICON;	
+				] call A3C_UI_MAP_DRAW_MACRO_VEHICON;	
 	}
 ];

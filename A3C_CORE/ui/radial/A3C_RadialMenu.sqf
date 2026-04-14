@@ -16,7 +16,7 @@ if  (!isnull (findDisplay 602)) exitwith {};
 if  (!isnull (finddisplay 100020)) exitwith {};
 if  (!isnull (finddisplay 100030)) exitwith {};
 if  (!isnull (finddisplay 100040)) exitwith {};
-if  (!isnull (finddisplay 100010)) exitwith {};
+if  (!isnull (findDisplay 100010)) exitwith {};
 if  (!isnull (finddisplay 100050)) exitwith {};
 
 
