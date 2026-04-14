@@ -36,7 +36,7 @@ class Extended_PreInit_EventHandlers
 #include "ui\HUD\HUD_Formation_Menu.hpp"
 #include "ui\HUD\HUD_CAM_UI.hpp"
 // #include "ui\radial\A3C_FORMATION.hpp"
-#include "ui\radial\A3C_SETTINGS_DIALOG.hpp"
+#include "ui\radial\UI_DSP_SettingsMenu.hpp"
 #include "ui\suppression\A3C_SUPPRESSION_DRAW.hpp"
 #include "cfgsounds.hpp"
 

@@ -3410,7 +3410,7 @@ A3C_GROUP_RESET = {
 	//systemchat 'hey';
 	
 	//-- refresh map UI and HUD UI
-	[] execVM "A3C_CORE\ui\MapOverlay\MAP_UI_fnc_drawMapUI.sqf";
+	[] execVM "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_drawMapUI.sqf";
 	[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
 
 

@@ -192,7 +192,7 @@ with uiNameSpace do {
 			showHud _newStatus;
 		};
 //systemchat '1';
-		A3C_MAP = (finddisplay 46) createDisplay "A3C_MAPDIALOG";
+		A3C_MAP = (finddisplay 46) createDisplay "A3C_DSP_MapOverlay";
 		(findDisplay 12 displayCtrl 51) ctrlMapCursor ["Track", "Arrow"];
 	};
 

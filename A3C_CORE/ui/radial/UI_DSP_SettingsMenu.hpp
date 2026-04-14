@@ -1,5 +1,5 @@
 
-class A3C_SETTINGS_MENU
+class A3C_DSP_SettingsMenu
 {
 	idd = 100010;
 	movingenable = true;
@@ -18,7 +18,7 @@ class A3C_SETTINGS_MENU
 	class Controls 
 	{
 		//-- HEADER
-		class A3C_SETTINGS_MENU: A3C_RscText
+		class A3C_DSP_SettingsMenu_HEADER: A3C_RscText
 		{
 			idc = -1;
 			text = "A3C - GLOBAL SETTINGS:"; 
@@ -114,7 +114,7 @@ class A3C_SETTINGS_MENU
 			idc = 1600;
 			text = ""; 
 			tooltip = "BOOST AI-SKILL";
-			action = "['A3C_SKILL_VAR'] call A3C_SETTINGS";
+			action = "['A3C_SKILL_VAR'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
 			sizeEx = 0.04;
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 9 * GUI_GRID_H + GUI_GRID_Y;
@@ -126,7 +126,7 @@ class A3C_SETTINGS_MENU
 			idc = 1601;
 			text = ""; 
 			tooltip = "TOGGLE NUMPAD FUNCTIONS";
-			action = "['A3C_NUM_VAR'] call A3C_SETTINGS";
+			action = "['A3C_NUM_VAR'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
 			sizeEx = 0.04;
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 11.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -138,7 +138,7 @@ class A3C_SETTINGS_MENU
 			idc = 1602;
 			text = ""; 
 			tooltip = "Reset HUD-formation to line when opening";
-			action = "['A3C_HUD_RES_VAR'] call A3C_SETTINGS";
+			action = "['A3C_HUD_RES_VAR'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
 			sizeEx = 0.04;
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 14 * GUI_GRID_H + GUI_GRID_Y;
@@ -150,7 +150,7 @@ class A3C_SETTINGS_MENU
 			idc = 1603;
 			text = ""; 
 			tooltip = "Final 'railing' towards destination (experimental)";
-			action = "['A3C_FORCERAIL_VAR'] call A3C_SETTINGS";
+			action = "['A3C_FORCERAIL_VAR'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
 			sizeEx = 0.04;
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 16.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -174,7 +174,7 @@ class A3C_SETTINGS_MENU
 			idc = 1605;
 			text = ""; 
 			tooltip = "select HUD layout";
-			action = "['A3C_HUD_LAYOUT_CORNER'] call A3C_SETTINGS";
+			action = "['A3C_HUD_LAYOUT_CORNER'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
 			sizeEx = 0.04;
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 21.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -186,7 +186,7 @@ class A3C_SETTINGS_MENU
 			idc = 1606;
 			text = ""; 
 			tooltip = "select HUD objects (OFF: indicators, ON: units)";
-			action = "['A3C_HUD_OBJECTS'] call A3C_SETTINGS";
+			action = "['A3C_HUD_OBJECTS'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
 			sizeEx = 0.04;
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 23.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -198,7 +198,7 @@ class A3C_SETTINGS_MENU
 			idc = 1607;
 			text = ""; 
 			tooltip = "HC-Group Menu Response (OFF: CONFIRM, ON: IMMEDIATE)";
-			action = "['HC_GROUP_RESPONSE'] call A3C_SETTINGS";
+			action = "['HC_GROUP_RESPONSE'] call A3C_UI_SETTINGS_FNC_ChangeSettings";
 			sizeEx = 0.04;
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 25.5 * GUI_GRID_H + GUI_GRID_Y;

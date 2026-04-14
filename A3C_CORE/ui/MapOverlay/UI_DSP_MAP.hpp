@@ -12,7 +12,7 @@
 #define A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H (0.08 * safezoneH)
 #define A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W (A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H * 0.75)
 
-class A3C_MAPDIALOG
+class A3C_DSP_MapOverlay
 {
 	idd = 100020;
 	movingenable = true;
