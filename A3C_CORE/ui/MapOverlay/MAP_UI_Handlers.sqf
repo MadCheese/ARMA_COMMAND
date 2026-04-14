@@ -19,7 +19,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 	
 	if (isNull findDisplay _a3c_dsp) exitWith {};
 	if (A3C_MAP_BOOL_CT_EDIT_ACTIVE) exitWith {};
-	if (A3C_UI_MAPTAB_isCircleMenu) exitWith {
+	if (A3C_UI_MAP_isCircleMenu) exitWith {
 		if !(_left) then {
 			[_a3c_dsp,-1] call A3C_UI_MAP_FNC_CloseSyncCircleMenu;
 		};
@@ -329,7 +329,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 					if (count _button > 0) then {
 						_button = _button select 0;
 						_buttonParent = _button select [0,count _button -1];
-						if ([_button select 0] in A3C_MAPTAB_TREES_OPEN) then {
+						if ([_button select 0] in A3C_UI_MAP_TREES_OPEN) then {
 							_CT_TREE tvSetCurSel _button;
 							[
 								[
@@ -339,7 +339,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 								"OPEN",
 								false,
 								0.1
-							] spawn A3C_MAPTAB_TREE_OPEN_COLLAPSE
+							] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE
 						};
 					};	
 				};
@@ -455,7 +455,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 						if (count _button > 0) then {
 							_button = _button select 0;
 							_buttonParent = _button select [0,count _button -1];
-							if ([_button select 0] in A3C_MAPTAB_TREES_OPEN) then {
+							if ([_button select 0] in A3C_UI_MAP_TREES_OPEN) then {
 								//systemchat str _button;
 								_CT_TREE tvSetCurSel _button;
 								[
@@ -466,7 +466,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 									"OPEN",
 									false,
 									0.1
-								] spawn A3C_MAPTAB_TREE_OPEN_COLLAPSE
+								] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE
 							};
 						};
 						//if ( ((A3C_SELECTED_UNITS select 0) == A3C_SQ_CLICKED_UNIT) && (A3C_HELI_INF_MODE == "INF") ) then {
@@ -632,7 +632,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 	//-- 7078 (UnitButton RMB-contextMenu) requires special assistance: 0.1 delay is required for lb-selection to fire!!
 	if (ctrlShown (findDisplay _a3c_dsp displayCtrl 7078)) exitWith {
 		sleep 0.1;
-		if !(A3C_MAPTAB_OPENING_CONTEXTMENU OR ([[_sX,_sY],findDisplay _a3c_dsp displayCtrl 7078] call MCSS_fnc_isClickPosInCTRLArea)) then {
+		if !(A3C_UI_MAP_OPENING_CONTEXTMENU OR ([[_sX,_sY],findDisplay _a3c_dsp displayCtrl 7078] call MCSS_fnc_isClickPosInCTRLArea)) then {
 			sleep 0.1;
 			((findDisplay _a3c_dsp) displayCtrl 7078) ctrlShow false;
 		};
@@ -1153,7 +1153,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 			if (count _button > 0) then {
 				_button = _button select 0;
 				_buttonParent = _button select [0,count _button -1];
-				if ([_button select 0] in A3C_MAPTAB_TREES_OPEN) then {
+				if ([_button select 0] in A3C_UI_MAP_TREES_OPEN) then {
 					_CT_TREE tvSetCurSel _button;
 					[
 						[
@@ -1163,7 +1163,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 						"OPEN",
 						false,
 						0.1
-					] spawn A3C_MAPTAB_TREE_OPEN_COLLAPSE
+					] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE
 				};
 			};	
 		};
@@ -1211,10 +1211,10 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 					// };
 					// if (true) exitWith {};
 					private _syncTypes = ["SYNC"];
-					A3C_UI_MAPTAB_SYNC_BOARDGROUP = grpNull;
-					A3C_UI_MAPTAB_SYNC_HOSTGROUP = grpNull;
-					A3C_UI_MAPTAB_SYNC_BoardWPI = -1;
-					A3C_UI_MAPTAB_SYNC_HostWPI = -1;
+					A3C_UI_MAP_SYNC_BOARDGROUP = grpNull;
+					A3C_UI_MAP_SYNC_HOSTGROUP = grpNull;
+					A3C_UI_MAP_SYNC_BoardWPI = -1;
+					A3C_UI_MAP_SYNC_HostWPI = -1;
 					private _targetLeadVic = objNull;
 					{
 						private _checkedGroup = _x;
@@ -1254,10 +1254,10 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 									};
 								} foreach (units _refGroup);
 								if (count _emptyPoses >= (count units _checkedGroup)) then {
-									A3C_UI_MAPTAB_SYNC_BOARDGROUP = _checkedGroup;
-									A3C_UI_MAPTAB_SYNC_BoardWPI =  if (_checkedGroup == _gp) then {_wp_Index} else {_rootWPI};
-									A3C_UI_MAPTAB_SYNC_HostWPI =  if (_checkedGroup == _gp) then {_rootWPI} else {_wp_Index};
-									A3C_UI_MAPTAB_SYNC_HOSTGROUP = _refGroup;
+									A3C_UI_MAP_SYNC_BOARDGROUP = _checkedGroup;
+									A3C_UI_MAP_SYNC_BoardWPI =  if (_checkedGroup == _gp) then {_wp_Index} else {_rootWPI};
+									A3C_UI_MAP_SYNC_HostWPI =  if (_checkedGroup == _gp) then {_rootWPI} else {_wp_Index};
+									A3C_UI_MAP_SYNC_HOSTGROUP = _refGroup;
 									//_targetVeh = (vehicle leader _refGroup);
 									_syncTypes pushBackUnique "GET IN";
 								};
@@ -1266,10 +1266,10 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 							case ({vehicle _x != _leadVic} count units _checkedGroup == 0) : {
 								if ((driver _leadVic) in (units _leadVic)) then {
 									if ((_refVic canVehicleCargo _leadVic) select 0) then {
-										A3C_UI_MAPTAB_SYNC_BOARDGROUP = _checkedGroup;
-										A3C_UI_MAPTAB_SYNC_HOSTGROUP = _refGroup;
-										A3C_UI_MAPTAB_SYNC_BoardWPI =  if (_checkedGroup == _gp) then {_wp_Index} else {_rootWPI};
-										A3C_UI_MAPTAB_SYNC_HostWPI =  if (_checkedGroup == _gp) then {_rootWPI} else {_wp_Index};
+										A3C_UI_MAP_SYNC_BOARDGROUP = _checkedGroup;
+										A3C_UI_MAP_SYNC_HOSTGROUP = _refGroup;
+										A3C_UI_MAP_SYNC_BoardWPI =  if (_checkedGroup == _gp) then {_wp_Index} else {_rootWPI};
+										A3C_UI_MAP_SYNC_HostWPI =  if (_checkedGroup == _gp) then {_rootWPI} else {_wp_Index};
 										//systemchat str [_refVic,_refVic];
 										_syncTypes pushBackUnique "VEHICLE GET IN";
 									};
@@ -1279,8 +1279,8 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 					} foreach [_gp,_rootGroup];
 					
 					if (count _syncTypes > 1) then {
-						A3C_UI_MAPTAB_isCircleMenu = true;
-						A3C_UI_MAPTAB_CircleMenu_CTRLS = [];
+						A3C_UI_MAP_isCircleMenu = true;
+						A3C_UI_MAP_CircleMenu_CTRLS = [];
 						private _cycle = 0;
 						private _angle = 180;
 						private _angleSplit = (360 / (count _syncTypes)) min 90;
@@ -1349,7 +1349,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 								_x ctrlSetPosition (_innerMacroPos + [_w,_h]);
 								_x ctrlCommit 0;
 							} foreach [_btnImg,_btnClicker];
-							A3C_UI_MAPTAB_CircleMenu_CTRLS pushBackUnique [_bgID,_imgID,_clickerID]; //_bgID
+							A3C_UI_MAP_CircleMenu_CTRLS pushBackUnique [_bgID,_imgID,_clickerID]; //_bgID
 							
 							_angle = _angle - _angleSplit;
 
@@ -1536,7 +1536,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 				if (count _button > 0) then {
 					_button = _button select 0;
 					_buttonParent = _button select [0,count _button -1];
-					if ([_button select 0] in A3C_MAPTAB_TREES_OPEN) then {
+					if ([_button select 0] in A3C_UI_MAP_TREES_OPEN) then {
 						_CT_TREE tvSetCurSel _button;
 						[
 							[
@@ -1546,7 +1546,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 							"OPEN",
 							false,
 							0.1
-						] spawn A3C_MAPTAB_TREE_OPEN_COLLAPSE
+						] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE
 					};
 				};
 			};

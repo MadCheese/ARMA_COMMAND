@@ -97,15 +97,15 @@ A3C_UNITCOUNTER =  (count (units group player));
 
 A3C_HC_WP_SYNC_ROOT = [grpNull,-1];
 
-A3C_UI_MAPTAB_SYNC_BOARDGROUP = grpNull;
-A3C_UI_MAPTAB_SYNC_HOSTGROUP = grpNull;
-A3C_UI_MAPTAB_SYNC_BoardWPI = -1;
-A3C_UI_MAPTAB_SYNC_HostWPI = -1;
+A3C_UI_MAP_SYNC_BOARDGROUP = grpNull;
+A3C_UI_MAP_SYNC_HOSTGROUP = grpNull;
+A3C_UI_MAP_SYNC_BoardWPI = -1;
+A3C_UI_MAP_SYNC_HostWPI = -1;
 
 
 //A3C_HC_WP_SYNC_ARRAYS = [];
-A3C_UI_MAPTAB_isCircleMenu = false;
-A3C_UI_MAPTAB_CircleMenu_CTRLS = [];
+A3C_UI_MAP_isCircleMenu = false;
+A3C_UI_MAP_CircleMenu_CTRLS = [];
 
 A3C_TARGETVEH = objnull;
 A3C_SNAP_OBJECT = objnull;
@@ -478,7 +478,7 @@ A3C_360_out = true;
 A3C_BOOL_ROE_3 = false;
 
 
-A3C_MAPTAB_OPENING_CONTEXTMENU = false;
+A3C_UI_MAP_OPENING_CONTEXTMENU = false;
 
 
 A3C_BOOL_STANCE_ICON_TRAVEL = false;
@@ -633,7 +633,7 @@ BLUE_LINES = [];
 
 
 
-A3C_MAPTAB_UNITBUTTONCEIL = 16;
+A3C_UI_MAP_UNITBUTTONCEIL = 16;
 A3C_UI_MAP_Overlay_VAR_isUnFolded = false;
 A3C_SQ_CLICKED_UNIT = objNull;
 A3C_BOOL_MOUSEMOVING = false;

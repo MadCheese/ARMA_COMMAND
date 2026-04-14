@@ -511,8 +511,8 @@ A3C_UI_MAP_FNC_CloseSyncCircleMenu = {
 		{
 			ctrlDelete (findDisplay _a3c_dsp displayCtrl _x);
 		} foreach _x;
-	} foreach A3C_UI_MAPTAB_CircleMenu_CTRLS;
-	A3C_UI_MAPTAB_isCircleMenu = false;
+	} foreach A3C_UI_MAP_CircleMenu_CTRLS;
+	A3C_UI_MAP_isCircleMenu = false;
 };
 
 
@@ -524,10 +524,10 @@ A3C_UI_MAP_FNC_CloseSyncCircleMenu = {
 A3C_UI_MAP_FNC_SYNC_LoadGroupInVehicle = {
 	private ["_wp","_syncWps"];
 
-	_wp = [A3C_UI_MAPTAB_SYNC_HOSTGROUP,A3C_UI_MAPTAB_SYNC_HostWPI];
+	_wp = [A3C_UI_MAP_SYNC_HOSTGROUP,A3C_UI_MAP_SYNC_HostWPI];
 
 	_syncWps = synchronizedWaypoints _wp;
-	A3C_UI_MAPTAB_SYNC_HOSTGROUP setVariable ["A3C_HC_SYNCWPS",_syncWps,true]; //~~ necessary?
+	A3C_UI_MAP_SYNC_HOSTGROUP setVariable ["A3C_HC_SYNCWPS",_syncWps,true]; //~~ necessary?
 
 	private _precond = [((waypointStatements _wp) select 0), waypointTimeout _wp] call A3C_HC_getConditionFromStatements;
 	_wp setWayPointType "SCRIPTED";
@@ -546,9 +546,9 @@ A3C_UI_MAP_FNC_SYNC_LoadGroupInVehicle = {
 A3C_UI_MAP_FNC_SYNC_LoadVehicleInVehicle = {
 	private ["_wp","_syncWps"];
 
-	_wp = [A3C_UI_MAPTAB_SYNC_HOSTGROUP,A3C_UI_MAPTAB_SYNC_HostWPI];
+	_wp = [A3C_UI_MAP_SYNC_HOSTGROUP,A3C_UI_MAP_SYNC_HostWPI];
 	_syncWps = synchronizedWaypoints _wp;
-	A3C_UI_MAPTAB_SYNC_HOSTGROUP setVariable ["A3C_HC_SYNCWPS",_syncWps,true]; //~~ necessary?
+	A3C_UI_MAP_SYNC_HOSTGROUP setVariable ["A3C_HC_SYNCWPS",_syncWps,true]; //~~ necessary?
 
 	private _precond = [((waypointStatements _wp) select 0), waypointTimeout _wp] call A3C_HC_getConditionFromStatements;
 	_wp setWayPointType "SCRIPTED";
@@ -638,7 +638,7 @@ A3C_UNITSEL_REFRESH_UI = {
 				_mode = "OPEN";
 				// private _vehicle = if ()
 				private _infModeTo = if (vehicle (A3C_SELECTED_UNITS select 0) isKindOf "AIR") then {"AIR"} else {"INF"};
-				[_infModeTo] call A3C_MAPTAB_REFRESH_BARCONTROLS;
+				[_infModeTo] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 			};
 			[_mode,0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
 
@@ -1458,7 +1458,7 @@ A3C_TAB_TOGGLE_TRACKER = {
 
 
 
-A3C_MAPTAB_BARSETTINGS_LABEL = {
+A3C_UI_MAP_BARSETTINGS_LABEL = {
 	params ["_mode"];
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	//-- hide subselection controls
@@ -1471,7 +1471,7 @@ A3C_MAPTAB_BARSETTINGS_LABEL = {
 };
 
 
-A3C_MAPTAB_REFRESH_BARCONTROLS = {
+A3C_UI_MAP_REFRESH_BARCONTROLS = {
 	params ["_mode"];
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	if !(_mode == "HC") then {
@@ -1746,7 +1746,7 @@ A3C_START_TABMODE = {
 			(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
 		} foreach [7064,7065];
 	};
-	[_mode] call A3C_MAPTAB_REFRESH_BARCONTROLS;
+	[_mode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 	
 	(findDisplay _a3c_dsp displayCtrl 7022) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa";
 	A3C_TEMP_CONDITION = ["NONE","NONE"];
@@ -1838,7 +1838,7 @@ A3C_CREATE_TRACKER = {
 			//-- friendly
 			if ((faction leader _x) == (faction player)) then {
 				//-- player faction
-				//-- NO ACTION. will be drawn by AIC or in individual section >> A3C_MAPTAB_fnc_drawMapUI
+				//-- NO ACTION. will be drawn by AIC or in individual section >> MAP_UI_fnc_drawMapUI
 			} else {
 				//-- friendly faction
 			};
@@ -2411,7 +2411,7 @@ A3C_getActionsArray = {
 };
 
 
-A3C_MAPTAB_SPAWN_TIMEOUTBOX = {
+A3C_UI_MAP_SPAWN_TIMEOUTBOX = {
 	params ["_mode"];
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	private _timeOutBox = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout;
@@ -3005,7 +3005,7 @@ A3C_fnc_SUBSET = {
 	if (_action == "SQ_COND_TIMEOUT") then {
 		//((findDisplay _a3c_dsp) displayCtrl 7008) ctrlSetText '(';
 		//{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow true} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
-		["OPEN"] call A3C_MAPTAB_SPAWN_TIMEOUTBOX;
+		["OPEN"] call A3C_UI_MAP_SPAWN_TIMEOUTBOX;
 	} else {
 		//((findDisplay _a3c_dsp) displayCtrl 7008) ctrlsettext '^';
 		{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
@@ -3935,10 +3935,10 @@ A3C_BTN_SELECT_UNIT = { //-- currently unused?
 	};
 };
 
-A3C_MAPTAB_CONTEXTMENU_BOOLFNC = {
-	A3C_MAPTAB_OPENING_CONTEXTMENU = true;
+A3C_UI_MAP_CONTEXTMENU_BOOLFNC = {
+	A3C_UI_MAP_OPENING_CONTEXTMENU = true;
 	sleep 0.5;
-	A3C_MAPTAB_OPENING_CONTEXTMENU = false;
+	A3C_UI_MAP_OPENING_CONTEXTMENU = false;
 };
 
 A3C_BTN_FNC_NOSHIFT = { //-- currently unnused?
@@ -4418,7 +4418,7 @@ A3C_CHECK_FOR_DEAD_WIP = { //-- currently unused
 	} foreach (profileNamespace getvariable "A3C_GROUPUNITS");
 };
 
-A3C_MAPTAB_TREE_getSubParentCount = {
+A3C_UI_MAP_TREE_getSubParentCount = {
 	params ["_CT_TREE","_mainTreeIndex"];
 	private _squadTreeCount = _CT_TREE tvCount [_mainTreeIndex];
 	private _parentSubCount = 0;
@@ -4716,7 +4716,7 @@ A3C_SET_ORDER_WIP = {
 				_x setvariable ["A3C_PLOT_TEMP",_switchData,true];
 			} foreach _units;
 		};
-		[A3C_HELI_INF_MODE] call A3C_MAPTAB_REFRESH_BARCONTROLS;
+		[A3C_HELI_INF_MODE] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 	} else {
 		[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
 	};

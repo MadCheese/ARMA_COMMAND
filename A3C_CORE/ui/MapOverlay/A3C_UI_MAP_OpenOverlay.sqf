@@ -1,4 +1,4 @@
-#include "defines.hpp"
+// #include "defines.hpp"
 
 private ["_hudStatus"];
 
@@ -173,7 +173,7 @@ with uiNameSpace do {
 		[
 			"Draw",
 			{
-				_this call A3C_MAPTAB_fnc_drawMapUI;
+				_this call MAP_UI_fnc_drawMapUI;
 			}
 		];
 
@@ -219,7 +219,7 @@ with uiNameSpace do {
 
 
 
-_ceil = (ceil ((count A3C_SELECTED_UNITS) / A3C_MAPTAB_UNITBUTTONCEIL)) - 1;
+_ceil = (ceil ((count A3C_SELECTED_UNITS) / A3C_UI_MAP_UNITBUTTONCEIL)) - 1;
 if (_ceil > A3C_BUTTONPAGE_TABLET) then {
 	A3C_BUTTONPAGE_TABLET = 0; //~~ no longer needed?
 };
@@ -227,7 +227,7 @@ if (_ceil > A3C_BUTTONPAGE_TABLET) then {
 
 
 
-[_display] call A3C_MAPTAB_TREE_LABEL; //-- can take long depending on amount of commanded units
+[_display] call A3C_UI_MAP_TREE_LABEL; //-- can take long depending on amount of commanded units
 
 
 

@@ -920,7 +920,7 @@ A3C_FNC_CBA_KEY = {
 						if (isnull (findDisplay 100020)) then {
 							profilenamespace setvariable ["A3C_MAP_VAR",true];
 							A3C_OPACITY = 0.8;
-							nul = [100020] execVM "A3C_CORE\ui\MapOverlay\A3C_MAPTAB.sqf";
+							nul = [100020] execVM "A3C_CORE\ui\MapOverlay\A3C_UI_MAP_OpenOverlay.sqf";
 
 						} else {
 							A3C_OPACITY = 0;
@@ -1285,7 +1285,7 @@ A3C_UI_HUD_HandlerFNC_KeyDown = {
 							if (profileNameSpace getVariable "A3C_MAP_VAR")  then {
 								A3C_WeaponCurr = currentWeapon player;
 								A3C_BOOL_MAPFORCE= false;
-								nul = [100020] execVM "A3C_CORE\ui\MapOverlay\A3C_MAPTAB.sqf";
+								nul = [100020] execVM "A3C_CORE\ui\MapOverlay\A3C_UI_MAP_OpenOverlay.sqf";
 								if (count units player > 0) then {
 									if (({(_x == (driver vehicle _x)) && {typeOf (vehicle _x) iskindOf "AIR"}} count (units player - [player])) >= ((count (units player - [player])) / 2)) then {
 										A3C_HELI_INF_MODE = "AIR";

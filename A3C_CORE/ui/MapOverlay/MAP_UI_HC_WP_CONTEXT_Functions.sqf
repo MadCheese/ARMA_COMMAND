@@ -7,7 +7,7 @@ if (isDedicated) exitwith {};
 
 
 
-//~~ move to A3C_MAPTAB_Main_init.sqf
+//~~ move to A3C_UI_MAP_Main_init.sqf
 
 //A3C_HC_LB_IND = [1,1];
 A3C_HC_ACTIVEGROUP = grpNull;
@@ -695,7 +695,7 @@ A3C_Map_HC_waypointContext_OpenMenu = {
 		[_combo, A3C_HC_EDIT_ACTION] call A3C_addLbEntry;
 		[_combo, 0, true] call A3C_setCurSel;
 	} else {
-		[] call A3C_MAPTAB_WPMENU_ADDACTIONS;
+		[] call A3C_UI_MAP_WPMENU_ADDACTIONS;
 	};
 
 
@@ -1702,7 +1702,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 A3C_HC_CASMODES = [];
 
 
-A3C_MAPTAB_WPMENU_ADDACTIONS = {
+A3C_UI_MAP_WPMENU_ADDACTIONS = {
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	private _actionTypeCombo = (findDisplay _a3c_dsp displayCtrl 709141);
 

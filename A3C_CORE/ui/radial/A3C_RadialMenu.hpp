@@ -1056,8 +1056,8 @@ class A3C_MENU
 					//onTreeSelChanged = "player commandchat str _this";
 					//onTreeLButtonDown = "player commandchat str [_this select 1]; false";
 					onTreeLButtonDown = "_this call A3C_TREE_TVCHANGE; false";
-					onTreeCollapsed = "[_this,'COLLAPSE',false,0.1] spawn A3C_MAPTAB_TREE_OPEN_COLLAPSE;  false";
-					onTreeExpanded = "[_this,'OPEN',false,0.1] spawn A3C_MAPTAB_TREE_OPEN_COLLAPSE;  false";
+					onTreeCollapsed = "[_this,'COLLAPSE',false,0.1] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE;  false";
+					onTreeExpanded = "[_this,'OPEN',false,0.1] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE;  false";
 					sizeEx = 0.03 / (getResolution select 5);
 					colorBackground[] = {0.2,0.2,0.2,0.3}; // Fill color
 					colorBorder[] = {0,0,0,0}; // Frame color

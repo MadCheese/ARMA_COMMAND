@@ -1,6 +1,6 @@
 
-//[_CT_TREE,"SQUAD_VEH", [_veh,_crewUnits],_mainTreeIndex,_foreachIndex] call A3C_MAPTAB_TREE_ADD_ITEM;
-A3C_MAPTAB_TREE_ADD_ITEM = {
+//[_CT_TREE,"SQUAD_VEH", [_veh,_crewUnits],_mainTreeIndex,_foreachIndex] call A3C_UI_MAP_TREE_ADD_ITEM;
+A3C_UI_MAP_TREE_ADD_ITEM = {
 	params ["_CT_TREE","_mode","_dataParam","_mainTreeIndex","_parentIndex"];
 	private _unitArray = +(profileNamespace getvariable "A3C_GROUPUNITS");
 
@@ -81,7 +81,7 @@ A3C_MAPTAB_TREE_ADD_ITEM = {
 				"ASCEND"
 			] call BIS_fnc_sortBy;
 			{
-				[_CT_TREE,"SQUAD_CREW", [_x],_mainTreeIndex,_parentIndex] call A3C_MAPTAB_TREE_ADD_ITEM;	
+				[_CT_TREE,"SQUAD_CREW", [_x],_mainTreeIndex,_parentIndex] call A3C_UI_MAP_TREE_ADD_ITEM;	
 			} foreach _crewUnits;
 		};
 		case ("SQUAD_CREW") : {
@@ -145,7 +145,7 @@ A3C_MAPTAB_TREE_ADD_ITEM = {
 	};
 };
 
-// A3C_MAPTAB_TREE_SortByPower = {
+// A3C_UI_MAP_TREE_SortByPower = {
 // 	private _vehicles = _this;
 // 	_vehicles = 
 // 	[
@@ -187,7 +187,7 @@ A3C_MAPTAB_TREE_ADD_ITEM = {
 // 	] call BIS_fnc_sortBy;
 // };
 
-A3C_MAPTAB_TREE_LABEL = {
+A3C_UI_MAP_TREE_LABEL = {
 
 	params ["_a3c_dsp"];
 
@@ -262,14 +262,14 @@ A3C_MAPTAB_TREE_LABEL = {
 			{
 				_x params ["_veh","_crewUnits"];
 				//private _fi = _foreachIndex;
-				[_CT_TREE,"SQUAD_VEH", [_veh,_crewUnits],_mainTreeIndex,_foreachIndex] call A3C_MAPTAB_TREE_ADD_ITEM;
+				[_CT_TREE,"SQUAD_VEH", [_veh,_crewUnits],_mainTreeIndex,_foreachIndex] call A3C_UI_MAP_TREE_ADD_ITEM;
 			} foreach _vehicles; 
 		};
 
 		if (count _soldiers > 0) then {
 			private _squadTreeCount = count _vehicles;
 			{
-				[_CT_TREE,"SQUAD_INF", [_x],_mainTreeIndex,_foreachIndex + _squadTreeCount] call A3C_MAPTAB_TREE_ADD_ITEM;
+				[_CT_TREE,"SQUAD_INF", [_x],_mainTreeIndex,_foreachIndex + _squadTreeCount] call A3C_UI_MAP_TREE_ADD_ITEM;
 			} foreach _soldiers; 
 		};
 		_mainTreeIndex = _mainTreeIndex + 1;
@@ -422,7 +422,7 @@ A3C_MAPTAB_TREE_LABEL = {
 					_gp setVariable ["A3C_TREESEL_INDEX",[_ct_indexArray]];
 					{
 						_cargoGroup = _x;
-						[_CT_TREE,"HC_CARGO", [_cargoGroup,_fi],_mainTreeIndex,_subTreeIndex] call A3C_MAPTAB_TREE_ADD_ITEM;
+						[_CT_TREE,"HC_CARGO", [_cargoGroup,_fi],_mainTreeIndex,_subTreeIndex] call A3C_UI_MAP_TREE_ADD_ITEM;
 					} foreach _cargoGroups;
 
 				} foreach _refArray;
@@ -435,7 +435,7 @@ A3C_MAPTAB_TREE_LABEL = {
 	
 
 	private _openTrees = if (_a3c_dsp in [100020,100030]) then {
-		A3C_MAPTAB_TREES_OPEN
+		A3C_UI_MAP_TREES_OPEN
 	} else {
 		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
 			A3C_RADIAL_TREES_OPEN_SQ
@@ -447,24 +447,24 @@ A3C_MAPTAB_TREE_LABEL = {
 		[_ct_tree,_openTrees] spawn {
 			params ["_ct_tree","_openTrees"];
 			{
-				_scr = [[_ct_tree,_x],"OPEN",if (_forEachIndex == 0) then {true} else {false} ,0] spawn A3C_MAPTAB_TREE_OPEN_COLLAPSE;
+				_scr = [[_ct_tree,_x],"OPEN",if (_forEachIndex == 0) then {true} else {false} ,0] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE;
 				waitUntil {scriptDone _scr};
 				//sleep 1;
 			} foreach _openTrees;
 		};
 	} else {
-		[[_ct_tree,[0]],"COLLAPSE",true,0] spawn A3C_MAPTAB_TREE_OPEN_COLLAPSE;
+		[[_ct_tree,[0]],"COLLAPSE",true,0] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE;
 	};
 };
 
 
 
-A3C_MAPTAB_TREES_OPEN = [];
+A3C_UI_MAP_TREES_OPEN = [];
 A3C_RADIAL_TREES_OPEN_SQ = [[0]];
 A3C_RADIAL_TREES_OPEN_HC = [[0]];
 
 //-- animate tree collapse
-A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
+A3C_UI_MAP_TREE_OPEN_COLLAPSE = {
 	params ["_ctrlData","_mode","_isInit","_animTime"]; 
 	//-- _mode == "OPEN" or "COLLAPSE"
 	//-- _isInit == true (when initializing/refreshing tree) or false when toggled by player
@@ -475,7 +475,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
 	private _openTrees = if (_a3c_dsp == 100040) then {
 		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {A3C_RADIAL_TREES_OPEN_SQ} else {A3C_RADIAL_TREES_OPEN_HC}
 	} else {
-		A3C_MAPTAB_TREES_OPEN
+		A3C_UI_MAP_TREES_OPEN
 	};
 
 	playsound "ReadOutHideClick1";
@@ -577,7 +577,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
 			_effectiveH
 		];
 		_ctrl ctrlCommit _animTime; 
-		[_ctrl,_animTime] call A3C_MAPTAB_TREE_ADJUST_TOP_ROW;
+		[_ctrl,_animTime] call A3C_UI_MAP_TREE_ADJUST_TOP_ROW;
 		
 	} else {
 		private _ctrlGroup = findDisplay 100040 displayCtrl 8071;
@@ -605,7 +605,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE = {
 /*
 
 //-- animate tree collapse
-A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
+A3C_UI_MAP_TREE_OPEN_COLLAPSE1 = {
 	
 
 	params ["_ctrlData","_mode","_isInit","_animTime"]; 
@@ -620,7 +620,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 	private _openTrees = if (_a3c_dsp == 100040) then {
 		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {A3C_RADIAL_TREES_OPEN_SQ} else {A3C_RADIAL_TREES_OPEN_HC}
 	} else {
-		A3C_MAPTAB_TREES_OPEN
+		A3C_UI_MAP_TREES_OPEN
 	};
 
 	playsound "ReadOutHideClick1"; 
@@ -765,7 +765,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 			_effectiveH //max A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_H
 		];
 		_ctrl ctrlCommit _animTime; 
-		[_ctrl,_animTime] call A3C_MAPTAB_TREE_ADJUST_TOP_ROW;
+		[_ctrl,_animTime] call A3C_UI_MAP_TREE_ADJUST_TOP_ROW;
 		
 	} else {
 		private _ctrlGroup = findDisplay 100040 displayCtrl 8071;
@@ -799,7 +799,7 @@ A3C_MAPTAB_TREE_OPEN_COLLAPSE1 = {
 
 */
 
-A3C_MAPTAB_RESIZE_TEAMCOLORS_Y = {
+A3C_UI_MAP_RESIZE_TEAMCOLORS_Y = {
 	//-- this function matches the teamcolor bars to the height of the CT_TREE control depending on teamcolor presence (otherwise sets bars out of bounds)
 	params ["_animTime"];
 
@@ -882,7 +882,7 @@ A3C_MAPTAB_RESIZE_TEAMCOLORS_Y = {
 
 
 //-- fnc to adjust Height of teamcolor and toprow-controls to tree-size
-A3C_MAPTAB_TREE_ADJUST_TOP_ROW = { //asasas
+A3C_UI_MAP_TREE_ADJUST_TOP_ROW = { //asasas
 	params ["_ctrl","_animTime"];
 
 	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
@@ -896,7 +896,7 @@ A3C_MAPTAB_TREE_ADJUST_TOP_ROW = { //asasas
 	//private A3C_MAP_GAMEUI_Upper_buttonH = 0.04 * safezoneH; //0.0330053 * safezoneH;
 	private _totalW = (ctrlPosition (findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL)) select 2;
 	//--adjust height for teamcolor controls
-	[_animTime] call A3C_MAPTAB_RESIZE_TEAMCOLORS_Y;
+	[_animTime] call A3C_UI_MAP_RESIZE_TEAMCOLORS_Y;
 	_ctrlY = A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y - _ctrlH - (A3C_MAP_GAMEUI_PADDING_Y / 2); //0.85733 * safezoneH + safezoneY; //-- HARDCODED y value of first box
 	//-- adjust teamcolor bg and frame
 	{
@@ -1152,7 +1152,7 @@ A3C_TREE_BOXCLICK = {
 			//systemchat 'teamcolor shebang';
 			//A3C_BUTTON_UNIT = _unit;
 			lbClear ((findDisplay _a3c_dsp) displayCtrl 7078);
-			[] spawn A3C_MAPTAB_CONTEXTMENU_BOOLFNC;
+			[] spawn A3C_UI_MAP_CONTEXTMENU_BOOLFNC;
 			((findDisplay _a3c_dsp) displayCtrl 7078) ctrlShow true;
 			ctrlsetfocus (finddisplay _a3c_dsp displayctrl 7078);
 			A3C_LB_MODE = 3;
@@ -1327,8 +1327,8 @@ A3C_UI_MAP_UnitTree_Sync = {
 											if (_CT_TREE tvCount _ctrlParent == 0) then {
 												[_CT_TREE,_ctrlParent,"SQUAD"] call A3C_UI_MAP_UnitTree_CtrlDelete;
 											};
-											//_squadTreeCount = [_CT_TREE,_mainTreeIndex] call A3C_MAPTAB_TREE_getSubParentCount;
-											[_CT_TREE,"SQUAD_INF", [_buttonUnit],_mainTreeIndex, _CT_TREE tvCount [_mainTreeIndex] ] call A3C_MAPTAB_TREE_ADD_ITEM;
+											//_squadTreeCount = [_CT_TREE,_mainTreeIndex] call A3C_UI_MAP_TREE_getSubParentCount;
+											[_CT_TREE,"SQUAD_INF", [_buttonUnit],_mainTreeIndex, _CT_TREE tvCount [_mainTreeIndex] ] call A3C_UI_MAP_TREE_ADD_ITEM;
 										};
 									} else {
 										//-- infantry button -> check for boardings
@@ -1368,7 +1368,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 														[_buttonUnit],
 														_mainTreeIndex,
 														_refButtonData select 1
-													] call A3C_MAPTAB_TREE_ADD_ITEM;
+													] call A3C_UI_MAP_TREE_ADD_ITEM;
 												};										
 											} else {
 												[
@@ -1380,7 +1380,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 													],
 													_mainTreeIndex,
 													_CT_TREE tvCount [_mainTreeIndex]
-												] call A3C_MAPTAB_TREE_ADD_ITEM;
+												] call A3C_UI_MAP_TREE_ADD_ITEM;
 											};
 											
 										};
@@ -1412,7 +1412,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 					} foreach _reInforcementsWIP;
 					//systemchat str _reInforcementsWIP;
 					{
-						[_CT_TREE,"SQUAD_INF", [_x],_mainTreeIndex, _CT_TREE tvCount [_mainTreeIndex] ] call A3C_MAPTAB_TREE_ADD_ITEM;
+						[_CT_TREE,"SQUAD_INF", [_x],_mainTreeIndex, _CT_TREE tvCount [_mainTreeIndex] ] call A3C_UI_MAP_TREE_ADD_ITEM;
 					} forEach _reInforcementsWIP;
 					{
 						_vehicle = _x;
@@ -1425,7 +1425,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 							],
 							_mainTreeIndex,
 							_CT_TREE tvCount [_mainTreeIndex]
-						] call A3C_MAPTAB_TREE_ADD_ITEM;
+						] call A3C_UI_MAP_TREE_ADD_ITEM;
 					} forEach _reinforcementVics;
 				};
 				case ("HIGHCOMMAND") : {
@@ -1534,7 +1534,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 								//systemchat "cargo detected";
 								if (count _hostButton > 0) then {
 									_hostButton = _hostButton select ((count _hostButton) - 1);
-									[_CT_TREE,"HC_CARGO", [_x,_hostButton select 2],_hostButton select 0, _hostButton select 1] call A3C_MAPTAB_TREE_ADD_ITEM;
+									[_CT_TREE,"HC_CARGO", [_x,_hostButton select 2],_hostButton select 0, _hostButton select 1] call A3C_UI_MAP_TREE_ADD_ITEM;
 								};
 								
 							} else {
@@ -1568,7 +1568,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 	} foreach _modes;
 };
 
-A3C_MAPTAB_TREE_REFRESH_BUTTONVALUES = { //~~ WIP
+A3C_UI_MAP_TREE_REFRESH_BUTTONVALUES = { //~~ WIP
 	params ["_CT_TREE"];
 	private _modes = if (_a3c_dsp == 100040) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
 	private _mainTreeIndex = 0;

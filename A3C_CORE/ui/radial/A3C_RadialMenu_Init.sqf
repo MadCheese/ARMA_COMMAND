@@ -1112,7 +1112,7 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 	};
 
 	(findDisplay 100040 displayCtrl 8095) ctrlShow false; //-- teamcolor listbox - has to happen after UNIT SELECTOR group is opened
-	[100040] call A3C_MAPTAB_TREE_LABEL; 
+	[100040] call A3C_UI_MAP_TREE_LABEL; 
 };
 
 
@@ -1163,7 +1163,7 @@ A3C_UI_RADIAL_TOGGLE_LEFT_EXT = {
 				} foreach [8071,8096,8097,8098,8099,9000];
 				(findDisplay 100040 displayCtrl 8095) ctrlShow false;
 				[100040,if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {"INF"} else {"HC"}] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
-				[0] call A3C_MAPTAB_RESIZE_TEAMCOLORS_Y;
+				[0] call A3C_UI_MAP_RESIZE_TEAMCOLORS_Y;
 				[100040,8071] execFSM "A3C_CORE\FSM\A3C_MON_RADIAL.fsm";
 
 				//[] call A3C_RD_LABEL_SELECTORS;

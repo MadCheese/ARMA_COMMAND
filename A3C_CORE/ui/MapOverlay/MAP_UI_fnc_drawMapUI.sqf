@@ -21,7 +21,7 @@ A3C_UI_MAPICONS_HC_CONES = [];
 //A3C_UI_MAPICONS_HC_VICS = []; // defined in button function
 
 
-A3C_MAPTAB_fnc_drawMapUI = {
+MAP_UI_fnc_drawMapUI = {
 	disableserialization;
 	
 	if ( (A3C_OPACITY == 0) OR {!visibleMap} ) exitWith {};
@@ -1827,7 +1827,7 @@ A3C_EVH_DRAW = (findDisplay 12 displayCtrl 51) ctrlAddEventHandler
 [
 	"Draw",
 	{
-		_this call A3C_MAPTAB_fnc_drawMapUI;
+		_this call MAP_UI_fnc_drawMapUI;
 	}
 ]; //add for GPS? Tablet needs to be added each time it is opened
 

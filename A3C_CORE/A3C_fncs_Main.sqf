@@ -2441,7 +2441,7 @@ A3C_UNIT_HOLD = {
 	[_coverUnits,1] spawn A3C_FindCover;
 	player groupchat  _unitNames + " HOLD";
 	//[] call A3C_BTN_COLOR_RESET; //~~ STILL USED?
-	[A3C_HELI_INF_MODE] call A3C_MAPTAB_REFRESH_BARCONTROLS;
+	[A3C_HELI_INF_MODE] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 };
 
 A3C_UNIT_CONTINUE = {
@@ -2458,7 +2458,7 @@ A3C_UNIT_CONTINUE = {
 	} foreach _units;
 	player groupchat  _unitNames + " MOVE";
 	//[] call A3C_BTN_COLOR_RESET; //~~ STILL USED?
-	[A3C_HELI_INF_MODE] call A3C_MAPTAB_REFRESH_BARCONTROLS;
+	[A3C_HELI_INF_MODE] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 };
 
 
@@ -2847,7 +2847,7 @@ A3C_LB_Change = {
 			[_a3c_dsp,A3C_HELI_INF_MODE] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
 			[] spawn {
 				sleep 0.1;
-				[0] call A3C_MAPTAB_RESIZE_TEAMCOLORS_Y;
+				[0] call A3C_UI_MAP_RESIZE_TEAMCOLORS_Y;
 			};
 			
 			
@@ -3398,7 +3398,7 @@ A3C_GROUP_RESET = {
 	};
 
 	[] call A3C_UI_FNC_ADD_KEYBINDS;
-	[_a3c_dsp] call A3C_MAPTAB_TREE_LABEL; 
+	[_a3c_dsp] call A3C_UI_MAP_TREE_LABEL; 
 
 	if (behaviour player != "AWARE") then {
 		player setBehaviour "AWARE";
@@ -3410,7 +3410,7 @@ A3C_GROUP_RESET = {
 	//systemchat 'hey';
 	
 	//-- refresh map UI and HUD UI
-	[] execVM "A3C_CORE\ui\MapOverlay\A3C_MAPTAB_fnc_drawMapUI.sqf";
+	[] execVM "A3C_CORE\ui\MapOverlay\MAP_UI_fnc_drawMapUI.sqf";
 	[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
 
 
@@ -3526,7 +3526,7 @@ A3C_CANCELPLANS = {
 		A3C_WAYPOINTS_TEMP = [];
 		(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow false;
 		(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,0.2];
-		[A3C_HELI_INF_MODE] call A3C_MAPTAB_REFRESH_BARCONTROLS;
+		[A3C_HELI_INF_MODE] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 	};
 
 	if (_shift) then {
@@ -3610,12 +3610,12 @@ A3C_CANCELPLANS = {
 	};
 	[] spawn {
 		sleep 0.5;
-		[A3C_HELI_INF_MODE] call A3C_MAPTAB_REFRESH_BARCONTROLS;
+		[A3C_HELI_INF_MODE] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 	};
 	
 };
 
-//-- author note: move to A3C_MAPTAB_Main_init.sqf
+//-- author note: move to A3C_UI_MAP_Main_init.sqf
 A3C_GET_OPAC = {
 	_return = _this select 0;
 	_obj = _this select 1;

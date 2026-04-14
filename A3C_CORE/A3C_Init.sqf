@@ -99,6 +99,21 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\UI_createSafeEventHandler.sq
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_init_keyBinds.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\A3C_events.sqf";
 
+//-- Map Overlay
+call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\MAP_UI_Functions.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\MAP_UI_Handlers.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\MAP_UI_TREE_Functions.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\MAP_UI_HC_GP_CONTEXT_Functions.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\MAP_UI_HC_WP_CONTEXT_Functions.sqf";
+
+
+
+
+
+
+
+
+
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_findCover.sqf";     //-- Not HC/remote compatible yet
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Boarding.sqf";         //-- Not HC/remote compatible yet
 
@@ -111,8 +126,7 @@ if (A3C_EHM) then {
 	call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_EHM.sqf";
 };
 
-call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\A3C_MAPTAB_Main_init.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\A3C_MAPTAB_Main_init_UI_Handlers.sqf";
+
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_INIT.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_Init_SquadActions.sqf";
@@ -120,9 +134,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_Init_S
 
 
 
-call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\A3C_MAPTAB_TREE_init.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\A3C_MAPTAB_HC_GP_CONTEXT_INIT.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\A3C_MAPTAB_HC_WP_CONTEXT_INIT.sqf";
+
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD.sqf";
