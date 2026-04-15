@@ -1750,3 +1750,159 @@ A3C_HUD_MOVE = {
 		};
 	};
 };
+
+
+A3C_UI_HUD_HandlerFNC_KeyDown_NUM = {
+	private _colorTeamUnits = [];
+	private _teamColor = "";
+	private _gpUnits = (units group player) - [player];
+	private _unitCount = count _gpUnits;
+	switch (true) do {
+		case ((_key in [103, 104, 105, 106])): {
+			if (count A3C_HUD_UNITS == 0) then {
+				A3C_HUD_FORM = 0;
+			};
+
+			A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
+			A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
+			A3C_HUD_FORM_ICON_SIZE = 0.8;
+
+			switch (_key) do {
+				case 103: {_teamColor = "RED"};
+				case 104: {_teamColor = "GREEN"};
+				case 105: {_teamColor = "BLUE"};
+				case 106: {_teamColor = "YELLOW"};
+			};
+
+			for "_i" from 0 to (_unitCount - 1) do {
+				if (alive (_gpUnits select _i)) then {
+					private _assignedTeam = if (player == cameraOn) then {
+						assignedTeam (_gpUnits select _i)
+					} else {
+						(_gpUnits select _i) getVariable ["A3C_ASSIGNEDTEAM", "MAIN"]
+					};
+
+					if (_assignedTeam == _teamColor) then {
+						_colorTeamUnits pushBack (_gpUnits select _i);
+					};
+				};
+			};
+
+			{
+				if (_x in A3C_HUD_UNITS) then {
+					[_x] call A3C_HUD_REMOVE_SELECTED;
+				};
+				if (_x in _colorTeamUnits) then {
+					[_x, _key] call A3C_HUD_ADD_SELECTED;
+				};
+			} forEach ((units group player) - [player]);
+		};
+
+		case ((_key in [71, 72, 73, 75, 76, 77, 79, 80, 81])): {
+			if (A3C_FORMATION_DIR > 360) then {A3C_FORMATION_DIR = A3C_FORMATION_DIR - 360};
+			if (A3C_FORMATION_DIR < 0) then {A3C_FORMATION_DIR = A3C_FORMATION_DIR + 360};
+
+			_gpUnits = (profileNamespace getVariable "A3C_GROUPUNITS") - [player];
+			_unitCount = count _gpUnits;
+
+			if (count A3C_HUD_UNITS == 0) then {
+				A3C_NUM_DIR = 0;
+
+				for "_i" from 0 to (_unitCount - 1) do {
+					if (alive (_gpUnits select _i) && {!isPlayer (_gpUnits select _i)}) then {
+						[(_gpUnits select _i), _i] call A3C_HUD_ADD_SELECTED;
+					};
+				};
+
+				if (A3C_HUD_FORM == 0) then {
+					A3C_HUD_FORM = 1;
+					A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Left.paa";
+					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
+					A3C_HUD_FORM_ICON_SIZE = 0.8;
+				};
+			};
+
+			A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_CorrectDir;
+
+			switch (_key) do {
+				case 71: {
+					A3C_NUM_DIR = 180;
+					A3C_HUD_FORM = 4;
+					A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
+					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
+					A3C_HUD_FORM_ICON_SIZE = 0.8;
+				};
+				case 72: {
+					if (A3C_HUD_FORM == 0) then {
+						A3C_HUD_FORM = 1;
+						A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Left.paa";
+					} else {
+						A3C_HUD_FORM = 0;
+						A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
+					};
+					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
+					A3C_HUD_FORM_ICON_SIZE = 0.8;
+					A3C_NUM_DIR = 0;
+				};
+				case 73: {
+					A3C_NUM_DIR = 180;
+					A3C_HUD_FORM = 3;
+					A3C_HUD_FORM_ICON = "\a3\ui_f\data\GUI\RscCommon\RscHTML\arrow_left_ca.paa";
+					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
+					A3C_HUD_FORM_ICON_SIZE = 0.8;
+				};
+				case 75: {
+					if (A3C_HUD_FORM == 0) then {
+						A3C_HUD_FORM = 1;
+						A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Left.paa";
+					} else {
+						A3C_HUD_FORM = 0;
+						A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
+					};
+					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
+					A3C_HUD_FORM_ICON_SIZE = 0.8;
+					A3C_NUM_DIR = 90;
+				};
+				case 77: {
+					if (A3C_HUD_FORM == 0) then {
+						A3C_HUD_FORM = 1;
+						A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Left.paa";
+					} else {
+						A3C_HUD_FORM = 0;
+						A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
+					};
+					A3C_NUM_DIR = -90;
+					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
+					A3C_HUD_FORM_ICON_SIZE = 0.8;
+				};
+				case 79: {
+					A3C_NUM_DIR = 0;
+					A3C_HUD_FORM = 3;
+					A3C_HUD_FORM_ICON = "\a3\ui_f\data\GUI\RscCommon\RscHTML\arrow_left_ca.paa";
+					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
+					A3C_HUD_FORM_ICON_SIZE = 0.8;
+				};
+				case 80: {
+					if (A3C_HUD_FORM == 0) then {
+						A3C_HUD_FORM = 1;
+						A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Left.paa";
+					} else {
+						A3C_HUD_FORM = 0;
+						A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
+					};
+					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
+					A3C_HUD_FORM_ICON_SIZE = 0.8;
+					A3C_NUM_DIR = 180;
+				};
+				case 81: {
+					A3C_NUM_DIR = 0;
+					A3C_HUD_FORM = 4;
+					A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
+					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
+					A3C_HUD_FORM_ICON_SIZE = 0.8;
+				};
+			};
+		};
+		
+	};
+};

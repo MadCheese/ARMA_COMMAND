@@ -291,7 +291,7 @@ A3C_VARNAME_INDEX  = 0;
 A3C_USERACTION_ID = 0;
 A3C_BUTTONPAGE_TABLET = 0;
 A3C_DIFFICULTY = difficulty;
-A3C_OPACITY = if (profilenamespace getvariable ["A3C_MAP_VAR",true]) then {1} else {0};
+A3C_OPACITY = if (profilenamespace getvariable ["A3C_MAP_OVERLAY_SHOWN",true]) then {1} else {0};
 A3C_TAB_TOGGLE_VAR = 0;
 A3C_TRACKER_VISIBLE = 1;
 A3C_TEMP_ACTION = ["NONE","NONE"];
@@ -519,7 +519,7 @@ profileNameSpace setVariable ["A3C_HUD_OBJECTS",profileNameSpace getVariable ["A
 
 profilenamespace setvariable ["A3C_NUM_VAR",profileNameSpace getVariable ["A3C_NUM_VAR", true]];
 profilenamespace setvariable ["A3C_SKILL_VAR",profileNameSpace getVariable ["A3C_SKILL_VAR", true]];
-profilenamespace setvariable ["A3C_MAP_VAR",profileNameSpace getVariable ["A3C_MAP_VAR", true]];
+profilenamespace setvariable ["A3C_MAP_OVERLAY_SHOWN",profileNameSpace getVariable ["A3C_MAP_OVERLAY_SHOWN", true]];
 //profilenamespace setvariable ["A3C_MAP_CtrlPos",profileNameSpace getVariable ["A3C_MAP_CtrlPos", []]];
 profilenamespace setvariable ["A3C_MAP_KEY_ID",profileNameSpace getVariable ["A3C_MAP_KEY_ID", [46,[false,false,false]]]];
 

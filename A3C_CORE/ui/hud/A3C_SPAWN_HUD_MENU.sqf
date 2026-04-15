@@ -120,15 +120,7 @@ A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 100050) displayAddEventHandler ["Ke
 		} else {
 			("A3C_HUD_MENU_UI" call BIS_fnc_rscLayer) cutText ["","PLAIN"];
 			profileNamespace setVariable ['A3C_HUD_isOpen',false];
-		};
-		//((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 15) ctrlSetText "";
-		//(findDisplay 100050) displayRemoveEventHandler ["MouseButtonDown", A3C_RAD_DEVH_MD];		
-		//BR_A3C_DISABLE_RADIAL = false;
-		//if ((count A3C_HUD_UnitIndicators) > 0) then {
-		//	{inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];
-		//} else {
-		//	{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];
-		//};			
+		};		
 	};
 }];
 

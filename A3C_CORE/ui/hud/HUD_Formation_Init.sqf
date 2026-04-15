@@ -323,7 +323,7 @@ A3C_C_FORM_SaveButton = {
 	};
 };
 
-A3C_C_FORM_SPAWNDIALOG = {
+A3C_UI_CustomFormation_FNC_spawnDialog = {
 	disableSerialization;
 	A3C_DOWNKEYS = [];
 	with uiNameSpace do {

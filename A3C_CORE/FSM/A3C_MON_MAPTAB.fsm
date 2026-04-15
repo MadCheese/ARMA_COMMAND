@@ -22,8 +22,8 @@ link7[] = {6,3};
 link8[] = {7,9};
 link9[] = {8,4};
 link10[] = {9,8};
-globals[] = {0.000000,0,0,0,0,640,480,1,186,6316128,1,-421.532837,499.299622,492.753174,-183.755875,897,659,1};
-window[] = {0,-1,-1,-1,-1,1117,286,1890,286,1,915};
+globals[] = {0.000000,0,0,0,0,640,480,1,186,6316128,1,-532.299133,610.065369,282.725647,-556.536560,897,659,1};
+window[] = {0,-1,-1,-1,-1,1013,182,1786,182,1,915};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -99,7 +99,7 @@ class FSM
                          "A3C_MAP_BOOL_CT_EDIT_ACTIVE = false;" \n
                          "A3C_BOOL_DISABLEMAPCTRL = false;" \n
                          "A3C_BOOL_MOUSEMOVING = false;" \n
-                         "A3C_BOOL_MAPFORCE = true;" \n
+                         "" \n
                          "" \n
                          "//player removeEventHandler [""killed"", A3C_KILLED_WIP];" \n
                          "{deletemarkerLocal _x;} foreach A3C_TRACKER_MARKERS; // (A3C_TAB_MARKERS + A3C_TRACKER_MARKERS);" \n
@@ -111,23 +111,6 @@ class FSM
                          "" \n
                          "" \n
                          "" \n
-                         "" \n
-                         "//_opac = 1;" \n
-                         "//_hide = false;" \n
-                         "//if (difficulty > 1) then {" \n
-                         "//	_hide = true;" \n
-                         "//};" \n
-                         "" \n
-                         "//if (_hide) then {" \n
-                         "//	_opac = 0;" \n
-                         "//};" \n
-                         "" \n
-                         "//-- what was this next bit??" \n
-                         "//mouseOverIcon = (missionNamespace getVariable ""AIC_Interactive_Icon_Over_Icon"");" \n
-                         "//if (!isNil ""_mouseOverIcon"") then {_opac = 1};" \n
-                         "" \n
-                         "//A3C_OPACITY = _opac;" \n
-                         "//systemchat str _opac;" \n
                          "" \n
                          ""/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;

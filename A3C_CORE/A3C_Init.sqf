@@ -42,6 +42,11 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_serverMon.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_vehicleRemote.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_HighCommand.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_sharedCommandingLevels.sqf";
+
+
+
+
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Helicopter.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Ship.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Suppress.sqf";
@@ -129,6 +134,7 @@ if (A3C_EHM) then {
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_UI_FNC.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\UI_DSP_RADIAL_Handlers.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_INIT.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_Init_SquadActions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\settingsMenu\functions\initFunctions.sqf";

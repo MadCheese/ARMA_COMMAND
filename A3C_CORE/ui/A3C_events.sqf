@@ -2,10 +2,443 @@
 if (isDedicated) exitwith {};
 
 //----------------------------------  K E Y -  A N D  M O U S E B I N D S  -----------------------
-//--------------------------------------------  UI-FUNCTIONS  ------------------------------------
+
+
+//-- HUD Main "KeyDown"
+
+
+//--------------------------------------------  UI-HELPER FUNCTIONS  -----------------------------
 //------------------------------------------------------------------------------------------------
 
-// A3C_LAST_USED_UAV = objNull;
+//-- Function to return a flat array of keys that are bound to given inputAction
+//-- Currently unused but could end up useful.
+A3C_fnc_flattenNumericLeaves = {
+	params ["_value"];
+	private _out = [];
+
+	if (_value isEqualType 0) exitWith {
+		[_value]
+	};
+
+	if (_value isEqualType []) then {
+		{
+			_out append ([_x] call A3C_fnc_flattenNumericLeaves);
+		} forEach _value;
+	};
+
+	_out
+};
+
+//---------------------------------------  HANDLER-FUNCTIONS  ------------------------------------
+//------------------------------------------------------------------------------------------------
+
+A3C_UI_HUD_HandlerFNC_KeyDown = {
+	params ["_display", "_key", "_shift", "_ctrl", "_alt"];
+	//-- exit if keystroke is not allowed
+	if (_key == 1) exitWith {false}; //-- nothing should happen if ESC is pressed
+	if !(player isEqualTo leader group player) exitWith {false};
+	if !(isNull findDisplay 312) exitWith {false}; // ZEUS interface is open
+	if (_alt && {_key == 15}) exitWith {// safety if user alt-tabs out of the game
+		A3C_MODIFIER_CTRL = false;
+		A3C_DOWNKEYS = [];
+		false
+	};
+
+	//-- allowed
+	if (
+		A3C_IsTAO
+		&& {
+			private _taoBind = (["Tao Folding Map", "toggle"] call CBA_fnc_getKeybind) select 5;
+			_taoBind isEqualTo [_key, [_shift, _ctrl, _alt]]
+		}
+	) exitWith {
+		false
+	};	
+	private _isNewKey = !(_key in A3C_DOWNKEYS);
+	if (_isNewKey) then {
+
+
+		private _keyControlsMap = (inputAction "showMap") > 0;
+
+		if !(_keyControlsMap) then {
+			A3C_DOWNKEYS set [count A3C_DOWNKEYS, _key];
+			A3C_LASTUSED_KD = time;
+		};
+
+		player sideChat format["HUD KEY-DOWN: %1 (%2)",_key, keyname _key];
+
+		
+		if (inputAction "revealTarget" > 0) then {
+			// reveal target
+			[cameraOn, screenToWorld [0.5, 0.5]] call MCSS_fnc_RevealCursorPos;
+		};
+
+		switch (true) do {
+			
+			case (_keyControlsMap) : {
+				
+				//-- Safety precaution: clear downkeys while player opens map
+				//-- Hud's keyUp will NOT fire once map is entered.
+				A3C_DOWNKEYS = [];
+
+				private _keyIsNotGPS = (inputAction "miniMapToggle") == 0;
+				if (
+					_keyIsNotGPS
+					&& {profileNamespace getVariable "A3C_MAP_OVERLAY_SHOWN"}
+				) then {
+					// open map / overlay
+					A3C_WeaponCurr = currentWeapon player;
+					nul = [100020] execVM "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_OpenOverlay.sqf";
+
+					private _groupUnits = (units group player) - [player];
+					if (count _groupUnits > 0) then {
+						if (({(_x == driver vehicle _x) && {typeOf vehicle _x isKindOf "AIR"}} count _groupUnits) >= ((count _groupUnits) / 2)) then {
+							A3C_MAP_CommandMode = "AIR";
+						} else {
+							A3C_MAP_CommandMode = "INF";
+						};
+					} else {
+						A3C_MAP_CommandMode = "HC";
+					};
+
+					A3C_SELECTED_UNITS = [];
+				};
+			};
+			case (
+				!(a3c_is_HC_remote)
+				&& {_key in [17, 200]}
+				&& {unitIsUAV cameraOn}
+				&& {(remoteControlled (driver cameraOn)) != player}
+			) : {
+				//-- UAV Gunner > W and Up Arrow make driver move to looket-at position
+				private _driver = driver cameraOn;
+				[_driver, screenToWorld [0.5, 0.5]] remoteExec ["doMove", _driver];
+			};
+			case (
+				//-- Purposely AFTER the uav check, since UAV's can be helicopters
+				player isEqualTo gunner vehicle player
+				&& {currentPilot vehicle player != player} 
+				&& {vehicle player isKindOf "HELICOPTER"}
+			) : {
+				// Helicopter gunner bonus controls
+				private _flareKeysArray = actionKeys "launchCM";
+				private _raiseCollectiveKeysArray = actionKeys "HeliCollectiveRaise";
+				private _lowerCollectiveKeysArray = actionKeys "HeliCollectiveLower";
+				private _handled = false;
+				private _atlHeight = (getPosATL vehicle player) select 2;
+
+				// countermeasures
+				if ({_x in A3C_DOWNKEYS} count _flareKeysArray == count _flareKeysArray) then {
+					if (behaviour driver vehicle player == "CARELESS") then {
+						private _wpnsTurret = vehicle player weaponsTurret [-1];
+
+						{
+							private _weapon = _x;
+							private _mags = getArray (configFile >> "CfgWeapons" >> _weapon >> "magazines");
+
+							{
+								private _ammo = getText (configFile >> "CfgMagazines" >> _x >> "ammo");
+								private _aiUsageFlags = getNumber (configFile >> "CfgAmmo" >> _ammo >> "aiAmmoUsageFlags");
+
+								if (_aiUsageFlags == 8) then {
+									private _mode = (getArray (configFile >> "CfgWeapons" >> _weapon >> "modes")) select 0;
+									(driver vehicle player) forceWeaponFire [_weapon, _mode];
+								};
+							} forEach _mags;
+						} forEach _wpnsTurret;
+
+						[vehicle player] call A3C_Evasive;
+						_handled = true;
+					};
+				};
+
+				// raise collective
+				if (!_handled && {{_x in A3C_DOWNKEYS} count _raiseCollectiveKeysArray == count _raiseCollectiveKeysArray}) then {
+					A3C_DOWNKEYS = A3C_DOWNKEYS - [_key];
+					vehicle player flyInHeight (_atlHeight + 20);
+					_handled = true;
+				};
+
+				// lower collective
+				if (!_handled && {{_x in A3C_DOWNKEYS} count _lowerCollectiveKeysArray == count _lowerCollectiveKeysArray}) then {
+					vehicle player flyInHeight (_atlHeight - 20);
+					A3C_DOWNKEYS = A3C_DOWNKEYS - [_key];
+					_handled = true;
+				};
+
+				// rotate / rudder
+				if (!_handled && {speed vehicle player < 25} && {_key in [203, 205, 30, 32]}) then {
+					private _twist = if (_key in [205, 32]) then {0.5} else {-0.5};
+					vehicle player setDir (getDir vehicle player + _twist);
+					A3C_DOWNKEYS = A3C_DOWNKEYS - [_key];
+					// _handled = true; // -- NOTE: uncomment this if you happen to add any more mechanics here
+				};
+			};
+			case (
+				!isNil "A3C_FORM_KEY_ID"
+				&& {[_key, _shift, _ctrl, _alt] isEqualTo A3C_FORM_KEY_ID}
+			) : {
+				[] call A3C_UI_CustomFormation_FNC_spawnDialog;
+			};
+			//-- #NOTE: Commented this out until I understand what F1-F5 were supposed to do with teamcolors
+			//-- F1-F5 are unit selectors by default...
+			// case (_key in [59, 60, 61, 62, 63]): { //-- F1-F5
+			// 	// refresh teamColor var
+			// 	if (player == cameraOn) then {
+			// 		[] spawn {
+			// 			sleep 0.3;
+			// 			{
+			// 				private _assignedTeam = assignedTeam _x;
+			// 				private _assignedTeamVar = _x getVariable ["A3C_ASSIGNEDTEAM", "MAIN"];
+			// 				if (_assignedTeam != _assignedTeamVar) then {
+			// 					_x setVariable ["A3C_ASSIGNEDTEAM", _assignedTeam];
+			// 				};
+			// 			} forEach ((units player) - [player]);
+			// 		};
+			// 	};
+			// };
+			case (_key == 29) : {
+				A3C_MODIFIER_CTRL = true;
+			};
+			case (
+				//-- NUM-key check
+				profileNamespace getVariable "A3C_NUM_VAR"
+				&& {
+					_key in  [71, 72, 73, 75, 76, 77, 79, 80, 81,103, 104, 105, 106];
+				}
+			) : {
+				[] call A3C_UI_HUD_HandlerFNC_KeyDown_NUM;
+			};
+			default {};
+		};
+
+		if (count A3C_HUD_UNITS == 0) then {
+			A3C_MODIFIER_LOCK = false;
+		};
+	};
+
+	private _blockDefaultKey = [_key, [_shift, _ctrl, _alt]] call A3C_GET_KEY_BOOL;
+	_blockDefaultKey
+};
+
+
+//-- HUD Main "KeyUp"
+A3C_UI_HUD_HandlerFNC_KeyUp = {
+	params ["_display", "_key"];
+	
+	player commandchat format ["HUD KEY-UP: %1 (%2)", _key, keyName _key];
+
+	if !(player == (leader group player)) exitwith {};
+	if ( !isNull(findDisplay 312) ) exitWith {}; //-- ZEUS interface is open. Prevent most A3C stuff
+	
+	A3C_DOWNKEYS = A3C_DOWNKEYS - [_key];
+	if (vehicle player isKindOf "HELICOPTER" && {player == (gunner vehicle player)}) then {
+		[] spawn {sleep 1; (vehicle player) flyInHeight((getPosATL (vehicle player)) select 2)};
+	};
+	if (_key == 29) exitwith {
+		A3C_MODIFIER_CTRL = false;
+	};
+	//-- protection: also set SHIFT to false?
+};
+
+
+
+
+
+
+A3C_UI_HUD_HandlerFNC_MouseButtonDown = {
+	private ["_bttn","_shft","_alt","_ctrl","_divisor","_exit"];
+	_bttn = (_this select 1);
+	_shft = (_this select 4);
+	_ctrl = (_this select 5);
+	_alt = (_this select 6);
+
+	//if (!isNull A3C_OBJECTPLACER && _bttn == 1) exitWith {
+	//	deleteVehicle A3C_OBJECTPLACER;
+		//BR_A3C_DISABLE_RADIAL = false;
+	//};
+
+
+
+
+	_exit = false;
+
+
+
+
+	_curTar = cursorTarget;
+
+	if (BR_A3C_DISABLE_RADIAL) exitwith {
+		if (_bttn == 1) then {
+			if (!isNil 'A3C_GRENADEHANDLER') then {
+				BR_A3C_DISABLE_RADIAL = false;
+				["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
+				(findDisplay 46) displayRemoveEventHandler ["MouseButtonUP",A3C_GRENADEHANDLER];
+			};
+		};
+	};
+	//if ((count A3C_HUD_UNITS) == 0) exitwith {};
+	if (_bttn == 1) then {
+		if !(isnull _curTar) then {
+			if (_curTar in (units group player)) then {
+				if (_ctrl) then {
+					_exit = true;
+					if (_alt) then {
+						if (_curTar in A3C_HUD_UNITS) then {
+							[_curTar] call A3C_HUD_REMOVE_SELECTED;
+						} else {
+							[_curTar,_curTar getvariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
+							if ((count (groupSelectedUnits player)) > 0) then {
+								{player groupSelectUnit [_x, false]} foreach units group player;
+							};
+						};
+					} else {
+						if ( (count A3C_HUD_UNITS) == 0) then {
+							if (_curTar in (groupSelectedUnits player)) then {
+								player groupSelectUnit [_curTar, false];
+							} else {
+								player groupSelectUnit [_curTar, true];
+							};
+						} else {
+							_exit = false;
+						};
+					};
+				};
+			};
+			if ((count (groupSelectedUnits player)) == 0) then {
+				showCommandingMenu "";
+			};
+		} else {
+			//systemchat "remove from select";
+
+			if !(A3C_MODIFIER_CTRL) then {
+				if ((count A3C_HUD_UnitIndicators) > 0) then {
+					{[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS;
+					//systemchat "cancelled";
+				};
+			};
+
+		};
+	};
+	if (_exit) exitwith {};
+	_unitAmount = (count A3C_HUD_UNITS);
+	if (_unitAmount == 0) exitwith {};
+
+	//-- Execute HUD-Order (Ctrl + RMB)
+	if (_bttn == 1) then {
+		if (_ctrl) then {
+			[_alt,_shft] call A3C_Setorder_HUD;
+		};
+	};
+};
+
+
+
+// Wheel
+//~~ NOTE: RE WRITE ALL THESE DOUBLE FUNCTIONS INTO SINGLE ONES
+A3C_UI_HUD_HandlerFNC_MouseZChanged = {
+	private _return = false;
+	if (!isNull A3C_GTI_UNIT) exitWith {
+		if ((_this select 1) > 0) then {
+			BR_A3C_TACV_throwTheta_Add = BR_A3C_TACV_throwTheta_Add + 1;
+		} else {
+			BR_A3C_TACV_throwTheta_Add = BR_A3C_TACV_throwTheta_Add - 1;
+		};
+		BR_A3C_TACV_throwTheta_Add = BR_A3C_TACV_throwTheta_Add max 0.01;
+		BR_A3C_TACV_throwTheta_Add = BR_A3C_TACV_throwTheta_Add min 89.99;
+		true
+	};
+	//systemchat str _this;
+	_pos = 0;
+	private _exit = false;
+	{
+		if (!isnull _x) then {
+			_exit = true;
+			showCommandingMenu "";
+			_pos = position _x;
+			if ((_this select 1) > 0) then {
+				A3C_SUPPRESSIONHEIGHT = A3C_SUPPRESSIONHEIGHT + 0.2;
+			} else {
+				if ((_pos select 2) > 0) then {
+					A3C_SUPPRESSIONHEIGHT = A3C_SUPPRESSIONHEIGHT - 0.2;
+				};
+			};
+		};
+	} foreach [A3C_SUPPRESSION_INDICATOR,A3C_SQ_REM_INDICATOR,A3C_HC_REM_INDICATOR];
+	if (_exit) exitWith {true};
+	if ((count A3C_HUD_UnitIndicators) == 0 && {isNull A3C_OBJECTPLACER}) exitwith {false};
+
+	if ( A3C_MODIFIER_CTRL) exitWith {
+		if (A3C_HUD_FORM == 7) then {
+			if ((_this select 1)  > 0) then {
+				A3C_HUD_RADIUS = A3C_HUD_RADIUS + 1;
+			} else {
+				A3C_HUD_RADIUS = A3C_HUD_RADIUS - 1;
+			};
+			if (A3C_HUD_RADIUS < A3C_HUD_RADIUS_MIN) then {A3C_HUD_RADIUS = A3C_HUD_RADIUS_MIN};
+		} else {
+			if ((_this select 1)  > 0) then {
+				A3C_HUD_SPACING = A3C_HUD_SPACING + 1;
+			} else {
+				A3C_HUD_SPACING = A3C_HUD_SPACING - 1;
+			};
+			if (A3C_HUD_SPACING < 2) then {A3C_HUD_SPACING = 2};
+		};
+		true
+	};
+
+	A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_CorrectDir;
+
+	_factor = 1;
+
+	_speed = (_this select 1);
+	if (_speed < 0) then {_speed = (_speed * -1)};
+	switch (true) do {
+		case (_speed == 1.2) : {_factor = 1};
+		case (_speed == 2.4) : {_factor = 5};
+		case (_speed >= 3.6) : {_factor = 25};
+	};
+
+	if (!isNull A3C_OBJECTPLACER) exitWith {
+		//systemchat str _factor;
+
+		if ((_this select 1) < 0 ) then {
+			A3C_OBJECTPLACER_DIR = A3C_OBJECTPLACER_DIR - (1 *_factor);
+		} else {
+			A3C_OBJECTPLACER_DIR = A3C_OBJECTPLACER_DIR + (1 *_factor);
+		};
+		true
+	};
+
+
+	if ((_this select 1) < 0 ) then {
+
+		if (A3C_HUD_FORM == 7) then {
+			A3C_360_out = true;
+		} else {
+			_factor = (_factor * -1);
+		};
+
+
+	} else {
+
+		if (A3C_HUD_FORM == 7) then {
+			A3C_360_out = false;
+		};
+	};
+
+	A3C_HUD_Snap_DIR = [A3C_HUD_Snap_DIR] call MCSS_fnc_CorrectDir;
+	if !(A3C_HUD_Snap) then {A3C_FORMATION_DIR = A3C_FORMATION_DIR + _factor;};
+
+	A3C_SCROLLTIME = time;
+	A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_CorrectDir;
+	true
+};
+
+
+
+//---------------------------------  OTHER KEYBIND FUNCTIONS  ------------------------------------
+//------------------------------------------------------------------------------------------------
 
 A3C_FNC_UAV_KEY = {
 	params ["_eventType","_props"];
@@ -202,183 +635,6 @@ A3C_FNC_UAV_KEY = {
 
 
 
-A3C_FNC_UAV_KEY_OLD = {
-	params ["_eventType","_props"];
-	_props params ["_display","_key","_shift","_ctrl","_alt"];
-
-	private _playerHasTerminal = {getNumber (configFile >> "CfgWeapons" >> _x >> "ItemInfo" >> "type") == 621} count (assignedItems player) > 0;
-
-	if !(_playerHasTerminal) exitWith {
-		hint "YOU HAVE NO UAV TERMINAL";
-	};
-
-	private _cameraOn = cameraOn; //-- store cameraOn
-
-
-
-	private _fnc_remote = {
-		params ["_unit","_uav"];
-
-		private _hasGunner = !isNull (gunner _uav);
-
-		if (!isNull _unit) then {
-			// switchCamera required
-			if (_hasGunner) then {
-				(gunner _uav) switchCamera "Internal";
-				_unit remoteControl (gunner _uav); 
-			} else {
-				(driver _uav) switchCamera "Internal";
-				_unit remoteControl (driver _uav); 
-			};
-		} else {
-			player switchCamera "Internal";
-			
-		};
-
-		if (unitIsUAV _cameraOn && {!isNull _unit &&  {side _cameraOn != side player}}) then {
-			// systemchat str _unit;
-			[_cameraOn] spawn {
-				params ["_uav"];
-				// sleep 0.2;
-				// if (unitIsUAV _uav && {side _uav != side player}) then {
-				// 	//-- side switch to civilian happens on drones such as CROCUS - fix back to player side
-					// private _oldGroup = group driver _uav;
-					// private _groupID = groupID _oldGroup;
-				// 	private _newGroup = createGroup [side player, true];
-				// 	(units _oldGroup) joinSilent _newGroup;
-				// 	deleteGroup _oldGroup;
-				// 	_newGroup setGroupIdGlobal [_groupID];
-				// 	sleep 0.2;
-				// 	systemchat format ["UAV (%1) SIDE: %2",  typeOf _uav, side _uav];
-				// 	systemchat str (side _newGroup);
-				// };
-				private _oldGroup = group driver _uav;
-				private _groupID = groupID _oldGroup;
-				private _droneData = [_groupID, typeOf _uav, velocity _uav, getPosASL _uav, [vectorDir _uav, vectorUp _uav], damage _uav];
-
-				
-				private _fnc_replace = {
-					//-- since crocus can change it's side, we need to hacky hacky it to respawn a new one
-					params ["_uav", "_droneData"];
-					_droneData params ["_groupID","_uavType", "_velocity", "_aslPos","_vectorData","_damage"];
-					private _isEngineOn = isEngineOn _uav;
-					private _spawnMode = if ((ASLtoATL _aslPos) select 2 > 0) then {"FLY"} else {"NONE"};
-					
-					private _oldGroup = group _uav;
-					deleteVehicle _uav;
-					deleteGroup _oldGroup;
-
-					private _newUAV = createVehicle [_uavType, [0,0, 1000 + random 1000], [], 0, _spawnMode];
-
-					_newUAV setVectorDirAndUp _vectorData;
-					_newUAV setPosASL _aslPos;
-					_newUAV setDamage _damage;
-					_newUAV setVelocity _velocity;
-
-					private _newGroup = createVehicleCrew _newUAV;
-					_newGroup setGroupIDGlobal [_groupID];
-					// systemchat format ["OLD DRONE REPLACED - NEW DRONE SIDE: %1",  side _newUAV];	
-				};
-
-				[[_uav, _droneData], _fnc_replace] remoteExec ["bis_fnc_spawn", _uav];
-				// 
-			};
-		};
-	
-	};
-
-	// systemchat str [_shift,_ctrl,_alt];
-	private _uav = getConnectedUAV player;
-	// systemchat str _uav;
-
-	if (isNull _uav) exitWith {
-		[] spawn {
-			hint "YOU HAVE NO UAV CONNECTED";
-			player action ["UAVTerminalOpen"];
-			sleep 2;
-			hintSilent "";
-		};
-	};
-
-	if (_ctrl) then { //--todo: if _uav isnull then open terminal, or hint if no uavs availabel
-		//-- SWITCH TO OTHER UAV IF AVAILABLE
-
-		// systemchat str time;
-
-		_UAVsAvailable = allUnitsUAV select {
-
-			side _x == side player &&
-			{
-				(
-					isNull ((UAVControl _x) select 0) ||
-				
-					{
-						((UAVControl _x) select 0) == player
-					}
-				) && 
-					{
-						count crew _x != 0
-					}
-			}
-		};
-
-		if (_UAVsAvailable isEqualTo [_uav]) then {
-			hint "NO OTHER UAV's ARE AVAILABLE"
-		} else {
-			_arrayIndex = [_uav, _UAVsAvailable] call MCSS_fnc_getArrayIndex;
-			_maxIndex = (count _UAVsAvailable) - 1;
-			_arrayIndex = _arrayIndex + 1;
-			if (_arrayIndex > _maxIndex) then {_arrayIndex = 0};
-			// systemchat str [_arrayIndex, _maxIndex];
-			_newUav = _UAVsAvailable select _arrayIndex;
-			// objNull remoteControl (driver _uav);
-			player connectTerminalToUAV _newUav;
-
-			[objNull,_uav] call _fnc_remote;
-			[player,_newUav] call _fnc_remote;
-
-			// player remoteControl (driver _newUav);
-		};
-
-		
-		// player commandchat str _UAVsAvailable;
-		
-		// {
-		// 	_x setDamage 1
-		// } forEach allUnitsUAV;
-		
-
-		
-	} else {
-		// if (_shift) then {
-		// 	systemchat 'oii!';
-		// 	if (isNull (findDisplay 160)) then {
-		// 		//-- Open Terminal
-		// 		player action ["UAVTerminalOpen"];
-		// 		systemchat 'oii1!';
-		// 	} else {
-		// 		systemchat 'oii2!';
-		// 		// -> close Terminal
-		// 		(findDisplay 160) closeDisplay 0; 
-		// 	};
-		// } else {
-			
-
-			if (cameraOn == _uav) then {
-				//-- player is in UAV = Switch back
-				[objNull,_uav] call _fnc_remote;
-				// objNull remoteControl (driver _uav);
-			} else {
-				//-- player is not in UAV, switch to UAV driver.
-				// switchCamera required
-				[player,_uav] call _fnc_remote;
-				// player remoteControl (driver _uav);
-			};
-		// };
-	};
-
-	
-};
 
 
 //-- Main CBA Keybind
@@ -906,7 +1162,7 @@ A3C_FNC_CBA_KEY = {
 					};
 				};
 					A3C_FORM_KEY_ID = [(_btnData select 1),(_btnData select 2),(_btnData select 3),(_btnData select 4)];
-					//[] call A3C_C_FORM_SPAWNDIALOG;
+					//[] call A3C_UI_CustomFormation_FNC_spawnDialog;
 					setMousePosition [0.5, 0.5];
 
 			};
@@ -918,7 +1174,7 @@ A3C_FNC_CBA_KEY = {
 				if (visibleMap) then {
 					if (_mode == "DOWN") then {
 						if (isnull (findDisplay 100020)) then {
-							profilenamespace setvariable ["A3C_MAP_VAR",true];
+							profilenamespace setvariable ["A3C_MAP_OVERLAY_SHOWN",true];
 							A3C_OPACITY = 0.8;
 							nul = [100020] execVM "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_OpenOverlay.sqf";
 
@@ -929,7 +1185,7 @@ A3C_FNC_CBA_KEY = {
 								(findDisplay 100020) closeDisplay 2;
 								A3C_SELECTED_UNITS = [];
 								{_x setvariable ["A3C_PLOT_TEMP",[],true];} foreach units group player;
-								profilenamespace setvariable ["A3C_MAP_VAR",false];
+								profilenamespace setvariable ["A3C_MAP_OVERLAY_SHOWN",false];
 							};
 						};
 					};
@@ -1140,55 +1396,8 @@ A3C_FNC_CBA_KEY = {
 	};
 };
 
-A3C_isCargoUnitEjectable = { //-- shared by player squad and player squad
-	params ["_unit","_vehicle"];
-	private ["_return"];
-	_return = false;
-	if ((assignedVehicleRole _x) select 0 == "CARGO") then {
-		_return = true;
-	};
-	if ((assignedVehicleRole _x) select 0 == "Turret") then {
-		private _turret = (assignedVehicleRole _x) select 1;
-		if (count (_vehicle weaponsTurret _turret) == 0 ) then {
-			_return = true;
-		};
-		if (_unit call MCSS_fnc_isUnitCopilot && ((_vehicle isKindOf 'HELICOPTER'))) then {
-			_return = true;
-		};
-
-	};
-	_return
-};
-A3C_isCargoGroupEjectable = {
-	params ["_gp","_refUnit"];
-	private ["_return"];
-	_return = false;
-	{
-		private _veh = vehicle _x;
-		if (_veh == vehicle _refUnit) then { //-- this is necessary to not dismount units in other vehicles
-			if ([_x, _veh] call A3C_isCargoUnitEjectable) then {
-				_return = true;
-			};
-		};
-	} foreach units _gp;
-
-	//-- overRide options for non player/pilot groups
-	{
-		//-- overRide TRUE if one or more units of cargo group DO have turret weapons
-		private _veh = vehicle _x;
-		if (_veh == vehicle _refUnit) then { //-- this is necessary to not dismount units in other vehicles
-			if ((assignedVehicleRole _x) select 0 == "Turret") then {
-				private _turret = (assignedVehicleRole _x) select 1;
-				if !(_x call MCSS_fnc_isUnitCopilot) then {
-					if (count (_veh weaponsTurret _turret) > 0 ) then {
-						_return = false;
-					};
-				};
-			};
-		};
-	} foreach units _gp;
-	_return
-};
+//--------------------------------------------  UI-FUNCTIONS  ------------------------------------
+//------------------------------------------------------------------------------------------------
 
 
 //-- determine if keyBind returns true or false (overwrite yes or no)
@@ -1252,457 +1461,9 @@ A3C_GET_KEY_BOOL = {
 	_return
 };
 
-//-- HUD Main "KeyDown"
 
-A3C_UI_HUD_HandlerFNC_KeyDown = {
-	private ["_exit","_taoBind"];
-	private _key = _this select 1;
-	_shift = _this select 2;
-	_ctrl = _this select 3;
-	_alt = _this select 4;
-	_exit = false;
-	if !(player == (leader group player)) exitwith {};
-	if ( !isNull(findDisplay 312) ) exitWith {}; //-- ZEUS interface is open. Prevent most A3C stuff
-	if (A3C_IsTAO) then {
-		_taoBind = (["Tao Folding Map", "toggle"] call CBA_fnc_getKeybind) select 5;
-		if (_taoBind isEqualTo [(_this select 1),[(_this select 2),(_this select 3),(_this select 4)]]) then {_exit = true};
-	};
-
-	if (_exit) exitwith {false};
-
-	private _inputAction = inputAction "miniMapToggle";
-	if !((_this select 1) in A3C_DOWNKEYS) then {
-		if !(visibleMap) then {
-			//-- reveal Target
-			if (inputAction 'revealTarget' > 0) then {
-				[cameraOn, screentoworld [0.5,0.5]] call MCSS_fnc_RevealCursorPos;
-			};
-			//-- Open Map (Automatically open overlay if profileVar "A3C_MAP_VAR" is set to do so)
-			if ((_this select 1) in actionKeys "showmap") then {
-				if (_inputAction == 0) then {
-					if (A3C_BOOL_MAPFORCE) then {
-						if (isnull (findDisplay 100020)) then {
-							if (profileNameSpace getVariable "A3C_MAP_VAR")  then {
-								A3C_WeaponCurr = currentWeapon player;
-								A3C_BOOL_MAPFORCE= false;
-								nul = [100020] execVM "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_OpenOverlay.sqf";
-								if (count units player > 0) then {
-									if (({(_x == (driver vehicle _x)) && {typeOf (vehicle _x) iskindOf "AIR"}} count (units player - [player])) >= ((count (units player - [player])) / 2)) then {
-										A3C_MAP_CommandMode = "AIR";
-									} else {
-										A3C_MAP_CommandMode = "INF";
-									};
-								} else {
-									A3C_MAP_CommandMode = "HC";
-								};
-								A3C_SELECTED_UNITS = [];
-							};
-						};
-					};
-				};
-			};
-
-		};
-	};
-	if !(_key in A3C_DOWNKEYS) then {
-		
-		if (
-			!(_key in [50]) && 
-			(_key != 1 || {visibleMap})
-		) then {
-			A3C_DOWNKEYS pushBack _key;
-		};
-
-		if !(visibleMap) then {
-			private ["_teamcolor","_exit"];
-			A3C_LASTUSED_KD = time;
-			if !(player == (leader group player)) exitwith {};
-
-			
-			private _exit = false;
-			_relativeDir = 0;
-			_dir = 0;
-			_flip = false;
-			_colorTeamUnits = [];
-			_teamColor = "";
-			_gpUnits = ((units group player) - [player]);
-			_unitCount = count _gpUnits;
-
-			//-- safety if user alt/tabs out of the game
-			if (_alt && {_key == 15}) exitwith {
-				A3C_MODIFIER_CTRL = false;
-				A3C_DOWNKEYS = [];
-			};
-
-
-			if ( _key in [17,200] && {!(a3c_is_HC_remote && {unitIsUAV cameraOn && {!((remoteControlled (driver cameraon)) == player)}})}      ) then {
-				private _driver = driver cameraOn;
-				[_driver, screenToWorld [0.5,0.5]] remoteExec ["doMove", _driver];
-			};
-
-
-
-
-
-
-			//-- Helicopter Gunner Bonus Controls
-			_flareKeysArray = actionKeys "launchCM";
-			_raiseCollectiveKeysArray = actionKeys "HeliCollectiveRaise";
-			_lowerCollectiveKeysArray = actionKeys "HeliCollectiveLower";
-			if (player == (gunner vehicle player) && {currentPilot vehicle player != player && {vehicle player isKindOf "HELICOPTER"}}) then {
-				//-- counter measures
-				if ({_x in A3C_DOWNKEYS} count _flareKeysArray == count _flareKeysArray) then {
-					if ((behaviour (driver vehicle player)) == "CARELESS") then {
-						_wpnsTurret = vehicle player weaponsTurret [-1];
-						private _flareMag = "";
-						{
-							_weapon = _x;
-							_mags = getArray (configfile >> "CfgWeapons" >> _x >> "magazines");
-							{
-								_ammo = getText (configfile >> "CfgMagazines" >> _x >> "ammo");
-								_aiUsageFlags = getNumber (configfile >> "CfgAmmo" >> _ammo >> "aiAmmoUsageFlags");
-								if (_aiUsageFlags == 8) then {
-									//(vehicle player) fire _weapon;
-									_mode = (getArray (configFile >> "cfgweapons" >> _weapon >> "modes")) select 0;
-									(driver vehicle player) forceWeaponFire [_weapon, _mode];
-								};
-							} foreach _mags;
-						} foreach _wpnsTurret;
-						[vehicle player] call A3C_Evasive;
-						_exit = true;
-					};
-				};
-				_atlHeight = (getPosATL (vehicle player)) select 2;
-				//-- raise Collective
-				if ({_x in A3C_DOWNKEYS} count  _raiseCollectiveKeysArray == count _raiseCollectiveKeysArray) then {
-					A3C_DOWNKEYS = A3C_DOWNKEYS - [_key];
-					(vehicle player) flyInHeight (_atlHeight + 20);
-					_exit = true;
-					//systemchat "raise";
-				};
-				//-- lower Collective
-				if ({_x in A3C_DOWNKEYS} count  _lowerCollectiveKeysArray == count _lowerCollectiveKeysArray) then {
-					(vehicle player) flyInHeight (_atlHeight - 20);
-					A3C_DOWNKEYS = A3C_DOWNKEYS - [_key];
-					_exit = true;
-					//systemchat "lower";
-				};
-				//-- rotate / rudder
-				if (speed vehicle player < 25) then {
-					if (_key in [203,205,30,32]) then {
-						_twist = if (_key in [205,32]) then {0.5} else {-0.5};
-						(vehicle player) setDir ((getDir vehicle player) + _twist);
-						_exit = true;
-						A3C_DOWNKEYS = A3C_DOWNKEYS - [_key];
-					};
-				};
-
-			};
-			
-			if (_exit) exitWith {};
-
-			if !(isnil "A3C_FORM_KEY_ID") then {
-				// systemchat STR  ([[_key,_shift,_ctrl,_alt], A3C_FORM_KEY_ID] );
-				if ([_key,_shift,_ctrl,_alt] isEqualTo A3C_FORM_KEY_ID) then {
-					
-					[] call A3C_C_FORM_SPAWNDIALOG;
-				};
-			};
-
-
-			switch (true) do {
-				case ((_key in [103,104,105,106]) && {profileNameSpace getVariable "A3C_NUM_VAR"}) : {
-					//-- numPad buttons 1
-					if ((count A3C_HUD_UNITS) == 0) then {A3C_HUD_FORM = 0};
-					A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
-					A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
-					A3C_HUD_FORM_ICON_SIZE = 0.8;
-					switch (_key) do {
-						case (103) : {_teamColor = "RED"};
-						case (104) : {_teamColor = "GREEN"};
-						case (105) : {_teamColor = "BLUE"};
-						case (106) : {_teamColor = "YELLOW"};
-					};
-					for "_i" from 0 to (_unitCount - 1) do {
-						if (alive (_gpUnits select _i)) then {
-							private _assignedTeam = if (player == cameraOn) then {assignedTeam (_gpUnits select _i)} else {(_gpUnits select _i) getVariable ["A3C_ASSIGNEDTEAM","MAIN"]};
-							if (_assignedTeam == _teamColor) then {
-								_colorTeamUnits pushback (_gpUnits select _i);
-							};
-						};
-					};
-					{
-						if (_x in A3C_HUD_UNITS) then {
-							[_x] call A3C_HUD_REMOVE_SELECTED;
-						};
-						if (_x in _colorTeamUnits) then {
-							[_x,_key] call A3C_HUD_ADD_SELECTED;
-						};
-					} foreach (units group player) - [player];
-				};
-				case ((_key in [71,72,73,75,76,77,79,80,81]) && {profileNameSpace getVariable "A3C_NUM_VAR"}) : {
-					//-- numpad buttons 2
-					if (A3C_FORMATION_DIR > 360) then {A3C_FORMATION_DIR = A3C_FORMATION_DIR - 360};
-					if (A3C_FORMATION_DIR < 0) then {A3C_FORMATION_DIR = A3C_FORMATION_DIR + 360};
-					_dir = [position player,(screentoworld [0.5,0.5])] call BIS_fnc_dirto;
-					if ((_dir > 90) && (_dir < 270)) then {_flip = true};
-					_gpUnits = ((profileNamespace getvariable "A3C_GROUPUNITS") - [player]);
-					_unitCount = count _gpUnits;
-					if ((count A3C_HUD_UNITS) == 0) then {
-						A3C_NUM_DIR = 0;
-						for "_i" from 0 to (_unitCount - 1) do {
-							if (alive (_gpUnits select _i) && {!isplayer (_gpUnits select _i)}) then {
-								[(_gpUnits select _i),_i] call A3C_HUD_ADD_SELECTED;
-							};
-						};
-						if (A3C_HUD_FORM == 0) then {
-							A3C_HUD_FORM = 1;
-							A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Left.paa";
-							A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
-							A3C_HUD_FORM_ICON_SIZE = 0.8;
-						};
-					};
-					A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_CorrectDir;
-					switch (_key) do {
-						//- L-Formation top left
-						case (71) : {
-							A3C_NUM_DIR = 180;
-							A3C_HUD_FORM = 4;
-							A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
-							A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
-							A3C_HUD_FORM_ICON_SIZE = 0.8;
-
-						};
-						//-
-						case (72) : {
-
-							// Line Straight + Toggle
-							if (A3C_HUD_FORM == 0) then {
-								A3C_HUD_FORM = 1;
-								A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Left.paa";;
-							} else {
-								A3C_HUD_FORM = 0;
-								A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";;
-							};
-							A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
-							A3C_HUD_FORM_ICON_SIZE = 0.8;
-							A3C_NUM_DIR = 0;
-						};
-						//- L-Formation top right
-						case (73) : {
-							A3C_NUM_DIR = 180;
-							A3C_HUD_FORM = 3;
-							A3C_HUD_FORM_ICON = "\a3\ui_f\data\GUI\RscCommon\RscHTML\arrow_left_ca.paa";
-							A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
-							A3C_HUD_FORM_ICON_SIZE = 0.8;
-						};
-
-						//- Line Formation left
-						case (75) : {
-							if (A3C_HUD_FORM == 0) then {
-								A3C_HUD_FORM = 1;
-								A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Left.paa";;
-							} else {
-								A3C_HUD_FORM = 0;
-								A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";;
-							};
-							A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
-							A3C_HUD_FORM_ICON_SIZE = 0.8;
-							A3C_NUM_DIR = 90;
-						};
-
-						// center 76 (NUM5)
-						//- Line Formation Right
-						case (77) : {
-							A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
-							if (A3C_HUD_FORM == 0) then {
-								A3C_HUD_FORM = 1;
-								A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Left.paa";;
-							} else {
-								A3C_HUD_FORM = 0;
-								A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";;
-							};
-							A3C_NUM_DIR = -90;
-							A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
-							A3C_HUD_FORM_ICON_SIZE = 0.8;
-						};
-						//- L-Formation low left
-						case (79) : {
-
-							A3C_NUM_DIR = 0;
-							A3C_HUD_FORM = 3;
-							A3C_HUD_FORM_ICON = "\a3\ui_f\data\GUI\RscCommon\RscHTML\arrow_left_ca.paa";
-							A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
-							A3C_HUD_FORM_ICON_SIZE = 0.8;
-						};
-						// Line Straight + Toggle Upside Down
-						case (80) : {
-							if (A3C_HUD_FORM == 0) then {
-								A3C_HUD_FORM = 1;
-								A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Left.paa";
-							} else {
-								A3C_HUD_FORM = 0;
-								A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
-							};
-							A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
-							A3C_HUD_FORM_ICON_SIZE = 0.8;
-							A3C_NUM_DIR = 180;
-						};
-						//- L-Formation low right
-						case (81) : {
-							A3C_NUM_DIR = 0;
-							A3C_HUD_FORM = 4;
-							A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";;
-							A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
-							A3C_HUD_FORM_ICON_SIZE = 0.8;
-						};
-					};
-				};
-				//-- refresh teamColor var (needed for uav-remote access)
-				case (_key in [59,60,61,62,63]) : { //-- Note: I was not able to use (actionKes "SetTeamX") - returned weird decimal numbers
-					if (player == cameraOn) then { //-- only execute while player is NOT remote controlling. That's the point of this loop, make sure vanilla usage is tracked
-						[] spawn {
-							sleep 0.3;
-							{
-								private _assignedTeam = assignedTeam _x;
-								private _assignedTeamVar = _x getVariable ["A3C_ASSIGNEDTEAM","MAIN"];
-								if (_assignedTeam != _assignedTeamVar) then {
-									_x setVariable ["A3C_ASSIGNEDTEAM",_assignedTeam];
-									//systemchat str _assignedTeam;
-								};
-							} foreach ((units player) - [player]);
-						};
-						
-					};
-				};
-				//-- CTRL button
-				case (_key == 29) : {
-					A3C_MODIFIER_CTRL = true;
-				};
-			};
-
-			if ( (count A3C_HUD_UNITS) == 0) then {
-				A3C_MODIFIER_LOCK = false;
-			};
-		};
-	};
-	_blockDefaultKey = [(_this select 1),[(_this select 2),(_this select 3),(_this select 4)]] call A3C_GET_KEY_BOOL;
-	// systemChat format ["HUD KEYDOWN _blockDefaultKey %1", _blockDefaultKey];
-	_blockDefaultKey
-};
-
-
-//-- HUD Main "KeyUp"
-A3C_UI_HUD_HandlerFNC_KeyUp = {
-	_btn = _this select 1;
-
-	// systemchat format ["UP %1", round time];
-	
-	A3C_BOOL_MAPFORCE = true; //!!!!~~~~~~~~~
-	if !(player == (leader group player)) exitwith {};
-	if ( !isNull(findDisplay 312) ) exitWith {}; //-- ZEUS interface is open. Prevent most A3C stuff
-	
-	A3C_DOWNKEYS = A3C_DOWNKEYS - [_btn];
-	if (vehicle player isKindOf "HELICOPTER" && {player == (gunner vehicle player)}) then {
-		[] spawn {sleep 1; (vehicle player) flyInHeight((getPosATL (vehicle player)) select 2)};
-	};
-	if (_btn == 29) exitwith {
-		A3C_MODIFIER_CTRL = false;
-	};
-	//-- protection: also set ALT and SHIFT to false?
-};
-
-
-
-
-
-
-A3C_UI_HUD_HandlerFNC_MouseButtonDown = {
-	private ["_bttn","_shft","_alt","_ctrl","_divisor","_exit"];
-	_bttn = (_this select 1);
-	_shft = (_this select 4);
-	_ctrl = (_this select 5);
-	_alt = (_this select 6);
-
-	//if (!isNull A3C_OBJECTPLACER && _bttn == 1) exitWith {
-	//	deleteVehicle A3C_OBJECTPLACER;
-		//BR_A3C_DISABLE_RADIAL = false;
-	//};
-
-
-
-
-	_exit = false;
-
-
-
-
-	_curTar = cursorTarget;
-
-	if (BR_A3C_DISABLE_RADIAL) exitwith {
-		if (_bttn == 1) then {
-			if (!isNil 'A3C_GRENADEHANDLER') then {
-				BR_A3C_DISABLE_RADIAL = false;
-				["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
-				(findDisplay 46) displayRemoveEventHandler ["MouseButtonUP",A3C_GRENADEHANDLER];
-			};
-		};
-	};
-	//if ((count A3C_HUD_UNITS) == 0) exitwith {};
-	if (_bttn == 1) then {
-		if !(isnull _curTar) then {
-			if (_curTar in (units group player)) then {
-				if (_ctrl) then {
-					_exit = true;
-					if (_alt) then {
-						if (_curTar in A3C_HUD_UNITS) then {
-							[_curTar] call A3C_HUD_REMOVE_SELECTED;
-						} else {
-							[_curTar,_curTar getvariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
-							if ((count (groupSelectedUnits player)) > 0) then {
-								{player groupSelectUnit [_x, false]} foreach units group player;
-							};
-						};
-					} else {
-						if ( (count A3C_HUD_UNITS) == 0) then {
-							if (_curTar in (groupSelectedUnits player)) then {
-								player groupSelectUnit [_curTar, false];
-							} else {
-								player groupSelectUnit [_curTar, true];
-							};
-						} else {
-							_exit = false;
-						};
-					};
-				};
-			};
-			if ((count (groupSelectedUnits player)) == 0) then {
-				showCommandingMenu "";
-			};
-		} else {
-			//systemchat "remove from select";
-
-			if !(A3C_MODIFIER_CTRL) then {
-				if ((count A3C_HUD_UnitIndicators) > 0) then {
-					{[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS;
-					//systemchat "cancelled";
-				};
-			};
-
-		};
-	};
-	if (_exit) exitwith {};
-	_unitAmount = (count A3C_HUD_UNITS);
-	if (_unitAmount == 0) exitwith {};
-
-	//-- Execute HUD-Order (Ctrl + RMB)
-	if (_bttn == 1) then {
-		if (_ctrl) then {
-			[_alt,_shft] call A3C_Setorder_HUD;
-		};
-	};
-};
-
+//--------------------------------------------  UI-FUNCTIONS  ------------------------------------
+//------------------------------------------------------------------------------------------------
 
 A3C_Setorder_HUD = {
 	params ["_alt","_shft"];
@@ -1894,103 +1655,3 @@ A3C_Setorder_HUD = {
 
 
 
-// Wheel
-//~~ NOTE: RE WRITE ALL THESE DOUBLE FUNCTIONS INTO SINGLE ONES
-A3C_UI_HUD_HandlerFNC_MouseZChanged = {
-	private _return = false;
-	if (!isNull A3C_GTI_UNIT) exitWith {
-		if ((_this select 1) > 0) then {
-			BR_A3C_TACV_throwTheta_Add = BR_A3C_TACV_throwTheta_Add + 1;
-		} else {
-			BR_A3C_TACV_throwTheta_Add = BR_A3C_TACV_throwTheta_Add - 1;
-		};
-		BR_A3C_TACV_throwTheta_Add = BR_A3C_TACV_throwTheta_Add max 0.01;
-		BR_A3C_TACV_throwTheta_Add = BR_A3C_TACV_throwTheta_Add min 89.99;
-		true
-	};
-	//systemchat str _this;
-	_pos = 0;
-	private _exit = false;
-	{
-		if (!isnull _x) then {
-			_exit = true;
-			showCommandingMenu "";
-			_pos = position _x;
-			if ((_this select 1) > 0) then {
-				A3C_SUPPRESSIONHEIGHT = A3C_SUPPRESSIONHEIGHT + 0.2;
-			} else {
-				if ((_pos select 2) > 0) then {
-					A3C_SUPPRESSIONHEIGHT = A3C_SUPPRESSIONHEIGHT - 0.2;
-				};
-			};
-		};
-	} foreach [A3C_SUPPRESSION_INDICATOR,A3C_SQ_REM_INDICATOR,A3C_HC_REM_INDICATOR];
-	if (_exit) exitWith {true};
-	if ((count A3C_HUD_UnitIndicators) == 0 && {isNull A3C_OBJECTPLACER}) exitwith {false};
-
-	if ( A3C_MODIFIER_CTRL) exitWith {
-		if (A3C_HUD_FORM == 7) then {
-			if ((_this select 1)  > 0) then {
-				A3C_HUD_RADIUS = A3C_HUD_RADIUS + 1;
-			} else {
-				A3C_HUD_RADIUS = A3C_HUD_RADIUS - 1;
-			};
-			if (A3C_HUD_RADIUS < A3C_HUD_RADIUS_MIN) then {A3C_HUD_RADIUS = A3C_HUD_RADIUS_MIN};
-		} else {
-			if ((_this select 1)  > 0) then {
-				A3C_HUD_SPACING = A3C_HUD_SPACING + 1;
-			} else {
-				A3C_HUD_SPACING = A3C_HUD_SPACING - 1;
-			};
-			if (A3C_HUD_SPACING < 2) then {A3C_HUD_SPACING = 2};
-		};
-		true
-	};
-
-	A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_CorrectDir;
-
-	_factor = 1;
-
-	_speed = (_this select 1);
-	if (_speed < 0) then {_speed = (_speed * -1)};
-	switch (true) do {
-		case (_speed == 1.2) : {_factor = 1};
-		case (_speed == 2.4) : {_factor = 5};
-		case (_speed >= 3.6) : {_factor = 25};
-	};
-
-	if (!isNull A3C_OBJECTPLACER) exitWith {
-		//systemchat str _factor;
-
-		if ((_this select 1) < 0 ) then {
-			A3C_OBJECTPLACER_DIR = A3C_OBJECTPLACER_DIR - (1 *_factor);
-		} else {
-			A3C_OBJECTPLACER_DIR = A3C_OBJECTPLACER_DIR + (1 *_factor);
-		};
-		true
-	};
-
-
-	if ((_this select 1) < 0 ) then {
-
-		if (A3C_HUD_FORM == 7) then {
-			A3C_360_out = true;
-		} else {
-			_factor = (_factor * -1);
-		};
-
-
-	} else {
-
-		if (A3C_HUD_FORM == 7) then {
-			A3C_360_out = false;
-		};
-	};
-
-	A3C_HUD_Snap_DIR = [A3C_HUD_Snap_DIR] call MCSS_fnc_CorrectDir;
-	if !(A3C_HUD_Snap) then {A3C_FORMATION_DIR = A3C_FORMATION_DIR + _factor;};
-
-	A3C_SCROLLTIME = time;
-	A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_CorrectDir;
-	true
-};
