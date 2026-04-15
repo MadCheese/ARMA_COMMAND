@@ -5,8 +5,8 @@ class A3C_DSP_SettingsMenu
 {
     idd = IDD_SETTINGS_MENU;
     movingEnable = 1;
-    onLoad = QUOTE(_this call FUNC(onLoad));
-    onUnload = QUOTE(_this call FUNC(onUnload));
+    onLoad = EXPAND_AND_QUOTE(_this call FUNC(onLoad));
+    onUnload = EXPAND_AND_QUOTE(_this call FUNC(onUnload));
 
     class ControlsBackground
     {
@@ -49,7 +49,7 @@ class A3C_DSP_SettingsMenu
             idc = IDC_SETTINGS_MENU_BTN_SKILL;
             text = "";
             tooltip = "BOOST AI-SKILL";
-            onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onButtonClick));
             sizeEx = 0.04;
             x = 23.5 * GUI_GRID_W + GUI_GRID_X;
             y = 9 * GUI_GRID_H + GUI_GRID_Y;
@@ -72,7 +72,7 @@ class A3C_DSP_SettingsMenu
             idc = IDC_SETTINGS_MENU_BTN_NUM;
             text = "";
             tooltip = "TOGGLE NUMPAD FUNCTIONS";
-            onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onButtonClick));
             sizeEx = 0.04;
             x = 23.5 * GUI_GRID_W + GUI_GRID_X;
             y = 11.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -95,7 +95,7 @@ class A3C_DSP_SettingsMenu
             idc = IDC_SETTINGS_MENU_BTN_HUD_RESET;
             text = "";
             tooltip = "Reset HUD-formation to line when opening";
-            onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onButtonClick));
             sizeEx = 0.04;
             x = 23.5 * GUI_GRID_W + GUI_GRID_X;
             y = 14 * GUI_GRID_H + GUI_GRID_Y;
@@ -118,7 +118,7 @@ class A3C_DSP_SettingsMenu
             idc = IDC_SETTINGS_MENU_BTN_AI_RAIL;
             text = "";
             tooltip = "Final 'railing' towards destination (experimental)";
-            onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onButtonClick));
             sizeEx = 0.04;
             x = 23.5 * GUI_GRID_W + GUI_GRID_X;
             y = 16.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -141,7 +141,7 @@ class A3C_DSP_SettingsMenu
             idc = IDC_SETTINGS_MENU_BTN_HUD_LAYOUT;
             text = "";
             tooltip = "Select HUD layout";
-            onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onButtonClick));
             sizeEx = 0.04;
             x = 23.5 * GUI_GRID_W + GUI_GRID_X;
             y = 19 * GUI_GRID_H + GUI_GRID_Y;
@@ -164,7 +164,7 @@ class A3C_DSP_SettingsMenu
             idc = IDC_SETTINGS_MENU_BTN_HUD_OBJECTS;
             text = "";
             tooltip = "Select HUD objects (OFF: indicators, ON: units)";
-            onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onButtonClick));
             sizeEx = 0.04;
             x = 23.5 * GUI_GRID_W + GUI_GRID_X;
             y = 21.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -187,7 +187,7 @@ class A3C_DSP_SettingsMenu
             idc = IDC_SETTINGS_MENU_BTN_HC_RESPONSE;
             text = "";
             tooltip = "HC-Group Menu Response (OFF: CONFIRM, ON: IMMEDIATE)";
-            onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onButtonClick));
             sizeEx = 0.04;
             x = 23.5 * GUI_GRID_W + GUI_GRID_X;
             y = 23.5 * GUI_GRID_H + GUI_GRID_Y;

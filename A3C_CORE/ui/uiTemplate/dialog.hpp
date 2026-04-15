@@ -5,8 +5,8 @@ class A3C_DSP_TemplateDialog
 {
     idd = IDD_TEMPLATE_DIALOG;
     movingEnable = 1;
-    onLoad = QUOTE(_this call FUNC(onLoad));
-    onUnload = QUOTE(_this call FUNC(onUnload));
+    onLoad = EXPAND_AND_QUOTE(_this call FUNC(onLoad));
+    onUnload = EXPAND_AND_QUOTE(_this call FUNC(onUnload));
 
     class ControlsBackground
     {
@@ -49,7 +49,7 @@ class A3C_DSP_TemplateDialog
             idc = IDC_TEMPLATE_BTN_PRIMARY;
             text = "";
             tooltip = "Primary action";
-            onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onButtonClick));
             sizeEx = 0.04;
             x = 19 * GUI_GRID_W + GUI_GRID_X;
             y = 11.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -72,7 +72,7 @@ class A3C_DSP_TemplateDialog
             idc = IDC_TEMPLATE_BTN_SECONDARY;
             text = "";
             tooltip = "Secondary action";
-            onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onButtonClick));
             sizeEx = 0.04;
             x = 19 * GUI_GRID_W + GUI_GRID_X;
             y = 14.5 * GUI_GRID_H + GUI_GRID_Y;

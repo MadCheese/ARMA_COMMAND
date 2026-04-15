@@ -1,10 +1,12 @@
-private _skill = ["skill"] call A3C_UI_settingsMenu_fnc_ctrl;
-private _num = ["num"] call A3C_UI_settingsMenu_fnc_ctrl;
-private _hudReset = ["hudReset"] call A3C_UI_settingsMenu_fnc_ctrl;
-private _aiRail = ["aiRail"] call A3C_UI_settingsMenu_fnc_ctrl;
-private _hudLayout = ["hudLayout"] call A3C_UI_settingsMenu_fnc_ctrl;
-private _hudObjects = ["hudObjects"] call A3C_UI_settingsMenu_fnc_ctrl;
-private _hcResponse = ["hcResponse"] call A3C_UI_settingsMenu_fnc_ctrl;
+#include "..\script_component.hpp"
+
+private _skill = ["skill"] call FUNC(ctrl);
+private _num = ["num"] call FUNC(ctrl);
+private _hudReset = ["hudReset"] call FUNC(ctrl);
+private _aiRail = ["aiRail"] call FUNC(ctrl);
+private _hudLayout = ["hudLayout"] call FUNC(ctrl);
+private _hudObjects = ["hudObjects"] call FUNC(ctrl);
+private _hcResponse = ["hcResponse"] call FUNC(ctrl);
 
 if !(isNull _skill) then {
     _skill ctrlSetText (["OFF", "ON"] select (profileNamespace getVariable ["A3C_SKILL_VAR", false]));

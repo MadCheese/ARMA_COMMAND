@@ -1,5 +1,7 @@
-private _primary = ["primary"] call A3C_UI_templateDialog_fnc_ctrl;
-private _secondary = ["secondary"] call A3C_UI_templateDialog_fnc_ctrl;
+#include "..\script_component.hpp"
+
+private _primary = ["primary"] call FUNC(ctrl);
+private _secondary = ["secondary"] call FUNC(ctrl);
 
 if !(isNull _primary) then {
     _primary ctrlSetText "BTN";

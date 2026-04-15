@@ -1,3 +1,5 @@
+#include "..\..\script_component.hpp"
+
 /*
     Example public action function.
 
@@ -11,3 +13,5 @@
 params ["_arg"];
 
 systemChat format ["Template example action called with: %1", _arg];
+
+[] call FUNC(refresh);

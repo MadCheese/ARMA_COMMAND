@@ -1,3 +1,4 @@
+#include "..\..\script_component.hpp"
 #include "..\..\dialog_defines.hpp"
 
 params ["_control"];
@@ -12,4 +13,4 @@ switch (_idc) do {
 
 if (_arg isEqualTo "") exitWith {};
 
-[_arg] call A3C_UI_templateDialog_fnc_exampleAction;
+[_arg] call FUNC(exampleAction);

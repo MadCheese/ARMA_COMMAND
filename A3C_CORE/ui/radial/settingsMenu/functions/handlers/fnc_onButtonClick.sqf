@@ -1,3 +1,4 @@
+#include "..\..\script_component.hpp"
 #include "..\..\dialog_defines.hpp"
 
 params ["_control"];
@@ -17,4 +18,4 @@ switch (_idc) do {
 
 if (_var isEqualTo "") exitWith {};
 
-[_var] call A3C_UI_settingsMenu_fnc_changeSettings;
+[_var] call FUNC(changeSettings);

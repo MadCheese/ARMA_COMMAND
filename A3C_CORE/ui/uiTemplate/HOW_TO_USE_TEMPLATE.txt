@@ -1,212 +1,258 @@
 HOW TO USE THIS TEMPLATE
+
 OVERVIEW
 
 This template creates one dialog module with:
+- dialog config (dialog.hpp)
+- dialog ID defines (dialog_defines.hpp)
+- per-component macro header (script_component.hpp)
+- one-file-per-function system
+- XEH_PREP.hpp as the registration list
+- initFunctions.sqf as the tiny loader
+- handlers/ for UI event entry points
+- public/ for externally callable functions (examples only)
+- root functions/ for internal dialog mechanics
 
-dialog config (dialog.hpp)
-dialog ID defines (dialog_defines.hpp)
-component macros (script_component.hpp)
-one-file-per-function system
-initFunctions.sqf as the loader
-handlers/ for UI event entry points
-public/ for externally callable functions (examples only)
-root functions/ for internal dialog mechanics
+In addition, the mission uses shared root macro files:
+- A3C_CORE\script_mod.hpp
+- A3C_CORE\script_macros.hpp
+
+These two files are shared by all dialogs and are not duplicated in the template dialog folder.
+
 STANDARD FOLDER FLOW
-Copy the full uiTemplate folder into the correct UI family location.
-Rename the dialog folder to the real dialog name.
-Edit script_component.hpp first.
-Edit dialog_defines.hpp second.
-Edit dialog.hpp third.
-Edit initFunctions.sqf and replace all TEMPLATE paths.
-Edit the files in functions/, handlers/, and public/.
-Add the initFunctions.sqf compile line to the correct init script.
-Update any callers to use the new public function names.
-Test the new dialog before removing old files.
+
+1. Copy the full uiTemplate folder into the correct UI family location.
+2. Rename the dialog folder to the real dialog name.
+3. Edit script_component.hpp first.
+4. Edit dialog_defines.hpp second.
+5. Edit dialog.hpp third.
+6. Edit XEH_PREP.hpp and replace template example registrations if needed.
+7. Edit the files in functions/, handlers/, and public/.
+8. Use the XEH_PREP helper if you want to auto-build handler/public registration lines.
+9. Add the initFunctions.sqf compile line to the correct init script.
+10. Update any callers to use the new public function names.
+11. Test the new dialog before removing old files.
+
 STEP 1 - RENAME THE COMPONENT
 
 Open script_component.hpp.
 
 Change:
-
-COMPONENT
-COMPONENT_BEAUTIFIED
+- COMPONENT
+- COMPONENT_BEAUTIFIED
+- COMPONENT_ROOT
 
 Example:
-
 #define COMPONENT UI_settingsMenu
+#define COMPONENT_BEAUTIFIED Settings Menu
+#define COMPONENT_ROOT A3C_CORE\ui\radial\settingsMenu
 
-This controls function names and namespace keys.
+This controls function names, namespace keys, and PREP paths.
 
 Example expansions:
+FUNC(onLoad) -> A3C_UI_settingsMenu_fnc_onLoad
+QGVAR(display) -> "A3C_UI_settingsMenu_display"
 
-FUNC(onLoad) → A3C_UI_settingsMenu_fnc_onLoad
-QGVAR(display) → "A3C_UI_settingsMenu_display"
 STEP 2 - DEFINE IDS
 
 Open dialog_defines.hpp.
 
-Set the real dialog IDD
-Define all runtime-used IDC_* values
+Set the real dialog IDD.
+Define all runtime-used IDC_* values.
 
 Rule:
+- Use idc = -1 for static controls.
+- Only assign IDs to controls that are accessed in code.
 
-Use idc = -1 for static controls
-Only assign IDs to controls that are accessed in code
 STEP 3 - BUILD THE DIALOG
 
 Open dialog.hpp.
 
 Replace:
-
-dialog class name
-control layout
-template labels
-button IDs
-tooltips and text
+- dialog class name
+- control layout
+- template labels
+- button IDs
+- tooltips and text
 
 Keep:
+onLoad = EXPAND_AND_QUOTE(_this call FUNC(onLoad));
+onUnload = EXPAND_AND_QUOTE(_this call FUNC(onUnload));
+onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onButtonClick));
 
-onLoad = QUOTE(_this call FUNC(onLoad));
-onUnload = QUOTE(_this call FUNC(onUnload));
-onButtonClick = QUOTE(_this call FUNC(onButtonClick));
-STEP 4 - FIX THE LOADER
+Do not switch this back to QUOTE(...).
+The template standard now uses EXPAND_AND_QUOTE(...) for config event strings.
 
-Open functions/initFunctions.sqf.
+STEP 4 - REGISTRATION SYSTEM
 
-Replace:
+The dialog now uses:
+- XEH_PREP.hpp for registration lines
+- initFunctions.sqf as the loader
 
-all A3C_UI_templateDialog_* names with your component name
-all TEMPLATE paths with your real folder path
+Open functions\XEH_PREP.hpp.
 
-This file is the registration layer.
+This file contains:
+- internal function registrations
+- handler registrations
+- public function registrations
+
+Open functions\initFunctions.sqf.
+
+This file should stay minimal:
+#include "..\script_component.hpp"
+#include "XEH_PREP.hpp"
 
 IMPORTANT:
-
-A function file does nothing unless it is compiled here.
+A function file on disk does nothing unless it is registered through XEH_PREP.hpp and loaded through initFunctions.sqf.
 
 STEP 5 - INTERNAL FUNCTIONS (CORE LAYER)
 
 The root functions/ folder contains dialog internals.
 
 Typical files:
-
-fnc_cacheGroups.sqf
-fnc_cacheControls.sqf
-fnc_ctrl.sqf
-fnc_groupCtrl.sqf (optional)
-fnc_onLoad.sqf
-fnc_onUnload.sqf
-fnc_refresh.sqf
+- fnc_cacheGroups.sqf
+- fnc_cacheControls.sqf
+- fnc_ctrl.sqf
+- fnc_groupCtrl.sqf
+- fnc_onLoad.sqf
+- fnc_onUnload.sqf
+- fnc_refresh.sqf
 
 Use this layer for:
+- storing display reference
+- caching controls
+- caching groups
+- control lookup by semantic name
+- refresh logic
+- lifecycle logic
 
-storing display reference
-caching controls
-caching groups (if used)
-control lookup by name
-UI refresh logic
-dialog lifecycle
+Internal dialog functions should use FUNC(...) and QGVAR(...) where appropriate instead of hardcoding full function names.
+
+Example:
+[] call FUNC(refresh);
+
 STEP 6 - HANDLERS (UI ENTRY POINTS)
 
 handlers/ contains functions directly called from dialog.hpp.
 
 Example:
-
-onButtonClick = QUOTE(_this call FUNC(onButtonClick));
+onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onButtonClick));
 
 Handlers should:
-
-receive UI event (_control, _this, etc.)
-identify which control triggered it
-translate it into a semantic action
-call a public or internal function
+- receive the UI event
+- identify which control triggered it
+- translate it into a semantic action
+- call a public or internal function
 
 Rule:
+Keep handlers thin. No heavy business logic here.
 
-Keep handlers thin. No heavy logic here.
+Handlers should also use FUNC(...) rather than hardcoded full function names when calling dialog functions.
 
 STEP 7 - PUBLIC FUNCTIONS (EXTERNAL API)
 
 public/ contains externally callable functions.
 
-These are entry points into your dialog system.
-
 Typical use cases:
+- open dialog
+- change settings
+- perform externally triggered actions
 
-open dialog
-trigger actions from outside
-apply settings
-integrate with other systems
-IMPORTANT
+The template public files are examples only:
+- fnc_exampleOpen.sqf
+- fnc_exampleAction.sqf
 
-The template files in public/ are examples only.
-
-They are named:
-
-fnc_exampleOpen.sqf
-fnc_exampleAction.sqf
-
-They exist to demonstrate structure and must be:
-
-renamed
-replaced with real logic
+They must be renamed and replaced for real dialogs.
 
 Example final naming:
-
 A3C_UI_settingsMenu_fnc_openSettings
 A3C_UI_settingsMenu_fnc_changeSettings
 
-Rule:
+Public functions may still include dialog-specific external logic, but when they call back into the dialog’s own function layer they should use FUNC(...).
 
-Do not keep template example logic in production.
+STEP 8 - XEH_PREP.hpp HELPER
 
-STEP 8 - ADD THE INIT LINE
+The helper is located in the main mission folder here:
+tools_editing\XEH_PREP_GENERATOR\Run_XEH_PREP_HPP_Generator.bat
 
-In your init (e.g. A3C_Init.sqf):
+Use it when:
+- you added or renamed files in functions\handlers\
+- you added or renamed files in functions\public\
 
+Expected dialog structure:
+<dialog folder>\functions\handlers\
+<dialog folder>\functions\public\
+
+The helper:
+- scans handlers/ and public/
+- ignores non-SQF files
+- strips the fnc_ prefix from filenames
+- creates A3C_PREP_SUBDIR(...) lines
+- copies the result to clipboard
+
+Important:
+The internal function block is still standard and expected to remain:
+A3C_PREP(cacheGroups);
+A3C_PREP(cacheControls);
+A3C_PREP(ctrl);
+A3C_PREP(groupCtrl);
+A3C_PREP(refresh);
+A3C_PREP(onLoad);
+A3C_PREP(onUnload);
+
+After generating the handler/public lines, paste the result into XEH_PREP.hpp.
+
+STEP 9 - ADD THE INIT LINE
+
+In your init (for example A3C_Init.sqf), add:
 call compile preprocessFileLineNumbers "PATH_TO_DIALOG_FOLDER\functions\initFunctions.sqf";
 
 Without this:
+- functions exist on disk
+- but are NOT registered
+- and will not work
 
-functions exist on disk
-but are NOT registered
-and will not work
-STEP 9 - UPDATE CALLERS
+STEP 10 - UPDATE CALLERS
 
-Replace old calls with new public function names.
+Replace old calls with the new public function names.
 
 Example:
-
 [] call A3C_UI_settingsMenu_fnc_openSettings;
 
 If the dialog is self-contained, this step may be minimal.
 
-STEP 10 - TEST ORDER
+STEP 11 - TEST ORDER
 
 Test in this exact order:
+1. dialog opens
+2. dialog closes correctly
+3. controls initialize correctly
+4. button clicks trigger handlers
+5. state updates correctly
+6. UI refresh works
+7. side effects work
 
-dialog opens
-dialog closes correctly
-controls initialize correctly
-button clicks trigger handlers
-state updates correctly
-UI refresh works
-side effects work
 RULES
-Always terminate SQF statements with ;
-One function per file
-All functions must be compiled in initFunctions.sqf
-handlers/ = UI-bound functions
-public/ = external API
-root functions/ = internal mechanics
-Never hardcode IDC numbers in logic (use defines)
-Cache controls once, reuse via fnc_ctrl
-Keep UI refresh centralized in fnc_refresh.sqf
-Keep handlers minimal
-Remove legacy structures after migration
+
+- Always terminate SQF statements with ;
+- One function per file
+- Use XEH_PREP.hpp for function registration
+- initFunctions.sqf should stay minimal
+- handlers/ = UI-bound functions
+- public/ = external API
+- root functions/ = internal dialog mechanics
+- Never hardcode IDC numbers in logic
+- Use defines for runtime-used IDs
+- Cache controls once, reuse via fnc_ctrl
+- Keep refresh centralized in fnc_refresh.sqf
+- Keep handlers minimal
+- Use FUNC(...) and QGVAR(...) inside dialog functions where practical
+- Remove legacy structures after migration
+
 NOTES
-fnc_groupCtrl.sqf can remain a stub if unused
-The template contains no radial-specific logic
-Public functions are intentionally generic examples
-You are expected to design your own API per dialog
-The template reflects a fully modular, ACE-style function structure without CfgFunctions
+
+- fnc_groupCtrl.sqf can remain a stub if unused
+- The template contains no radial-specific logic
+- Public functions are intentionally generic examples
+- You are expected to design your own public API per dialog
+- The template now reflects a shared-macro, PREP-style modular function structure

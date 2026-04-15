@@ -4,6 +4,6 @@ params ["_display"];
 
 uiNamespace setVariable [QGVAR(display), _display];
 
-[] call A3C_UI_settingsMenu_fnc_cacheGroups;
-[] call A3C_UI_settingsMenu_fnc_cacheControls;
-[] call A3C_UI_settingsMenu_fnc_refresh;
+[] call FUNC(cacheGroups);
+[] call FUNC(cacheControls);
+[] call FUNC(refresh);

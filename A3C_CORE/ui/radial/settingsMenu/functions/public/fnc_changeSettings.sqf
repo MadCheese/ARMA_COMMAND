@@ -1,3 +1,5 @@
+#include "..\..\script_component.hpp"
+
 params ["_var"];
 
 if !(_var in [
@@ -42,4 +44,4 @@ switch (_var) do {
     };
 };
 
-[] call A3C_UI_settingsMenu_fnc_refresh;
+[] call FUNC(refresh);
