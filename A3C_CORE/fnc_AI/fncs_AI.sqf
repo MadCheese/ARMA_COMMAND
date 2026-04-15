@@ -735,13 +735,7 @@ A3C_MOVE = {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	while {!isNull _unit} do {
-//		if (true) exitWith {
-//			_unit setVariable ["A3C_PLOT",[],true];
-//		};
-		//systemchat "0";
-		//if (_unit == leader group _unit) then {
-		//	systemchat format ["cycle %1",_cycle];
-		//};
+
 
 		_vehicle = vehicle _unit; //-- refresh to monitor changes
 
@@ -1026,7 +1020,7 @@ A3C_MOVE = {
 			};
 		};
 
-		
+
 		//-- set WP-details (speed/stance)
 		_unit setunitpos _unitPosTravel;
 		if !(_wpSpeed == -1) then {

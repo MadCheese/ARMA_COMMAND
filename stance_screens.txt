@@ -1,8 +1,0 @@
-
-["VR",[4509.44,2686.7,9.52338],180.787,0.1,[-1.86079,0],0,0,730.064,0,0,1.5,-0.5,1]
-
-run stand: "AmovPercMrunSrasWrflDf_ldst"
-walk stand "AmovPercMwlkSrasWrflDf"
-run crouch: "AmovPknlMrunSrasWrflDf_ldst"
-walk crouch "AmovPknlMrunSrasWrflDf"
-prone move: "AmovPpneMsprSlowWrflDbl"

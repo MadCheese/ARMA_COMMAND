@@ -1,6 +1,9 @@
 
 //class IGUIBack;
-//class RscStandardDisplay;	
+//class RscStandardDisplay;
+
+#include "A3C_CORE\script_mod.hpp"
+#include "A3C_CORE\script_macros.hpp"
 
 //#include "A3C_CORE\ui\baseclasses.hpp"
 #include "A3C_CORE\ui\A3C_BaseClasses.hpp"

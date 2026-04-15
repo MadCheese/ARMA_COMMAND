@@ -1,4 +1,22 @@
 #include "BIS_AddonInfo.hpp"
+
+#include "script_mod.hpp"
+#include "script_macros.hpp"
+
+#include "ui\A3C_BaseClasses.hpp"
+
+#include "ui\MapOverlay\UI_DSP_MAP.hpp"
+#include "ui\radial\A3C_RadialMenu.hpp"
+#include "ui\HUD\HUD_MENU.hpp"
+#include "ui\HUD\A3C_DSP_HUD_DYNAMIC.hpp"
+#include "ui\HUD\HUD_Formation_Menu.hpp"
+#include "ui\HUD\HUD_CAM_UI.hpp"
+// #include "ui\radial\A3C_FORMATION.hpp"
+
+#include "ui\radial\settingsMenu\dialog.hpp"
+#include "ui\suppression\A3C_SUPPRESSION_DRAW.hpp"
+#include "cfgsounds.hpp"
+
 class CfgPatches
 {
 	class A3C_CORE
@@ -24,20 +42,6 @@ class Extended_PreInit_EventHandlers
 {
 	A3C_init = "call compile preprocessFileLineNumbers 'A3C_CORE\A3C_Init.sqf';";
 };
-
-#include "ui\A3C_BaseClasses.hpp"
-
-#include "ui\MapOverlay\UI_DSP_MAP.hpp"
-#include "ui\radial\A3C_RadialMenu.hpp"
-#include "ui\HUD\HUD_MENU.hpp"
-#include "ui\HUD\A3C_DSP_HUD_DYNAMIC.hpp"
-#include "ui\HUD\HUD_Formation_Menu.hpp"
-#include "ui\HUD\HUD_CAM_UI.hpp"
-// #include "ui\radial\A3C_FORMATION.hpp"
-
-#include "ui\radial\settingsMenu\dialog.hpp"
-#include "ui\suppression\A3C_SUPPRESSION_DRAW.hpp"
-#include "cfgsounds.hpp"
 
 class CfgRemoteExec
 {
