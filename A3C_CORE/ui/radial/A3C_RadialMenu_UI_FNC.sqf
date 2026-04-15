@@ -474,7 +474,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 				};
 			} else {
 				if (_btn == 0) then {
-					BR_A3C_DISABLE_RADIAL = true;
+					A3C_DISABLE_RADIAL = true;
 					[] call A3C_RADIAL_CloseDisplay;
 					A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\hud\icon_HUD_movePos.paa"; //"\a3\ui_f\data\IGUI\Cfg\Cursors\waypointMark_ca.paa";
 					A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0] call A3C_UI_Color_setOpacity;
@@ -516,7 +516,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 								A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
 								sleep 0.1;
 							};
-							if (BR_A3C_DISABLE_RADIAL) then {
+							if (A3C_DISABLE_RADIAL) then {
 								//-- Radial key not released - reIssue the icon for repeated orders
 								A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
 								A3C_UI_HUD_3D_TAG_reposition = true;

@@ -17,7 +17,7 @@ if (isMultiplayer && isServer && !(hasInterface)) exitwith {};
 if !(player == leader group player) exitwith {};
 
 if (!isNull findDisplay 100040) exitWith {};
-if (BR_A3C_DISABLE_RADIAL) exitWith {};
+if (A3C_DISABLE_RADIAL) exitWith {};
 
 _display = _this select 0;
 

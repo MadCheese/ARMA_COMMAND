@@ -3,7 +3,7 @@ A3C_GP_RC_RemoveHandlers = {
     params ["_display"]; //-- we could get the display from visiblemap but it's tidier this way... assumably
     if (!visiblemap) then {
         // systemchat '3d';
-        BR_A3C_DISABLE_RADIAL = false;
+        A3C_DISABLE_RADIAL = false;
         _display displayRemoveEventHandler ["KeyDown",a3c_tank_remote_down];
         _display displayRemoveEventHandler ["KeyUp",a3c_tank_remote_up];
         _display displayRemoveEventHandler ["MouseButtonDown",a3c_tank_remote_MD];
@@ -27,7 +27,7 @@ A3C_GP_RC_UIVehicleRemoteFnc = {
     private _isRadial = _a3c_dsp == 100040;
 
     if (_isRadial) then {
-        BR_A3C_DISABLE_RADIAL = true;
+        A3C_DISABLE_RADIAL = true;
         [] call A3C_RADIAL_CloseDisplay;
     };
     a3c_is_HC_remote = true;

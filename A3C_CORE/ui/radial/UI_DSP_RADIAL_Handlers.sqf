@@ -34,7 +34,7 @@ A3C_UI_RADIAL_HandlerFNC_OnKeyUp = {
 		[] call A3C_RADIAL_CloseDisplay;
 		// A3C_DOWNKEYS = A3C_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
 		showCommandingMenu "";
-		BR_A3C_DISABLE_RADIAL = false;
+		A3C_DISABLE_RADIAL = false;
 		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
 			A3C_RD_UNITS = [];
 		};

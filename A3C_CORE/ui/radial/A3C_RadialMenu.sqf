@@ -24,7 +24,7 @@ if  (!isnull (finddisplay 100050)) exitwith {};
 
 
 
-if (BR_A3C_DISABLE_RADIAL) exitwith {};
+if (A3C_DISABLE_RADIAL) exitwith {};
 _exit = false;
 if !(player == (leader group player)) then {
 	_exit = true;
@@ -68,7 +68,7 @@ _cursortarget = cursortarget;
 
 
 A3C_RADIAL_HOVER = true;
-BR_A3C_DISABLE_RADIAL = false;
+A3C_DISABLE_RADIAL = false;
 A3C_RD_BOOL_UNITS = true;
 A3C_BOOL_CTBUILD = false;
 A3C_RADIALMODE = "";

@@ -207,7 +207,7 @@ A3C_UI_HUD_HandlerFNC_KeyDown = {
 					_key in  [71, 72, 73, 75, 76, 77, 79, 80, 81,103, 104, 105, 106];
 				}
 			) : {
-				[] call A3C_UI_HUD_HandlerFNC_KeyDown_NUM;
+				[_key] call A3C_UI_HUD_HandlerFNC_KeyDown_NUM;
 			};
 			default {};
 		};
@@ -228,17 +228,21 @@ A3C_UI_HUD_HandlerFNC_KeyUp = {
 	
 	player commandchat format ["HUD KEY-UP: %1 (%2)", _key, keyName _key];
 
-	if !(player == (leader group player)) exitwith {};
-	if ( !isNull(findDisplay 312) ) exitWith {}; //-- ZEUS interface is open. Prevent most A3C stuff
+	if (player != (leader group player)) exitwith {false};
+	if ( !isNull(findDisplay 312) ) exitWith {false}; //-- ZEUS interface is open. Prevent most A3C stuff
 	
 	A3C_DOWNKEYS = A3C_DOWNKEYS - [_key];
 	if (vehicle player isKindOf "HELICOPTER" && {player == (gunner vehicle player)}) then {
-		[] spawn {sleep 1; (vehicle player) flyInHeight((getPosATL (vehicle player)) select 2)};
+		(vehicle player) spawn {
+			sleep 1;
+			_this flyInHeight((getPosATL _this) select 2);
+		};
 	};
 	if (_key == 29) exitwith {
 		A3C_MODIFIER_CTRL = false;
-	};
-	//-- protection: also set SHIFT to false?
+		false
+	}; //-- protection: also set SHIFT to false? >> #TODO CLARIFY
+	false
 };
 
 
@@ -247,89 +251,78 @@ A3C_UI_HUD_HandlerFNC_KeyUp = {
 
 
 A3C_UI_HUD_HandlerFNC_MouseButtonDown = {
-	private ["_bttn","_shft","_alt","_ctrl","_divisor","_exit"];
-	_bttn = (_this select 1);
-	_shft = (_this select 4);
-	_ctrl = (_this select 5);
-	_alt = (_this select 6);
+	params ["_display","_button","_sX","_sY","_shift","_ctrl", "_alt"];
 
-	//if (!isNull A3C_OBJECTPLACER && _bttn == 1) exitWith {
-	//	deleteVehicle A3C_OBJECTPLACER;
-		//BR_A3C_DISABLE_RADIAL = false;
-	//};
+	scopeName "main";
 
+	player commandChat format ["A3C_UI_HUD_HandlerFNC_MouseButtonDown: %1", _this];
 
+	private _curTar = cursorTarget;
+	private _blockDefaultKey = false;
 
-
-	_exit = false;
-
-
-
-
-	_curTar = cursorTarget;
-
-	if (BR_A3C_DISABLE_RADIAL) exitwith {
-		if (_bttn == 1) then {
-			if (!isNil 'A3C_GRENADEHANDLER') then {
-				BR_A3C_DISABLE_RADIAL = false;
-				["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
-				(findDisplay 46) displayRemoveEventHandler ["MouseButtonUP",A3C_GRENADEHANDLER];
-			};
+	if (A3C_DISABLE_RADIAL) exitWith {
+		if (_button == 1 && {!isNil "A3C_GRENADEHANDLER"}) then {
+			A3C_DISABLE_RADIAL = false;
+			["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
+			(findDisplay 46) displayRemoveEventHandler ["MouseButtonUP", A3C_GRENADEHANDLER];
 		};
+		false
 	};
-	//if ((count A3C_HUD_UNITS) == 0) exitwith {};
-	if (_bttn == 1) then {
-		if !(isnull _curTar) then {
-			if (_curTar in (units group player)) then {
+
+	if (_button == 1) then {
+		if (!isNull _curTar) then {
+			if (_curTar in units group player) then {
 				if (_ctrl) then {
-					_exit = true;
 					if (_alt) then {
+						_blockDefaultKey = true;
+
 						if (_curTar in A3C_HUD_UNITS) then {
 							[_curTar] call A3C_HUD_REMOVE_SELECTED;
 						} else {
-							[_curTar,_curTar getvariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
-							if ((count (groupSelectedUnits player)) > 0) then {
-								{player groupSelectUnit [_x, false]} foreach units group player;
+							[_curTar, _curTar getVariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
+							if (count groupSelectedUnits player > 0) then {
+								{ player groupSelectUnit [_x, false] } forEach units group player;
 							};
 						};
+
+						breakOut "main";
 					} else {
-						if ( (count A3C_HUD_UNITS) == 0) then {
-							if (_curTar in (groupSelectedUnits player)) then {
+						if (count A3C_HUD_UNITS == 0) then {
+							_blockDefaultKey = true;
+
+							if (_curTar in groupSelectedUnits player) then {
 								player groupSelectUnit [_curTar, false];
 							} else {
 								player groupSelectUnit [_curTar, true];
 							};
-						} else {
-							_exit = false;
+
+							if (count groupSelectedUnits player == 0) then {
+								showCommandingMenu "";
+							};
+							breakOut "main";
 						};
-					};
+					};	
 				};
 			};
-			if ((count (groupSelectedUnits player)) == 0) then {
+
+			if (count groupSelectedUnits player == 0) then {
 				showCommandingMenu "";
 			};
 		} else {
-			//systemchat "remove from select";
-
-			if !(A3C_MODIFIER_CTRL) then {
-				if ((count A3C_HUD_UnitIndicators) > 0) then {
-					{[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS;
-					//systemchat "cancelled";
-				};
+			if (!A3C_MODIFIER_CTRL && {count A3C_HUD_UnitIndicators > 0}) then {
+				{ [_x] call A3C_HUD_REMOVE_SELECTED } forEach +A3C_HUD_UNITS;
 			};
-
 		};
 	};
-	if (_exit) exitwith {};
-	_unitAmount = (count A3C_HUD_UNITS);
-	if (_unitAmount == 0) exitwith {};
 
-	//-- Execute HUD-Order (Ctrl + RMB)
-	if (_bttn == 1) then {
-		if (_ctrl) then {
-			[_alt,_shft] call A3C_Setorder_HUD;
-		};
+	if (count A3C_HUD_UNITS == 0) exitWith {_blockDefaultKey};
+
+	if (_button == 1 && {_ctrl}) then {
+		[_alt, _shift] call A3C_Setorder_HUD;
+		_blockDefaultKey = true;
 	};
+
+	_blockDefaultKey
 };
 
 
@@ -898,7 +891,7 @@ A3C_FNC_CBA_KEY = {
 					//-- prevent grenade throw when planning
 					if (!visibleMap && (isNull (findDisplay 100030))) then {
 						//systemchat 'oi';
-						BR_A3C_DISABLE_RADIAL = true;
+						A3C_DISABLE_RADIAL = true;
 						showCommandingMenu "";
 						A3C_GREN_ALLOW_UNITSWITCH = if (count A3C_RD_UNITS == 1) then {false} else {true};
 						BR_A3C_TACV_oefId = ["BR_A3C_TACV_oefId", "onEachFrame", "BR_A3C_OEFControl"] call BIS_fnc_addStackedEventHandler;
@@ -908,8 +901,8 @@ A3C_FNC_CBA_KEY = {
 				if !(A3C_BOOL_REMFIRE) then {
 					_cun = ((groupselectedunits player) select 0);
 					if !(isPlayer _cun) then {
-						if (BR_A3C_DISABLE_RADIAL) then {
-							BR_A3C_DISABLE_RADIAL = false;
+						if (A3C_DISABLE_RADIAL) then {
+							A3C_DISABLE_RADIAL = false;
 							BR_A3C_TEMP_gfeh = _cun addEventHandler ["fired",
 							{
 								_unit = _this select 0;

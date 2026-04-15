@@ -886,7 +886,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						private _isRadial = _a3c_dsp == 100040;
 
 						if (_isRadial) then {
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							[
 								46,
@@ -969,7 +969,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						private _isRadial = _a3c_dsp == 100040;
 
 						if (_isRadial) then {
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							[
 								46,
@@ -1031,7 +1031,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						// private _isRadial = _a3c_dsp == 100040;
 						// if (_isRadial) then {
 						// 	//-- no actual action - just close menu
-						// 	BR_A3C_DISABLE_RADIAL = true;
+						// 	A3C_DISABLE_RADIAL = true;
 						// 	[] call A3C_RADIAL_CloseDisplay;
 						// 	[
 						// 		46,
@@ -1063,7 +1063,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						private _isRadial = _a3c_dsp == 100040;
 						if (_isRadial) then {
 							//-- no actual action - just close menu
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							[
 								46,
@@ -1189,7 +1189,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						private _isRadial = _a3c_dsp == 100040;
 						if (_isRadial) then {
 							//-- no actual action - just close menu
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							[
 								46,
@@ -1223,7 +1223,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						private _isRadial = _a3c_dsp == 100040;
 						if (_isRadial) then {
 							//-- no actual action - just close menu
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							[
 								46,
@@ -1261,7 +1261,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							(findDisplay 12 displayCtrl 51) ctrlEnable true;
 						} else {
 							//-- no actual action - just close menu
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							[
 								46,
@@ -1314,7 +1314,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 
 						if (_isRadial) then {
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							with uiNamespace do {
 								//disableSerialization;
@@ -1353,7 +1353,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											_button = _this select 0;
 											_button = _button - [(_button select 0)];
 											if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-												BR_A3C_DISABLE_RADIAL = false;
+												A3C_DISABLE_RADIAL = false;
 												//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 												//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 												(findDisplay 100060) closeDisplay 0;
@@ -1598,7 +1598,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						private _isRadial = _a3c_dsp == 100040;
 						if (_isRadial) then {
 							//-- no actual action - just close menu
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							[
 								46,
@@ -1634,7 +1634,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						private _isRadial = _a3c_dsp == 100040;
 						if (_isRadial) then {
 							//-- no actual action - just close menu
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							[
 								46,
@@ -1720,7 +1720,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 												_button = _this select 0;
 												_button = _button - [(_button select 0)];
 												if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-													BR_A3C_DISABLE_RADIAL = false;
+													A3C_DISABLE_RADIAL = false;
 													(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 													(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 													(findDisplay 100060) closeDisplay 0;
@@ -1771,7 +1771,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
-						BR_A3C_DISABLE_RADIAL = true;
+						A3C_DISABLE_RADIAL = true;
 						[] call A3C_RADIAL_CloseDisplay;
 						A3C_UI_HUD_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa'; //"\a3c_ui\menu\icon_menu_action_repair.paa";
 
@@ -1861,7 +1861,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
-						BR_A3C_DISABLE_RADIAL = true;
+						A3C_DISABLE_RADIAL = true;
 						[] call A3C_RADIAL_CloseDisplay;
 						A3C_UI_HUD_3D_TAG_ICON_TYPE =  "\a3c_ui\menu\icon_menu_action_repair.paa";
 
@@ -1950,7 +1950,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							if (!isNull findDisplay 100040) then {
 								A3C_UI_HUD_3D_TAG_ICON_TYPE =  "";
 								A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
-								BR_A3C_DISABLE_RADIAL = true;
+								A3C_DISABLE_RADIAL = true;
 
 
 								//("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutRsc ["A3C_KEY_VIEWER_UI","PLAIN"];
@@ -2013,7 +2013,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 														_button = _this select 0;
 														_button = _button - [(_button select 0)];
 														if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-															BR_A3C_DISABLE_RADIAL = false;
+															A3C_DISABLE_RADIAL = false;
 															(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 															(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 															(findDisplay 100060) closeDisplay 0;
@@ -2267,7 +2267,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						if (!isNull findDisplay 100040) then {
 							A3C_UI_HUD_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_CAS.paa';
 							A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							[
 								46,
@@ -2290,7 +2290,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 													_button = _this select 0;
 													_button = _button - [(_button select 0)];
 													if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-														BR_A3C_DISABLE_RADIAL = false;
+														A3C_DISABLE_RADIAL = false;
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 														(findDisplay 100060) closeDisplay 0;
@@ -2401,7 +2401,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						if (!isNull findDisplay 100040) then {
 							A3C_UI_HUD_3D_TAG_ICON_TYPE = "\A3C_UI\menu\icon_menu_action_Rappel.paa";
 							A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							A3C_OBJECTPLACER = "A3C_HeliPad" createvehicleLocal [0,0,0]; // "Land_JumpTarget_F"
 							[
@@ -2606,7 +2606,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
 												(findDisplay 100060) closeDisplay 0;
 												(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-												BR_A3C_DISABLE_RADIAL = false;
+												A3C_DISABLE_RADIAL = false;
 												A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 
 											};
@@ -2697,7 +2697,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 
 						if (!isNull findDisplay 100040) then {
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							A3C_UI_HUD_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_remote_Artillery.paa';
 							A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
@@ -2744,7 +2744,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
 											sleep 0.1;
 										};
-										if (BR_A3C_DISABLE_RADIAL) then {
+										if (A3C_DISABLE_RADIAL) then {
 											//-- Radial key not released - reIssue the icon for repeated orders
 											A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
 											A3C_UI_HUD_3D_TAG_reposition = true;
@@ -2846,7 +2846,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 
 						if (!isNull findDisplay 100040) then {
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 46) displayAddEventHandler
 							[
@@ -2856,7 +2856,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
 										(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 										{inGameUISetEventHandler [_x, 'true']} foreach ['PrevAction','NextAction'];
-										BR_A3C_DISABLE_RADIAL = false;
+										A3C_DISABLE_RADIAL = false;
 									};
 								}
 							];
@@ -2880,7 +2880,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 
 						if (!isNull findDisplay 100040) then {
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 46) displayAddEventHandler
 							[
@@ -2890,7 +2890,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
 										(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 										{inGameUISetEventHandler [_x, 'true']} foreach ['PrevAction','NextAction'];
-										BR_A3C_DISABLE_RADIAL = false;
+										A3C_DISABLE_RADIAL = false;
 									};
 								}
 							];
@@ -2928,7 +2928,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 
 						if (!isNull findDisplay 100040) then {
-							BR_A3C_DISABLE_RADIAL = true;
+							A3C_DISABLE_RADIAL = true;
 							[] call A3C_RADIAL_CloseDisplay;
 							A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 46) displayAddEventHandler
 							[
@@ -2938,7 +2938,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
 										(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 										{inGameUISetEventHandler [_x, 'true']} foreach ['PrevAction','NextAction'];
-										BR_A3C_DISABLE_RADIAL = false;
+										A3C_DISABLE_RADIAL = false;
 									};
 								}
 							];
@@ -2969,7 +2969,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 						A3C_UI_HUD_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa';
 						A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
-						BR_A3C_DISABLE_RADIAL = true;
+						A3C_DISABLE_RADIAL = true;
 						[] call A3C_RADIAL_CloseDisplay;
 
 						A3C_UI_RADIAL_Current_Remfire_Units = +(A3C_HC_DetoShot_Units);
@@ -3009,7 +3009,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 													_button = _this select 0;
 													_button = _button - [(_button select 0)];
 													if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-														BR_A3C_DISABLE_RADIAL = false;
+														A3C_DISABLE_RADIAL = false;
 														A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
@@ -3119,7 +3119,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
 						[] call A3C_RADIAL_CloseDisplay;
-						BR_A3C_DISABLE_RADIAL = true;
+						A3C_DISABLE_RADIAL = true;
 						[
 							46,
 							'SPACE',
@@ -3241,7 +3241,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											_button = _this select 0;
 											_button = _button - [(_button select 0)];
 											if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-												BR_A3C_DISABLE_RADIAL = false;
+												A3C_DISABLE_RADIAL = false;
 												A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 												(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 												(findDisplay 100060) closeDisplay 0;
@@ -3643,7 +3643,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 			}
 		] call BIS_fnc_addStackedEventHandler;
 	} else {
-		BR_A3C_DISABLE_RADIAL = true;
+		A3C_DISABLE_RADIAL = true;
 		[] call A3C_RADIAL_CloseDisplay;
 		A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\menu\icon_menu_action_suppression.paa";//
 		A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
@@ -4006,7 +4006,7 @@ A3C_GP_Btn_Para = {//mumu
 
 			A3C_OBJECTSELECTOR_MODE = "PARALOAD";
 			if (!isNull findDisplay 100040) then {
-				BR_A3C_DISABLE_RADIAL = true;
+				A3C_DISABLE_RADIAL = true;
 				[] call A3C_RADIAL_CloseDisplay;
 
 				[
@@ -4033,7 +4033,7 @@ A3C_GP_Btn_Para = {//mumu
 								if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
 									(findDisplay 100060) closeDisplay 0;
 									(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									BR_A3C_DISABLE_RADIAL = false;
+									A3C_DISABLE_RADIAL = false;
 									A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
 
 								};
@@ -4105,7 +4105,7 @@ A3C_fnc_SecuRejoin_fnc = {
 							_button = _this select 0;
 							_button = _button - [(_button select 0)];
 							if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-								BR_A3C_DISABLE_RADIAL = false;
+								A3C_DISABLE_RADIAL = false;
 								(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 								(findDisplay 100060) closeDisplay 0;
 								A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
@@ -4625,7 +4625,7 @@ A3C_HC_UnassembleWeapon = {
 			true
 		] call A3C_UI_RADIAL_ADD_EH_MACROS;
 
-		BR_A3C_DISABLE_RADIAL = true;
+		A3C_DISABLE_RADIAL = true;
 		[] call A3C_RADIAL_CloseDisplay;
 	};
 
@@ -4668,7 +4668,7 @@ A3C_HC_UnassembleWeapon = {
 							} else {
 								{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];
 							};
-							BR_A3C_DISABLE_RADIAL = false;
+							A3C_DISABLE_RADIAL = false;
 
 						};
 					}
@@ -4697,7 +4697,7 @@ A3C_HC_UnassembleWeapon = {
 
 		(findDisplay 100060) closeDisplay 0;
 		//(findDisplay 100060) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL1]; //-- not neede
-		//BR_A3C_DISABLE_RADIAL = false;
+		//A3C_DISABLE_RADIAL = false;
 	};
 
 

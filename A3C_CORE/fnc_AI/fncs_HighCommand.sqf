@@ -1308,7 +1308,7 @@ A3C_HC_VEHICLEBOARD = {
 	(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
 	if (_button == 0) then {
 		if (!isNull (findDisplay 100040)) then {
-			BR_A3C_DISABLE_RADIAL = true;
+			A3C_DISABLE_RADIAL = true;
 			[] call A3C_RADIAL_CloseDisplay;
 			A3C_UI_HUD_ASSIGNVEHICLE = true;
 			A3C_UI_MAPICONS_HC_VICS = [];

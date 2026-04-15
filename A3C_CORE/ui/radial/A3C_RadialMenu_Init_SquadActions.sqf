@@ -46,7 +46,7 @@ A3C_UI_RADIAL_fnc_RemFire_EH = {
 
 			if !(%1) then {
 				if (_a3c_dsp == 100040) then {
-					BR_A3C_DISABLE_RADIAL = true;
+					A3C_DISABLE_RADIAL = true;
 					[] call A3C_RADIAL_CloseDisplay;
 					{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu '';
 					A3C_UI_HUD_3D_TAG_ICON_TYPE = '%2';
@@ -642,7 +642,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 						if (count A3C_UI_RADIAL_Current_Remfire_Units == 0) exitWith {};
 						A3C_UI_HUD_3D_TAG_ICON_TYPE =  "\a3c_ui\menu\icon_menu_action_suppression.paa";
 						A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
-						BR_A3C_DISABLE_RADIAL = true;
+						A3C_DISABLE_RADIAL = true;
 						{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 						[] call A3C_RADIAL_CloseDisplay;
 
@@ -753,7 +753,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 						A3C_UI_HUD_3D_TAG_ICON_TYPE =  '\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa'; 
 						A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
 						//systemchat format ["To Do: Place Satchel (%1)", A3C_UI_RADIAL_Current_Remfire_Units];
-						BR_A3C_DISABLE_RADIAL = true;
+						A3C_DISABLE_RADIAL = true;
 						{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 						[] call A3C_RADIAL_CloseDisplay;
 
@@ -806,7 +806,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 													_button = _this select 0;
 													_button = _button - [(_button select 0)];
 													if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-														BR_A3C_DISABLE_RADIAL = false;
+														A3C_DISABLE_RADIAL = false;
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 														(findDisplay 100060) closeDisplay 0;
@@ -915,7 +915,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 						if (count _staticData > 0) then {
 
 							if (_display == 100040) then {
-								BR_A3C_DISABLE_RADIAL = true;
+								A3C_DISABLE_RADIAL = true;
 								(findDisplay _display) closeDisplay 0;
 								[
 									46,
@@ -974,7 +974,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 													_button = _button - [(_button select 0)];
 													if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
 
-														BR_A3C_DISABLE_RADIAL = false;
+														A3C_DISABLE_RADIAL = false;
 														(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 100060) closeDisplay 0;
 														A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
@@ -1032,7 +1032,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 						A3C_UI_RADIAL_Current_Remfire_Units = _assemblingUnitSelection;
 
 
-						BR_A3C_DISABLE_RADIAL = true;
+						A3C_DISABLE_RADIAL = true;
 						[] call A3C_RADIAL_CloseDisplay;
 						//(findDisplay _display) closeDisplay 0;
 
@@ -1076,7 +1076,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 											_button = _this select 0;
 											_button = _button - [(_button select 0)];
 											if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-												BR_A3C_DISABLE_RADIAL = false;
+												A3C_DISABLE_RADIAL = false;
 												(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 												(findDisplay 100060) closeDisplay 0;
 												A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
@@ -1206,7 +1206,7 @@ A3C_UI_INV_LB_CREATE = {
 	params ["_target","_source"];
 
 	if (isNull _target) exitWith {};
-	BR_A3C_DISABLE_RADIAL = true;
+	A3C_DISABLE_RADIAL = true;
 	(findDisplay 602) closeDisplay 0;
 	waitUntil {isNull (findDisplay 602)};
 	sleep 0.2;
@@ -1253,7 +1253,7 @@ A3C_UI_INV_LB_CREATE = {
 
 	waitUntil { !(isNull (findDisplay 602)) };
 	sleep 0.1;
-	BR_A3C_DISABLE_RADIAL = false;
+	A3C_DISABLE_RADIAL = false;
 
 	_box1 = (findDisplay 602) ctrlCreate ["A3C_RscCombo",1928]; //-- A3C_RscXListBox
 	_box2 = (findDisplay 602) ctrlCreate ["A3C_RscCombo",1929];

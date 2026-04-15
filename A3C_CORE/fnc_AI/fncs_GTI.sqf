@@ -55,7 +55,7 @@ BR_A3C_TACV_GV0MaxS = 19;		//standing
 BR_A3C_TACV_fatEff	= 0.4;	//max - fatEff*max when fat = 1
 BR_A3C_TACV_GV0MaxP = 0.75;		//prone
 BR_A3C_TACV_GV0MaxC = 0.9;		//crouch
-BR_A3C_DISABLE_RADIAL = false;
+A3C_DISABLE_RADIAL = false;
 BR_A3C_TACV_throwTheta = 45;
 BR_A3C_TACV_throwTheta_Add = 0;
 
@@ -81,7 +81,7 @@ BR_A3C_OEFControl = {
 	private _isPlayer = A3C_GTI_UNIT == player;
 	private _screenToWorld = [0,0,0];
 	if !(_isPlayer) then {
-		BR_A3C_DISABLE_RADIAL = true;
+		A3C_DISABLE_RADIAL = true;
 		_screenToWorld = screenToWorld [0.5,0.5];
 	};
 
@@ -315,7 +315,7 @@ A3C_GRENADE_PLAYER = {
 		};
 		//A3C_GTI_UNIT = objNull;
 		BR_A3C_GRENADEMODE = false;
-		//BR_A3C_DISABLE_RADIAL = false;
+		//A3C_DISABLE_RADIAL = false;
 	};
 };
 
@@ -558,7 +558,7 @@ A3C_RadialMenu_GREN = {
 	A3C_GREN_ALLOW_UNITSWITCH = if (count A3C_RD_UNITS == 1) then {false} else {true};
 	BR_A3C_TACV_oefId = ["BR_A3C_TACV_oefId", "onEachFrame", "BR_A3C_OEFControl"] call BIS_fnc_addStackedEventHandler;
 
-	BR_A3C_DISABLE_RADIAL = true;
+	A3C_DISABLE_RADIAL = true;
 	[] call A3C_RADIAL_CloseDisplay;
 	[
 		46,
@@ -566,8 +566,8 @@ A3C_RadialMenu_GREN = {
 		{count A3C_RD_UNITS > 0},
 		{
 			[] spawn {
-				if (BR_A3C_DISABLE_RADIAL) then {
-					//BR_A3C_DISABLE_RADIAL = false;
+				if (A3C_DISABLE_RADIAL) then {
+					//A3C_DISABLE_RADIAL = false;
 					BR_A3C_TEMP_gfeh = A3C_GTI_UNIT addEventHandler ["fired",
 					{
 						private _unit = _this select 0;
@@ -607,9 +607,9 @@ A3C_RadialMenu_GREN = {
 		{true},
 		{},
 		{
-			if (BR_A3C_DISABLE_RADIAL) then {
+			if (A3C_DISABLE_RADIAL) then {
 				(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-				BR_A3C_DISABLE_RADIAL = false;
+				A3C_DISABLE_RADIAL = false;
 				["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
 				A3C_GTI_UNIT = objnull;
 				A3C_AI_GREN_ARRAY = [];

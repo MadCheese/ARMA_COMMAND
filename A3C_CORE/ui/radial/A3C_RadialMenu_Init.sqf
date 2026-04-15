@@ -15,7 +15,7 @@ A3C_ACTIVE_BUTTONUNIT = objnull;
 
 //-- Open Radial SQ-levl Behaviour and combatMode controls via A3C_DSP_HUD_DYNAMIC
 A3C_UI_Radial_SQ_ROE_MAIN = {
-    BR_A3C_DISABLE_RADIAL = true;
+    A3C_DISABLE_RADIAL = true;
     [] call A3C_RADIAL_CloseDisplay;
 
     with uiNamespace do {
@@ -36,7 +36,7 @@ A3C_UI_Radial_SQ_ROE_MAIN = {
                 _button = _this select 0;
                 _button = _button - [(_button select 0)];
                 if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-                    BR_A3C_DISABLE_RADIAL = false;
+                    A3C_DISABLE_RADIAL = false;
                     A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
                     (findDisplay 100100) closeDisplay 0;
                     A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];

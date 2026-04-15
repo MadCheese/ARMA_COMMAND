@@ -648,7 +648,7 @@ A3C_UI_RADIAL_ADD_EH_MACROS = {
 
 						[] spawn %3;
 						if (%4) then {
-							BR_A3C_DISABLE_RADIAL = false;
+							A3C_DISABLE_RADIAL = false;
 						};
 					};
 				",
@@ -681,7 +681,7 @@ A3C_UI_RADIAL_ADD_EH_MACROS = {
 						};
 						[] spawn %3;
 						if (%4) then {
-							BR_A3C_DISABLE_RADIAL = false;
+							A3C_DISABLE_RADIAL = false;
 						};
 
 					};
@@ -3238,7 +3238,7 @@ A3C_GROUP_RESET = {
 
 	_units joinSilent (group _leader); //-- (group _leader) is used as it could either be _groupNew or _groupInitial, depending on reshuffle occurrence
 	deletegroup _groupTemporary;
-	BR_A3C_DISABLE_RADIAL = false;
+	A3C_DISABLE_RADIAL = false;
 
 	{
 		_u = _x;

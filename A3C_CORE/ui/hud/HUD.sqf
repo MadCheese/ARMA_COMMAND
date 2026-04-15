@@ -1753,10 +1753,15 @@ A3C_HUD_MOVE = {
 
 
 A3C_UI_HUD_HandlerFNC_KeyDown_NUM = {
+	params ["_key"];
 	private _colorTeamUnits = [];
 	private _teamColor = "";
-	private _gpUnits = (units group player) - [player];
+	// private _gpUnits = (units group player) - [player]; //-- NOTE: JUst a reminder that I changed things - if it turns out to need (units player) we re-adjust
+	private _gpUnits = (profileNamespace getVariable "A3C_GROUPUNITS") - [player];
 	private _unitCount = count _gpUnits;
+
+
+
 	switch (true) do {
 		case ((_key in [103, 104, 105, 106])): {
 			if (count A3C_HUD_UNITS == 0) then {
@@ -1775,42 +1780,46 @@ A3C_UI_HUD_HandlerFNC_KeyDown_NUM = {
 			};
 
 			for "_i" from 0 to (_unitCount - 1) do {
-				if (alive (_gpUnits select _i)) then {
+				private _unit = _gpUnits select _i;
+				if (!isNull _unit && {alive _unit}) then {
 					private _assignedTeam = if (player == cameraOn) then {
-						assignedTeam (_gpUnits select _i)
+						assignedTeam _unit
 					} else {
-						(_gpUnits select _i) getVariable ["A3C_ASSIGNEDTEAM", "MAIN"]
+						_unit getVariable ["A3C_ASSIGNEDTEAM", "MAIN"]
 					};
-
 					if (_assignedTeam == _teamColor) then {
-						_colorTeamUnits pushBack (_gpUnits select _i);
+						_colorTeamUnits set [count _colorTeamUnits, _unit];
 					};
 				};
 			};
 
 			{
+				//--#TODO: clarify if this is intentional or sloppy coding
 				if (_x in A3C_HUD_UNITS) then {
 					[_x] call A3C_HUD_REMOVE_SELECTED;
 				};
 				if (_x in _colorTeamUnits) then {
 					[_x, _key] call A3C_HUD_ADD_SELECTED;
 				};
-			} forEach ((units group player) - [player]);
+			} forEach (_gpUnits select {!isNull _x});
 		};
 
 		case ((_key in [71, 72, 73, 75, 76, 77, 79, 80, 81])): {
 			if (A3C_FORMATION_DIR > 360) then {A3C_FORMATION_DIR = A3C_FORMATION_DIR - 360};
 			if (A3C_FORMATION_DIR < 0) then {A3C_FORMATION_DIR = A3C_FORMATION_DIR + 360};
 
-			_gpUnits = (profileNamespace getVariable "A3C_GROUPUNITS") - [player];
-			_unitCount = count _gpUnits;
-
 			if (count A3C_HUD_UNITS == 0) then {
 				A3C_NUM_DIR = 0;
 
 				for "_i" from 0 to (_unitCount - 1) do {
-					if (alive (_gpUnits select _i) && {!isPlayer (_gpUnits select _i)}) then {
-						[(_gpUnits select _i), _i] call A3C_HUD_ADD_SELECTED;
+					private _unit = _gpUnits select _i;
+					if
+					(
+						!isNull _unit
+						&& {alive _unit}
+						&& {!isPlayer _unit} //-- in case there's a fellow human in squad
+					) then {
+						[_unit, _i] call A3C_HUD_ADD_SELECTED;
 					};
 				};
 
@@ -1823,14 +1832,14 @@ A3C_UI_HUD_HandlerFNC_KeyDown_NUM = {
 			};
 
 			A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_CorrectDir;
-
+			A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
+			A3C_HUD_FORM_ICON_SIZE = 0.8;
 			switch (_key) do {
 				case 71: {
 					A3C_NUM_DIR = 180;
 					A3C_HUD_FORM = 4;
 					A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
-					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
-					A3C_HUD_FORM_ICON_SIZE = 0.8;
+					
 				};
 				case 72: {
 					if (A3C_HUD_FORM == 0) then {
@@ -1840,16 +1849,12 @@ A3C_UI_HUD_HandlerFNC_KeyDown_NUM = {
 						A3C_HUD_FORM = 0;
 						A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
 					};
-					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
-					A3C_HUD_FORM_ICON_SIZE = 0.8;
 					A3C_NUM_DIR = 0;
 				};
 				case 73: {
 					A3C_NUM_DIR = 180;
 					A3C_HUD_FORM = 3;
 					A3C_HUD_FORM_ICON = "\a3\ui_f\data\GUI\RscCommon\RscHTML\arrow_left_ca.paa";
-					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
-					A3C_HUD_FORM_ICON_SIZE = 0.8;
 				};
 				case 75: {
 					if (A3C_HUD_FORM == 0) then {
@@ -1859,8 +1864,6 @@ A3C_UI_HUD_HandlerFNC_KeyDown_NUM = {
 						A3C_HUD_FORM = 0;
 						A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
 					};
-					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
-					A3C_HUD_FORM_ICON_SIZE = 0.8;
 					A3C_NUM_DIR = 90;
 				};
 				case 77: {
@@ -1872,15 +1875,11 @@ A3C_UI_HUD_HandlerFNC_KeyDown_NUM = {
 						A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
 					};
 					A3C_NUM_DIR = -90;
-					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
-					A3C_HUD_FORM_ICON_SIZE = 0.8;
 				};
 				case 79: {
 					A3C_NUM_DIR = 0;
 					A3C_HUD_FORM = 3;
 					A3C_HUD_FORM_ICON = "\a3\ui_f\data\GUI\RscCommon\RscHTML\arrow_left_ca.paa";
-					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
-					A3C_HUD_FORM_ICON_SIZE = 0.8;
 				};
 				case 80: {
 					if (A3C_HUD_FORM == 0) then {
@@ -1890,16 +1889,12 @@ A3C_UI_HUD_HandlerFNC_KeyDown_NUM = {
 						A3C_HUD_FORM = 0;
 						A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
 					};
-					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
-					A3C_HUD_FORM_ICON_SIZE = 0.8;
 					A3C_NUM_DIR = 180;
 				};
 				case 81: {
 					A3C_NUM_DIR = 0;
 					A3C_HUD_FORM = 4;
 					A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
-					A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
-					A3C_HUD_FORM_ICON_SIZE = 0.8;
 				};
 			};
 		};
