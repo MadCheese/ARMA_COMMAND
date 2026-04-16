@@ -431,8 +431,8 @@ A3C_RadialMenu_KEY_ID = [-500,false,false,false];
 A3C_HUD_MENU_KEY_ID = [-500,false,false,false];
 
 
-A3C_MODIFIER_CTRL = false;
-A3C_MODIFIER_SHIFT = false; //-- not really a customizable modifier - just adding functionality to CT-TREE clicks
+
+
 A3C_MODIFIER_LOCK = false;
 A3C_MOUSEWHEEL_ACTIVE = false;
 A3C_HUD_UnitIndicators_IN_BUILDING = false;

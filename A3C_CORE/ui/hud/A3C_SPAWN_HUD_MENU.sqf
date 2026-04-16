@@ -110,9 +110,7 @@ A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 100050) displayAddEventHandler ["Ke
 	if ((_button select 0) == (A3C_HUD_MENU_KEY_ID select 0)) then {
 		(findDisplay 100050) closeDisplay 0;
 		showCommandingMenu "";	
-		(findDisplay 100050) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-		A3C_MODIFIER_CTRL = false;
-		
+		(findDisplay 100050) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];	
 		if (profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
 			if !(profileNamespace getVariable 'A3C_HUD_isOpen') then {
 				[] call A3C_HUD_OPEN_MENU;

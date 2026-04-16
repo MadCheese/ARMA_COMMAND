@@ -100,9 +100,15 @@ publicVariable 'RHS_ENGINE_STARTUP_OFF';
 //-- Init Client Only
 if (isDedicated) exitwith {};
 
+
+
+
 call compile preprocessFileLineNumbers "A3C_CORE\ui\UI_createSafeEventHandler.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_init_keyBinds.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\A3C_events.sqf";
+
+//-- Shared UI fncs
+call compile preprocessFileLineNumbers "A3C_CORE\ui\UI_DSP_SHARED_Functions.sqf";
 
 //-- Map Overlay
 call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_Functions.sqf";

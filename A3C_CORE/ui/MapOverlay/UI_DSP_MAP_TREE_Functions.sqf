@@ -970,6 +970,9 @@ A3C_TREE_TVCHANGE = {
 	_tvSelTo params ["_parentTo","_childTo"];
 	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
 	private _isRadial = _a3c_dsp == 100040;
+	private _shift = 42 in A3C_DOWNKEYS;
+	private _ctrl = 29 in A3C_DOWNKEYS;
+	
 	if (count _tvSelTo == 1) exitWith {}; //-- click on main category - no application
 	playsound "ReadOutHideClick1"; 
 	_tvSelFrom = tvCurSel _control;
@@ -1010,7 +1013,7 @@ A3C_TREE_TVCHANGE = {
 			_isSquadLevel && 
 			{
 				//-- SQUAD ONLY check for modifier click between categories
-				(A3C_MODIFIER_SHIFT OR {A3C_MODIFIER_CTRL}) && 
+				(_shift OR {_ctrl}) && 
 				{
 					(count _tvSelFrom) != (count _tvSelTo)
 				}
@@ -1065,7 +1068,7 @@ A3C_TREE_TVCHANGE = {
 	};
 
 	_buttonValues = [];
-	if (A3C_MODIFIER_SHIFT) then {
+	if (_shift) then {
 		
 		_startIndex = _tvSelFrom select ((count _tvSelFrom) - 1);
 		_endIndex = _tvSelTo select ((count _tvSelTo) - 1);
@@ -1081,7 +1084,7 @@ A3C_TREE_TVCHANGE = {
 			//systemchat str [_btnV];
 		};
 	} else {
-		if (A3C_MODIFIER_CTRL) then {
+		if (_ctrl) then {
 			_buttonValues pushBackUnique _valueTo;
 			
 		} else {
@@ -1102,7 +1105,7 @@ A3C_TREE_TVCHANGE = {
 		if ((_foreachIndex + _add) in _buttonValues) then {
 			_doPushBack = true;
 			
-			if (A3C_MODIFIER_CTRL) then {
+			if (_ctrl) then {
 				if (_x in A3C_SELECTED_UNITS) then {
 					_doPushBack = false;
 					

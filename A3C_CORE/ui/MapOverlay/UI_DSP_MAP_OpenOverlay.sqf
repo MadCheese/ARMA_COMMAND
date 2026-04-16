@@ -132,23 +132,6 @@ A3C_TEMP_CONDITION = ["NONE","NONE"];
 {_x setMarkerAlphaLocal 1} foreach A3C_MARKERS;
 
 
-/*
-//-- Remove dead/nul units from BEGINNING of A3C-Group-Data
-_unitArray = (profileNamespace getvariable "A3C_GROUPUNITS");
-for [{_i=  ((count _unitArray) -1)},{_i>=0},{_i=_i-1}] do {
-	if (_i >= 0 && {_i < (count _unitArray)}) then {
-		private _u = _unitArray select _i;
-		
-		if (!isnull _u && {alive _u}) then {
-			_exit = true;
-		} else {
-			_unitArray = _unitArray - [_u];
-		};
-	};
-	if (_exit) exitwith {};	
-};
-profileNamespace setvariable ["A3C_GROUPUNITS",_unitArray];
-*/
 
 //--------------------- Create Tablet-Interface. Center Map on player -------------------------
 //---------------------------------------------------------------------------------------------
@@ -241,14 +224,13 @@ if (_display == 100020 && {!visibleMap}) exitWith {(findDisplay _display) closeD
 sleep 0.1;
 
 
-//systemchat '5';
+
 //-- overlay step 2: closed sidebar (waypoint settings)
 
 ["COLLAPSE",0] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
 //-- overlay step 3: adjust upper-tree buttons
 sleep 0.1;
 
-//systemchat '6';
 
 //-- overlay step 4: edit button settings (in the background)
 
@@ -298,20 +280,7 @@ A3C_TAB_KEY_U = (findDisplay _display) displayAddEventHandler
 		_shift = _this select 2;
 		_ctrl = _this select 3;
 		_alt = _this select 4;
-		//if (_btn1 == 42) then {
-		//	A3C_BUTTON_SHIFT = false;
-		//};
-		//if !(isnull (finddisplay 100020)) then {
-			//-- shift and ctrl checks - otherwise not available. CTRL does not fire from OVERLAY so it happens here instead
-			if (_btn1 == 42) then { 
-				A3C_MODIFIER_SHIFT = false; //-- needed for UI (TREE EH's do not do CTL/SHIFT)
-			};
-			
-			if (_btn1 == 29) then {
-				A3C_MODIFIER_CTRL = false; //-- needed for UI (TREE EH's do not do CTL/SHIFT)
-			};
-		//};
-		//systemchat str ["UP",_btn1,_shift,_ctrl];
+
 		A3C_DOWNKEYS = A3C_DOWNKEYS -  [_btn1];
 	}
 ];

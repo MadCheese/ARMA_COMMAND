@@ -39,7 +39,6 @@ A3C_UI_HUD_HandlerFNC_KeyDown = {
 	if !(player isEqualTo leader group player) exitWith {false};
 	if !(isNull findDisplay 312) exitWith {false}; // ZEUS interface is open
 	if (_alt && {_key == 15}) exitWith {// safety if user alt-tabs out of the game
-		A3C_MODIFIER_CTRL = false;
 		A3C_DOWNKEYS = [];
 		false
 	};
@@ -61,7 +60,7 @@ A3C_UI_HUD_HandlerFNC_KeyDown = {
 		private _keyControlsMap = (inputAction "showMap") > 0;
 
 		if !(_keyControlsMap) then {
-			A3C_DOWNKEYS set [count A3C_DOWNKEYS, _key];
+			[_key] call A3C_UI_Shared_FNC_AddDownkey;
 			A3C_LASTUSED_KD = time;
 		};
 
@@ -197,9 +196,7 @@ A3C_UI_HUD_HandlerFNC_KeyDown = {
 			// 		};
 			// 	};
 			// };
-			case (_key == 29) : {
-				A3C_MODIFIER_CTRL = true;
-			};
+
 			case (
 				//-- NUM-key check
 				profileNamespace getVariable "A3C_NUM_VAR"
@@ -238,10 +235,6 @@ A3C_UI_HUD_HandlerFNC_KeyUp = {
 			_this flyInHeight((getPosATL _this) select 2);
 		};
 	};
-	if (_key == 29) exitwith {
-		A3C_MODIFIER_CTRL = false;
-		false
-	}; //-- protection: also set SHIFT to false? >> #TODO CLARIFY
 	false
 };
 
@@ -308,7 +301,7 @@ A3C_UI_HUD_HandlerFNC_MouseButtonDown = {
 				showCommandingMenu "";
 			};
 		} else {
-			if (!A3C_MODIFIER_CTRL && {count A3C_HUD_UnitIndicators > 0}) then {
+			if (!(_ctrl) && {count A3C_HUD_UnitIndicators > 0}) then {
 				{ [_x] call A3C_HUD_REMOVE_SELECTED } forEach +A3C_HUD_UNITS;
 			};
 		};
@@ -329,6 +322,9 @@ A3C_UI_HUD_HandlerFNC_MouseButtonDown = {
 // Wheel
 //~~ NOTE: RE WRITE ALL THESE DOUBLE FUNCTIONS INTO SINGLE ONES
 A3C_UI_HUD_HandlerFNC_MouseZChanged = {
+	// systemchat format ["A3C_UI_HUD_HandlerFNC_MouseZChanged: %1", _this];
+
+	private _ctrl = 29 in A3C_DOWNKEYS;
 	private _return = false;
 	if (!isNull A3C_GTI_UNIT) exitWith {
 		if ((_this select 1) > 0) then {
@@ -360,7 +356,7 @@ A3C_UI_HUD_HandlerFNC_MouseZChanged = {
 	if (_exit) exitWith {true};
 	if ((count A3C_HUD_UnitIndicators) == 0 && {isNull A3C_OBJECTPLACER}) exitwith {false};
 
-	if ( A3C_MODIFIER_CTRL) exitWith {
+	if (_ctrl) exitWith {
 		if (A3C_HUD_FORM == 7) then {
 			if ((_this select 1)  > 0) then {
 				A3C_HUD_RADIUS = A3C_HUD_RADIUS + 1;

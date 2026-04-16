@@ -4,23 +4,23 @@ A3C_UI_RADIAL_HandlerFNC_OnKeyDown =	{
 	params ["_display","_key"];
 	private _mods = (_this select [2,5]);
 	private _bool = false;
+
+	//-- prevent continuous firing while holding down menu key
+	if (A3C_RadialMenu_KEY_ID select 0 == _key) exitWith {};
+	if (_key in A3C_DOWNKEYS) exitWith {};
+	
+	[_key] call A3C_UI_Shared_FNC_AddDownkey;
+
 	player groupchat format ["[RADIAL] onKeyDown , %1 (%2)", _key, keyname _key];
+
 	//-- Safety: clear A3C_DOWNKEYS - not used in radial
-	A3C_DOWNKEYS = [];
+	
 	if ([_key,_mods] isEqualTo ((["A3C", "A3C_KeyFnc_Switch_CommandLevel"] call CBA_fnc_getKeybind) select 5)) exitWith {
 		["COMMAND_LEVEL","DOWN"] call A3C_FNC_CBA_KEY;
 		false
 	};
-	switch (_key) do {
-		case (16) : {
-			_bool = [0] call A3C_UI_RADIAL_CTRLS_QUICKTOGGLE;
-		};
-		case (29) : {
-			A3C_MODIFIER_CTRL = true;
-		};
-		case (42) : {
-			A3C_MODIFIER_SHIFT = true;
-		};
+	if (_key -- 16) then {
+		_bool = [0] call A3C_UI_RADIAL_CTRLS_QUICKTOGGLE;
 	};
 	_bool
 };
@@ -29,7 +29,11 @@ A3C_UI_RADIAL_HandlerFNC_OnKeyDown =	{
 // NOTE: previously A3C_UI_RADIAL_EH_KEYUP_CANCEL (Remove this comment when cleaned up)
 A3C_UI_RADIAL_HandlerFNC_OnKeyUp = {
 	params ["_display", "_key"];
+
 	player globalchat format ["[RADIAL] onKeyUp , %1 (%2)", _key, keyname _key];
+
+	A3C_DOWNKEYS = A3C_DOWNKEYS - [_key];
+
 	if (_key == (A3C_RadialMenu_KEY_ID select 0)) exitWith {
 		[] call A3C_RADIAL_CloseDisplay;
 		// A3C_DOWNKEYS = A3C_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
@@ -48,16 +52,9 @@ A3C_UI_RADIAL_HandlerFNC_OnKeyUp = {
 			(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 		};
 	};
-	switch (_this select 1) do {
-		case (16) : {
-			[1] call A3C_UI_RADIAL_CTRLS_QUICKTOGGLE
-		};
-		case (29) : {
-			A3C_MODIFIER_CTRL = false;
-		};
-		case (42) : {
-			A3C_MODIFIER_SHIFT = false;
-		};
+
+	if (_key == 16) then {
+		[1] call A3C_UI_RADIAL_CTRLS_QUICKTOGGLE
 	};
 };
 		

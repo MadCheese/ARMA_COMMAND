@@ -2154,9 +2154,15 @@ A3C_UI_MAP_HandlerFNC_OnMouseMoving_Overlay = {
 A3C_UI_MAP_HandlerFNC_KeyDown_Map = { //-- This handler is needed because ESC behaves differently than ALL other keys
 	params ["_mapControl","_key","_shift","_ctrl","_alt"];
 
-	
+
 	// player sidechat format ["Display %1, A3C_UI_MAP_HandlerFNC_KeyDown_Map - %2 %3",_mapControl, keyName (_this select 1), round time];
+
 	
+	
+
+
+
+
 	private _display = findDisplay 100020;
 	if (_key == 1) exitWith {
 		private _groupContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT;
@@ -2214,8 +2220,13 @@ A3C_UI_MAP_HandlerFNC_KeyDown_Overlay = {
 		// || {A3C_MAP_BOOL_CT_EDIT_ACTIVE}
 	) exitwith {false};
 
+	if (_alt && {_key == 15}) exitWith {// safety if user alt-tabs out of the game
+        A3C_DOWNKEYS = [];
+        false
+    };
 
-	A3C_DOWNKEYS pushbackUnique _key;
+
+	[_key] call A3C_UI_Shared_FNC_AddDownkey;
 
 
 	
@@ -2289,15 +2300,6 @@ A3C_UI_MAP_HandlerFNC_KeyDown_Overlay = {
 				};
 			};
 			_blockDefault = true;
-		};
-		case 29: {
-			_blockDefault = true;
-			A3C_MODIFIER_CTRL = true; //-- needed for UI (TREE EH's do not do CTL/SHIFT)
-		};
-		
-		case 42: {
-			_blockDefault = true; 
-			A3C_MODIFIER_SHIFT = true; //-- needed for UI (TREE EH's do not do CTL/SHIFT)
 		};
 		case 57: { // Spacebar
 			_blockDefault = true;
