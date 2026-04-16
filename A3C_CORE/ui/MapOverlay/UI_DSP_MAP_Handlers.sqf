@@ -11,7 +11,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	disableserialization;
 
-	
+	A3C_BOOL_MAP_MD = true; 
 
 	private _exit = false;
 
@@ -228,7 +228,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 							};
 						} else {
 							//-- waypoint marker about to be moved
-							A3C_BOOL_MOUSEUP = true;
+							A3C_BOOL_MAP_MU = true;
 							A3C_BOOL_MOUSEMOVING = true;
 							A3C_HC_TOSWITCH = [_gp,_wp_Index];
 							A3C_HC_ACTIVEGROUP = _gp;
@@ -538,7 +538,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 		private _polyID = (_mapPolygon select 0);
 		A3C_MovedItem_ID = _polyID; //= "";
 		if ({((_x select 0) select 1) == _polyID} count A3C_ALL_POLYS > 0) then {
-			A3C_BOOL_MOUSEUP = true;
+			A3C_BOOL_MAP_MU = true;
 			A3C_BOOL_MOUSEMOVING = true;
 			A3C_BOOL_MOVINGMARKER = true;
 			A3C_DRAGPOS = [_sx, _sy];
@@ -581,7 +581,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 				_poses = _x select 1;
 				private _ind = [_edgePosition,_poses] call MCSS_fnc_GetArrayINdex;
 				A3C_MovedItem_ID = [_parentPoly,_ind];
-				A3C_BOOL_MOUSEUP = true;
+				A3C_BOOL_MAP_MU = true;
 				A3C_BOOL_MOUSEMOVING = true;
 				A3C_BOOL_MOVINGMARKER = true;
 				A3C_DRAGPOS = [_sx, _sy];
@@ -604,7 +604,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 		if (_left) then {
 			A3C_MovedItem_ID = if (_wpDotIDS select 1 == "" ) then {_wpDotIDS select 0} else {_wpDotIDS select 1};
 			if !(_alt) then {
-				A3C_BOOL_MOUSEUP = true;
+				A3C_BOOL_MAP_MU = true;
 				A3C_BOOL_MOUSEMOVING = true;
 				A3C_BOOL_MOVINGMARKER = true;
 				A3C_DRAGPOS = [_sx, _sy];
@@ -624,7 +624,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 		private _squadWaypointLookDirSelected = _squadWaypointLookDirs select 0;
 		_squadWaypointLookDirSelected params ["_unit","_size","_area","_markerID"];
 		A3C_MovedItem_ID = _squadWaypointLookDirSelected;
-		A3C_BOOL_MOUSEUP = true;
+		A3C_BOOL_MAP_MU = true;
 		A3C_BOOL_MOUSEMOVING = true;
 		A3C_BOOL_MOVINGMARKER = true;
 		A3C_DRAGPOS = [_sx, _sy];
@@ -698,7 +698,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 	// 	if (A3C_MAP_CommandMode == "HC") then {
 	// 		if (count (["HC_WP",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos) > 0) then {
 	// 			systemchat "ALERT! PLEASE REPORT IF YOU SEE THIS ERROR: MAP_LEFTDOWN_OLD_HC";
-	// 			A3C_BOOL_MOUSEUP = true;
+	// 			A3C_BOOL_MAP_MU = true;
 	// 			A3C_BOOL_MOUSEMOVING = true;
 	// 			A3C_BOOL_MOVINGHC = true;
 	// 			A3C_MMCode = {
@@ -869,7 +869,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 
 					
 				};
-				A3C_BOOL_MOUSEUP = true;
+				A3C_BOOL_MAP_MU = true;
 			};
 		};
 	};
@@ -916,7 +916,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 
 
 
-	A3C_BOOL_MOUSEUP = true;
+	A3C_BOOL_MAP_MU = true;
 	if (A3C_TAB_TOGGLE_VAR == 0) then {
 		(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow true;
 		(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,1];
@@ -1067,7 +1067,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 
 	if (_exit) exitWith {
 		A3C_BOOL_DRAGLINE = false;
-		A3C_BOOL_MOUSEUP = false;
+		A3C_BOOL_MAP_MU = false;
 	};
 
 
@@ -1086,11 +1086,11 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 };
 
 
-
-
 A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 	private ["_exit","_sX","_sY","_sPos","_marker","_veh","_unit","_wpData"];
 
+	A3C_BOOL_MAP_MD = false;
+	A3C_BOOL_MOUSEMOVING = false;
 
 
 	//A3C_ConvoyUnits = [];
@@ -1749,7 +1749,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 
 	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 
-	if !(A3C_BOOL_MOUSEUP) exitwith {};
+	if !(A3C_BOOL_MAP_MU) exitwith {};
 
 	if !(getmarkerColor "A3C_RADIMARK" == "") then {deletemarkerLocal "A3C_RADIMARK"};
 	if (A3C_BOOL_LOOPING) exitwith {
@@ -1884,10 +1884,10 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 
 
 	_exit = false;
-	if (typeName A3C_MovedItem_ID == "ARRAY") exitWith {
-		A3C_BOOL_MOUSEUP = false;
-		A3C_BOOL_MOUSEMOVING = false;
-	};
+	// if (typeName A3C_MovedItem_ID == "ARRAY") exitWith { // << NOTE: MouseUp means these should be reset anyways, no??
+		A3C_BOOL_MAP_MU = false;
+		// A3C_BOOL_MOUSEMOVING = false; //-- keeping this as a reminder it was initially here >> i moved it to top
+	// };
 
 	_hcGroup = A3C_HC_TOSWITCH select 0;
 	_wpID = A3C_HC_TOSWITCH select 1;
@@ -1970,7 +1970,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 
 	//-- exit: drag is over, reset evh's
 	if (A3C_BOOL_MOVINGHC) exitwith {
-		A3C_BOOL_MOUSEUP = false;
+		A3C_BOOL_MAP_MU = false;
 		A3C_BOOL_MOUSEMOVING = false;
 		 [grpNull,-1];
 		A3C_BOOL_MOVINGHC = false;
@@ -1978,13 +1978,13 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 
 	//-- exit: Mode is HC
 	if (A3C_MAP_CommandMode == "HC") exitWith {
-		A3C_BOOL_MOUSEUP = false;
+		A3C_BOOL_MAP_MU = false;
 	};
 
 
 	//-- exit: No Drag Marker selected
 	if !(A3C_MovedItem_ID == "") exitwith {
-		A3C_BOOL_MOUSEUP = false;
+		A3C_BOOL_MAP_MU = false;
 		A3C_BOOL_MOUSEMOVING = false;
 		A3C_MovedItem_ID = "";
 
@@ -2014,7 +2014,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 
 	//-- exit: No units selected
 	if ((count A3C_SELECTED_UNITS) == 0) exitwith {
-		A3C_BOOL_MOUSEUP = false;
+		A3C_BOOL_MAP_MU = false;
 	};
 
 
@@ -2117,6 +2117,8 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 	};
 };
 
+
+
 A3C_UI_MAP_HandlerFNC_OnMouseMoving_Main = {
 	
 	if (isNull findDisplay 100020) then {
@@ -2216,12 +2218,12 @@ A3C_UI_MAP_HandlerFNC_KeyDown_Overlay = {
 	
 	//-- 2: DEFAULT EXIT CONDITIONS
 	if (
-		_key in A3C_DOWNKEYS
+		_key in A3C_UI_DOWNKEYS
 		// || {A3C_MAP_BOOL_CT_EDIT_ACTIVE}
 	) exitwith {false};
 
 	if (_alt && {_key == 15}) exitWith {// safety if user alt-tabs out of the game
-        A3C_DOWNKEYS = [];
+        A3C_UI_DOWNKEYS = [];
         false
     };
 
@@ -2697,7 +2699,7 @@ A3C_UI_MAP_HandlerFNC_MouseButtonDown_Loop = {
 				} foreach ["A3C_PLOT","A3C_PLOT_TEMP"];
 			} foreach (units player - [player]);
 			A3C_BOOL_MOUSEMOVING = true;
-			A3C_BOOL_MOUSEUP = true;
+			A3C_BOOL_MAP_MU = true;
 
 			A3C_MMCode = {
 				_this spawn A3C_UI_MAP_HandlerFNC_MouseDrag;
@@ -2745,7 +2747,7 @@ A3C_UI_MAP_HandlerFNC_MouseButtonUp_Loop = {
 	private ["_startMark","_exit","_units","_data","_isLoop","_dragMode","_sc","_wrongDir"];
 
 	A3C_BOOL_LOOPING = false;
-	A3C_BOOL_MOUSEUP = false;
+	A3C_BOOL_MAP_MU = false;
 	A3C_BOOL_MOUSEMOVING = false;
 
 

@@ -139,7 +139,7 @@ A3C_TARGETVEH = objnull;
 //sleep 0.3;
 
 
-//if !(15 in A3C_DOWNKEYS) exitWith {systemchat 'dafuq'};
+//if !(15 in A3C_UI_DOWNKEYS) exitWith {systemchat 'dafuq'};
 
 
 if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
@@ -164,7 +164,7 @@ with uiNameSpace do {
 };
 
 if (_cursorObjectSelection) then {
-	A3C_DOWNKEYS = A3C_DOWNKEYS - [29];
+	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [29];
 };
 
 {inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];

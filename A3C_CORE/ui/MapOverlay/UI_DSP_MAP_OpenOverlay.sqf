@@ -281,7 +281,7 @@ A3C_TAB_KEY_U = (findDisplay _display) displayAddEventHandler
 		_ctrl = _this select 3;
 		_alt = _this select 4;
 
-		A3C_DOWNKEYS = A3C_DOWNKEYS -  [_btn1];
+		A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS -  [_btn1];
 	}
 ];
 

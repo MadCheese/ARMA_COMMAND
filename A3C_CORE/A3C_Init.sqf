@@ -110,19 +110,20 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\A3C_events.sqf";
 //-- Shared UI fncs
 call compile preprocessFileLineNumbers "A3C_CORE\ui\UI_DSP_SHARED_Functions.sqf";
 
+//-- HUD (findDisplay 46)
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_UI.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_Formation_Init.sqf";
+A3C_SPAWN_HUD_MENU = compile preprocessfileLineNumbers "A3C_CORE\ui\HUD\A3C_SPAWN_HUD_MENU.sqf";
+
+
 //-- Map Overlay
 call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_Functions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_Handlers.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_TREE_Functions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_HCGP_CONTEXT_Functions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_HCWP_CONTEXT_Functions.sqf";
-
-
-
-
-
-
-
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_findCover.sqf";     //-- Not HC/remote compatible yet
@@ -151,11 +152,9 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\settingsMenu\function
 
 
 
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_UI.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_Formation_Init.sqf";
+
 A3C_SPAWN_RADIAL = compile preprocessfileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu.sqf";
-A3C_SPAWN_HUD_MENU = compile preprocessfileLineNumbers "A3C_CORE\ui\HUD\A3C_SPAWN_HUD_MENU.sqf";
+
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_Mode_ZEUS.sqf";

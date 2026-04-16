@@ -17,6 +17,13 @@ class A3C_DSP_MapOverlay
 	idd = 100020;
 	movingenable = true;
 	onKeyDown = "_this call A3C_UI_MAP_HandlerFNC_KeyDown_Overlay;";
+	onMouseButtonDown = "_this call A3C_UI_MAP_HandlerFNC_OnMouseButtonDown; false";
+	onMouseButtonUp = "_this call A3C_UI_MAP_HandlerFNC_OnMouseButtonUp; false";
+
+	
+			
+			
+			
 
 			
 	class ControlsBackground 

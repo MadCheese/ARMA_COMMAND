@@ -270,7 +270,7 @@ A3C_BOOL_CT_SPACING = false;
 A3C_BOOL_DISABLEMAPCTRL = false;
 A3C_BOOL_LOOPING = false;
 A3C_BOOL_MAP_MD = false;
-A3C_BOOL_MOUSEUP = false;
+A3C_BOOL_MAP_MU = false;
 A3C_BOOL_MAPFORCE = true;
 A3C_STATE_CHECKING_PICKUP = false;
 
@@ -396,7 +396,7 @@ A3C_FORMATION_DIR = [player,(screenToWorld [0.5,0.5])] call BIS_fnc_dirto;
 
 A3C_HUD_UNITS = [];
 A3C_HUD_UnitIndicators= [];
-A3C_DOWNKEYS = [];
+A3C_UI_DOWNKEYS = [];
 A3C_SPLIT_UNITS = [];
 A3C_TAKEN_WEAPONS = [];
 A3C_TAKEN_MAGS = [];

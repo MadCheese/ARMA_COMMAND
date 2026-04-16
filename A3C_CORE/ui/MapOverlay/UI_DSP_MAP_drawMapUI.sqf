@@ -27,7 +27,7 @@ MAP_UI_fnc_drawMapUI = {
 	if ( (A3C_OPACITY == 0) OR {!visibleMap} ) exitWith {};
 	if (!isNil 'A3C_disableMapPlanning' && {A3C_disableMapPlanning}) exitWith {};
 	if !(player == leader group player) exitWith {};
-	private _shift = 42 in A3C_DOWNKEYS;
+	private _shift = 42 in A3C_UI_DOWNKEYS;
 
 	
 	private ["_unitIcon","_plotTemp","_plotMain","_data","_isHighCommand","_allGroupsHC","_color","_syncWPS"];

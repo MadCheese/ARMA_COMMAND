@@ -29,7 +29,10 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"display",
 		"KeyDown",
 		{
-			private _blockDefaultKey = _this call A3C_UI_HUD_HandlerFNC_KeyDown;
+			private _blockDefaultKey = false;
+			if (!visibleMap) then { //-- NOTE: THis is indeed necessary. If map is active and overlay is hidden, this bind still fires
+				_blockDefaultKey = _this call A3C_UI_HUD_HandlerFNC_KeyDown;
+			};
 			_blockDefaultKey
 		}
 	] call A3C_UI_CreateSafeEventhandler;
@@ -41,8 +44,10 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"display",
 		"KeyUp",
 		{
-			_this call A3C_UI_HUD_HandlerFNC_KeyUp;
-			false
+			if (!visibleMap) then { //-- NOTE: THis is indeed necessary. If map is active and overlay is hidden, this bind still fires
+				_this call A3C_UI_HUD_HandlerFNC_KeyUp;
+				false
+			};
 		}
 	] call A3C_UI_CreateSafeEventhandler;
 
@@ -54,7 +59,10 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"display",
 		"MouseButtonDown",
 		{
-			_this spawn A3C_UI_HUD_HandlerFNC_MouseButtonDown;
+			if (!visibleMap) then { //-- NOTE: THis is indeed necessary. If map is active and overlay is hidden, this bind still fires
+				_this spawn A3C_UI_HUD_HandlerFNC_MouseButtonDown;
+			};
+			
 			false
 		}
 	] call A3C_UI_CreateSafeEventhandler;
@@ -66,6 +74,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"display",
 		"MouseZChanged",
 		{
+			//-- visibleMap check not necessary as HUD-MouseZ does not fire on Map
 			private _blockDefaultKey = _this call A3C_UI_HUD_HandlerFNC_MouseZChanged;
 			_blockDefaultKey
 		}
@@ -75,7 +84,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 	////                  MAP - EVHS		          ////
 	//////////////////////////////////////////////////////
 
-	//-- Map KeyDown
+	//-- Map KeyDown - this direct map-keybind is currently necessary :) COZ I DON'T UNDERSTAND ARMA lol
 	[
 		(findDisplay 12 displayctrl 51),
 		"A3C_UI_MAP_KeyDown_EHID",
@@ -88,36 +97,6 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		}
 	] call A3C_UI_CreateSafeEventhandler;
 
-	//-- Map MouseButtonDown
-	[
-		(findDisplay 12 displayctrl 51),
-		"A3C_UI_MAP_MouseButtonDown_EHID",
-		"ctrl",
-		"MouseButtonDown",
-		{
-			_return = false;
-			A3C_BOOL_MAP_MD = true;
-			if (visibleMap) then {
-				_this spawn A3C_UI_MAP_HandlerFNC_OnMouseButtonDown;
-			};
-			_return
-		}
-	] call A3C_UI_CreateSafeEventhandler;
-
-	//-- Map MouseButtonUp
-	[
-		(findDisplay 12 displayctrl 51),
-		"A3C_UI_MAP_MouseButtonUp_EHID",
-		"ctrl",
-		"MouseButtonUp",
-		{
-			A3C_BOOL_MAP_MD = false;
-			if (visibleMap) then {
-				_this spawn A3C_UI_MAP_HandlerFNC_OnMouseButtonUp;
-				A3C_BOOL_MOUSEMOVING = false;
-			};
-		}
-	] call A3C_UI_CreateSafeEventhandler;
 
 	// #TODO: Remove grenade handler and add to main handler
 	if !(isNil "A3C_GRENADEHANDLER") then {(findDisplay 46) displayRemoveEventHandler ["MouseButtonUP",A3C_GRENADEHANDLER];};

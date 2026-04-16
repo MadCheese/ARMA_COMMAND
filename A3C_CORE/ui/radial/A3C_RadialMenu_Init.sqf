@@ -39,7 +39,7 @@ A3C_UI_Radial_SQ_ROE_MAIN = {
                     A3C_DISABLE_RADIAL = false;
                     A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
                     (findDisplay 100100) closeDisplay 0;
-                    A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+                    A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
                     {player groupSelectUnit [_x,false]} foreach units player; 
                     showCommandingMenu "";
                 };

@@ -661,8 +661,8 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 							{
 
 
-								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_DOWNKEYS) exitWith {};
-								//A3C_DOWNKEYS = A3C_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
+								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_UI_DOWNKEYS) exitWith {};
+								//A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
 								A3C_UI_HUD_3D_TAG_reposition = false;
 								//[A3C_UI_HUD_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_UI_HUD_3D_TAG;
 								if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
@@ -771,8 +771,8 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 							},
 							{
 
-								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_DOWNKEYS) exitWith {};
-								//A3C_DOWNKEYS = A3C_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
+								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_UI_DOWNKEYS) exitWith {};
+								//A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
 								A3C_UI_HUD_3D_TAG_reposition = false;
 								//[A3C_UI_HUD_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_UI_HUD_3D_TAG;
 								if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
@@ -810,7 +810,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 														(findDisplay 100060) closeDisplay 0;
-														A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+														A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 													};
 												};
@@ -977,7 +977,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 														A3C_DISABLE_RADIAL = false;
 														(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 100060) closeDisplay 0;
-														A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+														A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 													};
 												};
@@ -1079,7 +1079,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 												A3C_DISABLE_RADIAL = false;
 												(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 												(findDisplay 100060) closeDisplay 0;
-												A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+												A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 												{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 											};
 										};

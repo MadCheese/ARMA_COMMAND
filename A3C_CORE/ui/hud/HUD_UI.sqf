@@ -16,10 +16,10 @@ A3C_UI_ARSENAL_CREATELB = {
 	A3C_CurrentPlayerObject = player;
 	[] call A3C_RADIAL_CloseDisplay;
 	A3C_DISABLE_RADIAL = true;
-	if (15 in A3C_DOWNKEYS) then {
+	if (15 in A3C_UI_DOWNKEYS) then {
 		("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutRsc ["A3C_KEY_VIEWER_UI","PLAIN"];
 		((uiNamespace getVariable "A3C_KEY_VIEWER_UI") displayCtrl 11) ctrlSetText "Please release TAB";
-		waitUntil {!(15 in A3C_DOWNKEYS)};
+		waitUntil {!(15 in A3C_UI_DOWNKEYS)};
 		("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutText ["","PLAIN"];
 
 	};
@@ -134,7 +134,7 @@ A3C_TOGGLE_KEYVIEWER = {
 			KEYVIEWER_VAL = 1;
 			//
 			while {KEYVIEWER_VAL == 1} do {
-				_downKeys = A3C_DOWNKEYS;
+				_downKeys = A3C_UI_DOWNKEYS;
 				_MODIFIERS = [];
 				_text = "";
 				if (29 in _downKeys) then {_MODIFIERS pushBack "CTRL"};
@@ -377,7 +377,7 @@ A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG = {
 						//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 						//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 						(findDisplay 100060) closeDisplay 0;
-						A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+						A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 						{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 						A3C_UI_RADIAL_Current_Remfire_Units = [];
 					};

@@ -8,7 +8,7 @@ class EditorData
 	toggles=33;
 	class ItemIDProvider
 	{
-		nextID=4953;
+		nextID=4956;
 	};
 	class MarkerIDProvider
 	{
@@ -315,7 +315,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=61;
+		items=60;
 		class Item0
 		{
 			dataType="Trigger";
@@ -1497,66 +1497,6 @@ class Mission
 		class Item39
 		{
 			dataType="Group";
-			side="East";
-			class Entities
-			{
-				items=1;
-				class Item0
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={22431.455,50.356487,19411.564};
-					};
-					side="East";
-					flags=6;
-					class Attributes
-					{
-						init="removeallweapons this;";
-						name="dude";
-					};
-					id=4865;
-					type="O_crew_F";
-					class CustomAttributes
-					{
-						class Attribute0
-						{
-							property="speaker";
-							expression="_this setspeaker _value;";
-							class Value
-							{
-								class data
-								{
-									singleType="STRING";
-									value="VIE";
-								};
-							};
-						};
-						class Attribute1
-						{
-							property="pitch";
-							expression="_this setpitch _value;";
-							class Value
-							{
-								class data
-								{
-									singleType="SCALAR";
-									value=0.97000003;
-								};
-							};
-						};
-						nAttributes=2;
-					};
-				};
-			};
-			class Attributes
-			{
-			};
-			id=4858;
-		};
-		class Item40
-		{
-			dataType="Group";
 			side="West";
 			class Entities
 			{
@@ -1598,7 +1538,7 @@ class Mission
 			};
 			id=4870;
 		};
-		class Item41
+		class Item40
 		{
 			dataType="Object";
 			class PositionInfo
@@ -1615,7 +1555,7 @@ class Mission
 			type="B_MBT_01_cannon_F";
 			atlOffset=-1.1444092e-05;
 		};
-		class Item42
+		class Item41
 		{
 			dataType="Group";
 			side="West";
@@ -1721,7 +1661,7 @@ class Mission
 			id=4878;
 			atlOffset=-1.1444092e-05;
 		};
-		class Item43
+		class Item42
 		{
 			dataType="Group";
 			side="West";
@@ -1828,7 +1768,7 @@ class Mission
 			id=4879;
 			atlOffset=-0.00011920929;
 		};
-		class Item44
+		class Item43
 		{
 			dataType="Object";
 			class PositionInfo
@@ -1845,7 +1785,7 @@ class Mission
 			type="B_APC_Wheeled_01_cannon_F";
 			atlOffset=-0.00011920929;
 		};
-		class Item45
+		class Item44
 		{
 			dataType="Group";
 			side="West";
@@ -1898,7 +1838,7 @@ class Mission
 			id=4884;
 			atlOffset=-4.3869019e-05;
 		};
-		class Item46
+		class Item45
 		{
 			dataType="Object";
 			class PositionInfo
@@ -1916,7 +1856,7 @@ class Mission
 			type="B_Truck_01_transport_F";
 			atlOffset=-4.3869019e-05;
 		};
-		class Item47
+		class Item46
 		{
 			dataType="Group";
 			side="West";
@@ -2023,7 +1963,7 @@ class Mission
 			id=4887;
 			atlOffset=-0.00026035309;
 		};
-		class Item48
+		class Item47
 		{
 			dataType="Object";
 			class PositionInfo
@@ -2040,7 +1980,7 @@ class Mission
 			type="B_APC_Tracked_01_rcws_F";
 			atlOffset=-0.00026035309;
 		};
-		class Item49
+		class Item48
 		{
 			dataType="Object";
 			class PositionInfo
@@ -2060,7 +2000,7 @@ class Mission
 			type="B_Crocus_AT";
 			atlOffset=0.0028572083;
 		};
-		class Item50
+		class Item49
 		{
 			dataType="Group";
 			side="West";
@@ -2113,7 +2053,7 @@ class Mission
 			id=4691;
 			atlOffset=0.0028572083;
 		};
-		class Item51
+		class Item50
 		{
 			dataType="Group";
 			side="West";
@@ -2414,7 +2354,7 @@ class Mission
 			};
 			id=4912;
 		};
-		class Item52
+		class Item51
 		{
 			dataType="Group";
 			side="West";
@@ -2521,7 +2461,7 @@ class Mission
 			id=4922;
 			atlOffset=-8.2015991e-05;
 		};
-		class Item53
+		class Item52
 		{
 			dataType="Object";
 			class PositionInfo
@@ -2539,7 +2479,7 @@ class Mission
 			type="RHS_M2A3_wd";
 			atlOffset=-8.2015991e-05;
 		};
-		class Item54
+		class Item53
 		{
 			dataType="Group";
 			side="West";
@@ -2617,7 +2557,7 @@ class Mission
 			};
 			id=4927;
 		};
-		class Item55
+		class Item54
 		{
 			dataType="Group";
 			side="West";
@@ -2700,7 +2640,7 @@ class Mission
 			id=4932;
 			atlOffset=-9.5367432e-07;
 		};
-		class Item56
+		class Item55
 		{
 			dataType="Group";
 			side="West";
@@ -2752,7 +2692,7 @@ class Mission
 			};
 			id=4942;
 		};
-		class Item57
+		class Item56
 		{
 			dataType="Object";
 			class PositionInfo
@@ -2768,7 +2708,7 @@ class Mission
 			id=4943;
 			type="B_G_Mortar_01_F";
 		};
-		class Item58
+		class Item57
 		{
 			dataType="Group";
 			side="West";
@@ -2819,7 +2759,7 @@ class Mission
 			};
 			id=4945;
 		};
-		class Item59
+		class Item58
 		{
 			dataType="Object";
 			class PositionInfo
@@ -2834,7 +2774,7 @@ class Mission
 			id=4947;
 			type="B_G_Mortar_01_F";
 		};
-		class Item60
+		class Item59
 		{
 			dataType="Group";
 			side="East";

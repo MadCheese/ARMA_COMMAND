@@ -1357,7 +1357,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 												//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 												//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 												(findDisplay 100060) closeDisplay 0;
-												A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+												A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 												{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 											};
 										};
@@ -1724,7 +1724,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 													(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 													(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 													(findDisplay 100060) closeDisplay 0;
-													A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+													A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 													{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 												};
 											};
@@ -2017,7 +2017,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 															(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 															(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 															(findDisplay 100060) closeDisplay 0;
-															A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+															A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 															{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 														};
 													};
@@ -2294,7 +2294,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 														(findDisplay 100060) closeDisplay 0;
-														A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+														A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 														A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 													};
@@ -2607,7 +2607,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 												(findDisplay 100060) closeDisplay 0;
 												(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 												A3C_DISABLE_RADIAL = false;
-												A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+												A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 
 											};
 										};
@@ -2723,7 +2723,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 												_button = _button - [(_button select 0)];
 												if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
 													(findDisplay 100060) closeDisplay 0;
-													A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+													A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 													{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 												};
 											};
@@ -2989,8 +2989,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							},
 							{
 
-								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_DOWNKEYS) exitWith {};
-								//A3C_DOWNKEYS = A3C_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
+								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_UI_DOWNKEYS) exitWith {};
+								//A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
 								//A3C_UI_HUD_3D_TAG_reposition = false;
 
 
@@ -3014,7 +3014,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 														(findDisplay 100060) closeDisplay 0;
-														A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+														A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 													};
 												};
@@ -3245,7 +3245,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 												A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
 												(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 												(findDisplay 100060) closeDisplay 0;
-												A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+												A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 												{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 											};
 										};
@@ -4034,7 +4034,7 @@ A3C_GP_Btn_Para = {//mumu
 									(findDisplay 100060) closeDisplay 0;
 									(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 									A3C_DISABLE_RADIAL = false;
-									A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+									A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 
 								};
 							};
@@ -4108,7 +4108,7 @@ A3C_fnc_SecuRejoin_fnc = {
 								A3C_DISABLE_RADIAL = false;
 								(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
 								(findDisplay 100060) closeDisplay 0;
-								A3C_DOWNKEYS = A3C_DOWNKEYS - [(_button select 0)];
+								A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 								{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 							};
 						};

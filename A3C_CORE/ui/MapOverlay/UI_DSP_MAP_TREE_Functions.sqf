@@ -970,8 +970,8 @@ A3C_TREE_TVCHANGE = {
 	_tvSelTo params ["_parentTo","_childTo"];
 	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
 	private _isRadial = _a3c_dsp == 100040;
-	private _shift = 42 in A3C_DOWNKEYS;
-	private _ctrl = 29 in A3C_DOWNKEYS;
+	private _shift = 42 in A3C_UI_DOWNKEYS;
+	private _ctrl = 29 in A3C_UI_DOWNKEYS;
 	
 	if (count _tvSelTo == 1) exitWith {}; //-- click on main category - no application
 	playsound "ReadOutHideClick1"; 

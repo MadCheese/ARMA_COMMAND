@@ -325,7 +325,7 @@ A3C_C_FORM_SaveButton = {
 
 A3C_UI_CustomFormation_FNC_spawnDialog = {
 	disableSerialization;
-	A3C_DOWNKEYS = [];
+	A3C_UI_DOWNKEYS = [];
 	with uiNameSpace do {
 		A3C_C_FORM_LineColor = "#(argb,8,8,3)color(0.53,0.29,0.69,1)";
 		A3C_C_FORM_SelectedUnits = (units player) - [player];

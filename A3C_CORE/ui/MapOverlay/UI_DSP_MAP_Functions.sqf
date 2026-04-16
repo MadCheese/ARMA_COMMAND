@@ -2092,7 +2092,7 @@ A3C_MAP_DelLoopObs = {
 	//-- executes when mouse is dragged into map controls
 	//~~ this whole solution is sloppy, there has to be a better way  || ~~ is this still true? yes, just pausing would be better. But that's complex.
 
-	A3C_BOOL_MOUSEUP = true;
+	A3C_BOOL_MAP_MU = true;
 	if (A3C_BOOL_MAP_MD) then {
 		A3C_BOOL_MAP_MD = false;
 		if (A3C_BOOL_DRAGLINE) then {
@@ -3910,7 +3910,7 @@ A3C_BTN_HC = {
 		};
 	};
 	A3C_BOOL_MAP_MD = false;
-	A3C_BOOL_MOUSEUP = false;
+	A3C_BOOL_MAP_MU = false;
 	[] spawn {
 		sleep 1;
 		{(vehicle _x) setvehicleLock "UNLOCKED"} foreach units group player;

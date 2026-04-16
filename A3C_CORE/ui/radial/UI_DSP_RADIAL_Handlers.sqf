@@ -7,13 +7,13 @@ A3C_UI_RADIAL_HandlerFNC_OnKeyDown =	{
 
 	//-- prevent continuous firing while holding down menu key
 	if (A3C_RadialMenu_KEY_ID select 0 == _key) exitWith {};
-	if (_key in A3C_DOWNKEYS) exitWith {};
+	if (_key in A3C_UI_DOWNKEYS) exitWith {};
 	
 	[_key] call A3C_UI_Shared_FNC_AddDownkey;
 
 	player groupchat format ["[RADIAL] onKeyDown , %1 (%2)", _key, keyname _key];
 
-	//-- Safety: clear A3C_DOWNKEYS - not used in radial
+	//-- Safety: clear A3C_UI_DOWNKEYS - not used in radial
 	
 	if ([_key,_mods] isEqualTo ((["A3C", "A3C_KeyFnc_Switch_CommandLevel"] call CBA_fnc_getKeybind) select 5)) exitWith {
 		["COMMAND_LEVEL","DOWN"] call A3C_FNC_CBA_KEY;
@@ -32,11 +32,11 @@ A3C_UI_RADIAL_HandlerFNC_OnKeyUp = {
 
 	player globalchat format ["[RADIAL] onKeyUp , %1 (%2)", _key, keyname _key];
 
-	A3C_DOWNKEYS = A3C_DOWNKEYS - [_key];
+	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
 
 	if (_key == (A3C_RadialMenu_KEY_ID select 0)) exitWith {
 		[] call A3C_RADIAL_CloseDisplay;
-		// A3C_DOWNKEYS = A3C_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
+		// A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
 		showCommandingMenu "";
 		A3C_DISABLE_RADIAL = false;
 		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
