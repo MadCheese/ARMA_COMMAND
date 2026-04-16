@@ -63,7 +63,7 @@ A3C_DSP_FindControlSafePos = {
 A3C_HC_ACTIVE_WPOS = [0,0,0];
 
 
-A3C_Map_HC_waypointContext_OpenMenu = {
+A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 
 
 	params ["_gp","_wpiC","_mode","_a3c_dsp","_ctrlPosWPM"];
@@ -1878,7 +1878,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 	//
 };
 
-A3C_Map_HC_waypointContext_OpenMenu_LB = { //-- no longer used
+A3C_UI_MAP_FNC_HCWPContext_OpenMenu_LB = { //-- no longer used
 
 	private ["_LBmode","_a3c_dsp","_wpMenu","_lb","_array","_landingTypes"];
 	_LBmode = _this select 0;

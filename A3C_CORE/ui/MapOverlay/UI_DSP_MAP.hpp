@@ -671,10 +671,10 @@ class A3C_DSP_MapOverlay
 			tooltip = "disband selected units to reserve";
 		};
 
-		class A3C_LISTBOX_1500: A3C_RscCombo
+		class A3C_COMBO_ENEMYTARGET: A3C_RscCombo
 		{
 			idc = 7078;
-			onLBSelChanged = "[A3C_LB_MODE,(_this select 1),100020] call A3C_LB_Change";
+			onLBSelChanged = " [A3C_LB_MODE,(_this select 1),100020] call A3C_LB_Change";
 			x = 0.00166839 * safezoneW + safezoneX;
 			y = 14 * safezoneH + safezoneY;
 			w = 0.0630074 * safezoneW;

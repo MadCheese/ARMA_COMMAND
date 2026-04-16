@@ -8,7 +8,7 @@ class EditorData
 	toggles=33;
 	class ItemIDProvider
 	{
-		nextID=4951;
+		nextID=4953;
 	};
 	class MarkerIDProvider
 	{
@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={14357.379,34.916645,16707.078};
-		dir[]={-0.048419941,-0.39968833,0.91537148};
-		up[]={-0.021112597,0.91665107,0.39913037};
-		aside[]={0.99860394,0,0.052822649};
+		pos[]={13681.309,368.25195,16797.018};
+		dir[]={-0.88356847,-0.40390366,0.23699963};
+		up[]={-0.39011365,0.9148016,0.10464022};
+		aside[]={0.25907218,-7.4505806e-09,0.96585816};
 	};
 };
 binarizationWanted=0;
@@ -58,13 +58,14 @@ addons[]=
 	"A3_Characters_F_Heads",
 	"rhsusf_c_troops",
 	"RHS_US_A2Port_Armor",
-	"A3_Static_F_Mortar_01"
+	"A3_Static_F_Mortar_01",
+	"A3_Characters_F_Tank"
 };
 class AddonsMetaData
 {
 	class List
 	{
-		items=27;
+		items=28;
 		class Item0
 		{
 			className="A3_Structures_F";
@@ -249,6 +250,13 @@ class AddonsMetaData
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
+		class Item27
+		{
+			className="A3_Characters_F_Tank";
+			name="Arma 3 Tank - Characters and Clothing";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
 	};
 };
 dlcs[]=
@@ -307,7 +315,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=60;
+		items=61;
 		class Item0
 		{
 			dataType="Trigger";
@@ -2825,6 +2833,34 @@ class Mission
 			};
 			id=4947;
 			type="B_G_Mortar_01_F";
+		};
+		class Item60
+		{
+			dataType="Group";
+			side="East";
+			class Entities
+			{
+				items=1;
+				class Item0
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={16264.871,14.709513,17073.939};
+					};
+					side="East";
+					flags=7;
+					class Attributes
+					{
+					};
+					id=4952;
+					type="O_Soldier_AHAT_F";
+				};
+			};
+			class Attributes
+			{
+			};
+			id=4951;
 		};
 	};
 	class Connections

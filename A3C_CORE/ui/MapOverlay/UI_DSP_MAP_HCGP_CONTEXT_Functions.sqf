@@ -3706,7 +3706,7 @@ A3C_HC_UNSTUCK = {
 
 
 
-A3C_Map_HC_groupContext_OpenMenu = {
+A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 	params ["_group","_modeNum"];
 	private ["_a3c_dsp"];
 	A3C_HC_NearStatics = [];

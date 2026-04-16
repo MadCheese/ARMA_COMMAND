@@ -275,16 +275,15 @@ A3C_UI_HUD_HandlerFNC_MouseButtonDown = {
 				if (_ctrl) then {
 					if (_alt) then {
 						_blockDefaultKey = true;
-
 						if (_curTar in A3C_HUD_UNITS) then {
 							[_curTar] call A3C_HUD_REMOVE_SELECTED;
 						} else {
 							[_curTar, _curTar getVariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
+							
 							if (count groupSelectedUnits player > 0) then {
 								{ player groupSelectUnit [_x, false] } forEach units group player;
 							};
 						};
-
 						breakOut "main";
 					} else {
 						if (count A3C_HUD_UNITS == 0) then {

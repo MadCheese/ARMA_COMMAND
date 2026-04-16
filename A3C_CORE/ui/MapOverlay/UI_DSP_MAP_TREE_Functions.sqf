@@ -1147,12 +1147,12 @@ A3C_TREE_BOXCLICK = {
 	
 	private _left = _mouseButton == 0;
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
+
 	if (!(_left) && {count A3C_SELECTED_UNITS > 0}) then {
 		if (_shift && {A3C_MAP_CommandMode != "HC"}) then { //~~ TO DO: ALIGN TEAMCOLORS THROUGH COMMAND LEVELS AND ALLOW FOR HC TEAMCOLOR VIA LISTBOX
-			//systemchat 'teamcolor shebang';
-			//A3C_BUTTON_UNIT = _unit;
+			//-- USER IS MANAGING SQUAD TEAMCOLORS VIA MAP-TREE
 			lbClear ((findDisplay _a3c_dsp) displayCtrl 7078);
-			[] spawn A3C_UI_MAP_CONTEXTMENU_BOOLFNC;
+
 			((findDisplay _a3c_dsp) displayCtrl 7078) ctrlShow true;
 			ctrlsetfocus (finddisplay _a3c_dsp displayctrl 7078);
 			A3C_LB_MODE = 3;
@@ -1181,13 +1181,13 @@ A3C_TREE_BOXCLICK = {
 				A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS select {typeName _x == "GROUP"};
 				
 				if (count A3C_SELECTED_HC_GROUPS_SETTINGS > 1) then {
-					[A3C_SELECTED_HC_GROUPS_SETTINGS,1] call A3C_Map_HC_groupContext_OpenMenu;
+					[A3C_SELECTED_HC_GROUPS_SETTINGS,1] call A3C_UI_MAP_FNC_HCGPContext_OpenMenu;
 					//systemchat '1';
 				} else {
 					//A3C_SELECTED_HC_GROUPS_SETTINGS = [_gp];
 					//systemChat str [A3C_SELECTED_HC_GROUPS_SETTINGS select 0];
 					if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
-						[A3C_SELECTED_HC_GROUPS_SETTINGS select 0,0] call A3C_Map_HC_groupContext_OpenMenu;
+						[A3C_SELECTED_HC_GROUPS_SETTINGS select 0,0] call A3C_UI_MAP_FNC_HCGPContext_OpenMenu;
 					};		
 				};
 			} else {

@@ -16,6 +16,8 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 	private _exit = false;
 
 	private _left = _mouseButton == 0;
+
+	//------------------------- EXIT CONDITIONS (MAPCLICK NOT ALLOWED)
 	
 	if (isNull findDisplay _a3c_dsp) exitWith {};
 	if (A3C_MAP_BOOL_CT_EDIT_ACTIVE) exitWith {};
@@ -31,6 +33,21 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 	//-- exit if mouseclick was within certain controls
 	if ({[[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea} count _ctls > 0) exitWith {};
 
+	
+
+	//-- ENEMY-TARGET Combo is open - ALWAYS disables mapclick, hides Combo if it's not clicked on directly
+	if (ctrlShown (findDisplay _a3c_dsp displayCtrl 7078)) exitWith {
+		if !([[_sX,_sY],findDisplay _a3c_dsp displayCtrl 7078] call MCSS_fnc_isClickPosInCTRLArea) then {
+			((findDisplay _a3c_dsp) displayCtrl 7078) ctrlShow false;
+		};
+	};
+
+	//-----------------------------------------------------------------------------------
+	
+	
+	
+	
+	
 	private _unitArray = (profileNamespace getvariable "A3C_GROUPUNITS");
 	private _map1 = if (_a3c_dsp == 100020) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
 	private _sPos = (_map1 posscreentoworld [_sx,_sy]);
@@ -238,7 +255,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 				_wp_Icon = _wp_Icons select 0;
 				_gp = _wp_Icon select 0;
 				_wp_Index = _wp_Icon select 3;
-				[_gp,_wp_Index,A3C_HC_EDIT_ACTION,_a3c_dsp,[_sx, _sy]] call A3C_Map_HC_waypointContext_OpenMenu;
+				[_gp,_wp_Index,A3C_HC_EDIT_ACTION,_a3c_dsp,[_sx, _sy]] call A3C_UI_MAP_FNC_HCWPContext_OpenMenu;
 				_resetSelection = false;
 			};
 
@@ -314,15 +331,12 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 				} else {;
 					A3C_SELECTED_UNITS = [_gp];
 				};
-				//sleep 0.4;
 				
 				//~~
 				//-- #TODO: #HuiHui -- streamline this duplicate code for visualizing selection change in tree-UI
 				private _CT_TREE = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
 				_CT_TREE tvSetCurSel [-1];
-				//sleep 0.7;
-				//playsound 'A3C_MenuSound1';
-				//0.3;
+
 				
 				if (count A3C_SELECTED_UNITS == 1) then { //--
 					_button = (A3C_SELECTED_UNITS select 0) getVariable ["A3C_TREESEL_INDEX",[]];
@@ -345,9 +359,6 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 				};
 				//~~
 
-
-
-				//sleep 1;
 				//playsound 'A3C_MenuSound1';
 				if (A3C_UI_MAP_Overlay_VAR_isUnFolded) then {
 					//systemchat 'ay';
@@ -385,14 +396,14 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 					
 					
 					//A3C_SELECTED_HC_GROUPS_SETTINGS = [_gp];
-					//[_gp,0] call A3C_Map_HC_groupContext_OpenMenu;
+					//[_gp,0] call A3C_UI_MAP_FNC_HCGPContext_OpenMenu;
 					A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS;
 					if (count A3C_SELECTED_HC_GROUPS_SETTINGS > 1) then {
 						A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS;
-						[A3C_SELECTED_HC_GROUPS_SETTINGS,1] call A3C_Map_HC_groupContext_OpenMenu;
+						[A3C_SELECTED_HC_GROUPS_SETTINGS,1] call A3C_UI_MAP_FNC_HCGPContext_OpenMenu;
 					} else {
 						A3C_SELECTED_HC_GROUPS_SETTINGS = [_gp];
-						[_gp,0] call A3C_Map_HC_groupContext_OpenMenu;
+						[_gp,0] call A3C_UI_MAP_FNC_HCGPContext_OpenMenu;
 					};				
 				//};
 			};
@@ -602,7 +613,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 				[_sx,_sy] call A3C_UI_MAP_HandlerFNC_MouseButtonDown_Loop;
 			};
 		} else {
-			[_wpDotIDS select 0,[_sX,_sY]] call A3C_RC_Menu_Inf;
+			[_wpDotIDS select 0,[_sX,_sY]] call A3C_UI_MAP_FNC_SQContext_OpenMenu;
 		};
 	};
 
@@ -627,16 +638,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 	if (_exit) exitWith {};
 
 
-
-
-	//-- 7078 (UnitButton RMB-contextMenu) requires special assistance: 0.1 delay is required for lb-selection to fire!!
-	if (ctrlShown (findDisplay _a3c_dsp displayCtrl 7078)) exitWith {
-		sleep 0.1;
-		if !(A3C_UI_MAP_OPENING_CONTEXTMENU OR ([[_sX,_sY],findDisplay _a3c_dsp displayCtrl 7078] call MCSS_fnc_isClickPosInCTRLArea)) then {
-			sleep 0.1;
-			((findDisplay _a3c_dsp) displayCtrl 7078) ctrlShow false;
-		};
-	};
+	
 
 
 

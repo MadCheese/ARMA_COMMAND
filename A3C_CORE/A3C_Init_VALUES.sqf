@@ -373,44 +373,6 @@ A3C_BPICONS = [];
 A3C_BPMARKERS = [];
 A3C_HC_TOSWITCH = [grpNull,-1];
 A3C_DIR_POS = [0,0,0];
-A3C_INF_MARKERS =
-[
-	'A3C_Marker_BUILDING',
-	'A3C_Marker_WAYPOINT',
-	'mil_dot','waypoint',
-	'mil_objective',
-	'mil_circle',
-	'mil_pickup',
-	'A3C_Marker_PICKUP_GROUND',
-	'A3C_Marker_DROPOFF_GROUND',
-	'A3C_Marker_LANDING',
-	'selector_selectedMission',
-	'A3C_Marker_SMOKE',
-	'A3C_Marker_HCWP',
-	'A3C_Marker_TIMEOUT',
-	'empty'
-
-];
-
-
-A3C_AIR_MARKERS =
-[
-	'A3C_Marker_WAYPOINT',
-	'A3C_Marker_PICKUP_AIR',
-	'A3C_Marker_DROPOFF_AIR',
-	'A3C_Marker_LANDING',
-	'A3C_Marker_Rappel',
-	'A3C_Marker_SlingDrop',
-	'A3C_Marker_Paradrop'
-]; //~~ add 'A3C_Marker_SlingLoad'! but spawn new selection
-
-A3C_GCD_MARKERS =
-[
-	'A3C_Marker_GoCode_A',
-	'A3C_Marker_GoCode_B',
-	'A3C_Marker_GoCode_C',
-	'A3C_Marker_GoCode_D'
-];
 
 
 //----------------  V A L U E S   A N D   A R R A Y S   F O R   H U D   M O D E  -------------
@@ -590,6 +552,7 @@ BV_MEDICAL = 0;
 BV_CBMODE = 0;
 
 
+A3C_LB_MODE = -1;
 
 BV_LB1 = 6;
 BV_LB2 = 7;

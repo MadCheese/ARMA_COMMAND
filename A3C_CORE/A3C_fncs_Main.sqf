@@ -2670,13 +2670,20 @@ A3C_TOGGLE_GOCODE_CTRLS = {
 
 
 A3C_LB_TICKTIME = time;
-//-- [A3C_LB_MODE,(_this select 1),_display] call A3C_LB_Change;
+
 A3C_LB_Change = {
 
 	if (A3C_CurSel) exitWith {};
 	// player sidechat format ["LB CHANGE, A3C_CurSel: %1, %2", A3C_CurSel, _this];
 
-	private _mode = _this select 0;
+	//~~ #TODO: rearrange to have logical order
+	//-- modes:
+	//-- 0: SQ-WPContext-Heli
+	//-- 1: Assign Target | Attack/Ignore (Shared by SQ & HC)
+	//-- 2: SQ-WPContext-Infantry
+	//-- 3: Squad-Level Teamcolor assignment
+
+	private _mode = _this select 0; //--> A3C_LB_MODE
 	private _lb = _this select 1;
 	private _doubleClick = false;
 	if (isnil "_mode") exitWith {};
@@ -2694,7 +2701,11 @@ A3C_LB_Change = {
 		_doubleClick = true;
 	};
 	A3C_LB_TICKTIME = time;
-	private _dest = switch (_mode) do {case (0): {objnull}; case (1) : {A3C_TRACKED_ENEMYGROUP}; case (2) : {A3C_GCUNITS}; case (3) : {A3C_BUTTON_UNIT}};
+	private _dest = switch (_mode) do {
+		case (1) : {A3C_TRACKED_ENEMYGROUP};
+		case (2) : {A3C_GCUNITS};
+		default {objnull}; //-- for _mode in [1,3]
+	};
 
 
 		

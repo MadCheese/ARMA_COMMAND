@@ -1,7 +1,6 @@
 
 if (isDedicated) exitwith {};
 
-
 /////////////////////////////   DRAW FNCS (MOVE TO OWN SCRIPT WITH UI FNCS)    ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////  
 
@@ -3623,323 +3622,8 @@ A3C_BUTTON_FORMMODE = {
 };
 
 
-A3C_BUTTON_UNIT = objnull;
-
-A3C_BTN_SELECT_HC = { //~~ #unused
-	_unitIndex = (_this select 0) - 1; //-- minus 1 because HC array starts at 0 while squad array starts at (units player select 1)
-	_button = _this select 1;
-	_data = _this select 2;
-	_shift = _data select 4; //false;  //-- disabled for now _data select 4;
-	_ctrl = _data select 5;
-	_alt = _data select 6;
-	private _unitArray =  A3C_HC_getAllGroups_Player_Current; //+(A3C_HC_MENU_REFERENCE_UNITS); 
-	private _unit = _unitArray select _unitIndex;
-	systemchat 'ayayay';
-	_a3c_dsp = if (visibleMap) then {100020} else {100030};
-	if ((_data select 1) == 0) then {
-		if (_shift) then {
-			if ((count A3C_SELECTED_UNITS) < (count _unitArray)) then {
-				//-- no or not not all units selected
-				_step = 1;
-				if (count A3C_SELECTED_UNITS > 0) then {
-					if !(_unit == A3C_ACTIVE_BUTTONUNIT) then {
-						//-- some units are selected
-						_destIndex = ([A3C_ACTIVE_BUTTONUNIT,_unitArray] call MCSS_fnc_GetArrayIndex);
-						if (_unitIndex > _destIndex) then {
-							_step = -1;
-						};
-						for "_i" from _unitIndex to _destIndex step _step do {
-							//if (!isPlayer leader (_unitArray select _i)) then {
-								A3C_SELECTED_UNITS pushbackUnique (_unitArray select _i);
-							//};
-
-						};
-						//-- Author Note: Make general function for unitButton Colors //~~ #unused is this still used?
-						for "_t" from 7025 to 7040 do {
-							_index = ((_t - 7025) + (A3C_BUTTONPAGE_TABLET * 16));
-							if (_index < (count _unitArray)) then {
-								if ((_unitArray select _index) in A3C_SELECTED_UNITS) then {
-									(findDisplay _a3c_dsp displayCtrl _t) ctrlSetTextColor [0,1,0,1];
-								} else {
-									(findDisplay _a3c_dsp displayCtrl _t) ctrlSetTextColor [0.9,0.9,0,1];
-								};
-							};
-						};
-					};
-				} else {
-					//-- no units are selected
-					if (!isPlayer _unit) then { //~~ what is tihs? we are in HC?
-						player groupSelectUnit [_unit,true];
-						A3C_SELECTED_UNITS pushbackUnique _unit;
-						(findDisplay 100040 displayCtrl (8072 + _button)) ctrlSetTextColor [1,1,1,1];
-					};
-				};
-			} else {
-				//-- all units selected
-			};
 
 
-			A3C_ACTIVE_BUTTONUNIT = _unit;
-		} else {
-			A3C_ACTIVE_BUTTONUNIT = _unit;
-			{player hcselectgroup [_x,false]} foreach (hcallgroups player);
-			if (_ctrl) then {
-				for "_i" from 25 to 40 do {
-					if ((_i - 24) == _button) then { //~~ #unused is this still used?
-						if ((A3C_HC_getAllGroups_Player_CURRENT select _unitIndex) in A3C_SELECTED_UNITS) then {
-							((findDisplay _a3c_dsp) displayCtrl (7000 + _i) ) ctrlSetTextColor [0.9,0.9,0,1];
-							A3C_SELECTED_UNITS = A3C_SELECTED_UNITS - [(A3C_HC_getAllGroups_Player_CURRENT select _unitIndex)];
-							player hcSelectGroup [(A3C_HC_getAllGroups_Player_CURRENT select _unitIndex),false];
-						} else {
-							((findDisplay _a3c_dsp) displayCtrl (7024 + _button) ) ctrlSetTextColor [0,1,0,1];
-							A3C_SELECTED_UNITS pushback (A3C_HC_getAllGroups_Player_CURRENT select _unitIndex);
-							player hcselectgroup [A3C_HC_getAllGroups_Player_CURRENT select _unitIndex,true];
-						};
-					};
-				};
-			} else {
-				A3C_SELECTED_UNITS = [A3C_HC_getAllGroups_Player_CURRENT select _unitIndex];
-				player hcselectgroup [A3C_HC_getAllGroups_Player_CURRENT select _unitIndex,true];
-
-				//systemchat str _unitindex;
-				for "_i" from 25 to 40 do { //~~ #unused is this still used?
-					if ((_i - 24) == _button) then {
-						((findDisplay _a3c_dsp) displayCtrl (7024 + _button) ) ctrlSetTextColor [0,1,0,1];
-					} else {
-						((findDisplay _a3c_dsp) displayCtrl (7000 + _i) ) ctrlSetTextColor [0.9,0.9,0,1];
-					};
-				};
-			};
-		};
-	} else {
-		if (_ctrl) then {
-			//-- center map on group leader
-			if (visiblemap) then {
-				(findDisplay 12 displayCtrl 51) ctrlEnable true;
-				(findDisplay 12 displayCtrl 51) ctrlMapAnimAdd [0.1,(ctrlMapScale (findDisplay 12 displayCtrl 51)),(position (leader (A3C_HC_getAllGroups_Player_CURRENT select _unitIndex)))];
-				ctrlMapAnimCommit (findDisplay 12 displayCtrl 51);
-				[] spawn {
-					sleep 0.2;
-					(findDisplay 12 displayCtrl 51) ctrlEnable false;
-				};
-			} else {
-				(findDisplay 100030 displayCtrl 7043) ctrlMapAnimAdd [0.1,(ctrlMapScale (findDisplay 100030 displayCtrl 7043)),(position (leader (A3C_HC_getAllGroups_Player_CURRENT select _unitIndex)))];
-				ctrlMapAnimCommit (findDisplay 100030 displayCtrl 7043);
-			};
-		} else {
-			//-- right click menu
-			lbClear ((findDisplay _a3c_dsp) displayCtrl 7078);
-			((findDisplay _a3c_dsp) displayCtrl 7078) ctrlShow true;
-			ctrlsetfocus (finddisplay _a3c_dsp displayctrl 7078);
-			A3C_LB_MODE = [4,(_button + (A3C_BUTTONPAGE_TABLET * 16))];
-			(findDisplay _a3c_dsp displayCtrl 7078) ctrlSetPosition [(_data select 2),(_data select 3)];
-			(findDisplay _a3c_dsp displayCtrl 7078) ctrlCommit 0;
-			[findDisplay _a3c_dsp displayCtrl 7078, "REJOIN"] call A3C_addLbEntry;
-			
-			[findDisplay _a3c_dsp displayCtrl 7078, 0] call A3C_setCurSel;
-			
-		};
-	};
-};
-
-A3C_BTN_SELECT_UNIT = { //-- currently unused?
-	private ["_unit","_unitIndex","_unitArray","_a3c_dsp","_mB","_sX","_sY","_shift","_ctrl"];
-
-//systemchat str [A3C_MAP_CommandMode,A3C_SELECTED_UNITS]; 
-
-	_unitIndex = _this select 0;
-	//systemChat str _unitIndex;
-	_button = ((_this select 0) - (A3C_BUTTONPAGE_TABLET * 16));
-	_data = _this select 1;
-	_a3c_dsp = if (visibleMap) then {100020} else {100030};
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
-	if (A3C_MAP_CommandMode == "HC") exitwith {[_unitIndex,_button,_data] call A3C_BTN_SELECT_HC};
-	_mB = _data select 1;
-	_sX = _data select 2;
-	_sY = _data select 3;
-	_shift = _data select 4;
-	_ctrl = _data select 5;
-	//if (_ctrl) exitwith {};
-	_unitArray = profileNamespace getvariable "A3C_GROUPUNITS";
-	_unit = _unitArray select _unitIndex;
-	if (isPlayer _unit) exitWith {
-		systemchat format ["A3C: %1 is controlled by a player and will not be selected",name (_unitArray select _unitIndex)];
-	};
-	if (!alive _unit) exitwith {systemchat 'A3C: Unit not available'};
-	if (_mB == 0) then {
-		if (_shift) then {
-
-			if ((count A3C_SELECTED_UNITS) < (count _unitArray)) then {
-				//-- no or not not all units selected
-				_step = 1;
-				if (count A3C_SELECTED_UNITS > 0) then {
-					if !(_unit == A3C_ACTIVE_BUTTONUNIT) then {
-						//-- some units are selected
-						_destIndex = [A3C_ACTIVE_BUTTONUNIT,_unitArray] call MCSS_fnc_GetArrayIndex;
-						if (_unitIndex > _destIndex) then {
-							_step = -1;
-						};
-						for "_i" from _unitIndex to _destIndex step _step do {
-							_add = false; //~~??
-
-							if (A3C_MAP_CommandMode == 'AIR') then {
-								if ( ((_unitArray select _i)== driver vehicle (_unitArray select _i)) OR (isNull (driver vehicle (_unitArray select _i))) ) then {
-								//if ((_unitArray select _i)== (driver (vehicle (_unitArray select _i))) ) then {
-									if ((vehicle (_unitArray select _i)) isKindOf 'AIR') then {
-										//if (A3C_UNIT_%1_BV == 0) then {
-										//};
-										_add = true;
-									};
-								};
-							} else {
-								if ( ((_unitArray select _i)== driver vehicle (_unitArray select _i)) OR (isNull (driver vehicle (_unitArray select _i))) ) then {
-								//if ((_unitArray select _i) == (driver (vehicle (_unitArray select _i))) ) then {
-									if !((vehicle (_unitArray select _i)) isKindOf 'AIR') then {
-										//if (A3C_UNIT_%1_BV == 0) then {
-											//if ((_unitArray select _i) == (driver vehicle (_unitArray select _i))) then {
-												_add = true;
-											//};
-										//};
-									};
-								};
-							};
-
-							if (_add) then {
-								if (!isPlayer (_unitArray select _i)) then {
-									//player groupSelectUnit [(_unitArray select _i),true];
-									A3C_SELECTED_UNITS pushbackUnique (_unitArray select _i);
-									call compile format ["A3C_UNIT_%1_BV = 1",_unitIndex];
-									if (A3C_FORMMODE_TEMP == 4) then {
-										A3C_SPLIT_UNITS pushbackUnique (_unitArray select _i);
-									};
-								} else {
-									systemchat format ["A3C: %1 is controlled by a player and will not be selected",name (_unitArray select _i)];
-								};
-							};
-						};
-						//-- Author Note: Make general function for unitButton Colors
-						for "_t" from 7025 to 7040 do {
-							_index = ((_t - 7024) + (A3C_BUTTONPAGE_TABLET * 16));
-							if (_index < (count _unitArray)) then {
-								if ((_unitArray select _index) in A3C_SELECTED_UNITS) then {
-									(findDisplay _a3c_dsp displayCtrl _t) ctrlSetTextColor [1,1,1,1];
-								} else {
-									(findDisplay _a3c_dsp displayCtrl _t) ctrlSetTextColor [1,1,1,0.5];
-								};
-							};
-						};
-					};
-				} else {
-					//-- no units are selected
-					//player groupSelectUnit [_unit,true];
-					if (!isPlayer _unit) then {
-						A3C_SELECTED_UNITS pushbackUnique _unit;
-						(findDisplay _a3c_dsp displayCtrl (7024 + _button)) ctrlSetTextColor [1,1,1,1];
-					} else {
-						systemchat format ["A3C: %1 is controlled by a player and will not be selected",name (_unitArray select _unit)];
-					};
-				};
-			}  else {
-				//-- all units selected
-			};
-			A3C_ACTIVE_BUTTONUNIT = _unit;
-		} else {
-			A3C_ACTIVE_BUTTONUNIT = _unit;
-			if (!isPlayer _unit) then {	//~~ this isPlayer check still necessary? exits above if otherwise
-				call compile format ["
-					if (A3C_UNIT_%1_BV == 0) then {
-						if (alive (_unitArray select %1) ) then {
-							if (A3C_MAP_CommandMode == 'AIR') then {
-								if ( (%2== driver vehicle %2) OR (isNull (driver vehicle %2)) ) then {
-									if ((vehicle %2) isKindOf 'AIR') then {
-										[%1] call A3C_BTN_FNC_NOSHIFT;
-										if !(_ctrl) then {
-											A3C_SELECTED_UNITS = [%2];
-										} else {
-											A3C_SELECTED_UNITS pushbackUnique %2;
-										};
-										A3C_UNIT_%1_BV = 1;
-										((findDisplay _a3c_dsp) displayCtrl (7024 + %3) ) ctrlSetTextColor [1,1,1,1];
-									} else {
-										A3C_SELECTED_UNITS = [%2];
-										['INF'] call A3C_START_TABMODE;
-										A3C_MAP_CommandMode = 'INF';
-									};
-								};
-							} else {
-								if ( (%2== driver vehicle %2) OR (isNull (driver vehicle %2)) ) then {
-									if !((vehicle %2) isKindOf 'AIR') then {
-										[%1] call A3C_BTN_FNC_NOSHIFT;
-										if !(_ctrl) then {
-											A3C_SELECTED_UNITS = [%2];
-										} else {
-											A3C_SELECTED_UNITS pushbackUnique %2;
-										};
-										A3C_UNIT_%1_BV = 1;
-										((findDisplay _a3c_dsp) displayCtrl (7024 + %3) ) ctrlSetTextColor [1,1,1,1];
-									} else {
-										A3C_SELECTED_UNITS = [%2];
-										['AIR'] call A3C_START_TABMODE;
-										A3C_MAP_CommandMode = 'AIR';
-									};
-								};
-							};
-						};
-					} else {
-						if (alive (_unitArray select %1) ) then {
-							if (A3C_MAP_CommandMode == 'AIR') then {
-								if ( (%2== driver vehicle %2) OR (isNull (driver vehicle %2)) ) then {
-									if ((vehicle %2) isKindOf 'AIR') then {
-										[%1] call A3C_BTN_FNC_NOSHIFT;
-										if !(_ctrl) then {
-											A3C_SELECTED_UNITS = [%2];
-										} else {
-											A3C_SELECTED_UNITS = A3C_SELECTED_UNITS - [%2];
-										};
-										A3C_UNIT_%1_BV = 1;
-										((findDisplay _a3c_dsp) displayCtrl (7024 + %3) ) ctrlSetTextColor [1,1,1,1];
-									};
-								};
-							} else {
-								if ( (%2== driver vehicle %2) OR (isNull (driver vehicle %2)) ) then {
-									if !((vehicle %2) isKindOf 'AIR') then {
-										[%1] call A3C_BTN_FNC_NOSHIFT;
-										if !(_ctrl) then {
-											A3C_SELECTED_UNITS = [%2];
-										} else {
-											A3C_SELECTED_UNITS = A3C_SELECTED_UNITS - [%2];
-										};
-										A3C_UNIT_%1_BV = 1;
-										((findDisplay _a3c_dsp) displayCtrl (7024 + %3) ) ctrlSetTextColor [1,1,1,1];
-									};
-								};
-							};
-						};
-					};
-				",_unitIndex,(_unitArray select _unitindex),_button];
-			};
-		};
-
-		[A3C_MAP_CommandMode] call A3C_START_TABMODE;
-	} else {
-		//-- right click
-		//if (alive _unit) then {
-			
-		//};
-	};
-	
-	//-- Subset Controls: Adjust images and hide subset-2
-	if (A3C_LAST_SUBSET_ACTION in ["SQ_ACTION"]) then {
-		[[7064,7065],A3C_LAST_SUBSET_ACTION,1,false] call A3C_TOGGLE_SUBSELECTION;
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT) ctrlShow false;
-	};
-};
-
-A3C_UI_MAP_CONTEXTMENU_BOOLFNC = {
-	A3C_UI_MAP_OPENING_CONTEXTMENU = true;
-	sleep 0.5;
-	A3C_UI_MAP_OPENING_CONTEXTMENU = false;
-};
 
 A3C_BTN_FNC_NOSHIFT = { //-- currently unnused?
 	_unitIndex = _this select 0;
@@ -4767,58 +4451,21 @@ A3C_Btn_fnc_Execute = {
 
 
 //-- Open Right Click Context Menu Infantry
-A3C_RC_Menu_Inf = {
-	private ["_marker","_mode","_building","_units","_data","_func"];
-	_marker = _this select 0;
-	_pos = _this select 1;
-	_sX = _pos select 0;
-	_sY = _pos select 1;
-	_markerType = (markerType _marker);
-	_building = objnull;
-	_mode = "INF";
-	_a3c_dsp = if (visibleMap) then {100020} else {100030};
-	if (_markerType in A3C_AIR_MARKERS) then {_mode = "HELI"};
-	if ((markertype _marker) == 'A3C_Marker_HCWP') then {_mode = "HC"};
-	//systemchat 'o';
+A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 
-	A3C_MARKERTOSWITCH = _marker;
-	lbClear ((findDisplay _a3c_dsp) displayCtrl 709112);
-	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlSetPosition [_sx, _sy];
-	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlCommit 0;
-	if (_mode == "HELI") then {
-		((findDisplay _a3c_dsp) displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow true;
-		A3C_LB_MODE = 0;
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlSetPosition [_sx, _sy];
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlCommit 0;
+	private _marker = _this select 0;
+	private _pos = _this select 1;
+	private _sX = _pos select 0;
+	private _sY = _pos select 1;
+	private _markerType = (markerType _marker); //~~ #BUG - always "" because we do not use markers
+	private _building = objnull;
+	private _mode = "INF";
+	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
+	
 
-		[findDisplay _a3c_dsp displayCtrl 709112, "NONE"] call A3C_addLbEntry;
-		[findDisplay _a3c_dsp displayCtrl 709112, "PICKUP"] call A3C_addLbEntry;
-		[findDisplay _a3c_dsp displayCtrl 709112, "DROPOFF"] call A3C_addLbEntry;
-		[findDisplay _a3c_dsp displayCtrl 709112, "LANDFINAL"] call A3C_addLbEntry;
-		if (A3C_IsRappel) then {
-			[findDisplay _a3c_dsp displayCtrl 709112, "RAPPEL"] call A3C_addLbEntry;
-		};
-		[findDisplay _a3c_dsp displayCtrl 709112, "PARADROP"] call A3C_addLbEntry;
-
-		
-
-		_paraSel = if (A3C_IsRappel) then {5} else {4};
-		
-		switch (markertype A3C_MARKERTOSWITCH) do {
-			case ('A3C_Marker_WAYPOINT') : {[findDisplay _a3c_dsp displayCtrl 709112, 0] call A3C_setCurSel;};
-			case ('A3C_Marker_PICKUP_AIR') : {[findDisplay _a3c_dsp displayCtrl 709112, 1] call A3C_setCurSel;};
-			case ('A3C_Marker_DROPOFF_AIR') : {[findDisplay _a3c_dsp displayCtrl 709112, 2] call A3C_setCurSel;};
-			case ('A3C_Marker_LANDING') : {[findDisplay _a3c_dsp displayCtrl 709112, 3] call A3C_setCurSel;};
-			case ('A3C_Marker_RAPPEL') : {[findDisplay _a3c_dsp displayCtrl 709112, 4] call A3C_setCurSel;};
-			case ('A3C_Marker_Paradrop') : {[findDisplay _a3c_dsp displayCtrl 709112, _paraSel] call A3C_setCurSel;};
-
-		};
-		
-	};
-	A3C_CHECKVAR = "A3C_PLOT_TEMP";
-	_units = [];
-	_data = [];
-	_func = {
+	private _units = [];
+	private _data = [];
+	private _funcSQ = {
 		private ["_soldier","_mode","_marker","_return","_data"];
 		_soldier = _this select 0;
 		_mode = _this select 1;
@@ -4893,53 +4540,56 @@ A3C_RC_Menu_Inf = {
 		} foreach ["A3C_PLOT","A3C_PLOT_TEMP"];
 		_return
 	};
-
-	_funcHC = {
-		private ["_wp"];
-		_marker = _this select 0;
-		_a3c_dsp = if (visibleMap) then {100020} else {100030};
-		_wp = 0;
-		((findDisplay _a3c_dsp) displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow true;
-
-		{
-			private ["_stance1","_stance2"];
-			_gp = _x;
-			_statements = "";
-			_stance1 = "";
-			_stance2 = "";
-			if ( (parseNumber ((_marker splitstring "_") select 3)) == ([_gp,A3C_HC_getAllGroups_Player_CURRENT] call MCSS_fnc_GetArrayIndex)   ) exitWith {
-				_wp = [_gp,((parseNumber ((_marker splitstring "_") select 4)) - 1)];
-				_statements = ((waypointstatements _wp) select 1) splitstring ";";
-				_stance1 = (((_statements select 0) splitstring "'") select 1);
-				_stance2 = (((_statements select 1) splitstring "'") select 1);
-				switch (_stance1) do {
-					case "DOWN" : {((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_prone.paa";};
-					case "MIDDLE" : {((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";};
-					case "UP" : {((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";};
-				};
-				switch (_stance2) do {
-					case "DOWN" : {((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_prone.paa";};
-					case "MIDDLE" : {((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";};
-					case "UP" : {((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";};
-				};
-				if ((waypointSpeed _wp) == "LIMITED") then {
-					((findDisplay _a3c_dsp) displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
-				} else {
-					((findDisplay _a3c_dsp) displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
-				};
-
-
-			};
-		} foreach A3C_HC_getAllGroups_Player_CURRENT;
-	};
-
-	if (_mode == "HC") exitWith {
-		[_marker] call _funcHC;
-	};
-
 	{
-		if ([_x,_mode,_marker] call _func) then {_units pushback _x};
+		if ([_x,_mode,_marker] call _funcSQ) then {_units pushback _x}; //-- #Cleanup Note: For grouped sq-wp's we can indeed have +1 selections
 	} foreach (profileNamespace getvariable "A3C_GROUPUNITS");
+
+	if (
+		{
+			private _op = objectParent _x;
+			!(_x == driver _op && {_op isKindOf "AIR"})
+		} count _units == 0
+	) then {_mode = "HELI"};
+
+
+	A3C_MARKERTOSWITCH = _marker;
+	lbClear ((findDisplay _a3c_dsp) displayCtrl 709112);
+	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlSetPosition [_sx, _sy];
+	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlCommit 0;
+	if (_mode == "HELI") then {
+		((findDisplay _a3c_dsp) displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow true;
+		A3C_LB_MODE = 0;
+		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlSetPosition [_sx, _sy];
+		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlCommit 0;
+
+		[findDisplay _a3c_dsp displayCtrl 709112, "NONE"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl 709112, "PICKUP"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl 709112, "DROPOFF"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl 709112, "LANDFINAL"] call A3C_addLbEntry;
+		if (A3C_IsRappel) then {
+			[findDisplay _a3c_dsp displayCtrl 709112, "RAPPEL"] call A3C_addLbEntry;
+		};
+		[findDisplay _a3c_dsp displayCtrl 709112, "PARADROP"] call A3C_addLbEntry;
+
+		
+
+		_paraSel = if (A3C_IsRappel) then {5} else {4};
+		
+		switch (markertype A3C_MARKERTOSWITCH) do {
+			case ('A3C_Marker_WAYPOINT') : {[findDisplay _a3c_dsp displayCtrl 709112, 0] call A3C_setCurSel;};
+			case ('A3C_Marker_PICKUP_AIR') : {[findDisplay _a3c_dsp displayCtrl 709112, 1] call A3C_setCurSel;};
+			case ('A3C_Marker_DROPOFF_AIR') : {[findDisplay _a3c_dsp displayCtrl 709112, 2] call A3C_setCurSel;};
+			case ('A3C_Marker_LANDING') : {[findDisplay _a3c_dsp displayCtrl 709112, 3] call A3C_setCurSel;};
+			case ('A3C_Marker_RAPPEL') : {[findDisplay _a3c_dsp displayCtrl 709112, 4] call A3C_setCurSel;};
+			case ('A3C_Marker_Paradrop') : {[findDisplay _a3c_dsp displayCtrl 709112, _paraSel] call A3C_setCurSel;};
+
+		};
+		
+	};
+	A3C_CHECKVAR = "A3C_PLOT_TEMP";
+	
+
+	
 
 
 	if (_mode == "INF") then {
@@ -4965,7 +4615,7 @@ A3C_RC_Menu_Inf = {
 				};
 			};
 			
-			switch (_markertype) do {
+			switch (_markertype) do { //~~ #BUG - markertype always, "", will ALWAYS use default :S
 				case ('A3C_Marker_GoCode_A') : {[findDisplay _a3c_dsp displayCtrl 709112, 1] call A3C_setCurSel;};
 				case ('A3C_Marker_GoCode_B') : {[findDisplay _a3c_dsp displayCtrl 709112, 2] call A3C_setCurSel;};
 				case ('A3C_Marker_GoCode_C') : {[findDisplay _a3c_dsp displayCtrl 709112, 3] call A3C_setCurSel;};
@@ -5046,14 +4696,7 @@ A3C_CONTEXTBUTTON = {
 	// AUTHOR NOTE: ~ can this be optimized more and shortened??
 	private ["_mode","_func","_createLoopLine"];
 	_mode = _this select 0;
-	if ((markertype A3C_MARKERTOSWITCH) in A3C_AIR_MARKERS) then {
-		if (_mode == "STANCE1") then {
-			_mode = "HEIGHT";
-		};
-		if (_mode == "STANCE2") then {
-			_mode = "HELIWP";
-		};
-	};
+
 	_func = {
 		private ["_unit","_mode","_data","_isCurrent","_isLoop","_loopStart","_loopDest"];
 		_unit = _this select 0;
