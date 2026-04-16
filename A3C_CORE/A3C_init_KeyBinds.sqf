@@ -31,6 +31,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		{
 			private _blockDefaultKey = false;
 			if (!visibleMap) then { //-- NOTE: THis is indeed necessary. If map is active and overlay is hidden, this bind still fires
+				//-- #UNCLEAR - note - if this fires when overlay is open, we could get rid of the MainMap KeyDown handler??
 				_blockDefaultKey = _this call A3C_UI_HUD_HandlerFNC_KeyDown;
 			};
 			_blockDefaultKey

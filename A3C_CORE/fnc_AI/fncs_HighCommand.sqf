@@ -60,6 +60,33 @@ A3C_HC_getFullCrew = {
 	_emptyPositions
 };
 
+A3C_AI_FNC_remoteSteer = {
+	params ["_vehicle","_angleDiff"];
+
+	if !(isEngineOn _vehicle) exitWith {
+		_vehicle engineOn true;
+	};
+
+	if (!(_vehicle isKindOf "TANK") && {abs ((velocityModelSpace _vehicle) select 1) < 4}) exitWith {}; //-- only tracked vehicles can rotate while stationary
+
+	private _currentVelocity = velocity _vehicle;
+	//private _vectorUp = vectorUp _vehicle;
+
+	private _newDir = [getDir _vehicle + _angleDiff] call MCSS_fnc_CorrectDir;
+
+	private _terrainVectors = [getPos _vehicle, _newDir] call MCSS_fnc_TerrainTilt;
+
+	// Calculate new velocity components after rotation
+	private _newVx = (_currentVelocity select 0) * cos(_angleDiff) - (_currentVelocity select 1) * sin(_angleDiff);
+	private _newVy = (_currentVelocity select 0) * sin(_angleDiff) + (_currentVelocity select 1) * cos(_angleDiff);
+	private _newVelocity = [_newVx, _newVy, _currentVelocity select 2];
+
+
+	_vehicle setVectorDirAndUp _terrainVectors;
+	_vehicle setVectorUp (surfaceNormal (getPos _vehicle));
+	_vehicle setVelocity _newVelocity;      
+};
+
 A3C_HC_getAllGroups_Player_ORGANIZED = {
 	private _hcAll = +A3C_HC_getAllGroups_Player_Current;
 	_hcAll = [_hcAll,[],{vehicle leader _x distance2D player},"ASCEND"] call BIS_fnc_sortBy;
