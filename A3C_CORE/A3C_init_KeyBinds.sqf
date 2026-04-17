@@ -81,6 +81,18 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		}
 	] call A3C_UI_CreateSafeEventhandler;
 
+	// //-- HUD MouseMoving
+	// [
+	// 	findDisplay 46,
+	// 	"A3C_UI_HUD_MouseMoving_EHID",
+	// 	"display",
+	// 	"MouseMoving",
+	// 	{
+	// 		private _blockDefaultKey = _this call A3C_UI_HUD_onMouseMoving;
+	// 		_blockDefaultKey
+	// 	}
+	// ] call A3C_UI_CreateSafeEventhandler;
+
 	//////////////////////////////////////////////////////
 	////                  MAP - EVHS		          ////
 	//////////////////////////////////////////////////////
@@ -97,10 +109,6 @@ A3C_UI_FNC_ADD_KEYBINDS =
 			_return	
 		}
 	] call A3C_UI_CreateSafeEventhandler;
-
-
-	// #TODO: Remove grenade handler and add to main handler
-	if !(isNil "A3C_GRENADEHANDLER") then {(findDisplay 46) displayRemoveEventHandler ["MouseButtonUP",A3C_GRENADEHANDLER];};
 
 
 

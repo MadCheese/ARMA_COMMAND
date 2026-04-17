@@ -78,7 +78,7 @@ A3C_UI_HUD_3D_TAG_ICON_MOD = "NONE"; //-- for modifier
 A3C_UI_MAP_BOOL_isHCWaypointPosEdit = false; //-- different from A3C_BOOL_MOVINGHC (for default Arma HC module)
 
 
-A3C_SHOWNHUD = shownHud select 6;;
+
 
 A3C_HC_ACTIVEGROUP = grpNull;
 A3C_HC_ACTIVE_WPSPEED = "UNCHANGED";
@@ -635,9 +635,12 @@ A3C_MAP_OVERLAY_GAMEUI_WPMENU_PreCondCtrls = 709202;
 A3C_MAP_OVERLAY_GAMEUI_WPMENU_MacroConfirm = [709131,709132,709133,709134];
 
 A3C_RADIAL_GAMEUI_AllButtonAreas =  [A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT, 8071]; //-- dashboard and selector-extension
- 
+
+
 
 [] spawn {
+	sleep 1;
+	A3C_SHOWNHUD = shownHud; //-- shownHud select 6 is false if this fires earlier
 
 	//-- GAMEUI- VARIABLES
 	waitUntil {!isNull findDisplay 12}; //-- necessary because otherwise weird offset

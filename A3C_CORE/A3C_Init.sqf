@@ -119,6 +119,8 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_UI.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_Formation_Init.sqf";
 A3C_SPAWN_HUD_MENU = compile preprocessfileLineNumbers "A3C_CORE\ui\HUD\A3C_SPAWN_HUD_MENU.sqf";
 
+//-- HUD DYNAMIC (findDisplay 100100)
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_DYNAMIC\UI_DSP_HUD_DYNAMIC_Handlers.sqf";
 
 //-- Map Overlay
 call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_Functions.sqf";

@@ -9,7 +9,7 @@ These functions are shared by dispatchers for MAP and HUD
 
 A3C_UI_SHARED_onKeyDown_remoteVehicle = {
 	params ["_display", "_key", "_shift", "_ctrl", "_alt"];
-	systemchat "keydown remote";
+
 	//-- vehicle remote: prepare action:
 	private _remoteDriver = driver a3c_remote_tank_obj;
 
@@ -24,9 +24,7 @@ A3C_UI_SHARED_onKeyDown_remoteVehicle = {
 
 		hint "CONTROL THE VEHICLE WITH ARROW KEYS. CANCEL REMOTE WITH CTRL+RMB";
 
-		a3c_tank_speed_max = if (_shift) then {15} else {5};
-
-		
+		a3c_tank_speed_max = if (_shift) then {15} else {5};	
 
 		//-- steering
 		switch (true) do {

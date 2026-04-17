@@ -91,12 +91,8 @@ if ((currentweapon player) == (secondaryweapon player)) then {
 if ( !isNull(findDisplay 312) ) exitWith {}; //-- ZEUS interface is open. Prevent most A3C stuff
 if (_exit) exitWith {};
 
-if !(isnil "A3C_GRENADEHANDLER") then {
-	(findDisplay 46) displayRemoveEventHandler ["MouseButtonUP",A3C_GRENADEHANDLER];
-};
-if !(isnil "A3C_GRENADEHANDLER_1") then {
-	(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_GRENADEHANDLER_1];
-};
+
+
 private _selectAll = false;
 
 

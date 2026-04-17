@@ -260,179 +260,181 @@ A3C_FNC_CBA_KEY = {
 
 
 	if ( !isNull(findDisplay 312) ) exitWith {}; //-- ZEUS interface is open. Prevent most A3C stuff
+	
+	
 	switch (_function) do {
-		case ("HUD_DRAW") : {
-			if (_mode == "DOWN") then {
-				if ((count groupSelectedUnits player) == 1) then {
-					A3C_HUD_DRAW_SHOWNHUD = shownHud;
-					_newHud = +(shownHud);
-					_newHUD set [0,false];
-					//showhud _newHUD;
-					A3C_HUD_DRAW_Action = player addaction
-					[
-						"",
-						{
-							//systemchat "fire disabled";
-						},
-						"",
-						0,
-						false,
-						true,
-						"DefaultAction"
-					];
-					A3C_HUD_DRAW_EH_MM = (findDisplay 46) displayAddEventHandler
-					[
-						"mouseMoving",
-						{
-							if (A3C_HUD_DRAW_BOOL) then {
-								private _unit = (groupSelectedUnits player) select 0;
-								private _vehicle = vehicle _unit;
-								private _pos = [player,objNull] call MCSS_fnc_posIntersect;
-								if (!isNull A3C_SNAP_OBJECT) then {
-									_prms = [ATLtoASL _pos,A3C_SNAP_OBJECT] call A3C_HUD_SNAP_FORMATION;
-									//systemchat str [_pos,_prms];
-									_pos = _prms select 0;
-								};
-								private _count = (count A3C_HUD_DRAW_POSARRAY);
-								if (_count > 0) then {
-									private _lastPos = A3C_HUD_DRAW_POSARRAY select (_count -1);
-									private _variDist = switch (true) do {
-										case (_vehicle isKindOf "MAN") : {2};
-										case (_vehicle isKindOf "AIR") : {150};
-										default {15};
-									};
-									private _precision = ((getNumber (configfile >> "CfgVehicles" >> (typeOf _vehicle) >> "precision")) + _variDist);
-									if (_pos distance2D _lastPos > _precision) then {
-										if (_pos distance2D _lastPos < 10) then {
-											_pos set [2,0];
-											A3C_HUD_DRAW_POSARRAY pushBack _pos;
-											//playsound 'A3C_MenuSound1';
-											//hint str _pos;
-										};
-									};
-								};
-							};
+		// case ("HUD_DRAW") : {
+		// 	if (_mode == "DOWN") then {
+		// 		if ((count groupSelectedUnits player) == 1) then {
+		// 			A3C_HUD_DRAW_SHOWNHUD = shownHud;
+		// 			_newHud = +(shownHud);
+		// 			_newHUD set [0,false];
+		// 			//showhud _newHUD;
+		// 			A3C_HUD_DRAW_Action = player addaction
+		// 			[
+		// 				"",
+		// 				{
+		// 					//systemchat "fire disabled";
+		// 				},
+		// 				"",
+		// 				0,
+		// 				false,
+		// 				true,
+		// 				"DefaultAction"
+		// 			];
+		// 			A3C_HUD_DRAW_EH_MM = (findDisplay 46) displayAddEventHandler
+		// 			[
+		// 				"mouseMoving",
+		// 				{
+		// 					if (A3C_HUD_DRAW_BOOL) then {
+		// 						private _unit = (groupSelectedUnits player) select 0;
+		// 						private _vehicle = vehicle _unit;
+		// 						private _pos = [player,objNull] call MCSS_fnc_posIntersect;
+		// 						if (!isNull A3C_SNAP_OBJECT) then {
+		// 							_prms = [ATLtoASL _pos,A3C_SNAP_OBJECT] call A3C_HUD_SNAP_FORMATION;
+		// 							//systemchat str [_pos,_prms];
+		// 							_pos = _prms select 0;
+		// 						};
+		// 						private _count = (count A3C_HUD_DRAW_POSARRAY);
+		// 						if (_count > 0) then {
+		// 							private _lastPos = A3C_HUD_DRAW_POSARRAY select (_count -1);
+		// 							private _variDist = switch (true) do {
+		// 								case (_vehicle isKindOf "MAN") : {2};
+		// 								case (_vehicle isKindOf "AIR") : {150};
+		// 								default {15};
+		// 							};
+		// 							private _precision = ((getNumber (configfile >> "CfgVehicles" >> (typeOf _vehicle) >> "precision")) + _variDist);
+		// 							if (_pos distance2D _lastPos > _precision) then {
+		// 								if (_pos distance2D _lastPos < 10) then {
+		// 									_pos set [2,0];
+		// 									A3C_HUD_DRAW_POSARRAY pushBack _pos;
+		// 									//playsound 'A3C_MenuSound1';
+		// 									//hint str _pos;
+		// 								};
+		// 							};
+		// 						};
+		// 					};
 
-						}
-					];
-					A3C_HUD_DRAW_EH_MD = (findDisplay 46) displayAddEventHandler
-					[
-						"mouseButtonDown",
-						{
-							//systemchat str _this;
-							if  (_this select 1 == 1) exitWith {};
-							if ((count groupSelectedUnits player) == 1) then {
-								A3C_HUD_DRAW_BOOL = true;
-								_pos = [player,objNull] call MCSS_fnc_posIntersect;
-								_pos set [2,0];
-								A3C_HUD_DRAW_POSARRAY = [_pos];
-							};
+		// 				}
+		// 			];
+		// 			A3C_HUD_DRAW_EH_MD = (findDisplay 46) displayAddEventHandler
+		// 			[
+		// 				"mouseButtonDown",
+		// 				{
+		// 					//systemchat str _this;
+		// 					if  (_this select 1 == 1) exitWith {};
+		// 					if ((count groupSelectedUnits player) == 1) then {
+		// 						A3C_HUD_DRAW_BOOL = true;
+		// 						_pos = [player,objNull] call MCSS_fnc_posIntersect;
+		// 						_pos set [2,0];
+		// 						A3C_HUD_DRAW_POSARRAY = [_pos];
+		// 					};
 
-						}
-					];
-					A3C_HUD_DRAW_EH_MU = (findDisplay 46) displayAddEventHandler
-					[
-						"mouseButtonUP",
-						{
-							//player sidechat str _this;
+		// 				}
+		// 			];
+		// 			A3C_HUD_DRAW_EH_MU = (findDisplay 46) displayAddEventHandler
+		// 			[
+		// 				"mouseButtonUP",
+		// 				{
+		// 					//player sidechat str _this;
 
-							//systemchat str A3C_HUD_DRAW_POSARRAY;
-							if  (_this select 1 == 1) exitWith {};
-							//-- insert action
-							if (!isNil 'A3C_HUD_DRAW_EH_MU') then {
-								(findDisplay 46) displayRemoveEventHandler ["mouseButtonUp",A3C_HUD_DRAW_EH_MU];
-								A3C_HUD_DRAW_EH_MU = nil;
-							};
-							if (!isNil 'A3C_HUD_DRAW_EH_MM') then {
-								(findDisplay 46) displayRemoveEventHandler ["mouseMoving",A3C_HUD_DRAW_EH_MM];
-								A3C_HUD_DRAW_EH_MM = nil;
-							};
-							if (!isNil 'A3C_HUD_DRAW_EH_MD') then {
-								(findDisplay 46) displayRemoveEventHandler ["mouseButtonDown",A3C_HUD_DRAW_EH_MD];
-								A3C_HUD_DRAW_EH_MD = nil;
-							};
-							private _unit = (groupSelectedUnits player) select 0; showCommandingMenu "";
+		// 					//systemchat str A3C_HUD_DRAW_POSARRAY;
+		// 					if  (_this select 1 == 1) exitWith {};
+		// 					//-- insert action
+		// 					if (!isNil 'A3C_HUD_DRAW_EH_MU') then {
+		// 						(findDisplay 46) displayRemoveEventHandler ["mouseButtonUp",A3C_HUD_DRAW_EH_MU];
+		// 						A3C_HUD_DRAW_EH_MU = nil;
+		// 					};
+		// 					if (!isNil 'A3C_HUD_DRAW_EH_MM') then {
+		// 						(findDisplay 46) displayRemoveEventHandler ["mouseMoving",A3C_HUD_DRAW_EH_MM];
+		// 						A3C_HUD_DRAW_EH_MM = nil;
+		// 					};
+		// 					if (!isNil 'A3C_HUD_DRAW_EH_MD') then {
+		// 						(findDisplay 46) displayRemoveEventHandler ["mouseButtonDown",A3C_HUD_DRAW_EH_MD];
+		// 						A3C_HUD_DRAW_EH_MD = nil;
+		// 					};
+		// 					private _unit = (groupSelectedUnits player) select 0; showCommandingMenu "";
 
-							private _tVar = [];
-							if (!isNil 'A3C_HUD_DRAW_Action') then {
-								//_x getPos [50,0]
-								{
-									//systemchat str _foreachindex;
-									private _mark = format ['A3C_Mark_P%1',A3C_MARKER_COUNT]; //[(format ['A3C_Mark_P%1',A3C_MARKER_COUNT]),_x,"ICON","mil_dot",[0.5,0.5],"","ColorWhite",1] call MCSS_fnc_createMarker;
-									_mark setMarkerAlphaLocal 0.5;
-									A3C_MARKERS pushBackUnique _mark;
-									A3C_MARKER_COUNT = A3C_MARKER_COUNT + 1;
-									_tVar pushBack
-									[
-										[_x,[]],
-										[_mark,"",""],
-										["NONE","NONE"],
-										["NONE","NONE"],
-										["UP","UP"],
-										[[0,false]],
-										false,
-										0,
-										-1,
-										0,
-										-1,
-										0
-									];
-								} foreach A3C_HUD_DRAW_POSARRAY;
-								//player commandChat str _tVar;
-								 _unit setVariable ["A3C_PLOT",_tVar,true];
-								private _script = [_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE;
-							} else {
+		// 					private _tVar = [];
+		// 					if (!isNil 'A3C_HUD_DRAW_Action') then {
+		// 						//_x getPos [50,0]
+		// 						{
+		// 							//systemchat str _foreachindex;
+		// 							private _mark = format ['A3C_Mark_P%1',A3C_MARKER_COUNT]; //[(format ['A3C_Mark_P%1',A3C_MARKER_COUNT]),_x,"ICON","mil_dot",[0.5,0.5],"","ColorWhite",1] call MCSS_fnc_createMarker;
+		// 							_mark setMarkerAlphaLocal 0.5;
+		// 							A3C_MARKERS pushBackUnique _mark;
+		// 							A3C_MARKER_COUNT = A3C_MARKER_COUNT + 1;
+		// 							_tVar pushBack
+		// 							[
+		// 								[_x,[]],
+		// 								[_mark,"",""],
+		// 								["NONE","NONE"],
+		// 								["NONE","NONE"],
+		// 								["UP","UP"],
+		// 								[[0,false]],
+		// 								false,
+		// 								0,
+		// 								-1,
+		// 								0,
+		// 								-1,
+		// 								0
+		// 							];
+		// 						} foreach A3C_HUD_DRAW_POSARRAY;
+		// 						//player commandChat str _tVar;
+		// 						 _unit setVariable ["A3C_PLOT",_tVar,true];
+		// 						private _script = [_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE;
+		// 					} else {
 
 
-							};
+		// 					};
 
-							{player groupSelectUnit [_x,false]} foreach units player;
-							A3C_HUD_DRAW_BOOL = false;
-							A3C_HUD_DRAW_POSARRAY = [];
-						}
-					];
-				} else {
-					A3C_HUD_DRAW_Action = nil;
-				};
+		// 					{player groupSelectUnit [_x,false]} foreach units player;
+		// 					A3C_HUD_DRAW_BOOL = false;
+		// 					A3C_HUD_DRAW_POSARRAY = [];
+		// 				}
+		// 			];
+		// 		} else {
+		// 			A3C_HUD_DRAW_Action = nil;
+		// 		};
 
-			} else {
-				if (!isNil 'A3C_HUD_DRAW_EH_MU') then {
-					(findDisplay 46) displayRemoveEventHandler ["mouseButtonUp",A3C_HUD_DRAW_EH_MU];
-					A3C_HUD_DRAW_EH_MU = nil;
-				};
-				if (!isNil 'A3C_HUD_DRAW_EH_MM') then {
-					(findDisplay 46) displayRemoveEventHandler ["mouseMoving",A3C_HUD_DRAW_EH_MM];
-					A3C_HUD_DRAW_EH_MM = nil;
-				};
-				if (!isNil 'A3C_HUD_DRAW_EH_MD') then {
-					(findDisplay 46) displayRemoveEventHandler ["mouseButtonDown",A3C_HUD_DRAW_EH_MD];
-					A3C_HUD_DRAW_EH_MD = nil;
-				};
+		// 	} else {
+		// 		if (!isNil 'A3C_HUD_DRAW_EH_MU') then {
+		// 			(findDisplay 46) displayRemoveEventHandler ["mouseButtonUp",A3C_HUD_DRAW_EH_MU];
+		// 			A3C_HUD_DRAW_EH_MU = nil;
+		// 		};
+		// 		if (!isNil 'A3C_HUD_DRAW_EH_MM') then {
+		// 			(findDisplay 46) displayRemoveEventHandler ["mouseMoving",A3C_HUD_DRAW_EH_MM];
+		// 			A3C_HUD_DRAW_EH_MM = nil;
+		// 		};
+		// 		if (!isNil 'A3C_HUD_DRAW_EH_MD') then {
+		// 			(findDisplay 46) displayRemoveEventHandler ["mouseButtonDown",A3C_HUD_DRAW_EH_MD];
+		// 			A3C_HUD_DRAW_EH_MD = nil;
+		// 		};
 
-				if (A3C_HUD_DRAW_BOOL) then {
+		// 		if (A3C_HUD_DRAW_BOOL) then {
 
-					[] spawn {
-						private _t = A3C_HUD_DRAW_POSARRAY;
-						for "_i" from 1 to 3 do {
-							A3C_HUD_DRAW_POSARRAY = [];
-							sleep 0.05;
-							A3C_HUD_DRAW_POSARRAY = _t;
-							sleep 0.05;
-						};
-						A3C_HUD_DRAW_POSARRAY = [];
-					};
+		// 			[] spawn {
+		// 				private _t = A3C_HUD_DRAW_POSARRAY;
+		// 				for "_i" from 1 to 3 do {
+		// 					A3C_HUD_DRAW_POSARRAY = [];
+		// 					sleep 0.05;
+		// 					A3C_HUD_DRAW_POSARRAY = _t;
+		// 					sleep 0.05;
+		// 				};
+		// 				A3C_HUD_DRAW_POSARRAY = [];
+		// 			};
 
-				} else {
-					{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
-				};
-				if (!isNil 'A3C_HUD_DRAW_Action') then {
-					player removeaction A3C_HUD_DRAW_Action;
-					//systemchat "fire enabled";
-					//showHUD A3C_HUD_DRAW_SHOWNHUD; A3C_HUD_DRAW_SHOWNHUD = nil;
-				};
-				A3C_HUD_DRAW_Action = nil;
-			};
-		};
+		// 		} else {
+		// 			{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
+		// 		};
+		// 		if (!isNil 'A3C_HUD_DRAW_Action') then {
+		// 			player removeaction A3C_HUD_DRAW_Action;
+		// 			//systemchat "fire enabled";
+		// 			//showHUD A3C_HUD_DRAW_SHOWNHUD; A3C_HUD_DRAW_SHOWNHUD = nil;
+		// 		};
+		// 		A3C_HUD_DRAW_Action = nil;
+		// 	};
+		// };
 		case ("SUPPRESSION") : {
 
 			if (_mode == "DOWN") then {
@@ -884,10 +886,9 @@ A3C_FNC_CBA_KEY = {
 
 				if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
 					A3C_CURRENT_COMMAND_LEVEL = "SQUAD";
-					_shownHud set [6,A3C_SHOWNHUD];
+					_shownHud = A3C_ShownHud;
 				} else {
 					A3C_CURRENT_COMMAND_LEVEL = "HIGHCOMMAND";
-					A3C_SHOWNHUD = _shownHud select 6;
 					_shownHud set [6,false];
 
 				};

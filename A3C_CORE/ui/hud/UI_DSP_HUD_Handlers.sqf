@@ -163,6 +163,7 @@ A3C_UI_HUD_onKeyUp = {
 
 	if (_key == A3C_RadialMenu_KEY_ID select 0) then {
 		A3C_DISABLE_RADIAL = false;
+		{inGameUISetEventHandler [_x, 'true']} foreach ['PrevAction','NextAction'];
 	};
 
 	switch (true) do {
@@ -205,63 +206,67 @@ A3C_UI_HUD_onMouseButtonDown = {
 	private _curTar = cursorTarget;
 	private _blockDefaultKey = false;
 
-	if (A3C_DISABLE_RADIAL) exitWith {
-		if (_button == 1 && {!isNil "A3C_GRENADEHANDLER"}) then {
-			A3C_DISABLE_RADIAL = false;
-			["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
-			(findDisplay 46) displayRemoveEventHandler ["MouseButtonUP", A3C_GRENADEHANDLER];
-		};
-		false
-	};
+	if (A3C_DISABLE_RADIAL) exitWith {false}; //-- disable MB because user-action is expected from radial
 
-	if (_button == 1 && {_ctrl}) then {
-		if (a3c_is_HC_remote) then {
-			_this call A3C_UI_SHARED_OnMouseButtonDown_remoteVehicle;
-		} else {
-			if (count A3C_HUD_UNITS > 0) then {
-				[_alt, _shift] call A3C_Setorder_HUD;
-				_blockDefaultKey = true;
+	if (_button == 1) then {
+		if (_ctrl) then {
+			if (a3c_is_HC_remote) then {
+				_this call A3C_UI_SHARED_OnMouseButtonDown_remoteVehicle;
 			} else {
-				if (!isNull _curTar) then {
-					if (_curTar in units group player) then {
-						if (_alt) then {
-							_blockDefaultKey = true;
-							if (_curTar in A3C_HUD_UNITS) then {
-								[_curTar] call A3C_HUD_REMOVE_SELECTED;
-							} else {
-								[_curTar, _curTar getVariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
-								
-								if (count groupSelectedUnits player > 0) then {
-									{ player groupSelectUnit [_x, false] } forEach units group player;
-								};
-							};
-							breakOut "main";
-						} else {
-							if (count A3C_HUD_UNITS == 0) then {
+				if (count A3C_HUD_UNITS > 0) then {
+					[_alt, _shift] call A3C_Setorder_HUD;
+					_blockDefaultKey = true;
+				} else {
+					if (!isNull _curTar) then {
+						if (_curTar in units group player) then {
+							if (_alt) then {
 								_blockDefaultKey = true;
-
-								if (_curTar in groupSelectedUnits player) then {
-									player groupSelectUnit [_curTar, false];
+								if (_curTar in A3C_HUD_UNITS) then {
+									[_curTar] call A3C_HUD_REMOVE_SELECTED;
 								} else {
-									player groupSelectUnit [_curTar, true];
-								};
-
-								if (count groupSelectedUnits player == 0) then {
-									showCommandingMenu "";
+									[_curTar, _curTar getVariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
+									
+									if (count groupSelectedUnits player > 0) then {
+										{ player groupSelectUnit [_x, false] } forEach units group player;
+									};
 								};
 								breakOut "main";
-							};
-						};	
-					};
+							} else {
+								if (count A3C_HUD_UNITS == 0) then {
+									_blockDefaultKey = true;
 
-					if (count groupSelectedUnits player == 0) then {
-						showCommandingMenu "";
-					};
-				} else {
-					if (!(_ctrl) && {count A3C_HUD_UnitIndicators > 0}) then {
-						{ [_x] call A3C_HUD_REMOVE_SELECTED } forEach +A3C_HUD_UNITS;
+									if (_curTar in groupSelectedUnits player) then {
+										player groupSelectUnit [_curTar, false];
+									} else {
+										player groupSelectUnit [_curTar, true];
+									};
+
+									if (count groupSelectedUnits player == 0) then {
+										showCommandingMenu "";
+									};
+									breakOut "main";
+								};
+							};	
+						};
+
+						if (count groupSelectedUnits player == 0) then {
+							showCommandingMenu "";
+						};
+					} else {
+						if (!(_ctrl) && {count A3C_HUD_UnitIndicators > 0}) then {
+							{ [_x] call A3C_HUD_REMOVE_SELECTED } forEach +A3C_HUD_UNITS;
+						};
 					};
 				};
+			};
+		} else {
+			//-- Regular RMB click
+
+			//-- Cancel GTI-Grenade (Player)
+			if (BR_A3C_GRENADEMODE && {A3C_GTI_UNIT == player}) then {
+				A3C_GTI_UNIT = objNull;
+				BR_A3C_GRENADEMODE = false;
+				["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
 			};
 		};	
 	};
@@ -374,3 +379,8 @@ A3C_UI_HUD_onMouseZChanged = {
 	A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_CorrectDir;
 	true
 };
+
+// A3C_UI_HUD_onMouseMoving = { //-- placeholder for 3d draw movement
+// 	params ["_display", "_xDeltaPos", "_yDeltaPos"];
+// 	hint str _this;
+// };

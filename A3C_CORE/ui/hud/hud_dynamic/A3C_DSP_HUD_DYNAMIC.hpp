@@ -18,6 +18,9 @@ class A3C_DSP_HUD_DYNAMIC
 {
 	idd = 100100;
 	movingenable = false;
+
+	onKeyUp = "_this call A3C_UI_HUD_DYNAMIC_onKeyUp";
+
 	class ControlsBackground 
 	{
 		class MCSS_A3C_BHV_CBM_Background: A3C_RscButton_Invisible

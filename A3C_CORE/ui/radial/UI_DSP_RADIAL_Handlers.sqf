@@ -138,7 +138,7 @@ A3C_UI_RADIAL_HandlerFNC_OnMouseButtonDown = {
 			//["ROE",-1,false,false] call A3C_RADIAL_BTN_FNC_RING_INNER;
 			A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_RD_UNITS;
 			[] call A3C_UNITSEL_REFRESH_UI;
-			[] call A3C_Radial_DashBoard;
+			[] call A3C_UI_SHARED_createDashBoard;
 		};
 		
 	} else {

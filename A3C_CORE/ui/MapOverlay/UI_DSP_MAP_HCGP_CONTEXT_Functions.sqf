@@ -1365,8 +1365,6 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											_button = _button - [(_button select 0)];
 											if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
 												A3C_DISABLE_RADIAL = false;
-												//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-												//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 												(findDisplay 100060) closeDisplay 0;
 												A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
 												{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
@@ -3798,7 +3796,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 	_startBar progressSetPosition 0.75;
 	
 	if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
-		[] call A3C_Radial_DashBoard;
+		[] call A3C_UI_SHARED_createDashBoard;
 
 		waitUntil {
 			isNull findDisplay _a3c_dsp ||

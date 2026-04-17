@@ -263,34 +263,13 @@ A3C_GRENADE_PLAYER = {
 	if ((lifeState player) in ["INJURED","INCAPACITATED"]) exitWith {};
 	A3C_GTI_UNIT = player;
 	if (_mode == "DOWN") then {
-		//if (A3C_WAIT_THROW_P == 0) then {
-			//private _reloadTime = getNumber (configFile >> "CfgWeapons" >> "Throw" >> ((currentThrowable player) select 1) >> "magazineReloadTime");
-			 //[_reloadTime,1] call BIS_fnc_cutDecimals;
-			
-			BR_A3C_TACV_throwTheta = 45;
-			BR_A3C_TACV_throwTheta_Add = 0;
-			BR_A3C_TACV_oefId = ["BR_A3C_TACV_oefId", "onEachFrame", "BR_A3C_OEFControl"] call BIS_fnc_addStackedEventHandler;
-			BR_A3C_GRENADEMODE = true;
-			//player setWeaponReloadingTime [player, (currentThrowable player) select 1, 0];
-			//if (count (groupSelectedUnits player) == 0) then {
-				A3C_GRENADEHANDLER_P = (findDisplay 46) displayAddEventHandler
-				[
-					"MouseButtonDown",
-					{
-						if ((_this select 1) == 1) then {
-							A3C_GTI_UNIT = objNull;
-							BR_A3C_GRENADEMODE = false;
-							(findDisplay 46) displayRemoveEventHandler ["MouseButtonDown",A3C_GRENADEHANDLER_P];
-							["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
-						};
-					}
-				];
-			//};
-		//};
+		BR_A3C_TACV_throwTheta = 45;
+		BR_A3C_TACV_throwTheta_Add = 0;
+		BR_A3C_TACV_oefId = ["BR_A3C_TACV_oefId", "onEachFrame", "BR_A3C_OEFControl"] call BIS_fnc_addStackedEventHandler;
+		BR_A3C_GRENADEMODE = true;
 	} else {
 		if (BR_A3C_GRENADEMODE) then {
 			["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
-			(findDisplay 46) displayRemoveEventHandler ["MouseButtonDown",A3C_GRENADEHANDLER_P];
 			if (A3C_WAIT_THROW_P == 0) then {
 				//systemChat str time;
 				A3C_WAIT_THROW_P = 1;
@@ -302,20 +281,9 @@ A3C_GRENADE_PLAYER = {
 						A3C_GTI_UNIT = objNull;
 					};
 				};
-				//((currentThrowable player) select 0) spawn {
-				//	sleep 1;
-				//	if (!isNull A3C_GTI_UNIT) then {
-				//		systemchat str (!isNull A3C_GTI_UNIT);
-				//		player removeEventHandler ["fired", BR_A3C_TEMP_gfeh];	
-				//	} else {
-						
-				//	};
-				//};
 			};
 		};
-		//A3C_GTI_UNIT = objNull;
 		BR_A3C_GRENADEMODE = false;
-		//A3C_DISABLE_RADIAL = false;
 	};
 };
 

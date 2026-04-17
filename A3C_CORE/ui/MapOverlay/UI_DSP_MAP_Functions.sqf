@@ -625,7 +625,7 @@ A3C_UNITSEL_REFRESH_UI = {
 				//A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_RD_UNITS;
 			};
 			//if (count A3C_RD_UNITS == 1) then {
-				[] call A3C_Radial_DashBoard;
+				[] call A3C_UI_SHARED_createDashBoard;
 			//};
 		};
 		A3C_RADIAL_HOVER = _radialHoverReal;
@@ -1809,7 +1809,7 @@ A3C_SWITCH_COMMAND_PAGE = {
 
 A3C_TRACKER_GROUPS = [];
 //-- Super simple Force-Tracker (units known to group members)
-A3C_CREATE_TRACKER = {
+A3C_UI_MAP_FNC_createEnemyForceTracker = {
 	if (A3C_DISABLE_TRACKER) exitWith {};
 	_factionGroups = [];
 	_friendlyGroups = [];

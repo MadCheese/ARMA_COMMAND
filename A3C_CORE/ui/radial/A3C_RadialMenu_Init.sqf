@@ -7,7 +7,7 @@ A3C_UI_GRID_SIZE = 1;
 A3C_CURRENT_COMMAND_LEVEL = "SQUAD";
 A3C_UI_RADIAL_CTRLS_SHOWN = [];
 A3C_UI_RADIAL_CTRLS_SHOWN_ACTIVATED = false;
-A3C_Radial_DashBoard_ExtraControls = [];
+A3C_UI_SHARED_createDashBoard_ExtraControls = [];
 A3C_ACTIVE_BUTTONUNIT = objnull;
 
 
@@ -28,24 +28,6 @@ A3C_UI_Radial_SQ_ROE_MAIN = {
     _buttonsPerRow = 5;
     _rows = 2;
 
-    (findDisplay 100100) displayAddEventhandler
-    [
-        "KeyUp",
-        {
-            [_this] spawn {
-                _button = _this select 0;
-                _button = _button - [(_button select 0)];
-                if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-                    A3C_DISABLE_RADIAL = false;
-                    A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-                    (findDisplay 100100) closeDisplay 0;
-                    A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
-                    {player groupSelectUnit [_x,false]} foreach units player; 
-                    showCommandingMenu "";
-                };
-            };
-        }
-    ];
 
     // Scaling factor to control the size of the entire dialog
     private _scaleFactor = 4; // Adjust this value to resize the dialog proportionally

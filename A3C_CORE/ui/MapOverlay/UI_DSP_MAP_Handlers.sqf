@@ -2171,13 +2171,13 @@ A3C_UI_MAP_onKeyDown_Map = { //-- This handler is needed because ESC behaves dif
 		>> For the record, it's totally possible that I create this circumstance somewhere :)
 
 	2.  In order to be able to use ESC key when closing popup menus (GP/WP Context menu) without closing entire map
-		has to be added to the map directly.
+		has to be added to the map directly. 'if (_key == 1) exitWith {true};' only works on main map
 	
 	The reason why I still keep _Map and _Overlay handlers separate is simply organization, and might be merged into the _Map addEventHandler
 
 	*///-----------------------------------------------------------
 
-
+	
 
 	// player sidechat format ["Display %1, A3C_UI_MAP_onKeyDown_Map - %2 %3",_mapControl, keyName (_this select 1), round time];
 
@@ -2225,7 +2225,7 @@ A3C_UI_MAP_onKeyDown_Overlay = {
 	
 	// player commandchat format ["Display %1, A3C_UI_MAP_onKeyDown_Overlay: %2 - %3", _display, keyName _key, round time];
 
-
+	
 
 	//-- 1: MAP KEYBIND (close map > Does not work if overlay is open)
 	if ((_this select 1) in actionKeys "showmap") exitWith {

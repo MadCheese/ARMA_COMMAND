@@ -22,8 +22,8 @@ link7[] = {6,3};
 link8[] = {7,9};
 link9[] = {8,4};
 link10[] = {9,8};
-globals[] = {0.000000,0,0,0,0,640,480,1,186,6316128,1,-532.299133,610.065369,282.725647,-556.536560,897,659,1};
-window[] = {0,-1,-1,-1,-1,1013,182,1786,182,1,915};
+globals[] = {0.000000,0,0,0,0,640,480,1,186,6316128,1,-721.360413,799.126282,421.623230,-695.434448,897,659,1};
+window[] = {0,-1,-1,-1,-1,935,104,1708,104,1,915};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -35,8 +35,8 @@ class FSM
                 {
                         name = "Start_";
                         itemno = 0;
-                        init = /*%FSM<STATEINIT""">*/"private _dspID = _this select 0;" \n
-                         "private _originalHud = _this select 1;" \n
+                        init = /*%FSM<STATEINIT""">*/"params [""_dspID""];" \n
+                         "" \n
                          "private _dsp = findDisplay _dspID;" \n
                          "" \n
                          "//systemchat str [""FSM"",_dspID];"/*%FSM</STATEINIT""">*/;
@@ -62,7 +62,7 @@ class FSM
                 {
                         name = "Exit_";
                         itemno = 2;
-                        init = /*%FSM<STATEINIT""">*/"showHud _originalHUD;" \n
+                        init = /*%FSM<STATEINIT""">*/"showHud A3C_SHOWNHUD;" \n
                          "" \n
                          "//systemchat ""fsm closed"";" \n
                          "" \n
