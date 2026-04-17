@@ -16,9 +16,11 @@ class A3C_DSP_MapOverlay
 {
 	idd = 100020;
 	movingenable = true;
-	onKeyDown = "_this call A3C_UI_MAP_HandlerFNC_KeyDown_Overlay;";
-	onMouseButtonDown = "_this call A3C_UI_MAP_HandlerFNC_OnMouseButtonDown; false";
-	onMouseButtonUp = "_this call A3C_UI_MAP_HandlerFNC_OnMouseButtonUp; false";
+	onKeyDown = "private _blockDefaultKey = _this call A3C_UI_MAP_onKeyDown_Overlay; _blockDefaultKey";
+	onKeyUp = "_this call A3C_UI_MAP_onKeyUp_Overlay;";
+
+	onMouseButtonDown = "_this call A3C_UI_MAP_onOnMouseButtonDown_Overlay; false";
+	onMouseButtonUp = "_this call A3C_UI_MAP_onOnMouseButtonUp_Overlay; false";
 
 	
 			
@@ -83,7 +85,7 @@ class A3C_DSP_MapOverlay
 		class A3C_MAP_FULLSCREEN: A3C_RscButton_Invisible
 		{
 			idc = 12;
-			onMouseMoving = "_this call A3C_UI_MAP_HandlerFNC_OnMouseMoving_Overlay";
+			onMouseMoving = "_this call A3C_UI_MAP_onOnMouseMoving_Overlay";
 			x = safezoneX;
 			y = safezoneY;
 			w = safezoneW;

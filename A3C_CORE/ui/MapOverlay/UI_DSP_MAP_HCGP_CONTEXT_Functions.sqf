@@ -1350,6 +1350,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									"KeyUp",
 									{
 										[_this] spawn {
+											
 											_button = _this select 0;
 											_button = _button - [(_button select 0)];
 											if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
@@ -1697,62 +1698,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								if (_x == driver _vehicle && {[_vehicle] call A3C_isAttackHelicopter}) then {
 									_vehicle setVariable ["A3C_Freeze_helicopter",[false,0],true];
 									{_vehicle enableAI _x; } foreach ["TARGET","PATH"];
-									//systemchat 'off';
 								};
 							} foreach (units _group);
-						/*
-						} else {
-							A3C_OBJECTSELECTOR_MODE = "HELI_OVERWATCH_1";
-							_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
-							_text = findDisplay _a3c_dsp displayCtrl 800802;
-							_listBox = findDisplay _a3c_dsp displayCtrl 800803;
-
-							if (_isRadial) then {
-								[] call A3C_RADIAL_CloseDisplay;
-								with uiNamespace do {
-								//disableSerialization;
-								A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-								(findDisplay 100060) displayAddEventhandler
-									[
-										"KeyUp",
-										{
-											[_this] spawn {
-												_button = _this select 0;
-												_button = _button - [(_button select 0)];
-												if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-													A3C_DISABLE_RADIAL = false;
-													(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-													(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-													(findDisplay 100060) closeDisplay 0;
-													A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
-													{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
-												};
-											};
-										}
-									];
-								};
-							} else {
-								(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
-								_parent ctrlShow true;
-								_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
-								_parent ctrlCommit 0;
-								_parent ctrlShow true;
-								{
-									_ctrlPos = ctrlPosition _x;
-									_ctrlPos set [3,(_ctrlPos select 3) + (  (4)   * (0.0440051 * safezoneH) )];
-									_x ctrlSetPosition _ctrlPos;
-									_x ctrlCommit 0;
-								} foreach [_parent,_listBox];
-							};
-							//if (true) exitWith {};
-							_text ctrlSetText "Select Hover Height";
-							
-							lbClear _listBox;
-							{
-								[_listBox, _x] call A3C_addLbEntry;
-							} foreach ["100","200","500","1000"];
-							
-						*/
 						};
 
 

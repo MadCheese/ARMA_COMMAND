@@ -412,6 +412,10 @@ A3C_UI_RADIAL_Current_Remfire_Vehicles = []; //-- Remfire Vehicles: Radial
 A3C_REMFIRE_nearEmptyStatics = [];
 
 a3c_is_HC_remote = false;
+a3c_tank_speed = 0;
+a3c_remote_tank_obj = false;
+
+
 A3C_BOOL_REMFIRE = false;
 A3C_BOOL_REMFIRE_SUP = false;
 A3C_REMFIRE_MAGTYPES = [];

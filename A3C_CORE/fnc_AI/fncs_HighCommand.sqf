@@ -1390,7 +1390,7 @@ A3C_HC_VEHICLEBOARD = {
 				A3C_UI_MAPICONS_HC_VICS = [];
 				A3C_BOOL_MOUSEMOVING = true;
 				A3C_MMCode = {
-					_this spawn A3C_UI_MAP_HandlerFNC_MouseDrag;
+					_this spawn A3C_UI_MAP_onMouseDrag;
 				};
 				A3C_BOOL_DRAGLINE = true;
 				A3C_CONNECTING_MODE = "HCBOARD";

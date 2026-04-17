@@ -1,4 +1,4 @@
-A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
+A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 
 	/*
 	Let's overwork this entire handler shall we.
@@ -15,7 +15,13 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 
 	private _exit = false;
 
-	private _left = _mouseButton == 0;
+	private _left = _mouseButton == 0; // << #TODO this sux, remove lol
+
+
+	if (a3c_is_HC_remote && {!(_left)}) exitWith  {
+		_this call A3C_UI_SHARED_OnMouseButtonDown_remoteVehicle;
+		false //-- potentially not needed. WIP stage, this entire mouseDown EH needs serious overhaul
+	};
 
 	//------------------------- EXIT CONDITIONS (MAPCLICK NOT ALLOWED)
 	
@@ -239,7 +245,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 							};
 							
 							A3C_MMCode = {
-								[A3C_HC_TOSWITCH,_this] spawn A3C_UI_MAP_HandlerFNC_MouseDrag_HCWP;
+								[A3C_HC_TOSWITCH,_this] spawn A3C_UI_MAP_onMouseDrag_HCWP;
 							};
 						};
 							
@@ -371,7 +377,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 						A3C_MAP_DRAGPLANNING_ACTIVE = true;
 						A3C_BOOL_MOUSEMOVING = true;
 						A3C_MMCode = {
-							_this spawn A3C_UI_MAP_HandlerFNC_MouseDrag;
+							_this spawn A3C_UI_MAP_onMouseDrag;
 						};
 					};
 				};
@@ -485,7 +491,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 							A3C_MAP_DRAGPLANNING_ACTIVE = true;
 							A3C_BOOL_MOUSEMOVING = true;
 							A3C_MMCode = {
-								_this spawn A3C_UI_MAP_HandlerFNC_MouseDrag;
+								_this spawn A3C_UI_MAP_onMouseDrag;
 							};
 						};
 						_exit = true; //~~?	
@@ -548,13 +554,13 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 					//systemchat str _polyRefID;
 					A3C_CUR_EDIT_POLY = ([(_x select 0) select 0,0,"",false] call A3C_SUP_CREATE_POLY) select 0; //~~ poly: what is going on here: since create_poly does not create markers, it is used to find // 0 is replacing (markerDir A3C_MovedItem_ID)
 					A3C_MMCode = if (_ctrl) then {
-						{[_this,A3C_MovedItem_ID,"WP",true,false] spawn A3C_UI_MAP_HandlerFNC_MouseDrag_MapItem;}
+						{[_this,A3C_MovedItem_ID,"WP",true,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
 					} else {
 						if (_alt) then {
 
-							{[_this,A3C_MovedItem_ID,"WP",false,true] spawn A3C_UI_MAP_HandlerFNC_MouseDrag_MapItem;}
+							{[_this,A3C_MovedItem_ID,"WP",false,true] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
 						} else {
-							{[_this,A3C_MovedItem_ID,"WP",false,false] spawn A3C_UI_MAP_HandlerFNC_MouseDrag_MapItem;}
+							{[_this,A3C_MovedItem_ID,"WP",false,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
 						};
 					};
 
@@ -608,9 +614,9 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 				A3C_BOOL_MOUSEMOVING = true;
 				A3C_BOOL_MOVINGMARKER = true;
 				A3C_DRAGPOS = [_sx, _sy];
-				A3C_MMCode = {[_this,A3C_MovedItem_ID,"WP",false,false] spawn A3C_UI_MAP_HandlerFNC_MouseDrag_MapItem;};
+				A3C_MMCode = {[_this,A3C_MovedItem_ID,"WP",false,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;};
 			} else {
-				[_sx,_sy] call A3C_UI_MAP_HandlerFNC_MouseButtonDown_Loop;
+				[_sx,_sy] call A3C_UI_MAP_onMouseButtonDown_Loop;
 			};
 		} else {
 			[_wpDotIDS select 0,[_sX,_sY]] call A3C_UI_MAP_FNC_SQContext_OpenMenu;
@@ -628,7 +634,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 		A3C_BOOL_MOUSEMOVING = true;
 		A3C_BOOL_MOVINGMARKER = true;
 		A3C_DRAGPOS = [_sx, _sy];
-		A3C_MMCode = {[_this,A3C_MovedItem_ID,"LDIR",false,false] spawn A3C_UI_MAP_HandlerFNC_MouseDrag_MapItem;};
+		A3C_MMCode = {[_this,A3C_MovedItem_ID,"LDIR",false,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;};
 	};
 
 
@@ -702,7 +708,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 	// 			A3C_BOOL_MOUSEMOVING = true;
 	// 			A3C_BOOL_MOVINGHC = true;
 	// 			A3C_MMCode = {
-	// 				[A3C_HC_TOSWITCH,_this] spawn A3C_UI_MAP_HandlerFNC_MouseDrag_HCWP
+	// 				[A3C_HC_TOSWITCH,_this] spawn A3C_UI_MAP_onMouseDrag_HCWP
 	// 			};
 	// 			_exit = true;
 	// 		};
@@ -875,7 +881,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 	};
 
 	if (_ctrl) exitWith {
-		[_sx,_sy] call A3C_UI_MAP_HandlerFNC_MouseButtonDown_Loop;
+		[_sx,_sy] call A3C_UI_MAP_onMouseButtonDown_Loop;
 	};
 
 
@@ -938,7 +944,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 	if !((A3C_TEMP_ACTION select 0) in ["SUPPRESSION","SLINGLOAD","CTRL_DET","STATIC"]) then { //~~ REMOVE GRENADE FROM THIS??   "GRENADE",
 		A3C_CONNECTING_MODE = "LOOKDIR";
 		A3C_MMCode = {
-			_this spawn A3C_UI_MAP_HandlerFNC_MouseDrag;
+			_this spawn A3C_UI_MAP_onMouseDrag;
 		};
 	};
 
@@ -976,7 +982,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 
 					A3C_CONNECTING_MODE = "";
 					A3C_MMCode = {
-						_this spawn A3C_UI_MAP_HandlerFNC_MouseDrag;
+						_this spawn A3C_UI_MAP_onMouseDrag;
 					};
 				};
 
@@ -1000,7 +1006,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 			A3C_TEMP_ACTION = ["STATIC",["ASSEMBLE",((A3C_STATIC_PACKS select 0) select 1)]];
 			A3C_CONNECTING_MODE = "LOOKDIR";
 			A3C_MMCode = {
-				_this spawn A3C_UI_MAP_HandlerFNC_MouseDrag;
+				_this spawn A3C_UI_MAP_onMouseDrag;
 			};
 		} else {
 			//_mSize = [0.5,0.5];
@@ -1018,7 +1024,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 
 				A3C_CONNECTING_MODE = "";
 				A3C_MMCode = {
-					_this spawn A3C_UI_MAP_HandlerFNC_MouseDrag;
+					_this spawn A3C_UI_MAP_onMouseDrag;
 				};
 			} else {
 				systemchat "A3C: No static weapons found or allowed";
@@ -1048,7 +1054,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 					if (count A3C_PICKUP_OBJECTS > 0) then {
 						A3C_CONNECTING_MODE = "";
 						A3C_MMCode = {
-							_this spawn A3C_UI_MAP_HandlerFNC_MouseDrag;
+							_this spawn A3C_UI_MAP_onMouseDrag;
 						};
 					} else {
 						systemchat "A3C: No sling-objects found";
@@ -1086,14 +1092,14 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonDown = {
 };
 
 
-A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
+A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
+	
+	
+	
 	private ["_exit","_sX","_sY","_sPos","_marker","_veh","_unit","_wpData"];
 
 	A3C_BOOL_MAP_MD = false;
 	A3C_BOOL_MOUSEMOVING = false;
-
-
-	//A3C_ConvoyUnits = [];
 
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	_sX = _this select 2;
@@ -1753,7 +1759,7 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 
 	if !(getmarkerColor "A3C_RADIMARK" == "") then {deletemarkerLocal "A3C_RADIMARK"};
 	if (A3C_BOOL_LOOPING) exitwith {
-		_this spawn A3C_UI_MAP_HandlerFNC_MouseButtonUp_Loop;
+		_this spawn A3C_UI_MAP_onMouseButtonUp_Loop;
 	};
 
 	
@@ -2119,17 +2125,17 @@ A3C_UI_MAP_HandlerFNC_OnMouseButtonUp = {
 
 
 
-A3C_UI_MAP_HandlerFNC_OnMouseMoving_Main = {
+A3C_UI_MAP_onOnMouseMoving_Main = {
 	
 	if (isNull findDisplay 100020) then {
-		// player commandChat "A3C_UI_MAP_HandlerFNC_OnMouseMoving_Main";
+		// player commandChat "A3C_UI_MAP_onOnMouseMoving_Main";
 		A3C_MAP_X = _this select 1;
 		A3C_MAP_Y = _this select 2;
 	};
 };
 
-A3C_UI_MAP_HandlerFNC_OnMouseMoving_Overlay = {
-	// player sideChat "A3C_UI_MAP_HandlerFNC_OnMouseMoving_Overlay";
+A3C_UI_MAP_onOnMouseMoving_Overlay = {
+	// player sideChat "A3C_UI_MAP_onOnMouseMoving_Overlay";
 	params ["_display","_sX","_sY","_unUsed"];
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
 	private _ctls = [13,7071,7077,202020,709099,8009,8010,709109,709115,8007];
@@ -2153,11 +2159,11 @@ A3C_UI_MAP_HandlerFNC_OnMouseMoving_Overlay = {
 };
 
 
-A3C_UI_MAP_HandlerFNC_KeyDown_Map = { //-- This handler is needed because ESC behaves differently than ALL other keys
+A3C_UI_MAP_onKeyDown_Map = { //-- This handler is needed because ESC behaves differently than ALL other keys
 	params ["_mapControl","_key","_shift","_ctrl","_alt"];
 
 
-	// player sidechat format ["Display %1, A3C_UI_MAP_HandlerFNC_KeyDown_Map - %2 %3",_mapControl, keyName (_this select 1), round time];
+	// player sidechat format ["Display %1, A3C_UI_MAP_onKeyDown_Map - %2 %3",_mapControl, keyName (_this select 1), round time];
 
 	
 	
@@ -2187,11 +2193,11 @@ A3C_UI_MAP_HandlerFNC_KeyDown_Map = { //-- This handler is needed because ESC be
 	false //-- standard - keep everything enabled
 };
 
-A3C_UI_MAP_HandlerFNC_KeyDown_Overlay = {
+A3C_UI_MAP_onKeyDown_Overlay = {
 	disableSerialization;
 	params ["_display","_key","_shift","_ctrl","_alt"];
 	
-	// player commandchat format ["Display %1, A3C_UI_MAP_HandlerFNC_KeyDown_Overlay: %2 - %3", _display, keyName _key, round time];
+	// player commandchat format ["Display %1, A3C_UI_MAP_onKeyDown_Overlay: %2 - %3", _display, keyName _key, round time];
 
 
 	
@@ -2218,7 +2224,7 @@ A3C_UI_MAP_HandlerFNC_KeyDown_Overlay = {
 	
 	//-- 2: DEFAULT EXIT CONDITIONS
 	if (
-		_key in A3C_UI_DOWNKEYS
+		[_key] call A3C_UI_Shared_shouldBlockKeyRepeat
 		// || {A3C_MAP_BOOL_CT_EDIT_ACTIVE}
 	) exitwith {false};
 
@@ -2231,115 +2237,165 @@ A3C_UI_MAP_HandlerFNC_KeyDown_Overlay = {
 	[_key] call A3C_UI_Shared_FNC_AddDownkey;
 
 
-	
-	
-
-	//-- 3: Check if keybind should control ObjectSelector
 	private _mapObjectSelector = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
+	switch (true) do {
+		//-- 3: Check if keybind should control ObjectSelector //-- #
+		case
+		(
+			ctrlShown _mapObjectSelector &&
+			{
+				private _lbSize = lbSize _mapObjectSelector;
+				_key >= 0 && _key <= 9 &&
+				{(_key - 1) <= _lbSize}
+			}
+		) : {
+			private _keyValueIndex = _key - 2;
 
-	if (
-		ctrlShown _mapObjectSelector &&
-		{
-			private _lbSize = lbSize _mapObjectSelector;
-			_key >= 0 && _key <= 9 &&
-			{(_key - 1) <= _lbSize}
-		}
-	) exitWith {
-		private _keyValueIndex = _key - 2;
-
-		[_mapObjectSelector, _keyValueIndex] spawn {
-			sleep 0.1;
-			params ["_mapObjectSelector","_keyValueIndex"];
-			[_mapObjectSelector, _keyValueIndex, true] call A3C_setCurSel;
-		};
-
-		true
-	};
-
-
-	//-- 4: Numbers 1-3 (Overlay Commanding Mode A3C_MAP_CommandMode)
-	if (commandingMenu == "") then {
-		switch (_key) do {
-			case 2: {
-				if !(A3C_MAP_CommandMode == "INF") then {
-					A3C_SELECTED_UNITS = [];
-				};
-
-				["INF"] call A3C_START_TABMODE;
-				A3C_MAP_CommandMode = "INF";
-			};
-			case 3: {
-				if !(A3C_MAP_CommandMode == "AIR") then {
-					A3C_SELECTED_UNITS = [];
-				};
-
-				["AIR"] call A3C_START_TABMODE;
-				A3C_MAP_CommandMode = "AIR";
-			};
-			case 4: {
-				if !(A3C_MAP_CommandMode == "HC") then {
-					A3C_SELECTED_UNITS = [];
-				};
-
-				["HC"] call A3C_START_TABMODE;
-				A3C_MAP_CommandMode = "HC";
-			};
-		};
-	};
-
-	private _groupContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT;
-	private _wpContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT;
-
-
-	//-- 5: Other keybinds
-	switch (_key) do {
-		case 28: { // Enter
-			if (ctrlShown _groupContextmenuHC) then {
-				[] call A3C_Map_HC_groupContext_ButtonFnc_Confirm;
-			} else {
-				if (ctrlShown _wpContextmenuHC) then {
-					[] call A3C_Map_HC_waypointContext_ButtonFnc_Confirm;
-				};
+			[_mapObjectSelector, _keyValueIndex] spawn {
+				sleep 0.1;
+				params ["_mapObjectSelector","_keyValueIndex"];
+				[_mapObjectSelector, _keyValueIndex, true] call A3C_setCurSel;
 			};
 			_blockDefault = true;
 		};
-		case 57: { // Spacebar
-			_blockDefault = true;
-			if ( A3C_MAP_CommandMode in ["INF","AIR"] && {count groupselectedUnits player == 0}) then {
-				['ALL'] spawn A3C_Btn_fnc_Execute;
-			};
-		};
-		case 207: { //-- END-key
-			if (A3C_Selection_MultiWaypoint isEqualTo []) then {
-				//-- SINGLE - need to hover exactly over waypoint
-				getMousePosition params ["_sX","_sY"];
-				_wpIcons = (["HC_WP",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
-				if (count _wpIcons > 0) then {
-					_wpIcon = _wpIcons select 0;
-					_gp = _wpIcon select 0;
-					_wpiC = _wpIcon select 3;
-					[_gp, _wpiC] call A3C_HC_REMOVE_WP_RC;
-				};
-			} else {
-				//-- MULTIPLE WAYPOINTS SELECTED - can just delete
-				{
-					_x params ["_group", "_wpIndex"];
-					while {_x in (waypoints _group)} do {
-						_x call A3C_HC_REMOVE_WP_RC;
+		//-- switch Squad-Bar pages
+		case
+		(
+			commandingMenu == ""
+			&& {_key in [2,3,4]}
+		) : {
+			switch (_key) do {
+				case 2: {
+					if !(A3C_MAP_CommandMode == "INF") then {
+						A3C_SELECTED_UNITS = [];
 					};
-					A3C_Selection_MultiWaypoint = A3C_Selection_MultiWaypoint - [_x];
-				} foreach A3C_Selection_MultiWaypoint;
+
+					["INF"] call A3C_START_TABMODE;
+					A3C_MAP_CommandMode = "INF";
+				};
+				case 3: {
+					if !(A3C_MAP_CommandMode == "AIR") then {
+						A3C_SELECTED_UNITS = [];
+					};
+
+					["AIR"] call A3C_START_TABMODE;
+					A3C_MAP_CommandMode = "AIR";
+				};
+				case 4: {
+					if !(A3C_MAP_CommandMode == "HC") then {
+						A3C_SELECTED_UNITS = [];
+					};
+
+					["HC"] call A3C_START_TABMODE;
+					A3C_MAP_CommandMode = "HC";
+				};
+			};
+			_blockDefault = true;
+		};
+		case 
+		(
+			a3c_is_HC_remote
+			&& {_key in [17,30,31,32,200,203,205,208]}
+		) :
+		{
+				_this call A3C_UI_SHARED_onKeyDown_remoteVehicle;
+				_exit = true;
+				_blockDefaultKey = true;
+		};
+		//-- Other keybinds
+		case (_key in [28,57,207]) : {
+
+			private _groupContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT;
+			private _wpContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT;
+
+			switch (_key) do {
+				case 28: { // Enter
+					if (ctrlShown _groupContextmenuHC) then {
+						[] call A3C_Map_HC_groupContext_ButtonFnc_Confirm;
+					} else {
+						if (ctrlShown _wpContextmenuHC) then {
+							[] call A3C_Map_HC_waypointContext_ButtonFnc_Confirm;
+						};
+					};
+					_blockDefault = true;
+				};
+				case 57: { // Spacebar
+					if ( A3C_MAP_CommandMode in ["INF","AIR"] && {count groupselectedUnits player == 0}) then {
+						['ALL'] spawn A3C_Btn_fnc_Execute;
+					};
+					_blockDefault = true;
+				};
+				case 207: { //-- END-key
+					if (A3C_Selection_MultiWaypoint isEqualTo []) then {
+						//-- SINGLE - need to hover exactly over waypoint
+						getMousePosition params ["_sX","_sY"];
+						_wpIcons = (["HC_WP",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+						if (count _wpIcons > 0) then {
+							_wpIcon = _wpIcons select 0;
+							_gp = _wpIcon select 0;
+							_wpiC = _wpIcon select 3;
+							[_gp, _wpiC] call A3C_HC_REMOVE_WP_RC;
+						};
+					} else {
+						//-- MULTIPLE WAYPOINTS SELECTED - can just delete
+						{
+							_x params ["_group", "_wpIndex"];
+							while {_x in (waypoints _group)} do {
+								_x call A3C_HC_REMOVE_WP_RC;
+							};
+							A3C_Selection_MultiWaypoint = A3C_Selection_MultiWaypoint - [_x];
+						} foreach A3C_Selection_MultiWaypoint;
+					};
+				};
 			};
 		};
 	};
 	_blockDefault
-};		
+};
+
+//-- MAP Main "KeyUp"
+A3C_UI_MAP_onKeyUp_Overlay = {
+	params ["_display","_key","_shift","_ctrl","_alt"];
+	
+	player commandchat format ["MAP KEY-UP: %1 (%2)", _key, keyName _key];
+
+	if (player != (leader group player)) exitwith {false};
+	if ( !isNull(findDisplay 312) ) exitWith {false}; //-- ZEUS interface is open. Prevent most A3C stuff
+	
+	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
+
+	switch (true) do {
+		case 
+		(
+			a3c_is_HC_remote
+			&& {_key in [17,30,31,32,200,203,205,208]}
+		) :
+		{
+				_this call A3C_UI_SHARED_onKeyUp_remoteVehicle;
+		};
+		case (
+			vehicle player isKindOf "HELICOPTER"
+			&& {player == (gunner vehicle player)}
+		) : {
+				(vehicle player) spawn {
+				sleep 1;
+				_this flyInHeight((getPosATL _this) select 2);
+			};
+		};
+		
+	};
+
+	false
+	
+};
+
+
 
 
 ///--- RELATED HELPERS / EXTENSIONS
 
 //-- A3C_MMCode Helpers:
-A3C_UI_MAP_HandlerFNC_MouseDrag = {
+A3C_UI_MAP_onMouseDrag = {
 	if (A3C_BOOL_DISABLEMAPCTRL) exitwith {};
 
 
@@ -2399,7 +2455,7 @@ A3C_UI_MAP_HandlerFNC_MouseDrag = {
 
 
 //-- adjust the position of HC-waypoint while dragged
-A3C_UI_MAP_HandlerFNC_MouseDrag_HCWP = {
+A3C_UI_MAP_onMouseDrag_HCWP = {
 	params ["_waypoint","_data"];
 
 	_waypoint params ["_group","_wpi"];
@@ -2443,7 +2499,7 @@ A3C_UI_MAP_HandlerFNC_MouseDrag_HCWP = {
 
 
 
-A3C_UI_MAP_HandlerFNC_MouseDrag_MapItem = {
+A3C_UI_MAP_onMouseDrag_MapItem = {
 
 	if (A3C_BOOL_DISABLEMAPCTRL) exitwith {};
 	params ["_data","_item","_mode","_ctrl","_alt"];
@@ -2631,7 +2687,7 @@ A3C_UI_MAP_HandlerFNC_MouseDrag_MapItem = {
 
 //-- EXTENDED HANDLER FNCS (Sub-Handler fncs spawned by parent Handler)
 //-- "mousebuttonDown" on marker. If Loop can be created, adds displayEventHandlers and creates Dummy for MouseDrag-Arrow
-A3C_UI_MAP_HandlerFNC_MouseButtonDown_Loop = {
+A3C_UI_MAP_onMouseButtonDown_Loop = {
 	private ["_units","_syncData"];
 	_sx = _this select 0;
 	_sy = _this select 1;
@@ -2702,7 +2758,7 @@ A3C_UI_MAP_HandlerFNC_MouseButtonDown_Loop = {
 			A3C_BOOL_MAP_MU = true;
 
 			A3C_MMCode = {
-				_this spawn A3C_UI_MAP_HandlerFNC_MouseDrag;
+				_this spawn A3C_UI_MAP_onMouseDrag;
 			};
 
 			//-- step 1:
@@ -2741,7 +2797,7 @@ A3C_UI_MAP_HandlerFNC_MouseButtonDown_Loop = {
 
 
 
-A3C_UI_MAP_HandlerFNC_MouseButtonUp_Loop = {
+A3C_UI_MAP_onMouseButtonUp_Loop = {
 
 	//-- #NOTE seems to be used for sync
 	private ["_startMark","_exit","_units","_data","_isLoop","_dragMode","_sc","_wrongDir"];

@@ -32,7 +32,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 			private _blockDefaultKey = false;
 			if (!visibleMap) then { //-- NOTE: THis is indeed necessary. If map is active and overlay is hidden, this bind still fires
 				//-- #UNCLEAR - note - if this fires when overlay is open, we could get rid of the MainMap KeyDown handler??
-				_blockDefaultKey = _this call A3C_UI_HUD_HandlerFNC_KeyDown;
+				_blockDefaultKey = _this call A3C_UI_HUD_onKeyDown;
 			};
 			_blockDefaultKey
 		}
@@ -46,7 +46,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"KeyUp",
 		{
 			if (!visibleMap) then { //-- NOTE: THis is indeed necessary. If map is active and overlay is hidden, this bind still fires
-				_this call A3C_UI_HUD_HandlerFNC_KeyUp;
+				_this call A3C_UI_HUD_onKeyUp;
 				false
 			};
 		}
@@ -61,7 +61,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"MouseButtonDown",
 		{
 			if (!visibleMap) then { //-- NOTE: THis is indeed necessary. If map is active and overlay is hidden, this bind still fires
-				_this spawn A3C_UI_HUD_HandlerFNC_MouseButtonDown;
+				_this spawn A3C_UI_HUD_onMouseButtonDown;
 			};
 			
 			false
@@ -76,7 +76,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"MouseZChanged",
 		{
 			//-- visibleMap check not necessary as HUD-MouseZ does not fire on Map
-			private _blockDefaultKey = _this call A3C_UI_HUD_HandlerFNC_MouseZChanged;
+			private _blockDefaultKey = _this call A3C_UI_HUD_onMouseZChanged;
 			_blockDefaultKey
 		}
 	] call A3C_UI_CreateSafeEventhandler;
@@ -93,7 +93,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"KeyDown",
 		{
 			disableSerialization;
-			private _return = _this call A3C_UI_MAP_HandlerFNC_KeyDown_Map;
+			private _return = _this call A3C_UI_MAP_onKeyDown_Map;
 			_return	
 		}
 	] call A3C_UI_CreateSafeEventhandler;

@@ -2096,7 +2096,7 @@ A3C_MAP_DelLoopObs = {
 	if (A3C_BOOL_MAP_MD) then {
 		A3C_BOOL_MAP_MD = false;
 		if (A3C_BOOL_DRAGLINE) then {
-			[0,0,0,0,false,false,false] spawn A3C_UI_MAP_HandlerFNC_OnMouseButtonUp;
+			[0,0,0,0,false,false,false] spawn A3C_UI_MAP_onOnMouseButtonUp_Overlay;
 		};
 	};
 };

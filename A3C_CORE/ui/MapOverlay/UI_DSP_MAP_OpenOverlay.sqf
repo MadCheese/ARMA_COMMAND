@@ -272,33 +272,10 @@ A3C_DIAG_ACTIVE = true;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-A3C_TAB_KEY_U = (findDisplay _display) displayAddEventHandler
-[
-	"KeyUp",
-	{
-		_btn1 = _this select 1;
-		_shift = _this select 2;
-		_ctrl = _this select 3;
-		_alt = _this select 4;
-
-		A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS -  [_btn1];
-	}
-];
 
 
 
 
-
-//-- Precaution: MouseButtonUp-handler will additionally remove leftOver "mouseMoving"-handler (drag)
-A3C_BU_SAFE = (findDisplay _display displayCtrl 7043) ctrlAddEventHandler
-[
-	"MouseButtonUP",
-	{
-		if !(isnil 'A3C_BU2') then {
-			(findDisplay _display displayCtrl 7043) ctrlRemoveEventHandler ['MouseMoving',A3C_BU2];
-		};
-	}
-];
 
 
 

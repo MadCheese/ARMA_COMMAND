@@ -1,7 +1,7 @@
 //---------------------------------------  HANDLER-FUNCTIONS  ------------------------------------
 //------------------------------------------------------------------------------------------------
 //-- HUD Main "KeyDown"
-A3C_UI_HUD_HandlerFNC_KeyDown = {
+A3C_UI_HUD_onKeyDown = {
 	params ["_display", "_key", "_shift", "_ctrl", "_alt"];
 	//-- exit if keystroke is not allowed
 	if (_key == 1) exitWith {false}; //-- nothing should happen if ESC is pressed
@@ -21,175 +21,137 @@ A3C_UI_HUD_HandlerFNC_KeyDown = {
 		}
 	) exitWith {
 		false
-	};	
-	private _isNewKey = !(_key in A3C_UI_DOWNKEYS);
-	if (_isNewKey) then {
-
-
-		private _keyControlsMap = (inputAction "showMap") > 0;
-
-		if !(_keyControlsMap) then {
-			[_key] call A3C_UI_Shared_FNC_AddDownkey;
-			A3C_LASTUSED_KD = time;
-		};
-
-		player sideChat format["HUD KEY-DOWN: %1 (%2)",_key, keyname _key];
-
-		
-		if (inputAction "revealTarget" > 0) then {
-			// reveal target
-			[cameraOn, screenToWorld [0.5, 0.5]] call MCSS_fnc_RevealCursorPos;
-		};
-
-		switch (true) do {
-			
-			case (_keyControlsMap) : {
-				
-				//-- Safety precaution: clear downkeys while player opens map
-				//-- Hud's keyUp will NOT fire once map is entered.
-				A3C_UI_DOWNKEYS = [];
-
-				private _keyIsNotGPS = (inputAction "miniMapToggle") == 0;
-				if (
-					_keyIsNotGPS
-					&& {profileNamespace getVariable "A3C_MAP_OVERLAY_SHOWN"}
-				) then {
-					// open map / overlay
-					A3C_WeaponCurr = currentWeapon player;
-					nul = [100020] execVM "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_OpenOverlay.sqf";
-
-					private _groupUnits = (units group player) - [player];
-					if (count _groupUnits > 0) then {
-						if (({(_x == driver vehicle _x) && {typeOf vehicle _x isKindOf "AIR"}} count _groupUnits) >= ((count _groupUnits) / 2)) then {
-							A3C_MAP_CommandMode = "AIR";
-						} else {
-							A3C_MAP_CommandMode = "INF";
-						};
-					} else {
-						A3C_MAP_CommandMode = "HC";
-					};
-
-					A3C_SELECTED_UNITS = [];
-				};
-			};
-			case (
-				!(a3c_is_HC_remote)
-				&& {_key in [17, 200]}
-				&& {unitIsUAV cameraOn}
-				&& {(remoteControlled (driver cameraOn)) != player}
-			) : {
-				//-- UAV Gunner > W and Up Arrow make driver move to looket-at position
-				private _driver = driver cameraOn;
-				[_driver, screenToWorld [0.5, 0.5]] remoteExec ["doMove", _driver];
-			};
-			case (
-				//-- Purposely AFTER the uav check, since UAV's can be helicopters
-				player isEqualTo gunner vehicle player
-				&& {currentPilot vehicle player != player} 
-				&& {vehicle player isKindOf "HELICOPTER"}
-			) : {
-				// Helicopter gunner bonus controls
-				private _flareKeysArray = actionKeys "launchCM";
-				private _raiseCollectiveKeysArray = actionKeys "HeliCollectiveRaise";
-				private _lowerCollectiveKeysArray = actionKeys "HeliCollectiveLower";
-				private _handled = false;
-				private _atlHeight = (getPosATL vehicle player) select 2;
-
-				// countermeasures
-				if ({_x in A3C_UI_DOWNKEYS} count _flareKeysArray == count _flareKeysArray) then {
-					if (behaviour driver vehicle player == "CARELESS") then {
-						private _wpnsTurret = vehicle player weaponsTurret [-1];
-
-						{
-							private _weapon = _x;
-							private _mags = getArray (configFile >> "CfgWeapons" >> _weapon >> "magazines");
-
-							{
-								private _ammo = getText (configFile >> "CfgMagazines" >> _x >> "ammo");
-								private _aiUsageFlags = getNumber (configFile >> "CfgAmmo" >> _ammo >> "aiAmmoUsageFlags");
-
-								if (_aiUsageFlags == 8) then {
-									private _mode = (getArray (configFile >> "CfgWeapons" >> _weapon >> "modes")) select 0;
-									(driver vehicle player) forceWeaponFire [_weapon, _mode];
-								};
-							} forEach _mags;
-						} forEach _wpnsTurret;
-
-						[vehicle player] call A3C_Evasive;
-						_handled = true;
-					};
-				};
-
-				// raise collective
-				if (!_handled && {{_x in A3C_UI_DOWNKEYS} count _raiseCollectiveKeysArray == count _raiseCollectiveKeysArray}) then {
-					A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
-					vehicle player flyInHeight (_atlHeight + 20);
-					_handled = true;
-				};
-
-				// lower collective
-				if (!_handled && {{_x in A3C_UI_DOWNKEYS} count _lowerCollectiveKeysArray == count _lowerCollectiveKeysArray}) then {
-					vehicle player flyInHeight (_atlHeight - 20);
-					A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
-					_handled = true;
-				};
-
-				// rotate / rudder
-				if (!_handled && {speed vehicle player < 25} && {_key in [203, 205, 30, 32]}) then {
-					private _twist = if (_key in [205, 32]) then {0.5} else {-0.5};
-					vehicle player setDir (getDir vehicle player + _twist);
-					A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
-					// _handled = true; // -- NOTE: uncomment this if you happen to add any more mechanics here
-				};
-			};
-			case (
-				!isNil "A3C_FORM_KEY_ID"
-				&& {[_key, _shift, _ctrl, _alt] isEqualTo A3C_FORM_KEY_ID}
-			) : {
-				[] call A3C_UI_CustomFormation_FNC_spawnDialog;
-			};
-			//-- #NOTE: Commented this out until I understand what F1-F5 were supposed to do with teamcolors
-			//-- F1-F5 are unit selectors by default...
-			// case (_key in [59, 60, 61, 62, 63]): { //-- F1-F5
-			// 	// refresh teamColor var
-			// 	if (player == cameraOn) then {
-			// 		[] spawn {
-			// 			sleep 0.3;
-			// 			{
-			// 				private _assignedTeam = assignedTeam _x;
-			// 				private _assignedTeamVar = _x getVariable ["A3C_ASSIGNEDTEAM", "MAIN"];
-			// 				if (_assignedTeam != _assignedTeamVar) then {
-			// 					_x setVariable ["A3C_ASSIGNEDTEAM", _assignedTeam];
-			// 				};
-			// 			} forEach ((units player) - [player]);
-			// 		};
-			// 	};
-			// };
-
-			case (
-				//-- NUM-key check
-				profileNamespace getVariable "A3C_NUM_VAR"
-				&& {
-					_key in  [71, 72, 73, 75, 76, 77, 79, 80, 81,103, 104, 105, 106];
-				}
-			) : {
-				[_key] call A3C_UI_HUD_HandlerFNC_KeyDown_NUM;
-			};
-			default {};
-		};
-
-		if (count A3C_HUD_UNITS == 0) then {
-			A3C_MODIFIER_LOCK = false;
-		};
 	};
 
-	private _blockDefaultKey = [_key, [_shift, _ctrl, _alt]] call A3C_GET_KEY_BOOL;
+	if ([_key] call A3C_UI_Shared_shouldBlockKeyRepeat) exitWith {};
+
+	private _keyControlsMap = (inputAction "showMap") > 0;
+
+	if !(_keyControlsMap) then {
+		[_key] call A3C_UI_Shared_FNC_AddDownkey;
+		A3C_LASTUSED_KD = time;
+	};
+
+	player sideChat format["HUD KEY-DOWN: %1 (%2)",_key, keyname _key];
+
+	if (inputAction "revealTarget" > 0) then {
+		// reveal target
+		[cameraOn, screenToWorld [0.5, 0.5]] call MCSS_fnc_RevealCursorPos;
+	};
+
+	private _blockDefaultKey = nil;
+
+	switch (true) do {
+		
+		case (_keyControlsMap) : {
+			
+			//-- Safety precaution: clear downkeys while player opens map
+			//-- Hud's keyUp will NOT fire once map is entered.
+			A3C_UI_DOWNKEYS = [];
+
+			private _keyIsNotGPS = (inputAction "miniMapToggle") == 0;
+			if (
+				_keyIsNotGPS
+				&& {profileNamespace getVariable "A3C_MAP_OVERLAY_SHOWN"}
+			) then {
+				// open map / overlay
+				A3C_WeaponCurr = currentWeapon player;
+				nul = [100020] execVM "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_OpenOverlay.sqf";
+
+				private _groupUnits = (units group player) - [player];
+				if (count _groupUnits > 0) then {
+					if (({(_x == driver vehicle _x) && {typeOf vehicle _x isKindOf "AIR"}} count _groupUnits) >= ((count _groupUnits) / 2)) then {
+						A3C_MAP_CommandMode = "AIR";
+					} else {
+						A3C_MAP_CommandMode = "INF";
+					};
+				} else {
+					A3C_MAP_CommandMode = "HC";
+				};
+				A3C_SELECTED_UNITS = [];
+			};
+		};
+
+		case 
+		(
+			a3c_is_HC_remote
+			&& {_key in [17,30,31,32,200,203,205,208]}
+		) :
+		{
+			_this call A3C_UI_SHARED_onKeyDown_remoteVehicle;
+			_blockDefaultKey = true;
+		};
+
+
+
+		//-- Player is remote-controling UAV 'gunner' : 'W' and "Up  Arrow' can make UAV
+		case (
+			!(a3c_is_HC_remote)
+			&& {_key in [17, 200]}
+			&& {unitIsUAV cameraOn}
+			&& {(remoteControlled (driver cameraOn)) != player}
+		) : {
+			//-- UAV Gunner > W and Up Arrow make driver move to looket-at position
+			private _driver = driver cameraOn;
+			[_driver, screenToWorld [0.5, 0.5]] remoteExec ["doMove", _driver];
+		};
+		case (
+			//-- Purposely AFTER the uav check, since UAV's can be helicopters
+			player isEqualTo gunner vehicle player
+			&& {currentPilot vehicle player != player} 
+			&& {vehicle player isKindOf "HELICOPTER"}
+		) : {
+			_this call A3C_UI_HUD_onKeyDown_heliGunner;
+		};
+		case (
+			!isNil "A3C_FORM_KEY_ID"
+			&& {[_key, _shift, _ctrl, _alt] isEqualTo A3C_FORM_KEY_ID}
+		) : {
+			[] call A3C_UI_CustomFormation_FNC_spawnDialog;
+		};
+		//-- #NOTE: Commented this out until I understand what F1-F5 were supposed to do with teamcolors
+		//-- F1-F5 are unit selectors by default...
+		// case (_key in [59, 60, 61, 62, 63]): { //-- F1-F5
+		// 	// refresh teamColor var
+		// 	if (player == cameraOn) then {
+		// 		[] spawn {
+		// 			sleep 0.3;
+		// 			{
+		// 				private _assignedTeam = assignedTeam _x;
+		// 				private _assignedTeamVar = _x getVariable ["A3C_ASSIGNEDTEAM", "MAIN"];
+		// 				if (_assignedTeam != _assignedTeamVar) then {
+		// 					_x setVariable ["A3C_ASSIGNEDTEAM", _assignedTeam];
+		// 				};
+		// 			} forEach ((units player) - [player]);
+		// 		};
+		// 	};
+		// };
+
+		case (
+			//-- NUM-key check
+			profileNamespace getVariable "A3C_NUM_VAR"
+			&& {
+				_key in  [71, 72, 73, 75, 76, 77, 79, 80, 81,103, 104, 105, 106];
+			}
+		) : {
+			[_key] call A3C_UI_HUD_onKeyDown_NUM;
+		};
+		default {};
+	};
+
+	if (count A3C_HUD_UNITS == 0) then {
+		A3C_MODIFIER_LOCK = false;
+	};
+
+	if (isNil '_blockDefaultKey') then {
+		_blockDefaultKey = [_key, [_shift, _ctrl, _alt]] call A3C_GET_KEY_BOOL; //<< #Clarify: is there a cleaner way here?
+	};
 	_blockDefaultKey
 };
 
 
 //-- HUD Main "KeyUp"
-A3C_UI_HUD_HandlerFNC_KeyUp = {
+A3C_UI_HUD_onKeyUp = {
 	params ["_display", "_key"];
 	
 	player commandchat format ["HUD KEY-UP: %1 (%2)", _key, keyName _key];
@@ -198,13 +160,34 @@ A3C_UI_HUD_HandlerFNC_KeyUp = {
 	if ( !isNull(findDisplay 312) ) exitWith {false}; //-- ZEUS interface is open. Prevent most A3C stuff
 	
 	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
-	if (vehicle player isKindOf "HELICOPTER" && {player == (gunner vehicle player)}) then {
-		(vehicle player) spawn {
-			sleep 1;
-			_this flyInHeight((getPosATL _this) select 2);
-		};
+
+	if (_key == A3C_RadialMenu_KEY_ID select 0) then {
+		A3C_DISABLE_RADIAL = false;
 	};
+
+	switch (true) do {
+		case 
+		(
+			a3c_is_HC_remote
+			&& {_key in [17,30,31,32,200,203,205,208]}
+		) :
+		{
+				_this call A3C_UI_SHARED_onKeyUp_remoteVehicle;
+		};
+		case (
+			vehicle player isKindOf "HELICOPTER"
+			&& {player == (gunner vehicle player)}
+		) : {
+				(vehicle player) spawn {
+				sleep 1;
+				_this flyInHeight((getPosATL _this) select 2);
+			};
+		};
+		
+	};
+
 	false
+	
 };
 
 
@@ -212,12 +195,12 @@ A3C_UI_HUD_HandlerFNC_KeyUp = {
 
 
 //-- HUD Main "MouseButtonDown"
-A3C_UI_HUD_HandlerFNC_MouseButtonDown = {
+A3C_UI_HUD_onMouseButtonDown = {
 	params ["_display","_button","_sX","_sY","_shift","_ctrl", "_alt"];
 
 	scopeName "main";
 
-	player commandChat format ["A3C_UI_HUD_HandlerFNC_MouseButtonDown: %1", _this];
+	player commandChat format ["A3C_UI_HUD_onMouseButtonDown: %1", _this];
 
 	private _curTar = cursorTarget;
 	private _blockDefaultKey = false;
@@ -231,58 +214,57 @@ A3C_UI_HUD_HandlerFNC_MouseButtonDown = {
 		false
 	};
 
-	if (_button == 1) then {
-		if (!isNull _curTar) then {
-			if (_curTar in units group player) then {
-				if (_ctrl) then {
-					if (_alt) then {
-						_blockDefaultKey = true;
-						if (_curTar in A3C_HUD_UNITS) then {
-							[_curTar] call A3C_HUD_REMOVE_SELECTED;
-						} else {
-							[_curTar, _curTar getVariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
-							
-							if (count groupSelectedUnits player > 0) then {
-								{ player groupSelectUnit [_x, false] } forEach units group player;
-							};
-						};
-						breakOut "main";
-					} else {
-						if (count A3C_HUD_UNITS == 0) then {
+	if (_button == 1 && {_ctrl}) then {
+		if (a3c_is_HC_remote) then {
+			_this call A3C_UI_SHARED_OnMouseButtonDown_remoteVehicle;
+		} else {
+			if (count A3C_HUD_UNITS > 0) then {
+				[_alt, _shift] call A3C_Setorder_HUD;
+				_blockDefaultKey = true;
+			} else {
+				if (!isNull _curTar) then {
+					if (_curTar in units group player) then {
+						if (_alt) then {
 							_blockDefaultKey = true;
-
-							if (_curTar in groupSelectedUnits player) then {
-								player groupSelectUnit [_curTar, false];
+							if (_curTar in A3C_HUD_UNITS) then {
+								[_curTar] call A3C_HUD_REMOVE_SELECTED;
 							} else {
-								player groupSelectUnit [_curTar, true];
-							};
-
-							if (count groupSelectedUnits player == 0) then {
-								showCommandingMenu "";
+								[_curTar, _curTar getVariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
+								
+								if (count groupSelectedUnits player > 0) then {
+									{ player groupSelectUnit [_x, false] } forEach units group player;
+								};
 							};
 							breakOut "main";
-						};
-					};	
+						} else {
+							if (count A3C_HUD_UNITS == 0) then {
+								_blockDefaultKey = true;
+
+								if (_curTar in groupSelectedUnits player) then {
+									player groupSelectUnit [_curTar, false];
+								} else {
+									player groupSelectUnit [_curTar, true];
+								};
+
+								if (count groupSelectedUnits player == 0) then {
+									showCommandingMenu "";
+								};
+								breakOut "main";
+							};
+						};	
+					};
+
+					if (count groupSelectedUnits player == 0) then {
+						showCommandingMenu "";
+					};
+				} else {
+					if (!(_ctrl) && {count A3C_HUD_UnitIndicators > 0}) then {
+						{ [_x] call A3C_HUD_REMOVE_SELECTED } forEach +A3C_HUD_UNITS;
+					};
 				};
 			};
-
-			if (count groupSelectedUnits player == 0) then {
-				showCommandingMenu "";
-			};
-		} else {
-			if (!(_ctrl) && {count A3C_HUD_UnitIndicators > 0}) then {
-				{ [_x] call A3C_HUD_REMOVE_SELECTED } forEach +A3C_HUD_UNITS;
-			};
-		};
+		};	
 	};
-
-	if (count A3C_HUD_UNITS == 0) exitWith {_blockDefaultKey};
-
-	if (_button == 1 && {_ctrl}) then {
-		[_alt, _shift] call A3C_Setorder_HUD;
-		_blockDefaultKey = true;
-	};
-
 	_blockDefaultKey
 };
 
@@ -290,9 +272,9 @@ A3C_UI_HUD_HandlerFNC_MouseButtonDown = {
 
 //-- HUD Main "MouseButtonDown"
 //~~ NOTE: RE WRITE ALL THESE DOUBLE FUNCTIONS INTO SINGLE ONES
-A3C_UI_HUD_HandlerFNC_MouseZChanged = {
+A3C_UI_HUD_onMouseZChanged = {
 
-	// systemchat format ["A3C_UI_HUD_HandlerFNC_MouseZChanged: %1", _this];
+	// systemchat format ["A3C_UI_HUD_onMouseZChanged: %1", _this];
 
 	private _ctrl = 29 in A3C_UI_DOWNKEYS;
 	private _return = false;
