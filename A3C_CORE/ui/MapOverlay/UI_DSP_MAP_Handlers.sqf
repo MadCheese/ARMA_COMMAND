@@ -2162,49 +2162,74 @@ A3C_UI_MAP_onOnMouseMoving_Overlay = {
 A3C_UI_MAP_onKeyDown_Map = { //-- This handler is needed because ESC behaves differently than ALL other keys
 	params ["_mapControl","_key","_shift","_ctrl","_alt"];
 
+	/*-------------------------------------------------------------
+	This keybind is my current fix for what I believe to be Arma 3 quirks:
+
+	1.  Arrow keys used for vehicle remote do not seem to register at all in keyDown event attached to dialog itself.
+		They do register in the main map display.
+		>> Strangely enough, keyUp registers fine. So for arrows (and the block with pageUp/Down) only triggers
+		>> For the record, it's totally possible that I create this circumstance somewhere :)
+
+	2.  In order to be able to use ESC key when closing popup menus (GP/WP Context menu) without closing entire map
+		has to be added to the map directly.
+	
+	The reason why I still keep _Map and _Overlay handlers separate is simply organization, and might be merged into the _Map addEventHandler
+
+	*///-----------------------------------------------------------
+
+
 
 	// player sidechat format ["Display %1, A3C_UI_MAP_onKeyDown_Map - %2 %3",_mapControl, keyName (_this select 1), round time];
 
 	
-	
+	private _blockDefault = false;
 
+	//-- Note: So far we do not need to check if keybind is allowed, might change later.
+	//-- Reason: Vehicle remote allows repeated bind firing.
 
-
-
-	private _display = findDisplay 100020;
-	if (_key == 1) exitWith {
-		private _groupContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT;
-		private _groupDashboardHC = _display displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT;
-		private _wpContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT;
-		private _blockDefault = false;
-		if (ctrlShown _groupContextmenuHC) then {
-			{
-				_x ctrlShow false;
-			} foreach [_groupContextmenuHC, _groupDashboardHC];
-			_blockDefault = true; 
-		} else {
-			if (ctrlShown _wpContextmenuHC) then {
-				_wpContextmenuHC ctrlShow false;
+	switch (true) do {
+		case (_key == 1) : {
+			private _display = findDisplay 100020;
+			private _groupContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT;
+			private _groupDashboardHC = _display displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT;
+			private _wpContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT;
+			private _blockDefault = false;
+			if (ctrlShown _groupContextmenuHC) then {
+				{
+					_x ctrlShow false;
+				} foreach [_groupContextmenuHC, _groupDashboardHC];
 				_blockDefault = true; 
+			} else {
+				if (ctrlShown _wpContextmenuHC) then {
+					_wpContextmenuHC ctrlShow false;
+					_blockDefault = true; 
+				};
 			};
 		};
-		_blockDefault
+		case 
+		(
+			a3c_is_HC_remote
+			&& {_key in [200,203,205,208]}
+		) :
+		{
+				_this call A3C_UI_SHARED_onKeyDown_remoteVehicle;
+				_blockDefaultKey = true;
+		};
 	};
-	false //-- standard - keep everything enabled
+	_blockDefault
 };
 
 A3C_UI_MAP_onKeyDown_Overlay = {
-	disableSerialization;
+	// disableSerialization;
 	params ["_display","_key","_shift","_ctrl","_alt"];
 	
 	// player commandchat format ["Display %1, A3C_UI_MAP_onKeyDown_Overlay: %2 - %3", _display, keyName _key, round time];
 
 
-	
-	
 
 	//-- 1: MAP KEYBIND (close map > Does not work if overlay is open)
 	if ((_this select 1) in actionKeys "showmap") exitWith {
+		
 		false //-- this will close the map automatically, no need for 'showMap false'
 	};
 
@@ -2221,12 +2246,12 @@ A3C_UI_MAP_onKeyDown_Overlay = {
 	) exitWith {
 		true	
 	};
-	
+
 	//-- 2: DEFAULT EXIT CONDITIONS
 	if (
-		[_key] call A3C_UI_Shared_shouldBlockKeyRepeat
+		[_key] call A3C_UI_Shared_blockKeyDownEvent
 		// || {A3C_MAP_BOOL_CT_EDIT_ACTIVE}
-	) exitwith {false};
+	) exitwith {};
 
 	if (_alt && {_key == 15}) exitWith {// safety if user alt-tabs out of the game
         A3C_UI_DOWNKEYS = [];
@@ -2291,16 +2316,6 @@ A3C_UI_MAP_onKeyDown_Overlay = {
 				};
 			};
 			_blockDefault = true;
-		};
-		case 
-		(
-			a3c_is_HC_remote
-			&& {_key in [17,30,31,32,200,203,205,208]}
-		) :
-		{
-				_this call A3C_UI_SHARED_onKeyDown_remoteVehicle;
-				_exit = true;
-				_blockDefaultKey = true;
 		};
 		//-- Other keybinds
 		case (_key in [28,57,207]) : {
@@ -2368,7 +2383,7 @@ A3C_UI_MAP_onKeyUp_Overlay = {
 		case 
 		(
 			a3c_is_HC_remote
-			&& {_key in [17,30,31,32,200,203,205,208]}
+			&& {_key in [200,203,205,208]}
 		) :
 		{
 				_this call A3C_UI_SHARED_onKeyUp_remoteVehicle;

@@ -7,18 +7,10 @@ A3C_UI_Shared_FNC_AddDownkey = {
 };
 
 
-A3C_UI_Shared_shouldBlockKeyRepeat = {
-	params ["_key"];
-	private _blockKeyRepeat = true;
-	if (
-		(
-			a3c_is_HC_remote
-			&& {_key in [17,30,31,32,200,203,205,208]}
-		)
-		//-- Add || {} if more binds apply
-	) then {
-		 _blockKeyRepeat = false;
-	};
-	_blockKeyRepeat
-};
+A3C_UI_Shared_blockKeyDownEvent = {
+    params ["_key"];
+    if (a3c_is_HC_remote && {_key in [200,203,205,208]}) exitWith {false};
+    if !(_key in A3C_UI_DOWNKEYS) exitWith {false};
 
+    true
+};

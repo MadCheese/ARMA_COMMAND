@@ -23,7 +23,7 @@ A3C_UI_HUD_onKeyDown = {
 		false
 	};
 
-	if ([_key] call A3C_UI_Shared_shouldBlockKeyRepeat) exitWith {};
+	if ([_key] call A3C_UI_Shared_blockKeyDownEvent) exitWith {};
 
 	private _keyControlsMap = (inputAction "showMap") > 0;
 
@@ -75,7 +75,7 @@ A3C_UI_HUD_onKeyDown = {
 		case 
 		(
 			a3c_is_HC_remote
-			&& {_key in [17,30,31,32,200,203,205,208]}
+			&& {_key in [200,203,205,208]}
 		) :
 		{
 			_this call A3C_UI_SHARED_onKeyDown_remoteVehicle;
@@ -169,7 +169,7 @@ A3C_UI_HUD_onKeyUp = {
 		case 
 		(
 			a3c_is_HC_remote
-			&& {_key in [17,30,31,32,200,203,205,208]}
+			&& {_key in [200,203,205,208]}
 		) :
 		{
 				_this call A3C_UI_SHARED_onKeyUp_remoteVehicle;

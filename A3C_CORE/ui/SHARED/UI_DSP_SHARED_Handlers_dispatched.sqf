@@ -9,7 +9,7 @@ These functions are shared by dispatchers for MAP and HUD
 
 A3C_UI_SHARED_onKeyDown_remoteVehicle = {
 	params ["_display", "_key", "_shift", "_ctrl", "_alt"];
-
+	systemchat "keydown remote";
 	//-- vehicle remote: prepare action:
 	private _remoteDriver = driver a3c_remote_tank_obj;
 
@@ -30,21 +30,21 @@ A3C_UI_SHARED_onKeyDown_remoteVehicle = {
 
 		//-- steering
 		switch (true) do {
-			case (_key in [30,203]) : { //-- LEFT ARROW
+			case (_key == 203) : { //-- LEFT ARROW
 				if (_alt) then {
 					[a3c_remote_tank_obj,"LEFT"] remoteExec ["sendSimpleCommand",a3c_remote_tank_obj];
 				} else {
 					[[a3c_remote_tank_obj, -.5],A3C_AI_FNC_remoteSteer] remoteExec ["bis_fnc_call", a3c_remote_tank_obj];
 				};
 			}; 
-			case (_key in [32,205]) : { // -- RIGHT ARROW
+			case (_key == 205) : { // -- RIGHT ARROW
 				if (_alt) then {
 					[a3c_remote_tank_obj,"RIGHT"] remoteExec ["sendSimpleCommand",a3c_remote_tank_obj];
 				} else {
 					[[a3c_remote_tank_obj, .5],A3C_AI_FNC_remoteSteer] remoteExec ["bis_fnc_call", a3c_remote_tank_obj];						
 				};  
 			};
-			case (_key in [31,208]) : { //-- DOWN ARROW
+			case (_key == 208) : { //-- DOWN ARROW
 
 				[
 					[a3c_remote_tank_obj],
@@ -60,7 +60,7 @@ A3C_UI_SHARED_onKeyDown_remoteVehicle = {
 					}
 				] remoteExec ["bis_fnc_call",a3c_remote_tank_obj];	
 			};
-			case (_key in [17,200]) : { //-- UP ARROW
+			case (_key == 200) : { //-- UP ARROW
 				[
 					[a3c_remote_tank_obj],
 					{

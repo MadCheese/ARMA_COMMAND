@@ -8,7 +8,7 @@ A3C_UI_RADIAL_HandlerFNC_OnKeyDown =	{
 	//-- prevent continuous firing while holding down menu key
 	if (A3C_RadialMenu_KEY_ID select 0 == _key) exitWith {};
 
-	if (_key in A3C_UI_DOWNKEYS) exitWith {}; //-- does not need if ([_key] call A3C_UI_Shared_shouldBlockKeyRepeat) condition
+	if (_key in A3C_UI_DOWNKEYS) exitWith {}; //-- does not need if ([_key] call A3C_UI_Shared_blockKeyDownEvent) condition
 
 	
 	[_key] call A3C_UI_Shared_FNC_AddDownkey;

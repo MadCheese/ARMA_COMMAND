@@ -1051,6 +1051,16 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						// 	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 						// 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 						// };
+						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+						private _isRadial = _a3c_dsp == 100040;
+						if (_isRadial) then {
+							A3C_DISABLE_RADIAL = true;
+							[] call A3C_RADIAL_CloseDisplay;
+						} else {
+							{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+							(findDisplay 12 displayCtrl 51) ctrlEnable true;
+						};
+						
 						[] call A3C_GP_RC_UIVehicleRemoteFnc;
 					};
 				};

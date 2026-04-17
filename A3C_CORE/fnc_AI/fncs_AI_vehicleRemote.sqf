@@ -3,10 +3,7 @@ A3C_GP_RC_UIVehicleRemoteFnc = {
     private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
     private _isRadial = _a3c_dsp == 100040;
 
-    if (_isRadial) then {
-        A3C_DISABLE_RADIAL = true;
-        [] call A3C_RADIAL_CloseDisplay;
-    };
+
     a3c_is_HC_remote = true;
     hint "CONTROL THE VEHICLE WITH ARROW KEYS. CANCEL REMOTE WITH CTRL+RMB";
 
