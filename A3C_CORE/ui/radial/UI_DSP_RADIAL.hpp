@@ -9,9 +9,9 @@ class A3C_MENU
 	idd = 100040;
 	movingenable = false;
 
-	onKeyDown = "_this call A3C_UI_RADIAL_HandlerFNC_OnKeyDown";
-	onKeyUp = "_this call A3C_UI_RADIAL_HandlerFNC_OnKeyUp";
-	onMouseButtonDown = "_this call A3C_UI_RADIAL_HandlerFNC_OnMouseButtonDown";
+	onKeyDown = "_this call A3C_UI_RADIAL_onKeyDown";
+	onKeyUp = "_this call A3C_UI_RADIAL_onKeyUp";
+	onMouseButtonDown = "_this call A3C_UI_RADIAL_onMouseButtonDown";
 	
 	class ControlsBackground {
 		//-- Radial BG: Core + Inner Ring

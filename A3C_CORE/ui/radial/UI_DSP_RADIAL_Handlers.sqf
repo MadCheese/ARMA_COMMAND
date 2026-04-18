@@ -1,6 +1,6 @@
 
 // NOTE: previously A3C_CBA_DOWN_MENU (Remove this comment when cleaned up)
-A3C_UI_RADIAL_HandlerFNC_OnKeyDown =	{
+A3C_UI_RADIAL_onKeyDown =	{
 	params ["_display","_key"];
 	private _mods = (_this select [2,5]);
 	private _bool = false;
@@ -29,7 +29,7 @@ A3C_UI_RADIAL_HandlerFNC_OnKeyDown =	{
 
 
 // NOTE: previously A3C_UI_RADIAL_EH_KEYUP_CANCEL (Remove this comment when cleaned up)
-A3C_UI_RADIAL_HandlerFNC_OnKeyUp = {
+A3C_UI_RADIAL_onKeyUp = {
 	params ["_display", "_key"];
 
 	player globalchat format ["[RADIAL] onKeyUp , %1 (%2)", _key, keyname _key];
@@ -65,7 +65,7 @@ A3C_UI_RADIAL_HandlerFNC_OnKeyUp = {
 //
 // NOTE: previously A3C_RAD_DEVH_MD (Remove this comment when cleaned up)
 
-A3C_UI_RADIAL_HandlerFNC_OnMouseButtonDown = {
+A3C_UI_RADIAL_onMouseButtonDown = {
 	params ["_display","_button","_sX","_sY","_shift","_ctrl","_alt"];
 
 	_ins = lineIntersectsSurfaces

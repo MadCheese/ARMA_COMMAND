@@ -365,25 +365,7 @@ A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG = {
 	with uiNamespace do {
 		//disableSerialization;
 		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-		(findDisplay 100060) displayAddEventhandler
-		[
-			"KeyUp",
-			{
-				[_this] spawn {
-					_button = _this select 0;
-					_button = _button - [(_button select 0)];
-					if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-						A3C_DISABLE_RADIAL = false;
-						//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-						//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-						(findDisplay 100060) closeDisplay 0;
-						A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
-						{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
-						A3C_UI_RADIAL_Current_Remfire_Units = [];
-					};
-				};
-			}
-		];
+		// #CURRENTBUG
 
 	};
 	

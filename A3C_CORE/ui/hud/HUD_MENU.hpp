@@ -16,8 +16,9 @@ class A3C_HUD_MENU
 	movingenable = false;
 
 
-	onKeyDown = "_refKey = ((['A3C', 'A3C_KeyFnc_Hud_Order_Reg'] call CBA_fnc_getKeybind) select 5) select 0;if (_refKey == _this select 1) then {[false,false] spawn A3C_Setorder_HUD; (findDisplay 100050) closeDisplay 0;};";
-
+	onKeyDown = "_this call A3C_UI_HUD_HudMenu_onKeyDown";
+	
+	onKeyUp = "_this call A3C_UI_HUD_HudMenu_onKeyUp";
 
 	class ControlsBackground {
 	};
@@ -150,6 +151,9 @@ class HUD_Display_ObjectSelector
 {
 	idd = 100060;
 	movingenable = true;
+
+	onKeyUp = "_this call A3C_UI_HUD_ObjectSelector_onKeyUp;";
+
 	class ControlsBackground {
 	};
 

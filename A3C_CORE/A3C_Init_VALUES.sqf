@@ -636,7 +636,7 @@ A3C_MAP_OVERLAY_GAMEUI_WPMENU_MacroConfirm = [709131,709132,709133,709134];
 
 A3C_RADIAL_GAMEUI_AllButtonAreas =  [A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT, 8071]; //-- dashboard and selector-extension
 
-
+BR_A3C_GRENADEMODE = false;
 
 [] spawn {
 	sleep 1;

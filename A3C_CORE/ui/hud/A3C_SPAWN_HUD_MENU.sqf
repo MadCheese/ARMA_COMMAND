@@ -104,22 +104,4 @@ if !(profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
 ["HUD_MENU"] call A3C_GET_UI_BG_COLOR;
 [0] call A3C_UI_HUD_FORM_BUTTON;
 
-A3C_UI_RADIAL_EH_KEYUP_CANCEL = (findDisplay 100050) displayAddEventHandler ["KeyUp", 
-{
-	_button = _this - [(_this select 0)];		
-	if ((_button select 0) == (A3C_HUD_MENU_KEY_ID select 0)) then {
-		(findDisplay 100050) closeDisplay 0;
-		showCommandingMenu "";	
-		(findDisplay 100050) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];	
-		if (profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
-			if !(profileNamespace getVariable 'A3C_HUD_isOpen') then {
-				[] call A3C_HUD_OPEN_MENU;
-			};
-		} else {
-			("A3C_HUD_MENU_UI" call BIS_fnc_rscLayer) cutText ["","PLAIN"];
-			profileNamespace setVariable ['A3C_HUD_isOpen',false];
-		};		
-	};
-}];
 
-if  (true) exitwith {};

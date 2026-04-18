@@ -200,7 +200,7 @@ A3C_UI_HUD_onMouseButtonDown = {
 
 	scopeName "main";
 
-	player commandChat format ["A3C_UI_HUD_onMouseButtonDown: %1", _this];
+	// player commandChat format ["A3C_UI_HUD_onMouseButtonDown: %1", _this];
 
 	private _curTar = cursorTarget;
 	private _blockDefaultKey = false;
@@ -384,3 +384,69 @@ A3C_UI_HUD_onMouseZChanged = {
 // 	params ["_display", "_xDeltaPos", "_yDeltaPos"];
 // 	hint str _this;
 // };
+
+
+
+
+
+
+//---------------------------------------------------------------------------------------------
+//---------- EH's FOR ADDITIONAL HUD ELEMENTS -------------------------------------------------
+//---------------------------------------------------------------------------------------------
+
+
+
+//------------------- OBJECT SELECTOR BINDS
+
+A3C_UI_HUD_ObjectSelector_onKeyUp = {
+	params ["_display", "_key"];
+	// systemchat 'A3C_UI_HUD_ObjectSelector_onKeyUp';
+	if (_key == (A3C_RadialMenu_KEY_ID select 0)) then {
+		A3C_DISABLE_RADIAL = false;
+		//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
+		//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
+		(findDisplay 100060) closeDisplay 0;
+		A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
+		{player groupSelectUnit [_x,false]} foreach units player;
+		showCommandingMenu "";
+		A3C_UI_RADIAL_Current_Remfire_Units = [];
+		A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+
+		// //-- clarify if this is needed??
+		// if ((count A3C_HUD_UnitIndicators) > 0) then {
+		// 	{inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];
+		// } else {
+		// 	{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];
+		// };
+		{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];
+	};
+};
+
+
+//------------------- HUD MENU BINDS
+//-- reminder: HUD_Menu split into visual and dialog, by default SHIFT makes UI interactive
+
+A3C_UI_HUD_HudMenu_onKeyDown = {
+	params ["_display", "_key", "_shift", "_ctrl", "_alt"];
+	private _refKey = ((['A3C', 'A3C_KeyFnc_Hud_Order_Reg'] call CBA_fnc_getKeybind) select 5) select 0;
+	if (_refKey == _key) then {
+		[false,false] spawn A3C_Setorder_HUD;
+		_display closeDisplay 0;
+	};
+};
+
+A3C_UI_HUD_HudMenu_onKeyUp = {
+	params ["_display", "_key"];
+	if (_key == (A3C_HUD_MENU_KEY_ID select 0)) then {
+		_display closeDisplay 0;
+		showCommandingMenu "";		
+		if (profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
+			if !(profileNamespace getVariable 'A3C_HUD_isOpen') then {
+				[] call A3C_HUD_OPEN_MENU;
+			};
+		} else {
+			("A3C_HUD_MENU_UI" call BIS_fnc_rscLayer) cutText ["","PLAIN"];
+			profileNamespace setVariable ['A3C_HUD_isOpen',false];
+		};		
+	};
+};

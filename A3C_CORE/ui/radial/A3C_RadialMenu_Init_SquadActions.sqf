@@ -798,25 +798,6 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 									with uiNamespace do {
 										//disableSerialization;
 										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-										(findDisplay 100060) displayAddEventhandler
-										[
-											"KeyUp",
-											{
-												[_this] spawn {
-													_button = _this select 0;
-													_button = _button - [(_button select 0)];
-													if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-														A3C_DISABLE_RADIAL = false;
-														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-														(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-														(findDisplay 100060) closeDisplay 0;
-														A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
-														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
-													};
-												};
-											}
-										];
-
 									};
 
 									private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
@@ -965,24 +946,6 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 								} else {
 									with uiNamespace do {
 										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-										(findDisplay 100060) displayAddEventhandler
-										[
-											"KeyUp",
-											{
-												[_this] spawn {
-													_button = _this select 0;
-													_button = _button - [(_button select 0)];
-													if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-
-														A3C_DISABLE_RADIAL = false;
-														(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-														(findDisplay 100060) closeDisplay 0;
-														A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
-														{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
-													};
-												};
-											}
-										];
 									};
 									_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
 									_text = findDisplay _a3c_dsp displayCtrl 800802;
@@ -1068,24 +1031,6 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 							with uiNamespace do {
 								//disableSerialization;
 								A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-								(findDisplay 100060) displayAddEventhandler
-								[
-									"KeyUp",
-									{
-										[_this] spawn {
-											_button = _this select 0;
-											_button = _button - [(_button select 0)];
-											if ((_button select 0) == (A3C_RadialMenu_KEY_ID select 0)) then {
-												A3C_DISABLE_RADIAL = false;
-												(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-												(findDisplay 100060) closeDisplay 0;
-												A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(_button select 0)];
-												{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
-											};
-										};
-									}
-								];
-
 							};
 
 							private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
