@@ -156,7 +156,7 @@ A3C_UI_HUD_onKeyUp = {
 	
 	player commandchat format ["HUD KEY-UP: %1 (%2)", _key, keyName _key];
 
-	if (player != (leader group player)) exitwith {false};
+	if (player != (leader group player)) exitWith {false};
 	if ( !isNull(findDisplay 312) ) exitWith {false}; //-- ZEUS interface is open. Prevent most A3C stuff
 	
 	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
@@ -179,10 +179,9 @@ A3C_UI_HUD_onKeyUp = {
 			vehicle player isKindOf "HELICOPTER"
 			&& {player == (gunner vehicle player)}
 		) : {
-				(vehicle player) spawn {
-				sleep 1;
-				_this flyInHeight((getPosATL _this) select 2);
-			};
+			//#TODO: Why should this fire on EVERY keyup? 
+			[] spawn A3C_UI_HUD_onKeyUp_heliGunner;
+			
 		};
 		
 	};
@@ -197,7 +196,7 @@ A3C_UI_HUD_onKeyUp = {
 
 //-- HUD Main "MouseButtonDown"
 A3C_UI_HUD_onMouseButtonDown = {
-	params ["_display","_button","_sX","_sY","_shift","_ctrl", "_alt"];
+	params ["_display","_mouseButton","_sX","_sY","_shift","_ctrl", "_alt"];
 
 	scopeName "main";
 
@@ -208,7 +207,7 @@ A3C_UI_HUD_onMouseButtonDown = {
 
 	if (A3C_DISABLE_RADIAL) exitWith {false}; //-- disable MB because user-action is expected from radial
 
-	if (_button == 1) then {
+	if (_mouseButton == 1) then {
 		if (_ctrl) then {
 			if (a3c_is_HC_remote) then {
 				_this call A3C_UI_SHARED_OnMouseButtonDown_remoteVehicle;
@@ -275,7 +274,8 @@ A3C_UI_HUD_onMouseButtonDown = {
 
 
 
-//-- HUD Main "MouseButtonDown"
+//-- HUD Main "MouseButtonDown" 
+//#TODO: Clean up!
 //~~ NOTE: RE WRITE ALL THESE DOUBLE FUNCTIONS INTO SINGLE ONES
 A3C_UI_HUD_onMouseZChanged = {
 
@@ -294,13 +294,13 @@ A3C_UI_HUD_onMouseZChanged = {
 		true
 	};
 	//systemchat str _this;
-	_pos = 0;
+
 	private _exit = false;
 	{
 		if (!isnull _x) then {
 			_exit = true;
 			showCommandingMenu "";
-			_pos = position _x;
+			private _pos = position _x;
 			if ((_this select 1) > 0) then {
 				A3C_SUPPRESSIONHEIGHT = A3C_SUPPRESSIONHEIGHT + 0.2;
 			} else {
@@ -311,7 +311,7 @@ A3C_UI_HUD_onMouseZChanged = {
 		};
 	} foreach [A3C_SUPPRESSION_INDICATOR,A3C_SQ_REM_INDICATOR,A3C_HC_REM_INDICATOR];
 	if (_exit) exitWith {true};
-	if ((count A3C_HUD_UnitIndicators) == 0 && {isNull A3C_OBJECTPLACER}) exitwith {false};
+	if ((count A3C_HUD_UnitIndicators) == 0 && {isNull A3C_OBJECTPLACER}) exitWith {false};
 
 	if (_ctrl) exitWith {
 		if (A3C_HUD_FORM == 7) then {

@@ -9,12 +9,25 @@ A3C_UI_Shared_FNC_AddDownkey = {
 
 A3C_UI_Shared_blockKeyDownEvent = {
     params ["_key"];
+
     if (a3c_is_HC_remote && {_key in [200,203,205,208]}) exitWith {false};
     if !(_key in A3C_UI_DOWNKEYS) exitWith {false};
 
+    private _ob = objectParent player;
+    if (
+		!isNull _ob
+		&& {_ob isKindOf "Helicopter"}
+		&& {player == gunner _ob}
+		&& {
+			(inputAction "HeliCollectiveRaise") > 0
+			|| {(inputAction "HeliCollectiveLower") > 0}
+			|| {(inputAction "HeliRudderLeft") > 0}
+			|| {(inputAction "HeliRudderRight") > 0}
+		}
+	) exitWith {false};
+
     true
 };
-
 
 // #TODO: Dashboard fnc could do with optimization for speed
 

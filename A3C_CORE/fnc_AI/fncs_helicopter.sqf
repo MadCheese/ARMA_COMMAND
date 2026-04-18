@@ -901,7 +901,7 @@ A3C_JET_organizeGroupTakeOff = {
 };
 
 
-A3C_Evasive = {
+A3C_AI_Fnc_Command_Helicopter_evasiveMove = {
 	params ["_vehicle"];
 	private ["_vel","_dir","_speed","_deg","_newVel"];
 	_vel = velocity _vehicle;

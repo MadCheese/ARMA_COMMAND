@@ -11,57 +11,160 @@ UI_DSP_HUD_Handlers.sqf handles the events and dispatches recognized keybinds he
 A3C_UI_HUD_onKeyDown_heliGunner = {
     params ["_display", "_key", "_shift", "_ctrl", "_alt"];
 
-    
-    private _flareKeysArray = actionKeys "launchCM";
-    private _raiseCollectiveKeysArray = actionKeys "HeliCollectiveRaise";
-    private _lowerCollectiveKeysArray = actionKeys "HeliCollectiveLower";
-    private _handled = false;
-    private _atlHeight = (getPosATL vehicle player) select 2;
+    private _helicopter = vehicle player;
 
-    // countermeasures
-    if ({_x in A3C_UI_DOWNKEYS} count _flareKeysArray == count _flareKeysArray) then {
-        if (behaviour driver vehicle player == "CARELESS") then {
-            private _wpnsTurret = vehicle player weaponsTurret [-1];
+	private _isCounterMeasures = (inputAction "launchCM") > 0;
+	private _isCollectiveRaise = (inputAction "HeliCollectiveRaise") > 0;
+	private _isCollectiveLower = (inputAction "HeliCollectiveLower") > 0;
+	private _isRudderLeft = (inputAction "HeliRudderLeft") > 0;
+	private _isRudderRight = (inputAction "HeliRudderRight") > 0;
 
-            {
-                private _weapon = _x;
-                private _mags = getArray (configFile >> "CfgWeapons" >> _weapon >> "magazines");
+	private _params = [_helicopter];
+	private _code = {};
+	private _shouldExec = false;
 
-                {
-                    private _ammo = getText (configFile >> "CfgMagazines" >> _x >> "ammo");
-                    private _aiUsageFlags = getNumber (configFile >> "CfgAmmo" >> _ammo >> "aiAmmoUsageFlags");
+    switch (true) do {
+        case (
+			_isCounterMeasures
+			//-- NOTE: Removed careless check until we know exactly that it is relevant.
+            // && {behaviour driver _helicopter == "CARELESS"}
 
-                    if (_aiUsageFlags == 8) then {
-                        private _mode = (getArray (configFile >> "CfgWeapons" >> _weapon >> "modes")) select 0;
-                        (driver vehicle player) forceWeaponFire [_weapon, _mode];
-                    };
-                } forEach _mags;
-            } forEach _wpnsTurret;
+        ): {
+			_params = [_helicopter, A3C_AI_Fnc_Command_Helicopter_evasiveMove];
+			_code = {
+				params ["_helicopter", "_evasiveFnc"];
 
-            [vehicle player] call A3C_Evasive;
-            _handled = true;
+				private _driver = driver _helicopter;
+				private _cfg = configFile;
+				private _wpnsTurret = _helicopter weaponsTurret [-1];
+				private _fired = false;
+
+				{
+					private _weapon = _x;
+					private _weaponCfg = _cfg >> "CfgWeapons" >> _weapon;
+
+					private _modes = getArray (_weaponCfg >> "modes");
+					if (_modes isEqualTo []) then { continue };
+
+					private _mode = _modes select 0;
+					private _mags = getArray (_weaponCfg >> "magazines");
+
+					{
+						private _magCfg = _cfg >> "CfgMagazines" >> _x;
+						private _ammoCfg = _cfg >> "CfgAmmo" >> getText (_magCfg >> "ammo");
+
+						if (
+							getText (_ammoCfg >> "simulation") == "shotCM"
+							&& {getText (_ammoCfg >> "effectsSmoke") in ["CounterMeasureFlare", "CounterMeasureChaff"]}
+						) exitWith {
+							_driver forceWeaponFire [_weapon, _mode];
+							_fired = true;
+						};
+					} forEach _mags;
+
+					if (_fired) exitWith {};
+				} forEach _wpnsTurret;
+
+				[_helicopter] call _evasiveFnc;
+			};
+			_shouldExec = true;    
+        };
+
+        case (_isCollectiveRaise): {
+			_params = [_helicopter];
+			_code = {
+				params ["_helicopter"];
+				_helicopter flyInHeight (((getPosATL _helicopter) select 2) + 20);
+			};
+			_shouldExec = true;
+		};
+
+		case (_isCollectiveLower): {
+			_params = [_helicopter];
+			_code = {
+				params ["_helicopter"];
+				_helicopter flyInHeight (((getPosATL _helicopter) select 2) - 20);
+			};
+			_shouldExec = true;
+		};
+
+        case
+		(
+			speed _helicopter < 25
+			&& {_isRudderLeft || {_isRudderRight}}
+		): {
+			private _adjust = if (_ctrl) then {0.5} else {0.2};
+            private _twist = if (_isRudderLeft) then {_adjust * -1} else {_adjust};
+			_params = [_helicopter, _twist];
+			_code = {
+				params ["_helicopter", "_twist"];
+
+				private _vel = velocity _helicopter;
+				private _dir = vectorDir _helicopter;
+				private _up = vectorUp _helicopter;
+
+				private _c = cos _twist;
+				private _s = sin _twist;
+
+				private _newDir = [
+					((_dir select 0) * _c) + ((_dir select 1) * _s),
+					-((_dir select 0) * _s) + ((_dir select 1) * _c),
+					_dir select 2
+				];
+
+				_helicopter setVectorDirAndUp [_newDir, _up];
+				_helicopter setVelocity _vel;
+			};
+			_shouldExec = true;    
         };
     };
 
-    // raise collective
-    if (!_handled && {{_x in A3C_UI_DOWNKEYS} count _raiseCollectiveKeysArray == count _raiseCollectiveKeysArray}) then {
-        vehicle player flyInHeight (_atlHeight + 20);
-        _handled = true;
-    };
-
-    // lower collective
-    if (!_handled && {{_x in A3C_UI_DOWNKEYS} count _lowerCollectiveKeysArray == count _lowerCollectiveKeysArray}) then {
-        vehicle player flyInHeight (_atlHeight - 20);
-        _handled = true;
-    };
-
-    // rotate / rudder
-    if (!_handled && {speed vehicle player < 25} && {_key in [203, 205, 30, 32]}) then {
-        private _twist = if (_key in [205, 32]) then {0.5} else {-0.5};
-        vehicle player setDir (getDir vehicle player + _twist);
-        // _handled = true; // -- NOTE: uncomment this if you happen to add any more mechanics here
-    };
+	if (_shouldExec) then {
+		[_params, _code] remoteExec ["bis_fnc_call", _helicopter];
+	};
 };
+
+
+A3C_UI_HUD_onKeyUp_heliGunner = {
+	private _isCollectiveRaise = (inputAction "HeliCollectiveRaise") > 0;
+	private _isCollectiveLower = (inputAction "HeliCollectiveLower") > 0;
+
+	if (_isCollectiveRaise || {_isCollectiveLower}) then {
+		private _helicopter = vehicle player;
+
+		private _params = [_helicopter];
+		private _code = {
+			params ["_helicopter"];
+
+			private _token = (_helicopter getVariable ["A3C_collectiveReleaseToken", 0]) + 1;
+			_helicopter setVariable ["A3C_collectiveReleaseToken", _token];
+
+			[_helicopter, _token] spawn {
+				params ["_helicopter", "_token"];
+
+				waitUntil {
+					sleep 0.05;
+
+					isNull _helicopter
+					|| {!local _helicopter}
+					|| {(_helicopter getVariable ["A3C_collectiveReleaseToken", -1]) != _token}
+					|| {abs ((velocity _helicopter) select 2) < 1}
+				};
+				if (
+					!isNull _helicopter
+					&& {local _helicopter}
+					&& {(_helicopter getVariable ["A3C_collectiveReleaseToken", -1]) == _token}
+				) then {
+					_helicopter flyInHeight ((getPosATL _helicopter) select 2);
+					_helicopter setVariable ["A3C_collectiveReleaseToken", nil];
+				};
+			};
+		};
+
+		[_params, _code] remoteExec ["BIS_fnc_call", _helicopter];
+	};
+};
+
 
 //-- NUM-Pad SQ-HUD unit selections
 A3C_UI_HUD_onKeyDown_NUM = {
