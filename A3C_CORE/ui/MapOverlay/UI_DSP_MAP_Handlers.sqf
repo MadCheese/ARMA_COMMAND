@@ -2226,7 +2226,7 @@ A3C_UI_MAP_onKeyDown_Overlay = {
 	// player commandchat format ["Display %1, A3C_UI_MAP_onKeyDown_Overlay: %2 - %3", _display, keyName _key, round time];
 
 	
-
+	
 	//-- 1: MAP KEYBIND (close map > Does not work if overlay is open)
 	if ((_this select 1) in actionKeys "showmap") exitWith {
 		
@@ -2237,7 +2237,8 @@ A3C_UI_MAP_onKeyDown_Overlay = {
 	//-- declare variable for suppression of Engine Binds
 	private _blockDefault = false;
 
-
+	//-- CTRL key must block default engine bind to disable map drawing
+	if (_key == 29) then {_blockDefault = true;};
 
 	//-- Disable Numbers (#TODO: Check why this is dependent on selectedUnits). Also Avoids weapon switch?
 	if (

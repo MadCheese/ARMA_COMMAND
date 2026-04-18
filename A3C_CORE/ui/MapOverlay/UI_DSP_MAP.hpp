@@ -19,8 +19,8 @@ class A3C_DSP_MapOverlay
 	onKeyDown = "private _blockDefaultKey = _this call A3C_UI_MAP_onKeyDown_Overlay; _blockDefaultKey";
 	onKeyUp = "_this call A3C_UI_MAP_onKeyUp_Overlay;";
 
-	onMouseButtonDown = "_this call A3C_UI_MAP_onOnMouseButtonDown_Overlay; false";
-	onMouseButtonUp = "_this call A3C_UI_MAP_onOnMouseButtonUp_Overlay; false";
+	onMouseButtonDown = "_this spawn A3C_UI_MAP_onOnMouseButtonDown_Overlay; true";
+	onMouseButtonUp = "_this spawn A3C_UI_MAP_onOnMouseButtonUp_Overlay; false";
 
 	
 			

@@ -41,7 +41,8 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\ai_rails\ai_rails_Heli.s
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_serverMon.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_vehicleRemote.sqf";
 
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_HighCommand.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\HighCommand\fncs_HighCommand.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\HighCommand\A3C_AI_HighCommand_ActionLibrary.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_sharedCommandingLevels.sqf";
 
 
