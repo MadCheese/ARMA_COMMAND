@@ -631,7 +631,7 @@ A3C_HEAL = {
 	};
 };
 
-A3C_MEDICAL_START_HC = {
+A3C_AI_HIGHCOMMAND_fnc_groupHeal = {
 	params ["_group"];
 
 	

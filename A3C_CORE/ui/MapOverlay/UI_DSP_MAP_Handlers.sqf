@@ -34,7 +34,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 	};
 	
 	//-- contextMenues are open
-	if ({ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT] > 0) exitwith {};
+	if ({ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,8008] > 0) exitwith {};
 	private _ctls = if (visibleMap) then {[A3C_SHARED_GAMEUI_TREE_CONTROL,7077,7071,709099,8008]} else {[]};
 	//-- exit if mouseclick was within certain controls
 	if ({[[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea} count _ctls > 0) exitWith {};
@@ -133,7 +133,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 	};
 
 	//-- detect click on VEHICLE BOARDING ICONS	
-	if (A3C_HC_VEHICLEBOARD_BOOL) exitWith {
+	if (A3C_AI_HighCommand_boardGroupToVehicle_BOOL) exitWith {
 
 		private _vhIcons = [];
 		//-- Boarding HC-units via map-ui pt 2
@@ -148,19 +148,19 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 				[A3C_SELECTED_HC_GROUPS_SETTINGS,_selectedVehicle] call A3C_HC_AssignVehicle;
 				_doReset = true;
 			} else {
-				A3C_HC_VEHICLEBOARD_BOOL = false; //-- disable boarding interface
+				A3C_AI_HighCommand_boardGroupToVehicle_BOOL = false; //-- disable boarding interface
 				_doReset = true;
 			};
 		} else {
 			if (_ctrl) then {
-				A3C_HC_VEHICLEBOARD_BOOL = false; //-- disable boarding interface
+				A3C_AI_HighCommand_boardGroupToVehicle_BOOL = false; //-- disable boarding interface
 				_doReset = true;
 			};
 		};
 		if (_doReset) then {
 			A3C_UI_MAPICONS_HC_VICS = [];
-			A3C_HC_VEHICLEBOARD_BOOL = false;
-			A3C_HC_VEHICLEBOARD_GROUPS = [];
+			A3C_AI_HighCommand_boardGroupToVehicle_BOOL = false;
+			A3C_AI_HighCommand_boardGroupToVehicle_GROUPS = [];
 			A3C_MMCode = {};
 			A3C_BOOL_MOUSEMOVING = false;
 			A3C_BOOL_DRAGLINE = false;
@@ -207,7 +207,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 					//-- HC waypoint sync
 					A3C_CONNECTING_MODE = "HCSYNC";
 					A3C_BOOL_DRAGLINE = true;
-					A3C_HC_VEHICLEBOARD_GROUPS = [_gp];
+					A3C_AI_HighCommand_boardGroupToVehicle_GROUPS = [_gp];
 					A3C_CLICKPOS_ORIG =  A3C_CLICKPOS_1;
 					A3C_BOOL_MOUSEMOVING = true;
 					A3C_HC_WP_SYNC_ROOT = [_gp,_wp_Index];
@@ -430,7 +430,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 				_cargoObjects = ([vehicle A3C_SQ_CLICKED_UNIT] call MCSS_fnc_getNearCargoLoadObjects);
 				if ( ((getPosATL (vehicle A3C_SQ_CLICKED_UNIT)) select 2) < 1) then {
 					if ((count _cargoObjects > 0) && (A3C_SQ_CLICKED_UNIT == driver (vehicle A3C_SQ_CLICKED_UNIT))) then {
-						_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
+						_parent = findDisplay _a3c_dsp displayCtrl 8008;
 						_text = findDisplay _a3c_dsp displayCtrl 800802;
 						_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 						//(findDisplay 100020 displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
@@ -661,7 +661,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 	};
 
 	//-- hide other contextmenu's
-	_ctls = if (visibleMap) then {[A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,709135,A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT]} else {[A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT,709112,709135,A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT]};
+	_ctls = if (visibleMap) then {[A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,709135,8008]} else {[A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT,709112,709135,8008]};
 	{
 		if !([[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea) then {
 			((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false;
@@ -769,7 +769,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 				if (count A3C_SELECTED_UNITS > 2) then {
 					A3C_MULTIWAYPOINT = false;
 					["MULTIWAYPOINT"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
-					waituntil {!ctrlShown (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT)};
+					waituntil {!ctrlShown (findDisplay _a3c_dsp displayCtrl 8008)};
 				};
 
 				//systemchat str [_clickPos,isOnRoad _clickPos];
@@ -2263,7 +2263,7 @@ A3C_UI_MAP_onKeyDown_Overlay = {
 	[_key] call A3C_UI_Shared_FNC_AddDownkey;
 
 
-	private _mapObjectSelector = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
+	private _mapObjectSelector = _display displayCtrl 8008;
 	switch (true) do {
 		//-- 3: Check if keybind should control ObjectSelector //-- #
 		case

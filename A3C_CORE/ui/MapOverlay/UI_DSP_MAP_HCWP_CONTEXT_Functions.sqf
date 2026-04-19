@@ -1662,7 +1662,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 		private _cargoGroups = ([A3C_HC_ACTIVEGROUP] call MCSS_fnc_getCargoGroups) select {private _gp = _x; (waypointPosition [_gp, currentWaypoint _gp]) distance2D [0,0,0] == 0};
 		if !(_cargoGroups isEqualTo []) then { //-- here we check for existing cargo units that can have waypoints assigned.
 			//-- Prompt user to select desired option
-			_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
+			_parent = findDisplay _a3c_dsp displayCtrl 8008;
 			_text = findDisplay _a3c_dsp displayCtrl 800802;
 			_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 
@@ -2394,7 +2394,7 @@ A3C_LB_HC = {
 						_ctrlText = "DEMOLITION";
 						(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT) ctrlShow false;
 						(findDisplay 12 displayCtrl 51) ctrlEnable true;
-						_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
+						_parent = findDisplay _a3c_dsp displayCtrl 8008;
 						_text = findDisplay _a3c_dsp displayCtrl 800802;
 						_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 

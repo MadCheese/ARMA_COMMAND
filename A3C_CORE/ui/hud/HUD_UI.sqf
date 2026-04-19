@@ -1154,7 +1154,7 @@ A3C_ObjectSelector_LB_Change = {
 
 			};
 			case ("STATIC_DISASSEMBLE_HC") : {
-				[1,(A3C_HC_NearStatics select _lb)] spawn A3C_HC_UnassembleWeapon;
+				[1,(A3C_HC_NearStatics select _lb)] spawn A3C_AI_HighCommand_Action_unAssembleWeapon;
 				_parent ctrlShow false;
 				player commandRadio "SentDisAssemble";
 				systemchat format

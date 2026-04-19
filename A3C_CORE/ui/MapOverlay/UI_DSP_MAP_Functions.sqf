@@ -326,7 +326,7 @@ A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP = {
 	params ["_mode"];
 	
 	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
-	_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
+	_parent = findDisplay _a3c_dsp displayCtrl 8008;
 	_text = findDisplay _a3c_dsp displayCtrl 800802;
 	_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 	//if !(visibleMap) then {
@@ -3893,7 +3893,7 @@ A3C_BTN_HC = {
 
 	} else {
 		// re-join units
-		[_groups] call A3C_fnc_SecuRejoin_fnc; //-- spawn security mechanic
+		[_groups] call A3C_AI_HIGHCOMMAND_fnc_mergeGroups; //-- spawn security mechanic
 
 	};
 

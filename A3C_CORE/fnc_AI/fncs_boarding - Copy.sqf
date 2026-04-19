@@ -639,7 +639,7 @@ A3C_boardSquadUnittoSeat = {
 	
 };
 
-A3C_HC_REBOARD = {
+A3C_AI_HIGHCOMMAND_fnc_reboardGroupToVehicle = {
 	params ["_groups"];
 	private _vehicleBundles = [];
 	private _hcAll = _groups select {

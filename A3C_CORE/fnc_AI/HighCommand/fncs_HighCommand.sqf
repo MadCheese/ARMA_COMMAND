@@ -321,7 +321,7 @@ A3C_HC_AssignVehicle = { //--#TODO: change from call to spawn and add delay if g
 		
 	};
 	
-	A3C_HC_VEHICLEBOARD_BOOL = false;
+	A3C_AI_HighCommand_boardGroupToVehicle_BOOL = false;
 };
 
 
@@ -1322,7 +1322,7 @@ A3C_WP_STATEMENTS = {
 
 
 
-A3C_HC_VEHICLEBOARD = {
+A3C_AI_HighCommand_boardGroupToVehicle = {
 	params ["_button","_ctrl"];
 	private ["_group","_a3c_dsp"];
 	//if !(count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) exitWith {systemchat 'A3C: Boarding/Dismount function is only compatible with single selections'};
@@ -1385,8 +1385,8 @@ A3C_HC_VEHICLEBOARD = {
 			] call A3C_UI_RADIAL_ADD_EH_MACROS;					
 			[] call A3C_RADIAL_CloseDisplay;
 		} else {
-			if !(A3C_HC_VEHICLEBOARD_BOOL) then {
-				A3C_HC_VEHICLEBOARD_GROUPS = +(A3C_SELECTED_HC_GROUPS_SETTINGS);
+			if !(A3C_AI_HighCommand_boardGroupToVehicle_BOOL) then {
+				A3C_AI_HighCommand_boardGroupToVehicle_GROUPS = +(A3C_SELECTED_HC_GROUPS_SETTINGS);
 				A3C_UI_MAPICONS_HC_VICS = [];
 				A3C_BOOL_MOUSEMOVING = true;
 				A3C_MMCode = {
@@ -1400,7 +1400,7 @@ A3C_HC_VEHICLEBOARD = {
 					};
 				} foreach ( (allMissionObjects "CAR") + (allMissionObjects "TANK") + (allMissionObjects "AIR") + (allMissionObjects "STATICWEAPON") +(allMissionObjects "SHIP"));
 				
-				A3C_HC_VEHICLEBOARD_BOOL = true;
+				A3C_AI_HighCommand_boardGroupToVehicle_BOOL = true;
 				
 	
 			};

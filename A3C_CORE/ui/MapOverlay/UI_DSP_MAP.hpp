@@ -2584,7 +2584,7 @@ class A3C_DSP_MapOverlay
 			};
 		};
 		
-		class A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT: A3C_RscControlsGroup_NoScroll
+		class 8008: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8008;
 			

@@ -593,7 +593,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 						params ["_clickData","_fncData"];
 						_fncData params ["_units","_display"];
 						_units = call compile _units;
-						[_units] call A3C_fnc_engineOff;
+						[_units] call A3C_AI_Shared_fnc_engineOff;
 						BV_ACT = 0;
 						["ACTIONS",0] call A3C_RADIAL_BTN_FNC_RING_INNER;
 					},
@@ -801,7 +801,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 									};
 
 									private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
-									_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
+									_parent = findDisplay _a3c_dsp displayCtrl 8008;
 									_text = findDisplay _a3c_dsp displayCtrl 800802;
 									_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 
@@ -947,7 +947,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 									with uiNamespace do {
 										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
 									};
-									_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
+									_parent = findDisplay _a3c_dsp displayCtrl 8008;
 									_text = findDisplay _a3c_dsp displayCtrl 800802;
 									_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 									
@@ -1034,7 +1034,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 							};
 
 							private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
-							_parent = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ObjectSelector_CTRLPARENT;
+							_parent = findDisplay _a3c_dsp displayCtrl 8008;
 							_text = findDisplay _a3c_dsp displayCtrl 800802;
 							_listBox = findDisplay _a3c_dsp displayCtrl 800803;
 
