@@ -75,6 +75,9 @@ A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
 
 A3C_UI_HUD_3D_TAG_ICON_MOD = "NONE"; //-- for modifier
 
+A3C_AI_HighCommand_Action_ID = "";
+
+
 A3C_UI_MAP_BOOL_isHCWaypointPosEdit = false; //-- different from A3C_BOOL_MOVINGHC (for default Arma HC module)
 
 

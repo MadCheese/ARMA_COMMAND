@@ -283,9 +283,6 @@ A3C_UI_Color_setOpacity =
 {
 	//-- fnc for map UI to add correct opacity to color array
 	params ["_colorArray","_opacity"];
-	//if ({!isNull findDisplay _x} count [100020,100030] > 0) then {
-	//	_opacity = _opacity min A3C_OPACITY;
-	//};
 	_colorArray set [3,_opacity];
 	_colorArray
 };

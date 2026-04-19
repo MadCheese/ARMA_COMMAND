@@ -602,7 +602,7 @@ A3C_FNC_CBA_KEY = {
 
 							A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = [A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units,getPosASL A3C_SQ_REM_INDICATOR] call A3C_UI_SHARED_FIND_BEST_SHOOTERS;
 							if ((count A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units) > 0) then {
-								[A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units select 0,(getposASL A3C_SQ_REM_INDICATOR),"FIND"] spawn A3C_ORDER_REMOTE_LAUNCH;
+								[A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units select 0,(getposASL A3C_SQ_REM_INDICATOR),"FIND"] spawn A3C_AI_SHARED_ORDER_REMOTE_LAUNCH;
 							};
 							A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = [];
 							deletevehicle A3C_SQ_REM_INDICATOR;
@@ -683,7 +683,7 @@ A3C_FNC_CBA_KEY = {
 							};
 						} foreach A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units;
 						if ((count A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units) > 0) then {
-							[A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units select 0,(getposASL A3C_HC_REM_INDICATOR),"FIND"] spawn A3C_ORDER_REMOTE_LAUNCH;
+							[A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units select 0,(getposASL A3C_HC_REM_INDICATOR),"FIND"] spawn A3C_AI_SHARED_ORDER_REMOTE_LAUNCH;
 						};
 						A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = [];
 						deletevehicle A3C_HC_REM_INDICATOR;

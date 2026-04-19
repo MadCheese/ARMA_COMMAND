@@ -99,7 +99,7 @@ A3C_UI_RADIAL_fnc_RemFire_EH = {
 								};
 								A3C_UI_RADIAL_Current_Remfire_Units = [];
 								{
-									[[_x,_aimPos,'%3'],A3C_ORDER_REMOTE_LAUNCH] remoteExec ['bis_fnc_spawn',_x];
+									[[_x,_aimPos,'%3'],A3C_AI_SHARED_ORDER_REMOTE_LAUNCH] remoteExec ['bis_fnc_spawn',_x];
 								} foreach _shooters;
 								[A3C_UI_HUD_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_UI_HUD_3D_TAG;
 								sleep 2;
@@ -148,7 +148,7 @@ A3C_UI_RADIAL_fnc_RemFire_EH = {
 	];
 	_return
 };
-//[_x,_aimPos,'%3'] spawn A3C_ORDER_REMOTE_LAUNCH;
+//[_x,_aimPos,'%3'] spawn A3C_AI_SHARED_ORDER_REMOTE_LAUNCH;
 
 
 

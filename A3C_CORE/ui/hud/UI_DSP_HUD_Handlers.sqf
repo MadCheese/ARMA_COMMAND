@@ -11,6 +11,7 @@ A3C_UI_HUD_onKeyDown = {
 		A3C_UI_DOWNKEYS = [];
 		false
 	};
+	
 
 	//-- allowed
 	if (
@@ -24,6 +25,27 @@ A3C_UI_HUD_onKeyDown = {
 	};
 
 	if ([_key] call A3C_UI_Shared_blockKeyDownEvent) exitWith {};
+	
+	//-- RADIAL-ACTIONS
+	if 
+	(
+		A3C_AI_HighCommand_Action_ID != ""
+		&& {_key == 57} //-- SpaceBar
+	) exitWith {
+		//-- Confirm Action
+		switch (A3C_AI_HighCommand_Action_ID) do {
+			case ("TANKSHOT") : {
+				[] call A3C_AI_HighCommand_Action_remoteFire_TankShot;
+			};
+		};
+		[] spawn {
+			private _flickerScript = [A3C_UI_HUD_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_UI_HUD_3D_TAG;
+			waitUntil {scriptDone _flickerScript};
+			[] call A3C_AI_HighCommand_Action_CancelPositionalProcess;
+		};
+		true
+	};
+
 
 	private _keyControlsMap = (inputAction "showMap") > 0;
 
@@ -161,9 +183,12 @@ A3C_UI_HUD_onKeyUp = {
 	
 	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
 
-	if (_key == A3C_RadialMenu_KEY_ID select 0) then {
+	if (_key == A3C_RadialMenu_KEY_ID select 0) exitWith {
 		A3C_DISABLE_RADIAL = false;
 		{inGameUISetEventHandler [_x, 'true']} foreach ['PrevAction','NextAction'];
+		if (A3C_AI_HighCommand_Action_ID != "") then {
+			[] call A3C_AI_HighCommand_Action_CancelPositionalProcess;
+		};
 	};
 
 	switch (true) do {
@@ -180,8 +205,7 @@ A3C_UI_HUD_onKeyUp = {
 			&& {player == (gunner vehicle player)}
 		) : {
 			//#TODO: Why should this fire on EVERY keyup? 
-			[] spawn A3C_UI_HUD_onKeyUp_heliGunner;
-			
+			[] spawn A3C_UI_HUD_onKeyUp_heliGunner;	
 		};
 		
 	};

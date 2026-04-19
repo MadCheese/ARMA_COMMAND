@@ -1175,22 +1175,29 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				
 				//----------- POSITIONAL ACTIONS
 
+				//----- Remote-Fire Actions (use )
+
+				//["TANKSHOT", '\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa',[1,0,0,1], "A3C_HeliPad","(0.5,0.1,1,1)"] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+
 				case ("TANKSHOT") : {
 					_imageColorCode = if (A3C_Prevent_TANKSHOT) then {[1,1,1,0.3]} else {[1,1,1,1]};
 					_params = [];
-
-					_buttonFnc =
-					[
-						'A3C_Prevent_TANKSHOT',
-						'\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa',
-						"TANKSHOT"
-					] call A3C_UI_RADIAL_fnc_RemFire_EH;
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_remoteTankShell.paa";
 					_button_toolTip =  format
 					[
 						"FIRE TANK SHELL - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
 						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
 					];
+
+					_buttonFnc = {
+						[
+							"TANKSHOT", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+					};
 				};
 
 				case ("VTOL_CANNON") : {
@@ -1543,12 +1550,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									};
 								} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
 								[] call A3C_RADIAL_CloseDisplay;
-								//_vehicle = createSimpleObject
-								//[
-								//	getText (configfile >> "CfgVehicles" >> _vehicleType >> "model"),
-								//	[0,0,100],
-								//	true
-								//]; //
+
 								_vehicle = _vehicleType createvehicleLocal [0,0,100]; //
 								_vehicle allowdamage false;
 								_vehicle enableSimulation false;

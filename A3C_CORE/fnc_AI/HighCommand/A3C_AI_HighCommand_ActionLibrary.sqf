@@ -700,9 +700,93 @@ A3C_AI_HighCommand_Action_weaponFlashLight = {
 
 
 //---------------------------------------------------------------------------------------------
-//---------- 2. Positional actions --------------------------------------------------------
+//---------- 2. Positional actions ------------------------------------------------------------
 //---------------------------------------------------------------------------------------------
 
+//---------------------------- RADIAL ONLY
+
+/*//-------------------------------------------------------------------------------------------
+	Positional Actions are spread up over multiple steps / UI-Elements
+	1. Radial menu is used to issue the order
+	2. HUD Keydown event (A3C_UI_HUD_onKeyDown)
+		2.1 Pressing SPACE-key confirms the order
+		2.2 Releasing TAB-Key cancels the order-planning
+*///-------------------------------------------------------------------------------------------
+
+
+//---------------------------- SHARED POSITIONAL STARTUP FUNCTION
+A3C_AI_HighCommand_Action_StartPositionalProcess = { //-- THIS MIGHT BE REQUIRED TO BE USED MY SQUAD -LEVEL TOO: IF SO, RENAME AND MOVE
+	params ["_actionID", "_iconType","_iconColor","_objectPlacerClass", "_objectPlacerColorString"];
+	//-- UI-Reaction
+	A3C_DISABLE_RADIAL = true;
+	[] call A3C_RADIAL_CloseDisplay;
+
+	{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu '';
+
+	//-- Positional UI 
+	A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
+	A3C_UI_HUD_3D_TAG_ICON_COL = [_iconColor,0.7] call A3C_UI_Color_setOpacity;
+	A3C_UI_HUD_3D_TAG_reposition = true;
+
+	A3C_AI_HighCommand_Action_ID = _actionID;
+
+	//-- Spawn object placer
+	if (_objectPlacerClass != "") then {
+		
+		private _placer = _objectPlacerClass createvehicleLocal [0,0,100]; //
+		_placer allowdamage false;
+		_placer enableSimulation false;
+		_placer disableCollisionWith player;
+		_placer hideObject true;
+		private _safePos = ([screenToWorld [0.5,0.5],[0,100]] call MCSS_fnc_getSafePos);
+		if (!isNil '_safePos' && {count _safePos > 0}) then {
+			_placer setpos _safePos;
+		};
+		_placer disableCollisionWith cursortarget;
+		//-- Color Object
+		if (_objectPlacerClass != "") then {
+			private _colorStringFinal = "#(rgb,8,8,3)color" + _objectPlacerColorString;
+			for "_i" from 0 to 10 do {
+				A3C_OBJECTPLACER setObjectTexture [0, _colorStringFinal];
+			};
+		};
+
+		_placer spawn { //-- spawn because we need the slight delay
+			sleep 0.2;
+			_this hideObject false;
+			A3C_OBJECTPLACER = _this; //-- naming delay is necessary so object does not get moved by HUDdraw script immediately to be destroyed
+			
+		};
+	};
+};
+
+// ["TANKSHOT", '\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa',[1,0,0,1], "A3C_HeliPad","(0.5,0.1,1,1)"] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+
+
+A3C_AI_HighCommand_Action_CancelPositionalProcess = {
+	// systemchat "A3C_AI_HighCommand_Action_CancelPositionalProcess";
+	A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+	A3C_UI_HUD_3D_TAG_reposition = false;
+	A3C_UI_HUD_3D_TAG_ICON_COL = [0.5,0.5,0.5,1]; //-- probably not needed, using grey to spot it happens :)
+	if (!isNull A3C_OBJECTPLACER) then {
+		deleteVehicle A3C_OBJECTPLACER;
+	};
+	// A3C_DISABLE_RADIAL = false; // -- not needed (Handled by keyup)
+	A3C_AI_HighCommand_Action_ID = "";
+	A3C_UI_HUD_3D_TAG_ICON_POS = [0,0,0];
+};
+
+
+//----- Remote-Fire Actions (use )
+
+
+A3C_AI_HighCommand_Action_remoteFire_TankShot = {
+	[A3C_REMFIRE_TankShot_Units, "TANKSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+};
+
+
+//---------------------------- MAP ONLY
 
 
 
+//---------------------------- SHARED (MAP+RADIAL)
