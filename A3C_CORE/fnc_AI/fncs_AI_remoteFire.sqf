@@ -35,7 +35,7 @@ A3C_removeFiredHandler = {
 };
 
 
-A3C_FireCounterMeasures = {
+A3C_FireCounterMeasures = { //-- to do: Unify with chaff/flare and include for helis as well (requires different icon)
 	params [
 		"_vehicle",
 		"_mode" //-- ): 0 = only check, 1 = fire if possible

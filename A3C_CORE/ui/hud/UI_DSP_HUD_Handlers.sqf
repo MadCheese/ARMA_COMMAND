@@ -1,3 +1,6 @@
+
+
+
 //---------------------------------------  HANDLER-FUNCTIONS  ------------------------------------
 //------------------------------------------------------------------------------------------------
 //-- HUD Main "KeyDown"
@@ -32,13 +35,45 @@ A3C_UI_HUD_onKeyDown = {
 		A3C_AI_HighCommand_Action_ID != ""
 		&& {_key == 57} //-- SpaceBar
 	) exitWith {
-		//-- Confirm Action
+		//-- Confirm Action (#TODO - create dedicated function to save space)
+		private _script = 0;
+
+
+		
+
 		switch (A3C_AI_HighCommand_Action_ID) do {
 			case ("TANKSHOT") : {
 				[] call A3C_AI_HighCommand_Action_remoteFire_TankShot;
 			};
+			case ("VTOL_CANNON") : {
+				_script = ["CANNON"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
+			};
+			case ("VTOL_GATLING") : {
+				_script = ["GATLING"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
+			};
+			case ("VTOL_AUTOCANNON") : {
+				_script = ["AUTOCANNON"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
+			};
+
+			case ("UGLSHOT") : { // #TODO: change velocity for UGLshots to a faster speed
+				[] call A3C_AI_HighCommand_Action_remoteFire_UGLshot;
+			};
+			case ("ATSHOT") : {
+				[] call A3C_AI_HighCommand_Action_remoteFire_ATshot;
+			};
+			case ("STATICSHOT") : {
+				[] call A3C_AI_HighCommand_Action_remoteFire_StaticRocketShot;
+			};
+
+
+			
+	
 		};
-		[] spawn {
+		[_script] spawn {
+			params ["_script"];
+			if (typeName _script == "CODE") then {
+				waitUntil {scriptDone _script};
+			};
 			private _flickerScript = [A3C_UI_HUD_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_UI_HUD_3D_TAG;
 			waitUntil {scriptDone _flickerScript};
 			[] call A3C_AI_HighCommand_Action_CancelPositionalProcess;

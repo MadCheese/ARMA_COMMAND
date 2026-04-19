@@ -716,7 +716,11 @@ A3C_AI_HighCommand_Action_weaponFlashLight = {
 
 //---------------------------- SHARED POSITIONAL STARTUP FUNCTION
 A3C_AI_HighCommand_Action_StartPositionalProcess = { //-- THIS MIGHT BE REQUIRED TO BE USED MY SQUAD -LEVEL TOO: IF SO, RENAME AND MOVE
-	params ["_actionID", "_iconType","_iconColor","_objectPlacerClass", "_objectPlacerColorString"];
+	params ["_isBusy", "_actionID", "_iconType","_iconColor","_objectPlacerClass", "_objectPlacerColorString"];
+	
+	if (_isBusy) exitWith {
+		systemchat 'A3C: Plase wait for your last order to complete';
+	};
 	//-- UI-Reaction
 	A3C_DISABLE_RADIAL = true;
 	[] call A3C_RADIAL_CloseDisplay;
@@ -783,6 +787,34 @@ A3C_AI_HighCommand_Action_CancelPositionalProcess = {
 A3C_AI_HighCommand_Action_remoteFire_TankShot = {
 	[A3C_REMFIRE_TankShot_Units, "TANKSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
 };
+
+A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon = {
+	params ["_weapon"];
+	private _aimpos = ATLtoASL(A3C_UI_HUD_3D_TAG_ICON_POS);
+	private _gp = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
+	private _leaderVic = vehicle (leader _gp);
+	private _array = [side player, _leaderVic, _aimpos, _weapon, objNull];
+	[_array, A3C_REMOTE_BLACKFISH] remoteExec ['bis_fnc_spawn', _leaderVic];
+	sleep 2;
+	waituntil {true};
+	if (!isNull findDisplay 100040 && {(ctrlShown (findDisplay 100040 displayctrl 8001)) && {A3C_RADIALMODE in ['ACT','HC ACTIONS']}}) then {
+		[A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+	};
+};
+
+A3C_AI_HighCommand_Action_remoteFire_UGLshot = {
+	[A3C_REMFIRE_UGLShot_Units, "UGLSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+};
+
+
+A3C_AI_HighCommand_Action_remoteFire_ATshot = {
+	[A3C_REMFIRE_ATShot_Units, "ATSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+};
+
+A3C_AI_HighCommand_Action_remoteFire_StaticRocketShot = {
+	[A3C_REMFIRE_StaticShot_Units, "STATICSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+};
+
 
 
 //---------------------------- MAP ONLY

@@ -156,7 +156,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 	A3C_REMFIRE_TankShot_Units = [];
 	A3C_REMFIRE_UGLShot_Units = [];
 	A3C_REMFIRE_ATShot_Units = [];
-	A3C_REMFIRE_STATICShot_Units = [];
+	A3C_REMFIRE_StaticShot_Units = [];
 
 	A3C_HC_DetoShot_Units = [];
 	A3C_HC_DetoTrigger_Units = [];
@@ -683,7 +683,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 					} else {
 						if ([vehicle _x] call A3C_isStaticMissileLauncher) then {
-							A3C_REMFIRE_STATICShot_Units pushbackUnique _x;
+							A3C_REMFIRE_StaticShot_Units pushbackUnique _x;
 						} else {
 							if ((count (getArtilleryAmmo [vehicle _x])) == 0 && {vehicle _x isKindOf "LAND"}) then { //-- exclude artillery and aircraft
 								_isCannonVic = false;
@@ -706,7 +706,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									A3C_REMFIRE_TankShot_Units pushbackUnique _x;
 								} else {
 									if (_isMissileVic) then {
-										A3C_REMFIRE_STATICShot_Units pushbackUnique _x;
+										A3C_REMFIRE_StaticShot_Units pushbackUnique _x;
 									};
 								};
 							};
@@ -737,7 +737,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		if (count A3C_REMFIRE_TankShot_Units > 0) then {
 			_actions pushBackUnique "TANKSHOT";
 		};
-		if (count A3C_REMFIRE_STATICShot_Units > 0) then {
+		if (count A3C_REMFIRE_StaticShot_Units > 0) then {
 			_actions pushBackUnique "STATICSHOT";
 		};
 		if (count A3C_REMFIRE_ATShot_Units > 0) then {
@@ -1191,6 +1191,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 					_buttonFnc = {
 						[
+							A3C_Prevent_TANKSHOT, //-- isBusy
 							"TANKSHOT", //-- actionID
 							'\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa', //-- Hud-Icon-class
 							[1,0,0,1], //-- Hud-Icon-color
@@ -1203,12 +1204,6 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				case ("VTOL_CANNON") : {
 					_imageColorCode = [1,1,1,1];
 					_params = [];
-					_buttonFnc =
-					[
-						false, //-- #TODO: Add delay for cannon
-						'\a3c_ui\crosshairs\icon_crosshair_remote_StaticAT.paa',
-						'CANNON'
-					] call A3C_UI_RADIAL_fnc_RemFire_VTOL_EH;
 
 					_button_IMG = "\a3c_ui\crosshairs\icon_crosshair_remote_StaticAT.paa";
 					_button_toolTip =  format
@@ -1216,17 +1211,22 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						"FIRE GUNSHIP CANNON - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
 						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
 					];
+
+					_buttonFnc = {
+						[
+							false, //-- isBusy
+							"VTOL_CANNON", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_remote_StaticAT.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+					};				
 				};
 
 				case ("VTOL_GATLING") : {
 					_imageColorCode = [1,1,1,1];
 					_params = [];
-					_buttonFnc =
-					[
-						false, //-- #TODO: Add delay for cannon
-						'\a3c_ui\crosshairs\icon_crosshair_CAS.paa',
-						'GATLING'
-					] call A3C_UI_RADIAL_fnc_RemFire_VTOL_EH;
 
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_Railgun.paa";
 					_button_toolTip =  format
@@ -1234,17 +1234,21 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						"FIRE GUNSHIP GATLING - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
 						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
 					];
+					_buttonFnc = {
+						[
+							false, //-- isBusy
+							"VTOL_GATLING", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_CAS.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+					};	
 				};
 
 				case ("VTOL_AUTOCANNON") : {
 					_imageColorCode = [1,1,1,1];
 					_params = [];
-					_buttonFnc =
-					[
-						false, //-- #TODO: Add delay for cannon
-						'\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa',
-						'AUTOCANNON'
-					] call A3C_UI_RADIAL_fnc_RemFire_VTOL_EH;
 
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_remoteTankShell.paa";
 					_button_toolTip =  format
@@ -1252,19 +1256,23 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						"FIRE GUNSHIP AUTOCANNON - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
 						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
 					];
+
+					_buttonFnc = {
+						[
+							false, //-- isBusy
+							"VTOL_AUTOCANNON", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+					};
 				};							
 				case ("UGLSHOT") : {
 
 
 					_imageColorCode = if (A3C_Prevent_UGLSHOT) then {[1,1,1,0.3]} else {[1,1,1,1]};
 					_params = [];
-
-					_buttonFnc =
-					[
-						'A3C_Prevent_UGLSHOT',
-						'\a3c_ui\crosshairs\icon_crosshair_remote_UGL.paa',
-						"UGLSHOT"
-					] call A3C_UI_RADIAL_fnc_RemFire_EH;
 
 					_button_IMG = "\a3c_ui\menu\icon_menu_action_remote_UGL.paa";
 					_button_toolTip =  format
@@ -1273,18 +1281,22 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
 					];
 
+					_buttonFnc = {
+						[
+							A3C_Prevent_UGLSHOT, //-- isBusy
+							"UGLSHOT", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_remote_UGL.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+					};
+
 
 				};
 				case ("ATSHOT") : {
 					_imageColorCode = if (A3C_Prevent_ATSHOT) then {[1,1,1,0.3]} else {[1,1,1,1]};
 					_params = [];
-
-					_buttonFnc =
-					[
-						'A3C_Prevent_ATSHOT',
-						'\a3c_ui\crosshairs\icon_crosshair_remote_AT.paa',
-						"ATSHOT"
-					] call A3C_UI_RADIAL_fnc_RemFire_EH;
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_remote_AT.paa";
 					_button_toolTip =  format
 					[
@@ -1292,24 +1304,39 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
 					];
 
+					_buttonFnc = {
+						[
+							A3C_Prevent_ATSHOT, //-- isBusy
+							"ATSHOT", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_remote_AT.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+					};
+
 
 				};
 				case ("STATICSHOT") : {
 					_imageColorCode = if (A3C_Prevent_STATICSHOT) then {[1,1,1,0.3]} else {[1,1,1,1]};
 					_params = [];
 
-					_buttonFnc =
-					[
-						'A3C_Prevent_STATICSHOT',
-						'\a3c_ui\crosshairs\icon_crosshair_remote_StaticAT.paa',
-						"STATICSHOT"
-					] call A3C_UI_RADIAL_fnc_RemFire_EH;
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_remote_StaticAT.paa";
 					_button_toolTip =  format
 					[
 						"FIRE STATIC ROCKET LAUNCHER - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
 						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
 					];
+					_buttonFnc = {
+						[
+							A3C_Prevent_STATICSHOT, //-- isBusy
+							"STATICSHOT", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_remote_StaticAT.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+					};
 				};
 				
 				case ("HELI_OVERWATCH") : {

@@ -40,7 +40,7 @@ A3C_UI_RADIAL_fnc_RemFire_EH = {
 				case ('TANKSHOT') : {+(A3C_REMFIRE_TankShot_Units)};
 				case ('ATSHOT') : {+(A3C_REMFIRE_ATShot_Units)};
 				case ('UGLSHOT') : {+(A3C_REMFIRE_UGLShot_Units)};
-				case ('STATICSHOT') : {+(A3C_REMFIRE_STATICShot_Units)};
+				case ('STATICSHOT') : {+(A3C_REMFIRE_StaticShot_Units)};
 				default {[]};
 			};
 
@@ -170,7 +170,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 	A3C_REMFIRE_TankShot_Units = [];
 	A3C_REMFIRE_UGLShot_Units = [];
 	A3C_REMFIRE_ATShot_Units = [];
-	A3C_REMFIRE_STATICShot_Units = [];
+	A3C_REMFIRE_StaticShot_Units = [];
 
 	//-- action check 1: find cover
 	if ({isNull objectParent _x} count _unitArray > 0) then {
@@ -327,7 +327,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 				} else {
 					//if (vehicle _x isKindOf "STATICWEAPON") then {
 					if (_x == gunner vehicle _x && {[vehicle _x] call A3C_isStaticMissileLauncher}) then {
-						A3C_REMFIRE_STATICShot_Units pushBackUnique _x;
+						A3C_REMFIRE_StaticShot_Units pushBackUnique _x;
 					} else {
 						if (vehicle _x isKindOf "TANK") then { //(count (getArtilleryAmmo [vehicle _unit])) > 0
 							A3C_REMFIRE_TankShot_Units pushBackUnique _x;
@@ -340,7 +340,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 		if (count A3C_REMFIRE_TankShot_Units > 0) then {
 			A3C_DYNAMIC_BUTTON_ACTIONS pushBack "TANKSHOT";
 		};
-		if (count A3C_REMFIRE_STATICShot_Units > 0) then {
+		if (count A3C_REMFIRE_StaticShot_Units > 0) then {
 			A3C_DYNAMIC_BUTTON_ACTIONS pushBack "STATICSHOT";
 		};
 		if (count A3C_REMFIRE_ATShot_Units > 0) then {
