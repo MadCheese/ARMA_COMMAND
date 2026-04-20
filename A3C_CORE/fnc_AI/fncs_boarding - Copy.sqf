@@ -436,7 +436,7 @@ A3C_boardSquadUnittoSeat = {
 	_pos = _tV modelToWorld (_tV selectionPosition (getText (configfile >> "CfgVehicles" >> typeOf _tV >> _memPoint)));
 	_pos set [2,0];
 	
-	[[_unit],false,true,true] spawn A3C_CANCELPLANS;
+	[[_unit],false,true,true] spawn A3C_AI_Shared_cancelUnitPlot;
 
 	//-- move unit to vehicle
 	_data = 
@@ -458,7 +458,7 @@ A3C_boardSquadUnittoSeat = {
 	];
 
 	_unit setvariable ["A3C_PLOT",_data,true];
-	_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE);
+	_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot);
 	
 	_unit setVariable ["A3C_assignedVehicleSeat",[_tv,_role,_seatIndexPath,_scr,_buttonImg],true];
 
@@ -939,7 +939,7 @@ A3C_BOARD_OLD = {
 	_pos set [2,0];
 	//player setpos _pos;
 	//_pos = [position _tv,((sizeof (typeOf _tv)) / 2),((getDir _tv) + 180)] call BIS_fnc_RelPos;
-	[[_unit],false,true,true] spawn A3C_CANCELPLANS;
+	[[_unit],false,true,true] spawn A3C_AI_Shared_cancelUnitPlot;
 	sleep 1;
 	_data = 
 	[
@@ -960,7 +960,7 @@ A3C_BOARD_OLD = {
 	];
 
 	_unit setvariable ["A3C_PLOT",_data,true];
-	_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE);
+	_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot);
 	//[_unit,_pos] call A3C_DOMOVE;
 	A3C_BOARD_UNITS_ACTIVE pushbackUnique _unit;
 	sleep 1;

@@ -154,7 +154,7 @@ class CfgSounds
 		sound[] = {"a3\dubbing_radio_f\data\eng\Male02ENG\RadioProtocolENG\Normal\100_Commands\FallBack.ogg", 1, 1};
 		titles[] = {0,""};
 	};
-	class A3C_MoveUp
+	class A3C_AI_Shared_executeUnitPlotUp
 	{
 		name = "Move Up";
 		// start path to sound file in AddOn with @

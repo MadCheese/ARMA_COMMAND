@@ -599,14 +599,14 @@ A3C_UNITSEL_REFRESH_UI = {
 
 			if ("act" in tolower A3C_RADIALMODE) then {	
 				BV_ACT = 0;
-				["ACTIONS",-1] call A3C_RADIAL_BTN_FNC_RING_INNER;
+				["ACTIONS",-1] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 			};
 
 
 
 			//-- Medical controls opened: reset Listbox entries and medical data  uuu
 			if (BV_MEDICAL == 1) then {
-				["MEDICAL"] call A3C_LABEL_LB;
+				["MEDICAL"] call A3C_UI_RADIAL_LABEL_LB;
 			};
 			if (A3C_LBR_1 == "REARM") then {
 				A3C_ReArm_options = [];
@@ -615,13 +615,13 @@ A3C_UNITSEL_REFRESH_UI = {
 			
 
 			if (A3C_RADIALMODE == "VEHS") then {
-				[A3C_RD_UNITS] call A3C_FINDVEHS;
+				[A3C_RD_UNITS] call A3C_UI_RADIAL_FINDVEHS;
 			};
-			[] call A3C_BTN_REINIT;	
+			[] call A3C_UI_RADIAL_BTN_REINIT;	
 		} else {
 			//-- radial highCommand
 			if ("act" in tolower A3C_RADIALMODE) then {
-				["ROE",-1,false,true] call A3C_RADIAL_BTN_FNC_RING_INNER;
+				["ROE",-1,false,true] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 				//A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_RD_UNITS;
 			};
 			//if (count A3C_RD_UNITS == 1) then {
@@ -668,9 +668,9 @@ A3C_Adjust_Poly_Edge = {
 		_u =_x;
 		_va = (_u getVariable ["A3C_UNIT_POLYS",[]]);
 		{
-			if ((_x select 0) select 1 == (A3C_MovedItem_ID select 0)) exitWith {
+			if ((_x select 0) select 1 == (A3C_AI_Shared_executeUnitPlotdItem_ID select 0)) exitWith {
 				private _poses = _x select 1;
-				_poses set [(A3C_MovedItem_ID select 1),_sPos]; //-- switch polygon-edgepos with mouse-dragpos
+				_poses set [(A3C_AI_Shared_executeUnitPlotdItem_ID select 1),_sPos]; //-- switch polygon-edgepos with mouse-dragpos
 				_u setVariable ["A3C_UNIT_POLYS",_va,true];
 			};
 		} foreach _va;
@@ -2056,7 +2056,7 @@ A3C_SWITCHPAGE_TABLET = {
 	if (_switchPages) then {
 		if (_a3c_dsp == 100040) then {
 			if !(isnull (findDisplay 100040)) then {
-				//[] call A3C_RD_LABEL_SELECTORS;
+				//[] call A3C_UI_RADIAL_LABEL_SELECTORS;
 			};
 		} else {
 			if !(isnull (findDisplay _a3c_dsp)) then {
@@ -3870,7 +3870,7 @@ A3C_BTN_HC = {
 			//[_newGroup,(position (leader _newGroup))] call A3C_HC_ADD_WP;
 		};
 
-		[A3C_SELECTED_UNITS,true,false] spawn A3C_CANCELPLANS;
+		[A3C_SELECTED_UNITS,true,false] spawn A3C_AI_Shared_cancelUnitPlot;
 
 		if (hcShownBar) then {
 			hcshowbar false;
@@ -4434,7 +4434,7 @@ A3C_Btn_fnc_Execute = {
 			if ((count (_u getvariable ["A3C_PLOT",[]])) == 0) then {
 				_x setvariable ["A3C_PLOT",((_x getvariable "A3C_PLOT") + _data),true];
 
-				_script = [_u,(_u getvariable ['A3C_PLOT',[]])] spawn A3C_MOVE;
+				_script = [_u,(_u getvariable ['A3C_PLOT',[]])] spawn A3C_AI_Shared_executeUnitPlot;
 
 			} else {
 				_u setvariable ["A3C_PLOT",((_x getvariable "A3C_PLOT") + _data),true];
@@ -4861,7 +4861,7 @@ A3C_CONTEXTBUTTON = {
 							if !((markertype A3C_MARKERTOSWITCH) == 'A3C_Marker_HCWP') then { //~~ is this condition still needed since no more HC markers are used??
 								(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow false;
 								if ([_unit,_var,_forEachIndex] call _isCurrent) then {
-									[[_unit],false,true,true] spawn A3C_CANCELPLANS;
+									[[_unit],false,true,true] spawn A3C_AI_Shared_cancelUnitPlot;
 									_unit setvariable ["A3C_BOOL_WP_DELETED",true,true];
 								} else {
 									// marker is left overif !(_isLoop) then {{deletemarkerlocal _x} foreach [((_data select _i) select 2),((_data select _i) select 3),((_data select _i) select 4)];};

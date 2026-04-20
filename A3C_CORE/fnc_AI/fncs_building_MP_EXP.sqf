@@ -1,4 +1,4 @@
-A3C_CLEARBUILDING = {
+A3C_AI_Shared_action_CLEARBUILDING = {
 	params ["_units","_building"];
 	private ["_buddyArrays","_roomArrays"];
 	
@@ -200,7 +200,7 @@ A3C_CLEARBUILDING = {
 
 	
 	if ({player == leader group _x} count _units == count _units) then {
-		[_units,true,false] call A3C_CANCELPLANS; //~~ ideally: _busyUnits only! || some issue with HC units not resetting A3C_PLOT
+		[_units,true,false] call A3C_AI_Shared_cancelUnitPlot; //~~ ideally: _busyUnits only! || some issue with HC units not resetting A3C_PLOT
 	} else {
 		//"HC wp" remoteExec ["systemchat",0];
 		{
@@ -291,7 +291,7 @@ A3C_CLEARBUILDING = {
 				[_x,_units select (_forEachIndex -1)] execFSM "A3C_CORE\A3C_AI_CLEAR_SPEED.fsm";
 				//[_x,_doors,_building] execFSM "A3C_CORE\A3C_AI_CLEAR.fsm";  
 			};
-			_scr = ([_x,_wpData] spawn A3C_MOVE);
+			_scr = ([_x,_wpData] spawn A3C_AI_Shared_executeUnitPlot);
 			_x setvariable ["A3C_SCRIPT",_scr,true];
 			[_x,_building,_units] spawn {
 				params ["_unit","_building","_units","_bPosArray"];
@@ -500,7 +500,7 @@ A3C_CLEARBUILDING = {
 							sleep 0.1;
 							
 							{
-								_scr = ([_x,(_x getvariable "A3C_PLOT")] spawn A3C_MOVE);
+								_scr = ([_x,(_x getvariable "A3C_PLOT")] spawn A3C_AI_Shared_executeUnitPlot);
 								_x setvariable ["A3C_SCRIPT",_scr,true];
 							} foreach _team;
 						};

@@ -28,55 +28,113 @@ A3C_UI_HUD_onKeyDown = {
 	};
 
 	if ([_key] call A3C_UI_Shared_blockKeyDownEvent) exitWith {};
+
+	// player sideChat format["HUD KEY-DOWN: %1 (%2)",_key, keyname _key];
 	
 	//-- RADIAL-ACTIONS
 	if 
 	(
-		A3C_AI_HighCommand_Action_ID != ""
-		&& {_key == 57} //-- SpaceBar
+		_key == 57 //-- SpaceBar
+		&& {A3C_AI_HighCommand_Action_ID != "" || {A3C_AI_Squad_Action_ID != ""}} 
 	) exitWith {
 		//-- Confirm Action (#TODO - create dedicated function to save space)
 		private _script = 0;
+		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
+			switch (A3C_AI_Squad_Action_ID) do {
+				case ("ATSHOT") : {
+					[] call A3C_AI_SHARED_Action_remoteFire_ATshot;
+				};
+				case ("UGLSHOT") : {
+					[] call A3C_AI_SHARED_Action_remoteFire_UGLshot;
+				};
+				case ("STATICSHOT") : {
+					[] call A3C_AI_SHARED_Action_remoteFire_StaticRocketShot;
+				};
+				case ("TANKSHOT") : {
+					[] call A3C_AI_SHARED_Action_remoteFire_TankShot;
+				};
+				case ("SUPPRESSION") : {
+					[] call A3C_AI_Squad_Action_suppression;
+				};
+				case ("PLACE_CHARGE_SQUAD") : {
+					[] call A3C_AI_Squad_Action_placeChargeHC;
+				};
+				case ("STATIC_ASSEMBLE_SQUAD") : {
+					[] call A3C_AI_Squad_Action_assembleWeapon;
+				};
 
 
+
+
+
+				
+			};
+		} else {
+			switch (A3C_AI_HighCommand_Action_ID) do {
+				case ("TANKSHOT") : {
+					[] call A3C_AI_SHARED_Action_remoteFire_TankShot;
+				};
+				case ("VTOL_CANNON") : {
+					_script = ["CANNON"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
+				};
+				case ("VTOL_GATLING") : {
+					_script = ["GATLING"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
+				};
+				case ("VTOL_AUTOCANNON") : {
+					_script = ["AUTOCANNON"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
+				};
+
+				case ("UGLSHOT") : { // #TODO: change velocity for UGLshots to a faster speed
+					[] call A3C_AI_SHARED_Action_remoteFire_UGLshot;
+				};
+				case ("ATSHOT") : {
+					[] call A3C_AI_SHARED_Action_remoteFire_ATshot;
+				};
+				case ("STATICSHOT") : {
+					[] call A3C_AI_SHARED_Action_remoteFire_StaticRocketShot;
+				};
+				case ("UAV_FPV") : {
+					[] call A3C_AI_HighCommand_Action_uavFPV;
+				};
+				case ("REPAIR") : {
+					[] call A3C_AI_HighCommand_Action_repair;
+				};
+				case ("LANDING") : {
+					[] call A3C_AI_HighCommand_Action_landAircraft;
+				};
+				case ("CAS-STRIKE") : {
+					[] call A3C_AI_HighCommand_Action_casStrike;
+				};
+				case ("RAPPEL") : {
+					[] call A3C_AI_HighCommand_Action_rappel;
+				};
+				case ("SUPPRESSION") : {
+					[] call A3C_AI_HighCommand_Action_suppression;
+				};
+				case ("ARTY") : {
+					[] call A3C_AI_HighCommand_Action_artillery;
+				};
+				case ("PLACE_CHARGE_HC") : {
+					[] call A3C_AI_HighCommand_Action_placeChargeHC;
+				};
+				case ("STATIC_ASSEMBLE_HC") : {
+					[] call A3C_AI_HighCommand_Action_assembleWeapon;
+				};	
+			};
+		};
+		
 		
 
-		switch (A3C_AI_HighCommand_Action_ID) do {
-			case ("TANKSHOT") : {
-				[] call A3C_AI_HighCommand_Action_remoteFire_TankShot;
-			};
-			case ("VTOL_CANNON") : {
-				_script = ["CANNON"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
-			};
-			case ("VTOL_GATLING") : {
-				_script = ["GATLING"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
-			};
-			case ("VTOL_AUTOCANNON") : {
-				_script = ["AUTOCANNON"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
-			};
-
-			case ("UGLSHOT") : { // #TODO: change velocity for UGLshots to a faster speed
-				[] call A3C_AI_HighCommand_Action_remoteFire_UGLshot;
-			};
-			case ("ATSHOT") : {
-				[] call A3C_AI_HighCommand_Action_remoteFire_ATshot;
-			};
-			case ("STATICSHOT") : {
-				[] call A3C_AI_HighCommand_Action_remoteFire_StaticRocketShot;
-			};
-
-
-			
-	
-		};
 		[_script] spawn {
 			params ["_script"];
 			if (typeName _script == "CODE") then {
 				waitUntil {scriptDone _script};
 			};
+			//-- wait until objectSelector is closed
+			waitUntil {isNull (findDisplay 100060)};
 			private _flickerScript = [A3C_UI_HUD_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_UI_HUD_3D_TAG;
 			waitUntil {scriptDone _flickerScript};
-			[] call A3C_AI_HighCommand_Action_CancelPositionalProcess;
+			[] call A3C_AI_SHARED_Action_CancelPositionalProcess;
 		};
 		true
 	};
@@ -89,7 +147,7 @@ A3C_UI_HUD_onKeyDown = {
 		A3C_LASTUSED_KD = time;
 	};
 
-	player sideChat format["HUD KEY-DOWN: %1 (%2)",_key, keyname _key];
+	
 
 	if (inputAction "revealTarget" > 0) then {
 		// reveal target
@@ -211,7 +269,7 @@ A3C_UI_HUD_onKeyDown = {
 A3C_UI_HUD_onKeyUp = {
 	params ["_display", "_key"];
 	
-	player commandchat format ["HUD KEY-UP: %1 (%2)", _key, keyName _key];
+	// player commandchat format ["HUD KEY-UP: %1 (%2)", _key, keyName _key];
 
 	if (player != (leader group player)) exitWith {false};
 	if ( !isNull(findDisplay 312) ) exitWith {false}; //-- ZEUS interface is open. Prevent most A3C stuff
@@ -222,7 +280,13 @@ A3C_UI_HUD_onKeyUp = {
 		A3C_DISABLE_RADIAL = false;
 		{inGameUISetEventHandler [_x, 'true']} foreach ['PrevAction','NextAction'];
 		if (A3C_AI_HighCommand_Action_ID != "") then {
-			[] call A3C_AI_HighCommand_Action_CancelPositionalProcess;
+			[] call A3C_AI_SHARED_Action_CancelPositionalProcess;
+		};
+		A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+		A3C_UI_HUD_3D_TAG_reposition = false;
+
+		if (!isNull A3C_OBJECTPLACER) then {
+			deleteVehicle A3C_OBJECTPLACER;
 		};
 	};
 
@@ -459,7 +523,7 @@ A3C_UI_HUD_onMouseZChanged = {
 
 A3C_UI_HUD_ObjectSelector_onKeyUp = {
 	params ["_display", "_key"];
-	// systemchat 'A3C_UI_HUD_ObjectSelector_onKeyUp';
+	systemchat 'A3C_UI_HUD_ObjectSelector_onKeyUp';
 	if (_key == (A3C_RadialMenu_KEY_ID select 0)) then {
 		A3C_DISABLE_RADIAL = false;
 		//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
@@ -470,13 +534,13 @@ A3C_UI_HUD_ObjectSelector_onKeyUp = {
 		showCommandingMenu "";
 		A3C_UI_RADIAL_Current_Remfire_Units = [];
 		A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+		A3C_UI_HUD_3D_TAG_reposition = false;
 
-		// //-- clarify if this is needed??
-		// if ((count A3C_HUD_UnitIndicators) > 0) then {
-		// 	{inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];
-		// } else {
-		// 	{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];
-		// };
+		if (!isNull A3C_OBJECTPLACER) then {
+			deleteVehicle A3C_OBJECTPLACER;
+		};
+
+
 		{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];
 	};
 };

@@ -249,13 +249,13 @@ A3C_MEDICAL_START = {
 					sleep 0.1;
 					if (group _healer == group player) then {
 						//-- update UI PRE HEAL
-						[] call A3C_UPDATE_UI_MEDICAL;
+						[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 					};
 					
 					waituntil {scriptDone _script};
 					if (group _healer == group player) then {
 						//-- update UI POST HEAL
-						[] call A3C_UPDATE_UI_MEDICAL;
+						[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 					};
 
 					if (currentcommand _healer == "STOP" && {!( ((expectedDestination _healer ) select 1) == "LEADER PLANNED")}) exitwith {
@@ -282,13 +282,13 @@ A3C_MEDICAL_START = {
 				sleep 0.1;
 				if (group _healer == group player) then {
 					//-- update UI PRE HEAL
-					[] call A3C_UPDATE_UI_MEDICAL;
+					[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 				};
 				waituntil {scriptDone _script};
 				//-- update UI POST HEAL
 				if (group _healer == group player) then {
 					//-- update UI POST HEAL
-					[] call A3C_UPDATE_UI_MEDICAL;
+					[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 				};
 
 			};
@@ -312,7 +312,7 @@ A3C_MEDICAL_START = {
 				if (ctrlShown (findDisplay 100040 displayCtrl 8056)) then {
 					[] spawn {
 						sleep 0.5;
-						[] call A3C_UPDATE_UI_MEDICAL;
+						[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 					};
 				};
 
@@ -342,7 +342,7 @@ A3C_isUnconscious = {
 };
 
 
-//-- requires (_unit getvariable "A3C_PLOT") and A3C_MOVE
+//-- requires (_unit getvariable "A3C_PLOT") and A3C_AI_Shared_executeUnitPlot
 A3C_HEAL = {
 	private ["_unit","_patient","_scr","_expDest","_pos","_objs","_formUnits"];
 	_unit = _this select 0;
@@ -427,7 +427,7 @@ A3C_HEAL = {
 	if (stance _patient == "STAND") then {
 		_patient setunitpos "MIDDLE";
 	};
-	// [[units player select 2],true,false] call A3C_CANCELPLANS;
+	// [[units player select 2],true,false] call A3C_AI_Shared_cancelUnitPlot;
 	// waitUntil {(_unit getvariable 'A3C_PLOT') isEqualTo []};
 
 	if (!(_vehicleHeal) && {_unit distance _patient < 3}) then {
@@ -453,7 +453,7 @@ A3C_HEAL = {
 		// systemchat str [_unit, _patient, _vehicleHeal];
 		if !(_vehicleHeal) then {
 			_unit setvariable ["A3C_PLOT",_data,true];
-			_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE);
+			_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot);
 			//#WIP
 			while {!isNull _patient} do {
 				
@@ -679,7 +679,7 @@ A3C_HEAL_AUTOLOOP = {
 		if (count _patients > 0) then {
 			if (count ((group player) getVariable ["A3C_MEDICS_LB", [] ]) > 0) then {
 				[group player, 1] spawn A3C_MEDICAL_START;
-				//[] call A3C_UPDATE_UI_MEDICAL;  //-- no need since you will not see UI
+				//[] call A3C_UI_RADIAL_UPDATE_MEDICAL;  //-- no need since you will not see UI
 				sleep 2;
 				while {true} do {
 					if ( {count _x > 0} count [group player getVariable ["A3C_PATIENTS_DESIGNATED", []],group player getVariable ["A3C_PATIENTS_ASSIGNED", []]] == 0) exitWith {

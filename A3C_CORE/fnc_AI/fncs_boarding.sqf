@@ -39,7 +39,7 @@ A3C_isGroupBoarding = {
 
 
 /*
-A3C_AI_BOARDING_GET_VehicleRoles = { //~~ will replace A3C_FINDVEHROLES once done!!!!!!!!!!!!!!!!
+A3C_AI_BOARDING_GET_VehicleRoles = { 
 	//-- returns roles in usable data, including units that occupy the seats
 	//-- used to fetch data to display in Radial Menu (SQ-Boarding) and assign controls accordingly
 	//-- note to self: it's better to use the gathered turrets instead of 'assignAsCommander' and 'assignAsGunner' 
@@ -450,7 +450,7 @@ A3C_boardSquadUnittoSeat = {
 	
 	
 	
-	[[_unit],false,true,true] spawn A3C_CANCELPLANS;
+	[[_unit],false,true,true] spawn A3C_AI_Shared_cancelUnitPlot;
 
 
 	
@@ -816,7 +816,7 @@ A3C_BOARD_OLD = {
 	_pos set [2,0];
 	//player setpos _pos;
 	//_pos = [position _tv,((sizeof (typeOf _tv)) / 2),((getDir _tv) + 180)] call BIS_fnc_RelPos;
-	[[_unit],false,true,true] spawn A3C_CANCELPLANS;
+	[[_unit],false,true,true] spawn A3C_AI_Shared_cancelUnitPlot;
 	sleep 1;
 	_data = 
 	[
@@ -837,7 +837,7 @@ A3C_BOARD_OLD = {
 	];
 
 	_unit setvariable ["A3C_PLOT",_data,true];
-	_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE);
+	_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot);
 	//[_unit,_pos] call A3C_DOMOVE;
 	A3C_BOARD_UNITS_ACTIVE pushbackUnique _unit;
 	sleep 1;

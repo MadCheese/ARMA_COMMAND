@@ -272,7 +272,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 			{
 				_x commandFollow player;
 			} foreach _units;
-			//["REFRESH",1,false] call A3C_RADIAL_BTN_FNC_RING_INNER;
+			//["REFRESH",1,false] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 			//[] spawn {
 			//	sleep 0.1;
 				{player groupSelectUnit [_x,false]} foreach (units player);

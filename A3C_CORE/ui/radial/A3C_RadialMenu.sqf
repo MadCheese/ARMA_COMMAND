@@ -254,7 +254,7 @@ if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then { //-- this has to happen after i
 
 			//};
 
-			["ACTIONS",-1] call A3C_RADIAL_BTN_FNC_RING_INNER;
+			["ACTIONS",-1] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 
 		} else {
 
@@ -263,9 +263,9 @@ if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then { //-- this has to happen after i
 					{
 						if (_cursortarget isKindOf _x) exitWith {
 							//A3C_VEHSAV = [_cursortarget];
-							["VEHICLES",0] call A3C_RADIAL_BTN_FNC_RING_INNER;
+							["VEHICLES",0] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 							A3C_RADIAL_VEH_KIND = _x;
-							[A3C_RD_UNITS] call A3C_FINDVEHS;
+							[A3C_RD_UNITS] call A3C_UI_RADIAL_FINDVEHS;
 
 						};
 					} foreach ["CAR","TANK","HELICOPTER","PLANE","SHIP","STATICWEAPON"];
@@ -291,9 +291,9 @@ if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then { //-- this has to happen after i
 					{
 						if (_cursortarget isKindOf _x) exitWith {
 							//A3C_VEHSAV = [_cursortarget];
-							["VEHICLES",0] call A3C_RADIAL_BTN_FNC_RING_INNER;
+							["VEHICLES",0] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 							A3C_RADIAL_VEH_KIND = _x;
-							[A3C_RD_UNITS] call A3C_FINDVEHS;
+							[A3C_RD_UNITS] call A3C_UI_RADIAL_FINDVEHS;
 
 						};
 					} foreach ["CAR","TANK","HELICOPTER","PLANE","SHIP"];

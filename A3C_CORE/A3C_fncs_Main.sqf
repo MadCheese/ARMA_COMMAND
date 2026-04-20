@@ -604,22 +604,7 @@ A3C_Prevent_ATSHOT = false;
 A3C_Prevent_TANKSHOT = false;
 A3C_Prevent_STATICSHOT = false;
 
-A3C_GroupHasArtilleryCapacity = {
-	params ["_group"];
-	private _return = false;
-	{
-		private _v = objectParent _x;
-		private _cond = !isNull _v && {
-			_x == gunner _v && {
-				count (getArtilleryAmmo [_v]) > 0
-			}
-		};
-		if (_cond) exitWith {
-			_return = true;
-		};
-	} foreach (units _group);
-	_return
-};
+
 
 
 A3C_UI_RADIAL_ADD_EH_MACROS = {
@@ -1457,13 +1442,15 @@ A3C_ExitRoute_isWpAborted = {
 	if (isNull _unit) exitWith {true};
 	if !(alive _unit) exitWith {true};
 
+	private _abortData = _unit getvariable ["A3C_ABORT_Data", [false, false]];
 	//-- unit has ABORT DATA
-	if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitWith { //-- Unit has command to abort one or all waypoints
-		if (A3C_DEBUG) then {systemchat 'abort variable'};
+	if ({_x} count _abortData > 0) exitWith { //-- Unit has command to abort one or all waypoints
+		// systemchat format ['firing %1', _abortData];
+		if (A3C_DEBUG) then {player commandchat format ['aborted, variable : %1 (%2)', name _unit, _abortData]};
 		true
 	};
 	//~~ HC Groups abort anything that is NOT in all HC groups (WHAT EXATLY IS THIS?)
-	if !((group _unit) == (group player)) then {
+	if ((group _unit) != (group player)) then {
 		if !((group _unit) in A3C_HC_getAllGroups_Player_CURRENT) then {
 			_abort = true;
 		};
@@ -2286,7 +2273,7 @@ A3C_UNIT_INIT = {
 	_unit setvariable ["A3C_PLOT",[],true];
 	_unit setvariable ["A3C_PLOT_TEMP",[],true];
 	_unit setvariable ["A3C_CURRENTWAYPOINT_INDEX",1,true];
-	_unit setvariable ["A3C_MOVE_Active",false,true];
+	_unit setvariable ["A3C_AI_Shared_executeUnitPlot_Active",false,true];
 	_unit setvariable ["A3C_SYNC_WPINDEX",0,true];
 	_unit setvariable ["A3C_SYNC_ITEMS",[],true];
 	_unit setvariable ["A3C_WP_LINES",[],true];
@@ -2409,7 +2396,7 @@ A3C_BTN_COLOR_RESET = { //-- currently unused
 		//[A3C_MAP_CommandMode] call A3C_LABEL_SELECTORS;
 	//};
 	if !(isnull (findDisplay 100040)) then {
-		[] call A3C_RD_LABEL_SELECTORS;
+		[] call A3C_UI_RADIAL_LABEL_SELECTORS;
 	};
 };
 
@@ -2435,7 +2422,7 @@ A3C_UNIT_HOLD = {
 		_x setVariable ["A3C_HOLD",true,false];
 		_unitNames = _unitNames + ([_x,1] call MCSS_fnc_NAMESTRING)
 	} foreach _units;
-	[_coverUnits,1] spawn A3C_FindCover;
+	[_coverUnits,1] spawn A3C_AI_Squad_action_FindCoverExecute;
 	player groupchat  _unitNames + " HOLD";
 	//[] call A3C_BTN_COLOR_RESET; //~~ STILL USED?
 	[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
@@ -2920,7 +2907,7 @@ A3C_LB_Change = {
 						
 					} foreach ["A3C_PATIENTS_ASSIGNED", "A3C_PATIENTS_DESIGNATED"]; //"A3C_PATIENTS_LB", 
 					systemchat format ["HEALING CANCELLED FOR %1", name _patient];
-					[] call A3C_UPDATE_UI_MEDICAL;
+					[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 					
 					
 
@@ -2938,7 +2925,7 @@ A3C_LB_Change = {
 					//systemchat '11';
 					A3C_TARGETVEH = A3C_VEHSAV select _lb;
 					
-					["VEHICLES",1] call A3C_LABEL_LB;
+					["VEHICLES",1] call A3C_UI_RADIAL_LABEL_LB;
 					
 					
 				
@@ -3430,97 +3417,17 @@ A3C_GROUP_RESET = {
 };
 
 
-A3C_getArtilleryAmmo = {
-	//-- _includeOrders: bolean to include planned orders or not
-	//-- _getDisplayName : bolean to convert/bundle array into displayName
-	params ["_includeOrders","_getDisplayName","_targetPos"]; 
-	
-	private _availableMagsAll= [];
-	{
-		private _artyPiece = _x;
-		private _artyMagTypes = getArtilleryAmmo [_artyPiece];
-		private _availableMagsVehicle = (magazinesAmmoFull _artyPiece) select
-		{
-			_x params ["_magType","_magAmount"];
-			_inRange = if (isNil '_targetPos' OR {_targetPos isEqualTo []}) then {true} else {_targetPos inRangeOfArtillery [[_artyPiece], _magType]};
-			_inRange && {_magType in _artyMagTypes}
-		};
-		{
-			_x params ["_magType","_magAmount"];
-			if ({_x select 0 == _magType} count _availableMagsAll == 0) then {
-				//-- create new entry
-				_availableMagsAll set
-				[
-					count _availableMagsAll,
-					[_magType,_magAmount]
-				];
-			} else {
-				//-- add to existing entry
-				{
-					_x params ["_magTypeRef","_magAmountRef"];
-					if (_magType == _magTypeRef) exitWith {
-						_x set [1, _magAmountRef + _magAmount];
-					};
-				} foreach _availableMagsAll;
-			};	
-		} foreach _availableMagsVehicle;
-		if (_includeOrders) then {
-			private _artyOrdersPlanned = _artyPiece getvariable ["A3C_ARTY_ORDERS",[]];
-			{
-				//-- filter for matching magtype
-				_x params ["_firePos","_magType","_orderCount"];
-				{
-					_x params ["_magTypeRef","_orderCountRef"];
-					if (_magTypeRef == _magType) exitWith {
-						(_availableMagsAll select _foreachIndex) set [1,_orderCountRef - _orderCount];
-					};
-				} foreach _availableMagsAll;
-			} foreach _artyOrdersPlanned;
-		};
-	} foreach MCSS_REMOTE_ARTILLERY_ARRAY;
-
-	
-	
-	_availableMagsAll = _availableMagsAll select {_x select 1 > 0}; //-- keep only those mags that can be shot
-	private _return = _availableMagsAll;
-	if (_getDisplayName) then {
-		
-		private _displayNameArray = [];
-		{
-			_x params ["_magType","_magAmount"];
-			private _displayName = getText (configfile >> "CfgMagazines" >> _magType >> "displayName");
-
-			if ({_x select 0 == _displayName} count _displayNameArray == 0) then {
-				//-- create new entry
-				_displayNameArray set
-				[
-					count _displayNameArray,
-					[_displayName,_magAmount]
-				];
-			} else {
-				//-- add to existing entry
-				{
-					_x params ["_displayNameRef","_magAmountRef"];
-					private _dspn = getText (configfile >> "CfgMagazines" >> _magType >> "displayName");
-					if (_displayNameRef == _displayName) exitWith {
-						_x set [1, _magAmountRef + _magAmount];
-					};
-				} foreach _displayNameArray;
-			};	
-		} foreach _availableMagsAll;
-		_return = _displayNameArray;
-	};	
-	_return
-};
 
 //-- ABORT ALL EXISTING ORDERS
-A3C_CANCELPLANS = {
+//-- REMINDER: IN ORDER TO CONTINUE WITH NEW PLOT, YOU FIRST NEED TO WAITUNTIL PLOT IS EMPTY
+//-->> so after [xy] call A3C_AI_Shared_cancelUnitPlot, you need waituntil {_unit getvariable ["A3C_PLOT", []] isEqualTo []}
+A3C_AI_Shared_cancelUnitPlot = {
 	private ["_data"];
 	if (A3C_MAP_CommandMode == "HC") exitWith {};
 	_selectedUnits = _this select 0;
 	_shift = _this select 1;
 	_ctrl = _this select 2;
-
+	
 	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 	_data = [];
 
@@ -3536,11 +3443,11 @@ A3C_CANCELPLANS = {
 		(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,0.2];
 		[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 	};
-
+	
 	if (_shift) then {
 
 		{
-			//[_x] call A3C_RESET_WIP;
+			private _unitPlot = _unit getVariable ["A3C_PLOT",[]];
 			_x setvariable ["A3C_PLOT_TEMP",[],true];
 			A3C_USERACTION = [];
 			A3C_USERACTION_ID = 0;
@@ -3549,26 +3456,19 @@ A3C_CANCELPLANS = {
 			(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,0.2];
 
 			[_x,(position _x)] call A3C_DOMOVE;
-			[_x] spawn {
-				private ["_unit","_mainMark","_subMark","_dirMark"];
-				_unit = _this select 0;
+			[_x, _unitPlot] spawn {
+				params ["_unit", "_unitPlot"];
+				private ["_mainMark","_subMark","_dirMark"];
 				_a3c_dsp = if (visibleMap) then {100020} else {100030};
 
 
-				if (count (_unit getVariable ["A3C_PLOT",[]]) > 0) then {
+				if (count _unitPlot > 0) then {
 					_unit setvariable ["A3C_ABORT_Data",[true,false],true];
 					waitUntil {count (_unit getVariable ["A3C_PLOT",[]]) == 0};
 				};
-
-				//-- next few lines nonsense?
-				{
-					{
-						if !(getMarkerColor _x == "") then {
-							[_x,_unit,"A3C_PLOT"] call A3C_DELETE_MARKER;
-						};
-					} foreach (_x select 1);
-				} foreach (_unit getvariable "A3C_PLOT");
-				_unit setvariable ["A3C_PLOT",[],true];
+				//-- reset abort variable after clearing
+				_unit setvariable ["A3C_ABORT_Data",[false,false],true];
+			
 				//
 				_unit setvariable ["A3C_PLOT_TEMP",[],true];
 				{_unit enableAI _x} foreach ["MOVE","TARGET","AUTOTARGET","FSM","AUTOCOMBAT"]; //,"THREAT_PATH","PATHPLAN"

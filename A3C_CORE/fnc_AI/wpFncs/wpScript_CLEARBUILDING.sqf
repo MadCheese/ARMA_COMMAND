@@ -49,7 +49,7 @@ if (typeName _currentAction != "SCALAR") then {
 };
 _occupiedUnits = (units _group) select {!isPlayer _x && {count (_x getVariable ["A3C_PLOT",[]]) > 0}};
 
-[_occupiedUnits,false,true,true] spawn A3C_CANCELPLANS;
+[_occupiedUnits,false,true,true] spawn A3C_AI_Shared_cancelUnitPlot;
 waituntil {{count (_x getVariable ["A3C_PLOT",[]]) > 0} count _occupiedUnits == 0};
 
 
@@ -64,7 +64,7 @@ waituntil {{count (_x getVariable ["A3C_PLOT",[]]) > 0} count _occupiedUnits == 
 //systemchat "arrived";
 //waituntil {};
 
-private _scr = [units _group,_building] spawn A3C_CLEARBUILDING;
+private _scr = [units _group,_building] spawn A3C_AI_Shared_action_CLEARBUILDING;
 _group setvariable ["A3C_SCRIPT",_scr,true];
 waituntil {scriptdone _scr};
 waituntil {{_x getVariable ["A3C_CLEARING",false] && {alive _x}} count (units _group) == 0};

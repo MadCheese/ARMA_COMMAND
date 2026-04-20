@@ -510,7 +510,7 @@ A3C_HC_INSERT_ACTION_WP = {
 //	if (_actionType == "CLEARBUILDING") then {
 //		_specialCondition = {params ["_gp"]; {_x getVariable ["A3C_CLEARING",false]} count units _gp == 0};
 //		_building = nearestBuilding _WPpos;
-//		[units _group,_building] spawn A3C_CLEARBUILDING;
+//		[units _group,_building] spawn A3C_AI_Shared_action_CLEARBUILDING;
 //		_insCondition = "false";
 //	};
 	
@@ -1336,7 +1336,7 @@ A3C_AI_HighCommand_boardGroupToVehicle = {
 	if (_button == 0) then {
 		if (!isNull (findDisplay 100040)) then {
 			A3C_DISABLE_RADIAL = true;
-			[] call A3C_RADIAL_CloseDisplay;
+			[] call A3C_UI_RADIAL_CloseDisplay;
 			A3C_UI_HUD_ASSIGNVEHICLE = true;
 			A3C_UI_MAPICONS_HC_VICS = [];
 			{
@@ -1383,7 +1383,7 @@ A3C_AI_HighCommand_boardGroupToVehicle = {
 				},
 				true 
 			] call A3C_UI_RADIAL_ADD_EH_MACROS;					
-			[] call A3C_RADIAL_CloseDisplay;
+			[] call A3C_UI_RADIAL_CloseDisplay;
 		} else {
 			if !(A3C_AI_HighCommand_boardGroupToVehicle_BOOL) then {
 				A3C_AI_HighCommand_boardGroupToVehicle_GROUPS = +(A3C_SELECTED_HC_GROUPS_SETTINGS);

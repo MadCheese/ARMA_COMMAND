@@ -70,12 +70,23 @@ if (A3C_IsIFA) then {
 
 
 
-A3C_STATIC_ASSEMBLE_3D = {
+A3C_AI_Squad_Action_assembleWeaponExecute = {
 	{
 		private _units = _x select 0;
 		private _weapon = _x select 1;
 		if (_weapon == typeOf A3C_OBJECTPLACER) exitWith {
-			[_units,true,false] call A3C_CANCELPLANS;
+			if ({ !((_x getVariable ["A3C_PLOT",[]]) isEqualTo []) } count _units > 0) then {
+				[_units,true,false] call A3C_AI_Shared_cancelUnitPlot;
+				waituntil {
+					sleep 0.1;
+					{
+						// private _abort = _x getvariable ["A3C_ABORT_Data",[false,false]];
+						private _plot = _x getVariable ["A3C_PLOT",[]];
+						!(_plot isEqualTo []) // || { {_x} count _abort > 0 }
+					} count _units == 0
+				};
+			};
+			
 			player groupRadio "SentAssemble";
 			_mainMark = "A3C_SQ_" + (str (random 10000000000));
 
@@ -100,7 +111,7 @@ A3C_STATIC_ASSEMBLE_3D = {
 					]
 				];
 				_unit setvariable ["A3C_PLOT",_data,true];
-				_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE);
+				_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot);
 			} foreach _units;
 			A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  _weapon >> "picture");
 			A3C_UI_HUD_3D_TAG_ICON_MOD = "ON";

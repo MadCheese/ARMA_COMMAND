@@ -48,7 +48,7 @@ A3C_BTN_HEAL = {
 //	systemchat str [A3C_MEDICS_LB,A3C_MEDICS_ACTIVE,A3C_PATIENTS_DESIGNATED,A3C_PATIENTS_ASSIGNED];
 //	if (count (A3C_MEDICS_LB - A3C_MEDICS_ACTIVE) == 0) exitWith {
 //		//-- update UI for added patients
-//		[] call A3C_UPDATE_UI_MEDICAL;
+//		[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 //	};
 //systemchat '2';
 
@@ -129,11 +129,11 @@ A3C_BTN_HEAL = {
 					_script = [_healer,_patient] spawn A3C_HEAL;
 					sleep 0.1;
 					//-- update UI PRE HEAL
-					[] call A3C_UPDATE_UI_MEDICAL;
+					[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 
 					waituntil {scriptDone _script};
 					//-- update UI POST HEAL
-					[] call A3C_UPDATE_UI_MEDICAL;
+					[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 					//player sidechat str _script;
 					systemchat 'he0';
 					if (currentcommand _healer == "STOP" && {!( ((expectedDestination _healer ) select 1) == "LEADER PLANNED")}) exitwith {
@@ -166,11 +166,11 @@ A3C_BTN_HEAL = {
 				_script = [_healer,_patient] spawn A3C_HEAL;
 				sleep 0.1;
 				//-- update UI PRE HEAL
-				[] call A3C_UPDATE_UI_MEDICAL;
+				[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 				waituntil {scriptDone _script};
 				//systemchat "2";
 				//-- update UI POST HEAL
-				[] call A3C_UPDATE_UI_MEDICAL;
+				[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 
 			};
 
@@ -199,7 +199,7 @@ A3C_BTN_HEAL = {
 				if (ctrlShown (findDisplay 100040 displayCtrl 8056)) then {
 					[] spawn {
 						sleep 0.5;
-						[] call A3C_UPDATE_UI_MEDICAL;
+						[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 					};
 				};
 

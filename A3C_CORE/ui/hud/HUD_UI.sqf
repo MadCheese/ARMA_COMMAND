@@ -14,7 +14,7 @@ A3C_UI_ARSENAL_CREATELB = {
 	};
 
 	A3C_CurrentPlayerObject = player;
-	[] call A3C_RADIAL_CloseDisplay;
+	[] call A3C_UI_RADIAL_CloseDisplay;
 	A3C_DISABLE_RADIAL = true;
 	if (15 in A3C_UI_DOWNKEYS) then {
 		("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutRsc ["A3C_KEY_VIEWER_UI","PLAIN"];
@@ -1077,21 +1077,24 @@ A3C_ObjectSelector_LB_Change = {
 
 			case ("STATIC_ASSEMBLE_SQUAD") : {
 				_weaponToAssemble = if (count A3C_STATIC_PACKS == 1) then {(getText (configfile >> "CfgVehicles" >> (A3C_STATIC_PACKS select 0) select 1 >> "displayName"))} else {_listBox lbText _lb};
-				[] call A3C_RADIAL_CloseDisplay;
+				[] call A3C_UI_RADIAL_CloseDisplay;
 				{player groupSelectUnit [_x,false]} foreach units player;
 				showCommandingMenu "";
 
 				{
 					_weapon = _x select 1;
 					if ((getText (configfile >> "CfgVehicles" >> _weapon >> "displayName")) == _weaponToAssemble) exitWith {
+						[
+							false, //-- isBusy
+							"STATIC_ASSEMBLE_SQUAD", //-- actionID
+							'', //-- Hud-Icon-class
+							[1,1,1,0.7], //-- Hud-Icon-color
+							_weapon, //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						
 						A3C_STATIC_PACKS = [_x];
 						A3C_OBJECTPLACER_DIR = getDir cameraOn;
-						A3C_OBJECTPLACER = _weapon createVehicleLocal (screenToWorld [0.5,0.5]);
-						A3C_OBJECTPLACER enablesimulation false;
-						A3C_OBJECTPLACER disableCollisionWith (vehicle cameraOn);
-						if (!isNull A3C_OBJECTPLACER) then {
-							A3C_DISABLE_RADIAL = true;
-						};
 					};
 				} foreach A3C_STATIC_PACKS;
 
@@ -1121,31 +1124,29 @@ A3C_ObjectSelector_LB_Change = {
 			};
 			case ("STATIC_ASSEMBLE_HC") : {
 
-				_weaponToAssemble = if (count A3C_STATIC_PACKS == 1) then {(getText (configfile >> "CfgVehicles" >> (A3C_STATIC_PACKS select 0) select 1 >> "displayName"))} else {_listBox lbText _lb};
+				private _weaponToAssemble = if (count A3C_STATIC_PACKS == 1) then {(getText (configfile >> "CfgVehicles" >> (A3C_STATIC_PACKS select 0) select 1 >> "displayName"))} else {_listBox lbText _lb};
 				//systemchat str _weaponToAssemble;
-				[] call A3C_RADIAL_CloseDisplay;
+				[] call A3C_UI_RADIAL_CloseDisplay;
 				{player groupSelectUnit [_x,false]} foreach units player;
 				showCommandingMenu "";
 				{
-					_weapon = _x select 1;
-
+					private _weapon = _x select 1;
+					
 					if ((getText (configfile >> "CfgVehicles" >> _weapon >> "displayName")) == _weaponToAssemble) exitWith {
-
-
 						A3C_STATIC_PACKS = [_x];
 						A3C_OBJECTPLACER_DIR = getDir cameraOn;
-						A3C_OBJECTPLACER = _weapon createVehicleLocal (screenToWorld [0.5,0.5]);
-
-						A3C_OBJECTPLACER enablesimulation false;
-						A3C_OBJECTPLACER disableCollisionWith (vehicle cameraOn);
-
-
-						if (!isNull A3C_OBJECTPLACER) then {
-							A3C_DISABLE_RADIAL = true;
-						};
-
+						[
+							false, //-- isBusy
+							"STATIC_ASSEMBLE_HC", //-- actionID
+							'', //-- Hud-Icon-class
+							[1,1,1,0.7], //-- Hud-Icon-color
+							_weapon, //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					};
 				} foreach A3C_STATIC_PACKS;
+
+				
 
 				_parent ctrlShow false;
 				with uiNamespace do {
@@ -1182,7 +1183,7 @@ A3C_ObjectSelector_LB_Change = {
 				private _unit = _demoUnits select 0;
 
 				player groupradio "SentCmdPlaceCharge";
-				[[_unit],true,false] call A3C_CANCELPLANS;
+				[[_unit],true,false] call A3C_AI_Shared_cancelUnitPlot;
 
 
 
@@ -1254,7 +1255,7 @@ A3C_ObjectSelector_LB_Change = {
 					params ["_unit","_data"];
 					waitUntil {count (_unit getvariable 'A3C_PLOT') == 0};
 					_unit setvariable ["A3C_PLOT",_data,true];
-					_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE);
+					_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot);
 					private _hasReached = false;
 					private _exit = false;
 					private _doReturnToOrders = true;

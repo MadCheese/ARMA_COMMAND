@@ -261,7 +261,7 @@ A3C_OBJECTPLACER_DIR = 180;
 A3C_TICKTIME_MoveMark = time;
 A3C_BOOL_MOVINGMARKER = false;
 //A3C_DIAG_ACTIVE = false;
-//A3C_MOVE_Active = false;
+//A3C_AI_Shared_executeUnitPlot_Active = false;
 //A3C_CTRL_ACTIVE = false;
 A3C_SYNC_ABORT = false;
 
@@ -355,7 +355,7 @@ A3C_STANCE2_TEMP = "MIDDLE";
 A3C_CHECKVAR = "TEMP";
 A3C_CONNECTING_MODE = "LOOKDIR";
 
-A3C_MovedItem_ID = ""; //-- used to identify a moved marker or Icon
+A3C_AI_Shared_executeUnitPlotdItem_ID = ""; //-- used to identify a moved marker or Icon
 
 A3C_WeaponCurr = "";
 

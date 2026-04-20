@@ -525,7 +525,7 @@ A3C_findRoomDoors = {
 	_roomDoorsArray;
 };
 
-A3C_CLEARBUILDING = {
+A3C_AI_Shared_action_CLEARBUILDING = {
 	params ["_units","_building"];
 	private ["_buddyArrays","_roomArrays"];
 	//systemchat 'yo';
@@ -646,7 +646,7 @@ A3C_CLEARBUILDING = {
 
 	//(str _roomArrays) remoteExec ["systemchat",0];
 	if ({player == leader group _x} count _units == count _units) then {
-		[_units,true,false] call A3C_CANCELPLANS; //~~ ideally: _busyUnits only! || some issue with HC units not resetting A3C_PLOT
+		[_units,true,false] call A3C_AI_Shared_cancelUnitPlot; //~~ ideally: _busyUnits only! || some issue with HC units not resetting A3C_PLOT
 	} else {
 		//"HC wp" remoteExec ["systemchat",0];
 		{
@@ -738,7 +738,7 @@ A3C_CLEARBUILDING = {
 				[_x,_units select (_forEachIndex -1)] execFSM "A3C_CORE\FSM\A3C_AI_CLEAR_SPEED.fsm";
 				//[_x,_doors,_building] execFSM "A3C_CORE\FSM\A3C_AI_CLEAR.fsm";  
 			};
-			_scr = ([_x,_wpData] spawn A3C_MOVE);
+			_scr = ([_x,_wpData] spawn A3C_AI_Shared_executeUnitPlot);
 
 
 			///// --------------------------------------- /////
@@ -982,7 +982,7 @@ A3C_CLEARBUILDING = {
 								sleep 0.1;
 								
 								{
-									_scr = ([_x,(_x getvariable "A3C_PLOT")] spawn A3C_MOVE);
+									_scr = ([_x,(_x getvariable "A3C_PLOT")] spawn A3C_AI_Shared_executeUnitPlot);
 								} foreach _team;
 							};
 						};
@@ -1026,246 +1026,4 @@ A3C_CLEARBUILDING = {
 	};
 };
 
-/*
-//-- Function to have units clear a building. Heavy WIP.
-A3C_CLEARBUILDING_OLD = {	
-	private ["_units","_building","_unit","_bpA","_func","_firstWP","_stackPos","_targets","_fsm"];
-	_func = {
-		private ["_u","_bldg","_bPos","_pos","_scr"];
-		_u = _this select 0;
-		if (isNull _u) exitWith {};
-		if (isPlayer _u) exitWith {};
-		_pos = _this select 1;
-		_entryPos = _this select 2;
-		_tgts = [(side player),10,"ENEMY",_pos,["MAN"]] call MCSS_fnc_NearEntities;
-		// NOTE: Make universal Create_Marker_LOCAL function!!!
-		call compile format 
-		[
-			"
-				ASMark_P%1 = createmarkerLocal ['A3C_Mark_P%1', %2];
-				'A3C_Mark_P%1' setMarkershapeLocal 'ICON';
-				A3C_TEMP_WP_ID_MAIN = 'A3C_Mark_P%1';
-				A3C_MARKERS pushback A3C_TEMP_WP_ID_MAIN;
-				A3C_MARKER_COUNT = A3C_MARKER_COUNT + 1;
-			",
-			A3C_MARKER_COUNT,
-			_pos
-		];
-		{
-			if (([((getposATL _x) select 2),(_pos select 2)] call MCSS_fnc_FindDifference) > 1.8) then {
-				_tgts = _tgts - [_x];
-			};
-		} foreach _tgts;
-		_tgt = objnull;
-		if (count _tgts > 0) then {
-			_tgt = _tgts select 0;
-			_u reveal [_tgt,1.5];
-			_u dotarget _tgt;
-		};
-		_rad = if (_entryPos isEqualTo _pos) then {7} else {3};
-		_data =
-		[
-			[
-				[_pos,objnull],
-				[A3C_TEMP_WP_ID_MAIN,"",""],
-				["NONE",nil],
-				["NONE",nil],
-				["UP","AUTO"],
-				[[0,false]],
-				false,
-				0,
-				-1,
-				25,
-				-1,
-				_rad
-			]
-		];
-		_u setvariable ["A3C_PLOT",_data,true];
-		private _scr = ([_u,(_u getvariable "A3C_PLOT")] spawn A3C_MOVE);
-	};
-	
-	
-	_units = _this select 0;
-	_building = _this select 1;
-	_bbox = [_building] call MCSS_fnc_BBOX; //~~ not used
-	_doors = [_building] call A3C_DOORPOSITIONS;
-	_firstWP = (_building buildingpos 0);
-	_houseData = [_building] call A3C_HouseData;
-	
-	_bpC = ([_building] call MCSS_fnc_countBPos);
-	_bpA = [];
-	_doorpos = if (count _doors > 0) then {_doors select 0} else {_firstWP}; //(_building modelToWorld (_building  selectionPosition "Door_1_trigger"));
-		
-	{
-		{
-			_bpA pushback (_building buildingpos _x);
-			if ( ((_building buildingpos _x) distance _doorPos) < (_firstWp distance _doorPos)) then {
-				if (((_building buildingpos _x) select 2) < 1.8) then {
-					_firstWp = (_building buildingpos _x);
-				};
-			};
-		} foreach _x;
-	} foreach _houseData;
-	_units = [_units,[],{_x distance _doorPos},"ASCEND"] call BIS_fnc_sortBy;	
-	{
-		if !(isnull objectParent _x) then {_units = _units - [_x]};
-		if (isPlayer _x) then {_units = _units - [_x]};
-	} foreach _units;
-	
-	if ((count _units) == 0) exitwith {};
-	
-	_unit = objnull;
-	{
-		if (_foreachIndex <= _bpC) then {
-			_x setVariable ["A3C_DEST",(expectedDestination _x),true];
-			//dostop _x;
-		} else {
-			_units = _units - [_x];
-		};
-		if (_x getvariable "A3C_CLEARING") then {
-			_units = _units - [_x];
-		};
-	} foreach _units;
 
-	{
-		if (_foreachindex > ((count _units) - 1)) exitwith {};
-		_unit = _x;
-		waituntil {(count (_unit getvariable "A3C_PLOT")) == 0};
-		_unit setVariable ["A3C_PLOT_TEMP",[],true];
-		[_x,_firstWP,_firstWP] call _func;
-		_bpA = _bpA - [_firstWP];		
-		[_x,_doors,_building] execFSM "A3C_CORE\FSM\A3C_AI_CLEAR.fsm"; 
-		_x setvariable ["A3C_CLEARING",true,true];
-			
-	} foreach _units;
-	
-	_targets = [];
-	sleep 1;
-	while {{alive _x} count _units > 0} do {
-		_targets = [(side player),(sizeOf (typeOf _building)),"ENEMY",(position _building),["MAN"]] call MCSS_fnc_NearEntities;
-		[_units,_targets,_doors] spawn {
-			_f = _this select 0;
-			_e = _this select 1;
-			_doors = _this select 2;
-			//hintsilent str _doors;
-			{
-				_fU = _x;
-				_stop = false;
-				
-				_eT = (_e select 0);	
-				{
-					_eU = _x;
-					if ([_fU,_eU] call MCSS_fnc_LOS_SIMPLE) exitwith {
-						_fU reveal [_eU,4];
-						_fU doTarget _eU;
-						_fU doFire _eU;
-						_fU doWatch _eU;
-						_fU lookAt _eU;
-						_stop = true;
-						_eT = objNull;
-					};
-					if ((_eU distance _fU) < (_eT distance _fU)) then {
-						if ((abs ((getPosATL _eu select 2) - (getPosATL _fU select 2))) < 1.8) then {
-							_eT = _eU;
-						};
-					};
-					
-					if (_foreachIndex == ((count _e) - 1)) then {
-						_fU doTarget _eT;
-					};
-					sleep 0.1;
-				} foreach _e;
-
-				if (_foreachindex > 0) then {
-					_ahead = (_f select (_foreachIndex -1));
-					if ((_fU distance _ahead) < 2) then {
-						if (([((getposATL _x) select 2),((getposATL _ahead) select 2)] call MCSS_fnc_FindDifference) < 1.8) then {
-							_stop = true;
-						};	
-					};
-				};
-				if (_stop) then {
-					if (speed _fU > 2) then {
-						_fU forcespeed 0;
-						sleep 1;
-						_fU forcespeed -1;
-						sleep 1;
-					};
-				} else {
-					_fU forcespeed -1;
-				};
-				sleep 0.1;
-			} foreach _f;
-			
-		};
-		_exit = false;
-		if (count _bpA == 0) then {
-			if (({(count (_x getVariable "A3C_PLOT")) > 0} count _units) == 0) then {
-				_exit = true;
-			};
-		};
-		if (_exit) exitwith {};
-		{
-			private ["_act"];
-			_u = _x;
-			_act = true;
-			if (count (expectedDestination _u) > 0) then {
-				if ((isPlayer leader group _u) && currentcommand _u == "STOP") then {
-					if !( ((expectedDestination _u ) select 1) == "LEADER PLANNED") then {
-						_act = false;
-					};
-				};			
-				if ((isPlayer leader group _u) && (((expectedDestination _u) select 1) in ["DoNotPlanFormation","FORMATION PLANNED"])) then {				
-					_act = false;
-				};
-			};
-								
-			if (_act) then {
-				if ((count (_u getVariable "A3C_PLOT")) == 0) then {
-					if (count _bpA > 0) then {
-						[_u,(_bpA select 0),_firstWP] call _func;
-						_bpA = _bpA - [(_bpA select 0)];
-					};
-				};
-			} else {
-				_units = _units - [_u];
-				_u setvariable ["A3C_CLEARING",false,true];	
-			};
-			
-			if !(alive _u) then {
-				_units = _units - [_u];
-				_data = (_x getvariable "A3C_PLOT");
-				{
-					//if !(_x select 7) then {
-						_bPA pushBack ((_x select 0) select 0);
-					//};
-				} foreach _data;
-			};
-		} foreach _units;
-		
-	};
-	{_x forcespeed -1} foreach _units;
-	{
-		_expD = _x getvariable ["A3C_DEST",[]];
-		if (count _expD > 0) then {
-			if ((isPlayer leader group _x) && ((_expD select 1) in ["DoNotPlanFormation","FORMATION PLANNED"])) then {
-				//_x doFollow player;
-				//_x lookAt objNull;
-				[_unit,(leader _unit)] remoteExec ["doFollow",_unit];
-				[_unit,objNull] remoteExec ["lookAt",_unit];
-				[_unit,"AUTO"] remoteExec ["setUnitPos",_unit];
-			};
-			_x setVariable ["A3C_DEST",[],true];
-		};
-		_x setvariable ["A3C_CLEARING",false,true];			
-	} foreach _units;
-	if (count _bpA == 0) then {
-		{
-			if (alive _x) exitwith {
-				_x groupchat "BUILDING CLEAR";
-			};
-			
-		} foreach _units;
-	};
-};
-*/

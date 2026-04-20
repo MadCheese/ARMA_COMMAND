@@ -1,6 +1,31 @@
+A3C_UI_RADIAL_LB_ADD = {
+	DISABLESERIALIZATION;
+	{
+		_x params["_label","_class","_obj","_cbo","_img"];
+		_index = [_cbo, _label] call A3C_addLbEntry;
+
+		_cbo lbSetData [(lbSize _cbo)-1,  _class];
+		switch (A3C_RADIALMODE) do {
+			case ("BRAIN") : {
+				//_array = "true" configClasses (configFile>>"CfgRanks");
+				//{
+				//	if ((getText (configfile >> "CfgRanks" >> (configname _x) >> "displayName")) == (rank _obj)) exitWith {
+				//		_picture = (getText (configfile >> "CfgRanks" >> (configname _x) >> "texture"));
+				//	};
+				//} foreach _array;
+			};
+			case ("VEHS") : {
+				_img = ((getText (configfile >> "CfgVehicles" >> _class >> "picture")));
+			};
+		};
+		_cbo lbSetPicture [(lbSize _cbo)-1,_img];
+	} forEach _this;
+};
+
+
 //-- UI HANDLER FNCS 
 // -- HANDLER FNCS
-A3C_RADIAL_TREE_MouseDown = {
+A3C_UI_RADIAL_TREE_MouseDown = {
 	params ["_ctrl","_btn","_sX","_sY","_shift","_ctrl","_alt"];
 	_boxPos = ctrlPosition (findDisplay 100040 displayCtrl 8071);
 	_sX = _sX - (_boxPos select 0);
@@ -271,7 +296,7 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 
 
 
-A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fncs and images to buttons
+A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fncs and images to buttons
 	private ["_bv"];
 
 	_mode = _this select 0;
@@ -293,7 +318,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 	private _doRefreshGroupSelected = true;
 	{player groupSelectUnit [_x,true]} foreach A3C_RD_UNITS;
 
-	[] call A3C_RADIAL_RESET_DYNAMIC_BTNS; //-- reset outer ring buttons
+	[] call A3C_UI_RADIAL_RESET_DYNAMIC_BTNS; //-- reset outer ring buttons
 
 	A3C_LBR_1 = "";
 	for "_i" from 0 to 45 do {
@@ -454,7 +479,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 					for "_i" from 8053 to 8068 do {
 						(findDisplay 100040 displayCtrl _i) ctrlShow false;
 					};
-					[100040,A3C_RD_UNITS,A3C_UI_RADIAL_BTN_DATA_OUTER_RING] call A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS;
+					[100040,A3C_RD_UNITS,A3C_UI_RADIAL_BTN_DATA_OUTER_RING] call A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS;
 					_outerRingBackGroundIDs = ["Placeholder","Top","Right","bottom"];
 					for "_i" from 8001 to 8004 do {
 						_ind = _i - 8000;
@@ -475,7 +500,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 			} else {
 				if (_btn == 0) then {
 					A3C_DISABLE_RADIAL = true;
-					[] call A3C_RADIAL_CloseDisplay;
+					[] call A3C_UI_RADIAL_CloseDisplay;
 					A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\hud\icon_HUD_movePos.paa"; //"\a3\ui_f\data\IGUI\Cfg\Cursors\waypointMark_ca.paa";
 					A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0] call A3C_UI_Color_setOpacity;
 					A3C_UI_HUD_3D_TAG_reposition = true;
@@ -823,7 +848,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 											A3C_LBR_1 = "MEDICAL";
 											(findDisplay 100040 displayCtrl 8053) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
 											{lbCLear (findDisplay 100040 displayCtrl _x)} foreach [8054,8055];
-											["MEDICAL"] call A3C_LABEL_LB;
+											["MEDICAL"] call A3C_UI_RADIAL_LABEL_LB;
 										} else {
 											BV_MEDICAL = 0;
 											for "_i" from 8053 to 8058 do {
@@ -892,7 +917,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 									//-- open right extension: combat mode
 									(findDisplay 100040 displayCtrl 8053) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
 									{lbCLear (findDisplay 100040 displayCtrl _x)} foreach [8054,8055];
-									["CBMODE"] call A3C_LABEL_LB;
+									["CBMODE"] call A3C_UI_RADIAL_LABEL_LB;
 								} else {
 									//-- close right extension: combat mode
 									BV_CBMODE = 0;
@@ -1055,7 +1080,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 					A3C_RADIALMODE = "GOCODE";
 					if (BV_STANCES == 3) then {
 						BV_STANCES = 0;
-						["STANCE",0] call A3C_RADIAL_BTN_FNC_RING_INNER;
+						["STANCE",0] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 					} else {
 						BV_STANCES = 3;
 						((findDisplay 100040) displayctrl 10007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
@@ -2219,7 +2244,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 											'%2',
 											{
 												A3C_RADIAL_VEH_KIND = '%3';
-												[A3C_RD_UNITS] call A3C_FINDVEHS;
+												[A3C_RD_UNITS] call A3C_UI_RADIAL_FINDVEHS;
 											}
 										];
 									",
@@ -2409,7 +2434,7 @@ A3C_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fnc
 	};
 };
 
-A3C_RADIAL_RESET_DYNAMIC_BTNS = {
+A3C_UI_RADIAL_RESET_DYNAMIC_BTNS = {
 	A3C_DYNAMIC_BUTTON_ACTIONS = [];
 	A3C_OUTER_RING_BTN_fnc_1 = [[],{}]; //-- Top Ring Button 1
 	A3C_OUTER_RING_BTN_fnc_2 = [[],{}]; //-- Top Ring Button 2
@@ -2438,7 +2463,7 @@ A3C_RADIAL_RESET_DYNAMIC_BTNS = {
 	};
 };
 //#TODO: Check if this is Radial only or used by others
-A3C_LABEL_LB = {
+A3C_UI_RADIAL_LABEL_LB = {
 	private ["_isCategorySwitch"];
 	
 	_mode = _this select 0;
@@ -2486,7 +2511,7 @@ A3C_LABEL_LB = {
 			private _multiMedic = (count _medics) > 1;
 			
 			if (_multiMedic) then {
-				[["ALL MEDICS","",objnull,(findDisplay 100040 displayCtrl 8054),"A3C_CORE\ui\pictures\icon_menu_Medical.paa"]] call A3C_LB_ADD;
+				[["ALL MEDICS","",objnull,(findDisplay 100040 displayCtrl 8054),"A3C_CORE\ui\pictures\icon_menu_Medical.paa"]] call A3C_UI_RADIAL_LB_ADD;
 				(findDisplay 100040 displayCtrl 8054) lbSetColor [0, [0, 1, 0, 1]];
 			};
 
@@ -2505,7 +2530,7 @@ A3C_LABEL_LB = {
 						(findDisplay 100040 displayCtrl 8054),
 						_img
 					]
-				] call A3C_LB_ADD;
+				] call A3C_UI_RADIAL_LB_ADD;
 				private _c = [1,1,1,1];
 				if (_x in (group player getVariable ["A3C_MEDICS_ACTIVE", [] ])) then {
 					_c = [0.99,0.5,0.49,1];
@@ -2527,7 +2552,7 @@ A3C_LABEL_LB = {
 			_patients = [group player] call A3C_FINDPATIENTS;
 			private _multiPatient = (count _patients) > 1;
 			if (_multiPatient) then {
-				[["HEAL ALL","",objnull,(findDisplay 100040 displayCtrl 8055),""]] call A3C_LB_ADD;
+				[["HEAL ALL","",objnull,(findDisplay 100040 displayCtrl 8055),""]] call A3C_UI_RADIAL_LB_ADD;
 				(findDisplay 100040 displayCtrl 8055) lbSetColor [0, [0, 1, 0, 1]];
 			};
 			{
@@ -2546,7 +2571,7 @@ A3C_LABEL_LB = {
 						(findDisplay 100040 displayCtrl 8055),
 						""
 					]
-				] call A3C_LB_ADD;
+				] call A3C_UI_RADIAL_LB_ADD;
 				private _add = if (_multiPatient) then {1} else {0};
 				(findDisplay 100040 displayCtrl 8055) lbSetColor [_foreachIndex + _add, _c];
 			} foreach _patients;
@@ -2600,7 +2625,7 @@ A3C_LABEL_LB = {
 						(findDisplay 100040 displayCtrl 8054),
 						"\a3\ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa"
 					]
-				] call A3C_LB_ADD;
+				] call A3C_UI_RADIAL_LB_ADD;
 				(findDisplay 100040 displayCtrl 8054) lbSetColor [_foreachIndex, _c];
 			} foreach ["CARELESS","SAFE","AWARE","COMBAT","STEALTH"];
 												;
@@ -2620,7 +2645,7 @@ A3C_LABEL_LB = {
 						(findDisplay 100040 displayCtrl 8055),
 						"\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\target_ca.paa"
 					]
-				] call A3C_LB_ADD;
+				] call A3C_UI_RADIAL_LB_ADD;
 				(findDisplay 100040 displayCtrl 8055) lbSetColor [_foreachIndex, _c];
 			} foreach ["Never Fire","Hold fire, defend only","Hold fire, engage at will","Fire At Will","Fire at will, engage at will"];
 
@@ -2913,7 +2938,7 @@ A3C_LABEL_LB = {
 							(findDisplay 100040 displayCtrl 8054),
 							""
 							]
-						] call A3C_LB_ADD;
+						] call A3C_UI_RADIAL_LB_ADD;
 					} foreach A3C_VEHSAV;
 				};
 			};
@@ -2927,7 +2952,7 @@ A3C_LABEL_LB = {
 	(findDisplay 100040 displayCtrl 8058) ctrlSetText _lbText2;
 };
 
-A3C_BTN_REINIT = {
+A3C_UI_RADIAL_BTN_REINIT = {
 
 	{
 		if (isPlayer _x) then {
@@ -3016,28 +3041,12 @@ A3C_BTN_REINIT = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-A3C_RADIAL_CloseDisplay = {
+A3C_UI_RADIAL_CloseDisplay = {
 	showHud ([true]  + (shownhud select [1,10]));
 	(findDisplay 100040) closeDisplay 0;
 };
 
 
-A3C_TempNVGLASER_TOGGLE = {
-	params ["_mode"];
-	_btnImage = "";
-	if (_mode == "ON") then {
-		_btnImage = ctrlsetText '\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\nvgs_ca.paa';
-	} else {
-		if ({_x isIRLaserOn (currentWeapon _x)} count (A3C_RD_UNITS - [player]) > 0) then {
-			_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_IRlaser_ON.paa";
-		} else {
-			_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_IRlaser_OFF.paa";
-		};
-	};
-	if (_btnImage != "") then {
-		(findDisplay 100040 displayCtrl 10026) ctrlSetText _btnImage;
-	};
-};
 
 A3C_UI_RADIAL_CTRLS_QUICKTOGGLE = {
 	params ["_mode"];
@@ -3075,7 +3084,7 @@ A3C_UI_RADIAL_CTRLS_QUICKTOGGLE = {
 
 
 
-A3C_RD_LABEL_SELECTORS = { //~~ currently unused
+A3C_UI_RADIAL_LABEL_SELECTORS = { //~~ currently unused
 	
 	systemchat'alert lbselectorradial';
 
@@ -3165,7 +3174,7 @@ A3C_RD_LABEL_SELECTORS = { //~~ currently unused
 	if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
 		if (count A3C_RD_UNITS > 0 ) then {
 			if (ctrlShown (findDisplay 100040 displayCtrl 8001)) then {
-				["ROE",0] call A3C_RADIAL_BTN_FNC_RING_INNER;
+				["ROE",0] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 			};
 		};
 	};
@@ -3204,7 +3213,7 @@ A3C_UI_RADIAL_TOGGLE_LEFT_EXT = {
 
 
 
-A3C_FINDVEHS = {
+A3C_UI_RADIAL_FINDVEHS = {
 	params ["_units"];
 	private _entities = if (count _this > 1) then {_this select 1} else {[A3C_RADIAL_VEH_KIND]};
 	A3C_VEHSAV= [];
@@ -3240,7 +3249,7 @@ A3C_FINDVEHS = {
 
 
 	if ((count A3C_VEHSAV) == 0) then { //~~ probably no longer used
-		[["NO VEHICLES","",objnull,(findDisplay 100040 displayCtrl 8054),""]] call A3C_LB_ADD;
+		[["NO VEHICLES","",objnull,(findDisplay 100040 displayCtrl 8054),""]] call A3C_UI_RADIAL_LB_ADD;
 	};
 	{lbCLear (findDisplay 100040 displayCtrl _x)} foreach [8054,8055];
 
@@ -3248,7 +3257,7 @@ A3C_FINDVEHS = {
 	
 	
 	[] spawn {
-		["VEHICLES"] call A3C_LABEL_LB;	
+		["VEHICLES"] call A3C_UI_RADIAL_LABEL_LB;	
 		sleep 0.1;
 		
 		if (cursortarget in A3C_VEHSAV) then {
@@ -3264,100 +3273,13 @@ A3C_FINDVEHS = {
 };
 
 
-A3C_FINDVEHROLES = { //-- move to boarding.sqf
-	private ["_vehicle","_all"];
-	_vehicle = _this select 0;
-	A3C_VEHROLES = [];
-
-	if ( ({!(side _x == civilian) && ((side _x getfriend side player) < 0.6)} count (crew _vehicle)) > 0) exitwith {};
-
-
-	_all = false;
-
-	{
-		call compile format
-		[
-			"
-				if ((_vehicle emptypositions '%1') > 0) then {
-					A3C_VEHROLES pushbackUnique _x;
-					_all = true;
-				};
-				if !(isNull (%1 _vehicle)) then {
-					if !(alive (%1 _vehicle)) then {
-						A3C_VEHROLES pushbackUnique _x;
-						_all = true;
-					};
-				};
-			",
-			_x
-		];
-	} foreach ["driver","gunner","commander"];
-
-
-
-	if ((_vehicle emptypositions "cargo") > 0) then {
-		A3C_VEHROLES pushbackUnique "cargo";
-		_all = true;
-	};
-	{
-		_u = _x;
-		_veh = vehicle _u;
-		if !(_u == driver _veh) then {
-			if !(_u == gunner _veh) then {
-				if !(_u == commander _veh) then {
-					if !(alive _x) then {
-						if ( ( {_u == (_vehicle turretUnit _x)} count (allturrets [_vehicle ,true])) == 0) then {
-
-							A3C_VEHROLES pushbackUnique "cargo";
-							_all = true;
-						};
-					};
-				};
-			};
-		};
-	} foreach (crew _vehicle);
-
-	if (_all) then {
-		//-- toggle on "BOARD ALL"
-		{(findDisplay 100040 displayCtrl _x) ctrlShow true} foreach [8067,8068];
-		(findDisplay 100040 displayCtrl 8067) ctrlSetTextColor  [1,1,1,0.6];
-	};
-
-
-
-	_turrs = allturrets [_vehicle,true];
-	{
-		if (!alive (_vehicle turretunit _x)) then {
-
-			if ( (count(_vehicle weaponsTurret _x)) > 0) then {
-				A3C_VEHROLES pushbackUnique "gunner";
-			} else {
-				if (_forEachIndex == 0) then {
-					if (_vehicle iskindof "AIR") then {
-						A3C_VEHROLES pushbackUnique "commander";
-					};
-				};
-			};
-
-		};
-	} foreach _turrs;
-
-	_array = "true" configClasses (configfile >> "CfgVehicles" >> (typeOf _vehicle) >> "Turrets");
-	{
-		if (_foreachIndex > 0) then {
-			if ( (getnumber (configfile >> "CfgVehicles" >> (typeof _vehicle) >> "Turrets" >> (configname _x) >> "hasgunner")) > 0) then {
-				A3C_VEHROLES pushbackUnique "gunner";
-			};
-		};
-	} foreach _array;
-
-};
 
 
 
 
 
-A3C_RadialMenu_FNC_TEAMCOLOR = {
+
+A3C_UI_RADIAL_FNC_TEAMCOLOR = {
 	_color = _this select 0;
 	_btn = _this select 1;
 	_ctrl = _this select 2;
@@ -3428,19 +3350,136 @@ A3C_RadialMenu_FNC_TEAMCOLOR = {
 			};
 	} foreach A3C_RD_UNITS;
 	if (BV_MEDICAL == 1) then {
-		["MEDICAL"] call A3C_LABEL_LB;
+		["MEDICAL"] call A3C_UI_RADIAL_LABEL_LB;
 	};
-	[] call A3C_BTN_REINIT;
+	[] call A3C_UI_RADIAL_BTN_REINIT;
 };
 
 
-A3C_UPDATE_UI_MEDICAL = {
+A3C_UI_RADIAL_UPDATE_MEDICAL = {
 	// player sidechat 'update UI';
 	if (A3C_LBR_1 == 'MEDICAL') then {
 		if (ctrlShown (findDisplay 100040 displayCtrl 8056)) then {
 
 			{lbCLear (findDisplay 100040 displayCtrl _x)} foreach [8054,8055];
-			["MEDICAL"] call A3C_LABEL_LB;
+			["MEDICAL"] call A3C_UI_RADIAL_LABEL_LB;
 		};
 	};
+};
+
+A3C_UI_RADIAL_INV_LB_CREATE = {
+	params ["_target","_source"];
+
+	if (isNull _target) exitWith {};
+	A3C_DISABLE_RADIAL = true;
+	(findDisplay 602) closeDisplay 0;
+	waitUntil {isNull (findDisplay 602)};
+	sleep 0.2;
+	A3C_UI_INV_CONTAINERS = [];
+	if (_source == _target) then {
+		_source = "GroundWeaponHolder" createVehicle (position _target);
+
+	};
+
+
+	_target action ['GEAR',_source];
+
+	_nearCrates =  (_target nearObjects 5) - (units player);
+	{
+		if (_x distance _target < 5 && {_x isKindOf "MAN"}) then {
+			if (!captive _x OR {(side _x != side player) OR {isplayer leader group _x}}) then {
+				_nearCrates = _nearCrates - [_x];
+			};
+		} else {
+			_cargo =( magazineCargo _x) + (weaponCargo _x);
+
+			if (count _cargo == 0) then {
+
+				_nearCrates = _nearCrates - [_x];
+			} else {
+
+			};
+		};
+	} foreach _nearCrates;
+
+
+	A3C_UI_INV_TARGETS = (units player);
+
+
+	{
+		//if (_x distance _target < 4) then {
+			A3C_UI_INV_CONTAINERS pushBackUnique _x;
+		//};
+		
+	} foreach ((((units player) select {_target distance2D _x < 5})  - [_target]) + _nearCrates + [_target]); // -- no better idea how to shuffle the target to the end
+
+
+	waitUntil { !(isNull (findDisplay 602)) };
+	sleep 0.1;
+	A3C_DISABLE_RADIAL = false;
+
+	_box1 = (findDisplay 602) ctrlCreate ["A3C_RscCombo",1928]; //-- A3C_RscXListBox
+	_box2 = (findDisplay 602) ctrlCreate ["A3C_RscCombo",1929];
+	private _lbHeight = (0.033 * safezoneH) ; // times x?
+
+	{
+		_x params ["_box","_refCtrl"];
+		_ctrlPos = ctrlPosition (findDisplay 602 displayCtrl _refCtrl);
+		_box ctrlSetPosition [_ctrlPos select 0, (_ctrlPos select 1) - _lbHeight,_ctrlPos select 2,_lbHeight];
+		_box ctrlCommit 0;
+	} foreach [[_box1,1001],[_box2,1020]];
+	{
+		[_box2, [_x] call MCSS_fnc_NAMESTRING] call A3C_addLbEntry;
+	} foreach A3C_UI_INV_TARGETS;
+	{
+
+		switch (true) do {
+			case (typeOf _x == "GroundWeaponHolder" OR {_x == A3C_UI_INV_TARGET_UNIT}) : {
+
+				[_box1, "Ground"] call A3C_addLbEntry;
+			};
+			case (_x in units player) : {
+				[_box1, [_x] call MCSS_fnc_NAMESTRING] call A3C_addLbEntry;
+			};
+			default {
+				private _lbText = gettext(configFile >> "CfgVehicles" >> typeof _x >> "displayName");
+				[_box1, _lbText] call A3C_addLbEntry;
+			};
+		};
+
+
+	} foreach A3C_UI_INV_CONTAINERS;
+
+	{
+
+		if (_x == _source OR {_x == A3C_UI_INV_TARGET_UNIT && {typeOf _source == "GroundWeaponHolder"}}) then {
+			[_box1, _foreachIndex] call A3C_setCurSel;
+		};
+	} foreach A3C_UI_INV_CONTAINERS;
+	{
+		if (_x == _target) then {
+			[_box2, _foreachIndex] call A3C_setCurSel;
+		};
+	} foreach A3C_UI_INV_TARGETS;
+
+
+
+	_box1 ctrlAddEventHandler
+	[
+		"LBSelChanged",
+		{
+			_container = A3C_UI_INV_CONTAINERS select (_this select 1);
+			[A3C_UI_INV_TARGET_UNIT,_container] spawn A3C_UI_RADIAL_INV_LB_CREATE;
+		}
+	];
+	_box2 ctrlAddEventHandler
+	[
+		"LBSelChanged",
+		{
+			A3C_UI_INV_TARGET_UNIT = A3C_UI_INV_TARGETS select (_this select 1);
+			[A3C_UI_INV_TARGET_UNIT,A3C_UI_INV_TARGET_UNIT] spawn A3C_UI_RADIAL_INV_LB_CREATE;
+		}
+	];
+
+
 };

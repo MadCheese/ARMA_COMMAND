@@ -706,7 +706,7 @@ A3C_LANDPLANE = {
 		private _waypointTimeout = waypointTimeout [group _unit, currentWaypoint group _unit];
 		if ((alive _vehicle) && _runwayLanding) then {
 			//-- park vehicle, disband pilot to the reserve
-			[[_unit],true,false] spawn A3C_CANCELPLANS;	//-- end units current plans just in case the player was being insane :)
+			[[_unit],true,false] spawn A3C_AI_Shared_cancelUnitPlot;	//-- end units current plans just in case the player was being insane :)
 			_hangars = nearestObjects [_vehicle, ["Land_TentHangar_V1_F"], 1500];
 			if (count _hangars == 0) then {
 				_hangars = nearestObjects [_vehicle, A3C_HangarTypes, 1500];

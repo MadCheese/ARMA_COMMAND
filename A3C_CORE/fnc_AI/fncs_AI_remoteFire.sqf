@@ -236,7 +236,6 @@ A3C_guided_BulletHandler_1 = {
 
 A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH = {
 	params ["_units","_remFireType"];
-	
 	if (count _units > 0) then {
 		private _aimpos = ATLtoASL(A3C_UI_HUD_3D_TAG_ICON_POS);
 		private _unitsByGroups = [];
@@ -268,6 +267,7 @@ A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH = {
 			_shooters = _units;
 		};
 		_units = [];
+		
 		{
 			[[_x,_aimPos,_remFireType],A3C_AI_SHARED_ORDER_REMOTE_LAUNCH] remoteExec ['bis_fnc_spawn',_x];
 		} foreach _shooters;
@@ -817,9 +817,6 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 
 
 
-A3C_ArtilleryOrder_Map_Setup = {
-	
-};
 
 
 

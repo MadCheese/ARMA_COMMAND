@@ -308,7 +308,7 @@ A3C_UI_RADIAL_fnc_RemFire_VTOL_EH = {
 			if !(%1) then {
 				if (_a3c_dsp == 100040) then {
 					A3C_DISABLE_RADIAL = true;
-					[] call A3C_RADIAL_CloseDisplay;
+					[] call A3C_UI_RADIAL_CloseDisplay;
 					{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu '';
 					A3C_UI_HUD_3D_TAG_ICON_TYPE = '%2';
 					A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;

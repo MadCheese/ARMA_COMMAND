@@ -285,6 +285,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		};
 
 		if (_leaderVic isKindOf "AIR") then { //-- para: works for player controlled groups too
+			
 			private _isRotor = ((getNumber (configfile >> "CfgVehicles" >> typeOf _leaderVic >> "landingSpeed")) < 10);
 			if (((getPosATL _leaderVic) select 2) > 1 && {!(_leaderVic getVariable ["A3C_ParadropActive",false])}) then {
 				//-- vehicle is airborne
@@ -293,10 +294,11 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					//-- vehicle has Cargo
 					_actions pushBackUnique "PARADROP";
 					if (A3C_IsRappel) then {
-
+						
 						if (_isRotor && {isPlayer (leader _gp) OR {{group _x != _gp} count (crew _leaderVic) > 0}}) then {
 							//if (isNull findDisplay 100040 OR {}) then {
 								_actions pushBackUnique "RAPPEL";
+								
 							//};
 
 						};
@@ -1172,12 +1174,20 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						["OFF"] call A3C_AI_HighCommand_Action_weaponFlashLight;
 					};	
 				};
+				case ("HELI_OVERWATCH") : {
+					_params = [];
+					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_HELI_OVERWATCH.paa";
+					_button_toolTip = "FORCE ATTACK HELI TO HOVER IN PLACE";
+					_buttonFnc = {
+						[] call A3C_AI_HighCommand_Action_heliHoverInPlace;
+					};
+				};
 				
 				//----------- POSITIONAL ACTIONS
 
 				//----- Remote-Fire Actions (use )
 
-				//["TANKSHOT", '\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa',[1,0,0,1], "A3C_HeliPad","(0.5,0.1,1,1)"] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+				//["TANKSHOT", '\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa',[1,0,0,1], "A3C_HeliPad","(0.5,0.1,1,1)"] call A3C_AI_SHARED_Action_StartPositionalProcess;
 
 				case ("TANKSHOT") : {
 					_imageColorCode = if (A3C_Prevent_TANKSHOT) then {[1,1,1,0.3]} else {[1,1,1,1]};
@@ -1197,7 +1207,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					};
 				};
 
@@ -1220,7 +1230,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					};				
 				};
 
@@ -1242,7 +1252,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					};	
 				};
 
@@ -1265,7 +1275,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					};
 				};							
 				case ("UGLSHOT") : {
@@ -1289,7 +1299,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					};
 
 
@@ -1312,7 +1322,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					};
 
 
@@ -1335,218 +1345,61 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_HighCommand_Action_StartPositionalProcess;
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					};
 				};
 				
-				case ("HELI_OVERWATCH") : {
 					
-					_params = [];
-					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_HELI_OVERWATCH.paa";
-					_button_toolTip = "FORCE ATTACK HELI TO HOVER IN PLACE";
-					_buttonFnc = {
-						params ["_clickData","_buttonArray","_specialParams"];
-						private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
-						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
-						private _isRadial = _a3c_dsp == 100040;
-						
-						private _var = (vehicle leader _group) getVariable ["A3C_Freeze_helicopter",[false,0]];
-
-
-						if (_var select 0) then {
-							//-- cancel action
-							if !(_isRadial) then {
-								{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
-								(findDisplay 12 displayCtrl 51) ctrlEnable true;
-							};
-							{
-								_vehicle = vehicle _x;
-								if (_x == driver _vehicle && {[_vehicle] call A3C_isAttackHelicopter}) then {
-									_vehicle setVariable ["A3C_Freeze_helicopter",[false,0],true];
-									{_vehicle enableAI _x; } foreach ["TARGET","PATH"];
-								};
-							} foreach (units _group);
-						};
-
-
-						
-					};
-					
-				};
-
-
 				
-
 				case ("UAV_FPV") : {
 					_imageColorCode = [1,1,1,1];
 					_params = [];
-
-					_buttonFnc = {
-						params ["_clickData","_buttonArray","_specialParams"];
-						A3C_DISABLE_RADIAL = true;
-						[] call A3C_RADIAL_CloseDisplay;
-						A3C_UI_HUD_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa'; //"\a3c_ui\menu\icon_menu_action_repair.paa";
-
-
-						[
-							46,
-							'SPACE',
-							{
-
-								count A3C_RD_UNITS > 0
-							},
-							{
-								_wpPos = +(A3C_UI_HUD_3D_TAG_ICON_POS);
-
-								[_wpPos,''] spawn A3C_UI_HUD_3D_TAG;
-								private _group = A3C_RD_UNITS select 0;
-								//-- delete current waypoints
-								while {(count (waypoints _group)) > 1} do {
-									{
-										if (_forEachIndex > 0) then {
-											deletewaypoint _x;
-										};
-									} foreach waypoints _group;
-								};
-								_ct = cursortarget;
-								if (!isNull _ct) then {
-									_wp = _group addWaypoint [_wpPos,0];
-									_wp setWaypointType "SCRIPTED";
-									_wp waypointAttachVehicle _ct;
-									_wp setWaypointSpeed "FULL";
-
-									_wp setWaypointScript "A3C_CORE\fnc_AI\wpFncs\wpScript_UAV_FPV.sqf [getPlayerUID player]"; 
-									//[cursortarget, getPlayerUID player]
-								} else {
-									hint "NO TARGET SELECTED!";
-									sleep 3;
-									hintSilent "";
-								};
-								
-							},
-							{
-								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-								//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-								A3C_UI_HUD_3D_TAG_reposition = false;
-							},
-							false
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-						[
-							46,
-							'RADIAL',
-							{
-
-								true
-							},
-							{
-							},
-							{
-								if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "") then {
-									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-								};
-								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-								A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-								A3C_UI_HUD_3D_TAG_reposition = false;
-								A3C_UI_RADIAL_Current_Remfire_Units = [];
-							},
-							true
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-						A3C_UI_HUD_3D_TAG_reposition = true;
-
-
-
-					};
-
 					_button_IMG = 'A3C_CORE\ui\pictures\icon_menu_action_UAV_FPV.paa';
 					_button_toolTip =  format
 					[
 						"FPV ATTACK - KEEP %1 PRESSED. CONFIRM TARGET WITH 'Spacebar' OR CANCEL BY RELEASING %1.",
 						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
 					];
+
+					_buttonFnc = {
+						[
+							false, //-- isBusy //#TODO: do we need a condition to prevent double assignment?
+							"UAV_FPV", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+					};
 				};
 			
 
 				case ("REPAIR") : {
-					_imageColorCode = if (A3C_Prevent_TANKSHOT) then {[1,1,1,0.3]} else {[1,1,1,1]};
+					_imageColorCode = [1,1,1,1];
 					_params = [];
-
-					_buttonFnc = {
-						params ["_clickData","_buttonArray","_specialParams"];
-						A3C_DISABLE_RADIAL = true;
-						[] call A3C_RADIAL_CloseDisplay;
-						A3C_UI_HUD_3D_TAG_ICON_TYPE =  "\a3c_ui\menu\icon_menu_action_repair.paa";
-
-
-						[
-							46,
-							'SPACE',
-							{
-
-								count A3C_RD_UNITS > 0
-							},
-							{
-								_wpPos = +(A3C_UI_HUD_3D_TAG_ICON_POS);
-
-								[_wpPos,''] spawn A3C_UI_HUD_3D_TAG;
-								private _group = A3C_RD_UNITS select 0;
-								//-- delete current waypoints
-								while {(count (waypoints _group)) > 1} do {
-									{
-										if (_forEachIndex > 0) then {
-											deletewaypoint _x;
-										};
-									} foreach waypoints _group;
-								};
-								_wp = _group addWaypoint [_wpPos,0];
-								_wp setWaypointType "SCRIPTED";
-								_wp setWaypointScript "A3C_CORE\fnc_AI\wpFncs\wpScript_repair.sqf [getPlayerUID player, ['ARRIVAL', 0]]";
-							},
-							{
-								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-								//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-								A3C_UI_HUD_3D_TAG_reposition = false;
-							},
-							false
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-						[
-							46,
-							'RADIAL',
-							{
-
-								true
-							},
-							{
-							},
-							{
-								if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "") then {
-									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-								};
-								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-								A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-								A3C_UI_HUD_3D_TAG_reposition = false;
-								A3C_UI_RADIAL_Current_Remfire_Units = [];
-							},
-							true
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-						A3C_UI_HUD_3D_TAG_reposition = true;
-
-
-
-					};
-
 					_button_IMG = '\a3c_ui\menu\icon_menu_action_repair.paa';
 					_button_toolTip =  format
 					[
 						"REPAIR VEHICLES - KEEP %1 PRESSED. CONFIRM LOCATION WITH 'Spacebar' OR CANCEL BY RELEASING %1. REPAIR RADIUS: 100m",
 						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
 					];
+					_buttonFnc = {
+						[
+							false, //-- isBusy
+							"REPAIR", //-- actionID
+							'\a3c_ui\menu\icon_menu_action_repair.paa', //-- Hud-Icon-class
+							[1,1,1,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+					};
 				};
 
 
 				case ("LANDING") : {
 					_params = [] ;
+					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
+					_button_toolTip = "LAND AIRCRAFT";
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
 						private _doSpecifyLandingPos = (
@@ -1560,273 +1413,25 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 						if (_doSpecifyLandingPos) then {
 							if (!isNull findDisplay 100040) then {
-								A3C_UI_HUD_3D_TAG_ICON_TYPE =  "";
-								A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
-								A3C_DISABLE_RADIAL = true;
 
-
-								//("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutRsc ["A3C_KEY_VIEWER_UI","PLAIN"];
-								//((uiNamespace getVariable "A3C_KEY_VIEWER_UI") displayCtrl 11) ctrlSetText "DRAG OBJECT ON BUILDING OR ROOF. ROTATE WITH MOUSEWHEEL. RELEASE TAB TO CANCEL. CONFIRM WITH SPACEBAR";
-
-
-								_vehicleType = "A3C_HeliPad";
+								private _vehicleType = "A3C_HeliPad";
+								private _colorString = "";
 								{
 									_leaderVic = vehicle leader _x;
 									if (_leaderVic isKindOf "Helicopter") exitWith {
 										_vehicleType = typeOf _leaderVic;
+										_colorString = "(0.5,0.1,1,1)";
 									};
 								} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
-								[] call A3C_RADIAL_CloseDisplay;
-
-								_vehicle = _vehicleType createvehicleLocal [0,0,100]; //
-								_vehicle allowdamage false;
-								_vehicle enableSimulation false;
-								_vehicle disableCollisionWith player;
-								_vehicle hideObject true;
-								_tPos = ([screenToWorld [0.5,0.5],[0,100]] call MCSS_fnc_getSafePos);
-								if (!isNil '_tPos' && {count _tPos > 0}) then {
-									_vehicle setpos _tPos;
-								};
-								_vehicle disableCollisionWith cursortarget;
-								sleep 0.2;
-								_vehicle hideObject false;
-								A3C_OBJECTPLACER = _vehicle; //-- naming delay is necessary so object does not get moved by HUDdraw script immediately to be destroyed
-								if (_vehicleType != "A3C_HeliPad") then {
-									for "_i" from 0 to 10 do {
-										A3C_OBJECTPLACER setObjectTexture [0, "#(rgb,8,8,3)color(0.5,0.1,1,1)"];
-									};
-								};
-								[
-									46,
-									'SPACE',
-									{
-
-										count A3C_RD_UNITS > 0
-									},
-									{
-
-
-										A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
-
-										//("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutRsc ["","PLAIN"];
-										with uiNamespace do {
-											//disableSerialization;
-											A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-										};
-
-
-										private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
-										_parent = findDisplay _a3c_dsp displayCtrl 8008;
-										_text = findDisplay _a3c_dsp displayCtrl 800802;
-										_listBox = findDisplay _a3c_dsp displayCtrl 800803;
-
-										_text ctrlSetText "CHECKING LZ";
-										lbClear _listBox;
-										[_listBox, "KEEP TAB PRESSED DOWN"] call A3C_addLbEntry;
-
-
-
-
-										_parent ctrlShow true;
-
-
-										_requiresPlacementCorrection = true;
-										_placerPos = getPosASL A3C_OBJECTPLACER;
-										private _landingPosRoot = +(_placerPos);
-										private _landingVector = [getDir A3C_OBJECTPLACER] call MCSS_fnc_DegreeToVector;
-
-										_dimensions = [typeof A3C_OBJECTPLACER] call A3C_getVehicleBodyDimensions;
-										_dimensions params ["_reference_Width","_reference_Length","_reference_Height","_reference_Rotorsize"];
-
-										_forceDefaultLanding = true;
-
-										_exit = false;
-										if (!isNull A3C_SNAP_OBJECT) then {
-											//-- position snapped against object
-
-											//systemchat str (typeof A3C_SNAP_OBJECT);
-
-											_placerPosZ = _placerPos select 2;
-											_snapObjectPos = (getPosASL A3C_SNAP_OBJECT);
-
-											_snapObjectZ = _snapObjectPos select 2;
-											_snapObjectHeight = A3C_SNAP_OBJECT call BIS_fnc_objectHeight;
-
-											_refPosTop = (_placerPos select [0,2]) + [_snapObjectZ + _snapObjectHeight]; //-- placer-pos at boundingBox top
-
-											_ins = lineIntersectsSurfaces
-											[
-												_refPosTop,
-												[_placerPos select 0,_placerPos select 1, 0],
-												A3C_OBJECTPLACER,
-												objNull,
-												true,
-												1,
-												"GEOM",
-												"NONE"
-											];
-
-											if (count _ins > 0) then {
-												//helper setposASL ((_ins select 0) select 0);
-												_intersectPosZ = ((_ins select 0) select 0) select 2;
-												//systemchat str [_intersectPosZ,_placerPosZ];
-												if (abs(_intersectPosZ - _placerPosZ) < 0.1) then {
-													_requiresPlacementCorrection = false;
-													_forceDefaultLanding = false;
-
-												};
-												if (_requiresPlacementCorrection) then {
-													hint "ADJUSTING LZ";
-													_LZData = [A3C_SNAP_OBJECT,_reference_Width,_reference_Length] call A3C_getHeliRoofLZ;
-													[] spawn {
-														hint "LZ ADJUSTED";
-														sleep 5;
-														hintSilent "";
-													};
-													if (count _LZData > 0) then {
-														_landingPosRoot = _LZData select 0;
-														_landingVector = [(_LZData select 1)] call MCSS_fnc_DegreeToVector;
-														_forceDefaultLanding = false;
-
-
-
-
-													};
-
-
-													//systemchat str _LZData;
-												};
-											//} else {
-											//	systemchat "NO INS";
-											};
-										} else {
-											//-- position in the open
-											_forceDefaultLanding = false;
-											_requiresPlacementCorrection = false;
-											_dummyBox = ([A3C_OBJECTPLACER,1] call MCSS_fnc_BBOX);
-											_maxRotorHeight = 1000;
-											{
-
-												_z = (A3C_OBJECTPLACER modelToWorld (A3C_OBJECTPLACER selectionposition _x)) select 2;
-												//systemchat str [_z];
-												if (_z < _maxRotorHeight) then {
-													_maxRotorHeight = _z;
-												};
-											} foreach ([A3C_OBJECTPLACER] call MCSS_fnc_getMainRotorSelections);
-
-											_centerAtRotorHeight = getPosASL A3C_OBJECTPLACER;
-											_centerAtRotorHeight set [2,_maxRotorHeight];
-											_centerAtRotorHeight = ATLtoASL _centerAtRotorHeight;
-											{
-												_dist = A3C_OBJECTPLACER distance2d _x;
-												_dir = A3C_OBJECTPLACER getDir _x;
-												_ins = lineIntersectsSurfaces
-												[
-													_centerAtRotorHeight,
-													[_centerAtRotorHeight,_dist,_dir] call BIS_fnc_relPos,
-													A3C_OBJECTPLACER,
-													objNull,
-													true,
-													1,
-													"GEOM",
-													"NONE"
-												];
-												if (count _ins > 0) exitWith {
-													_exit = true;
-												};
-											} foreach _dummyBox;
-										};
-
-										if (_exit) exitWith {
-											hint "THE SELECTED GROUND-LZ IS NOT SAFE - PLEASE REPEAT";
-											sleep 5;
-											hintSilent "";
-											//deletevehicle A3C_OBJECTPLACER;
-										};
-
-
-
-										if !(_requiresPlacementCorrection) then {
-											//systemchat "GOOD PLACEMENT";
-											//-- could be on roof (!isNull snap_object) but might still need security checks
-											//-- could be on ground and use same checks
-										} else {
-											//if !(_forceDefaultLanding) then {
-
-											//};
-											//systemchat "LZ WILL BE ADJUSTED";
-											//-- snap_object detected and definitely requires correction
-											//-- if (!isNull snap_object), use rooftop position generator
-											//-- otherwise use simple, ASL-level security
-										};
-
-
-
-										if (_forceDefaultLanding) then {
-											[] spawn {
-												hint "ALERT: NO SUITABLE LZ FOUND ON OBJECT. REVERTING TO DEFAULT LANDING";
-												sleep 5;
-												hintSilent "";
-											};
-											A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
-
-										};
-
-										A3C_RADIAL_ACTION_HC_LANDINGDATA = [_landingPosRoot,_landingVector,_forceDefaultLanding];
-
-										A3C_OBJECTSELECTOR_MODE = "HELI_LANDING_HC_TYPE";
-
-
-
-										_text ctrlSetText "SELECT LANDING TYPE";
-
-										{
-											_ctrlPos = ctrlPosition _x;
-											_ctrlPos set [3,(_ctrlPos select 3) + (  (3)   * (0.0440051 * safezoneH) )];
-											_x ctrlSetPosition _ctrlPos;
-											_x ctrlCommit 0;
-										} foreach [_parent,_listBox];
-
-										ctrlSetFocus _listBox;
-										
-										lbClear _listBox;
-										{
-											[_listBox, _x] call A3C_addLbEntry;
-										} foreach ["COMBAT LANDING","TRANSPORT UNLOAD","FULL LANDING"];
-										
-									},
-									{
-										deleteVehicle A3C_OBJECTPLACER; //A3C_OBJECTPLACER = nil;
-										(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-										A3C_UI_HUD_3D_TAG_reposition = false;
-									},
-									false
-								] call A3C_UI_RADIAL_ADD_EH_MACROS;
 
 								[
-									46,
-									'RADIAL',
-									{
-
-										true
-									},
-									{
-									},
-									{
-										if (!isNull A3C_OBJECTPLACER) then {
-											deleteVehicle A3C_OBJECTPLACER; //A3C_OBJECTPLACER = nil;
-											A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-											(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-										};
-										//A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-
-										(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-
-										A3C_UI_HUD_3D_TAG_reposition = false;
-									},
-									true
-								] call A3C_UI_RADIAL_ADD_EH_MACROS;
-								A3C_UI_HUD_3D_TAG_reposition = true;
+									false, //-- isBusy
+									"LANDING", //-- actionID
+									'', //-- Hud-Icon-class
+									[1,1,1,1], //-- Hud-Icon-color
+									_vehicleType, //-- placer class
+									_colorString //-- placer color-params
+								] call A3C_AI_SHARED_Action_StartPositionalProcess;
 							} else {
 								//-- specify mapclick
 							};
@@ -1843,248 +1448,59 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
 						};
 					};
-					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
-					_button_toolTip = "LAND AIRCRAFT";
+					
 				};
 
 				case ("CAS-STRIKE") : {
 					_params = [] ;
-					_buttonFnc = {
-						params ["_clickData","_buttonArray","_specialParams"];
-
-						if (!isNull findDisplay 100040) then {
-							A3C_UI_HUD_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_CAS.paa';
-							A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
-							A3C_DISABLE_RADIAL = true;
-							[] call A3C_RADIAL_CloseDisplay;
-							[
-								46,
-								'SPACE',
-								{
-
-									count A3C_RD_UNITS > 0
-								},
-								{
-
-
-									with uiNamespace do {
-										//disableSerialization;
-										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-									};
-
-
-									private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
-									_parent = findDisplay _a3c_dsp displayCtrl 8008;
-									_text = findDisplay _a3c_dsp displayCtrl 800802;
-									_listBox = findDisplay _a3c_dsp displayCtrl 800803;
-
-									A3C_OBJECTSELECTOR_MODE = "CAS";
-
-									_text ctrlSetText "SELECT CAS-TYPE";
-
-
-
-									
-
-									lbClear _listBox;
-									{
-										_leaderVic = vehicle leader _x;
-										_casModes = [typeof _leaderVic] call MCSS_fnc_getCASmodes;
-										if (count _casModes > 0) exitWith {
-											{
-												_casMode = switch (true) do {
-													case (_x isEqualTo ["machinegun"]) : {'GUN RUN'};
-													case (_x isEqualTo ["missilelauncher"]) : {'MISSILES'};
-													case (_x isEqualTo ["machinegun","missilelauncher"]) : {'GUNS + MISSILES'};
-													case (_x isEqualTo ["bomblauncher"]) : {'BOMBING RUN'};
-												};
-												[_listBox, _casMode] call A3C_addLbEntry;
-											} foreach _casModes;
-										};
-									} foreach A3C_RD_UNITS;
-									
-
-
-
-
-									{
-										_ctrlPos = ctrlPosition _x;
-										_ctrlPos set [3,(_ctrlPos select 3) + (  (3)   * (0.0440051 * safezoneH) )];
-										_x ctrlSetPosition _ctrlPos;
-										_x ctrlCommit 0;
-									} foreach [_parent,_listBox];
-
-								},
-								{
-									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-									A3C_UI_HUD_3D_TAG_reposition = false;
-								},
-								false
-							] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-							[
-								46,
-								'RADIAL',
-								{
-
-									true
-								},
-								{
-								},
-								{
-									if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "") then {
-										(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-									};
-									if !(A3C_UI_HUD_3D_TAGGING) then {
-										A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-									};
-									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-									A3C_UI_HUD_3D_TAG_reposition = false;
-									A3C_UI_RADIAL_Current_Remfire_Units = [];
-								},
-								true
-							] call A3C_UI_RADIAL_ADD_EH_MACROS;
-							A3C_UI_HUD_3D_TAG_reposition = true;
-
-						} else {
-							//-- specify mapclick
-						};
-
-					};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_CAS.paa";
 					_button_toolTip =  format
 					[
 						"ORDER CAS-STRIKE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
 						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
 					];
+					_buttonFnc = {					
+						if (!isNull findDisplay 100040) then {
+							[
+								false, //-- isBusy
+								"CAS-STRIKE", //-- actionID
+								'\a3c_ui\crosshairs\icon_crosshair_CAS.paa', //-- Hud-Icon-class
+								[1,1,1,0.7], //-- Hud-Icon-color
+								"", //-- placer class
+								"" //-- placer color-params
+							] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						} else {
+							//-- specify mapclick
+						};
+					};
 				};
-
-
 				case ("RAPPEL") : {
 					_params = [] ;
+					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
+					_button_toolTip = "";
+					if (_a3c_dsp == 100040) then {
+						_button_toolTip =  format
+						[
+							"RAPPEL CARGO - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1. Creates wp on destination and origin.",
+							["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						];
+					} else {
+						_button_toolTip = "RAPPEL CARGO";
+					};
+
 					_buttonFnc = {
-						params ["_clickData","_buttonArray","_specialParams"];
-
+						
 						if (!isNull findDisplay 100040) then {
-							A3C_UI_HUD_3D_TAG_ICON_TYPE = "\A3C_UI\menu\icon_menu_action_Rappel.paa";
-							A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
-							A3C_DISABLE_RADIAL = true;
-							[] call A3C_RADIAL_CloseDisplay;
-							A3C_OBJECTPLACER = "A3C_HeliPad" createvehicleLocal [0,0,0]; // "Land_JumpTarget_F"
 							[
-								46,
-								'SPACE',
-								{
+								false, //-- isBusy
+								"RAPPEL", //-- actionID
+								'', //-- Hud-Icon-class
+								[1,1,1,0.7], //-- Hud-Icon-color
+								"A3C_HeliPad", //-- placer class
+								"" //-- placer color-params
+							] call A3C_AI_SHARED_Action_StartPositionalProcess;
 
-									count A3C_RD_UNITS > 0 &&
-									{
-										A3C_UI_HUD_3D_TAG_ICON_TYPE != ''
-										&&
-										{count A3C_RD_UNITS > 0}
-									}
-								},
-								{
-									[A3C_UI_HUD_3D_TAG_ICON_POS,''] spawn A3C_UI_HUD_3D_TAG;
-									{
-										private _gp = _x;
-
-										_gp setvariable ["A3C_UNIT_POLYS",[],true];
-
-										//-- clear all waypoints
-										{
-											{
-												_x setVariable ["A3C_CLEARING",false,true];
-											} foreach (units _x);
-										} foreach A3C_SELECTED_UNITS;
-
-
-										_gp = A3C_RD_UNITS select 0;
-										while {(count (waypoints _gp)) > 1} do {
-											{
-												if (_forEachIndex > 0) then {
-													deletewaypoint _x;
-												};
-											} foreach waypoints _gp;
-										};
-										
-										//-- add new waypoints
-										private _leaderVic = (vehicle leader _gp);
-										private _rappelWPos = +(A3C_UI_HUD_3D_TAG_ICON_POS);
-										private _startPos = getpos _leaderVic;
-										private _landOnReturn = !isEngineOn _leaderVic;
-										_wp =
-										[
-											_gp,
-											_rappelWPos
-										] call A3C_HC_ADD_WP;
-										if (A3C_UI_HUD_3D_TAG_ICON_POS distance2D _leaderVic > 50) then {
-											_wp2 =
-											[
-												_gp,
-												_startPos
-											] call A3C_HC_ADD_WP;
-											if (_landOnReturn) then {
-												_statements = format
-												[
-													"
-														[this,%1,'%2',[],true] spawn A3C_HC_WPACTION_LANDING_FULL;
-													",
-													_startPos,
-													getPlayerUID player
-
-												];
-												_wpStm = waypointStatements _wp2;
-												_wp2 setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _statements];
-											};
-										};
-										if (_leaderVic distance2D _rappelWPos < 800) then {
-											waitUntil {speed _leaderVic > 80  OR {_leaderVic distance2D _rappelWPos < 300} };
-										};
-
-										_statements = format
-										[
-											"
-												[['%1',this,[['NONE','NONE'],'RAPPELL'],'LINE',(currentWaypoint group this),0],A3C_HC_INSERT_ACTION_WP] remoteExec ['bis_fnc_call',0];
-											",
-											getPlayerUID player
-										];
-										_wpStm = waypointStatements _wp;
-										_wp setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _statements];
-									} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
-								},
-								{
-									deleteVehicle A3C_OBJECTPLACER; //A3C_OBJECTPLACER = nil;
-									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-									A3C_UI_HUD_3D_TAG_reposition = false;
-								},
-								false
-							] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-							[
-								46,
-								'RADIAL',
-								{
-
-									true
-								},
-								{
-								},
-								{
-									if (!isNull A3C_OBJECTPLACER) then {
-										deleteVehicle A3C_OBJECTPLACER; //A3C_OBJECTPLACER = nil;
-										A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-										(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-									};
-									//A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-
-									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-
-									A3C_UI_HUD_3D_TAG_reposition = false;
-								},
-								true
-							] call A3C_UI_RADIAL_ADD_EH_MACROS;
-							A3C_UI_HUD_3D_TAG_reposition = true;
+							
 						} else {
 							//-- map mode: immideate rappel for stationary vics (change to mapclick)
 							{
@@ -2103,17 +1519,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
 						};
 					};
-					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
-					_button_toolTip = "";
-					if (_a3c_dsp == 100040) then {
-						_button_toolTip =  format
-						[
-							"RAPPEL CARGO - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1. Creates wp on destination and origin.",
-							["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
-						];
-					} else {
-						_button_toolTip = "RAPPEL CARGO";
-					};
+					
 				};
 				
 				
@@ -2141,84 +1547,33 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				
 
 				case ("ARTY") : {
-					_params = []; 
+					_params = [];
+					_button_IMG = "a3c_ui\menu\icon_menu_action_Artillery.paa";
+					_button_toolTip = "";
+					if (_a3c_dsp == 100040) then {
+						_button_toolTip =  format
+						[
+							"FIRE ARTILLERY - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
+							["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						];
+					} else {
+						_button_toolTip = "FIRE ARTILLERY - RELAY COORDINATES VIA MAPCLICK";
+					}; 
 					_buttonFnc = {
-						params ["_clickData","_buttonArray","_specialParams"];
+						
+						private _a3c_dsp = if (visibleMap) then {100020} else {100040};
 
-						private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 
-						if (!isNull findDisplay 100040) then {
-							A3C_DISABLE_RADIAL = true;
-							[] call A3C_RADIAL_CloseDisplay;
-							A3C_UI_HUD_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_remote_Artillery.paa';
-							A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
-							[
-								46,
-								'SPACE',
-								{
-
-									(count A3C_RD_UNITS > 0 && {A3C_UI_HUD_3D_TAG_ICON_TYPE != ""})
-								},
-								{
-									A3C_HC_FOCUS_ARTY = objNull;
-									A3C_HC_FOCUS_ARTY_AMMO = ""; //-- what is goin on here
-									with uiNamespace do {
-										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-									};
-
-									A3C_HC_FOCUS_ARTY_POS = +(A3C_UI_HUD_3D_TAG_ICON_POS);
-									["ARTY"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
-									[] spawn {
-										while {!isNull findDisplay 100060} do {
-											sleep 0.5;
-										};
-										A3C_UI_HUD_3D_TAG_reposition = false;
-										private _iconType = '\a3c_ui\crosshairs\icon_crosshair_remote_Artillery.paa';
-										//-- mini flicker
-										for "_i" from 1 to 2 do {
-											A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-											sleep 0.1;
-											A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
-											sleep 0.1;
-										};
-										if (A3C_DISABLE_RADIAL) then {
-											//-- Radial key not released - reIssue the icon for repeated orders
-											A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
-											A3C_UI_HUD_3D_TAG_reposition = true;
-										} else {
-											//-- Radial key released - abort
-											A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-											A3C_UI_HUD_3D_TAG_reposition = false;
-										}
-
-									};
-									
-									// A3C_UI_HUD_3D_TAG_reposition = false;
-								},
-								{
-									
-								},
-								false
-							] call A3C_UI_RADIAL_ADD_EH_MACROS;
+						if (_a3c_dsp == 100040) then {
 
 							[
-								46,
-								'RADIAL',
-								{
-									true
-								},
-								{
-								},
-								{
-									//-- in order to allow multiple successive arty orders, we remove confirm keybind when MENU key is released 
-									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-									(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									A3C_UI_HUD_3D_TAG_reposition = false;
-									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-								},
-								true
-							] call A3C_UI_RADIAL_ADD_EH_MACROS;
-							A3C_UI_HUD_3D_TAG_reposition = true;
+								false, //-- isBusy
+								"ARTY", //-- actionID
+								'\a3c_ui\crosshairs\icon_crosshair_remote_Artillery.paa', //-- Hud-Icon-class
+								A3C_UI_COLOR_RED, //-- Hud-Icon-color
+								"", //-- placer class
+								"" //-- placer color-params
+							] call A3C_AI_SHARED_Action_StartPositionalProcess;
 						} else {
 							[_a3c_dsp] spawn {
 								params ["_a3c_dsp"];
@@ -2254,20 +1609,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								};
 							};
 						};
-
-					};
-					_button_IMG = "a3c_ui\menu\icon_menu_action_Artillery.paa";
-					_button_toolTip = "";
-					if (_a3c_dsp == 100040) then {
-						_button_toolTip =  format
-						[
-							"FIRE ARTILLERY - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-							["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
-						];
-					} else {
-						_button_toolTip = "FIRE ARTILLERY - RELAY COORDINATES VIA MAPCLICK";
-					};
-
+					};	
 				};
 
 				
@@ -2275,126 +1617,15 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 					_params = [];
 					_buttonFnc = {
-						params ["_clickData","_buttonArray","_specialParams"];
-
-
-						A3C_UI_HUD_3D_TAG_ICON_TYPE = '\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa';
-						A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
-						A3C_DISABLE_RADIAL = true;
-						[] call A3C_RADIAL_CloseDisplay;
-
 						A3C_UI_RADIAL_Current_Remfire_Units = +(A3C_HC_DetoShot_Units);
-
-
 						[
-							46,
-							'SPACE',
-							{
-
-								count A3C_RD_UNITS > 0 &&
-								{
-									A3C_UI_HUD_3D_TAG_ICON_TYPE != ''
-									&&
-									{count A3C_RD_UNITS > 0}
-								}
-							},
-							{
-
-								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_UI_DOWNKEYS) exitWith {};
-								//A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
-								//A3C_UI_HUD_3D_TAG_reposition = false;
-
-
-								if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
-
-
-									_doRefreshGroupSelected = false;
-									with uiNamespace do {
-										//disableSerialization;
-										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-									};
-
-									private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
-									_parent = findDisplay _a3c_dsp displayCtrl 8008;
-									_text = findDisplay _a3c_dsp displayCtrl 800802;
-									_listBox = findDisplay _a3c_dsp displayCtrl 800803;
-
-									A3C_OBJECTSELECTOR_MODE = "PLACE_CHARGE_HC";
-									_parent ctrlShow true;
-									_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
-									_parent ctrlCommit 0;
-									_text ctrlSetText "Place Charge";
-
-									if (count A3C_REMFIRE_MAGTYPES > 4) then {
-										_parentPos = ctrlPosition _parent;
-										_parentPos set[3,(_parentPos select 3) + (  ((count A3C_REMFIRE_MAGTYPES) - 4)   * (0.0440051 * safezoneH) )];
-										_parent ctrlSetPosition _parentPos;
-										_parent ctrlCommit 0;
-									};
-									
-									ctrlSetFocus _listBox;
-									
-									lbClear _listBox;
-									{
-										private _lbText = (getText (configfile >> "CfgMagazines" >> _x >> "displayName"));
-										[_listBox, _lbText] call A3C_addLbEntry;
-									} foreach A3C_REMFIRE_MAGTYPES;
-									[_parent,_listBox, count A3C_REMFIRE_MAGTYPES] call A3C_OBJECTSEL_RESIZE;
-									
-
-
-									[] spawn {
-										sleep 0.1;
-										while {!isNull findDisplay 100060} do {
-
-											sleep 0.5;
-										};
-										if (A3C_UI_HUD_3D_TAG_ICON_TYPE == "\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\cargoPut_ca.paa") then {
-											A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-										};
-									};
-
-								} else {
-									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-								};
-
-							},
-							{
-
-								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-								A3C_UI_HUD_3D_TAG_reposition = false;
-							},
-							false
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-						[
-							46,
-							'RADIAL',
-							{
-
-								true
-							},
-							{
-
-								//[A3C_UI_HUD_3D_TAG_ICON_POS,''] spawn A3C_UI_HUD_3D_TAG;
-							},
-							{
-								if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "") then {
-									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-								};
-								if !(A3C_UI_HUD_3D_TAGGING) then {
-									A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-								};
-								
-								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-
-								A3C_UI_HUD_3D_TAG_reposition = false;
-								A3C_UI_RADIAL_Current_Remfire_Units = [];
-							},
-							true
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-						A3C_UI_HUD_3D_TAG_reposition = true;
-
+							false, //-- isBusy
+							"PLACE_CHARGE_HC", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa', //-- Hud-Icon-class
+							[1,1,1,0.7], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_explosives_Place.paa";
 					_button_toolTip =  format
@@ -2408,116 +1639,12 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				case ("STATIC_ASSEMBLE_HC") : {
 					_params = [];
 					_buttonFnc = {
-						params ["_clickData","_buttonArray","_specialParams"];
-						[] call A3C_RADIAL_CloseDisplay;
-						A3C_DISABLE_RADIAL = true;
-						[
-							46,
-							'SPACE',
-							{
 
-								!isNull A3C_OBJECTPLACER
-							},
-							{
-								{
-									private _units = _x select 0;
-									private _weapon = _x select 1;
-									private _var = [];
-									if (_weapon == typeOf A3C_OBJECTPLACER) exitWith {
-										//-- clear all waypoints
-										{
-											{
-												_x setVariable ["A3C_CLEARING",false,true];
-											} foreach (units _x);
-										} foreach A3C_SELECTED_UNITS;
-
-										
-										_gp = A3C_RD_UNITS select 0;
-										while {(count (waypoints _gp)) > 1} do {
-											{
-												if (_forEachIndex > 0) then {
-													deletewaypoint _x;
-												};
-											} foreach waypoints _gp;
-										};
-										_wp =
-										[
-											_gp,
-											position A3C_OBJECTPLACER
-										] call A3C_HC_ADD_WP;
-
-										_var = _gp getvariable ["A3C_UNIT_POLYS",[]];
-
-										_prefix = 'ASS'; //-- ASS stands for 'assemble' you cheeky little kitten.
-										_tPos = position A3C_OBJECTPLACER;
-										_tpos set [2,0]; //==-- security mechanic: sometimes z-value is missing! ~~// does that apply here?
-
-										_tPos = _tPos getPos [50, getDir A3C_OBJECTPLACER];
-
-										if !(A3C_HC_PREVENT_POLY) then {
-											_polygon = [];
-											//if !(A3C_HC_EDIT_ACTION == "ASSEMBLE WEAPON") then {
-												//-- action is NOT assembling weapon. create VISIBLE polygon
-												_polygon = ([[_tPos,format ["A3C_%1_MAIN_Mark_%2_%3",parsetext _prefix,getPlayerUID player,A3C_SUP_POLY_IND_MARK],currentWaypoint _gp]] + ([_tPos,getDir A3C_OBJECTPLACER,"ASSEMBLE WEAPON",true] call A3C_SUP_CREATE_POLY));
-											//} else {
-												//-- action IS assembling weapon. create INVISIBLE polygon
-											//	_polygon = ([[_tPos,format ["A3C_%1_MAIN_Mark_%2_%3",parsetext _prefix,getPlayerUID player,A3C_SUP_POLY_IND_MARK],_indSel]] + ( [[_tPos,_tPos,_tPos,_tPos],["","","",""],0]) );
-											//};
-											A3C_SUP_POLY_IND_MARK = A3C_SUP_POLY_IND_MARK + 1;
-											_var pushback _polygon;
-										};
-
-
-
-										_statements = format
-										[
-											"
-
-												['%1',this,%2,'%3',(currentWaypoint group this)] call A3C_HC_INSERT_ACTION_WP;
-											",
-											getPlayerUID player,
-											[["NONE","NONE"],"ASSEMBLE WEAPON"],
-											formation _gp
-										];
-										_wpStm = waypointStatements _wp;
-										_wp setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _statements];
-										
-										_gp setvariable ["A3C_UNIT_POLYS",_var,true];
-										
-
-										//-- create waypoint
-
-										A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  _weapon >> "picture");
-										A3C_UI_HUD_3D_TAG_ICON_MOD = "ON";
-										[screentoWorld [0.5,0.5],""] spawn A3C_UI_HUD_3D_TAG;
-										player commandRadio "SentAssemble";
-
-									};
-								} foreach A3C_STATIC_PACKS;
-								deleteVehicle A3C_OBJECTPLACER;
-							},
-							{
-								(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-							},
-							false
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-						[
-							46,
-							'RADIAL',
-							{!isNull A3C_OBJECTPLACER},
-							{
-								(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-								deletevehicle A3C_OBJECTPLACER;
-							},
-							{
-								(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-							},
-							true
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
+						//-- Note: Here we select type first, then position 
+						//--> This means, A3C_AI_SHARED_Action_StartPositionalProcess is called in A3C_ObjectSelector_LB_Change!
+						
 						A3C_OBJECTSELECTOR_MODE = "STATIC_ASSEMBLE_HC";
-						_staticData = [units (A3C_RD_UNITS select 0),"PLANNING"] call A3C_getSelectionBackpackStatics;
+						private _staticData = [units (A3C_RD_UNITS select 0),"PLANNING"] call A3C_getSelectionBackpackStatics;
 						if (count _staticData == 1) then {
 							[0] call A3C_ObjectSelector_LB_Change;
 						} else {
@@ -2527,9 +1654,9 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							};
 
 							private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
-							_parent = findDisplay _a3c_dsp displayCtrl 8008;
-							_text = findDisplay _a3c_dsp displayCtrl 800802;
-							_listBox = findDisplay _a3c_dsp displayCtrl 800803;
+							private _parent = findDisplay _a3c_dsp displayCtrl 8008;
+							private _text = findDisplay _a3c_dsp displayCtrl 800802;
+							private _listBox = findDisplay _a3c_dsp displayCtrl 800803;
 
 							
 							_parent ctrlShow true;
@@ -2559,27 +1686,22 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				
 
 			};
+
+
+
 			_buttonData = _btnArray select _foreachIndex;
 
-			//[_a3c_dsp,_buttonData,_button_IMG,_button_toolTip] spawn {
 
-			//	params ["_a3c_dsp","_buttonData","_button_IMG","_button_toolTip"];
-				_buttonData params ["_btnBackgroundCtrl","_btnImageCtrl","_btnClickerCtrl"];
+			_buttonData params ["_btnBackgroundCtrl","_btnImageCtrl","_btnClickerCtrl"];
 
-				//for "_i" from 1 to 10 do {
+			(findDisplay _a3c_dsp displayCtrl _btnBackgroundCtrl) ctrlSetText "#(argb,8,8,3)color(0,0,0,0.4)";
+			(findDisplay _a3c_dsp displayCtrl _btnImageCtrl) ctrlSetText _button_IMG;
+			(findDisplay _a3c_dsp displayCtrl _btnImageCtrl) ctrlSetTextColor _imageColorCode;
+			(findDisplay _a3c_dsp displayCtrl _btnClickerCtrl) ctrlSetToolTip _button_toolTip;
+			if (_doToggle) then {
+				{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true} foreach _buttonData;
+			};
 
-
-					(findDisplay _a3c_dsp displayCtrl _btnBackgroundCtrl) ctrlSetText "#(argb,8,8,3)color(0,0,0,0.4)";
-					(findDisplay _a3c_dsp displayCtrl _btnImageCtrl) ctrlSetText _button_IMG;
-					(findDisplay _a3c_dsp displayCtrl _btnImageCtrl) ctrlSetTextColor _imageColorCode;
-					(findDisplay _a3c_dsp displayCtrl _btnClickerCtrl) ctrlSetToolTip _button_toolTip;
-					if (_doToggle) then {
-						{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true} foreach _buttonData;
-					};
-
-				//};
-
-			//};
 			if (_a3c_dsp == 100040) then {
 
 				_buttonFnc = (str _buttonFnc) splitString "";
@@ -2590,7 +1712,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				_buttonFnc = _buttonFnc + " [] spawn { sleep 0.1; [A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED] call A3C_MAP_fnc_GroupMenu_LabelActionButtons}; ";
 
 
-				//systemchat str _buttonFnc;
+
 
 				_buttonFnc = compile _buttonFnc;
 				_val =  _foreachIndex + 1;
@@ -2624,12 +1746,13 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 
-	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
-	private _refUnits = A3C_SELECTED_UNITS;
-	_remFire_units = [];
+	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
+	 //~~ has to be RD becasue it can also be called on squad units (subideal, maybe just have one array for everything. A3C_SELECTED_UNITS)
+	private _refUnits = if (_a3c_dsp == 100040) then {A3C_RD_UNITS} else {A3C_SELECTED_UNITS};
+	private _remFire_units = [];
 	if (!isNull findDisplay 100040) then {
 		_a3c_dsp = 100040;
-		_refUnits = A3C_RD_UNITS; //~~ has to be RD becasue it can also be called on squad units (subideal, maybe just have one array for everything. A3C_SELECTED_UNITS)
+		_refUnits = A3C_RD_UNITS;
 	};
 	private _chatMessageParts = [];
 	private _currentlySuppressingUnits = [];
@@ -2637,17 +1760,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 	{
 		private _group = _x;
 		private _leaderVic = (vehicle leader _group);
-		//if ({_x in (A3C_SUPPRESSION_UNITS_SQ + A3C_SUPPRESSION_UNITS_AI)} count units _group > 0) exitWith {
-		//	_currentlySuppressingUnits = [];
-		//	{
-		//		if (_x in (A3C_SUPPRESSION_UNITS_SQ + A3C_SUPPRESSION_UNITS_AI)) then {
-		//			_currentlySuppressingUnits pushBackUnique _x;
-		//		};
-		//	} foreach (units _group);
-		//	if (count _currentlySuppressingUnits > 0) then {
-		//		[_currentlySuppressingUnits,"SUPPRESSION"] call A3C_POLY_ACTION_OFF;
-		//	};
-		//};
+
 		if (_a3c_dsp in [100020,100030]) then {
 			if (_group in _refUnits) then { //~~ ?? what does this do ecxactly? making sure that group menu switches the button pages?
 				["HC"] call A3C_START_TABMODE;
@@ -2699,7 +1812,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 
 	//-- give new suppression order via the appropriate medium
 
-	if (_a3c_dsp in [100020,100030]) then {
+	if (_a3c_dsp == 100020) then {
 
 		systemchat "A3C: Please relay map-coordinates via mapclick!";
 		sleep 0.5; //~~ small delay needed for mapclick
@@ -2721,49 +1834,15 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 			}
 		] call BIS_fnc_addStackedEventHandler;
 	} else {
-		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
-		A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\menu\icon_menu_action_suppression.paa";//
-		A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
 
 		[
-			46,
-			'SPACE',
-			{true},
-			{},
-			{
-				if (count A3C_RD_UNITS > 0 && {A3C_UI_HUD_3D_TAG_ICON_TYPE != ""}) then {
-					{
-						[_x,A3C_UI_HUD_3D_TAG_ICON_POS] call A3C_HC_Suppression_Immediate;
-					} foreach A3C_UI_RADIAL_Current_Remfire_Units;
-				};
-				// systemchat 'WHooo';
-				(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-
-				A3C_HC_GroupMenu_SuppressionRequested = false;
-				A3C_UI_HUD_3D_TAG_reposition = false;
-				[A3C_UI_HUD_3D_TAG_ICON_POS,"SUPPRESSION"] spawn A3C_UI_HUD_3D_TAG;
-			},
-			false
-		] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-		[
-			46,
-			'RADIAL',
-			{true},
-			{},
-			{
-				if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "") then {
-					(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-				};
-				(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-				A3C_UI_HUD_3D_TAG_reposition = false;
-				A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-			},
-			true
-		] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-		A3C_UI_HUD_3D_TAG_reposition = true;
+			false, //-- isBusy
+			"SUPPRESSION", //-- actionID
+			'\a3c_ui\menu\icon_menu_action_suppression.paa', //-- Hud-Icon-class
+			A3C_UI_COLOR_RED, //-- Hud-Icon-color
+			"", //-- placer class
+			"" //-- placer color-params
+		] call A3C_AI_SHARED_Action_StartPositionalProcess;
 	};
 };
 
@@ -2778,7 +1857,7 @@ A3C_AI_HIGHCOMMAND_fnc_Unstuck = {
 		systemChat "A3C: Unstuck is only available for single selections";
 	};
 	private _gp = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
-	(units _gp) spawn A3C_UNSTUCK;
+	(units _gp) spawn A3C_AI_Shared_action_UNSTUCK;
 
 };
 
@@ -3085,7 +2164,7 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 			A3C_OBJECTSELECTOR_MODE = "PARALOAD";
 			if (!isNull findDisplay 100040) then {
 				A3C_DISABLE_RADIAL = true;
-				[] call A3C_RADIAL_CloseDisplay;
+				[] call A3C_UI_RADIAL_CloseDisplay;
 
 				[
 					46,
@@ -3198,442 +2277,7 @@ A3C_REJOIN_GROUPS = {
 	} foreach _groups;
 };
 
-A3C_ORDER_ARTILLERY = {
-	params ["_pos","_shift"];
-	MCSS_REMOTE_ARTILLERY_ARRAY = MCSS_REMOTE_ARTILLERY_ARRAY select
-	{
-		_artyAmmo = getArtilleryAmmo [_x];
-		{_x in A3C_HC_FOCUS_ARTY_AMMO_ARRAY} count _artyAmmo > 0
-	};
-	_fireCount = A3C_HC_FOCUS_ARTY_AmmoCount; //-- copy number
-	//systemchat str [count MCSS_REMOTE_ARTILLERY_ARRAY,A3C_HC_FOCUS_ARTY_AMMO_ARRAY,_fireCount];
-	//private _fireOrders = [];
-	//-- stack fireorders
-	//--  while _fireCount is > 0, units are distributed shots one by one 
-	//-- meaning: unit1 takes shot 1, unit 2 takes shot 2 
-	//-- unit needs to check if it can take the shot:
-	//-->> unit needs to have more mags of allowed types than existing fireorders of matching types 
-	//-- unit gets a shot assigned with the ammo that is has left 
-	//-->> take all existing ammo
 
-
-	private _artyLeaderVic = MCSS_REMOTE_ARTILLERY_ARRAY select 0;
-	private _artyLeader = gunner _artyLeaderVic;
-	{
-		[_x] call A3C_AddToArtyRadio;
-	} foreach MCSS_REMOTE_ARTILLERY_ARRAY;
-
-	
-	//A3C_CUSTOMRADIO_ID radioChannelAdd [player];
-	
-	
-	//-- create data
-	private _canNotFire = true;
-	private _artyOrdersCurrent = []; //[vehicle, pos, mag, amount] >> array handling CURRENT artillery order. carries _vehicle
-	while {_fireCount > 0} do {
-		
-		{
-			//-- THIS STEP DISTRIBUTES SHELLS OF THE CURRENTLY REQUESTED ORDER THROUGHOUT THE AVAILABLE VEHICLES
-			private _artyPiece = _x;
-			if (_fireCount == 0) exitWith {};
-			
-			private _availableMags = (magazinesAmmoFull _artyPiece) select
-			{
-				_x params ["_magType","_magAmount"];
-				(_magType in A3C_HC_FOCUS_ARTY_AMMO_ARRAY) && {_pos inRangeOfArtillery [[_artyPiece], _magType]}
-			};
-			private _artyOrdersPlanned = _artyPiece getvariable ["A3C_ARTY_ORDERS",[]];
-			//player sidechat str _artyOrdersPlanned;
-			_artyOrdersFiltered = _artyOrdersPlanned select
-			{
-				//-- filter for matching magtype
-				_x params ["_firePos","_magType","_orderCount"];
-				_magType in A3C_HC_FOCUS_ARTY_AMMO_ARRAY
-			};
-			private _exit = false;
-			{
-				_x params ["_firePos","_magType","_orderCount"];
-				{
-					private _magData = _x;
-					_magData params ["_magTypeRef","_magAmount"];
-					//systemchat str [_magTypeRef , _magType];
-					if (_magTypeRef == _magType) exitWith {
-						(_availableMags select _foreachIndex) set [1,_magAmount - _orderCount];
-						//_x set [1,_magAmount - _orderCount];
-						_exit = true;
-						//systemchat str (_magAmount - _orderCount);
-					};
-				} foreach _availableMags;
-				if (_exit) exitWith {};
-			} foreach _artyOrdersFiltered;
-			_availableMags = _availableMags select {_x select 1 > 0};
-
-			if !(_availableMags isEqualTo []) then {
-				private _selectedMag = (_availableMags select 0) select 0;
-				
-
-				if ({_x select 0 == _artyPiece && {_x select 2 == _selectedMag && {_x select 1 isEqualTo _pos}}} count _artyOrdersCurrent == 0) then {
-					//-- create new entry
-					_artyOrdersCurrent set [count _artyOrdersCurrent,[_artyPiece,_pos,_selectedMag,1]];
-				} else {
-					//-- add to existing entry
-					{
-						if (_x select 0 == _artyPiece && {_x select 2 == _selectedMag && {_x select 1 isEqualTo _pos}}) exitWith {
-							_x set [3,(_x select 3) + 1];
-						};
-					} foreach _artyOrdersCurrent;
-				};
-				
-				if ({_x select 1 == _selectedMag && {_x select 0 isEqualTo _pos}} count _artyOrdersPlanned == 0) then {
-					//-- create new entry
-					_artyOrdersPlanned set [count _artyOrdersPlanned,[_pos,_selectedMag,1]];
-					_canNotFire = false;
-					_fireCount = _fireCount - 1;
-				} else {
-					//-- add to existing entry
-					{
-						if (_x select 1 == _selectedMag && {_x select 0 isEqualTo _pos}) exitWith {
-							_x set [2,(_x select 2) + 1];
-							_canNotFire = false;
-							_fireCount = _fireCount - 1;
-						};
-					} foreach _artyOrdersPlanned;
-				};
-				_artyPiece setvariable ["A3C_ARTY_ORDERS",_artyOrdersPlanned,true];
-			};
-
-		} foreach MCSS_REMOTE_ARTILLERY_ARRAY;
-		if (_canNotFire) exitWith {
-			hint "ARTILLERY PROBLEM: SOME GUNS ARE NOT IN RANGE";	
-		};
-	};
-
-	if !(_canNotFire) then {
-		hint "";
-		//-- comms: REQUESTING SUPPORT
-		player customRadio [A3C_CUSTOMRADIO_ID, "SentARTYFireAtWithAmmo"];
-
-
-		[_artyLeader] spawn {
-			params ["_artyLeader"];
-			sleep (3 + (random 2));
-			_artyLeader customRadio [A3C_CUSTOMRADIO_ID, "SentRequestAcknowledgedSGArty"];
-		};
-		//systemchat str _artyOrdersCurrent;
-		// _artyOrdersCurrent carries data for executed strikes of MULTIPLE vehicles
-		// we now cycle through those orders and reference them to existing orders
-		{
-			//-- THIS STEP CHECKS FOR PRE-EXISTING ORDERS. IF NONE EXIST, WE ADD THE MANAGEMENT EVENTHANDLERS
-			sleep random 2;
-			_x params ["_vehicle","_pos","_magType","_shellAmount"];
-
-			//-- slightly messy, maybe :) determine if this is first or added order. Manage accordingly
-			private _artyOrdersPlanned = _vehicle getvariable ["A3C_ARTY_ORDERS",[]];
-			private _currentOrder = _x - [_x select 0]; //-- current order instance (_x) in format of "A3C_ARTY_ORDERS" variable
-			private _ordersPreExist = _artyOrdersPlanned - [_currentOrder];
-
-			//systemchat str _currentOrder;
-
-			if (_ordersPreExist isEqualTo []) then {
-
-				//systemchat "INITIAL ORDER";
-
-
-				//-- NO ORDERS EXIST: DISTRIBUTE MANAGEMENT EVENTHANDLERS
-				private _spread = if (_shellAmount > 7) then {random 50} else {1};
-				
-
-				//-- problem: we only want one 'SPLASH' message for the first shell per order
-				//-- we need extra EH because later we can not identify the order-index 
-				
-				_vehicle setVariable ["A3C_ARTY_TARGETPOS",_pos,true];
-				_splashHandler = _vehicle addEventHandler
-				[
-					"FIRED",
-					{
-						params ["_vehicle", "_weapon", "_muzzle", "_mode", "_ammo", "_magazine", "_projectile", "_gunner"];
-
-						_vehicle removeEventHandler [_thisEvent,_thisEventHandler];
-
-						_targetPos = _vehicle getVariable ["A3C_ARTY_TARGETPOS",[]];
-
-						if !(_targetPos isEqualTo []) then {
-							private _artyShellETA = _vehicle getArtilleryETA [_targetPos, _magazine];
-							_artyShellETA = _artyShellETA max 0;
-							private _commsOperator = gunner _vehicle;
-							[_artyShellETA,_commsOperator] spawn { //-- SPLASH only relates to the first shell
-								params ["_artyShellETA","_commsOperator"];
-								//sleep 2;
-								//systemchat format ["SPLASH ETA: %1sec", round _artyShellETA];
-								sleep (_artyShellETA - 7);
-								_commsOperator customRadio [A3C_CUSTOMRADIO_ID, "SentRequestAccomplishedSGArty"];
-							};
-						};
-						_vehicle setVariable ["A3C_ARTY_TARGETPOS",nil,true];	
-					}
-				];
-
-				private _eventHandlers = _vehicle getVariable ["A3C_ARTY_EH",[]];
-				private _ehFired = -1;
-				private _ehReloaded = -1;
-				if (_eventHandlers isEqualTo []) then {
-					_ehFired = _vehicle addEventHandler
-					[
-						"FIRED",
-						{
-							params ["_vehicle", "_weapon", "_muzzle", "_mode", "_ammo", "_magazine", "_projectile", "_gunner"];
-
-							//systemchat format ["A UNIT HAS FIRED (%1)",(round time)];
-
-							_vehicle setVariable ["A3C_ARTY_LAST",time,true];
-
-							//-- SECURITY: REMOVE ALL REMAINING ORDERS IF GUN STOPS SHOOTING
-							[_vehicle] spawn {
-								params ["_vehicle"];
-								sleep 15;
-								private _lastShot = _vehicle getVariable ["A3C_ARTY_LAST",nil];
-								private _cond = !isNil '_lastShot' &&
-								{
-									(time - _lastShot) > 14 &&
-									{
-										private _artyOrders = _vehicle getvariable ["A3C_ARTY_ORDERS",[]];
-										!(_artyOrders isEqualTo [])
-									}
-								};
-								if (_cond) then {
-
-									// systemchat "SAFETY >> fired";
-									//-- remove EHs
-									private _varData = _vehicle getVariable ["A3C_ARTY_EH",[]];
-									if !(_varData isEqualTo []) then {
-										_varData params ["_dataFired","_dataReloaded"];
-										_vehicle removeEventHandler [_dataFired select 0,_dataFired select 1];
-										_vehicle removeEventHandler [_dataReloaded select 0,_dataReloaded select 1];
-									};
-									
-									//-- reset main orders var
-									_vehicle setvariable ["A3C_ARTY_ORDERS",nil,true];
-									
-									//-- reset currentOrder var
-									_vehicle setVariable ["A3C_ARTYORDER_CURRENT",nil, true];
-
-									//-- remove last fired var
-									_vehicle setVariable ["A3C_ARTY_LAST",nil,true];
-
-									//-- delete EH objectNameSpace var 
-									_vehicle setVariable ["A3C_ARTY_EH",nil];
-
-									//-- radio feedback: ROUNDS COMPLETE
-									private _commsOperator = gunner _vehicle;
-									[_vehicle] call A3C_AddToArtyRadio;
-									_commsOperator spawn {
-										sleep (1 + (random 2));
-										_this customRadio [A3C_CUSTOMRADIO_ID, "SentARTYRoundsComplete"];
-									};
-								};
-							};
-
-							
-
-							
-							private _artyOrders = _vehicle getvariable ["A3C_ARTY_ORDERS",[]];
-							
-
-							private _orderCurrent = _vehicle getVariable ["A3C_ARTYORDER_CURRENT",[]];
-							_orderCurrent params ["_currentFirePos","_currentFireMag","_currentShellAmount"];
-
-							if (_currentFireMag == _magazine) then {
-								
-								_currentShellAmount = (_currentShellAmount - 1) max 0;
-								if (_currentShellAmount > 0) then {
-									//-- CURRENT ORDER NOT YET COMPLETE
-									//-- remove shot from current order
-									_vehicle setVariable ["A3C_ARTYORDER_CURRENT",[_currentFirePos,_currentFireMag,_currentShellAmount], true];
-									//-- remove shot from main variable
-									{
-										_x params ["_firePos","_magType","_orderCount"];
-										if (_magType == _magazine) exitWith { //-- assumption: last shot will always be from current order
-											_x set [2, _orderCount - 1];
-										};
-									} foreach _artyOrders; //-- note: just using (_artyOrders select 0) does not work if one magtype is used in multiple orders
-									
-
-									//systemchat "removing shell from current orders";
-								} else {
-
-									//-- CURRENT ORDER COMPLETE: MOVE TO NEXT OR DELETE VARIABLES
-
-									//-- remove order from main variable
-									_artyOrders = _artyOrders - [_orderCurrent];
-
-									
-									if (_artyOrders isEqualTo []) then {
-										
-
-										//-- No more orders: remove EHs
-										_vehicle removeEventHandler [_thisEvent,_thisEventHandler];
-										//systemchat "eh's removed REG FIRED";
-										private _varData = _vehicle getVariable ["A3C_ARTY_EH",[]];
-										if !(_varData isEqualTo []) then {
-											_varData params ["_dataFired","_dataReloaded"];
-											_vehicle removeEventHandler [_dataReloaded select 0,_dataReloaded select 1];
-											
-											//systemchat "eh's removed REG RELOAD";	
-											
-										};
-
-										//-- MAIN var will be reset after the current parenting if statement is completed
-
-										//-- reset currentOrder var
-										_vehicle setVariable ["A3C_ARTYORDER_CURRENT",nil, true];
-
-										//-- remove last fired var
-										_vehicle setVariable ["A3C_ARTY_LAST",nil,true];
-
-										//-- delete EH objectNameSpace var 
-										_vehicle setVariable ["A3C_ARTY_EH",nil];
-
-										//-- radio feedback: ROUNDS COMPLETE
-										private _commsOperator = gunner _vehicle;
-										[_vehicle] call A3C_AddToArtyRadio;
-										// systemchat "ARTY ORDERS COMPLETE";
-										_commsOperator spawn {
-											sleep (1 + (random 2));
-											_this customRadio [A3C_CUSTOMRADIO_ID, "SentARTYRoundsComplete"];
-										};
-									} else {
-										//-- still more orders lined up
-										//systemchat "executing next order";
-										_nextOrder = _artyOrders select 0;
-										_nextOrder params ["_nextTargetPos","_nextMagType","_nextShellAmount"];
-										_vehicle setVariable ["A3C_ARTYORDER_CURRENT",_nextOrder, true];
-										[_vehicle,[_nextTargetPos getPos [5,random 360],_nextMagType,_nextShellAmount]] remoteExec ["commandArtilleryFire",_vehicle];
-									};
-								};
-							};
-							_vehicle setvariable ["A3C_ARTY_ORDERS",_artyOrders];
-						}
-					];
-
-					//-- ISSUE: commandArtilleryFire gets cancelled if the vehicle reloads. We add a reloaded-EH that cancels all Arty Data
-					_ehReloaded = _vehicle addEventHandler
-					[
-						"RELOADED",
-						{
-							params ["_vehicle", "_weapon", "_muzzle", "_newMagazine", "_oldMagazine"];
-
-							_newMagazine = _newMagazine select 0;
-							_oldMagazine = if (isNil '_oldMagazine' OR {_oldMagazine isEqualTo []}) then {"rndm"} else {_oldMagazine select 0};
-
-							private _artyOrders = _vehicle getvariable ["A3C_ARTY_ORDERS",[]];
-
-
-							if (_newMagazine == _oldMagazine) then {
-								//-- canceled orders due to reload >> (engine bug) reissue remaining artillery orders!
-								// systemchat "A VEHICLE IS RELOADING MID ORDER";
-								private _targetPos = [];
-								private _shellAmount = 0;
-								{
-									_x params ["_firePos","_magType","_orderCount"];
-									//systemchat str [_magazine,_magType];
-									if (_magType == _oldMagazine) then {
-										_targetPos = _firePos; //-- will use last one (note: will not matter once orders are made stack-able)
-										_shellAmount = _shellAmount + _orderCount;
-									};
-								} foreach _artyOrders;
-								
-								if !(_targetPos isEqualto []) then {
-									[_vehicle,[_targetPos getPos [5,random 360],_oldMagazine,_shellAmount]] remoteExec ["commandArtilleryFire",_vehicle];
-								};
-							} else {
-								// systemchat "A VEHICLE HAS CHANGED MAGS";
-							};
-						}
-					];
-
-					_vehicle setVariable
-					[
-						"A3C_ARTY_EH",
-						[
-							["FIRED",_ehFired],
-							["RELOADED",_ehReloaded]
-						]
-					];
-				};
-
-				_vehicle setVariable ["A3C_ARTYORDER_CURRENT",_currentOrder,true];
-				
-				[_vehicle,[_pos getPos [_spread,random 360],_magType,_shellAmount]] remoteExec ["commandArtilleryFire",_vehicle];
-
-				//-- SAFTEY: IF UNIT DOES NOT REACT TO ORDER, DELETE VARIABLES
-				_vehicle setVariable ["A3C_ARTY_LAST",time,true]; //-- precaution to be sure to have a reference.
-				[_vehicle,_splashHandler,_ehFired,_ehReloaded] spawn {
-					params ["_vehicle","_splashHandler","_ehFired","_ehReloaded"];
-					sleep 15;
-					private _lastShot = _vehicle getVariable ["A3C_ARTY_LAST",nil];
-					private _cond = !isNil '_lastShot' &&
-					{
-						(time - _lastShot) > 14 &&
-						{
-							private _artyOrders = _vehicle getvariable ["A3C_ARTY_ORDERS",[]];
-							!(_artyOrders isEqualTo [])
-						}
-					};
-					if (_cond) then {
-						// systemchat "SAFETY >> unresponsive";
-						//-- remove EHs
-						private _varData = _vehicle getVariable ["A3C_ARTY_EH",[]];
-						if !(_varData isEqualTo []) then {
-							_varData params ["_dataFired","_dataReloaded"];
-							_vehicle removeEventHandler [_dataFired select 0,_dataFired select 1];
-							_vehicle removeEventHandler [_dataReloaded select 0,_dataReloaded select 1];
-						};
-
-						//-- reset main orders var
-						_vehicle setvariable ["A3C_ARTY_ORDERS",nil,true];
-
-						//-- reset currentOrder var
-						_vehicle setVariable ["A3C_ARTYORDER_CURRENT",nil, true];
-
-						//-- remove last fired var
-						_vehicle setVariable ["A3C_ARTY_LAST",nil,true];
-
-						//-- delete EH objectNameSpace var 
-						_vehicle setVariable ["A3C_ARTY_EH",nil];
-
-						//-- radio feedback: ROUNDS COMPLETE
-						private _commsOperator = gunner _vehicle;
-						[_vehicle] call A3C_AddToArtyRadio;
-						_commsOperator spawn {
-							sleep (1 + (random 2));
-							_this customRadio [A3C_CUSTOMRADIO_ID, "SentARTYCannotExecuteAdjustCoordinates"];
-							hint "hint: sometimes vehicles become unresponsive. Try to move the vehicle(s) a bit and make sure that they face the target";
-						};
-
-						//-- remove splash handler
-						_vehicle removeEventHandler ["FIRED",_splashHandler];
-					};
-				};
-			};	
-		} foreach _artyOrdersCurrent;
-
-
-	};
-
-
-};
-
-A3C_AddToArtyRadio = {
-	params ["_vehicle"];
-	private _commsOperator = gunner _vehicle;
-	if (!isNull _commsOperator && {alive _commsOperator}) then {
-		A3C_CUSTOMRADIO_ID radioChannelAdd [player,_commsOperator];
-		if ("ItemRadio" in assignedItems _commsOperator) then {
-			_commsOperator addItem "itemRadio"; 
-			_commsOperator assignItem "itemRadio";
-		};
-	};
-};
 
 
 A3C_FlyinHeightArrayHeli = ["25","75","200","500"];

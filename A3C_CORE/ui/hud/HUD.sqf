@@ -1643,7 +1643,7 @@ A3C_HUD_MOVE = {
 	if ( (profilenamespace getvariable ["A3C_HUD_MENUOVERRIDE_VAR",true]) OR (count (_unit getVariable "A3C_PLOT") == 0)) then {
 		_tVar = [_wpData];
 		_unit setVariable ["A3C_PLOT",_tVar,true];
-		_script = [_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE;
+		_script = [_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot;
 	} else {
 		_tVar = _unit getVariable ["A3C_PLOT",[]];
 		_tVar pushBack _wpData;

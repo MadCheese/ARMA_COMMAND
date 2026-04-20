@@ -47,7 +47,7 @@ A3C_UI_RADIAL_fnc_RemFire_EH = {
 			if !(%1) then {
 				if (_a3c_dsp == 100040) then {
 					A3C_DISABLE_RADIAL = true;
-					[] call A3C_RADIAL_CloseDisplay;
+					[] call A3C_UI_RADIAL_CloseDisplay;
 					{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu '';
 					A3C_UI_HUD_3D_TAG_ICON_TYPE = '%2';
 					A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
@@ -154,8 +154,8 @@ A3C_UI_RADIAL_fnc_RemFire_EH = {
 
 ////////////////////////////this one is actually radial only
 
-//~~ rename this fnc, it's not really shared after all
-A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
+
+A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 	params ["_display","_unitArray","_buttonContainers"]; //-- here the entire display is passed in, not just the idc number
 
 	{
@@ -402,35 +402,215 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 	//systemchat str A3C_DYNAMIC_BUTTON_ACTIONS;
 
 	for "_i" from 0 to ( ((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do { //~~ this could also be a foreach loop?
-		_action = A3C_DYNAMIC_BUTTON_ACTIONS select _i;
-		_button = _buttonContainers select _i;
-		_buttonImage = (findDisplay _display displayCtrl (_button select 0));
-		_buttonClicker = (findDisplay _display displayCtrl (_button select 1));
+		private _action = A3C_DYNAMIC_BUTTON_ACTIONS select _i;
+		private _button = _buttonContainers select _i;
+		private _buttonImage = (findDisplay _display displayCtrl (_button select 0));
+		private _buttonClicker = (findDisplay _display displayCtrl (_button select 1));
 		private _buttonFncData = [];
 		switch (_action) do {
-			case ("TANKSHOT") : {
-				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_remoteTankShell.paa";
+
+			//----------- NON-POSITIONAL ACTIONS
+
+			case ("CLEAR_BUILDING") : {
+				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_clearBuilding.paa";
 				_buttonFncData =
 				[
-					[],
+					[str _unitArray,'cursortarget',_display],
 					{
-						_buttonFnc =
-						[
-							'A3C_Prevent_TANKSHOT',
-							'\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa',
-							"TANKSHOT"
-						] call A3C_UI_RADIAL_fnc_RemFire_EH;
-						[] call _buttonFnc;
+						params ["_clickData","_fncData"];
+						_fncData params ["_unitArray","_cursorString","_display"];
+						_unitArray = call compile _unitArray;
+						[_unitArray,_cursorString] call A3C_AI_Squad_Action_clearBuilding;
+					},
+					true
+
+				];
+				_buttonClicker ctrlSetTooltip "Clear Building";
+			};
+			case ("ARSENAL") : {
+				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_arsenal.paa";
+				_buttonFncData =
+				[
+					[str (_unitArray select 0),_display],
+					{
+						params ["_clickData","_fncData"];
+						_fncData params ["_unit","_display"];
+						_unit = call compile _unit;
+						[_unit] call A3C_AI_Squad_Action_Arsenal;
+					},
+					true
+				];
+				_buttonClicker ctrlSetTooltip "OPEN ARSENAL";
+			};
+			case ("UNSTUCK") : {
+				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_unstuck.paa";
+				_buttonFncData =
+				[
+					[str _unitArray,_display],
+					{
+						params ["_clickData","_fncData"];
+						_fncData params ["_units","_display"];
+						_units = call compile _units;
+						[_units] call A3C_AI_Squad_Action_Unstuck;
+					},
+					true
+				];
+				_buttonClicker ctrlSetTooltip "Un-Stuck Unit(s)";
+			};
+
+			case ("ENGINE_ON") : {
+				_buttonImage ctrlSetText "\a3\ui_f\data\IGUI\Cfg\Actions\engine_on_ca.paa";
+				_buttonFncData =
+				[
+					[str _unitArray,_display],
+					{
+						params ["_clickData","_fncData"];
+						_fncData params ["_units","_display"];
+						_units = call compile _units;
+						[_units] call A3C_AI_Squad_Action_engineOn;
+						BV_ACT = 0;
+						["ACTIONS",0] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
+					},
+					true
+
+				];
+				_buttonClicker ctrlSetTooltip "Turn Engine(s) On";
+			};
+			case ("ENGINE_OFF") : {
+				_buttonImage ctrlSetText "\a3\ui_f\data\IGUI\Cfg\Actions\engine_off_ca.paa";
+				_buttonFncData =
+				[
+					[str _unitArray,_display],
+					{
+						params ["_clickData","_fncData"];
+						_fncData params ["_units","_display"];
+						_units = call compile _units;
+						[_units] call A3C_AI_Squad_Action_engineOn;	
+						BV_ACT = 0;
+						["ACTIONS",0] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 					},
 					true
 
 				];
 
+				_buttonClicker ctrlSetTooltip "Turn Engine(s) Off";
+
+			};
+			case ("ORDER_DETO") : {
+				_buttonImage ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\cargoPut_ca.paa";
+				_buttonClicker ctrlSetTooltip "MANAGE EXPLOSIVES";
+				_buttonFncData =
+				[
+					[],
+					{
+						[] call A3C_AI_Squad_Action_orderDetonation;
+					},
+					false
+				];
+			};
+
+			case ("SUPPRESSION_OFF") : {
+				_buttonImage ctrlSetText "\a3\ui_f\data\IGUI\Cfg\Actions\ico_OFF_ca.paa";
+				_buttonClicker ctrlSetTooltip "STOP SUPPRESSING";
+				_buttonFncData =
+				[
+					[[],_display],
+					{
+						[] call A3C_AI_Squad_Action_suppressionStop;
+						BV_ACT = 0;
+						["ACTIONS",0] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
+					},
+					false
+				];
+
+
+			};
+
+			case ("STATIC_DISASSEMBLE_SQUAD") : {
+				_unitArray = units player;
+				{
+					if (isPlayer _x) then {
+						_unitArray = _unitArray - [_x];
+					};
+				} foreach _unitArray;
+				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_STATIC_Packing.paa";
+				_buttonClicker ctrlSetTooltip "DISASSEMBLE Static Weapon";
+				_buttonFncData =
+				[
+					[str _unitArray,_display],
+					{
+						params ["_clickData","_fncData"];
+						_fncData params ["_assemblingUnitSelection","_display"];
+						_assemblingUnitSelection = call compile _assemblingUnitSelection;
+						A3C_UI_RADIAL_Current_Remfire_Units = _assemblingUnitSelection;
+						[] call A3C_AI_Squad_Action_unAssembleWeapon;
+					},
+					false
+				];
+			};
+			case ("OPEN_INV") : {
+				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_openInventory.paa";
+				_buttonClicker ctrlSetTooltip "Open Inventory";
+				private _target = if (player distance (_unitArray select 0) < 5.5) then {player} else {_unitArray select 0}; //-- if player is close, he will become target (right box). otherwise unit iself will be target and source will be weaponholder
+				private _source = _unitArray select 0; //if (player distance (_unitArray select 0) < 5.5) then {_unitArray select 0} else {objNull};
+				_buttonFncData =
+				[
+					[str _target,str _source,_display],
+					{
+						params ["_clickData","_fncData"];
+						_fncData params ['_target','_source','_display'];
+						_target = call compile _target;
+						_source = call compile _source;
+						[_target, _source] call A3C_AI_Squad_Action_openInventory;
+					},
+					false
+				];
+				//
+			};
+			case ("FIND_COVER") : {
+				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_takeCover.paa";
+				_buttonClicker ctrlSetTooltip "Find Cover";
+				_buttonFncData =
+				[
+					[str _unitArray],
+					{
+						params ["_clickData","_fncData"];
+						_fncData params ["_unitArray"];
+						_unitArray = call compile _unitArray;
+						[_unitArray] call A3C_AI_Squad_action_FindCover;
+					},
+					true
+				];
+
+			};
+
+			//----- Remote-Fire Actions (use )
+
+			case ("TANKSHOT") : {
+				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_remoteTankShell.paa";
 				_buttonClicker ctrlSetTooltip format
 				[
 					"FIRE TANK SHELL - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
 					["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
 				];
+				_buttonFncData =
+				[
+					[],
+					{
+						[
+							A3C_Prevent_TANKSHOT, //-- isBusy
+							'TANKSHOT', //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							'', //-- placer class
+							'' //-- placer color-params
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+					},
+					true
+
+				];
+
+				
 			};
 			case ("STATICSHOT") : {
 				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_remote_StaticAT.paa";
@@ -438,13 +618,14 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 				[
 					[],
 					{
-						_buttonFnc =
 						[
-							'A3C_Prevent_STATICSHOT',
-							'\a3c_ui\crosshairs\icon_crosshair_remote_StaticAT.paa',
-							"STATICSHOT"
-						] call A3C_UI_RADIAL_fnc_RemFire_EH;
-						[] call _buttonFnc;
+							A3C_Prevent_STATICSHOT, //-- isBusy
+							"STATICSHOT", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_remote_StaticAT.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					},
 					true
 
@@ -461,13 +642,14 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 				[
 					[],
 					{
-						_buttonFnc =
 						[
-							'A3C_Prevent_ATSHOT',
-							'\a3c_ui\crosshairs\icon_crosshair_remote_AT.paa',
-							"ATSHOT"
-						] call A3C_UI_RADIAL_fnc_RemFire_EH;
-						[] call _buttonFnc;
+							A3C_Prevent_ATSHOT, //-- isBusy
+							"ATSHOT", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_remote_AT.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					},
 					true
 
@@ -484,13 +666,14 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 				[
 					[],
 					{
-						_buttonFnc =
 						[
-							'A3C_Prevent_UGLSHOT',
-							'\a3c_ui\crosshairs\icon_crosshair_remote_UGL.paa',
-							"UGLSHOT"
-						] call A3C_UI_RADIAL_fnc_RemFire_EH;
-						[] call _buttonFnc;
+							A3C_Prevent_UGLSHOT, //-- isBusy
+							"UGLSHOT", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_remote_UGL.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					},
 					true
 
@@ -503,122 +686,8 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 				];
 			};
 
-
-			case ("CLEAR_BUILDING") : {
-				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_clearBuilding.paa";
-				_buttonFncData =
-				[
-					[str _unitArray,'cursortarget',_display],
-					{
-						params ["_clickData","_fncData"];
-						_fncData params ["_unitArray","_cursorString","_display"];
-						_unitArray = call compile _unitArray;
-						[_unitArray,_cursorString] spawn A3C_CLEARBUILDING;
-					},
-					true
-
-				];
-
-				_buttonClicker ctrlSetTooltip "Clear Building";
-			};
-			case ("ARSENAL") : {
-
-				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_arsenal.paa";
-				_buttonFncData =
-				[
-					[str (_unitArray select 0),_display],
-					{
-						params ["_clickData","_fncData"];
-						_fncData params ["_unit","_display"];
-						_unit = call compile _unit;
-						[_unit,true] spawn A3C_UI_ARSENAL_CREATELB;
-					},
-					true
-
-				];
-
-				_buttonClicker ctrlSetTooltip "OPEN ARSENAL";
-
-			};
-			case ("UNSTUCK") : {
-				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_unstuck.paa";
-				_buttonFncData =
-				[
-					[str _unitArray,_display],
-					{
-						params ["_clickData","_fncData"];
-						_fncData params ["_units","_display"];
-						_units = call compile _units;
-						_units spawn A3C_UNSTUCK;
-					},
-					true
-
-				];
-				_buttonClicker ctrlSetTooltip "Un-Stuck Unit(s)";
-			};
-
-			case ("ENGINE_ON") : {
-				_buttonImage ctrlSetText "\a3\ui_f\data\IGUI\Cfg\Actions\engine_on_ca.paa";
-				_buttonFncData =
-				[
-					[str _unitArray,_display],
-					{
-						params ["_clickData","_fncData"];
-						_fncData params ["_units","_display"];
-						_units = call compile _units;
-						{
-							_unit = _x;
-							if (!isNull objectParent _unit) then {
-								if (_unit == driver vehicle _unit) then {
-									if (((getPosATL vehicle _unit) select 2) < 5) then {
-										_unit action ["engineOn",vehicle _unit];
-									};
-								};
-							};
-						} foreach _units;
-						BV_ACT = 0;
-						["ACTIONS",0] call A3C_RADIAL_BTN_FNC_RING_INNER;
-					},
-					true
-
-				];
-				_buttonClicker ctrlSetTooltip "Turn Engine(s) On";
-			};
-			case ("ENGINE_OFF") : {
-				_buttonImage ctrlSetText "\a3\ui_f\data\IGUI\Cfg\Actions\engine_off_ca.paa";
-				_buttonFncData =
-				[
-					[str _unitArray,_display],
-					{
-						params ["_clickData","_fncData"];
-						_fncData params ["_units","_display"];
-						_units = call compile _units;
-						[_units] call A3C_AI_Shared_fnc_engineOff;
-						BV_ACT = 0;
-						["ACTIONS",0] call A3C_RADIAL_BTN_FNC_RING_INNER;
-					},
-					true
-
-				];
-
-				_buttonClicker ctrlSetTooltip "Turn Engine(s) Off";
-
-			};
-			case ("ORDER_DETO") : {
-				_buttonImage ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\cargoPut_ca.paa";
-				_buttonClicker ctrlSetTooltip "MANAGE EXPLOSIVES";
-
-				//{(findDisplay _display displayCtrl _x) ctrlShow false} foreach [8012,8013];
-
-				_buttonFncData =
-				[
-					[],
-					{
-						[] call A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG;
-					},
-					false
-				];
-			};
+			//----------- POSITIONAL ACTIONS
+			
 
 			case ("SUPPRESSION_ON") : {
 				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_suppression.paa";
@@ -631,8 +700,6 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 				[
 					[[],_display],
 					{
-						//params ["_clickData","_fncData"];
-						//_fncData params ["_detoUnits","_display"];
 						A3C_UI_RADIAL_Current_Remfire_Units = A3C_RD_UNITS;
 						{
 							if (_x in A3C_SUPPRESSION_UNITS_SQ) then {
@@ -640,100 +707,22 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 							};
 						} foreach A3C_UI_RADIAL_Current_Remfire_Units;
 						if (count A3C_UI_RADIAL_Current_Remfire_Units == 0) exitWith {};
-						A3C_UI_HUD_3D_TAG_ICON_TYPE =  "\a3c_ui\menu\icon_menu_action_suppression.paa";
-						A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
-						A3C_DISABLE_RADIAL = true;
-						{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
-						[] call A3C_RADIAL_CloseDisplay;
-
+						
 						[
-							46,
-							'SPACE',
-							{
-
-								count A3C_RD_UNITS > 0 &&
-								{
-									A3C_UI_HUD_3D_TAG_ICON_TYPE != ''
-									&&
-									{count A3C_RD_UNITS > 0}
-								}
-							},
-							{
-
-
-								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_UI_DOWNKEYS) exitWith {};
-								//A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
-								A3C_UI_HUD_3D_TAG_reposition = false;
-								//[A3C_UI_HUD_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_UI_HUD_3D_TAG;
-								if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
-									//private _aimpos = ATLtoASL(A3C_UI_HUD_3D_TAG_ICON_POS);
-									private _units = +(A3C_UI_RADIAL_Current_Remfire_Units);
-									//private _aimpos = ATLtoASL(A3C_UI_HUD_3D_TAG_ICON_POS);
-									[A3C_UI_HUD_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_UI_HUD_3D_TAG;
-									[_units,[A3C_UI_HUD_3D_TAG_ICON_POS,""],'SUPPRESSION',true] spawn A3C_POLY_ACTION_ON;
-
-								};
-
-							},
-							{
-
-								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-							},
-							false
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-						[
-							46,
-							'RADIAL',
-							{
-
-								true
-							},
-							{
-
-								//[A3C_UI_HUD_3D_TAG_ICON_POS,''] spawn A3C_UI_HUD_3D_TAG;
-							},
-							{
-								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-								A3C_UI_HUD_3D_TAG_ICON_TYPE = '';
-								A3C_UI_HUD_3D_TAG_reposition = false;
-								A3C_UI_RADIAL_Current_Remfire_Units = [];
-							},
-							true
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-						A3C_UI_HUD_3D_TAG_reposition = true;
+							false, //-- isBusy
+							"SUPPRESSION", //-- actionID
+							'\a3c_ui\menu\icon_menu_action_suppression.paa', //-- Hud-Icon-class
+							[1,0,0,1], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					},
 					false
 				];
 
 
 			};
-			case ("SUPPRESSION_OFF") : {
-				_buttonImage ctrlSetText "\a3\ui_f\data\IGUI\Cfg\Actions\ico_OFF_ca.paa";
-				_buttonClicker ctrlSetTooltip "STOP SUPPRESSING";
-				_buttonFncData =
-				[
-					[[],_display],
-					{
-						//params ["_clickData","_fncData"];
-						//_fncData params ["_detoUnits","_display"];
-						A3C_UI_RADIAL_Current_Remfire_Units = A3C_RD_UNITS;
-						{
-							if !(_x in A3C_SUPPRESSION_UNITS_SQ) then {
-								A3C_UI_RADIAL_Current_Remfire_Units = A3C_UI_RADIAL_Current_Remfire_Units - [_x];
-							};
-						} foreach A3C_UI_RADIAL_Current_Remfire_Units;
-						if (count A3C_UI_RADIAL_Current_Remfire_Units == 0) exitWith {};
-						[A3C_UI_RADIAL_Current_Remfire_Units,"SUPPRESSION"] call A3C_POLY_ACTION_OFF;
-						BV_ACT = 0;
-						["ACTIONS",0] call A3C_RADIAL_BTN_FNC_RING_INNER;
-					},
-					false
-				];
-
-
-			};
+			
 			case ("PLACE_CHARGE_SQUAD") : {
 				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_explosives_Place.paa"; 
 				_buttonClicker ctrlSetTooltip format
@@ -749,131 +738,18 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 						_fncData params ["_detoUnits","_display"];
 						A3C_UI_RADIAL_Current_Remfire_Units = call compile _detoUnits;
 						if (count A3C_UI_RADIAL_Current_Remfire_Units == 0) exitWith {};
-						
-						A3C_UI_HUD_3D_TAG_ICON_TYPE =  '\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa'; 
-						A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
-						//systemchat format ["To Do: Place Satchel (%1)", A3C_UI_RADIAL_Current_Remfire_Units];
-						A3C_DISABLE_RADIAL = true;
 						{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
-						[] call A3C_RADIAL_CloseDisplay;
-
 						[
-							46,
-							'SPACE',
-							{
-
-								count A3C_RD_UNITS > 0 &&
-								{
-									A3C_UI_HUD_3D_TAG_ICON_TYPE != ''
-									&&
-									{count A3C_RD_UNITS > 0}
-								}
-							},
-							{
-
-								//if !((A3C_RadialMenu_KEY_ID select 0)in A3C_UI_DOWNKEYS) exitWith {};
-								//A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
-								A3C_UI_HUD_3D_TAG_reposition = false;
-								//[A3C_UI_HUD_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_UI_HUD_3D_TAG;
-								if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
-									//private _aimpos = ATLtoASL(A3C_UI_HUD_3D_TAG_ICON_POS);
-									private _units = +(A3C_UI_RADIAL_Current_Remfire_Units);
-									private _mags = [];
-									{
-										_u = _x;
-										{
-											if (getText (configfile >> "CfgMagazines" >> _x >> "nameSound") in ["satchelcharge","mine"]) then {
-												private _ammo = getText (configfile >> "CfgMagazines" >> _x >> "ammo");
-												private _mineTrigger = getText (configfile >> "CfgAmmo" >> _ammo >> "mineTrigger");
-												if (_mineTrigger == "RemoteTrigger" OR isNull cursorTarget) then {
-													_mags pushbackUnique _x;
-												};
-											};
-										} foreach (magazines _u)
-									} foreach _units;
-									//systemChat str _mags;
-
-									//
-									_doRefreshGroupSelected = false;
-									with uiNamespace do {
-										//disableSerialization;
-										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-									};
-
-									private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
-									_parent = findDisplay _a3c_dsp displayCtrl 8008;
-									_text = findDisplay _a3c_dsp displayCtrl 800802;
-									_listBox = findDisplay _a3c_dsp displayCtrl 800803;
-
-									A3C_OBJECTSELECTOR_MODE = "PLACE_CHARGE_SQUAD";
-									_parent ctrlShow true;
-									_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
-									_parent ctrlCommit 0;
-									_text ctrlSetText "Place Charge";
-
-									if (count _mags > 4) then {
-										_parentPos = ctrlPosition _parent;
-										_parentPos set[3,(_parentPos select 3) + (  ((count _mags) - 4)   * (0.0440051 * safezoneH) )];
-										_parent ctrlSetPosition _parentPos;
-										_parent ctrlCommit 0;
-									};
-
-
-
-									ctrlSetFocus _listBox;
-									
-									lbClear _listBox;
-									{
-										private _lbText = (getText (configfile >> "CfgMagazines" >> _x >> "displayName"));
-										[_listBox, _lbText] call A3C_addLbEntry;
-									} foreach _mags;
-									[_parent,_listBox, count _mags] call A3C_OBJECTSEL_RESIZE;
-									
-
-
-									[] spawn {
-										while {!isNull findDisplay 100060} do {
-
-											sleep 0.5;
-										};
-										if (A3C_UI_HUD_3D_TAG_ICON_TYPE == "\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\cargoPut_ca.paa") then {
-											A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-										};
-									};
-
-								};
-
-							},
-							{
-
-								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-							},
-							false
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-						[
-							46,
-							'RADIAL',
-							{true},
-							{},
-							{
-								if (A3C_UI_HUD_3D_TAG_reposition) then {
-									(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-									A3C_UI_HUD_3D_TAG_ICON_TYPE = '';
-									A3C_UI_HUD_3D_TAG_reposition = false;
-								};
-								(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-								A3C_UI_RADIAL_Current_Remfire_Units = [];
-							},
-							true
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-						A3C_UI_HUD_3D_TAG_reposition = true;
+							false, //-- isBusy
+							"PLACE_CHARGE_SQUAD", //-- actionID
+							'\a3c_ui\crosshairs\icon_crosshair_explosives_Place.paa', //-- Hud-Icon-class
+							[1,1,1,0.7], //-- Hud-Icon-color
+							"", //-- placer class
+							"" //-- placer color-params
+						] call A3C_AI_SHARED_Action_StartPositionalProcess;
 					},
 					false
 				];
-
-
-
 			};
 
 			case ("STATIC_ASSEMBLE_SQUAD") : {
@@ -892,52 +768,16 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 						params ["_clickData","_fncData"];
 						_fncData params ["_assemblingUnitSelection","_display"];
 						_assemblingUnitSelection = call compile _assemblingUnitSelection;
+						
+						
+
 						_staticData = [_assemblingUnitSelection,"PLANNING"] call A3C_getSelectionBackpackStatics;
 						if (count _staticData > 0) then {
 
 							if (_display == 100040) then {
 								A3C_DISABLE_RADIAL = true;
 								(findDisplay _display) closeDisplay 0;
-								[
-									46,
-									'SPACE',
-									{
-
-										count A3C_RD_UNITS > 0 &&
-										{
-											!isNull A3C_OBJECTPLACER
-										}
-									},
-									{
-
-										(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-										[] call A3C_STATIC_ASSEMBLE_3D;
-
-									},
-									{
-										A3C_UI_HUD_3D_TAG_reposition = false;
-									},
-									false
-								] call A3C_UI_RADIAL_ADD_EH_MACROS;
-								[
-									46,
-									'RADIAL',
-									{
-
-										true
-									},
-									{
-										if (!isNull A3C_OBJECTPLACER) then {
-
-											deleteVehicle A3C_OBJECTPLACER;
-											(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-										};
-										A3C_UI_HUD_3D_TAG_reposition = false;
-										(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-									},
-									{},
-									true
-								] call A3C_UI_RADIAL_ADD_EH_MACROS;
+								
 
 								private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}}; //~~ how does this differ from _display unless it's 100060?	
 								A3C_OBJECTSELECTOR_MODE = if (_a3c_dsp == 100060) then {"STATIC_ASSEMBLE_SQUAD"} else {"PLACEHOLDER"};
@@ -976,152 +816,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 				];
 
 			};
-			case ("STATIC_DISASSEMBLE_SQUAD") : {
-				_unitArray = units player;
-				{
-					if (isPlayer _x) then {
-						_unitArray = _unitArray - [_x];
-					};
-				} foreach _unitArray;
-				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_STATIC_Packing.paa";
-				_buttonClicker ctrlSetTooltip "DISASSEMBLE Static Weapon";
-				_buttonFncData =
-				[
-					[str _unitArray,_display],
-					{
-						params ["_clickData","_fncData"];
-						_fncData params ["_assemblingUnitSelection","_display"];
-						_assemblingUnitSelection = call compile _assemblingUnitSelection;
-						A3C_UI_RADIAL_Current_Remfire_Units = _assemblingUnitSelection;
-
-
-						A3C_DISABLE_RADIAL = true;
-						[] call A3C_RADIAL_CloseDisplay;
-						//(findDisplay _display) closeDisplay 0;
-
-
-						[
-							46,
-							'RADIAL',
-							{
-
-								true
-							},
-							{
-								(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-							},
-							{},
-							true
-						] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-						if (count crew cursorTarget == 0 && {cursorTarget isKindOf "STATICWEAPON"}) exitWith {
-							[A3C_UI_RADIAL_Current_Remfire_Units,cursortarget] spawn A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING;
-							//A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  typeOf cursortarget >> "picture");
-							//A3C_UI_HUD_3D_TAG_ICON_MOD = "OFF";
-							//[position cursortarget,""] spawn A3C_UI_HUD_3D_TAG;
-						};
-
-						if ((gunner cursorTarget) in A3C_UI_RADIAL_Current_Remfire_Units && {cursorTarget isKindOf "STATICWEAPON"} ) then {
-							[A3C_UI_RADIAL_Current_Remfire_Units,cursortarget] spawn A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING;
-
-							//A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  typeOf cursortarget >> "picture");
-							//A3C_UI_HUD_3D_TAG_ICON_MOD = "OFF";
-							//[position cursortarget,""] spawn A3C_UI_HUD_3D_TAG;
-						} else {
-							with uiNamespace do {
-								//disableSerialization;
-								A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-							};
-
-							private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
-							_parent = findDisplay _a3c_dsp displayCtrl 8008;
-							_text = findDisplay _a3c_dsp displayCtrl 800802;
-							_listBox = findDisplay _a3c_dsp displayCtrl 800803;
-
-							A3C_OBJECTSELECTOR_MODE = "STATIC_DISASSEMBLE_SQUAD";
-							_parent ctrlShow true;
-							_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
-							_parent ctrlCommit 0;
-							_text ctrlSetText "Pack Weapon";
-
-
-							A3C_UI_RADIAL_Current_Remfire_Vehicles = [];
-							{
-								if (_x == gunner vehicle _x && {vehicle _x isKindOf "STATICWEAPON"}) then {
-									A3C_UI_RADIAL_Current_Remfire_Vehicles pushBackUnique (vehicle _x);
-								};
-							} foreach _assemblingUnitSelection;
-
-
-							if (count A3C_UI_RADIAL_Current_Remfire_Vehicles > 4) then {
-								_parentPos = ctrlPosition _parent;
-								_parentPos set[3,(_parentPos select 3) + (  ((count _mags) - 4)   * (0.0440051 * safezoneH) )];
-								_parent ctrlSetPosition _parentPos;
-								_parent ctrlCommit 0;
-							};
-
-
-
-							ctrlSetFocus _listBox;
-							
-							lbClear _listBox;
-							{
-								_str = "";
-								if (gunner _x in A3C_UI_RADIAL_Current_Remfire_Units) then {
-									_str = format ["%1 (%2)",getText (configfile >> "CfgVehicles" >> typeOf _x >> "displayName"),name (gunner _x)];
-								} else {
-									_str = format ["%1 (Empty)",getText (configfile >> "CfgVehicles" >> typeOf _x >> "displayName")];
-								};
-								[_listBox, _str] call A3C_addLbEntry;
-							} foreach (A3C_UI_RADIAL_Current_Remfire_Vehicles + A3C_REMFIRE_nearEmptyStatics);
-							
-
-						};
-					},
-					false
-				];
-			};
-			case ("OPEN_INV") : {
-				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_openInventory.paa";
-				_buttonClicker ctrlSetTooltip "Open Inventory";
-				//player commandchat str _unitarray;
-				_target = if (player distance (_unitArray select 0) < 5.5) then {player} else {_unitArray select 0}; //-- if player is close, he will become target (right box). otherwise unit iself will be target and source will be weaponholder
-				_source = _unitArray select 0; //if (player distance (_unitArray select 0) < 5.5) then {_unitArray select 0} else {objNull};
-				_buttonFncData =
-				[
-					[str _target,str _source,_display],
-					{
-						params ["_clickData","_fncData"];
-						_fncData params ['_target','_source','_display'];
-						_target = call compile _target;
-						_source = call compile _source;
-						A3C_UI_INV_TARGET_UNIT = _target;
-						(findDisplay _display) closeDisplay 0;
-						{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
-						[_target,_source] spawn A3C_UI_INV_LB_CREATE;
-
-
-					},
-					false
-				];
-				//
-			};
-			case ("FIND_COVER") : {
-				_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_takeCover.paa";
-				_buttonClicker ctrlSetTooltip "Find Cover";
-				_buttonFncData =
-				[
-					[str _unitArray],
-					{
-						params ["_clickData","_fncData"];
-						_fncData params ["_unitArray"];
-						_unitArray = call compile _unitArray;
-						[_unitArray] spawn A3C_FindCover;
-					},
-					true
-				];
-
-			};
+			
 		};
 
 		call compile format
@@ -1147,125 +842,7 @@ A3C_UI_SHARED_DISTRIBUTE_MENU_ACTIONS = {
 
 A3C_UI_INV_CONTAINERS = [];
 
-A3C_UI_INV_LB_CREATE = {
-	params ["_target","_source"];
 
-	if (isNull _target) exitWith {};
-	A3C_DISABLE_RADIAL = true;
-	(findDisplay 602) closeDisplay 0;
-	waitUntil {isNull (findDisplay 602)};
-	sleep 0.2;
-	A3C_UI_INV_CONTAINERS = [];
-	if (_source == _target) then {
-		_source = "GroundWeaponHolder" createVehicle (position _target);
-		//_source setPos (position _target);
-		//_source attachTo [_target,[0,0,0]];
-		//A3C_UI_INV_CONTAINERS = [_source];
-	};
-
-
-	_target action ['GEAR',_source];
-
-	_nearCrates =  (_target nearObjects 5) - (units player);
-	{
-		if (_x distance _target < 5 && {_x isKindOf "MAN"}) then {
-			if (!captive _x OR {(side _x != side player) OR {isplayer leader group _x}}) then {
-				_nearCrates = _nearCrates - [_x];
-			};
-		} else {
-			_cargo =( magazineCargo _x) + (weaponCargo _x);
-
-			if (count _cargo == 0) then {
-
-				_nearCrates = _nearCrates - [_x];
-			} else {
-
-			};
-		};
-	} foreach _nearCrates;
-
-
-	A3C_UI_INV_TARGETS = (units player);
-
-
-	{
-		//if (_x distance _target < 4) then {
-			A3C_UI_INV_CONTAINERS pushBackUnique _x;
-		//};
-		
-	} foreach ((((units player) select {_target distance2D _x < 5})  - [_target]) + _nearCrates + [_target]); // -- no better idea how to shuffle the target to the end
-
-
-	waitUntil { !(isNull (findDisplay 602)) };
-	sleep 0.1;
-	A3C_DISABLE_RADIAL = false;
-
-	_box1 = (findDisplay 602) ctrlCreate ["A3C_RscCombo",1928]; //-- A3C_RscXListBox
-	_box2 = (findDisplay 602) ctrlCreate ["A3C_RscCombo",1929];
-	private _lbHeight = (0.033 * safezoneH) ; // times x?
-
-	{
-		_x params ["_box","_refCtrl"];
-		_ctrlPos = ctrlPosition (findDisplay 602 displayCtrl _refCtrl);
-		_box ctrlSetPosition [_ctrlPos select 0, (_ctrlPos select 1) - _lbHeight,_ctrlPos select 2,_lbHeight];
-		_box ctrlCommit 0;
-	} foreach [[_box1,1001],[_box2,1020]];
-	{
-		[_box2, [_x] call MCSS_fnc_NAMESTRING] call A3C_addLbEntry;
-	} foreach A3C_UI_INV_TARGETS;
-	{
-
-		switch (true) do {
-			case (typeOf _x == "GroundWeaponHolder" OR {_x == A3C_UI_INV_TARGET_UNIT}) : {
-
-				[_box1, "Ground"] call A3C_addLbEntry;
-			};
-			case (_x in units player) : {
-				[_box1, [_x] call MCSS_fnc_NAMESTRING] call A3C_addLbEntry;
-			};
-			default {
-				private _lbText = gettext(configFile >> "CfgVehicles" >> typeof _x >> "displayName");
-				[_box1, _lbText] call A3C_addLbEntry;
-			};
-		};
-
-
-	} foreach A3C_UI_INV_CONTAINERS;
-
-	{
-
-		if (_x == _source OR {_x == A3C_UI_INV_TARGET_UNIT && {typeOf _source == "GroundWeaponHolder"}}) then {
-			[_box1, _foreachIndex] call A3C_setCurSel;
-		};
-	} foreach A3C_UI_INV_CONTAINERS;
-	{
-		if (_x == _target) then {
-			[_box2, _foreachIndex] call A3C_setCurSel;
-		};
-	} foreach A3C_UI_INV_TARGETS;
-
-
-
-	_box1 ctrlAddEventHandler
-	[
-		"LBSelChanged",
-		{
-			_container = A3C_UI_INV_CONTAINERS select (_this select 1);
-			[A3C_UI_INV_TARGET_UNIT,_container] spawn A3C_UI_INV_LB_CREATE;
-			//player groupchat str [A3C_UI_INV_TARGET_UNIT,_container];
-		}
-	];
-	_box2 ctrlAddEventHandler
-	[
-		"LBSelChanged",
-		{
-			A3C_UI_INV_TARGET_UNIT = A3C_UI_INV_TARGETS select (_this select 1);
-			[A3C_UI_INV_TARGET_UNIT,A3C_UI_INV_TARGET_UNIT] spawn A3C_UI_INV_LB_CREATE;
-		}
-	];
-
-
-};//A3C_UI_INV_TARGET_UNIT
 
 A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING = {
 	params ["_assemblingUnitSelection","_weaponToDisassemble"];
@@ -1289,7 +866,7 @@ A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING = {
 
 	if (count _selectedTastUnits == 2) then {
 		player groupRadio "SentDisAssemble";
-		[_selectedTastUnits,true,false] call A3C_CANCELPLANS;
+		[_selectedTastUnits,true,false] call A3C_AI_Shared_cancelUnitPlot;
 		_mainMark = "A3C_SQ_" + (str (random 10000000000));
 		_wpnPos = position _weaponToDisassemble;
 		
@@ -1317,7 +894,7 @@ A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING = {
 			_unit setvariable ["A3C_PLOT",_data,true];
 			[_unit] spawn {
 				params ["_unit"];
-				_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE);
+				_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot);
 				private _hasReached = false;
 				private _exit = false;
 				private _doReturnToOrders = true;

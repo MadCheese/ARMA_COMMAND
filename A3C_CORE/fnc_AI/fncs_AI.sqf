@@ -15,7 +15,7 @@
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 //-- Teleport stuck units into a close and empty position
-A3C_UNSTUCK = {
+A3C_AI_Shared_action_UNSTUCK = {
 
 	private _units = _this;
 	
@@ -401,7 +401,7 @@ A3C_calculatePath = {
 //-- Function to make unit move to position
 //-- issues both doMove and moveTo orders
 //-- issues commandMove order when player is effectiveCommander of vehicle
-//-- this function is for a single movement and is called by A3C_MOVE and various other routines that require movement
+//-- this function is for a single movement and is called by A3C_AI_Shared_executeUnitPlot and various other routines that require movement
 A3C_DOMOVE = {
 	private ["_unit","_wPos","_veh","_comm"];
 	_unit = _this select 0;
@@ -619,7 +619,7 @@ A3C_SpawnGoCode = {
 //---------------------------- requires unit to have data in (_unit getvariable "A3C_PLOT") ---------------------------------
 //------------------------------------ used by Planning Mode, ReArm, BuildingClear, Medical -----------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------
-A3C_MOVE = {
+A3C_AI_Shared_executeUnitPlot = {
 	params ["_unit","_data"];
 	private
 	[
@@ -632,7 +632,7 @@ A3C_MOVE = {
 
 	//player globalChat str ["START",_unit];
 
-	//(str [_unit,"A3C_Move"]) remoteExec ["systemchat",0];
+	//(str [_unit,"A3C_AI_Shared_executeUnitPlot"]) remoteExec ["systemchat",0];
 
 	_count = count _data;
 
@@ -773,6 +773,7 @@ A3C_MOVE = {
 		//-- Check if abort data was given via dialog
 		_abortData = _unit getvariable "A3C_ABORT_Data";
 
+		
 		if (_abortdata select 1) then {
 			//-- Player skipped current waypoint:
 			_unit setvariable ["A3C_ABORT_Data",[false,false],true];
@@ -792,6 +793,8 @@ A3C_MOVE = {
 				_unit setvariable ["A3C_CURRENTWAYPOINT_INDEX",(_cycle + 1),true];
 			};
 		};
+
+		
 
 
 		//-- after checking and for skipped waypoint we wait for the unit to be 'driver'
@@ -823,7 +826,6 @@ A3C_MOVE = {
 		if (isNull _unit) exitwith {};
 
 		
-
 
 		//-- refuel RTB planes
 		if (_vehicle isKindOf "PLANE") then {
@@ -903,6 +905,8 @@ A3C_MOVE = {
 			};
 		};
 
+		
+
 
 		//-- Activate Suppression
 		if ((_wpAction select 0) == "SUPPRESSION") then {
@@ -963,6 +967,8 @@ A3C_MOVE = {
 			};
 		};
 
+		
+
 
 		//(format ["%1 waittilcomm",[_unit, units _unit] call MCSS_fnc_getArrayINdex]) remoteExec ["systemchat",0];
 
@@ -1020,6 +1026,9 @@ A3C_MOVE = {
 			};
 		};
 
+		
+
+
 
 		//-- set WP-details (speed/stance)
 		_unit setunitpos _unitPosTravel;
@@ -1041,16 +1050,20 @@ A3C_MOVE = {
 		} else {
 			_vehicle limitspeed _maxSpeed;
 		};
-		_unit setvariable ["A3C_MOVE_Active",true,true];
+		_unit setvariable ["A3C_AI_Shared_executeUnitPlot_Active",true,true];
 
+
+		
 
 		if !(_vehicle == _unit) then {_vehicle = vehicle _unit}; //asasas
 
+		// systemchat format ['testing abort variable__ : %1 (%2)', name _unit, _unit getvariable "A3C_ABORT_Data"];
+
 
 		//sleep 1; //~~ #UNCLEAR why is this needed?
-		_unit stop false;
+		// _unit stop false;
 
-		//systemchat "2";
+		
 		private _complete = false;
 		//THIS BIT CAN GET STUCK!
 		//(format ["%1 pre mov",[_unit, units _unit] call MCSS_fnc_getArrayINdex]) remoteExec ["systemchat",0];
@@ -1072,9 +1085,13 @@ A3C_MOVE = {
 				sleep 2;
 			} else {
 				private _threshHold = 0;
+				
 				if (isPlayer leader group _unit) then {
 					while {alive _unit} do {
-						if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {_abort = true};
+						if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {
+							// systemchat 'yuh';
+							_abort = true;
+						};
 						if ( (toLower((expectedDestination _unit ) select 1)) in ["leader planned","vehicle planned"]) exitWith {};
 						_variDist = switch (true) do {
 							case (_vehicle isKindOf "MAN") : {5};
@@ -1089,13 +1106,15 @@ A3C_MOVE = {
 								[_unit,_movePos] call A3C_DOMOVE;
 							};
 						};
-						//(format ["%1 shoot 2",[_unit, units _unit] call MCSS_fnc_getArrayINdex]) remoteExec ["systemchat",0];
 						sleep 0.1;
 					};
-					//waituntil {((expectedDestination _unit ) select 1) in ["LEADER PLANNED","VEHICLE PLANNED"]};
 				};
 			};
 		};
+
+		// systemchat format ['testing abort variable__ : %1 (%2)', name _unit, _unit getvariable "A3C_ABORT_Data"];
+
+
 		
 		//for "_i" from 0 to 3 do { //-- DEBUG HC Building Clearing with VR units
 		//	_unit setObjectTexture [_i, "#(rgb,8,8,3)color(0,1,0,1)"];
@@ -1123,6 +1142,9 @@ A3C_MOVE = {
 		};
 		//(format ["%1 moving",[_unit, units _unit] call MCSS_fnc_getArrayINdex]) remoteExec ["systemchat",0];
 		private _stuckCycles = 0;
+		
+		
+
 		while {true} do { //~~ is 'alive _unit' not a safer condition?
 			//-- Update Waypoint Data
 			waituntil {!A3C_REFRESHING};
@@ -1355,7 +1377,7 @@ A3C_MOVE = {
 						//if !(position _unit isFlatEmpty  [5, -1, -1, -1, -1, false, _unit] isEqualTo []) then {
 							_unit setVariable ["A3C_HOLD_COVER",true,false];
 							if (speed _unit > 1) then { //~~ not ideal
-								[[_unit],1] spawn A3C_FindCover;
+								[[_unit],1] spawn A3C_AI_Squad_action_FindCoverExecute;
 							};
 						//};
 					};
@@ -1667,12 +1689,16 @@ A3C_MOVE = {
 			//-- WAIT FOR OTHER UNITS TO REACH WP (HUB)
 			///////////////////////////////////////////
 			while {true} do {
-//systemchat str ["HUB",time];
+				// systemchat str ["HUB",time];
 				if ((_wpAction select 0) in ["GRENADE","SUPPRESSION"]) exitwith {};
 
 
-				if ([_unit] call A3C_ExitRoute_isWpAborted) exitwith {_abort = true};
-				if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitWith {_abort = true};
+				if ([_unit] call A3C_ExitRoute_isWpAborted) exitwith {
+					_abort = true;
+				};
+				if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitWith {
+					_abort = true;
+				};
 
 
 				if !(A3C_BOOL_MOVINGMARKER) then {
@@ -1683,7 +1709,7 @@ A3C_MOVE = {
 				};
 				//if (_abort && {!(_unit getVariable ["A3C_PAUSE_PLAN",false])}) then {systemchat "BUG"};
 				if !((_wpAction select 0) == "STATIC") then { // << TEMP SOLUTION!
-					//systemchat 'brokenfrom4';
+					// systemchat 'brokenfrom4';
 					if ([_unit,_origdest,_data,_cycle,1] call A3C_ExitRoute_isBrokenFrom) then {
 						_abort = true;
 					};
@@ -1707,12 +1733,12 @@ A3C_MOVE = {
 				} foreach _otherUnits;
 				if (_hubComplete) exitwith {};
 				sleep 1; //~~ #UNCLEAR  is this needed? [might be irrelevant for single units - CONFIRMED]
-
 			};
 		};
 		_vehicle = vehicle _unit; //-- refresh
 
 		//-- WP ACTION: STATIC WEAPONS (had to wait unitil HUB is complete
+		// player commandchat str [_wpAction, _abort];
 		if (_wpAction select 0 == "STATIC" && {!(_abort)}) then {
 			sleep 0.2;
 			_staticData = _wpAction select 1;
@@ -2254,7 +2280,7 @@ A3C_MOVE = {
 //	if (combatmode _unit == "BLUE") then {
 //		[_unit,["COMBATMODE","YELLOW"]] call MCSS_fnc_orderIndividual;
 //	};
-	_unit setvariable ["A3C_MOVE_Active",false,true];
+	_unit setvariable ["A3C_AI_Shared_executeUnitPlot_Active",false,true];
 
 	_unit setvariable ["A3C_CURRENTWAYPOINT_INDEX",1,true];
 	if !(alive _unit) then {sleep 5}; // safety for reassigning vars when clearing buildings
@@ -2262,7 +2288,7 @@ A3C_MOVE = {
 //	_unit setVariable ["A3C_DEST",[],true];
 	//doStop _unit;
 	//if (_unit == (leader group _unit)) then {
-	//	systemchat format ["A3C_MOVE exit, ABORT: %1",_abort];
+	//	systemchat format ["A3C_AI_Shared_executeUnitPlot exit, ABORT: %1",_abort];
 
 	//	for "_i" from 0 to 3 do { //-- DEBUG HC Building Clearing with VR units
 	//		_unit setObjectTexture [_i, "#(rgb,8,8,3)color(1,1,1,1)"];

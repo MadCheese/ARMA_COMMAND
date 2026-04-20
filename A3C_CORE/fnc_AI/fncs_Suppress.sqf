@@ -1624,7 +1624,7 @@ A3C_Replace_Unit = {
 
 
 /*
-A3C_MOVE_SUPPRESSION_INDICATOR = {
+A3C_AI_Shared_executeUnitPlot_SUPPRESSION_INDICATOR = {
 	params ["_indicator"];
 	private ["_pos"];
 	_objectCollision = [];

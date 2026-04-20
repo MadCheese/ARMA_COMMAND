@@ -3,7 +3,7 @@ A3C_COVER_BLACKLIST =
 [
 ];
 
-A3C_FindCover = {
+A3C_AI_Squad_action_FindCoverExecute = {
 	private
 	[
 		"_occupiedPositions","_houses","_positionCheck","_enemies","_altSelection","_realCoverPoses",
@@ -19,7 +19,7 @@ A3C_FindCover = {
 	if (_mode == 0) then {
 		_busyUnits = _units select {count (_x getVariable ["A3C_PLOT",[]]) > 0};
 		if (count _busyUnits > 0) then {
-			[_busyUnits,true,false] spawn A3C_CANCELPLANS;
+			[_busyUnits,true,false] spawn A3C_AI_Shared_cancelUnitPlot;
 			sleep 1;
 		};	
 		player groupRadio "SentCmdHide";
@@ -168,7 +168,7 @@ A3C_FindCover = {
 		} else {
 			A_HELPERS = [];
 		};
-//systemchat str _coverObjects;
+
 		private _assignmentFull = [];
 		private _positionsAssigned = [];
 		private _positionsBlacklisted = [];

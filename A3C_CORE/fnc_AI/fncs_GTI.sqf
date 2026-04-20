@@ -527,7 +527,7 @@ A3C_RadialMenu_GREN = {
 	BR_A3C_TACV_oefId = ["BR_A3C_TACV_oefId", "onEachFrame", "BR_A3C_OEFControl"] call BIS_fnc_addStackedEventHandler;
 
 	A3C_DISABLE_RADIAL = true;
-	[] call A3C_RADIAL_CloseDisplay;
+	[] call A3C_UI_RADIAL_CloseDisplay;
 	[
 		46,
 		'SPACE',

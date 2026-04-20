@@ -62,7 +62,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 	private _marker = "";
 	private _isHcMark= false;
 
-	A3C_MovedItem_ID = ""; //-- reset movedItem on every moueDown event
+	A3C_AI_Shared_executeUnitPlotdItem_ID = ""; //-- reset movedItem on every moueDown event
 	A3C_MMCode = {};
 	A3C_SQ_CLICKED_UNIT = objNull;
 	A3C_LB_TICKTIME = time;
@@ -542,7 +542,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 		private _mapPolygon = _mapPolygons select 0;
 
 		private _polyID = (_mapPolygon select 0);
-		A3C_MovedItem_ID = _polyID; //= "";
+		A3C_AI_Shared_executeUnitPlotdItem_ID = _polyID; //= "";
 		if ({((_x select 0) select 1) == _polyID} count A3C_ALL_POLYS > 0) then {
 			A3C_BOOL_MAP_MU = true;
 			A3C_BOOL_MOUSEMOVING = true;
@@ -552,15 +552,15 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 				private _polyRefID = (_x select 0) select 1;
 				if (_polyID == _polyRefID) exitWith {
 					//systemchat str _polyRefID;
-					A3C_CUR_EDIT_POLY = ([(_x select 0) select 0,0,"",false] call A3C_SUP_CREATE_POLY) select 0; //~~ poly: what is going on here: since create_poly does not create markers, it is used to find // 0 is replacing (markerDir A3C_MovedItem_ID)
+					A3C_CUR_EDIT_POLY = ([(_x select 0) select 0,0,"",false] call A3C_SUP_CREATE_POLY) select 0; //~~ poly: what is going on here: since create_poly does not create markers, it is used to find // 0 is replacing (markerDir A3C_AI_Shared_executeUnitPlotdItem_ID)
 					A3C_MMCode = if (_ctrl) then {
-						{[_this,A3C_MovedItem_ID,"WP",true,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
+						{[_this,A3C_AI_Shared_executeUnitPlotdItem_ID,"WP",true,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
 					} else {
 						if (_alt) then {
 
-							{[_this,A3C_MovedItem_ID,"WP",false,true] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
+							{[_this,A3C_AI_Shared_executeUnitPlotdItem_ID,"WP",false,true] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
 						} else {
-							{[_this,A3C_MovedItem_ID,"WP",false,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
+							{[_this,A3C_AI_Shared_executeUnitPlotdItem_ID,"WP",false,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
 						};
 					};
 
@@ -586,7 +586,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 
 				_poses = _x select 1;
 				private _ind = [_edgePosition,_poses] call MCSS_fnc_GetArrayINdex;
-				A3C_MovedItem_ID = [_parentPoly,_ind];
+				A3C_AI_Shared_executeUnitPlotdItem_ID = [_parentPoly,_ind];
 				A3C_BOOL_MAP_MU = true;
 				A3C_BOOL_MOUSEMOVING = true;
 				A3C_BOOL_MOVINGMARKER = true;
@@ -608,13 +608,13 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 		private _squadWaypointSelected = _squadWaypoints select 0;
 		_squadWaypointSelected params ["_unit","_size","_position","_wpDotIDS"];
 		if (_left) then {
-			A3C_MovedItem_ID = if (_wpDotIDS select 1 == "" ) then {_wpDotIDS select 0} else {_wpDotIDS select 1};
+			A3C_AI_Shared_executeUnitPlotdItem_ID = if (_wpDotIDS select 1 == "" ) then {_wpDotIDS select 0} else {_wpDotIDS select 1};
 			if !(_alt) then {
 				A3C_BOOL_MAP_MU = true;
 				A3C_BOOL_MOUSEMOVING = true;
 				A3C_BOOL_MOVINGMARKER = true;
 				A3C_DRAGPOS = [_sx, _sy];
-				A3C_MMCode = {[_this,A3C_MovedItem_ID,"WP",false,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;};
+				A3C_MMCode = {[_this,A3C_AI_Shared_executeUnitPlotdItem_ID,"WP",false,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;};
 			} else {
 				[_sx,_sy] call A3C_UI_MAP_onMouseButtonDown_Loop;
 			};
@@ -629,12 +629,12 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 		A3C_DIR_POS = (_map1 posscreentoworld [_sx,_sy]);
 		private _squadWaypointLookDirSelected = _squadWaypointLookDirs select 0;
 		_squadWaypointLookDirSelected params ["_unit","_size","_area","_markerID"];
-		A3C_MovedItem_ID = _squadWaypointLookDirSelected;
+		A3C_AI_Shared_executeUnitPlotdItem_ID = _squadWaypointLookDirSelected;
 		A3C_BOOL_MAP_MU = true;
 		A3C_BOOL_MOUSEMOVING = true;
 		A3C_BOOL_MOVINGMARKER = true;
 		A3C_DRAGPOS = [_sx, _sy];
-		A3C_MMCode = {[_this,A3C_MovedItem_ID,"LDIR",false,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;};
+		A3C_MMCode = {[_this,A3C_AI_Shared_executeUnitPlotdItem_ID,"LDIR",false,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;};
 	};
 
 
@@ -722,7 +722,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 
 	if (_exit) exitwith {};
 
-	A3C_MovedItem_ID = "";
+	A3C_AI_Shared_executeUnitPlotdItem_ID = "";
 	if (A3C_TAB_BUILDING_BOOL) then {
 		[] call A3C_DELETE_BPOS_MARKERS;
 		A3C_TAB_BUILDING_BOOL = false;
@@ -937,7 +937,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 
 
 
-	A3C_MovedItem_ID = "";
+	A3C_AI_Shared_executeUnitPlotdItem_ID = "";
 
 
 	A3C_BOOL_MOUSEMOVING = true;
@@ -1081,7 +1081,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 	A3C_MARKER_COUNT = A3C_MARKER_COUNT + 1;
 	//A3C_MARKERS_TEMP pushback A3C_TEMP_WP_ID_MAIN;
 	if (  ((A3C_TEMP_ACTION select 0) in ['SLINGLOAD','CTRL_DET']) OR (_packMode == "DISASSEMBLE")  ) then {
-		A3C_MovedItem_ID = A3C_TEMP_WP_ID_MAIN;
+		A3C_AI_Shared_executeUnitPlotdItem_ID = A3C_TEMP_WP_ID_MAIN;
 	};
 
 
@@ -1591,7 +1591,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 				private _drawBoardIcon = _drawBoardIcons select 0;
 				private _vehi = _drawBoardIcon select 0;
 				//systemchat 'sq units get in';
-				[A3C_SELECTED_UNITS,true,true] call A3C_CANCELPLANS;
+				[A3C_SELECTED_UNITS,true,true] call A3C_AI_Shared_cancelUnitPlot;
 				
 				_vehi spawn {
 					sleep 1;
@@ -1604,7 +1604,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 					if ( (_unit == A3C_SQ_CLICKED_UNIT) && (A3C_MAP_CommandMode == "INF") ) then {
 						//_unit setvariable ["A3C_PLOT_TEMP",[],true];
 						if (count (_unit getVariable ["A3C_PLOT",[]]) > 0 ) then {
-							[[_unit],true,true] call A3C_CANCELPLANS;
+							[[_unit],true,true] call A3C_AI_Shared_cancelUnitPlot;
 							waitUntil {count (_unit getvariable 'A3C_PLOT') == 0};
 						};
 						private _data = [];
@@ -1629,7 +1629,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 							_data pushBack _wp;
 						} foreach A3C_MAP_DRAGPLANNING_POSITIONS;
 						_unit setvariable ["A3C_PLOT",_data,true];
-						_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_MOVE);
+						_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot);
 					};
 				} else {
 					
@@ -1786,7 +1786,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 
 							{
 								_x params ["_wpPositions","_wpMarkers","_wpAction","_wpCondition","_wpStances","_wpSyncData","_wpCompleted","_wpCombatMode","_wpSpeed","_wpFlyInHeight","_wpLoopValue","_wpRadius"];
-								if ((_wpMarkers select 0) == A3C_MovedItem_ID) exitWith {
+								if ((_wpMarkers select 0) == A3C_AI_Shared_executeUnitPlotdItem_ID) exitWith {
 									(_x select 0) set [0,(getPosATL _veh)];
 									(_x select 2) set [1,_veh];
 								};
@@ -1816,7 +1816,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 							_attachPos = (_attachPos select 0) select 0;
 							_attachPos set [2,0];
 							A3C_TEMP_ACTION set [1,[_veh,""]];
-							//A3C_MovedItem_ID setMarkerTextLocal ("Destroy " + (getText (configFile >> "CfgVehicles" >> typeOf _veh >> "displayName")));
+							//A3C_AI_Shared_executeUnitPlotdItem_ID setMarkerTextLocal ("Destroy " + (getText (configFile >> "CfgVehicles" >> typeOf _veh >> "displayName")));
 						} else {
 							_veh = objNull;
 							A3C_TEMP_ACTION set [1,[objNull,""]];
@@ -1826,10 +1826,10 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 						_wpData = _unit getVariable "A3C_PLOT_TEMP";
 						{
 							_x params ["_wpPositions","_wpMarkers","_wpAction","_wpCondition","_wpStances","_wpSyncData","_wpCompleted","_wpCombatMode","_wpSpeed","_wpFlyInHeight","_wpLoopValue","_wpRadius"];
-							if ((_wpMarkers select 0) == A3C_MovedItem_ID) then {
+							if ((_wpMarkers select 0) == A3C_AI_Shared_executeUnitPlotdItem_ID) then {
 								(_x select 0) set [0,_attachPos];
 								_x set [2,["CTRL_DET",[_veh,""]]];
-								//systemchat A3C_MovedItem_ID;
+								//systemchat A3C_AI_Shared_executeUnitPlotdItem_ID;
 								//player setpos _sPos;
 							};
 						} foreach _wpData;
@@ -1847,7 +1847,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 								_wpData = _soldier getVariable "A3C_PLOT_TEMP";
 								{
 									_x params ["_wpPositions","_wpMarkers","_wpAction","_wpCondition","_wpStances","_wpSyncData","_wpCompleted","_wpCombatMode","_wpSpeed","_wpFlyInHeight","_wpLoopValue","_wpRadius"];
-									if ((_wpMarkers select 0) == A3C_MovedItem_ID) then {
+									if ((_wpMarkers select 0) == A3C_AI_Shared_executeUnitPlotdItem_ID) then {
 										if (_soldier == (A3C_SELECTED_UNITS select 0)) then {
 											(_x select 0) set [0,(getPosATL _veh)];
 											A3C_CLICKPOS_ORIG = (getPosATL _veh);
@@ -1870,7 +1870,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 				};
 
 
-				A3C_MovedItem_ID = "";
+				A3C_AI_Shared_executeUnitPlotdItem_ID = "";
 			} else {
 				if ( ((A3C_TEMP_ACTION select 0) in ["CTRL_DET"])) then {
 					//-- bbb
@@ -1890,7 +1890,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 
 
 	_exit = false;
-	// if (typeName A3C_MovedItem_ID == "ARRAY") exitWith { // << NOTE: MouseUp means these should be reset anyways, no??
+	// if (typeName A3C_AI_Shared_executeUnitPlotdItem_ID == "ARRAY") exitWith { // << NOTE: MouseUp means these should be reset anyways, no??
 		A3C_BOOL_MAP_MU = false;
 		// A3C_BOOL_MOUSEMOVING = false; //-- keeping this as a reminder it was initially here >> i moved it to top
 	// };
@@ -1989,10 +1989,10 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 
 
 	//-- exit: No Drag Marker selected
-	if !(A3C_MovedItem_ID == "") exitwith {
+	if !(A3C_AI_Shared_executeUnitPlotdItem_ID == "") exitwith {
 		A3C_BOOL_MAP_MU = false;
 		A3C_BOOL_MOUSEMOVING = false;
-		A3C_MovedItem_ID = "";
+		A3C_AI_Shared_executeUnitPlotdItem_ID = "";
 
 		if (count A3C_MV_MARKERDATA > 0 ) then {
 			A3C_MV_MARKERDATA params ["_soldier","_wPos","_varName"];
@@ -2450,13 +2450,13 @@ A3C_UI_MAP_onMouseDrag = {
 	if (A3C_BOOL_DRAGLINE) then {
 		//A3C_AIC_DRAGPOS = _sPos;
 		if (A3C_STATE_CHECKING_PICKUP) then {
-			//A3C_MovedItem_ID setMarkerPosLocal _sPos;
+			//A3C_AI_Shared_executeUnitPlotdItem_ID setMarkerPosLocal _sPos;
 			private ["_unit","_wpData"];
 			_unit = A3C_SELECTED_UNITS select 0;
 			_wpData = _unit getVariable "A3C_PLOT_TEMP";
 			{
 				_x params ["_wpPositions","_wpMarkers","_wpAction","_wpCondition","_wpStances","_wpSyncData","_wpCompleted","_wpCombatMode","_wpSpeed","_wpFlyInHeight","_wpLoopValue","_wpRadius"];
-				if ((_wpMarkers select 0) == A3C_MovedItem_ID) then {
+				if ((_wpMarkers select 0) == A3C_AI_Shared_executeUnitPlotdItem_ID) then {
 					(_x select 0) set [0,_sPos];
 				};
 			} foreach _wpData;
@@ -2567,8 +2567,8 @@ A3C_UI_MAP_onMouseDrag_MapItem = {
 				} else {
 
 					{
-						if (((_x select 0) select 1) == A3C_MovedItem_ID) exitwith {
-							[_u,A3C_MovedItem_ID,_sPos,1] call A3C_ADJUST_POLY;
+						if (((_x select 0) select 1) == A3C_AI_Shared_executeUnitPlotdItem_ID) exitwith {
+							[_u,A3C_AI_Shared_executeUnitPlotdItem_ID,_sPos,1] call A3C_ADJUST_POLY;
 						};
 
 					} foreach _va;
@@ -2654,7 +2654,7 @@ A3C_UI_MAP_onMouseDrag_MapItem = {
 							//if !(_alt) then {
 								if ({((_x select 0) select 1) == _item} count A3C_ALL_POLYS > 0) then {
 									{
-										if (((_x select 0) select 1) == A3C_MovedItem_ID) exitwith {
+										if (((_x select 0) select 1) == A3C_AI_Shared_executeUnitPlotdItem_ID) exitwith {
 											[_soldier,_item,_sPos,1] call A3C_ADJUST_POLY;
 										};
 									} foreach _var;

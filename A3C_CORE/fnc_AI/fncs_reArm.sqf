@@ -85,7 +85,7 @@ A3C_ReArm_Auto_OrderIssue = {
 	A3C_MARKER_COUNT = A3C_MARKER_COUNT + 1;
 
 	_unit setVariable ["A3C_PLOT", [_wpData], true];
-	[_unit, (_unit getVariable "A3C_PLOT")] spawn A3C_MOVE;
+	[_unit, (_unit getVariable "A3C_PLOT")] spawn A3C_AI_Shared_executeUnitPlot;
 
 	waitUntil {count (_unit getVariable ["A3C_PLOT", []]) == 0};
 
@@ -172,14 +172,14 @@ A3C_ReArm_Plot_AddItem = {
 
 	if (_cancel) then {
 		if (count _wpData > 0) then {
-			[[_unit], true, false] call A3C_CANCELPLANS;
+			[[_unit], true, false] call A3C_AI_Shared_cancelUnitPlot;
 		};
 		waitUntil {count (_unit getVariable "A3C_PLOT") == 0};
 		sleep 0.5;
 		[_unit] call A3C_UNIT_STORE_DESTINATION;
 
 		_unit setVariable ["A3C_PLOT", [_wpDataNew], true];
-		[_unit, (_unit getVariable "A3C_PLOT")] spawn A3C_MOVE;
+		[_unit, (_unit getVariable "A3C_PLOT")] spawn A3C_AI_Shared_executeUnitPlot;
 
 		[_unit] spawn {
 			params ["_unit"];
@@ -1142,7 +1142,7 @@ A3C_ReArm_OpenUI = {
 				(findDisplay 100040 displayCtrl 8054),
 				_img
 			]
-		] call A3C_LB_ADD;
+		] call A3C_UI_RADIAL_LB_ADD;
 	} foreach A3C_ReArm_Options;
 	[findDisplay 100040 displayCtrl 8054, 0, true] call A3C_setCurSel;		
 };
@@ -1171,7 +1171,7 @@ A3C_Rearm_LBChange_Source = {
 					_ctrlCargo,
 					""
 				]
-			] call A3C_LB_ADD;
+			] call A3C_UI_RADIAL_LB_ADD;
 		};
 
 		for "_i" from 0 to 3 do {
@@ -1283,7 +1283,7 @@ A3C_Rearm_LBChange_Source = {
 							_ctrlCargo,
 							_img
 						]
-					] call A3C_LB_ADD;
+					] call A3C_UI_RADIAL_LB_ADD;
 
 				} forEach _cargo;
 			};

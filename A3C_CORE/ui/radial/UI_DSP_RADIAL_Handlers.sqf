@@ -37,7 +37,7 @@ A3C_UI_RADIAL_onKeyUp = {
 	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
 
 	if (_key == (A3C_RadialMenu_KEY_ID select 0)) exitWith {
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 		// A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
 		showCommandingMenu "";
 		A3C_DISABLE_RADIAL = false;
@@ -122,7 +122,7 @@ A3C_UI_RADIAL_onMouseButtonDown = {
 
 			_ind = [_group,_hcAll] call MCSS_fnc_GetArrayIndex;
 			A3C_BUTTONPAGE_TABLET = (ceil ((_ind + 1) / 18)) - 1;
-			//[] call A3C_RD_LABEL_SELECTORS;
+			//[] call A3C_UI_RADIAL_LABEL_SELECTORS;
 			
 			if (count A3C_RD_UNITS == 0) then {
 				(findDisplay 100040 displayCtrl 8005) ctrlSetText "SELECT UNIT";
@@ -135,7 +135,7 @@ A3C_UI_RADIAL_onMouseButtonDown = {
 				};
 
 			};
-			//["ROE",-1,false,false] call A3C_RADIAL_BTN_FNC_RING_INNER;
+			//["ROE",-1,false,false] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 			A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_RD_UNITS;
 			[] call A3C_UNITSEL_REFRESH_UI;
 			[] call A3C_UI_SHARED_createDashBoard;

@@ -11,12 +11,12 @@ A3C_UI_SHARED_createDashBoard_ExtraControls = [];
 A3C_ACTIVE_BUTTONUNIT = objnull;
 
 
-[] call A3C_RADIAL_RESET_DYNAMIC_BTNS;
+[] call A3C_UI_RADIAL_RESET_DYNAMIC_BTNS;
 
 //-- Open Radial SQ-levl Behaviour and combatMode controls via A3C_DSP_HUD_DYNAMIC
 A3C_UI_Radial_SQ_ROE_MAIN = {
     A3C_DISABLE_RADIAL = true;
-    [] call A3C_RADIAL_CloseDisplay;
+    [] call A3C_UI_RADIAL_CloseDisplay;
 
     with uiNamespace do {
         A3C_HUD_OBS = (findDisplay 46) createDisplay "A3C_DSP_HUD_DYNAMIC";
@@ -222,31 +222,3 @@ A3C_setCurSel = {
 };
 
 
-A3C_LB_ADD =
-{
-	// 
-	DISABLESERIALIZATION;
-	{
-		_x params["_label","_class","_obj","_cbo","_img"];
-		_index = [_cbo, _label] call A3C_addLbEntry;
-
-		_cbo lbSetData [(lbSize _cbo)-1,  _class];
-		switch (A3C_RADIALMODE) do {
-			case ("BRAIN") : {
-				//_array = "true" configClasses (configFile>>"CfgRanks");
-				//{
-				//	if ((getText (configfile >> "CfgRanks" >> (configname _x) >> "displayName")) == (rank _obj)) exitWith {
-				//		_picture = (getText (configfile >> "CfgRanks" >> (configname _x) >> "texture"));
-				//	};
-				//} foreach _array;
-			};
-			case ("VEHS") : {
-				_img = ((getText (configfile >> "CfgVehicles" >> _class >> "picture")));
-			};
-		};
-		_cbo lbSetPicture [(lbSize _cbo)-1,_img];
-	} forEach _this;
-	// 
-	
-
-};

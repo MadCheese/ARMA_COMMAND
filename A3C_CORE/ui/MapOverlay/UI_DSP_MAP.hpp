@@ -626,7 +626,7 @@ class A3C_DSP_MapOverlay
 		class A3C_Cancel_Data_1: A3C_RscButton_Invisible
 		{
 			idc = 7070;
-			onmousebuttondown = "[A3C_SELECTED_UNITS,(_this select 4),(_this select 5)] spawn A3C_CANCELPLANS";
+			onmousebuttondown = "[A3C_SELECTED_UNITS,(_this select 4),(_this select 5)] spawn A3C_AI_Shared_cancelUnitPlot";
 
 			x = 0.660383 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;

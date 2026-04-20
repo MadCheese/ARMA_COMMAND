@@ -15,7 +15,7 @@ A3C_AI_HighCommand_Action_joinPlayerGroup = {
 	} else {
 		//-- no actual action - just close menu
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	};
 	[A3C_SELECTED_HC_GROUPS_SETTINGS] call A3C_AI_HIGHCOMMAND_fnc_mergeGroups;
 };
@@ -30,6 +30,35 @@ A3C_AI_HighCommand_Action_mergeGroups = {
 	A3C_isMergeGroupActive = false;
 };
 
+A3C_AI_HighCommand_Action_heliHoverInPlace = {
+	private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+	private _isRadial = _a3c_dsp == 100040;
+	
+	private _var = (vehicle leader _group) getVariable ["A3C_Freeze_helicopter",[false,0]];
+
+
+	if (_var select 0) then {
+		//-- cancel action
+		if !(_isRadial) then {
+			{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+			(findDisplay 12 displayCtrl 51) ctrlEnable true;
+		};
+		{
+			_vehicle = vehicle _x;
+			if (_x == driver _vehicle && {[_vehicle] call A3C_isAttackHelicopter}) then {
+				_vehicle setVariable ["A3C_Freeze_helicopter",[false,0],true];
+				{_vehicle enableAI _x; } foreach ["TARGET","PATH"];
+			};
+		} foreach (units _group);
+	};
+};
+
+//---------------------------- RADIAL ONLY
+
+
+
+
 //---------------------------- SHARED (MAP+RADIAL)
 
 A3C_AI_HighCommand_Action_RefreshGroup = {
@@ -41,7 +70,7 @@ A3C_AI_HighCommand_Action_RefreshGroup = {
 		//-- no actual action - just close menu
 		//-- note: we still disable radial so that player needs to let go of key
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
@@ -145,7 +174,7 @@ A3C_AI_HighCommand_Action_VehicleRemote = {
 	private _isRadial = _a3c_dsp == 100040;
 	if (_isRadial) then {
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
@@ -161,7 +190,7 @@ A3C_AI_HighCommand_Action_ConvoyHalt = {
 	//-- UI-Reaction
 	if (_isRadial) then {
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 	};
@@ -222,7 +251,7 @@ A3C_AI_HighCommand_Action_DeleteGroups = {
 	//-- UI-Reaction
 	if (_isRadial) then {
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 	};
@@ -257,7 +286,7 @@ A3C_AI_HighCommand_Action_convoyCreate = {
 	if (_isRadial) then {
 		//-- no actual action - just close menu
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
@@ -273,7 +302,7 @@ A3C_AI_HighCommand_Action_convoyRejoin = {
 	if (_isRadial) then {
 		//-- no actual action - just close menu
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
@@ -293,7 +322,7 @@ A3C_AI_HighCommand_Action_limitSpeed = {
 
 	if (_isRadial) then {
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 		with uiNamespace do {
 			//disableSerialization;
 			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
@@ -361,7 +390,7 @@ A3C_AI_HighCommand_Action_reBoardGroupToVehicle = {
 	if (_isRadial) then {
 		//-- no actual action - just close menu
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
@@ -376,7 +405,7 @@ A3C_AI_HighCommand_Action_chargeMavic = {
 	if (_isRadial) then {
 		//-- no actual action - just close menu
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
@@ -472,7 +501,7 @@ A3C_AI_HighCommand_Action_reArm = {
 
 	if (!isNull findDisplay 100040) then {
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
 		(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
@@ -484,7 +513,7 @@ A3C_AI_HighCommand_Action_groupHeal = {
 
 	if (!isNull findDisplay 100040) then {
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
 		(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
@@ -513,7 +542,7 @@ A3C_AI_HighCommand_Action_transferOwnership = {
 
 	if (!isNull findDisplay 100040) then {
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
 		(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
@@ -538,7 +567,7 @@ A3C_AI_HighCommand_Action_unAssembleWeapon = { // #TODO This fnc requires invest
 	//-- main display EH to disable radial until key is let go
 	if (!isNull findDisplay 100040 && _a3c_dsp == 100060 ) then {
 		A3C_DISABLE_RADIAL = true;
-		[] call A3C_RADIAL_CloseDisplay;
+		[] call A3C_UI_RADIAL_CloseDisplay;
 	};
 
 	if (_a3c_dsp == 100060 && { {(vehicle _x) isKindOf "staticweapon"} count units _group == 0 }) then {
@@ -714,79 +743,13 @@ A3C_AI_HighCommand_Action_weaponFlashLight = {
 *///-------------------------------------------------------------------------------------------
 
 
-//---------------------------- SHARED POSITIONAL STARTUP FUNCTION
-A3C_AI_HighCommand_Action_StartPositionalProcess = { //-- THIS MIGHT BE REQUIRED TO BE USED MY SQUAD -LEVEL TOO: IF SO, RENAME AND MOVE
-	params ["_isBusy", "_actionID", "_iconType","_iconColor","_objectPlacerClass", "_objectPlacerColorString"];
-	
-	if (_isBusy) exitWith {
-		systemchat 'A3C: Plase wait for your last order to complete';
-	};
-	//-- UI-Reaction
-	A3C_DISABLE_RADIAL = true;
-	[] call A3C_RADIAL_CloseDisplay;
-
-	{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu '';
-
-	//-- Positional UI 
-	A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
-	A3C_UI_HUD_3D_TAG_ICON_COL = [_iconColor,0.7] call A3C_UI_Color_setOpacity;
-	A3C_UI_HUD_3D_TAG_reposition = true;
-
-	A3C_AI_HighCommand_Action_ID = _actionID;
-
-	//-- Spawn object placer
-	if (_objectPlacerClass != "") then {
-		
-		private _placer = _objectPlacerClass createvehicleLocal [0,0,100]; //
-		_placer allowdamage false;
-		_placer enableSimulation false;
-		_placer disableCollisionWith player;
-		_placer hideObject true;
-		private _safePos = ([screenToWorld [0.5,0.5],[0,100]] call MCSS_fnc_getSafePos);
-		if (!isNil '_safePos' && {count _safePos > 0}) then {
-			_placer setpos _safePos;
-		};
-		_placer disableCollisionWith cursortarget;
-		//-- Color Object
-		if (_objectPlacerClass != "") then {
-			private _colorStringFinal = "#(rgb,8,8,3)color" + _objectPlacerColorString;
-			for "_i" from 0 to 10 do {
-				A3C_OBJECTPLACER setObjectTexture [0, _colorStringFinal];
-			};
-		};
-
-		_placer spawn { //-- spawn because we need the slight delay
-			sleep 0.2;
-			_this hideObject false;
-			A3C_OBJECTPLACER = _this; //-- naming delay is necessary so object does not get moved by HUDdraw script immediately to be destroyed
-			
-		};
-	};
-};
-
-// ["TANKSHOT", '\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa',[1,0,0,1], "A3C_HeliPad","(0.5,0.1,1,1)"] call A3C_AI_HighCommand_Action_StartPositionalProcess;
 
 
-A3C_AI_HighCommand_Action_CancelPositionalProcess = {
-	// systemchat "A3C_AI_HighCommand_Action_CancelPositionalProcess";
-	A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-	A3C_UI_HUD_3D_TAG_reposition = false;
-	A3C_UI_HUD_3D_TAG_ICON_COL = [0.5,0.5,0.5,1]; //-- probably not needed, using grey to spot it happens :)
-	if (!isNull A3C_OBJECTPLACER) then {
-		deleteVehicle A3C_OBJECTPLACER;
-	};
-	// A3C_DISABLE_RADIAL = false; // -- not needed (Handled by keyup)
-	A3C_AI_HighCommand_Action_ID = "";
-	A3C_UI_HUD_3D_TAG_ICON_POS = [0,0,0];
-};
+//---------------------------- RADIAL ONLY
+
+//----- Remote-Fire Actions 
 
 
-//----- Remote-Fire Actions (use )
-
-
-A3C_AI_HighCommand_Action_remoteFire_TankShot = {
-	[A3C_REMFIRE_TankShot_Units, "TANKSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
-};
 
 A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon = {
 	params ["_weapon"];
@@ -802,23 +765,492 @@ A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon = {
 	};
 };
 
-A3C_AI_HighCommand_Action_remoteFire_UGLshot = {
-	[A3C_REMFIRE_UGLShot_Units, "UGLSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+
+//----- Regular Radial Actions
+
+
+A3C_AI_HighCommand_Action_uavFPV = {
+
+	private _group = A3C_RD_UNITS select 0;
+	private _wpPos = +(A3C_UI_HUD_3D_TAG_ICON_POS);
+	
+
+	//-- delete current waypoints
+	while {(count (waypoints _group)) > 1} do {
+		{
+			if (_forEachIndex > 0) then {
+				deletewaypoint _x;
+			};
+		} foreach waypoints _group;
+	};
+	private _ct = cursortarget;
+	if (!isNull _ct) then {
+		private _wp = _group addWaypoint [_wpPos,0];
+		_wp setWaypointType "SCRIPTED";
+		_wp waypointAttachVehicle _ct;
+		_wp setWaypointSpeed "FULL";
+		_wp setWaypointScript "A3C_CORE\fnc_AI\wpFncs\wpScript_UAV_FPV.sqf [getPlayerUID player]"; 
+	} else {
+		[] spawn {
+			hint "NO TARGET SELECTED!";
+			sleep 3;
+			hintSilent "";
+		};
+	};
+};
+
+A3C_AI_HighCommand_Action_repair = {
+	private _group = A3C_RD_UNITS select 0;
+	private _wpPos = +(A3C_UI_HUD_3D_TAG_ICON_POS);
+
+	//-- delete current waypoints
+	while {(count (waypoints _group)) > 1} do {
+		{
+			if (_forEachIndex > 0) then {
+				deletewaypoint _x;
+			};
+		} foreach waypoints _group;
+	};
+	private _wp = _group addWaypoint [_wpPos,0];
+	_wp setWaypointType "SCRIPTED";
+	_wp setWaypointScript "A3C_CORE\fnc_AI\wpFncs\wpScript_repair.sqf [getPlayerUID player, ['ARRIVAL', 0]]";
+};
+
+A3C_AI_HighCommand_Action_landAircraft = {
+	A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
+
+	//("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutRsc ["","PLAIN"];
+	with uiNamespace do {
+		//disableSerialization;
+		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+	};
+
+
+	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+	_parent = findDisplay _a3c_dsp displayCtrl 8008;
+	_text = findDisplay _a3c_dsp displayCtrl 800802;
+	_listBox = findDisplay _a3c_dsp displayCtrl 800803;
+
+	_text ctrlSetText "CHECKING LZ";
+	lbClear _listBox;
+	[_listBox, "KEEP TAB PRESSED DOWN"] call A3C_addLbEntry;
+
+
+
+
+	_parent ctrlShow true;
+
+
+	_requiresPlacementCorrection = true;
+	_placerPos = getPosASL A3C_OBJECTPLACER;
+	private _landingPosRoot = +(_placerPos);
+	private _landingVector = [getDir A3C_OBJECTPLACER] call MCSS_fnc_DegreeToVector;
+
+	_dimensions = [typeof A3C_OBJECTPLACER] call A3C_getVehicleBodyDimensions;
+	_dimensions params ["_reference_Width","_reference_Length","_reference_Height","_reference_Rotorsize"];
+
+	_forceDefaultLanding = true;
+
+	_exit = false;
+	if (!isNull A3C_SNAP_OBJECT) then {
+		//-- position snapped against object
+
+		//systemchat str (typeof A3C_SNAP_OBJECT);
+
+		_placerPosZ = _placerPos select 2;
+		_snapObjectPos = (getPosASL A3C_SNAP_OBJECT);
+
+		_snapObjectZ = _snapObjectPos select 2;
+		_snapObjectHeight = A3C_SNAP_OBJECT call BIS_fnc_objectHeight;
+
+		_refPosTop = (_placerPos select [0,2]) + [_snapObjectZ + _snapObjectHeight]; //-- placer-pos at boundingBox top
+
+		_ins = lineIntersectsSurfaces
+		[
+			_refPosTop,
+			[_placerPos select 0,_placerPos select 1, 0],
+			A3C_OBJECTPLACER,
+			objNull,
+			true,
+			1,
+			"GEOM",
+			"NONE"
+		];
+
+		if (count _ins > 0) then {
+			//helper setposASL ((_ins select 0) select 0);
+			_intersectPosZ = ((_ins select 0) select 0) select 2;
+			//systemchat str [_intersectPosZ,_placerPosZ];
+			if (abs(_intersectPosZ - _placerPosZ) < 0.1) then {
+				_requiresPlacementCorrection = false;
+				_forceDefaultLanding = false;
+
+			};
+			if (_requiresPlacementCorrection) then {
+				hint "ADJUSTING LZ";
+				_LZData = [A3C_SNAP_OBJECT,_reference_Width,_reference_Length] call A3C_getHeliRoofLZ;
+				[] spawn {
+					hint "LZ ADJUSTED";
+					sleep 5;
+					hintSilent "";
+				};
+				if (count _LZData > 0) then {
+					_landingPosRoot = _LZData select 0;
+					_landingVector = [(_LZData select 1)] call MCSS_fnc_DegreeToVector;
+					_forceDefaultLanding = false;
+
+
+
+
+				};
+
+
+				//systemchat str _LZData;
+			};
+		//} else {
+		//	systemchat "NO INS";
+		};
+	} else {
+		//-- position in the open
+		_forceDefaultLanding = false;
+		_requiresPlacementCorrection = false;
+		_dummyBox = ([A3C_OBJECTPLACER,1] call MCSS_fnc_BBOX);
+		_maxRotorHeight = 1000;
+		{
+
+			_z = (A3C_OBJECTPLACER modelToWorld (A3C_OBJECTPLACER selectionposition _x)) select 2;
+			//systemchat str [_z];
+			if (_z < _maxRotorHeight) then {
+				_maxRotorHeight = _z;
+			};
+		} foreach ([A3C_OBJECTPLACER] call MCSS_fnc_getMainRotorSelections);
+
+		_centerAtRotorHeight = getPosASL A3C_OBJECTPLACER;
+		_centerAtRotorHeight set [2,_maxRotorHeight];
+		_centerAtRotorHeight = ATLtoASL _centerAtRotorHeight;
+		{
+			_dist = A3C_OBJECTPLACER distance2d _x;
+			_dir = A3C_OBJECTPLACER getDir _x;
+			_ins = lineIntersectsSurfaces
+			[
+				_centerAtRotorHeight,
+				[_centerAtRotorHeight,_dist,_dir] call BIS_fnc_relPos,
+				A3C_OBJECTPLACER,
+				objNull,
+				true,
+				1,
+				"GEOM",
+				"NONE"
+			];
+			if (count _ins > 0) exitWith {
+				_exit = true;
+			};
+		} foreach _dummyBox;
+	};
+
+	if (_exit) exitWith {
+		hint "THE SELECTED GROUND-LZ IS NOT SAFE - PLEASE REPEAT";
+		sleep 5;
+		hintSilent "";
+		//deletevehicle A3C_OBJECTPLACER;
+	};
+
+
+
+	if !(_requiresPlacementCorrection) then {
+		//systemchat "GOOD PLACEMENT";
+		//-- could be on roof (!isNull snap_object) but might still need security checks
+		//-- could be on ground and use same checks
+	} else {
+		//if !(_forceDefaultLanding) then {
+
+		//};
+		//systemchat "LZ WILL BE ADJUSTED";
+		//-- snap_object detected and definitely requires correction
+		//-- if (!isNull snap_object), use rooftop position generator
+		//-- otherwise use simple, ASL-level security
+	};
+
+
+
+	if (_forceDefaultLanding) then {
+		[] spawn {
+			hint "ALERT: NO SUITABLE LZ FOUND ON OBJECT. REVERTING TO DEFAULT LANDING";
+			sleep 5;
+			hintSilent "";
+		};
+		A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
+
+	};
+
+	A3C_RADIAL_ACTION_HC_LANDINGDATA = [_landingPosRoot,_landingVector,_forceDefaultLanding];
+
+	A3C_OBJECTSELECTOR_MODE = "HELI_LANDING_HC_TYPE";
+
+
+
+	_text ctrlSetText "SELECT LANDING TYPE";
+
+	{
+		_ctrlPos = ctrlPosition _x;
+		_ctrlPos set [3,(_ctrlPos select 3) + (  (3)   * (0.0440051 * safezoneH) )];
+		_x ctrlSetPosition _ctrlPos;
+		_x ctrlCommit 0;
+	} foreach [_parent,_listBox];
+
+	ctrlSetFocus _listBox;
+
+	lbClear _listBox;
+	{
+		[_listBox, _x] call A3C_addLbEntry;
+	} foreach ["COMBAT LANDING","TRANSPORT UNLOAD","FULL LANDING"];
+};
+
+A3C_AI_HighCommand_Action_casStrike = {
+	with uiNamespace do {
+		//disableSerialization;
+		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+	};
+
+
+	private _a3c_dsp = if (visibleMap) then {100020} else {100060};
+	private _parent = findDisplay _a3c_dsp displayCtrl 8008;
+	private _text = findDisplay _a3c_dsp displayCtrl 800802;
+	private _listBox = findDisplay _a3c_dsp displayCtrl 800803;
+	_text ctrlSetText "SELECT CAS-TYPE";
+
+	A3C_OBJECTSELECTOR_MODE = "CAS";
+	
+	lbClear _listBox;
+	{
+		_leaderVic = vehicle leader _x;
+		private _casModes = [typeof _leaderVic] call MCSS_fnc_getCASmodes;
+		if (count _casModes > 0) exitWith {
+			{
+				_casMode = switch (true) do {
+					case (_x isEqualTo ["machinegun"]) : {'GUN RUN'};
+					case (_x isEqualTo ["missilelauncher"]) : {'MISSILES'};
+					case (_x isEqualTo ["machinegun","missilelauncher"]) : {'GUNS + MISSILES'};
+					case (_x isEqualTo ["bomblauncher"]) : {'BOMBING RUN'};
+				};
+				[_listBox, _casMode] call A3C_addLbEntry;
+			} foreach _casModes;
+		};
+	} foreach A3C_RD_UNITS;
+	{
+		_ctrlPos = ctrlPosition _x;
+		_ctrlPos set [3,(_ctrlPos select 3) + (  (3)   * (0.0440051 * safezoneH) )];
+		_x ctrlSetPosition _ctrlPos;
+		_x ctrlCommit 0;
+	} foreach [_parent,_listBox];
+
+};
+
+A3C_AI_HighCommand_Action_rappel = {
+	{
+		private _gp = _x;
+
+		_gp setvariable ["A3C_UNIT_POLYS",[],true];
+
+		//-- clear all waypoints
+		{
+			{
+				_x setVariable ["A3C_CLEARING",false,true];
+			} foreach (units _x);
+		} foreach A3C_SELECTED_UNITS;
+
+
+		// _gp = A3C_RD_UNITS select 0; // ?????
+		while {(count (waypoints _gp)) > 1} do {
+			{
+				if (_forEachIndex > 0) then {
+					deletewaypoint _x;
+				};
+			} foreach waypoints _gp;
+		};
+		
+		//-- add new waypoints
+		private _leaderVic = (vehicle leader _gp);
+		private _rappelWPos = +(A3C_UI_HUD_3D_TAG_ICON_POS);
+		private _startPos = getpos _leaderVic;
+		private _landOnReturn = !isEngineOn _leaderVic;
+		private _wp =
+		[
+			_gp,
+			_rappelWPos
+		] call A3C_HC_ADD_WP;
+		if (A3C_UI_HUD_3D_TAG_ICON_POS distance2D _leaderVic > 50) then {
+			_wp2 =
+			[
+				_gp,
+				_startPos
+			] call A3C_HC_ADD_WP;
+			if (_landOnReturn) then {
+				_statements = format
+				[
+					"
+						[this,%1,'%2',[],true] spawn A3C_HC_WPACTION_LANDING_FULL;
+					",
+					_startPos,
+					getPlayerUID player
+
+				];
+				_wpStm = waypointStatements _wp2;
+				_wp2 setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _statements];
+			};
+		};
+		if (_leaderVic distance2D _rappelWPos < 800) then {
+			waitUntil {speed _leaderVic > 80  OR {_leaderVic distance2D _rappelWPos < 300} };
+		};
+
+		_statements = format
+		[
+			"
+				[['%1',this,[['NONE','NONE'],'RAPPELL'],'LINE',(currentWaypoint group this),0],A3C_HC_INSERT_ACTION_WP] remoteExec ['bis_fnc_call',0];
+			",
+			getPlayerUID player
+		];
+		_wpStm = waypointStatements _wp;
+		_wp setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _statements];
+	} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
+};
+
+A3C_AI_HighCommand_Action_suppression = {
+	if (count A3C_RD_UNITS > 0 && {A3C_UI_HUD_3D_TAG_ICON_TYPE != ""}) then {
+		{
+			[_x,A3C_UI_HUD_3D_TAG_ICON_POS] call A3C_HC_Suppression_Immediate;
+		} foreach A3C_UI_RADIAL_Current_Remfire_Units;
+	};
+	A3C_HC_GroupMenu_SuppressionRequested = false;
+};
+
+A3C_AI_HighCommand_Action_artillery = {
+	A3C_HC_FOCUS_ARTY = objNull;
+	A3C_HC_FOCUS_ARTY_AMMO = ""; //-- what is goin on here
+	with uiNamespace do {
+		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+	};
+
+	A3C_HC_FOCUS_ARTY_POS = +(A3C_UI_HUD_3D_TAG_ICON_POS);
+	["ARTY"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
 };
 
 
-A3C_AI_HighCommand_Action_remoteFire_ATshot = {
-	[A3C_REMFIRE_ATShot_Units, "ATSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+A3C_AI_HighCommand_Action_placeChargeHC = {
+	if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
+		with uiNamespace do {
+			//disableSerialization;
+			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+		};
+
+		private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+		private _parent = findDisplay _a3c_dsp displayCtrl 8008;
+		private _text = findDisplay _a3c_dsp displayCtrl 800802;
+		private _listBox = findDisplay _a3c_dsp displayCtrl 800803;
+
+		A3C_OBJECTSELECTOR_MODE = "PLACE_CHARGE_HC";
+		_parent ctrlShow true;
+		_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
+		_parent ctrlCommit 0;
+		_text ctrlSetText "Place Charge";
+
+		if (count A3C_REMFIRE_MAGTYPES > 4) then {
+			_parentPos = ctrlPosition _parent;
+			_parentPos set[3,(_parentPos select 3) + (  ((count A3C_REMFIRE_MAGTYPES) - 4)   * (0.0440051 * safezoneH) )];
+			_parent ctrlSetPosition _parentPos;
+			_parent ctrlCommit 0;
+		};
+		
+		ctrlSetFocus _listBox;
+		
+		lbClear _listBox;
+		{
+			private _lbText = (getText (configfile >> "CfgMagazines" >> _x >> "displayName"));
+			[_listBox, _lbText] call A3C_addLbEntry;
+		} foreach A3C_REMFIRE_MAGTYPES;
+		[_parent,_listBox, count A3C_REMFIRE_MAGTYPES] call A3C_OBJECTSEL_RESIZE;
+	};
 };
 
-A3C_AI_HighCommand_Action_remoteFire_StaticRocketShot = {
-	[A3C_REMFIRE_StaticShot_Units, "STATICSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+A3C_AI_HighCommand_Action_assembleWeapon = {
+	private _gp = A3C_RD_UNITS select 0;
+	{
+		private _units = _x select 0;
+		private _weapon = _x select 1;
+		private _var = [];
+		if (_weapon == typeOf A3C_OBJECTPLACER) exitWith {
+			//-- clear all waypoints
+			{
+				{
+					_x setVariable ["A3C_CLEARING",false,true];
+				} foreach (units _x);
+			} foreach A3C_SELECTED_UNITS;
+
+			
+			
+			while {(count (waypoints _gp)) > 1} do {
+				{
+					if (_forEachIndex > 0) then {
+						deletewaypoint _x;
+					};
+				} foreach waypoints _gp;
+			};
+			private _wp =
+			[
+				_gp,
+				position A3C_OBJECTPLACER
+			] call A3C_HC_ADD_WP;
+
+			private _var = _gp getvariable ["A3C_UNIT_POLYS",[]];
+
+			private _prefix = 'ASS'; //-- ASS stands for 'assemble' you cheeky little kitten.
+			private _tPos = position A3C_OBJECTPLACER;
+			_tpos set [2,0]; //==-- security mechanic: sometimes z-value is missing! ~~// does that apply here?
+
+			_tPos = _tPos getPos [50, getDir A3C_OBJECTPLACER];
+
+			if !(A3C_HC_PREVENT_POLY) then {
+
+				//-- create VISIBLE polygon
+				private _polygon = ([[_tPos,format ["A3C_%1_MAIN_Mark_%2_%3",parsetext _prefix,getPlayerUID player,A3C_SUP_POLY_IND_MARK],currentWaypoint _gp]] + ([_tPos,getDir A3C_OBJECTPLACER,"ASSEMBLE WEAPON",true] call A3C_SUP_CREATE_POLY));
+
+				A3C_SUP_POLY_IND_MARK = A3C_SUP_POLY_IND_MARK + 1;
+				_var pushback _polygon;
+			};
+
+
+
+			_statements = format
+			[
+				"
+
+					['%1',this,%2,'%3',(currentWaypoint group this)] call A3C_HC_INSERT_ACTION_WP;
+				",
+				getPlayerUID player,
+				[["NONE","NONE"],"ASSEMBLE WEAPON"],
+				formation _gp
+			];
+			_wpStm = waypointStatements _wp;
+			_wp setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _statements];
+			
+			_gp setvariable ["A3C_UNIT_POLYS",_var,true];
+			
+
+			//-- create waypoint
+
+			A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  _weapon >> "picture");
+			A3C_UI_HUD_3D_TAG_ICON_MOD = "ON";
+			// [screentoWorld [0.5,0.5],""] spawn A3C_UI_HUD_3D_TAG;
+			player commandRadio "SentAssemble";
+
+		};
+	} foreach A3C_STATIC_PACKS;
 };
+
+
 
 
 
 //---------------------------- MAP ONLY
-
-
 
 //---------------------------- SHARED (MAP+RADIAL)
