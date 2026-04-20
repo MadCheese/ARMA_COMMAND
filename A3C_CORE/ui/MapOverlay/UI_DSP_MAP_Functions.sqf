@@ -668,9 +668,9 @@ A3C_Adjust_Poly_Edge = {
 		_u =_x;
 		_va = (_u getVariable ["A3C_UNIT_POLYS",[]]);
 		{
-			if ((_x select 0) select 1 == (A3C_AI_Shared_executeUnitPlotdItem_ID select 0)) exitWith {
+			if ((_x select 0) select 1 == (A3C_MovedItem_ID select 0)) exitWith {
 				private _poses = _x select 1;
-				_poses set [(A3C_AI_Shared_executeUnitPlotdItem_ID select 1),_sPos]; //-- switch polygon-edgepos with mouse-dragpos
+				_poses set [(A3C_MovedItem_ID select 1),_sPos]; //-- switch polygon-edgepos with mouse-dragpos
 				_u setVariable ["A3C_UNIT_POLYS",_va,true];
 			};
 		} foreach _va;

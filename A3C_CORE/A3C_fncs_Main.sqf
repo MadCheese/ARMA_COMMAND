@@ -2273,7 +2273,7 @@ A3C_UNIT_INIT = {
 	_unit setvariable ["A3C_PLOT",[],true];
 	_unit setvariable ["A3C_PLOT_TEMP",[],true];
 	_unit setvariable ["A3C_CURRENTWAYPOINT_INDEX",1,true];
-	_unit setvariable ["A3C_AI_Shared_executeUnitPlot_Active",false,true];
+	_unit setvariable ["A3C_PLOT_ACTIVE",false,true];
 	_unit setvariable ["A3C_SYNC_WPINDEX",0,true];
 	_unit setvariable ["A3C_SYNC_ITEMS",[],true];
 	_unit setvariable ["A3C_WP_LINES",[],true];

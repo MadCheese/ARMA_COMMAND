@@ -458,7 +458,7 @@ A3C_FNC_CBA_KEY = {
 									A3C_SUPPRESSIONHEIGHT = 0;
 									A3C_SUPPRESSION_INDICATOR = "MCSS_ASM_SUPRESSION_INDICATOR_F" createVehicleLocal (screenToWorld [0.5, 0.5]);
 									A3C_SUPPRESSION_INDICATOR setObjectTextureGlobal[0,'#(argb,8,8,3)color(1,0,0,0.5)'];
-									//[A3C_SUPPRESSION_INDICATOR] spawn A3C_AI_Shared_executeUnitPlot_SUPPRESSION_INDICATOR;
+									//[A3C_SUPPRESSION_INDICATOR] spawn A3C_MOVE_SUPPRESSION_INDICATOR;
 								} else {
 									{
 										if !(_x in A3C_SUPPRESSION_UNITS_SQ) then {
@@ -589,7 +589,7 @@ A3C_FNC_CBA_KEY = {
 							A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = _targetUnits;
 							A3C_SQ_REM_INDICATOR = "MCSS_ASM_SUPRESSION_INDICATOR_F" createVehicleLocal (screenToWorld [0.5, 0.5]);
 							A3C_SQ_REM_INDICATOR setObjectTextureGlobal[0,'#(argb,8,8,3)color(1,1,0,0.5)'];
-							//[A3C_SQ_REM_INDICATOR] spawn A3C_AI_Shared_executeUnitPlot_SUPPRESSION_INDICATOR;
+							//[A3C_SQ_REM_INDICATOR] spawn A3C_MOVE_SUPPRESSION_INDICATOR;
 							showCommandingMenu "";
 						};
 					};
@@ -652,7 +652,7 @@ A3C_FNC_CBA_KEY = {
 						A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = _targetUnits;
 						A3C_HC_REM_INDICATOR = "MCSS_ASM_SUPRESSION_INDICATOR_F" createVehicleLocal (screenToWorld [0.5, 0.5]);
 						A3C_HC_REM_INDICATOR setObjectTextureGlobal[0,'#(argb,8,8,3)color(0,0.3,0.6,0.5)'];
-						//[A3C_HC_REM_INDICATOR] spawn A3C_AI_Shared_executeUnitPlot_SUPPRESSION_INDICATOR;
+						//[A3C_HC_REM_INDICATOR] spawn A3C_MOVE_SUPPRESSION_INDICATOR;
 						showCommandingMenu "";
 					};
 				} else {
@@ -708,7 +708,7 @@ A3C_FNC_CBA_KEY = {
 							A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = _targetUnits;
 							A3C_HC_SUP_INDICATOR = "MCSS_ASM_SUPRESSION_INDICATOR_F" createVehicleLocal (screenToWorld [0.5, 0.5]);
 							A3C_HC_SUP_INDICATOR setObjectTextureGlobal[0,'#(argb,8,8,3)color(0.73,0.47,0.7,0.5)'];
-							//[A3C_HC_REM_INDICATOR] spawn A3C_AI_Shared_executeUnitPlot_SUPPRESSION_INDICATOR;
+							//[A3C_HC_REM_INDICATOR] spawn A3C_MOVE_SUPPRESSION_INDICATOR;
 							showCommandingMenu "";
 						};
 					} else {

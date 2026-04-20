@@ -1050,7 +1050,7 @@ A3C_AI_Shared_executeUnitPlot = {
 		} else {
 			_vehicle limitspeed _maxSpeed;
 		};
-		_unit setvariable ["A3C_AI_Shared_executeUnitPlot_Active",true,true];
+		_unit setvariable ["A3C_PLOT_ACTIVE",true,true];
 
 
 		
@@ -2280,7 +2280,7 @@ A3C_AI_Shared_executeUnitPlot = {
 //	if (combatmode _unit == "BLUE") then {
 //		[_unit,["COMBATMODE","YELLOW"]] call MCSS_fnc_orderIndividual;
 //	};
-	_unit setvariable ["A3C_AI_Shared_executeUnitPlot_Active",false,true];
+	_unit setvariable ["A3C_PLOT_ACTIVE",false,true];
 
 	_unit setvariable ["A3C_CURRENTWAYPOINT_INDEX",1,true];
 	if !(alive _unit) then {sleep 5}; // safety for reassigning vars when clearing buildings
