@@ -101,6 +101,7 @@ A3C_UI_HUD_onKeyDown = {
                 };
                 case ("REPAIR") : {
                     [] call A3C_AI_HighCommand_Action_repair;
+					_flickerMode = "";
                 };
                 case ("LANDING") : {
                     [] call A3C_AI_HighCommand_Action_landAircraft;
@@ -110,6 +111,7 @@ A3C_UI_HUD_onKeyDown = {
                 };
                 case ("RAPPEL") : {
                     [] call A3C_AI_HighCommand_Action_rappel;
+					_flickerMode = "";
                 };
                 case ("SUPPRESSION") : {
                     [] call A3C_AI_HighCommand_Action_suppression;
@@ -120,9 +122,12 @@ A3C_UI_HUD_onKeyDown = {
                 };
                 case ("PLACE_CHARGE_HC") : {
                     [] call A3C_AI_HighCommand_Action_placeCharge;
+					_flickerMode = "DEMOLITION";
                 };
                 case ("STATIC_ASSEMBLE_HC") : {
                     [] call A3C_AI_HighCommand_Action_assembleWeapon;
+					// _flickerMode = "";
+					_flickerMode = "DEMOLITION";
                 };
                 case ("BoardVehicle_HC") : {
                     [] call A3C_AI_HighCommand_Action_boardGroupToVehicle;
@@ -132,9 +137,7 @@ A3C_UI_HUD_onKeyDown = {
                     [] call A3C_AI_HighCommand_Action_addWaypoint;
 					_oneTimeAction = false;
                     // _flickerMode = "BOARD";
-                };
-
-				  
+                };	  
             };
         };
         
@@ -147,9 +150,7 @@ A3C_UI_HUD_onKeyDown = {
             waitUntil {isNull (findDisplay 100060)};
             
 			if (_oneTimeAction) then {
-				 [] call A3C_AI_SHARED_Action_CancelPositionalProcess;
-				 private _flickerScript = [A3C_UI_HUD_3D_TAG_ICON_POS, _flickerMode] spawn A3C_UI_HUD_3D_TAG;
-            	waitUntil {scriptDone _flickerScript};
+				[_flickerMode] spawn A3C_AI_SHARED_Action_ConfirmPositionalProcess;	
 			} else {
 				//-- end flicker
 				private _iconType = A3C_UI_HUD_3D_TAG_ICON_TYPE;
@@ -304,11 +305,9 @@ A3C_UI_HUD_onKeyUp = {
 	if (_key == A3C_RadialMenu_KEY_ID select 0) exitWith {
 		A3C_DISABLE_RADIAL = false;
 		{inGameUISetEventHandler [_x, 'true']} foreach ['PrevAction','NextAction'];
-		if (A3C_AI_HighCommand_Action_ID != "") then {
+		if (A3C_AI_HighCommand_Action_ID != "" && {!(A3C_isHud3dTag)}) then {
 			[] call A3C_AI_SHARED_Action_CancelPositionalProcess;
 		};
-		A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-		A3C_UI_HUD_3D_TAG_reposition = false;
 
 		if (!isNull A3C_OBJECTPLACER) then {
 			deleteVehicle A3C_OBJECTPLACER;

@@ -1158,23 +1158,11 @@ MCSS_fnc_orderIndividual = {
 		[_unit] join grpNull;
 
 		//-- apply new settings
-		//--- %1 set%2 '%3';
+
 		private _commandString = if (_command == "BEHAVIOUR") then {"setBehaviour"} else {"setCombatMode"};
 		[_unit,_value] remoteExec ["setBehaviour",_unit];
 
-		//systemchat format ["%1 %2 %3",_unit,_commandString, _value];
-		//[_unit,_value] remoteExec [_commandString,_unit];
 
-		
-		//call compile format
-		//[
-		//	"
-		//		[%1,'%3'] remoteExec ['set%2',%1];
-		//	",
-		//	_unit,
-		//	_data select 0,
-		//	_data select 1
-		//];
 
 		if (!isPlayer leader _group) exitWith {
 			[_unit] joinSilent _group;

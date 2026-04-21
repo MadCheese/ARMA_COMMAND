@@ -29,13 +29,13 @@ A3C_AI_SHARED_Action_StartPositionalProcess = { //-- THIS MIGHT BE REQUIRED TO B
 		private _placer = _objectPlacerClass createvehicleLocal [0,0,100]; //
 		_placer allowdamage false;
 		_placer enableSimulation false;
-		_placer disableCollisionWith player;
 		_placer hideObject true;
 		private _safePos = ([screenToWorld [0.5,0.5],[0,100]] call MCSS_fnc_getSafePos);
 		if (!isNil '_safePos' && {count _safePos > 0}) then {
 			_placer setpos _safePos;
 		};
-		_placer disableCollisionWith cursortarget;
+
+		_placer setPhysicsCollisionFlag false;
 		//-- Color Object
 		if (_objectPlacerColorString != "") then {
 			private _colorStringFinal = "#(rgb,8,8,3)color" + _objectPlacerColorString;
@@ -62,8 +62,6 @@ A3C_AI_SHARED_Action_CancelPositionalProcess = {
 	if (!isNull A3C_OBJECTPLACER) then {
 		deleteVehicle A3C_OBJECTPLACER;
 	};
-	// A3C_DISABLE_RADIAL = false; // -- not needed (Handled by keyup)
-
 	if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
 		A3C_AI_Squad_Action_ID = "";
 	} else {
@@ -73,6 +71,20 @@ A3C_AI_SHARED_Action_CancelPositionalProcess = {
 	if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
 		A3C_UI_RADIAL_Current_Remfire_Units = [];
 	};
+};
+
+//---------------------------- SHARED POSITIONAL CONFIRM FUNCTION
+A3C_AI_SHARED_Action_ConfirmPositionalProcess = {
+	params ["_flickerMode"];
+	A3C_isHud3dTag = true;
+	A3C_UI_HUD_3D_TAG_reposition = false;
+	if (!isNull A3C_OBJECTPLACER) then {
+		deleteVehicle A3C_OBJECTPLACER;
+	};
+	private _flickerScript = [A3C_UI_HUD_3D_TAG_ICON_POS, _flickerMode] spawn A3C_UI_HUD_3D_TAG;
+	waitUntil {scriptDone _flickerScript};
+	A3C_isHud3dTag = false;
+	[] call A3C_AI_SHARED_Action_CancelPositionalProcess; //-- reset UI
 };
 
 

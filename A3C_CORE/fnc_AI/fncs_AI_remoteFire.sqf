@@ -708,37 +708,30 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 			//-- FIRE GL-LAUNCHER
 			_muzzle = _primMuzzles select 1;
 			_target = "A3C_Supression_Target_F"   createVehicle [0,0,0]; // "A3C_Supression_Target_F"    "B_SOLDIER_F"  
-			//[_target,true] remoteExec ["hideObjectGlobal",2];
+
 
 			sleep 1;
 			
-			//_unit playMoveNow "amovpercmstpsraswrfldnon";
 
-			
-			//_unit disableAI "ANIM";
 			_target setposASL _targetPos;
 			_unit reveal [_target,4];
 			_unit doTarget _target;
 			_unit doWatch _target;
 			_unit lookAt _target;
 
-			
 
-			
-			//(units player select 1) forceWeaponFire ["GL_3GL_F","Single"]
-			
 			sleep 2;
 			for "_i" from 0 to 80 do {
 				_unit doTarget _target;
 				if !(alive _unit) exitwith {};
 				
 				if ([_unit,_target] call MCSS_fnc_LOF) exitwith {
-					//systemchat "yeppi";
+
 					_unit setVariable ["A3C_PAUSE_PLAN",true,true];
 
 					_unit setDir (_unit getDir (getPosASL _target));
 
-					//sleep 1;
+
 					_refPos = (ASLtoATL _targetPos);
 					if ((_refPos select 2) > 2) then {
 						_refPos = [_refPos,15,_dir] call BIS_fnc_RelPos;
@@ -761,7 +754,6 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 						_shooter setVariable ["A3C_unit_is_Remote_Firing",false,true];
 						_shooter enableAI "ANIM";
 						sleep 1;
-						//systemchat str _behaviour;
 						[_shooter,["BEHAVIOUR",_behaviour]] call MCSS_fnc_orderIndividual;
 					};
 					[_unit,_handlerFunc,objNull,objNull,_snapObjectStored] call _addEHFunc;
@@ -774,12 +766,6 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 					[_unit,["BEHAVIOUR","COMBAT"]] call MCSS_fnc_orderIndividual;
 					sleep 1;
 
-					//_var = _unit getvariable ["A3C_REMOTE_HANDLE",[],true];
-					//if !(_var isEqualTo []) then {
-					//	systemchat 'goes';
-					//	_var set [count _var, behaviour _unit];
-					//	_unit setvariable ["A3C_REMOTE_HANDLE",_var,true];
-					//};
 					_unit forceWeaponFire [_muzzle,"Single"]
 				};
 				sleep 0.1;
@@ -813,86 +799,6 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 		};
 	};
 	_unit enableAI "AUTOTARGET";
-};
-
-
-
-
-
-
-/*
-
-A3C_guided_BulletHandler = {
-	private ["_var","_target"];
-	_veh = _this select 0;
-	_weapon = _this select 1;
-	_ammo = _this select 4;
-	_projectile = _this select 6;
-
-	_var = _veh getvariable "A3C_REMOTE_HANDLE";
-	_target = _var select 1;
-	if (isNil {_target}) exitWith {};
-
-	_vel = velocity _projectile;
-	_length = sqrt((_vel select 0)*(_vel select 0) + (_vel select 1)*(_vel select 1) + (_vel select 2)*(_vel select 2));
-	while {alive _projectile && alive _target} do
-	{
-		_dir = getPosATL _projectile vectorFromTo (getPosATL _target);
-		_vel =  [(_dir select 0) * _length, (_dir select 1) * _length, (_dir select 2) * _length];
-		_projectile setVelocity _vel;
-		sleep 0.1;
-	};
-};
-A3C_ExactoMISSILE1 = {
-	params ["_unit","_missile","_lock","_target","_target1"];
-
-	//(str _this) remoteExec ["systemchat",0];
-	if !(local _missile) exitWith {};
-
-	_missile setDir (_missile getDir _target);
-	private _missileSpeed = (speed _missile);
-	private _act = true;
-	private _c = 0;
-	private _sleep = if (_lock == 0) then {0.1} else {0.2};
-	private _maxCycles = if (_lock == 0) then {40} else {20};
-
-	private _ammo = typeOf _missile;
-	private _vel = velocity _missile;
-	private _vectorDir = vectorDir _missile;
-	private _vectorUp = vectorUp _missile;
-	private _posi = getPosASL _missile;
-
-
-	//systemchat str (_ammo == (typeOf _projectile));
-
-
-	sleep 0.001; //-- sleep 0.1 sec so the new bullet does not damage the turret
-	deletevehicle _missile;
-	private _newProjectile = _ammo createVehicle ((_posi select [0,2]) + [100]);
-	_newProjectile setPosASL _posi;
-	_newProjectile setVectorDirAndUp [_vectorDir,_vectorUp];
-	_newProjectile setVelocity _vel;
-	_unit setVariable ["A3C_Replacement_Projectile",_newProjectile,true];
-
-	//str _ammo remoteExec ["systemchat",0];
-	while {alive _newProjectile} do {
-		_travelTime = (_target distance _newProjectile) / ((_missileSpeed max 150) min 150);
-		_velocityX = (((getPosASL _target) select 0) - ((getPosASL _newProjectile) select 0)) / _travelTime;
-		_velocityY = (((getPosASL _target) select 1) - ((getPosASL _newProjectile) select 1)) / _travelTime;
-		_velocityZ = (((getPosASL _target) select 2) - ((getPosASL _newProjectile) select 2)) / _travelTime;
-		_newProjectile setvelocity [_velocityX,_velocityY,_velocityZ];
-		//str [getPosATL _newProjectile] remoteExec ["systemchat",0];
-		if (_lock == 0 && {_act}) then {
-			_act = false;
-			{detach _x} foreach [_target,_target1];
-		};
-
-		if (_lock == 0 && {_c > _maxCycles}) exitWith {};
-		_c = _c + 1;
-		sleep _sleep;
-	};
-	sleep 1;
-	{deletevehicle _x} foreach [_target,_target1];
 };
 
 
