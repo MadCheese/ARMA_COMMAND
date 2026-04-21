@@ -1255,6 +1255,35 @@ A3C_AI_HighCommand_Action_boardGroupToVehicle = {
 };
 
 
+A3C_AI_HighCommand_Action_addWaypoint = {
+	if (count A3C_RD_UNITS > 1) then {
+								
+		private _units = +(A3C_RD_UNITS);
+		[_units,A3C_UI_HUD_3D_TAG_ICON_POS] spawn A3C_FNCS_CONVOY_MULTIGROUP;
+	} else {
+		{
+			private _gp = _x;
+			private _wpParams = [_gp,A3C_UI_HUD_3D_TAG_ICON_POS];
+			private _eligibleForBuildingSearch = A3C_UI_HUD_3D_TAG_ICON_TYPE == "a3c_ui\markers\building.paa";
+			if (_eligibleForBuildingSearch) then {
+				_wpParams set [1, cursorTarget buildingPos 0];
+				_wpParams set [2,[]];
+				_wpParams = _wpParams +
+				[
+					"MOVE",
+					[0,0,"AUTO","AUTO","NORMAL","CLEARBUILDING"]
+				];
+			};
+			_wpParams call A3C_HC_ADD_WP;
+		} foreach A3C_RD_UNITS;
+	};
+};
+
+
+
+
+
+
 
 //---------------------------- MAP ONLY
 

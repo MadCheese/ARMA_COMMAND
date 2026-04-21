@@ -499,79 +499,14 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 				};
 			} else {
 				if (_btn == 0) then {
-					A3C_DISABLE_RADIAL = true;
-					[] call A3C_UI_RADIAL_CloseDisplay;
-					A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\hud\icon_HUD_movePos.paa"; //"\a3\ui_f\data\IGUI\Cfg\Cursors\waypointMark_ca.paa";
-					A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0] call A3C_UI_fnc_setOpacity;
-					A3C_UI_HUD_3D_TAG_reposition = true;
 					[
-						46,
-						'SPACE',
-						{count A3C_RD_UNITS > 0 && {A3C_UI_HUD_3D_TAG_ICON_TYPE != ""}},
-						{
-							if (count A3C_RD_UNITS > 1) then {
-								
-								private _units = +(A3C_RD_UNITS);
-								[_units,A3C_UI_HUD_3D_TAG_ICON_POS] spawn A3C_FNCS_CONVOY_MULTIGROUP;
-							} else {
-								{
-									private _gp = _x;
-									private _wpParams = [_gp,A3C_UI_HUD_3D_TAG_ICON_POS];
-									private _eligibleForBuildingSearch = A3C_UI_HUD_3D_TAG_ICON_TYPE == "a3c_ui\markers\building.paa";
-									if (_eligibleForBuildingSearch) then {
-										_wpParams set [1, cursorTarget buildingPos 0];
-										_wpParams set [2,[]];
-										_wpParams = _wpParams +
-										[
-											"MOVE",
-											[0,0,"AUTO","AUTO","NORMAL","CLEARBUILDING"]
-										];
-									};
-									_wpParams call A3C_HC_ADD_WP;
-								} foreach A3C_RD_UNITS;
-							};
-						},
-						{
-							private _iconType = "\a3c_ui\hud\icon_HUD_movePos.paa";
-							A3C_UI_HUD_3D_TAG_reposition = false;
-							//-- mini flicker
-							for "_i" from 1 to 2 do {
-								A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-								sleep 0.1;
-								A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
-								sleep 0.1;
-							};
-							if (A3C_DISABLE_RADIAL) then {
-								//-- Radial key not released - reIssue the icon for repeated orders
-								A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
-								A3C_UI_HUD_3D_TAG_reposition = true;
-							} else {
-								//-- Radial key released - abort
-								A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-								A3C_UI_HUD_3D_TAG_reposition = false;
-							}
-
-							
-						},
-						false
-					] call A3C_UI_RADIAL_ADD_EH_MACROS;
-					[
-						46,
-						'RADIAL',
-						{true},
-						{},
-						{
-							//-- here, we need to remove the keybind upon release of TAB, not the main thingy
-							(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-							if (A3C_UI_HUD_3D_TAG_reposition) then {
-								A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-								A3C_UI_HUD_3D_TAG_reposition = false;
-							};
-						},
-						true
-					] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-					
+						false, //-- isBusy
+						"HC_Waypoint", //-- actionID
+						'\a3c_ui\hud\icon_HUD_movePos.paa', //-- Hud-Icon-class  "\a3\ui_f\data\IGUI\Cfg\Cursors\waypointMark_ca.paa"
+						[1,1,1,0.7], //-- Hud-Icon-color
+						"", //-- placer class
+						"" //-- placer color-params
+					] call A3C_AI_SHARED_Action_StartPositionalProcess;	
 				} else {
 					for "_i" from 10008 to 10039 do {
 						(findDisplay 100040 displayCtrl _i) ctrlShow false;

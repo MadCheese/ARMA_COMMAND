@@ -7,6 +7,7 @@ class A3C_DSP_SettingsMenu
     movingEnable = 1;
     onLoad = EXPAND_AND_QUOTE(_this call FUNC(onLoad));
     onUnload = EXPAND_AND_QUOTE(_this call FUNC(onUnload));
+    onKeyUp = EXPAND_AND_QUOTE(_this call FUNC(onKeyUp));
 
     class ControlsBackground
     {

@@ -2158,18 +2158,6 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 				A3C_DISABLE_RADIAL = true;
 				[] call A3C_UI_RADIAL_CloseDisplay;
 
-				[
-					46,
-					'RADIAL',
-					{true},
-					{},
-					{
-						(findDisplay 100060) closeDisplay 0;
-						(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-					},
-					true
-				] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
 				with uiNameSpace do {
 					A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
 				};

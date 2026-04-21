@@ -40,6 +40,7 @@ A3C_UI_HUD_onKeyDown = {
         //-- Confirm Action (#TODO - create dedicated function to save space)
         private _script = 0;
         private _flickerMode = "SUPPRESSION";
+		private _oneTimeAction = true;
         if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
             switch (A3C_AI_Squad_Action_ID) do {
                 case ("ATSHOT") : {
@@ -115,6 +116,7 @@ A3C_UI_HUD_onKeyDown = {
                 };
                 case ("ARTY") : {
                     [] call A3C_AI_HighCommand_Action_artillery;
+					_oneTimeAction = false;
                 };
                 case ("PLACE_CHARGE_HC") : {
                     [] call A3C_AI_HighCommand_Action_placeCharge;
@@ -125,20 +127,39 @@ A3C_UI_HUD_onKeyDown = {
                 case ("BoardVehicle_HC") : {
                     [] call A3C_AI_HighCommand_Action_boardGroupToVehicle;
                     _flickerMode = "BOARD";
-                };  
+                };
+				case ("HC_Waypoint") : {
+                    [] call A3C_AI_HighCommand_Action_addWaypoint;
+					_oneTimeAction = false;
+                    // _flickerMode = "BOARD";
+                };
+
+				  
             };
         };
         
-        [_script, _flickerMode] spawn {
-            params ["_script", "_flickerMode"];
+        [_script, _oneTimeAction, _flickerMode] spawn {
+            params ["_script", "_oneTimeAction", "_flickerMode"];
             if (typeName _script == "CODE") then {
                 waitUntil {scriptDone _script};
             };
             //-- wait until objectSelector is closed
             waitUntil {isNull (findDisplay 100060)};
-            private _flickerScript = [A3C_UI_HUD_3D_TAG_ICON_POS, _flickerMode] spawn A3C_UI_HUD_3D_TAG;
-            waitUntil {scriptDone _flickerScript};
-            [] call A3C_AI_SHARED_Action_CancelPositionalProcess;
+            
+			if (_oneTimeAction) then {
+				 [] call A3C_AI_SHARED_Action_CancelPositionalProcess;
+				 private _flickerScript = [A3C_UI_HUD_3D_TAG_ICON_POS, _flickerMode] spawn A3C_UI_HUD_3D_TAG;
+            	waitUntil {scriptDone _flickerScript};
+			} else {
+				//-- end flicker
+				private _iconType = A3C_UI_HUD_3D_TAG_ICON_TYPE;
+				for "_i" from 1 to 2 do {			
+					A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+					sleep 0.1;
+					A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
+					sleep 0.1;
+				};
+			}; 
         };
         true
     };

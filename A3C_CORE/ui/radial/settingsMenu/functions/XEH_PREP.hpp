@@ -9,6 +9,7 @@ A3C_PREP(onUnload);
 
 // UI event handlers.
 A3C_PREP_SUBDIR(handlers,onButtonClick);
+A3C_PREP_SUBDIR(handlers,onKeyUp);
 
 // Public entry points.
 A3C_PREP_SUBDIR(public,changeSettings);
