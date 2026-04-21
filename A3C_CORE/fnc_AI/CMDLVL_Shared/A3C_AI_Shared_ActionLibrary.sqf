@@ -13,7 +13,7 @@ A3C_AI_SHARED_Action_StartPositionalProcess = { //-- THIS MIGHT BE REQUIRED TO B
 
 	//-- Positional UI 
 	A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
-	A3C_UI_HUD_3D_TAG_ICON_COL = [_iconColor,0.7] call A3C_UI_Color_setOpacity;
+	A3C_UI_HUD_3D_TAG_ICON_COL = [_iconColor,0.7] call A3C_UI_fnc_setOpacity;
 	A3C_UI_HUD_3D_TAG_reposition = true;
 
 	if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {

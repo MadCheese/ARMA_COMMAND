@@ -60,7 +60,7 @@ A3C_ReArm_Auto_OrderIssue = {
 
 	if (isPlayer _unit) exitWith {};
 
-	private _expDest = [_unit] call A3C_UNIT_STORE_DESTINATION;
+	private _expDest = [_unit] call A3C_fnc_setDestination;
 	private _cratePos = _crate getRelPos [3, random 360];
 
 	_unit setVariable ["A3C_REARMING", true, true];
@@ -114,7 +114,7 @@ A3C_ReArm_Auto_OrderIssue = {
 		} forEach _crateItems;
 	};
 
-	[_unit] call A3C_UNIT_RESUME_DESTINATION;
+	[_unit] call A3C_AI_action_resumeDestination;
 	_unit setVariable ["A3C_REARMING", nil, true];
 };
 
@@ -176,7 +176,7 @@ A3C_ReArm_Plot_AddItem = {
 		};
 		waitUntil {count (_unit getVariable "A3C_PLOT") == 0};
 		sleep 0.5;
-		[_unit] call A3C_UNIT_STORE_DESTINATION;
+		[_unit] call A3C_fnc_setDestination;
 
 		_unit setVariable ["A3C_PLOT", [_wpDataNew], true];
 		[_unit, (_unit getVariable "A3C_PLOT")] spawn A3C_AI_Shared_executeUnitPlot;
@@ -184,7 +184,7 @@ A3C_ReArm_Plot_AddItem = {
 		[_unit] spawn {
 			params ["_unit"];
 			waitUntil {sleep 1; count (_unit getVariable "A3C_PLOT") == 0};
-			[_unit] call A3C_UNIT_RESUME_DESTINATION;
+			[_unit] call A3C_AI_action_resumeDestination;
 		};
 
 	} else {

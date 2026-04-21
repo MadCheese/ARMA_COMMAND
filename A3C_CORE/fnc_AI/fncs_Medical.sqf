@@ -228,7 +228,7 @@ A3C_MEDICAL_START = {
 
 
 			//_expP = if (((_expDest select 0) distance2d [0,0,0] ) == 0) then {(position _healer)} else {(_expDest select 0)};
-			[_healer] call A3C_UNIT_STORE_DESTINATION;
+			[_healer] call A3C_fnc_setDestination;
 			_array = [];
 			_dir = getdir _healer;
 			_script = {};
@@ -293,7 +293,7 @@ A3C_MEDICAL_START = {
 
 			};
 
-			[_healer] call A3C_UNIT_RESUME_DESTINATION;
+			[_healer] call A3C_AI_action_resumeDestination;
 
 
 
@@ -353,7 +353,7 @@ A3C_HEAL = {
 	private _vehicleHeal = _objParentUnit == _objParentPatient;
 	if (isplayer _unit) exitwith {};
 	_isPlayer = (_patient == player);
-	_expDest = [_patient] call A3C_UNIT_STORE_DESTINATION; //expectedDestination _patient;
+	_expDest = [_patient] call A3C_fnc_setDestination; //expectedDestination _patient;
 	_objs = [];
 	_patientStance = switch (stance _patient) do {
 		case ("STAND") : {"AUTO"};
@@ -627,7 +627,7 @@ A3C_HEAL = {
 	waituntil {!(['medic',animationState _unit] call BIS_fnc_inString) };
 	_patient forcespeed -1;
 	if (!(_patient == _unit) && !(_isPlayer)) then {
-		[_unit] call A3C_UNIT_RESUME_DESTINATION;
+		[_unit] call A3C_AI_action_resumeDestination;
 	};
 };
 

@@ -1072,7 +1072,7 @@ A3C_POLY_ACTION_OFF = {
 					[_u,_poly] call A3C_SUP_REMOVE_POLY;
 
 					_ed = _x getvariable ["A3C_DEST",(expectedDestination _x)];
-					[_u] call A3C_UNIT_RESUME_DESTINATION;	
+					[_u] call A3C_AI_action_resumeDestination;	
 				//};
 				A3C_SUPPRESSION_UNITS_SQ = A3C_SUPPRESSION_UNITS_SQ - [_u];
 				A3C_SUPPRESSION_UNITS_AI = A3C_SUPPRESSION_UNITS_AI - [_u];

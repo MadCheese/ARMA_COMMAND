@@ -488,9 +488,9 @@ A3C_UI_SHARED_createDashBoard = {
 			_actualProgressBar ctrlSetPosition _ctrlPosBar;
 
 			_progressCol = switch (true) do {
-				case (_progress <= 0.3) : { [A3C_UI_COLOR_RED,0.6] call A3C_UI_Color_setOpacity};
-				case (_progress < 0.7) : { [A3C_UI_COLOR_YELLOW,0.6] call A3C_UI_Color_setOpacity};
-				//case (_progress == 0) : { [A3C_UI_COLOR_RED,0.1] call A3C_UI_Color_setOpacity};
+				case (_progress <= 0.3) : { [A3C_UI_COLOR_RED,0.6] call A3C_UI_fnc_setOpacity};
+				case (_progress < 0.7) : { [A3C_UI_COLOR_YELLOW,0.6] call A3C_UI_fnc_setOpacity};
+				//case (_progress == 0) : { [A3C_UI_COLOR_RED,0.1] call A3C_UI_fnc_setOpacity};
 				default {[0,1,0,0.6]};
 			};
 			
@@ -504,7 +504,7 @@ A3C_UI_SHARED_createDashBoard = {
 			_barTextCtrl ctrlSetPosition _ctrlPosText;
 
 			if (_progress == 0) then {
-				_barTextCtrl ctrlSetTextColor [1,0,0,1]; //([A3C_UI_COLOR_RED,0.9] call A3C_UI_Color_setOpacity);
+				_barTextCtrl ctrlSetTextColor [1,0,0,1]; //([A3C_UI_COLOR_RED,0.9] call A3C_UI_fnc_setOpacity);
 			};
 			{_x ctrlCommit 0} foreach [_actualProgressBar,_barTextCtrl,_bg_ProgressBar];
 			_macro = [_actualProgressBar,_barTextCtrl,_bg_ProgressBar];
@@ -524,13 +524,13 @@ A3C_UI_SHARED_createDashBoard = {
 				case (1) : {findDisplay _a3c_dsp displayCtrl 12003};
 			};
 			_progressCol = switch (true) do {
-				case (_x <= 0.3) : { [A3C_UI_COLOR_RED,0.6] call A3C_UI_Color_setOpacity};
-				case (_x < 0.7) : { [A3C_UI_COLOR_YELLOW,0.6] call A3C_UI_Color_setOpacity};
+				case (_x <= 0.3) : { [A3C_UI_COLOR_RED,0.6] call A3C_UI_fnc_setOpacity};
+				case (_x < 0.7) : { [A3C_UI_COLOR_YELLOW,0.6] call A3C_UI_fnc_setOpacity};
 				default {[0,1,0,0.6]};
 			};
 			private _prog = _x;
 			if (_prog == 0) then {
-				_txtctrl ctrlSetTextColor [1,0,0,1]; //([A3C_UI_COLOR_RED,0.9] call A3C_UI_Color_setOpacity);
+				_txtctrl ctrlSetTextColor [1,0,0,1]; //([A3C_UI_COLOR_RED,0.9] call A3C_UI_fnc_setOpacity);
 			};
 			_ctrl progressSetPosition _prog;
 			_ctrl ctrlSetTextColor _progressCol;
@@ -610,7 +610,7 @@ A3C_UI_SHARED_createDashBoard = {
 			_healingCapableIcon ctrlCommit 0;
 			_supportButtons = 1;
 		};
-		if ({[_x] call A3C_canUnitRepair} count units _group > 0) then {
+		if ({[_x] call A3C_fnc_canRepair} count units _group > 0) then {
 			if (_supportButtons == 1) then {
 				//_supportButtonBasePos set [0,0.134387 * safezoneW];
 				_supportButtonBasePos set [1,(3.09064e-006 * safezoneH) + (0.0340016 * safezoneH)];

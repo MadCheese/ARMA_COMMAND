@@ -170,7 +170,7 @@ A3C_AssignVehicleSeatMacro = {
 					_boardingData = _x;
 					if ({_x in _boardingData} count _refArray >= 2) exitWith {
 						_occupyingUnit = _x select 0;
-						_buttonColor = if (group _occupyingUnit == group player) then {[A3C_UI_COLOR_BLUE,0.3] call A3C_UI_Color_setOpacity} else {[A3C_UI_COLOR_RED,0.3] call A3C_UI_Color_setOpacity};
+						_buttonColor = if (group _occupyingUnit == group player) then {[A3C_UI_COLOR_BLUE,0.3] call A3C_UI_fnc_setOpacity} else {[A3C_UI_COLOR_RED,0.3] call A3C_UI_fnc_setOpacity};
 					};
 				} foreach _vicVar;
 
@@ -271,7 +271,7 @@ A3C_AssignVehicleSeat = {
 		};
 	};
 	
-	_buttonImg ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.3] call A3C_UI_Color_setOpacity);
+	_buttonImg ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.3] call A3C_UI_fnc_setOpacity);
 	
 	
 	_vicVar = _vehicle getVariable ["A3C_AssignedVehicleCrew",[]];
@@ -503,7 +503,7 @@ A3C_boardSquadUnittoSeat = {
 	_tv setVariable ["A3C_AssignedVehicleCrew",_vicVar,true]; 
 
 	if (A3C_RADIALMODE == "VEHS" && {_tv == A3C_TARGETVEH}) then {
-		_buttonImg ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.7] call A3C_UI_Color_setOpacity);
+		_buttonImg ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.7] call A3C_UI_fnc_setOpacity);
 	};
 	
 	if (_isPlayerAssigned) then {

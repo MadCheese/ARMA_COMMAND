@@ -32,7 +32,7 @@ A3C_AI_Squad_Action_engineOn = {
 
 A3C_AI_Squad_Action_engineOff = {
 	params ["_units"];
-	[_units] call A3C_AI_Shared_fnc_engineOff;
+	[_units] call A3C_AI_action_engineOff;
 };
 
 A3C_AI_Squad_Action_orderDetonation = {
@@ -149,23 +149,20 @@ A3C_AI_Squad_Action_suppression = {
 	};
 };
 
-A3C_AI_Squad_Action_placeChargeHC = {
+A3C_AI_Squad_Action_placeCharge = {
+
 	A3C_UI_HUD_3D_TAG_reposition = false;
 	if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
 		private _units = +(A3C_UI_RADIAL_Current_Remfire_Units);
 		private _mags = [];
+
 		{
-			private __u = _x;
-			{
-				if (getText (configfile >> "CfgMagazines" >> _x >> "nameSound") in ["satchelcharge","mine"]) then {
-					private _ammo = getText (configfile >> "CfgMagazines" >> _x >> "ammo");
-					private _mineTrigger = getText (configfile >> "CfgAmmo" >> _ammo >> "mineTrigger");
-					if (_mineTrigger == "RemoteTrigger" OR isNull cursorTarget) then {
-						_mags pushbackUnique _x;
-					};
-				};
-			} foreach (magazines _u)
-		} foreach _units;
+			_mags append ([_x] call A3C_fnc_getRemoteDetonatableUnitMagazines);
+		} forEach _units;
+
+		_mags = _mags arrayIntersect _mags;
+
+		// systemchat str _mags;
 
 		private __doRefreshGroupSelected = false;
 		with uiNamespace do {
@@ -173,10 +170,10 @@ A3C_AI_Squad_Action_placeChargeHC = {
 			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
 		};
 
-		private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
-		private __parent = findDisplay _a3c_dsp displayCtrl 8008;
-		private __text = findDisplay _a3c_dsp displayCtrl 800802;
-		private __listBox = findDisplay _a3c_dsp displayCtrl 800803;
+		private _a3c_dsp = if (visibleMap) then {100020} else {100060};
+		private _parent = findDisplay _a3c_dsp displayCtrl 8008;
+		private _text = findDisplay _a3c_dsp displayCtrl 800802;
+		private _listBox = findDisplay _a3c_dsp displayCtrl 800803;
 
 		A3C_OBJECTSELECTOR_MODE = "PLACE_CHARGE_SQUAD";
 		_parent ctrlShow true;
@@ -186,30 +183,51 @@ A3C_AI_Squad_Action_placeChargeHC = {
 
 		if (count _mags > 4) then {
 			_parentPos = ctrlPosition _parent;
-			_parentPos set[3,(_parentPos select 3) + (  ((count _mags) - 4)   * (0.0440051 * safezoneH) )];
+			_parentPos set [3, (_parentPos select 3) + (((count _mags) - 4) * (0.0440051 * safezoneH))];
 			_parent ctrlSetPosition _parentPos;
 			_parent ctrlCommit 0;
 		};
-
 
 
 		ctrlSetFocus _listBox;
 		
 		lbClear _listBox;
 		{
-			private _lbText = (getText (configfile >> "CfgMagazines" >> _x >> "displayName"));
+			private _lbText = getText (configFile >> "CfgMagazines" >> _x >> "displayName");
 			[_listBox, _lbText] call A3C_addLbEntry;
-		} foreach _mags;
-		[_parent,_listBox, count _mags] call A3C_OBJECTSEL_RESIZE;
-		
-
-
-		// A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\cargoPut_ca.paa";
-
+		} forEach _mags;
+		[_parent, _listBox, count _mags] call A3C_OBJECTSEL_RESIZE;
 	};
 };
 
 A3C_AI_Squad_Action_assembleWeapon = {
 	[] spawn A3C_AI_Squad_Action_assembleWeaponExecute;
+};
+
+A3C_AI_Squad_Action_throwGTIgrenade = {
+	
+					
+	BR_A3C_TEMP_gfeh = A3C_GTI_UNIT addEventHandler ["fired",
+	{
+		private _unit = _this select 0;
+		_unit forceSpeed -1;
+		if (_this select 1 == "THROW") then {
+			(_this select 6) setVelocity BR_A3C_TACV_throwVel;
+		};
+		if ((side _unit) == WEST) then {
+			[_unit] call A3C_Gren_Phrase;
+		};
+		_unit removeEventHandler ["fired", BR_A3C_TEMP_gfeh];
+		_add = if (BR_A3C_TACV_throwV0 <= BR_A3C_TACV_GV0MaxS) then {BR_A3C_TACV_throwV0 * BR_A3C_TACV_fatAdd} else {BR_A3C_TACV_throwV0 * BR_A3C_TACV_fatAdd * 2};
+		_unit setFatigue ((getFatigue _unit) + _add);
+		A3C_GREN_MUZZLE = "";
+	}];
+	_mz = ([A3C_GREN_MUZZLE] call MCSS_fnc_GetMuzzle);
+	A3C_GTI_UNIT forceSpeed 0;
+	sleep 0.5;
+	A3C_GTI_UNIT forceWeaponFire [_mz,_mz];
+	["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
+	A3C_GTI_UNIT = objnull;
+	A3C_AI_GREN_ARRAY = [];	
 };
 

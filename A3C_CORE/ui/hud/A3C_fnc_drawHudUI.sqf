@@ -183,7 +183,7 @@ A3C_fnc_drawHudUI = {
 					drawIcon3D
 					[
 						_iconType,
-						[A3C_UI_COLOR_BLUE,0.3] call A3C_UI_Color_setOpacity,
+						[A3C_UI_COLOR_BLUE,0.3] call A3C_UI_fnc_setOpacity,
 						_iconPos,
 						_iconSize,
 						_iconSize,
@@ -235,7 +235,7 @@ A3C_fnc_drawHudUI = {
 			drawIcon3D
 			[
 				[group player] call A3C_HC_getIconType,
-				[A3C_UI_COLOR_BLUE,0.3] call A3C_UI_Color_setOpacity,
+				[A3C_UI_COLOR_BLUE,0.3] call A3C_UI_fnc_setOpacity,
 				_iconPosPL, //_iconPos,
 				1, //_iconSize,
 				1, //_iconSize,
@@ -288,7 +288,7 @@ A3C_fnc_drawHudUI = {
 					drawIcon3D
 					[
 						_iconType,
-						[A3C_UI_COLOR_BLUE,0.6] call A3C_UI_Color_setOpacity, //[0.8,0.6,0,0.6],
+						[A3C_UI_COLOR_BLUE,0.6] call A3C_UI_fnc_setOpacity, //[0.8,0.6,0,0.6],
 						_iconPos,
 						_iconSize,
 						_iconSize,
@@ -320,9 +320,9 @@ A3C_fnc_drawHudUI = {
 				_integer = (_vehicleHealth max 0.1) * 10; //-- to get the number for the progressbar
 				_repairProgress = format ["\a3c_ui\infoAdd\icon_3D_progress_%1.paa",_integer];
 				_progressCol = switch (true) do {
-					case (_integer <= 3) : { [A3C_UI_COLOR_RED,0.6] call A3C_UI_Color_setOpacity};
-					case (_integer < 7) : { [A3C_UI_COLOR_YELLOW,0.6] call A3C_UI_Color_setOpacity};
-					default {if (canMove _x) then {[0,1,0,0.6]} else { [A3C_UI_COLOR_YELLOW,0.6] call A3C_UI_Color_setOpacity}};
+					case (_integer <= 3) : { [A3C_UI_COLOR_RED,0.6] call A3C_UI_fnc_setOpacity};
+					case (_integer < 7) : { [A3C_UI_COLOR_YELLOW,0.6] call A3C_UI_fnc_setOpacity};
+					default {if (canMove _x) then {[0,1,0,0.6]} else { [A3C_UI_COLOR_YELLOW,0.6] call A3C_UI_fnc_setOpacity}};
 				};
 			//};
 			//-- draw progress bar 
@@ -348,7 +348,7 @@ A3C_fnc_drawHudUI = {
 
 	//-- draw custom cursorTarget if player is in a vehicle
 	if (count _hcAllGroups > 0 && {!isNull objectparent player} ) then { //&&  {player == driver vehicle player}
-		_cursorTarget = [] call A3C_customCursorTarget;
+		_cursorTarget = [] call A3C_fnc_getCursortargetCustom;
 		if (!isNull _cursorTarget && { A3C_CURRENT_COMMAND_LEVEL == 'HIGHCOMMAND' && {group driver _cursorTarget in _hcAllGroups && {(_cursorTarget canVehicleCargo (vehicle player)) select 0}}}) then {
 			_iconPos = _cursorTarget modelToWorldVisual [0,0,0];
 			drawIcon3D
@@ -436,10 +436,10 @@ A3C_fnc_drawHudUI = {
 					];
 					private _assignedTeam = if (player == cameraOn) then {assignedTeam _x} else {_x getVariable ["A3C_ASSIGNEDTEAM","MAIN"]};
 					_color = switch (_assignedTeam) do {
-						case ("RED") : {[A3C_UI_COLOR_RED,_opacity] call A3C_UI_Color_setOpacity};
-						case ("GREEN") : {[[0,1,0,1],_opacity] call A3C_UI_Color_setOpacity};
-						case ("BLUE") : {[A3C_UI_COLOR_BLUE,_opacity] call A3C_UI_Color_setOpacity};
-						case ("YELLOW") : {[A3C_UI_COLOR_YELLOW,_opacity] call A3C_UI_Color_setOpacity};
+						case ("RED") : {[A3C_UI_COLOR_RED,_opacity] call A3C_UI_fnc_setOpacity};
+						case ("GREEN") : {[[0,1,0,1],_opacity] call A3C_UI_fnc_setOpacity};
+						case ("BLUE") : {[A3C_UI_COLOR_BLUE,_opacity] call A3C_UI_fnc_setOpacity};
+						case ("YELLOW") : {[A3C_UI_COLOR_YELLOW,_opacity] call A3C_UI_fnc_setOpacity};
 						default {[1,1,1,_opacity]}
 					};
 					
@@ -495,7 +495,7 @@ A3C_fnc_drawHudUI = {
 							A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
 						} else {
 							A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\hud\icon_HUD_movePos.paa";
-							A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0.5] call A3C_UI_Color_setOpacity;
+							A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0.5] call A3C_UI_fnc_setOpacity;
 						};
 					};
 				};

@@ -1601,7 +1601,7 @@ A3C_AI_Shared_executeUnitPlot = {
 					};
 				};
 				case ("CTRL_DET") : {
-					_spawnBehaviour = [_unit,_movePos,(_wpAction select 1)] spawn A3C_WP_ACTION_PlantExplosive;
+					_spawnBehaviour = [_unit,_movePos,(_wpAction select 1)] spawn A3C_AI_Squad_wpAction_plantExplosive;
 					waitUntil {scriptDone _spawnBehaviour};
 					sleep 0.5;
 				};

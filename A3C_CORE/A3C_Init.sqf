@@ -9,6 +9,12 @@ call compile preprocessFileLineNumbers "A3C_CORE\A3C_Init_VALUES.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_fncs_Main.sqf";
 
+//-- AI Functions 
+call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_general.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_actions.sqf";
+
+
+
 
 if (A3C_IsAICommand && {!isDedicated}) exitWith {
 	waituntil {alive player};
@@ -167,7 +173,14 @@ A3C_SPAWN_RADIAL = compile preprocessfileLineNumbers "A3C_CORE\ui\radial\A3C_Rad
 
 
 
+
+call compile preprocessFileLineNumbers "A3C_CORE\fnc_Player\fncs_Player.sqf";
+
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_Mode_ZEUS.sqf";
+
+call compile preprocessFileLineNumbers "A3C_CORE\ui\fncs_UI_main.sqf";
+
+
 MCSS_fnc_createMarker = compile preprocessfileLineNumbers "A3C_CORE\fnc_GEN\createMarker.sqf";
 MCSS_fnc_ctrlCreate = compile preprocessfileLineNumbers "A3C_CORE\ui\ctrlCreate.sqf";
 [] execVM "A3C_CORE\A3C_init_Runner.sqf";

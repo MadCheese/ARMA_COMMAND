@@ -94,8 +94,8 @@ A3C_ORDER_UNITS = [];
 A3C_CLICKPOS_1 = [0,0,0];
 A3C_CLICKPOS_2 = [0,0,0];
 A3C_CLICKPOS_ROOT = [0,0,0];
-A3C_LINECOLOR_DIAG = [A3C_UI_COLOR_BLUE,1] call A3C_UI_Color_setOpacity;
-A3C_LINECOLOR_MAP = [A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_Color_setOpacity; //~~ check which of these vars are no longer needed
+A3C_LINECOLOR_DIAG = [A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity;
+A3C_LINECOLOR_MAP = [A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_fnc_setOpacity; //~~ check which of these vars are no longer needed
 
 A3C_GROUP_NAMING_ACTIVE = nil;
 

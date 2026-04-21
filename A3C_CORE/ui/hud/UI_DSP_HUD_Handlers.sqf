@@ -57,14 +57,15 @@ A3C_UI_HUD_onKeyDown = {
 					[] call A3C_AI_Squad_Action_suppression;
 				};
 				case ("PLACE_CHARGE_SQUAD") : {
-					[] call A3C_AI_Squad_Action_placeChargeHC;
+					[] call A3C_AI_Squad_Action_placeCharge;
 				};
 				case ("STATIC_ASSEMBLE_SQUAD") : {
 					[] call A3C_AI_Squad_Action_assembleWeapon;
 				};
 
-
-
+				case ("GTI_GRENADE_SQUAD") : {
+					[] spawn A3C_AI_Squad_Action_throwGTIgrenade;
+				};
 
 
 				
@@ -115,7 +116,7 @@ A3C_UI_HUD_onKeyDown = {
 					[] call A3C_AI_HighCommand_Action_artillery;
 				};
 				case ("PLACE_CHARGE_HC") : {
-					[] call A3C_AI_HighCommand_Action_placeChargeHC;
+					[] call A3C_AI_HighCommand_Action_placeCharge;
 				};
 				case ("STATIC_ASSEMBLE_HC") : {
 					[] call A3C_AI_HighCommand_Action_assembleWeapon;
@@ -123,8 +124,6 @@ A3C_UI_HUD_onKeyDown = {
 			};
 		};
 		
-		
-
 		[_script] spawn {
 			params ["_script"];
 			if (typeName _script == "CODE") then {

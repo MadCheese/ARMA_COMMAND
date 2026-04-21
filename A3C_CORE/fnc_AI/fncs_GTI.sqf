@@ -369,10 +369,10 @@ A3C_GREN_DATA = {
 	};
 
 	if !(isnull (finddisplay 100040)) then {
-		[A3C_GREN_MUZZLE,0,_doChange] call A3C_GREN_VISUAL;
+		[A3C_GREN_MUZZLE,0,_doChange] call A3C_UI_RADIAL_populateOuterRing_Grenades;
 	} else {
 		(findDisplay _display displayCtrl 7064) ctrlSetTextColor [1,1,1,1];
-		[A3C_GREN_MUZZLE,1,_doChange] call A3C_GREN_VISUAL;
+		[A3C_GREN_MUZZLE,1,_doChange] call A3C_UI_RADIAL_populateOuterRing_Grenades;
 	};
 
 	if ((A3C_TEMP_ACTION select 0) == "GRENADE") then {
@@ -380,216 +380,11 @@ A3C_GREN_DATA = {
 	};
 };
 
-A3C_GREN_VISUAL = {
-	params ["_muzzle","_mode"];
-	//player commandchat str [_mode];
-
-	//-- label parent button
-	private _col = if (count A3C_AI_GREN_ARRAY == 0) then {[1,1,1,0.3]} else{[1,1,1,0.6]};
-	(findDisplay 100040 displayCtrl 9015) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_grenade.paa";
-	(findDisplay 100040 displayCtrl 9015) ctrlSetTextColor _col;
-	(findDisplay 100040 displayCtrl 9016) ctrlSetToolTip "AI Grenades";
 
 
-	//-- sort grenades by usability
-	A3C_AI_GREN_ARRAY =
-	[
-		A3C_AI_GREN_ARRAY,
-		[],
-		{
-			_ammo = getText (configfile >> "CfgMagazines" >> _x >> "ammo");
-			_number = 0;
-			_explo = getNumber (configfile >> "CfgAmmo" >> _ammo >> "explosive");
-			if (_explo == 1) then {
-				_hit = getNumber (configfile >> "CfgAmmo" >> _ammo >> "hit");
-				_number = 1000 * _hit;
-			} else {
-				_number = getNumber (configfile >> "CfgAmmo" >> _ammo >> "aiAmmoUsageFlags");
-			};
-			_number
-		},
-		"DESCEND"
-	] call BIS_fnc_sortBy;
-
-	if (A3C_RADIALMODE == "GRENADE" ) then {//&& {BV_GREN == 0}
-		//-- reset outer ring buttons
-		for "_i" from 10008 to 10039 do {
-			(findDisplay 100040 displayCtrl _i) ctrlShow false;
-			if (_i % 2 == 0) then {
-				(findDisplay 100040 displayCtrl _i) ctrlSetText "";
-			} else {
-				(findDisplay 100040 displayCtrl _i) ctrlSetTooltip "";
-			};
-		};
-
-		_outerRingBackGroundIDs = ["PlaceHolder","Left","bottom","Right","Top"];
-
-		//-- outer ring backgrounds
-		for "_i" from 8001 to 8004 do {
-			_ind = _i - 8000;
-
-			if ( _ind <= ((ceil ((count A3C_AI_GREN_ARRAY) / 4) ) min 3)    ) then {
-				(findDisplay 100040 displayCtrl _i) ctrlShow true; //-- outer circle backgroud shown
-				(findDisplay 100040 displayCtrl _i) ctrlSetText (format ["A3C_CORE\ui\pictures\BG_Radial_OuterRing_%1.paa",_outerRingBackGroundIDs select _ind]);
-			} else {
-				(findDisplay 100040 displayCtrl _i) ctrlShow false; //-- outer circle backgroud hidden
-			};
-		};
-		if (count A3C_AI_GREN_ARRAY == 0) exitWith {};
-		//-- label buttons-images and fncs
-		{
-			_btnID = (10039 - (_foreachIndex * 2));
-			_imgID = ((10039 - (_foreachIndex * 2)) - 1);
-			_buttonitem = 16 - _foreachIndex;
-			//systemchat str _btnID;
-			_btnClicker = findDisplay 100040 displayCtrl _btnID;
-			_btnImage = findDisplay 100040 displayCtrl _imgID;
-			{_x ctrlShow true} foreach [_btnImage,_btnClicker];
-			_btnImage ctrlSetText (gettext (configfile >> "CfgMagazines" >> _x >> "picture"));
-			_btnClicker ctrlSetToolTip (gettext (configfile >> "CfgMagazines" >> _x >> "displayNameShort"));
-			call compile format
-			[
-				"
-					A3C_OUTER_RING_BTN_fnc_%1 =
-					[
-						[],
-						{
-							A3C_GREN_MUZZLE = '%2';
-							[] spawn A3C_RadialMenu_GREN;
-						}
-					];
-				",
-				_buttonitem,
-				_x
-			];
-		} foreach A3C_AI_GREN_ARRAY;
-	};
-};
 
 
-A3C_GREN_VISUAL_1 = {
-	params ["_muzzle","_mode","_doChange"];
-systemchat 'visual';
-	_display = if (visibleMap) then {100020} else {100030};
-	if (A3C_MAP_CommandMode == "HC") exitWith {};
-	if (_mode == 0) then {
-		if (count A3C_AI_GREN_ARRAY > 0) then {
-			((findDisplay 100040) displayCtrl 9015) ctrlSetText (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "picture"));
-			((findDisplay 100040) displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlSetTooltip (format ["Hold LMB for %1, click RMB to change item", (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "displayNameShort"))]);
-		} else {
-			((findDisplay 100040) displayCtrl 9015) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_GrenMain.paa";
-			((findDisplay 100040) displayCtrl 9016) ctrlSetTooltip "currently no items available";
-		};
-	} else {
-		if (_doChange) then {
-			if !(A3C_GREN_MUZZLE == "") then {
-				((findDisplay 100040) displayCtrl 9016) ctrlSetTooltip (format ["LMB: activate/deactivate %1. Shift+LMB: activate suppressive fire", (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "displayNameShort"))]);
-				(findDisplay _display displayCtrl 7064) ctrlsettext (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "picture"));
-				(findDisplay _display displayCtrl 7065) ctrlSetToolTip ( "Throw " + (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "displayNameShort")) + " || Hold SHIFT to cycle through grenade types");
-				A3C_TEMP_ACTION = ["GRENADE",A3C_GREN_MUZZLE];
-			} else {
-				A3C_TEMP_ACTION = ["GRENADE",""];
-				(findDisplay _display displayCtrl 7064) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_smokeGrey.paa";
-				(findDisplay _display displayCtrl 7065) ctrlSetToolTip "Throw Grenade: No items available || LMB: Switch Action Type";
-			};
-		};
-	};
-};
 
-A3C_RadialMenu_GREN = {
-
-	if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") exitWith {};
-
-	//if (_this select 1 == 1) exitwith {
-	//	if (count A3C_AI_GREN_ARRAY > 1) then {
-	//		[1] call A3C_GREN_DATA;
-	//		sleep 0.1;
-	//		{player groupSelectUnit [_x,true]} foreach A3C_RD_UNITS;
-	//	};
-	//};
-
-	_unit = objnull;
-	{
-		if ( ( {A3C_GREN_MUZZLE == _x} count (magazines _x)) > 0) exitwith {
-			_unit = _x;
-			A3C_GTI_UNIT = _x;
-		};
-	} foreach A3C_RD_UNITS;
-	if (isnull _unit) exitwith {};
-	{[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS;
-
-	if (isnil "A3C_GREN_MUZZLE") exitwith {
-		((findDisplay 100040) displayCtrl 9016) ctrlSetTooltip "currently no items available";
-	};
-	BR_A3C_TACV_throwTheta = 45;
-	BR_A3C_TACV_throwTheta_Add = 0;
-	A3C_GREN_ALLOW_UNITSWITCH = if (count A3C_RD_UNITS == 1) then {false} else {true};
-	BR_A3C_TACV_oefId = ["BR_A3C_TACV_oefId", "onEachFrame", "BR_A3C_OEFControl"] call BIS_fnc_addStackedEventHandler;
-
-	A3C_DISABLE_RADIAL = true;
-	[] call A3C_UI_RADIAL_CloseDisplay;
-	[
-		46,
-		'SPACE',
-		{count A3C_RD_UNITS > 0},
-		{
-			[] spawn {
-				if (A3C_DISABLE_RADIAL) then {
-					//A3C_DISABLE_RADIAL = false;
-					BR_A3C_TEMP_gfeh = A3C_GTI_UNIT addEventHandler ["fired",
-					{
-						private _unit = _this select 0;
-						_unit forceSpeed -1;
-						if (_this select 1 == "THROW") then {
-							(_this select 6) setVelocity BR_A3C_TACV_throwVel;
-						};
-						if ((side _unit) == WEST) then {
-							[_unit] call A3C_Gren_Phrase;
-						};
-						_unit removeEventHandler ["fired", BR_A3C_TEMP_gfeh];
-						_add = if (BR_A3C_TACV_throwV0 <= BR_A3C_TACV_GV0MaxS) then {BR_A3C_TACV_throwV0 * BR_A3C_TACV_fatAdd} else {BR_A3C_TACV_throwV0 * BR_A3C_TACV_fatAdd * 2};
-						_unit setFatigue ((getFatigue _unit) + _add);
-						A3C_GREN_MUZZLE = "";
-					}];
-					_mz = ([A3C_GREN_MUZZLE] call MCSS_fnc_GetMuzzle);
-					A3C_GTI_UNIT forceSpeed 0;
-					sleep 0.5;
-					A3C_GTI_UNIT forceWeaponFire [_mz,_mz];
-					["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
-					A3C_GTI_UNIT = objnull;
-					A3C_AI_GREN_ARRAY = [];
-
-				};
-			};
-
-		},
-		{
-			(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-		},
-		false
-	] call A3C_UI_RADIAL_ADD_EH_MACROS;
-
-	[
-		46,
-		'RADIAL',
-		{true},
-		{},
-		{
-			if (A3C_DISABLE_RADIAL) then {
-				(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-				A3C_DISABLE_RADIAL = false;
-				["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
-				A3C_GTI_UNIT = objnull;
-				A3C_AI_GREN_ARRAY = [];
-			};
-			(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-
-		},
-		true
-	] call A3C_UI_RADIAL_ADD_EH_MACROS;
-	A3C_UI_HUD_3D_TAG_reposition = true;
-	showCommandingMenu "";
-};
 
 A3C_Gren_Phrase = {
 	_unit = _this select 0;

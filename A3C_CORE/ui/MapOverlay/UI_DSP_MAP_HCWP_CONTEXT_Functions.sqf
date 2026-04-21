@@ -1736,7 +1736,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 			
 			
 			if (_leaderVic isKindOf "HELICOPTER") then {
-				if ([_leaderVic] call A3C_isAttackHelicopter ) then { //-- unit with toolKit is required
+				if ([_leaderVic] call A3C_fnc_isAttackHelicopter ) then { //-- unit with toolKit is required
 					_landingTypes pushBackUnique "HELI OVERWATCH";
 				};
 				
@@ -1791,7 +1791,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 				_actionTypes = _actionTypes + ["ASSEMBLE WEAPON"];
 
 			};
-			if (count ([units A3C_HC_ACTIVEGROUP] call A3C_get_det_units) > 0) then {
+			if (count ([units A3C_HC_ACTIVEGROUP] call A3C_fnc_getRemoteDetonatorUnits) > 0) then {
 				_actionTypes = _actionTypes + ["DEMOLITION"];
 			};
 			{
@@ -1814,7 +1814,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 			};
 		};
 
-		if ({[_x] call A3C_canUnitRepair} count (units A3C_HC_ACTIVEGROUP) > 0) then { //-- unit with toolKit is required
+		if ({[_x] call A3C_fnc_canRepair} count (units A3C_HC_ACTIVEGROUP) > 0) then { //-- unit with toolKit is required
 			_actionTypes pushBackUnique "REPAIR";
 		};
 	};
@@ -2403,16 +2403,14 @@ A3C_LB_HC = {
 						lbClear _listBox;
 						ctrlSetFocus _listBox;
 
-						A3C_REMFIRE_MAGTYPES = [];
-
+						private _allRemfireMagTypes = [];
 						{
-							_u = _x;
-							{
-								if (getText (configfile >> "CfgMagazines" >> _x >> "nameSound") in ["satchelcharge","mine"]) then {
-									A3C_REMFIRE_MAGTYPES pushbackUnique _x;
-								};
-							} foreach (magazines _u)
-						} foreach units A3C_HC_ACTIVEGROUP;
+							_allRemfireMagTypes append ((magazines _x) select {
+								getText (configFile >> "CfgMagazines" >> _x >> "nameSound") in ["satchelcharge", "mine"]
+							});
+						} forEach (units A3C_HC_ACTIVEGROUP);
+						A3C_REMFIRE_MAGTYPES = _allRemfireMagTypes arrayIntersect _allRemfireMagTypes;
+
 						A3C_OBJECTSELECTOR_MODE = "PLACE_CHARGE_HC_MAP";
 						_text ctrlSetText "Select Charge";
 						_parent ctrlShow true;

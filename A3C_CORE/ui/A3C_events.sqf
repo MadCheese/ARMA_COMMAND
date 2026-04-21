@@ -188,12 +188,12 @@ A3C_FNC_UAV_KEY = {
 					switch (_button) do {
 						case 0: {
 							// systemChat format ["LMB on %1 | obj=%2", _name, _uav];
-							[_uav, 0] spawn A3C_ConnectUAV;
+							[_uav, 0] spawn A3C_fnc_playerConnectToUAV;
 							(ctrlParent _ctrl) closeDisplay 1;
 						};
 						case 1: {
 							// systemChat format ["RMB on %1 | obj=%2", _name, _uav];
-							[_uav, 1] spawn A3C_ConnectUAV;
+							[_uav, 1] spawn A3C_fnc_playerConnectToUAV;
 							(ctrlParent _ctrl) closeDisplay 1;
 						};
 					};
@@ -217,7 +217,7 @@ A3C_FNC_UAV_KEY = {
 		
 		if !(unitIsUAV cameraOn) then {
 			//-- Take UAV control
-			[] spawn A3C_TakeUAVControl
+			[] spawn A3C_fnc_playerTakeUAVControl
 		} else {
 			//-- Release UAV control
 			player switchCamera "Internal";

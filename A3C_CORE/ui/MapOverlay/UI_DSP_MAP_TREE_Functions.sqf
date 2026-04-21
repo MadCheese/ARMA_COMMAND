@@ -8,10 +8,10 @@ A3C_UI_MAP_TREE_ADD_ITEM = {
 		params ["_unit"];
 		private _assignedTeam = if (player == cameraOn) then {assignedTeam _unit} else {_unit getVariable ["A3C_ASSIGNEDTEAM","MAIN"]};
 		private _color = switch (_assignedTeam ) do {
-			case ("RED") : {[A3C_UI_COLOR_RED,1] call A3C_UI_Color_setOpacity};
+			case ("RED") : {[A3C_UI_COLOR_RED,1] call A3C_UI_fnc_setOpacity};
 			case ("GREEN") : {[0,1,0,1]};
-			case ("BLUE") : {[A3C_UI_COLOR_BLUE,1] call A3C_UI_Color_setOpacity};
-			case ("YELLOW") : {[A3C_UI_COLOR_YELLOW,1] call A3C_UI_Color_setOpacity};
+			case ("BLUE") : {[A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity};
+			case ("YELLOW") : {[A3C_UI_COLOR_YELLOW,1] call A3C_UI_fnc_setOpacity};
 			default {[1,1,1,1]};
 		};
 		_color
@@ -30,7 +30,7 @@ A3C_UI_MAP_TREE_ADD_ITEM = {
 				switch (true) do {
 					case ({[_x] call TAG_fnc_baseWeapon == "Medikit"} count (items _unit) > 0) : {
 						_CT_TREE tvSetPictureRight [_ct_indexArray, "A3C_CORE\ui\pictures\icon_menu_Medical.paa"];
-						//_CT_TREE tvSetPictureRightColor [_ct_indexArray, [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity];
+						//_CT_TREE tvSetPictureRightColor [_ct_indexArray, [A3C_UI_COLOR_RED,0.7] call A3C_UI_fnc_setOpacity];
 						_CT_TREE tvSetPictureRightColor [_ct_indexArray, [1,1,1,0.7]];						
 					};
 					case ({[_x] call TAG_fnc_baseWeapon == "ToolKit"} count (items _unit) > 0) : {
@@ -853,10 +853,10 @@ A3C_UI_MAP_RESIZE_TEAMCOLORS_Y = {
 			//if (_i % 2 == 0) then {
 				_ctrlBar ctrlSetText "#(argb,8,8,3)color(1,1,1,0.8)";
 				_tCol = switch (_teamColor) do {
-					case ("RED") : {[A3C_UI_COLOR_RED,1] call A3C_UI_Color_setOpacity};
+					case ("RED") : {[A3C_UI_COLOR_RED,1] call A3C_UI_fnc_setOpacity};
 					case ("GREEN") : {[0,1,0,1]};
-					case ("BLUE") : {[A3C_UI_COLOR_BLUE,1] call A3C_UI_Color_setOpacity};
-					case ("YELLOW") : {[A3C_UI_COLOR_YELLOW,1] call A3C_UI_Color_setOpacity};
+					case ("BLUE") : {[A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity};
+					case ("YELLOW") : {[A3C_UI_COLOR_YELLOW,1] call A3C_UI_fnc_setOpacity};
 					case ("MAIN") : {[1,1,1,1]};
 					case ("ALL") : {[0.5,0.2,0.6,1]};
 				};

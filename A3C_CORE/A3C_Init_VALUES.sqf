@@ -641,6 +641,15 @@ A3C_RADIAL_GAMEUI_AllButtonAreas =  [A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT
 
 BR_A3C_GRENADEMODE = false;
 
+A3C_Prevent_attach_IR = false;
+A3C_Prevent_attach_IR_Laser = false;
+A3C_Prevent_attach_Flashlight = false;
+
+A3C_Prevent_UGLSHOT = false;
+A3C_Prevent_ATSHOT = false;
+A3C_Prevent_TANKSHOT = false;
+A3C_Prevent_STATICSHOT = false;
+
 [] spawn {
 	sleep 1;
 	A3C_SHOWNHUD = shownHud; //-- shownHud select 6 is false if this fires earlier

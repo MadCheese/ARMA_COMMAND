@@ -126,14 +126,14 @@ MAP_UI_fnc_drawMapUI = {
 	
 	//-- Attach Explosiive: Vehicle Pickup Icons
 	if (A3C_HC_DETONATION_BOOL) then {
-		_demolition_snapObjects = [leader A3C_HC_ACTIVEGROUP,waypointPosition [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND],50,true] call MCSS_fnc_nearDetonationTargets;
+		_demolition_snapObjects = [leader A3C_HC_ACTIVEGROUP,waypointPosition [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND],50,true] call A3C_fnc_getNearDetonationTargets;
 		if !(_demolition_snapObjects isEqualTo []) then {
 			{
 				[
 					_this select 0,
 					_x,
 					25,
-					[A3C_UI_COLOR_RED,1] call A3C_UI_Color_setOpacity,
+					[A3C_UI_COLOR_RED,1] call A3C_UI_fnc_setOpacity,
 					(gettext(configFile >> "CfgVehicles" >> typeof _x >> "displayName"))
 				] call A3C_UI_MAP_DRAW_MACRO_VEHICON;		
 				A3C_UI_MAPICONS_DEMO_VICS pushBack [_x,[25,25],getpos _x];
@@ -234,7 +234,7 @@ MAP_UI_fnc_drawMapUI = {
 
 					_root = []; //-- default: empty WP position.
 					_index = _forEachIndex;
-					_color = if (_varInd == 0) then {[A3C_UI_COLOR_BLACK,1] call A3C_UI_Color_setOpacity} else {[A3C_UI_COLOR_GREY,1] call A3C_UI_Color_setOpacity}; //-- default color: ColorBlufor   [0,0.3,0.6,A3C_OPACITY] //
+					_color = if (_varInd == 0) then {[A3C_UI_COLOR_BLACK,1] call A3C_UI_fnc_setOpacity} else {[A3C_UI_COLOR_GREY,1] call A3C_UI_fnc_setOpacity}; //-- default color: ColorBlufor   [0,0.3,0.6,A3C_OPACITY] //
 					_wpFiringMode = if ((_wpAction select 0) in ["GRENADE","SUPPRESSION"]) then {2} else {0}; //~~ change this value here and in smokeless_wp
 					_wPos = _wpPositions select 0;
 					_mainMarkerID = _wpMarkers select 0;
@@ -520,10 +520,10 @@ MAP_UI_fnc_drawMapUI = {
 			_op = _op min A3C_OPACITY;
 			private _assignedTeam = if (player == cameraOn) then {assignedTeam _x} else {_x getVariable ["A3C_ASSIGNEDTEAM","MAIN"]};
 			private _unitColor = switch (_assignedTeam) do {
-				case ("RED") :{if (_hold) then {[1,0.55,0.52,_op]} else {[A3C_UI_COLOR_RED,_op] call A3C_UI_Color_setOpacity} };
+				case ("RED") :{if (_hold) then {[1,0.55,0.52,_op]} else {[A3C_UI_COLOR_RED,_op] call A3C_UI_fnc_setOpacity} };
 				case ("GREEN") :{if (_hold) then {[0.6,1,0.5,_op]} else {[0,1,0,_op]}};
-				case ("BLUE") :{if (_hold) then {[0.5,0.67,0.98,_op]} else {[A3C_UI_COLOR_BLUE,_op] call A3C_UI_Color_setOpacity} };
-				case ("YELLOW") :{if (_hold) then {[0.98,0.95,0.63,_op]} else {[A3C_UI_COLOR_YELLOW,_op] call A3C_UI_Color_setOpacity} };
+				case ("BLUE") :{if (_hold) then {[0.5,0.67,0.98,_op]} else {[A3C_UI_COLOR_BLUE,_op] call A3C_UI_fnc_setOpacity} };
+				case ("YELLOW") :{if (_hold) then {[0.98,0.95,0.63,_op]} else {[A3C_UI_COLOR_YELLOW,_op] call A3C_UI_fnc_setOpacity} };
 				case ("MAIN") :{if (_hold) then {[0.52,0.52,0.52,_op]} else {[0.8,0.8,0.8,_op]}};
 				default {[0.8,0.8,0.8,_op]};
 			};
@@ -738,12 +738,12 @@ MAP_UI_fnc_drawMapUI = {
 			if (_allowDrawing) then { //&& _isGPScapable
 				_iconColorString = toLower (_group getVariable ["A3C_HC_GroupColor","blue"]);
 				_iconColorArray = switch (_iconColorString) do {
-					case ("red") : {[A3C_UI_COLOR_RED,_opacity] call A3C_UI_Color_setOpacity};
-					case ("blue") : {[A3C_UI_COLOR_BLUE,_opacity] call A3C_UI_Color_setOpacity};
+					case ("red") : {[A3C_UI_COLOR_RED,_opacity] call A3C_UI_fnc_setOpacity};
+					case ("blue") : {[A3C_UI_COLOR_BLUE,_opacity] call A3C_UI_fnc_setOpacity};
 					case ("green") : {[0,1,0,_opacity]};
-					case ("black") : {[A3C_UI_COLOR_Black,_opacity] call A3C_UI_Color_setOpacity};
+					case ("black") : {[A3C_UI_COLOR_Black,_opacity] call A3C_UI_fnc_setOpacity};
 					case ("white") : {[1,1,1,_opacity]};
-					default {[A3C_UI_COLOR_BLUE,_opacity] call A3C_UI_Color_setOpacity};
+					default {[A3C_UI_COLOR_BLUE,_opacity] call A3C_UI_fnc_setOpacity};
 				};
 				{
 					private ["_wp","_startPos","_endPos","_draw"];
@@ -894,7 +894,7 @@ MAP_UI_fnc_drawMapUI = {
 							switch (true) do {
 								case ("repair" in _scr) : {
 									//-- circle
-									_entities = (_wPos nearEntities [["Car","Motorcycle","Tank","AIR"], 100]) select {[side _leader, _x,"VISUAL"] call A3C_VEHICLE_needsTreatment};
+									_entities = (_wPos nearEntities [["Car","Motorcycle","Tank","AIR"], 100]) select {[side _leader, _x,"VISUAL"] call A3C_fnc_isVehicleDamaged};
 									_circleColor = switch (true) do {
 										case (count _entities > 3) : {A3C_UI_COLOR_RED};
 										case (count _entities > 2) : {[0.99,0.36,0.12,1]};
@@ -910,7 +910,7 @@ MAP_UI_fnc_drawMapUI = {
 										100,
 										100,
 										0,
-										[_circleColor,0.5 min A3C_OPACITY] call A3C_UI_Color_setOpacity,
+										[_circleColor,0.5 min A3C_OPACITY] call A3C_UI_fnc_setOpacity,
 										"#(ai,512,512,9)perlinNoise(256,256,0,1)"
 									];
 									//-- vehicles to repair
@@ -1380,7 +1380,7 @@ MAP_UI_fnc_drawMapUI = {
 						_wpnIcon = _this select 0 drawIcon
 						[
 							(gettext(configfile >> "CfgVehicles" >> (typeof (vehicle _x)) >> "icon")),
-							[A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_Color_setOpacity,
+							[A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_fnc_setOpacity,
 							getPos _x,
 							35,
 							35,
@@ -1497,7 +1497,7 @@ MAP_UI_fnc_drawMapUI = {
 							_poses = [_poses,[],{_x distance2D _u},"ASCEND"] call BIS_fnc_sortBy;
 							_root = _poses select 0;
 							_unitPos = if (typeName _u == "OBJECT") then {getPos _u} else {getPos (leader _u)}; //-- unNecessary
-							(_this select 0) drawline [getPos _x, _root, [A3C_UI_COLOR_RED,0.3] call A3C_UI_Color_setOpacity];
+							(_this select 0) drawline [getPos _x, _root, [A3C_UI_COLOR_RED,0.3] call A3C_UI_fnc_setOpacity];
 							_this select 0 drawIcon
 							[
 								"\a3\ui_f\data\Map\Markers\Military\dot_CA.paa",
@@ -1599,7 +1599,7 @@ MAP_UI_fnc_drawMapUI = {
 					} foreach _wpA;
 					
 					if (_draw) then {
-						(_this select 0) drawline [_root1,(_poly select 0) select 0, [A3C_UI_COLOR_RED,0.3] call A3C_UI_Color_setOpacity];
+						(_this select 0) drawline [_root1,(_poly select 0) select 0, [A3C_UI_COLOR_RED,0.3] call A3C_UI_fnc_setOpacity];
 					};
 				};
 				//_poly = _poly - [_rec];
@@ -1628,7 +1628,7 @@ MAP_UI_fnc_drawMapUI = {
 		//-- draw polygon, unless it's an Assembly Polygon
 		if (count _x > 0 && {count (_x select 1) > 0 }) then {
 			private _color = switch (_polyType) do {
-				case ("SUP") : {[A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity}; //{"ColorOpfor"}; NOTE: ColorOpfor does not work after Contact Patch
+				case ("SUP") : {[A3C_UI_COLOR_RED,0.7] call A3C_UI_fnc_setOpacity}; //{"ColorOpfor"}; NOTE: ColorOpfor does not work after Contact Patch
 				case ("AMB") : {[0,0,0,0.7]}; //{"ColorBlack"};
 				case ("ASS") : {[0,0,0,0.7]}; //{"ColorBlack"};
 				case ("OTHER") : {[1,1,1,0.7]}; //{"ColorWhite"};
@@ -1774,7 +1774,7 @@ MAP_UI_fnc_drawMapUI = {
 				_this select 0,
 				_x,
 				25,
-				[A3C_UI_COLOR_BLUE,1] call A3C_UI_Color_setOpacity,
+				[A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity,
 				(gettext(configFile >> "CfgVehicles" >> typeof _v >> "displayName"))
 			] call A3C_UI_MAP_DRAW_MACRO_VEHICON;	
 			A3C_UI_MAPICONS_PICKUP pushbackUnique [_x,[25,25], getPosASL _x];
@@ -1786,7 +1786,7 @@ MAP_UI_fnc_drawMapUI = {
 				_this select 0,
 				_x select 0,
 				32.5,
-				[A3C_UI_COLOR_BLUE,1] call A3C_UI_Color_setOpacity,
+				[A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity,
 				""
 			] call A3C_UI_MAP_DRAW_MACRO_VEHICON;
 		} foreach A3C_UI_MAPICONS_HC_VICS;
@@ -1842,7 +1842,7 @@ A3C_EVH_DRAW1 = (findDisplay 12 displayCtrl 51) ctrlAddEventHandler
 					_this select 0,
 					vehicle player,
 					25,
-					[A3C_UI_COLOR_RED,1] call A3C_UI_Color_setOpacity,
+					[A3C_UI_COLOR_RED,1] call A3C_UI_fnc_setOpacity,
 					""
 				] call A3C_UI_MAP_DRAW_MACRO_VEHICON;	
 	}

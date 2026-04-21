@@ -971,7 +971,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 		if (count A3C_SELECTED_UNITS == 1) then {
 			if (isNull objectParent (A3C_SELECTED_UNITS select 0)) then {
 				A3C_STATE_CHECKING_PICKUP = true;
-				A3C_PICKUP_OBJECTS = [A3C_SELECTED_UNITS select 0,A3C_CLICKPOS_ORIG,250,true] call MCSS_fnc_nearDetonationTargets;
+				A3C_PICKUP_OBJECTS = [A3C_SELECTED_UNITS select 0,A3C_CLICKPOS_ORIG,250,true] call A3C_fnc_getNearDetonationTargets;
 				{
 					if !(typeName _x == "OBJECT") then {
 						A3C_PICKUP_OBJECTS = A3C_PICKUP_OBJECTS - [_x];
@@ -1309,7 +1309,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 							private _btnClicker  = (findDisplay _a3c_dsp) ctrlCreate ["A3C_RscButton_Invisible", _clickerID];
 
 							_btnBG ctrlSetText "A3C_UI\markers\icon_marker_vehicleHexagon.paa";
-							_btnImg ctrlSetTextColor ([A3C_UI_COLOR_BLUE,1] call A3C_UI_Color_setOpacity);
+							_btnImg ctrlSetTextColor ([A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity);
 							//systemchat str [_bgID,_imgID,_clickerID];
 							private _btnFnc = {};
 							switch (_x) do {

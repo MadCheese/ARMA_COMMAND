@@ -1168,7 +1168,7 @@ A3C_LABEL_SELECTORS = {
 					};
 
 					_text = (str ((_i - 23)+ (A3C_BUTTONPAGE_TABLET * 16))    ) + ": " ;
-					_backCol = [A3C_UI_COLOR_BLUE,0.7] call A3C_UI_Color_setOpacity ;
+					_backCol = [A3C_UI_COLOR_BLUE,0.7] call A3C_UI_fnc_setOpacity ;
 					//systemchat str [_unitIndex , (count A3C_HC_DISBANDED)];
 					if (_unitIndex <= (count A3C_HC_DISBANDED) ) then {
 
@@ -1260,7 +1260,7 @@ A3C_CREATE_BPOS_MARKERS = {
 A3C_ICONCOLORSIZE = {
 	private ["_bPos","_size","_color","_textSize","_result"];
 	_bPos = _this select 0;
-	_color = [A3C_UI_COLOR_BLUE,1] call A3C_UI_Color_setOpacity;
+	_color = [A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity;
 	_size = 4;
 	_textSize = 0.03;
 	if ((_bPos select 2) > 2) then {_color = [0,1,0,1]; _size = 6; _textSize = 0.0415;};
@@ -1304,7 +1304,7 @@ A3C_SWITCHMARKER = {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal "A3C_Marker_WAYPOINT";
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "ColorBlufor";
 			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_Color_setOpacity);
+			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity);
 			_newAction = ["LANDING","NONE"];
 		};
 		case 1 : {
@@ -1819,8 +1819,8 @@ A3C_UI_MAP_FNC_createEnemyForceTracker = {
 	{
 		private _group = _x;
 		_color = switch (side _x) do {
-			case (WEST) : {[A3C_UI_COLOR_BLUE,1] call A3C_UI_Color_setOpacity}; //{"colorBlufor"};
-			case (EAST) : {[A3C_UI_COLOR_RED,1] call A3C_UI_Color_setOpacity}; //{"colorOpfor"};
+			case (WEST) : {[A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity}; //{"colorBlufor"};
+			case (EAST) : {[A3C_UI_COLOR_RED,1] call A3C_UI_fnc_setOpacity}; //{"colorOpfor"};
 			case (RESISTANCE) : {[0,0.5,0,1]}; //{"ColorGUER"};
 			case (civilian) : {[0.4,0,0.5,1]}; //{"ColorCivilian"};
 			default  {[0.4,0,0.5,1]};
@@ -1912,7 +1912,7 @@ A3C_HC_getIconType = {
 			case ([_gp,"CAR"] call _kindFnc) : {
 				//systemchat str (units _gp);
 				switch (true) do {
-					//case ({[_x] call A3C_canUnitRepair} count _units > 0) : {
+					//case ({[_x] call A3C_fnc_canRepair} count _units > 0) : {
 					//	_root = "\a3c_ui\markers\";
 					//};
 					case (count (getArtilleryAmmo [_leaderVic]) > 0) : {
@@ -3330,7 +3330,7 @@ A3C_STANCE_BTN_2 = {
 					//-- set to NONE
 					A3C_TEMP_ACTION = ["LANDING","NONE"];
 					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_Color_setOpacity); //[0.5,0.5,0.5,0.6];
+					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_fnc_setOpacity); //[0.5,0.5,0.5,0.6];
 					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "MOVE";
 				};
 			};
@@ -3415,7 +3415,7 @@ A3C_STANCE_BTN_2 = {
 					//-- set to NONE
 					A3C_TEMP_ACTION = ["LANDING","NONE"];
 					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_Color_setOpacity); //[0.5,0.5,0.5,0.6];
+					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity); //[0.5,0.5,0.5,0.6];
 					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "MOVE";
 				} else {
 					//-- set to SLINGLOAD
@@ -4505,7 +4505,7 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 						switch (_wpAction select 1) do {
 							case "NONE" : {
 								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_Color_setOpacity);
+								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity);
 							};
 							case "PICKUP" : {
 								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
@@ -4850,7 +4850,7 @@ A3C_CONTEXTBUTTON = {
 								case ("LANDFINAL") : {
 									(_x select 2) set [1,"NONE"];
 									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_Color_setOpacity);
+									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_fnc_setOpacity);
 									[A3C_MARKERTOSWITCH,"A3C_Marker_WAYPOINT","DEFAULT"] call MCSS_fnc_SwitchMarker;
 									[findDisplay _a3c_dsp displayCtrl 709112, 0] call A3C_setCurSel;
 								};

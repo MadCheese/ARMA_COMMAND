@@ -50,7 +50,7 @@ A3C_UI_RADIAL_fnc_RemFire_EH = {
 					[] call A3C_UI_RADIAL_CloseDisplay;
 					{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu '';
 					A3C_UI_HUD_3D_TAG_ICON_TYPE = '%2';
-					A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
+					A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_RED,0.7] call A3C_UI_fnc_setOpacity;
 					[
 						46,
 						'SPACE',
@@ -302,12 +302,13 @@ A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 	};
 
 	//-- REMFIRE ACTION CHECK 2: Place Explosive
-	_detoUnits = [_unitArray] call A3C_get_det_units;
+	_detoUnits = [_unitArray] call A3C_fnc_getRemoteDetonatorUnits;
 	if (count _detoUnits > 0) then {
 		//if (side cursortarget == civilian OR ((side cameraOn) getfriend (side cursorTarget) < 0.6) ) then {  //~~turned out to be confusing
 			A3C_DYNAMIC_BUTTON_ACTIONS pushbackUnique "PLACE_CHARGE_SQUAD";
 		//};
 	};
+	
 
 	if ({_x in A3C_SUPPRESSION_UNITS_SQ} count A3C_RD_UNITS > 0) then {A3C_DYNAMIC_BUTTON_ACTIONS pushBack "SUPPRESSION_OFF";};
 	if ({!(_x in A3C_SUPPRESSION_UNITS_SQ)} count A3C_RD_UNITS > 0) then {A3C_DYNAMIC_BUTTON_ACTIONS pushBack "SUPPRESSION_ON";};
@@ -890,7 +891,7 @@ A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING = {
 					0 // -- radius (for circle, not completion)
 				]
 			];
-			private _expDest = [_unit] call A3C_UNIT_STORE_DESTINATION;
+			private _expDest = [_unit] call A3C_fnc_setDestination;
 			_unit setvariable ["A3C_PLOT",_data,true];
 			[_unit] spawn {
 				params ["_unit"];
@@ -917,7 +918,7 @@ A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING = {
 				//systemchat "loop exit";
 				if (_doReturnToOrders) then {
 					//systemchat 'fire';
-					[_unit] call A3C_UNIT_RESUME_DESTINATION;
+					[_unit] call A3C_AI_action_resumeDestination;
 				};
 			};
 		} foreach _selectedTastUnits;

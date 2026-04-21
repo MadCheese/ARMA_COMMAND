@@ -25,10 +25,10 @@ A3C_UI_ARSENAL_CREATELB = {
 	};
 
 	A3C_DISABLE_RADIAL = false;
-	{[_x] call A3C_UNIT_STORE_DESTINATION} foreach (units player);
+	{[_x] call A3C_fnc_setDestination} foreach (units player);
 	selectPlayer _unit;
 	(group player) selectLeader player;
-	{[_x] call A3C_UNIT_RESUME_DESTINATION} foreach (units player);
+	{[_x] call A3C_AI_action_resumeDestination} foreach (units player);
 	["Open",true] spawn BIS_fnc_arsenal;
 	waituntil {_arsenalDisplay = (uiNamespace getVariable ["RscDisplayArsenal", displayNull]); !isNull _arsenalDisplay};
 	titlecut ["","black in",0.2];
@@ -75,10 +75,10 @@ A3C_UI_ARSENAL_CREATELB = {
 
 
 	waituntil {_arsenalDisplay = (uiNamespace getVariable ["RscDisplayArsenal", displayNull]); isNull _arsenalDisplay};
-	{[_x] call A3C_UNIT_STORE_DESTINATION} foreach (units player);
+	{[_x] call A3C_fnc_setDestination} foreach (units player);
 	selectPlayer A3C_CurrentPlayerObject;
 	(group player) selectLeader player;
-	{[_x] call A3C_UNIT_RESUME_DESTINATION} foreach (units player);
+	{[_x] call A3C_AI_action_resumeDestination} foreach (units player);
 
 
 };
@@ -804,7 +804,7 @@ A3C_ObjectSelector_LB_Change = {
 							//-- start action
 							{
 								_vehicle = vehicle _x;
-								if (_x == driver _vehicle && {[_vehicle] call A3C_isAttackHelicopter}) then {
+								if (_x == driver _vehicle && {[_vehicle] call A3C_fnc_isAttackHelicopter}) then {
 									//00 disable movement
 									{_vehicle disableAI _x; } foreach ["TARGET","PATH"]; //,  ["ALL"] ,,"AUTOTARGET","FSM","SUPPRESSION","COVER","AUTOCOMBAT","MOVE"
 									//-- rotate chopper
@@ -1187,7 +1187,7 @@ A3C_ObjectSelector_LB_Change = {
 
 
 
-				private _expD = [_unit] call A3C_UNIT_STORE_DESTINATION;
+				private _expD = [_unit] call A3C_fnc_setDestination;
 
 
 				_detoObject = if ({cursorTarget isKindOf _x} count ["AIR","CAR","TANK","WHEELED","ARMORED","MOTORCYCLE"] > 0) then {cursorTarget} else {objNull};
@@ -1275,7 +1275,7 @@ A3C_ObjectSelector_LB_Change = {
 						sleep 1;
 					};
 					if (_doReturnToOrders) then {
-						[_unit] call A3C_UNIT_RESUME_DESTINATION;
+						[_unit] call A3C_AI_action_resumeDestination;
 					};
 				};
 				private _magPic = getText (configfile >> "CfgMagazines" >>  _magName >> "picture");
@@ -1327,7 +1327,7 @@ A3C_ObjectSelector_LB_Change = {
 					_statements = format
 					[
 						"
-							[[group this,'%1'], A3C_WP_ACTION_PlantExplosive_HC] remoteExec ['bis_fnc_call',0];
+							[[group this,'%1'], A3C_AI_HighCommand_wpAction_plantExplosive] remoteExec ['bis_fnc_call',0];
 						",
 						_magName
 					];
@@ -1375,7 +1375,7 @@ A3C_ObjectSelector_LB_Change = {
 					[
 						"
 							[(group this)] call A3C_HC_FNC_CompleteWaypoint;
-							[[group this,'%1'], A3C_WP_ACTION_PlantExplosive_HC] remoteExec ['bis_fnc_call',0];
+							[[group this,'%1'], A3C_AI_HighCommand_wpAction_plantExplosive] remoteExec ['bis_fnc_call',0];
 						",
 						_magName
 					]
@@ -1438,7 +1438,7 @@ A3C_RADIAL_ACTION_HC_LANDING_FNC = {
 	[A3C_UI_HUD_3D_TAG_ICON_POS,''] spawn A3C_UI_HUD_3D_TAG;
 	private _groups = +(A3C_SELECTED_HC_GROUPS_SETTINGS);
 
-	_distributedPositions = [_landingPosRoot,_groups,count _groups,_landingPosRoot getDir (leader (_groups select 0)),100 ] call A3C_create_wpWedgePositions;
+	_distributedPositions = [_landingPosRoot,_groups,count _groups,_landingPosRoot getDir (leader (_groups select 0)),100 ] call A3C_fnc_generateWpWedgePositions;
 
 	private _occupiedLandingPoses = [_landingPosRoot]; //[A3C_UI_HUD_3D_TAG_ICON_POS];
 	//private _landingPosRoot = +(A3C_UI_HUD_3D_TAG_ICON_POS);
@@ -1615,9 +1615,9 @@ A3C_UI_HUD_3D_TAG = {
 	//};
 	A3C_UI_HUD_3D_TAG_ICON_COL = switch (_mode) do {
 		case ("DEMOLITION") : {[1,1,1,0.7]};
-		//case ("HC_WP") : {[A3C_UI_COLOR_BLUE,0.7] call A3C_UI_Color_setOpacity};
-		case ("BOARD") : {[A3C_UI_COLOR_YELLOW,0.7] call A3C_UI_Color_setOpacity};
-		case ("SUPPRESSION") : {[A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity};
+		//case ("HC_WP") : {[A3C_UI_COLOR_BLUE,0.7] call A3C_UI_fnc_setOpacity};
+		case ("BOARD") : {[A3C_UI_COLOR_YELLOW,0.7] call A3C_UI_fnc_setOpacity};
+		case ("SUPPRESSION") : {[A3C_UI_COLOR_RED,0.7] call A3C_UI_fnc_setOpacity};
 		default {A3C_UI_HUD_3D_TAG_ICON_COL};
 	};
 	if (!isNull cursorTarget && {(_mode in ["DEMOLITION","BOARD"])}) then {

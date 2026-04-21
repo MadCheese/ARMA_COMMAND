@@ -46,7 +46,7 @@ A3C_AI_HighCommand_Action_heliHoverInPlace = {
 		};
 		{
 			_vehicle = vehicle _x;
-			if (_x == driver _vehicle && {[_vehicle] call A3C_isAttackHelicopter}) then {
+			if (_x == driver _vehicle && {[_vehicle] call A3C_fnc_isAttackHelicopter}) then {
 				_vehicle setVariable ["A3C_Freeze_helicopter",[false,0],true];
 				{_vehicle enableAI _x; } foreach ["TARGET","PATH"];
 			};
@@ -685,7 +685,7 @@ A3C_AI_HighCommand_Action_lineCharge = {
 
 A3C_AI_HighCommand_Action_vehicleEngineOff = {
 	{
-		[units _x] call A3C_AI_Shared_fnc_engineOff;
+		[units _x] call A3C_AI_action_engineOff;
 	} foreach A3C_HC_engineOffUnits;
 };
 
@@ -707,7 +707,7 @@ A3C_AI_HighCommand_Action_vehicleLights = { //-- seems to not work currently?
 A3C_AI_HighCommand_Action_irStrobe = {
 	params ["_mode"]; //-- "ON" | "OFF"
 	if !(A3C_Prevent_attach_IR) then {
-		[_mode] spawn A3C_fnc_toggle_IR_STROBES;
+		[_mode] spawn A3C_AI_action_toggleIrStrobeHC;
 	} else {
 		hint "Please wait for your last order instance to reach all units";
 	};
@@ -1136,7 +1136,7 @@ A3C_AI_HighCommand_Action_artillery = {
 };
 
 
-A3C_AI_HighCommand_Action_placeChargeHC = {
+A3C_AI_HighCommand_Action_placeCharge = {
 	if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
 		with uiNamespace do {
 			//disableSerialization;

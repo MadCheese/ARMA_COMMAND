@@ -1,35 +1,93 @@
+//---------------------------------------------------------------------------------------------
+//---------- GETTERS --------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
 
-A3C_ConnectUAV = {
-	params ["_uav", "_mode"];
-	if (unitIsUAV cameraOn) then {};
-	player switchCamera "Internal";
-	player connectTerminalToUAV objNull;
-	player connectTerminalToUAV _uav;
-	if (_mode == 1) then {
-		[] spawn A3C_TakeUAVControl;
+A3C_fnc_getNearDetonationTargets = {
+	params ["_unit","_position","_distance","_mustKnowAbout"];
+	_nearObjects = nearestObjects [_position, ["CAR","TANK","HELICOPTER","JET","PLANE","SHIP","staticWeapon","ReammoBox","ReammoBox_F"],_distance];
+	{
+		if ( isClass (configFile >> "CFGVehicles" >> typeOf _x)) then {
+			if (speed _x > 1) then {_nearobjects = _nearobjects - [_x]};
+			if (_mustKnowAbout && (_unit knowsabout _x) < 0.1 ) then {_nearobjects = _nearobjects - [_x]};
+		};
+	} foreach _nearobjects;
+	_nearobjects
+};
+
+A3C_fnc_getRemoteDetonatorUnits = {
+	params ["_units"];
+	{
+		private _unit = _x;
+		private _mags = magazines _unit;
+		if ({getText (configfile >> "CfgMagazines" >> _x >> "nameSound") in ["satchelcharge","mine"]} count _mags == 0) then {
+			_units = _units - [_x];
+		};
+	} foreach _units;
+	_units
+};
+
+A3C_fnc_getRemoteDetonatableUnitMagazines = {
+	params ["_unit"];
+
+	private _result = [];
+
+	{
+		private _magCfg = configFile >> "CfgMagazines" >> _x;
+
+		if (getText (_magCfg >> "nameSound") in ["satchelcharge", "mine"]) then {
+			private _ammoCfg = configFile >> "CfgAmmo" >> getText (_magCfg >> "ammo");
+
+			if (getText (_ammoCfg >> "mineTrigger") == "RemoteTrigger") then {
+				_result pushBack _x;
+			};
+		};
+	} forEach (magazines _unit arrayIntersect magazines _unit);
+
+	_result
+};
+
+A3C_fnc_getCursortargetCustom = {
+	private _vehicle = vehicle player;
+	private _cursorTarget = cursorTarget;
+	if (!isNull _cursorTarget && {player == driver _vehicle && {_cursorTarget != _vehicle}}) then {
+		_startPos = AGLToASL positionCameraToWorld [0,0,0];
+		_endPos = AGLToASL positionCameraToWorld [0,0,viewDistance];
+		_endPos set [2,(_startPos select 2) max (_endPos select 2)]; //-- level refpos with player's view height
+		private _ins = lineIntersectsSurfaces
+		[
+			_startPos,
+			_endPos,
+			vehicle cameraOn,
+			cameraon,
+			true,
+			1,
+			"GEOM",
+			"NONE"
+		];
+		if (count _ins > 0) then {
+			_cursorTarget = (_ins select 0 select 2);
+		};
+
 	};
+	_cursorTarget
 };
 
-A3C_TakeUAVControl = {
-	private _uav = getConnectedUAV player;
-	if (isNull _uav) exitWith {};
-	private _hasGunner = !isNull (gunner _uav);
-	private _actionRole = if (_hasGunner) then {"Gunner"} else {"Driver"};
-	private _actionName = format ["SwitchToUAV%1", _actionRole];
-	player action [_actionName, _uav];
+//---------------------------------------------------------------------------------------------
+//---------- Setters --------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
 
-};
 
-A3C_ReleaseUAVControl = {
-	// private _uav = getConnectedUAV player;
-	// if (cameraOn != _uav) exitWith {};
-	// player connectTerminalToUAV objNull;
-	// waitUntil {cameraOn == player};
-	// player connectTerminalToUAV _uav;
-	player switchCamera "Internal";
-};
 
-A3C_isAttackHelicopter = {
+
+
+//---------------------------------------------------------------------------------------------
+//---------- Predicates ('is x') --------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+
+
+//---------- State predicates
+
+A3C_fnc_isAttackHelicopter = {
 	params ["_vehicle"];
 	private _return = false;
 	private _exit = false;
@@ -43,7 +101,7 @@ A3C_isAttackHelicopter = {
 	_return		
 };
 
-A3C_isArmedVehicle = {
+A3C_fnc_isArmedVehicle = {
 	params ["_vehicle"];
 	private _turrets = allTurrets [_vehicle, true]; //-- FFV has to be true - since ffv turret has no weapons, it will still work?
 	private _return = false;
@@ -54,11 +112,7 @@ A3C_isArmedVehicle = {
 	_return	
 };
 
-
-
-
-
-A3C_VEHICLE_needsTreatment = {
+A3C_fnc_isVehicleDamaged = {
 	params ["_callerSide","_entity"];
 	
 	private _mode = if (count _this > 1) then {_this select 1} else {"NONE"};
@@ -86,39 +140,8 @@ A3C_VEHICLE_needsTreatment = {
 	_return
 };
 
-A3C_REPAIR_ANIMS = {
-	params ["_unit"];
-	if ( (_unit getVariable ["A3C_ANIM", [false, -1]]) select 0) exitWith {};
 
-	private _anims =
-	[
-		"Acts_carFixingWheel",
-		"inbasemoves_assemblingvehicleerc",
-		"inbasemoves_repairvehicleknl",
-		"ainvpknlmstpslaywrfldnon_medic"
-	];
-	_anim = _anims call BIS_fnc_SelectRandom;
-	[_unit,"ANIM"] remoteExec ["disableAI",0];
-	[_unit,_anim] remoteExec ["switchMove",0];
-
-	private _handler = _unit addEventHandler [ "AnimDone", {
-		params[ "_unit", "_anim" ];
-		if !( (_unit getVariable ["A3C_ANIM", [false, -1]]) select 0) exitWith {};
-		private _anims =
-		[
-			"Acts_carFixingWheel",
-			"inbasemoves_assemblingvehicleerc",
-			"inbasemoves_repairvehicleknl",
-			"ainvpknlmstpslaywrfldnon_medic"
-		];
-		_anim = _anims call BIS_fnc_SelectRandom;
-		[_unit,_anim] remoteExec ["switchMove",0];
-	}];
-
-	_unit setVariable ["A3C_ANIM", [true, _handler], true];	
-};
-
-A3C_isNVGoggles = {
+A3C_fnc_isNVGoggles = {
 	params ["_weaponclass"];
 
 	private _return = false;
@@ -130,60 +153,61 @@ A3C_isNVGoggles = {
 	_return
 };
 
-A3C_isIRMagazine = {
+A3C_fnc_isIRMagazine = {
 	params ["_mag"];
 	private _ammo = getText (configfile >> "CfgMagazines" >> _mag >> "ammo");
 	private _sim = getText (configfile >> "CfgAmmo" >> _ammo >> "simulation");
 	_sim == "shotNVGMarker"
 };
 
+//---------- Posession predicates
 
-A3C_doesUnitHaveWeaponItem = {
+A3C_fnc_hasWeaponItem = {
 	params ["_unit","_itemType"];
 	private _return = false;
 	if (_itemType == "SILENCER") exitWith {
 		_unit weaponAccessories currentMuzzle _unit param [0, ""] != ""
 	};
-	//{
-		_itemName = _unit weaponAccessories currentMuzzle _unit param [1, ""];
-		switch (_itemType) do {
-			case ("FLASHLIGHT") : {
-				if (getNumber (configfile >> "CfgWeapons" >> _itemName >> "ItemInfo" >> "FlashLight" >> "intensity") != 0) then {
+	private _itemName = (_unit weaponAccessories (currentMuzzle _unit)) param [1, ""];
+	switch (_itemType) do {
+		case ("FLASHLIGHT") : {
+			if (getNumber (configfile >> "CfgWeapons" >> _itemName >> "ItemInfo" >> "FlashLight" >> "intensity") != 0) then {
+				_return = true;
+			} else {
+				_rhsText = toLower (getText (configfile >> "cfgWeapons" >> _itemName >> "rhs_acc_combo_text"));
+				if ("light" in _rhsText) then {
 					_return = true;
 				} else {
-					_rhsText = toLower (getText (configfile >> "cfgWeapons" >> _itemName >> "rhs_acc_combo_text"));
-					if ("light" in _rhsText) then {
+					_smaText = toLower (getText (configfile >> "cfgWeapons" >> _itemName >> "MRT_switchItemHintText"));
+					if ("laser" in _smaText) then {
 						_return = true;
-					} else {
-						_smaText = toLower (getText (configfile >> "cfgWeapons" >> _itemName >> "MRT_switchItemHintText"));
-						if ("laser" in _smaText) then {
-							_return = true;
-						};
 					};
 				};
-
 			};
-			case ("LASER") : {
-				if (getNumber (configfile >> "CfgWeapons" >> _itemName >> "ItemInfo" >> "Pointer" >> "irDistance") != 0) then {
+
+		};
+		case ("LASER") : {
+			if (getNumber (configfile >> "CfgWeapons" >> _itemName >> "ItemInfo" >> "Pointer" >> "irDistance") != 0) then {
+				_return = true;
+			} else {
+				private _rhsText = toLower (getText (configfile >> "cfgWeapons" >> _itemName >> "rhs_acc_combo_text"));
+				if ("laser" in _rhsText) then {
 					_return = true;
 				} else {
-					_rhsText = toLower (getText (configfile >> "cfgWeapons" >> _itemName >> "rhs_acc_combo_text"));
-					if ("laser" in _rhsText) then {
+					_smaText = toLower (getText (configfile >> "cfgWeapons" >> _itemName >> "MRT_switchItemHintText"));
+					if ("light" in _smaText) then {
 						_return = true;
-					} else {
-						_smaText = toLower (getText (configfile >> "cfgWeapons" >> _itemName >> "MRT_switchItemHintText"));
-						if ("light" in _smaText) then {
-							_return = true;
-						};
 					};
 				};
 			};
 		};
-	//} foreach (primaryWeaponItems _unit);
+	};
 	_return
 };
 
-A3C_canUnitRepair = {
+//---------- Ability predicates
+
+A3C_fnc_canRepair = {
 	params ["_unit"];
 	private _return = false;
 	if (isNull objectParent _unit && {vehicle _unit isKindOf "MAN"}) then {
@@ -201,10 +225,13 @@ A3C_canUnitRepair = {
 	_return
 };
 
+//---------------------------------------------------------------------------------------------
+//---------- Generators ----------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
 
 
 
-A3C_create_wpWedgePositions = {
+A3C_fnc_generateWpWedgePositions = {
 	params ["_pos","_refArray1","_amount","_dir","_spacing"];
 	private _poses = [_pos];
 	private _currentSpacing = +(_spacing);
@@ -277,332 +304,8 @@ A3C_create_wpWedgePositions = {
 
 
 
+/////////////////////////////
 
-
-A3C_UI_Color_setOpacity =
-{
-	//-- fnc for map UI to add correct opacity to color array
-	params ["_colorArray","_opacity"];
-	_colorArray set [3,_opacity];
-	_colorArray
-};
-
-
-A3C_UNIT_STORE_DESTINATION =
-{
-	params ["_unit"];
-	private _expD = (expectedDestination _unit);
-	_dir = -1;
-	if  !(["form",toLower (_expD select 1)] call BIS_fnc_instring) then {
-		_dir = getDir _unit;
-		_expD = [getPosATL _unit,"LEADER PLANNED",false]; //-- make sure the unit will run back to a previous idle position
-	};
-	_expD pushBack _dir;
-	_unit setVariable ["A3C_DEST",_expD,true];
-	_expD
-};
-
-A3C_UNIT_RESUME_DESTINATION = {
-	params ["_unit"];
-	_expCurrent = (expectedDestination _unit);
-	if ( count _expCurrent > 0 &&  {(_expCurrent select 1) in ["DoNotPlanFormation","FORMATION PLANNED"]  } ) exitWith {}; //-- units are already in formation
-	private _expD = _unit getvariable ["A3C_DEST",[]];
-	//systemchat str _expD;
-	if (!isPLayer _unit) then {
-		if (count _expD > 0) then {
-			_expP = _expD select 0;
-			if (player == leader group _unit) then { // isPlayer leader group _unit && {
-				if ((_expD select 1) in ["DoNotPlanFormation","FORMATION PLANNED"]) then {
-					//-- unit was in formation
-					_unit doFollow player;
-				} else {
-					if !(currentcommand _unit == "STOP") then {
-						//-- units had a destination or stationary position and was NOT ordered to stop in meantime
-						//sleep 1;
-						_unit dowatch objnull;
-						_unit lookAt objnull;
-						_unit setunitpos "UP";
-						if !(A3C_C_FORM_ACTIVE) then {
-							if ((_expD select 1) in ["DoNotPlanFormation","FORMATION PLANNED"]) then {
-								_unit doFollow player;
-							} else {
-								[_unit,_expP] call A3C_DOMOVE;
-								if (count _expD > 3) then {
-									_unit lookAt (_expP getPos [100,_expD select 3]);
-								};
-							};
-						} else {
-							//systemchat 'yao';
-							//if !(_unit getVariable ["A3C_FORM_MEMBER",false]) then {
-								[_unit] spawn {
-									params ["_unit"];
-									private ["_var","_formDist","_formDir","_formPos"];
-									_var = _unit getVariable "A3C_FORM";
-									_formDist = (_var select 0);
-									_formDir = (getDir player) + (_var select 1);
-									_formPos = (player getpos [_formDist,_formDir]);
-									_unit setVariable ["A3C_FORM_MEMBER",true,false];
-									doStop _unit;
-									sleep 0.2;
-									[_unit,_formPos] call A3C_DOMOVE;
-									
-									if !(isMultiplayer) then {
-										_unit doFSM ["A3C_CORE\fsm\doFormation.fsm", position _unit,_unit];
-									};
-								};
-							//};
-						};
-					};
-				};
-			} else {
-				if ((_expD select 1) in ["DoNotPlanFormation","FORMATION PLANNED"]) then {
-					[_unit,(leader _unit)] remoteExec ["doFollow",_unit];
-					[_unit,objNull] remoteExec ["lookAt",_unit];
-					[_unit,"AUTO"] remoteExec ["setUnitPos",_unit];
-				} else {
-					if (_expP distance2D [0,0,0] > 0) then {
-						[_unit,_expP] call A3C_DOMOVE;
-						if (count _expD > 3) then {
-							_unit lookAt (_expP getPos [100,_expD select 3]);
-						};
-					};
-				};
-			};
-		};
-	};
-	//systemchat str _expD;
-
-	_unit setVariable ["A3C_DEST",_expD,true];
-};
-
-
-A3C_customCursorTarget = {
-	private _vehicle = vehicle player;
-	private _cursorTarget = cursorTarget;
-	if (!isNull _cursorTarget && {player == driver _vehicle && {_cursorTarget != _vehicle}}) then {
-		_startPos = AGLToASL positionCameraToWorld [0,0,0];
-		_endPos = AGLToASL positionCameraToWorld [0,0,viewDistance];
-		_endPos set [2,(_startPos select 2) max (_endPos select 2)]; //-- level refpos with player's view height
-		private _ins = lineIntersectsSurfaces
-		[
-			_startPos,
-			_endPos,
-			vehicle cameraOn,
-			cameraon,
-			true,
-			1,
-			"GEOM",
-			"NONE"
-		];
-		if (count _ins > 0) then {
-			_cursorTarget = (_ins select 0 select 2);
-		};
-
-	};
-	//systemchat str _cursorTarget;
-	_cursorTarget
-}; //
-
-
-
-A3C_AI_Shared_fnc_engineOff = {
-	params ["_units"];
-
-	{
-		_unit = _x;
-		if (!isNull objectParent _unit) then {
-			if (_unit == driver vehicle _unit) then {
-				if ( vehicle _unit isKindOf "SHIP" OR  (((getPosATL vehicle _unit) select 2) < 5)   ) then {
-					[_unit,["engineOff",vehicle _unit]] remoteExec ["action",_unit];
-				};
-			};
-		};
-	} foreach _units;
-};
-//[cursortarget,"NVG_TargetE"] spawn A3C_fnc_attachIRStrobeToVehicle;
-
-
-
-
-A3C_fnc_toggle_IR_STROBES = { //-- only for HC!
-	params ["_mode"];
-	_referenceArray = if (_mode == "ON") then {A3C_HC_IROnUnits} else {A3C_HC_IROffUnits};
-	_strobeType = switch (side cameraOn) do {
-		case (WEST) : {"NVG_TargetE"};
-		case (EAST) : {"NVG_TargetW"};
-		default {"NVG_TargetC"};
-	};
-	_randomSleepMax = 0;
-	A3C_Prevent_attach_IR = true;
-	{
-		_gp = _x;
-		_randomSleepGroup = random 5;
-		if (_randomSleepGroup > _randomSleepMax) then {
-			_randomSleepMax = _randomSleepGroup;
-		};
-		if (!isPlayer (leader _gp) && {player != leader _gp}) then {
-			{
-				private _unit = _x;
-				if (_mode == "ON") then {
-					[_unit,_strobeType,_randomSleepGroup] spawn {
-						params ["_unit","_strobeType","_randomSleepGroup"];
-						_unit setvariable ["A3C_STROBE",[objNull,""],true];
-						sleep (_randomSleepGroup + (random 1));
-						_strobeObject = _strobeType createVehicle [0,0,0];
-						_unit setvariable ["A3C_STROBE",[_strobeObject,_strobeType],true];
-
-						[[_unit,_strobeObject],A3C_UNIT_STROBE_LOOP] remoteExec ['bis_fnc_spawn',_unit];
-
-						// [_unit,_strobeObject] spawn A3C_UNIT_STROBE_LOOP;
-					};
-
-				} else {
-					[_unit,_randomSleepGroup] spawn {
-						params ["_unit","_randomSleepGroup"];
-						sleep (_randomSleepGroup + (random 1));
-						_irData = _unit getvariable ["A3C_STROBE",[]];
-						if (count _irData > 0) then {
-							deleteVehicle (_irData select 0);
-							_unit setvariable ["A3C_STROBE",[],true];
-						};
-					};
-
-				};
-			} foreach units _gp;
-		};
-
-	} foreach _referenceArray;
-	[_randomSleepMax] spawn {
-		params ["_randomSleepMax"];
-		sleep (_randomSleepMax + 1);
-		A3C_Prevent_attach_IR = false;
-		_targetArray = if (!isNull findDisplay 100040) then {A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED} else {A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS};
-		//systemchat str _targetArray;
-		[_targetArray] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
-	};
-
-};
-
-
-A3C_UNIT_STROBE_LOOP = {
-	params ["_unit","_strobeObject"];
-	private _currentMode = "UNIT";
-	_t = 0;
-	_fnc_detach = {
-		params ["_strobeObject"];
-		for "_i" from 1 to 5 do {
-			detach _strobeObject; //-- attachment and setpos commands are GLOBAL, no remote needed
-		};
-	};
-	while {!isNull _strobeObject} do {
-		private _vehicle = vehicle _unit;
-		if (_unit != driver _vehicle) then {
-			//-- unit is not driver
-			[_strobeObject, true] remoteExec ["hideObjectGlobal",2];
-			sleep 0.1;
-			_t = 0; //-- re-enable unit pickcup
-			private _currentMode = "UNIT";
-			while {_unit != driver _vehicle && !isNull _strobeObject} do {
-				if (!alive _unit) exitWith {
-					_currentMode == "NONE";
-					_t = 1; //-- prevent dead unit from being picked up again
-				};
-
-				sleep 1;
-			};
-			[_strobeObject, false] remoteExec ["hideObjectGlobal",2];
-
-		};
-		if (!isNull objectParent _unit ) then { //&& {_unit == driver _vehicle}
-			if (_currentMode == "UNIT") then {
-				//-- requires vehicle adjustment
-				_currentMode = "VEHICLE";
-				[_strobeObject,true] call _fnc_detach;
-
-				_vehicleLength = ((boundingboxreal _vehicle) select 1) select 1;
-				_targetPos = [];
-				private _exit = false;
-				private _attachPosFound = false;
-
-				for "_i" from 1.5 to 3 step 0.5 do {
-
-					_c = 1;
-					while {alive _vehicle} do {
-						_targetPos = getposASL  _vehicle;
-						_h = _targetPos select 2;
-						_targetPos = _targetPos getPos [_vehicleLength / _i, (getDir _vehicle) + 180];
-						_targetPos set [2,_h];
-						_refPos = +(_targetPos);
-						_refPos set [2,(_targetPos select 2) + (  (((boundingBoxReal _vehicle) select 1) select 2)    * 2  )];
-						_targetPos = (lineintersectsSurfaces [_refPos,_targetPos]); //,objnull, objnull, true, 1, "GEOM", "FIRE"
-						if (count _targetPos > 0) then {
-							if ( (_targetPos select 0) select 2 == _vehicle ) then {
-								_exit = true;
-								_targetPos = ASLtoATL ((_targetPos select 0) select 0);
-								_attachPosFound = true;
-							};
-						};
-						if (_exit) exitWith {};
-						if (_c >  20) exitWith {};
-						_c = _c + 1;
-						sleep 0.1;
-					};
-					if (isNull _strobeObject OR _attachPosFound) exitWith {};
-				};
-
-				if (_attachPosFound) then {
-					_targetPos = _vehicle worldToModel _targetPos;
-					for "_i" from 1 to 5 do {
-						_strobeObject attachTo [_vehicle,_targetPos];
-					};
-				} else {
-					/*
-					while {!isNull _strobeObject} do {
-						if (_unit != driver _vehicle) exitWith {
-							_currentMode == "UNIT";
-							_t = 0;
-						};
-						if (!alive _unit) exitWith {
-							_currentMode == "NONE";
-							_t = 1; //-- prevent dead unit from being picked up again
-						};
-
-						sleep 1;
-					};
-					*/
-				};
-			};
-		} else {
-			if (_currentMode == "VEHICLE" OR {_t == 0}) then {
-				//-- requires unit adjustment
-				_currentMode = "UNIT";
-				[_strobeObject,false] call _fnc_detach;
-				_attachArray = if (isPlayer _unit) then {[0.034,-0.2,0.02]} else {[0.094,-0.1,0.02]};
-				for "_i" from 1 to 5 do {
-					_strobeObject attachTo [_unit,_attachArray,"neck"];
-				};
-			};
-		};
-		if (!alive _unit) exitWith {
-			if (_unit != driver _vehicle) then {
-				deleteVehicle _strobeObject;
-				_unit setvariable ["A3C_STROBE",[],true];
-			};
-		};
-		_t = 1;
-		sleep 1;
-	};
-	//systemchat 'loop exit';
-};
-
-A3C_Prevent_attach_IR = false;
-A3C_Prevent_attach_IR_Laser = false;
-A3C_Prevent_attach_Flashlight = false;
-
-A3C_Prevent_UGLSHOT = false;
-A3C_Prevent_ATSHOT = false;
-A3C_Prevent_TANKSHOT = false;
-A3C_Prevent_STATICSHOT = false;
 
 
 
@@ -709,13 +412,13 @@ A3C_fnc_toggle_WeaponAttachMent = {
 	};
 
 
-	player commandchat format
-	[
-		"%1: %2, %3",
-		name player,
-		_msgTarget,
-		_msgBody
-	];
+	// player commandchat format
+	// [
+	// 	"%1: %2, %3",
+	// 	name player,
+	// 	_msgTarget,
+	// 	_msgBody
+	// ];
 
 
 	{
@@ -1962,33 +1665,11 @@ A3C_VehicleRadius = {
 
 
 
-MCSS_fnc_nearDetonationTargets = {
-	params ["_unit","_position","_distance","_mustKnowAbout"];
-	_nearObjects = nearestObjects [_position, ["CAR","TANK","HELICOPTER","JET","PLANE","SHIP","staticWeapon","ReammoBox","ReammoBox_F"],_distance];
-	{
-		if ( isClass (configFile >> "CFGVehicles" >> typeOf _x)) then {
-			if (speed _x > 1) then {_nearobjects = _nearobjects - [_x]};
-			if (_mustKnowAbout && (_unit knowsabout _x) < 0.1 ) then {_nearobjects = _nearobjects - [_x]};
-		};
-	} foreach _nearobjects;
-	_nearobjects
-};
-
-A3C_get_det_units = {
-	params ["_units"];
-	{
-		private _unit = _x;
-		private _mags = magazines _unit;
-		if ({getText (configfile >> "CfgMagazines" >> _x >> "nameSound") in ["satchelcharge","mine"]} count _mags == 0) then {
-			_units = _units - [_x];
-		};
-	} foreach _units;
-	_units
-};
 
 
 
-A3C_WP_ACTION_PlantExplosive_HC = {
+
+A3C_AI_HighCommand_wpAction_plantExplosive = {
 	params ["_group","_magType"];
 
 	if (!local _group) exitWith {};
@@ -1998,7 +1679,7 @@ A3C_WP_ACTION_PlantExplosive_HC = {
 	if (!alive _attachToObject OR {_attachToObject in units _group} ) then { //isNil '_attachToObject' OR {isNull _attachToObject OR {}}
 		_attachToObject = objNull;
 	};
-	private _detoUnits = [units _group] call A3C_get_det_units;
+	private _detoUnits = [units _group] call A3C_fnc_getRemoteDetonatorUnits;
 	if (typename _attachToObject == "STRING") then {
 		_attachToObject = missionNamespace getVariable _attachToObject;
 
@@ -2006,11 +1687,11 @@ A3C_WP_ACTION_PlantExplosive_HC = {
 	if (count _detoUnits == 0) exitWith {};
 	//(str _attachToObject) remoteExec ["systemchat",0];
 	// systemchat "DEBUG DETO HC";
-	[_detoUnits select 0, waypointPosition [_group, currentWaypoint _group], [_attachToObject,_magType]] spawn A3C_WP_ACTION_PlantExplosive;
+	[_detoUnits select 0, waypointPosition [_group, currentWaypoint _group], [_attachToObject,_magType]] spawn A3C_AI_Squad_wpAction_plantExplosive;
 };
 
 
-A3C_WP_ACTION_PlantExplosive = {
+A3C_AI_Squad_wpAction_plantExplosive = {
 	params ["_unit","_targetPos","_orderDetails"];
 	_orderDetails params ["_targetVeh","_ammoType"];
 	// systemchat format ["DEBUG DETOINFO: %1", _orderDetails];
@@ -2784,7 +2465,7 @@ A3C_LB_Change = {
 			switch (_lb) do {
 				case (0) : {
 					_color = "RED";
-					_backCol = [A3C_UI_COLOR_RED,1] call A3C_UI_Color_setOpacity;
+					_backCol = [A3C_UI_COLOR_RED,1] call A3C_UI_fnc_setOpacity;
 				};
 				case (1) : {
 					_color = "GREEN";
@@ -2792,11 +2473,11 @@ A3C_LB_Change = {
 				};
 				case (2) : {
 					_color = "BLUE";
-					_backCol = [A3C_UI_COLOR_BLUE,1] call A3C_UI_Color_setOpacity;
+					_backCol = [A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity;
 				};
 				case (3) : {
 					_color = "YELLOW";
-					_backCol = [A3C_UI_COLOR_YELLOW,1] call A3C_UI_Color_setOpacity;
+					_backCol = [A3C_UI_COLOR_YELLOW,1] call A3C_UI_fnc_setOpacity;
 				};
 				case (4) : {
 					_color = "MAIN";
@@ -3447,7 +3128,7 @@ A3C_AI_Shared_cancelUnitPlot = {
 	if (_shift) then {
 
 		{
-			private _unitPlot = _unit getVariable ["A3C_PLOT",[]];
+			
 			_x setvariable ["A3C_PLOT_TEMP",[],true];
 			A3C_USERACTION = [];
 			A3C_USERACTION_ID = 0;
@@ -3456,12 +3137,12 @@ A3C_AI_Shared_cancelUnitPlot = {
 			(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,0.2];
 
 			[_x,(position _x)] call A3C_DOMOVE;
-			[_x, _unitPlot] spawn {
-				params ["_unit", "_unitPlot"];
+			[_x] spawn {
+				params ["_unit"];
 				private ["_mainMark","_subMark","_dirMark"];
-				_a3c_dsp = if (visibleMap) then {100020} else {100030};
+				private _a3c_dsp = 100020;
 
-
+				private _unitPlot = _unit getVariable ["A3C_PLOT",[]];
 				if (count _unitPlot > 0) then {
 					_unit setvariable ["A3C_ABORT_Data",[true,false],true];
 					waitUntil {count (_unit getVariable ["A3C_PLOT",[]]) == 0};
@@ -3746,10 +3427,10 @@ A3C_GET_UB_COLOR = {
 	switch (_assignedTeam) do {
 		case ("RED") : {
 			if (_hold) then {
-				_backCol = [[1,0.55,0.52,1],0.5] call A3C_UI_Color_setOpacity;
+				_backCol = [[1,0.55,0.52,1],0.5] call A3C_UI_fnc_setOpacity;
 
 			} else {
-				_backCol = [A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity;
+				_backCol = [A3C_UI_COLOR_RED,0.7] call A3C_UI_fnc_setOpacity;
 
 			};
 		};
@@ -3765,16 +3446,16 @@ A3C_GET_UB_COLOR = {
 			if (_hold) then {
 				_backCol = [0.5,0.67,0.98,0.5];
 			} else {
-				_backCol = [A3C_UI_COLOR_BLUE,0.5] call A3C_UI_Color_setOpacity;
+				_backCol = [A3C_UI_COLOR_BLUE,0.5] call A3C_UI_fnc_setOpacity;
 			};
 
 		};
 		case ("YELLOW") : {
 			if (_hold) then {
-				_backCol = [[0.98,0.95,0.63,1],0.5] call A3C_UI_Color_setOpacity;
+				_backCol = [[0.98,0.95,0.63,1],0.5] call A3C_UI_fnc_setOpacity;
 
 			} else {
-				_backCol = [A3C_UI_COLOR_YELLOW,0.7] call A3C_UI_Color_setOpacity;
+				_backCol = [A3C_UI_COLOR_YELLOW,0.7] call A3C_UI_fnc_setOpacity;
 			};
 
 

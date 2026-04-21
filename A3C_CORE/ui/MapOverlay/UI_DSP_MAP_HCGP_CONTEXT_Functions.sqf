@@ -304,7 +304,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						};
 					};
 				};
-				//if ([_leaderVic] call A3C_isAttackHelicopter ) then {
+				//if ([_leaderVic] call A3C_fnc_isAttackHelicopter ) then {
 				private _var = (_leaderVic) getVariable ["A3C_Freeze_helicopter",[false,0]];
 				if (_var select 0) then {
 					if (_a3c_dsp != 100040) then { //~~ TEMPORARY - MAKE THIS ACCESSIBLE VIA RADIAL AS WELL!
@@ -350,7 +350,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				//-- radial menu only
 				_testedUnits = units _gp;
 				{
-					if ([_x] call A3C_canUnitRepair) then {
+					if ([_x] call A3C_fnc_canRepair) then {
 						_actions pushBackUnique "REPAIR";
 					};
 					if (!isNull objectParent _x) then {
@@ -364,20 +364,13 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					};
 				};
 
-				{
-					_u = _x;
-					{
-						if (getText (configfile >> "CfgMagazines" >> _x >> "nameSound") in ["satchelcharge","mine"]) then {
-							private _ammo = getText (configfile >> "CfgMagazines" >> _x >> "ammo");
-							private _mineTrigger = getText (configfile >> "CfgAmmo" >> _ammo >> "mineTrigger");
-							if (_mineTrigger == "RemoteTrigger" OR isNull cursorTarget) then {
-								A3C_REMFIRE_MAGTYPES pushbackUnique _x;
-							};
-							A3C_HC_DetoShot_Units pushBackUnique _u;
-						};
-					} foreach (magazines _u);
+				private _allExplosiveTypes = [];
 
-				} foreach _testedUnits;
+				{
+					_allExplosiveTypes append ([_x] call A3C_fnc_getRemoteDetonatableUnitMagazines);
+				} forEach _testedUnits;
+
+				A3C_REMFIRE_MAGTYPES = _allExplosiveTypes arrayIntersect _allExplosiveTypes;
 			};
 
 		};
@@ -657,8 +650,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			//-- following is not included in above loop as it has to effect the ENTIRE group.
 			{
 				_u = _x;
-				_hasPointer = [_u,"LASER"] call A3C_doesUnitHaveWeaponItem;
-				_hasFlashLight = [_u,"FLASHLIGHT"] call A3C_doesUnitHaveWeaponItem;
+				_hasPointer = [_u,"LASER"] call A3C_fnc_hasWeaponItem;
+				_hasFlashLight = [_u,"FLASHLIGHT"] call A3C_fnc_hasWeaponItem;
 
 				if (_hasPointer) then {
 					if ({_x isIRLaserOn (currentWeapon _x)} count units (group _u) > 0) then {

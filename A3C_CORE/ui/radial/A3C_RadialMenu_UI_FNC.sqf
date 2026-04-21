@@ -236,7 +236,7 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 		(findDisplay 100040 displayCtrl 8005) ctrlSetText (toUpper (groupID group player));
 
 		[0] call A3C_GREN_DATA;
-		[] call A3C_GREN_VISUAL;
+		[] call A3C_UI_RADIAL_populateOuterRing_Grenades;
 
 		(findDisplay 100040 displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
 
@@ -502,7 +502,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					A3C_DISABLE_RADIAL = true;
 					[] call A3C_UI_RADIAL_CloseDisplay;
 					A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\hud\icon_HUD_movePos.paa"; //"\a3\ui_f\data\IGUI\Cfg\Cursors\waypointMark_ca.paa";
-					A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0] call A3C_UI_Color_setOpacity;
+					A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0] call A3C_UI_fnc_setOpacity;
 					A3C_UI_HUD_3D_TAG_reposition = true;
 					[
 						46,
@@ -1299,11 +1299,11 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					_itemCategories pushBack "SWITCHWEAPON";
 				};
 
-				if ( (   {count (_x getvariable ["A3C_STROBE",[]]) > 0 } count _grunts > 0)   OR {{{_item = _x; [_item] call A3C_isIRMagazine } count (magazines _x) > 0} count _grunts > 0}) then {
+				if ( (   {count (_x getvariable ["A3C_STROBE",[]]) > 0 } count _grunts > 0)   OR {{{_item = _x; [_item] call A3C_fnc_isIRMagazine } count (magazines _x) > 0} count _grunts > 0}) then {
 					_itemCategories pushBack "IR_STROBE";
 				};
 
-				if ({{_item = _x; [_item] call A3C_isNVGoggles } count (assigneditems _x + items _x) > 0} count _grunts > 0) then {
+				if ({{_item = _x; [_item] call A3C_fnc_isNVGoggles } count (assigneditems _x + items _x) > 0} count _grunts > 0) then {
 					_itemCategories pushBack "NVG";
 				};
 				private _sunData = [] call BIS_fnc_sunriseSunsetTime;
@@ -1329,7 +1329,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 						};
 					};
 
-					if (_add && {{[_x,_itemString] call A3C_doesUnitHaveWeaponItem} count _grunts > 0}) then {
+					if (_add && {{[_x,_itemString] call A3C_fnc_hasWeaponItem} count _grunts > 0}) then {
 						_itemCategories pushBack _itemString;
 					};
 
@@ -1523,7 +1523,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 															_u removeMagazine _it;
 															_st = "NVG_TargetC" createVehicle getPos _u;
 															_u setvariable ["A3C_STROBE",[_st,_it],true];
-															[_u,_st] spawn A3C_UNIT_STROBE_LOOP;
+															[_u,_st] spawn A3C_AI_action_irStrobeLoop;
 
 														};
 													};
@@ -1559,7 +1559,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								_nvgImage =  "A3C_CORE\ui\pictures\icon_menu_item_NVG_OFF.paa";
 								_nvgToolTip = "Turn NVG ON";
 
-								if ({{_item = _x; [_item] call A3C_isNVGoggles } count (assigneditems _x) > 0} count A3C_RD_UNITS > 0) then {
+								if ({{_item = _x; [_item] call A3C_fnc_isNVGoggles } count (assigneditems _x) > 0} count A3C_RD_UNITS > 0) then {
 									_nvgImage = "A3C_CORE\ui\pictures\icon_menu_item_NVG_ON.paa";
 									_nvgToolTip = "Turn NVG OFF";
 								};
@@ -1582,11 +1582,11 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 									{
 										_u = _x;
 
-										if ({{_item = _x; [_item] call A3C_isNVGoggles } count (assigneditems _x) > 0} count A3C_RD_UNITS > 0) then {
+										if ({{_item = _x; [_item] call A3C_fnc_isNVGoggles } count (assigneditems _x) > 0} count A3C_RD_UNITS > 0) then {
 
 											_nvgs = "";
 											{
-												if ([_x] call A3C_isNVGoggles ) exitWith {
+												if ([_x] call A3C_fnc_isNVGoggles ) exitWith {
 													_nvgs = _x;
 												};
 											} foreach (assigneditems _x);
@@ -1614,7 +1614,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 										} else {
 											_nvgs = "";
 											{
-												if ([_x] call A3C_isNVGoggles ) exitWith {
+												if ([_x] call A3C_fnc_isNVGoggles ) exitWith {
 													_nvgs = _x;
 												};
 											} foreach (items _x);
@@ -1932,7 +1932,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								_silencerImage =  "A3C_CORE\ui\pictures\icon_menu_item_Silencer_OFF.paa";
 								_silencerToolTip = "Attach Suppressor";
 
-								if ({[_x,"SILENCER"] call A3C_doesUnitHaveWeaponItem} count (A3C_RD_UNITS - [player]) > 0) then {
+								if ({[_x,"SILENCER"] call A3C_fnc_hasWeaponItem} count (A3C_RD_UNITS - [player]) > 0) then {
 									_silencerImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_ON.paa";
 									_silencerToolTip = "Remove Suppressor";
 								};
@@ -1954,7 +1954,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 									(findDisplay 100040 displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 									{
 
-										if ({[_x,"SILENCER"] call A3C_doesUnitHaveWeaponItem} count A3C_RD_UNITS > 0) then {
+										if ({[_x,"SILENCER"] call A3C_fnc_hasWeaponItem} count A3C_RD_UNITS > 0) then {
 											_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_OFF.paa";
 											_tooltip = "Attach Suppressor";
 											_sl = [_x,"MuzzleSlot",1,(currentWeapon _x)] call MCSS_fnc_getWeaponItems;
@@ -2795,7 +2795,7 @@ A3C_UI_RADIAL_LABEL_LB = {
 
 
 					if (!isNull _occupyingUnit && {alive _occupyingUnit}) then {
-						_buttonColor = if (_occupyingUnit in units player) then {[A3C_UI_COLOR_BLUE,0.7] call A3C_UI_Color_setOpacity} else {[A3C_UI_COLOR_RED,0.7] call A3C_UI_Color_setOpacity};
+						_buttonColor = if (_occupyingUnit in units player) then {[A3C_UI_COLOR_BLUE,0.7] call A3C_UI_fnc_setOpacity} else {[A3C_UI_COLOR_RED,0.7] call A3C_UI_fnc_setOpacity};
 
 						if (_occupyingUnit in units player) then {
 							_positionName = _positionName + " (" + (name _occupyingUnit) + ")";
@@ -2814,7 +2814,7 @@ A3C_UI_RADIAL_LABEL_LB = {
 							_boardingData = _x;
 							if ({_x in _boardingData} count _refArray >= 2) exitWith {
 								_occupyingUnit = _x select 0;
-								_buttonColor = if (group _occupyingUnit == group player) then {[A3C_UI_COLOR_BLUE,0.3] call A3C_UI_Color_setOpacity} else {[A3C_UI_COLOR_RED,0.3] call A3C_UI_Color_setOpacity};
+								_buttonColor = if (group _occupyingUnit == group player) then {[A3C_UI_COLOR_BLUE,0.3] call A3C_UI_fnc_setOpacity} else {[A3C_UI_COLOR_RED,0.3] call A3C_UI_fnc_setOpacity};
 								_nameAdd = " (Currently Boarded)";
 							};
 						} foreach _vicVar;
@@ -3123,7 +3123,7 @@ A3C_UI_RADIAL_LABEL_SELECTORS = { //~~ currently unused
 				_textCol = [0,0,0,0.2];
 				_backCol = [1,0,0,0.2];
 			} else {
-				_backCol = if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {[_u] call A3C_GET_UB_COLOR} else {[A3C_UI_COLOR_BLUE,0.8] call A3C_UI_Color_setOpacity};
+				_backCol = if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {[_u] call A3C_GET_UB_COLOR} else {[A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity};
 
 				call compile format
 				[

@@ -1,7 +1,7 @@
 A3C_FNCS_CONVOY_MULTIGROUP = {
 	params ["_inputUnits","_refPos"];
 
-	private _wpPositions = [_refPos,_inputUnits,count _inputUnits, (_refPos getDir (leader (_inputUnits select 0))) + 180,20 ] call A3C_create_wpWedgePositions;
+	private _wpPositions = [_refPos,_inputUnits,count _inputUnits, (_refPos getDir (leader (_inputUnits select 0))) + 180,20 ] call A3C_fnc_generateWpWedgePositions;
 	//systemchat str (_inputUnits);
 
 	private _lastUnit = grpNull;
@@ -143,7 +143,7 @@ A3C_FNCS_CONVOY_MULTIGROUP = {
 				private _leaderVehicle = vehicle leader _group;
 				if (isNull _leaderVehicle) exitWith {"SAFE"};
 
-				if (!([_leaderVehicle] call A3C_isArmedVehicle)) exitWith {"CARELESS"};
+				if (!([_leaderVehicle] call A3C_fnc_isArmedVehicle)) exitWith {"CARELESS"};
 				"SAFE"
 			};
 
