@@ -1216,18 +1216,34 @@ A3C_AI_HighCommand_Action_assembleWeapon = {
 
 
 
-			_statements = format
-			[
-				"
+			// _statements = format
+			// [
+			// 	"
 
-					['%1',this,%2,'%3',(currentWaypoint group this)] call A3C_HC_INSERT_ACTION_WP;
-				",
+			// 		['%1',this,%2,'%3',(currentWaypoint group this)] call A3C_HC_INSERT_ACTION_WP;
+			// 	",
+			// 	getPlayerUID player,
+			// 	[["NONE","NONE"],"ASSEMBLE WEAPON"],
+			// 	formation _gp,
+			// 	typeOf A3C_OBJECTPLACER
+			// ];
+			// _wpStm = waypointStatements _wp;
+			// _wp setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _statements];
+			// systemchat str _wpStm;
+
+
+
+			private _wpScript = format 
+			[
+				"A3C_CORE\fnc_AI\wpFncs\wpScript_AssembleWeapon.sqf ['%1',%2,%3,'%4']",
 				getPlayerUID player,
-				[["NONE","NONE"],"ASSEMBLE WEAPON"],
-				formation _gp
+				["ARRIVAL",0],
+				["NONE","NONE"],
+				typeOf A3C_OBJECTPLACER
 			];
-			_wpStm = waypointStatements _wp;
-			_wp setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _statements];
+			_wp setWaypointType "SCRIPTED";
+			_wp setWaypointScript _wpScript;
+
 			
 			_gp setvariable ["A3C_UNIT_POLYS",_var,true];
 			

@@ -516,7 +516,6 @@ A3C_HC_INSERT_ACTION_WP = {
 	
 	if (_actionType == "ASSEMBLE WEAPON") then {
 		[leader _group,_caller] call A3C_WPstatementsASSEMBLE;
-		//systemchat 'yo';
 	};
 	
 

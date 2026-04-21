@@ -6,7 +6,8 @@ params
 	"_target",
 	"_callerUID",
 	"_preCondition", //-- _preCondition: ARRAY >> example: ["GOCODE","A"]
-	"_postCondition" //-- _postCondition: ARRAY >> example: ["GOCODE","A"]
+	"_postCondition", //-- _postCondition: ARRAY >> example: ["GOCODE","A"]
+	"_weaponClass"
 ];
 
 if ([_callerUID,_group] call A3C_HC_WPScriptBlock) exitWith {};
@@ -84,13 +85,15 @@ private _exitCondition = {{true}};
 	};
 } foreach [_preCondition,_postCondition];
 
+// player sidechat format ["WPSCRIPT: %1", [_weaponClass]];
+
 //-------------------------------//
 //-- INSERT ACTION SCRIPT here --//
 //-------------------------------//
 
 if !(_group getVariable ["A3C_ASSEMBLING",false]) then {
 	_group setVariable ["A3C_ASSEMBLING",true,true];
-	[_leader] call A3C_WPstatementsASSEMBLE;	
+	[_leader, _weaponClass] call A3C_WPstatementsASSEMBLE;	
 	waitUntil {!(_group getVariable ["A3C_ASSEMBLING",false])};
 	_group setVariable ["A3C_ASSEMBLING",true,true]; //-- reset to true for exitcondition
 } else {

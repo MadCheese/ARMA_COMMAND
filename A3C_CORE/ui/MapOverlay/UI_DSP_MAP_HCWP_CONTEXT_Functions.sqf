@@ -1532,10 +1532,11 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 				_statements = "";
 				_wpScript = format 
 				[
-					"A3C_CORE\fnc_AI\wpFncs\wpScript_AssembleWeapon.sqf ['%1',%2,%3]",
+					"A3C_CORE\fnc_AI\wpFncs\wpScript_AssembleWeapon.sqf ['%1',%2,%3,'']",
 					getPlayerUID player,
 					[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL],
 					[A3C_HC_ACTIVE_POST_COND_MODE,A3C_HC_ACTIVE_POST_COND_VAL]
+					// -- #TODO: Add weapon classname
 				]; 
 			};
 

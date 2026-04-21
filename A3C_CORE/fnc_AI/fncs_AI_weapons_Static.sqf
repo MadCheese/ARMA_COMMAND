@@ -293,30 +293,51 @@ A3C_getSelectionBackpackStatics = {
 	_return
 };
 
-//-- Squad Level WP Behaviour. Used to find data and execute WP ACTION (next fnc below)
 A3C_WPstatementsASSEMBLE = {
-	params ["_leader"];
+	params [
+		["_leader", objNull],
+		["_weapon", ""]
+	];
+	// systemchat format ["A3C_WPstatementsASSEMBLE, weapon: %1", [_weapon]];
+	private _weaponData = [units _leader, "PLANNING"] call A3C_getSelectionBackpackStatics;
+	private _pVar = (group _leader) getVariable ["A3C_UNIT_POLYS", []];
+	private _dir = 0;
 
-	_weaponData = [units _leader,'PLANNING'] call A3C_getSelectionBackpackStatics;
-	_pVar = (group _leader) getvariable ['A3C_UNIT_POLYS',[]];
-	_dir = 0;
 	{
-		_poly = _x;
-		_polyID = ((_x select 0) select 1);
-		if (["ASS",_polyID] call BIS_fnc_instring) then {
-			_dir = [_leader,((_x select 0) select 0)] call BIS_fnc_dirTo;
+		private _poly = _x;
+		private _polyID = (_poly select 0) select 1;
+
+		if (["ASS", _polyID] call BIS_fnc_inString) then {
+			_dir = [_leader, (_poly select 0) select 0] call BIS_fnc_dirTo;
 			_pVar = _pVar - [_poly];
 		};
-	} foreach _pVar;
-	if (count _weaponData > 0) then {
+	} forEach _pVar;
+
+	// systemChat format ["A3C_WPstatementsASSEMBLE weaponData: %1", _weaponData];
+
+	private _selectedWeaponData = [];
+
+	if (_weapon != "") then {
+		private _idx = _weaponData findIf { (_x select 1) isEqualTo _weapon };
+		if (_idx > -1) then {
+			_selectedWeaponData = _weaponData select _idx;
+		};
+	} else {
+		if !(_weaponData isEqualTo []) then {
+			_selectedWeaponData = _weaponData select 0;
+		};
+	};
+
+	if !(_selectedWeaponData isEqualTo []) then {
 		[
-			(units _leader),
-			['ASSEMBLE',(_weaponData select 0) select 1],
+			units _leader,
+			["ASSEMBLE", _selectedWeaponData select 1],
 			position _leader,
 			_dir
 		] spawn A3C_WP_ACTION_STATICWEAPON;
 	};
-	(group _leader) setvariable ['A3C_UNIT_POLYS',_pVar,true];
+
+	(group _leader) setVariable ["A3C_UNIT_POLYS", _pVar, true];
 };
 
 
