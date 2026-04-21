@@ -321,7 +321,7 @@ A3C_HC_AssignVehicle = { //--#TODO: change from call to spawn and add delay if g
 		
 	};
 	
-	A3C_AI_HighCommand_boardGroupToVehicle_BOOL = false;
+	A3C_Boarding_ACTIVE = false;
 };
 
 
@@ -1321,88 +1321,41 @@ A3C_WP_STATEMENTS = {
 };
 
 
-
-A3C_AI_HighCommand_boardGroupToVehicle = {
+A3C_AI_HighCommand_ActionDistribute_boardGroupsToVehicle = {
 	params ["_button","_ctrl"];
 	private ["_group","_a3c_dsp"];
 	//if !(count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) exitWith {systemchat 'A3C: Boarding/Dismount function is only compatible with single selections'};
-	_a3c_dsp = if (visibleMap) then {100020} else {100030};
+	_a3c_dsp = if (visibleMap) then {100020} else {100040};
 	
-	//systemchat 'ay';
+	
 
 	//-- Boarding HC-units via map-ui pt 1
 	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
 	(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
 	if (_button == 0) then {
-		if (!isNull (findDisplay 100040)) then {
-			A3C_DISABLE_RADIAL = true;
-			[] call A3C_UI_RADIAL_CloseDisplay;
+		A3C_UI_MAPICONS_HC_VICS = [] call A3C_fnc_getBoardableVehicles;
+		if (_a3c_dsp == 100040) then {
+
 			A3C_UI_HUD_ASSIGNVEHICLE = true;
-			A3C_UI_MAPICONS_HC_VICS = [];
-			{
-					if (side _x == civilian OR {{alive _x && (side _x) getfriend (side player) < 0.6} count crew _x == 0}) then {
-						A3C_UI_MAPICONS_HC_VICS pushBackUnique [_x,[25,25],_x getPos [0,0]];
-					};
-				} foreach ( (allMissionObjects "CAR") + (allMissionObjects "TANK") + (allMissionObjects "AIR") + (allMissionObjects "STATICWEAPON") +(allMissionObjects "SHIP"));
-			
 			[
-				46,
-				'SPACE',
-				{
-					
-					count A3C_RD_UNITS > 0 && {cursortarget in A3C_UI_HUD_ASSIGNVEHICLE_OBJECTS}
-				},
-				{
-					[ A3C_RD_UNITS select {!isPlayer leader _x}, cursortarget] call A3C_HC_AssignVehicle;			
-					A3C_UI_HUD_3D_TAG_ICON_TYPE = (gettext (configfile >> "CfgVehicles" >> typeof cursortarget >> "picture"));
-					_uiPos = getPosASL cursortarget;
-					_uiPos set [2,(((boundingBoxReal cursortarget) select 1) select 2) / 2];
-					[_uiPos,"BOARD"] spawn A3C_UI_HUD_3D_TAG;
-					A3C_UI_MAPICONS_HC_VICS = [];	
-				},
-				{ 
-					(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-					A3C_UI_HUD_ASSIGNVEHICLE = false;
-				},
-				false 
-			] call A3C_UI_RADIAL_ADD_EH_MACROS;
-			
-			[
-				46,
-				'RADIAL',
-				{
-					
-					true
-				},
-				{
-				},
-				{ 
-					(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-					(findDisplay 46) displayRemoveEventHandler ["KeyUp", A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-					A3C_UI_HUD_ASSIGNVEHICLE = false;
-				},
-				true 
-			] call A3C_UI_RADIAL_ADD_EH_MACROS;					
-			[] call A3C_UI_RADIAL_CloseDisplay;
+				false, //-- isBusy
+				"BoardVehicle_HC", //-- actionID
+				'', //-- Hud-Icon-class
+				[1,0,0,1], //-- Hud-Icon-color
+				"", //-- placer class
+				"" //-- placer color-params
+			] call A3C_AI_SHARED_Action_StartPositionalProcess;
 		} else {
-			if !(A3C_AI_HighCommand_boardGroupToVehicle_BOOL) then {
-				A3C_AI_HighCommand_boardGroupToVehicle_GROUPS = +(A3C_SELECTED_HC_GROUPS_SETTINGS);
-				A3C_UI_MAPICONS_HC_VICS = [];
+			if !(A3C_Boarding_ACTIVE) then {
+				A3C_BOARDING_GROUPS = +(A3C_SELECTED_HC_GROUPS_SETTINGS);
+				
 				A3C_BOOL_MOUSEMOVING = true;
 				A3C_MMCode = {
 					_this spawn A3C_UI_MAP_onMouseDrag;
 				};
 				A3C_BOOL_DRAGLINE = true;
 				A3C_CONNECTING_MODE = "HCBOARD";
-				{
-					if (side _x == civilian OR {{alive _x && (side _x) getfriend (side player) < 0.6} count crew _x == 0}) then {
-						A3C_UI_MAPICONS_HC_VICS pushBackUnique [_x,[25,25],_x getPos [0,0]];
-					};
-				} foreach ( (allMissionObjects "CAR") + (allMissionObjects "TANK") + (allMissionObjects "AIR") + (allMissionObjects "STATICWEAPON") +(allMissionObjects "SHIP"));
-				
-				A3C_AI_HighCommand_boardGroupToVehicle_BOOL = true;
-				
-	
+				A3C_Boarding_ACTIVE = true;
 			};
 		};
 	} else {

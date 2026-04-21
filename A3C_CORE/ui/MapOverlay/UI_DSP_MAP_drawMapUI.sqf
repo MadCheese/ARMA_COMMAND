@@ -106,7 +106,7 @@ MAP_UI_fnc_drawMapUI = {
 			case ("HCBOARD") : {
 				{
 					(_this select 0) drawArrow [leader _x,A3C_DRAGPOS, [0,0,1,1]];
-				} foreach A3C_AI_HighCommand_boardGroupToVehicle_GROUPS;
+				} foreach A3C_BOARDING_GROUPS;
 
 				
 			};
@@ -1780,7 +1780,7 @@ MAP_UI_fnc_drawMapUI = {
 			A3C_UI_MAPICONS_PICKUP pushbackUnique [_x,[25,25], getPosASL _x];
 		} foreach A3C_PICKUP_OBJECTS;
 	};
-	if (A3C_AI_HighCommand_boardGroupToVehicle_BOOL) then {
+	if (A3C_Boarding_ACTIVE) then {
 		{
 			[
 				_this select 0,

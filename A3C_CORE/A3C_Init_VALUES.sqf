@@ -344,8 +344,8 @@ A3C_MAP_CommandMode = "INF";
 
 A3C_HC_DETONATION_BOOL = false; //~~ change to clearer varnames, make obvious that it's about map drawing
 
-A3C_AI_HighCommand_boardGroupToVehicle_BOOL = false;
-A3C_AI_HighCommand_boardGroupToVehicle_GROUPS = [];
+A3C_Boarding_ACTIVE = false;
+A3C_BOARDING_GROUPS = [];
 A3C_UI_MAPICONS_HC_VICS = [];
 
 A3C_WP_SPEED_TEMP = -1;

@@ -72,6 +72,35 @@ A3C_fnc_getCursortargetCustom = {
 	_cursorTarget
 };
 
+
+
+A3C_fnc_getBoardableVehicles = {
+	private _playerSide = side player;
+
+	private _allVics = (
+		(allMissionObjects "CAR")
+		+ (allMissionObjects "TANK")
+		+ (allMissionObjects "AIR")
+		+ (allMissionObjects "STATICWEAPON")
+		+ (allMissionObjects "SHIP")
+	);
+
+	_allVics = _allVics select {
+		side _x == civilian || {
+			{
+				alive _x && { (side _x) getFriend _playerSide < 0.6 }
+			} count (crew _x) == 0
+		}
+	};
+
+	private _return = _allVics apply {
+		[_x, [25,25], getPos _x]
+	};
+
+	_return
+};
+
+
 //---------------------------------------------------------------------------------------------
 //---------- Setters --------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------

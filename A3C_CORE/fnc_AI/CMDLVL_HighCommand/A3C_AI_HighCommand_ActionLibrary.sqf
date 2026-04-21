@@ -379,10 +379,6 @@ A3C_AI_HighCommand_Action_orderDetonation = {
 	A3C_HC_DetoTrigger_Units = nil; //~~ this whole var stoll needed?
 };
 
-A3C_AI_HighCommand_Action_boardGroupToVehicle = {
-	_this spawn A3C_AI_HighCommand_boardGroupToVehicle;
-};
-
 A3C_AI_HighCommand_Action_reBoardGroupToVehicle = {
 	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
 	private _isRadial = _a3c_dsp == 100040;
@@ -1247,7 +1243,16 @@ A3C_AI_HighCommand_Action_assembleWeapon = {
 	} foreach A3C_STATIC_PACKS;
 };
 
-
+A3C_AI_HighCommand_Action_boardGroupToVehicle = {
+    private _vehicle = cursortarget;
+    [ A3C_RD_UNITS select {!isPlayer leader _x}, _vehicle] call A3C_HC_AssignVehicle;           
+    A3C_UI_HUD_3D_TAG_ICON_TYPE = (gettext (configfile >> "CfgVehicles" >> typeof _vehicle >> "picture"));
+    _uiPos = getPosASL _vehicle;
+    _uiPos set [2,(((boundingBoxReal _vehicle) select 1) select 2) / 2];
+    // [_uiPos,"BOARD"] spawn A3C_UI_HUD_3D_TAG;
+    A3C_UI_MAPICONS_HC_VICS = [];
+    A3C_UI_HUD_ASSIGNVEHICLE = false;   
+};
 
 
 

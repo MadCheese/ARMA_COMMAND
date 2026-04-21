@@ -383,7 +383,6 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 
 
-			//_actions pushBack "VEHICLE";
 			_vehicleType = "GROUND";
 			if (_leaderVic isKindOf "AIR") then {
 				_vehicleType = "AIR";
@@ -959,7 +958,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip = "ASSIGN AND UNASSIGN VEHICLES. LMB to ASSIGN. RMB TO UNASSIGN. CTRL+RMB TO UNLOAD CARGO GROUPS";
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
-						[_clickData select 1,_clickData select 5] call A3C_AI_HighCommand_Action_boardGroupToVehicle;	
+						[_clickData select 1,_clickData select 5] call A3C_AI_HighCommand_ActionDistribute_boardGroupsToVehicle;	
 					};	
 				};
 				case ("VEHICLE_REBOARD") : {

@@ -133,7 +133,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 	};
 
 	//-- detect click on VEHICLE BOARDING ICONS	
-	if (A3C_AI_HighCommand_boardGroupToVehicle_BOOL) exitWith {
+	if (A3C_Boarding_ACTIVE) exitWith {
 
 		private _vhIcons = [];
 		//-- Boarding HC-units via map-ui pt 2
@@ -148,19 +148,19 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 				[A3C_SELECTED_HC_GROUPS_SETTINGS,_selectedVehicle] call A3C_HC_AssignVehicle;
 				_doReset = true;
 			} else {
-				A3C_AI_HighCommand_boardGroupToVehicle_BOOL = false; //-- disable boarding interface
+				A3C_Boarding_ACTIVE = false; //-- disable boarding interface
 				_doReset = true;
 			};
 		} else {
 			if (_ctrl) then {
-				A3C_AI_HighCommand_boardGroupToVehicle_BOOL = false; //-- disable boarding interface
+				A3C_Boarding_ACTIVE = false; //-- disable boarding interface
 				_doReset = true;
 			};
 		};
 		if (_doReset) then {
 			A3C_UI_MAPICONS_HC_VICS = [];
-			A3C_AI_HighCommand_boardGroupToVehicle_BOOL = false;
-			A3C_AI_HighCommand_boardGroupToVehicle_GROUPS = [];
+			A3C_Boarding_ACTIVE = false;
+			A3C_BOARDING_GROUPS = [];
 			A3C_MMCode = {};
 			A3C_BOOL_MOUSEMOVING = false;
 			A3C_BOOL_DRAGLINE = false;
@@ -207,7 +207,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 					//-- HC waypoint sync
 					A3C_CONNECTING_MODE = "HCSYNC";
 					A3C_BOOL_DRAGLINE = true;
-					A3C_AI_HighCommand_boardGroupToVehicle_GROUPS = [_gp];
+					A3C_BOARDING_GROUPS = [_gp];
 					A3C_CLICKPOS_ORIG =  A3C_CLICKPOS_1;
 					A3C_BOOL_MOUSEMOVING = true;
 					A3C_HC_WP_SYNC_ROOT = [_gp,_wp_Index];

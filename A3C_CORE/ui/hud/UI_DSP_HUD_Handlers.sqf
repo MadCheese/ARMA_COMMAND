@@ -32,111 +32,116 @@ A3C_UI_HUD_onKeyDown = {
 	// player sideChat format["HUD KEY-DOWN: %1 (%2)",_key, keyname _key];
 	
 	//-- RADIAL-ACTIONS
-	if 
-	(
-		_key == 57 //-- SpaceBar
-		&& {A3C_AI_HighCommand_Action_ID != "" || {A3C_AI_Squad_Action_ID != ""}} 
-	) exitWith {
-		//-- Confirm Action (#TODO - create dedicated function to save space)
-		private _script = 0;
-		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
-			switch (A3C_AI_Squad_Action_ID) do {
-				case ("ATSHOT") : {
-					[] call A3C_AI_SHARED_Action_remoteFire_ATshot;
-				};
-				case ("UGLSHOT") : {
-					[] call A3C_AI_SHARED_Action_remoteFire_UGLshot;
-				};
-				case ("STATICSHOT") : {
-					[] call A3C_AI_SHARED_Action_remoteFire_StaticRocketShot;
-				};
-				case ("TANKSHOT") : {
-					[] call A3C_AI_SHARED_Action_remoteFire_TankShot;
-				};
-				case ("SUPPRESSION") : {
-					[] call A3C_AI_Squad_Action_suppression;
-				};
-				case ("PLACE_CHARGE_SQUAD") : {
-					[] call A3C_AI_Squad_Action_placeCharge;
-				};
-				case ("STATIC_ASSEMBLE_SQUAD") : {
-					[] call A3C_AI_Squad_Action_assembleWeapon;
-				};
+    if 
+    (
+        _key == 57 //-- SpaceBar
+        && {A3C_AI_HighCommand_Action_ID != "" || {A3C_AI_Squad_Action_ID != ""}} 
+    ) exitWith {
+        //-- Confirm Action (#TODO - create dedicated function to save space)
+        private _script = 0;
+        private _flickerMode = "SUPPRESSION";
+        if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
+            switch (A3C_AI_Squad_Action_ID) do {
+                case ("ATSHOT") : {
+                    [] call A3C_AI_SHARED_Action_remoteFire_ATshot;
+                };
+                case ("UGLSHOT") : {
+                    [] call A3C_AI_SHARED_Action_remoteFire_UGLshot;
+                };
+                case ("STATICSHOT") : {
+                    [] call A3C_AI_SHARED_Action_remoteFire_StaticRocketShot;
+                };
+                case ("TANKSHOT") : {
+                    [] call A3C_AI_SHARED_Action_remoteFire_TankShot;
+                };
+                case ("SUPPRESSION") : {
+                    [] call A3C_AI_Squad_Action_suppression;
+                };
+                case ("PLACE_CHARGE_SQUAD") : {
+                    [] call A3C_AI_Squad_Action_placeCharge;
+                };
+                case ("STATIC_ASSEMBLE_SQUAD") : {
+                    [] call A3C_AI_Squad_Action_assembleWeapon;
+                };
 
-				case ("GTI_GRENADE_SQUAD") : {
-					[] spawn A3C_AI_Squad_Action_throwGTIgrenade;
-				};
+                case ("GTI_GRENADE_SQUAD") : {
+                    [] spawn A3C_AI_Squad_Action_throwGTIgrenade;
+                };
 
 
-				
-			};
-		} else {
-			switch (A3C_AI_HighCommand_Action_ID) do {
-				case ("TANKSHOT") : {
-					[] call A3C_AI_SHARED_Action_remoteFire_TankShot;
-				};
-				case ("VTOL_CANNON") : {
-					_script = ["CANNON"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
-				};
-				case ("VTOL_GATLING") : {
-					_script = ["GATLING"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
-				};
-				case ("VTOL_AUTOCANNON") : {
-					_script = ["AUTOCANNON"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
-				};
+                
+            };
+        } else {
+            switch (A3C_AI_HighCommand_Action_ID) do {
+                case ("TANKSHOT") : {
+                    [] call A3C_AI_SHARED_Action_remoteFire_TankShot;
+                };
+                case ("VTOL_CANNON") : {
+                    _script = ["CANNON"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
+                };
+                case ("VTOL_GATLING") : {
+                    _script = ["GATLING"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
+                };
+                case ("VTOL_AUTOCANNON") : {
+                    _script = ["AUTOCANNON"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
+                };
 
-				case ("UGLSHOT") : { // #TODO: change velocity for UGLshots to a faster speed
-					[] call A3C_AI_SHARED_Action_remoteFire_UGLshot;
-				};
-				case ("ATSHOT") : {
-					[] call A3C_AI_SHARED_Action_remoteFire_ATshot;
-				};
-				case ("STATICSHOT") : {
-					[] call A3C_AI_SHARED_Action_remoteFire_StaticRocketShot;
-				};
-				case ("UAV_FPV") : {
-					[] call A3C_AI_HighCommand_Action_uavFPV;
-				};
-				case ("REPAIR") : {
-					[] call A3C_AI_HighCommand_Action_repair;
-				};
-				case ("LANDING") : {
-					[] call A3C_AI_HighCommand_Action_landAircraft;
-				};
-				case ("CAS-STRIKE") : {
-					[] call A3C_AI_HighCommand_Action_casStrike;
-				};
-				case ("RAPPEL") : {
-					[] call A3C_AI_HighCommand_Action_rappel;
-				};
-				case ("SUPPRESSION") : {
-					[] call A3C_AI_HighCommand_Action_suppression;
-				};
-				case ("ARTY") : {
-					[] call A3C_AI_HighCommand_Action_artillery;
-				};
-				case ("PLACE_CHARGE_HC") : {
-					[] call A3C_AI_HighCommand_Action_placeCharge;
-				};
-				case ("STATIC_ASSEMBLE_HC") : {
-					[] call A3C_AI_HighCommand_Action_assembleWeapon;
-				};	
-			};
-		};
-		
-		[_script] spawn {
-			params ["_script"];
-			if (typeName _script == "CODE") then {
-				waitUntil {scriptDone _script};
-			};
-			//-- wait until objectSelector is closed
-			waitUntil {isNull (findDisplay 100060)};
-			private _flickerScript = [A3C_UI_HUD_3D_TAG_ICON_POS,'SUPPRESSION'] spawn A3C_UI_HUD_3D_TAG;
-			waitUntil {scriptDone _flickerScript};
-			[] call A3C_AI_SHARED_Action_CancelPositionalProcess;
-		};
-		true
-	};
+                case ("UGLSHOT") : { // #TODO: change velocity for UGLshots to a faster speed
+                    [] call A3C_AI_SHARED_Action_remoteFire_UGLshot;
+                };
+                case ("ATSHOT") : {
+                    [] call A3C_AI_SHARED_Action_remoteFire_ATshot;
+                };
+                case ("STATICSHOT") : {
+                    [] call A3C_AI_SHARED_Action_remoteFire_StaticRocketShot;
+                };
+                case ("UAV_FPV") : {
+                    [] call A3C_AI_HighCommand_Action_uavFPV;
+                };
+                case ("REPAIR") : {
+                    [] call A3C_AI_HighCommand_Action_repair;
+                };
+                case ("LANDING") : {
+                    [] call A3C_AI_HighCommand_Action_landAircraft;
+                };
+                case ("CAS-STRIKE") : {
+                    [] call A3C_AI_HighCommand_Action_casStrike;
+                };
+                case ("RAPPEL") : {
+                    [] call A3C_AI_HighCommand_Action_rappel;
+                };
+                case ("SUPPRESSION") : {
+                    [] call A3C_AI_HighCommand_Action_suppression;
+                };
+                case ("ARTY") : {
+                    [] call A3C_AI_HighCommand_Action_artillery;
+                };
+                case ("PLACE_CHARGE_HC") : {
+                    [] call A3C_AI_HighCommand_Action_placeCharge;
+                };
+                case ("STATIC_ASSEMBLE_HC") : {
+                    [] call A3C_AI_HighCommand_Action_assembleWeapon;
+                };
+                case ("BoardVehicle_HC") : {
+                    [] call A3C_AI_HighCommand_Action_boardGroupToVehicle;
+                    _flickerMode = "BOARD";
+                };  
+            };
+        };
+        
+        [_script, _flickerMode] spawn {
+            params ["_script", "_flickerMode"];
+            if (typeName _script == "CODE") then {
+                waitUntil {scriptDone _script};
+            };
+            //-- wait until objectSelector is closed
+            waitUntil {isNull (findDisplay 100060)};
+            private _flickerScript = [A3C_UI_HUD_3D_TAG_ICON_POS, _flickerMode] spawn A3C_UI_HUD_3D_TAG;
+            waitUntil {scriptDone _flickerScript};
+            [] call A3C_AI_SHARED_Action_CancelPositionalProcess;
+        };
+        true
+    };
 
 
 	private _keyControlsMap = (inputAction "showMap") > 0;
