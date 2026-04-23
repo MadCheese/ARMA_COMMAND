@@ -1,17 +1,25 @@
+#include "script_component.hpp"
+#include "dialog_defines.hpp"
+
 #define BAR_X (-10.5 * GUI_GRID_W + GUI_GRID_X)
 #define BAR_W (16 * GUI_GRID_W)
 #define BAR_H (15.5 * GUI_GRID_H)
 #define TREE_W (13 * GUI_GRID_W)
-#define TEAMCOL_FRAME_H ((0.03 * safezoneH) + ((safezoneY + safeZoneH) * 0.0141935))// (safezoneY + safeZoneH) * 0.0141935 should be A3C_MAP_GAMEUI_PADDING_Y
+#define TEAMCOL_FRAME_H ((0.03 * safezoneH) + ((safezoneY + safeZoneH) * 0.0141935))
+
 
 class A3C_MENU
 {
-	idd = 100040;
-	movingenable = false;
+	idd = IDD_RADIAL_MENU;
+	movingEnable = false;
 
-	onKeyDown = "_this call A3C_UI_RADIAL_onKeyDown";
-	onKeyUp = "_this call A3C_UI_RADIAL_onKeyUp";
-	onMouseButtonDown = "_this call A3C_UI_RADIAL_onMouseButtonDown";
+	onLoad = EXPAND_AND_QUOTE(_this call FUNC(onLoad));
+	onUnload = EXPAND_AND_QUOTE(_this call FUNC(onUnload));
+
+	onKeyDown = EXPAND_AND_QUOTE(_this call FUNC(onKeyDown));
+	onKeyUp = EXPAND_AND_QUOTE(_this call FUNC(onKeyUp));
+	onMouseButtonDown = EXPAND_AND_QUOTE(_this call FUNC(onMouseButtonDown));
+
 	
 	class ControlsBackground {
 		//---------------------------------------------------------------------------------------------

@@ -6,14 +6,17 @@
 #include "ui\A3C_BaseClasses.hpp"
 
 #include "ui\MapOverlay\UI_DSP_MAP.hpp"
-#include "ui\radial\UI_DSP_RADIAL.hpp"
+
 #include "ui\HUD\HUD_MENU.hpp"
 #include "ui\HUD\HUD_DYNAMIC\A3C_DSP_HUD_DYNAMIC.hpp"
 #include "ui\HUD\customFormation\UI_DSP_CustomFormation.hpp"
 #include "ui\HUD\HUD_CAM_UI.hpp"
 // #include "ui\radial\A3C_FORMATION.hpp"
 
+// #include "ui\radial\UI_DSP_RADIAL.hpp"
+#include "ui\radial\radialMenu\dialog.hpp"
 #include "ui\radial\settingsMenu\dialog.hpp"
+
 #include "ui\suppression\A3C_SUPPRESSION_DRAW.hpp"
 #include "cfgsounds.hpp"
 

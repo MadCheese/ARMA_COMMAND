@@ -1,0 +1,1 @@
+#define IDD_RADIAL_MENU 100040
