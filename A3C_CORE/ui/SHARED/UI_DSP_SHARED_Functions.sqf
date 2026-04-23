@@ -29,6 +29,74 @@ A3C_UI_Shared_blockKeyDownEvent = {
     true
 };
 
+A3C_UI_Shared_fnc_ReleaseMenuKey = {
+	//-- unified function for all KeyUp handlers for RADIAL/ObjectSelector Key-Release
+	params ["_display"];
+
+	private _radialDisplay = findDisplay 100040;
+	private _hudDisplay = findDisplay 100050;
+	private _mainDisplay = findDisplay 46;
+
+	private _isRadialDisplay = _display == _radialDisplay;
+	private _isHudDisplay = _display == _hudDisplay;
+	private _isMainDisplay = _display == _mainDisplay;
+
+	//-- remove key from downkeys array
+
+
+	//-- close input display
+	if (_isRadialDisplay) then {
+		[] call A3C_UI_RADIAL_CloseDisplay;
+	} else {
+		if (!_isMainDisplay) then {
+			_display closeDisplay 0;
+		};
+	};
+
+	if (_isHudDisplay) then {
+		//-- HUD-Menu
+		if (profileNamespace getVariable ["A3C_HUD_MENUSHOW_VAR", true]) then {
+			if !(profileNamespace getVariable ["A3C_HUD_isOpen", false]) then {
+				[] call A3C_HUD_OPEN_MENU;
+			};
+		} else {
+			("A3C_HUD_MENU_UI" call BIS_fnc_rscLayer) cutText ["", "PLAIN"];
+			profileNamespace setVariable ["A3C_HUD_isOpen", false];
+		};
+	} else {
+		//-- Radial / ObjectSelector
+		if (A3C_AI_HighCommand_Action_ID != "" && { !(A3C_isHud3dTag) }) then {
+			[] call A3C_AI_SHARED_Action_CancelPositionalProcess;
+			A3C_AI_HighCommand_Action_ID = "";
+		};
+
+		A3C_DISABLE_RADIAL = false;
+
+		if (!isNull A3C_OBJECTPLACER) then {
+			deleteVehicle A3C_OBJECTPLACER;
+		};
+
+		A3C_UI_RADIAL_Current_Remfire_Units = [];
+		A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+		A3C_UI_HUD_3D_TAG_reposition = false;
+	};
+
+	//-- General
+	{ player groupSelectUnit [_x, false] } forEach units player;
+	showCommandingMenu "";
+	{ inGameUISetEventHandler [_x, "false"] } forEach ["PrevAction", "NextAction"];
+};
+
+A3C_UI_Shared_ObjectSelector_Listbox_NumberControl = {
+	params ["_key", "_objectSelectorListbox"];
+
+	private _keyValueIndex = _key - 2;
+	if (_keyValueIndex >= 0 && {_keyValueIndex < lbSize _objectSelectorListbox}) then {
+		sleep 0.1;
+		[_objectSelectorListbox, _keyValueIndex, true] call A3C_setCurSel;
+	};
+};
+
 // #TODO: Dashboard fnc could do with optimization for speed
 
 A3C_UI_SHARED_createDashBoard = {

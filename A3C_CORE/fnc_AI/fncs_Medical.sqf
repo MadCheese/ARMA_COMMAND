@@ -245,7 +245,7 @@ A3C_MEDICAL_START = {
 			if (_hm == 1) then {
 				//-- HEAL ALL
 				while {alive _healer} do {
-					_script = [_healer,_patient] spawn A3C_HEAL;
+					_script = [_healer,_patient] spawn A3C_AI_Shared_Action_Heal;
 					sleep 0.1;
 					if (group _healer == group player) then {
 						//-- update UI PRE HEAL
@@ -278,7 +278,7 @@ A3C_MEDICAL_START = {
 					group _healer setVariable ["A3C_PATIENTS_DESIGNATED", _patients_designated ]
 				};
 			} else {
-				_script = [_healer,_patient] spawn A3C_HEAL;
+				_script = [_healer,_patient] spawn A3C_AI_Shared_Action_Heal;
 				sleep 0.1;
 				if (group _healer == group player) then {
 					//-- update UI PRE HEAL
@@ -341,12 +341,55 @@ A3C_isUnconscious = {
 	|| { !(isNil "BTC_REVIVE_TIME_MIN") && { (_unit getVariable ["r3_unitIsDown", 0]) > 0 } }
 };
 
+A3C_fnc_healUnitMultiCompat = {
+	params ["_patient"];
+	
+	if ( !(isNil "AIS_System_fnc_ReviveAI")) then {
+		if ([_patient] call A3C_isUnconscious) then {
+			[_unit, _patient] spawn AIS_System_fnc_ReviveAI;
+		};
+	};
+	_patient setVariable ["ais_unconscious",false,true];
+	_patient setVariable ["ais_stabilized", true, true];
+	_patient setVariable ["ais_fireDamage", 0];
+	_patient setVariable ["tcb_ais_agony",false,true];
+	_patient setVariable ["unit_is_unconscious",false,true];
+
+	_patient setVariable ["vn_revive_bleeding",false,true];
+	_patient setVariable ["vn_revive_incapacitated",false,true];
+	if !(isNil "f_wound_extraFAK") then {
+		_patient setVariable ["f_wound_down",false];
+		_patient setVariable ["f_wound_bleeding",false];
+		_patient setVariable ["f_wound_blood",100]; // other player dont need know this
+		_patient setVariable ["f_wound_dragging",nil];
+	};
+	if !(isnil "BTC_REVIVE_TIME_MIN") then {
+		_patient setVariable ["r3_unitIsDown", 0, true];
+		_patient setVariable ["r3_unitIsStabi", 0, true];
+		_patient setVariable ["r3_unitPrivateMedic", objNull, true];
+		_patient setVariable ["r3_unitGetRevive", 0, true];
+	};
+	if !(isnil "TFFG_fnc_ReviveSuccess") then {
+		_patient setVariable ["TFFG_Incapacitated", false, true];
+		_patient setVariable ["TFFG_Incapacitated_Dam", false, true];
+		_patient setVariable ["TFFG_Incapacitated_CanBeDragged", false, true];
+	};
+	if (A3C_IsAce3) then {
+
+		[objNull, _patient] call ace_medical_treatment_fnc_fullHeal;
+
+	} else {
+		_patient setUnconscious false;
+	};
+};
 
 //-- requires (_unit getvariable "A3C_PLOT") and A3C_AI_Shared_executeUnitPlot
-A3C_HEAL = {
+A3C_AI_Shared_Action_Heal = {
 	private ["_unit","_patient","_scr","_expDest","_pos","_objs","_formUnits"];
 	_unit = _this select 0;
 	_patient = _this select 1;
+
+	
 	
 	private _objParentUnit = objectParent _unit;
 	private _objParentPatient = objectParent _patient;
@@ -429,8 +472,12 @@ A3C_HEAL = {
 	};
 	// [[units player select 2],true,false] call A3C_AI_Shared_cancelUnitPlot;
 	// waitUntil {(_unit getvariable 'A3C_PLOT') isEqualTo []};
-
-	if (!(_vehicleHeal) && {_unit distance _patient < 3}) then {
+	// systemchat str [_vehicleHeal, _unit distance _patient, (!(_vehicleHeal) && {_unit distance _patient > 3})];
+	if (
+		!(_vehicleHeal)
+		&& {_unit distance _patient > 3}
+	) then {
+		// systemchat format ["A3C_AI_Shared_Action_Heal: %1", _this];
 		_data =
 		[
 			[
@@ -557,46 +604,9 @@ A3C_HEAL = {
 			waituntil {!(["medic", animationState _unit] call BIS_fnc_inString)};
 			sleep 1;
 		};
+		[_patient] call A3C_fnc_healUnitMultiCompat;
 		
-		//if ( !(isNil "TCB_AIS_PATH")) then {
-			if ( !(isNil "AIS_System_fnc_ReviveAI")) then {
-				if ([_patient] call A3C_isUnconscious) then {
-					[_unit, _patient] spawn AIS_System_fnc_ReviveAI;
-				};
-			};
-			_patient setVariable ["ais_unconscious",false,true];
-			_patient setVariable ["ais_stabilized", true, true];
-			_patient setVariable ["ais_fireDamage", 0];
-			_patient setVariable ["tcb_ais_agony",false,true];
-			_patient setVariable ["unit_is_unconscious",false,true];
-
-		//};
-		_patient setVariable ["vn_revive_bleeding",false,true];
-		_patient setVariable ["vn_revive_incapacitated",false,true];
-		if !(isNil "f_wound_extraFAK") then {
-			_patient setVariable ["f_wound_down",false];
-			_patient setVariable ["f_wound_bleeding",false];
-			_patient setVariable ["f_wound_blood",100]; // other player dont need know this
-			_patient setVariable ["f_wound_dragging",nil];
-		};
-		if !(isnil "BTC_REVIVE_TIME_MIN") then {
-			_patient setVariable ["r3_unitIsDown", 0, true];
-			_patient setVariable ["r3_unitIsStabi", 0, true];
-			_patient setVariable ["r3_unitPrivateMedic", objNull, true];
-			_patient setVariable ["r3_unitGetRevive", 0, true];
-		};
-		if !(isnil "TFFG_fnc_ReviveSuccess") then {
-			_patient setVariable ["TFFG_Incapacitated", false, true];
-			_patient setVariable ["TFFG_Incapacitated_Dam", false, true];
-			_patient setVariable ["TFFG_Incapacitated_CanBeDragged", false, true];
-		};
-		if (A3C_IsAce3) then {
-
-			[objNull, _patient] call ace_medical_treatment_fnc_fullHeal;
-
-	   	} else {
-			_patient setUnconscious false;
-		};
+		
 		_patient setdamage 0;
 		_patient dowatch objnull;
 	};

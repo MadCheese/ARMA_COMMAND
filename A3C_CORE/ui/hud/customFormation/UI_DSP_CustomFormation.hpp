@@ -20,6 +20,10 @@ class HUD_Formation_Menu
 			y = safezoneY;
 			w = safezoneW;
 			h = safezoneH;
+
+			onMouseButtonDown = "_this call A3C_UI_CustomFormation_onMouseButtonDown";
+			onMouseButtonUp = "_this call A3C_UI_CustomFormation_onMouseButtonUp";
+			onMouseMoving = "_this call A3C_UI_CustomFormation_onMouseMoving";
 		};
 	};
 	
@@ -35,7 +39,7 @@ class HUD_Formation_Menu
 			y = 0.378981 * safezoneH + safezoneY;
 			w = 0.0973751 * safezoneW;
 			h = 0.044007 * safezoneH;
-			action = "['RED'] call A3C_C_FORM_SelectTeam;";
+			action = "['RED'] call A3C_UI_CustomFormation_fnc_selectTeam;";
 			size = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 			sizeEx = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 			
@@ -48,7 +52,7 @@ class HUD_Formation_Menu
 			y = 0.433989 * safezoneH + safezoneY;
 			w = 0.0973751 * safezoneW;
 			h = 0.044007 * safezoneH;
-			action = "['GREEN'] call A3C_C_FORM_SelectTeam;";
+			action = "['GREEN'] call A3C_UI_CustomFormation_fnc_selectTeam;";
 			size = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 			sizeEx = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 		};
@@ -60,7 +64,7 @@ class HUD_Formation_Menu
 			y = 0.488998 * safezoneH + safezoneY;
 			w = 0.0973751 * safezoneW;
 			h = 0.044007 * safezoneH;
-			action = "['BLUE'] call A3C_C_FORM_SelectTeam;";
+			action = "['BLUE'] call A3C_UI_CustomFormation_fnc_selectTeam;";
 			size = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 			sizeEx = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 		};
@@ -72,7 +76,7 @@ class HUD_Formation_Menu
 			y = 0.544007 * safezoneH + safezoneY;
 			w = 0.0973751 * safezoneW;
 			h = 0.044007 * safezoneH;
-			action = "['YELLOW'] call A3C_C_FORM_SelectTeam;";
+			action = "['YELLOW'] call A3C_UI_CustomFormation_fnc_selectTeam;";
 			size = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 			sizeEx = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 		};
@@ -84,7 +88,7 @@ class HUD_Formation_Menu
 			y = 0.599016 * safezoneH + safezoneY;
 			w = 0.0973751 * safezoneW;
 			h = 0.044007 * safezoneH;
-			action = "['MAIN'] call A3C_C_FORM_SelectTeam;";
+			action = "['MAIN'] call A3C_UI_CustomFormation_fnc_selectTeam;";
 			size = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 			sizeEx = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 		};
@@ -98,7 +102,7 @@ class HUD_Formation_Menu
 			y = 0.654025 * safezoneH + safezoneY;
 			w = 0.0973751 * safezoneW;
 			h = 0.044007 * safezoneH;
-			action = "['ALL'] call A3C_C_FORM_SelectTeam;";
+			action = "['ALL'] call A3C_UI_CustomFormation_fnc_selectTeam;";
 			size = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 			sizeEx = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 		};
@@ -121,7 +125,7 @@ class HUD_Formation_Menu
 			y = 0.235958 * safezoneH + safezoneY;
 			w = 0.0973751 * safezoneW;
 			h = 0.121019 * safezoneH;
-			action = "[0] spawn A3C_C_FORM_ActivateForm";
+			action = "[0] spawn A3C_UI_CustomFormation_fnc_activateFormation";
 			size = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 			sizeEx = "(((((safezoneW / safezoneH) min 0.6) / 0.3) / 53) * 1)";
 			//colorText[] = {1,1,1,1};
@@ -135,7 +139,7 @@ class HUD_Formation_Menu
 			y = 0.180949 * safezoneH + safezoneY;
 			w = 0.0973751 * safezoneW;
 			h = 0.044007 * safezoneH;
-			action = "[] call A3C_C_FORM_Button_ClearForm";
+			action = "[] call A3C_UI_CustomFormation_fnc_clearFormation";
 			
 		};
 		class RscButton_1608: A3C_RscButton
@@ -146,7 +150,7 @@ class HUD_Formation_Menu
 			y = 0.709033 * safezoneH + safezoneY;
 			w = 0.0973751 * safezoneW;
 			h = 0.044007 * safezoneH;
-			onMouseButtonDown = "[_this select 1] call A3C_C_FORM_SaveButton";
+			onMouseButtonDown = "[_this select 1] call A3C_UI_CustomFormation_FNC_SaveButton";
 		};
 		class RscButton_1609: A3C_LISTBOX
 		{
@@ -157,7 +161,7 @@ class HUD_Formation_Menu
 			y = 0.764042 * safezoneH + safezoneY;
 			w = 0.0973751 * safezoneW;
 			h = 0.176028 * safezoneH;
-			onLBSelChanged = "[(_this select 1)] call A3C_C_FORM_LB_Change";
+			onLBSelChanged = "[(_this select 1)] call A3C_UI_CustomFormation_onLBselChanged";
 		};
 				
 	};

@@ -3780,13 +3780,7 @@ A3C_BTN_HC = {
 
 		[(units group player) - [player]] call A3C_GROUP_RESET;
 
-		while {(count (waypoints _newGroup)) > 1} do {
-			{
-				if (_forEachIndex > 0) then {
-					deletewaypoint _x;
-				};
-			} foreach waypoints _newGroup;
-		};
+		[_newGroup, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
 
 		if (count (_unit getvariable "A3C_PLOT") > 0) then {
 			{

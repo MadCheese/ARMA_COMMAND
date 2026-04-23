@@ -125,7 +125,12 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers.sqf"
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers_dispatched.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_UI.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_Formation_Init.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_CustomFormation_init.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_CustomFormation_handlers.sqf";
+
+
+
+
 A3C_SPAWN_HUD_MENU = compile preprocessfileLineNumbers "A3C_CORE\ui\HUD\A3C_SPAWN_HUD_MENU.sqf";
 
 //-- HUD DYNAMIC (findDisplay 100100)
@@ -182,7 +187,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\fncs_UI_main.sqf";
 
 
 MCSS_fnc_createMarker = compile preprocessfileLineNumbers "A3C_CORE\fnc_GEN\createMarker.sqf";
-MCSS_fnc_ctrlCreate = compile preprocessfileLineNumbers "A3C_CORE\ui\ctrlCreate.sqf";
+
 [] execVM "A3C_CORE\A3C_init_Runner.sqf";
 //A3C_loaded = true;
 

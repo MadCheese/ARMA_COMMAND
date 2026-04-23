@@ -410,7 +410,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								{
 									
 									private _mb = (_this select 0) select 1;
-									['%2'] spawn A3C_FNC_FORMMENU;
+									['%2'] spawn A3C_Shared_setFormation;
 									if (_mb == 1) then {
 										(group player) setFormDir (getDir (vehicle player));
 										[] spawn {
@@ -2759,6 +2759,7 @@ A3C_UI_RADIAL_LABEL_LB = {
 					_btnImg ctrlSetTextColor _buttonColor;
 					_btnClicker ctrlSetTooltip _positionName;
 					//-- when looking at this fnc, keep in mind that it requires vehicleVarname or an !isNull object. Hence the format (Player units have vehicleVarname
+					//-- NOTE: ctrlAddEventhandler is allowed as button is created with ctrlCreate 
 					_btnClicker ctrlAddEventHandler
 					[
 						"MouseButtonDown",
@@ -2829,6 +2830,8 @@ A3C_UI_RADIAL_LABEL_LB = {
 						} foreach [_btnImg,_btnClicker];
 
 						private _units = +(A3C_RD_UNITS);
+						
+						//-- NOTE: ctrlAddEventhandler is allowed as button is created with ctrlCreate 
 						_btnClicker ctrlAddEventHandler
 						[
 							"MouseButtonDown",
@@ -3381,8 +3384,6 @@ A3C_UI_RADIAL_INV_LB_CREATE = {
 				[_box1, _lbText] call A3C_addLbEntry;
 			};
 		};
-
-
 	} foreach A3C_UI_INV_CONTAINERS;
 
 	{
@@ -3398,7 +3399,7 @@ A3C_UI_RADIAL_INV_LB_CREATE = {
 	} foreach A3C_UI_INV_TARGETS;
 
 
-
+	//-- NOTE: ctrlAddEventhandler is allowed as listbox is created with ctrlCreate 
 	_box1 ctrlAddEventHandler
 	[
 		"LBSelChanged",

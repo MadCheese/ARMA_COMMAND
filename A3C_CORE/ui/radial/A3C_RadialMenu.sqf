@@ -38,14 +38,7 @@ if !(player == (leader group player)) then {
 };
 if (_exit) exitwith {};
 
-//-- security: remove any possible extra Radial-ActionEH's
-if (!isNil 'A3C_UI_RADIAL_EH_KEYUP_CONFIRM') then {
-	(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-};
 
-//if (!isNil 'A3C_UI_RADIAL_EH_KEYUP_CANCEL') then {
-//	(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-//};
 
 
 

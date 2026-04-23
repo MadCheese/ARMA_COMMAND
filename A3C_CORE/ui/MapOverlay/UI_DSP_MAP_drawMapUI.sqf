@@ -1103,11 +1103,7 @@ MAP_UI_fnc_drawMapUI = {
 
 
 				if (_group == group player) then {
-					{
-						if ((waypointStatements _x) select 0 == "false") then {
-							deletewaypoint _x;							
-						};
-					} foreach _wps;
+					[_group, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
 				};
 
 				//-- draw Group Icon
@@ -1832,18 +1828,3 @@ A3C_EVH_DRAW = (findDisplay 12 displayCtrl 51) ctrlAddEventHandler
 ]; //add for GPS? Tablet needs to be added each time it is opened
 
 
-/*
-if (!isNil "A3C_EVH_DRAW1") then {(findDisplay 12 displayCtrl 51) ctrlRemoveEventHandler ["Draw",A3C_EVH_DRAW1]};
-A3C_EVH_DRAW1 = (findDisplay 12 displayCtrl 51) ctrlAddEventHandler
-[
-	"Draw",
-	{
-		[
-					_this select 0,
-					vehicle player,
-					25,
-					[A3C_UI_COLOR_RED,1] call A3C_UI_fnc_setOpacity,
-					""
-				] call A3C_UI_MAP_DRAW_MACRO_VEHICON;	
-	}
-];

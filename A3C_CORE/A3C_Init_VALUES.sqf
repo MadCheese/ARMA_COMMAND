@@ -455,7 +455,7 @@ A3C_BOOL_STANCE_ICON_TRAVEL = false;
 profilenamespace setvariable ["A3C_HUD_STANCE_MODE_TRAVEL",profileNameSpace getVariable ["A3C_HUD_STANCE_MODE_TRAVEL", 4]];
 A3C_HUD_STANCE_MODE_TRAVEL = profileNameSpace getVariable "A3C_HUD_STANCE_MODE_TRAVEL";
 A3C_HUD_STANCE_ICON_COLOR_TRAVEL = [1,1,1,1]; //~~no longer needed
-A3C_HUD_STANCE_ICON_TRAVEL= "A3C_CORE\ui\pictures\icon_menu_stance_NoChange.paa";
+A3C_HUD_STANCE_ICON_TRAVEL = "A3C_CORE\ui\pictures\icon_menu_stance_NoChange.paa";
 
 
 
@@ -466,9 +466,6 @@ A3C_HUD_STANCE_ICON_COLOR_DESTINATION= [1,1,1,1]; //~~no longer needed
 A3C_HUD_STANCE_ICON_DESTINATION= "A3C_CORE\ui\pictures\icon_menu_stance_NoChange.paa";
 
 profileNamespace setvariable ["A3C_EHM_DIR",0];
-
-
-
 
 
 A3C_HUD_GOCODE_ICON = "A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa";
@@ -604,7 +601,7 @@ BLUE_LINES = [];
 
 
 
-A3C_UI_MAP_UNITBUTTONCEIL = 16;
+
 A3C_UI_MAP_Overlay_VAR_isUnFolded = false;
 A3C_SQ_CLICKED_UNIT = objNull;
 A3C_BOOL_MOUSEMOVING = false;
@@ -613,6 +610,39 @@ A3C_MAP_DRAGPLANNING_ACTIVE = false;
 A3C_DRAGPOS = [];
 A3C_Prevent_SCALING = false;
   
+
+
+A3C_UI_CustomFormation_BOOL_DRAW = false;
+A3C_UI_CustomFormation_BOOL_ALLOW = false;
+A3C_UI_CustomFormation_BOOL_formationActive = false;
+
+A3C_UI_CustomFormation_formationDirection = getDir player;
+
+A3C_UI_CustomFormation_Dots = [];
+A3C_UI_CustomFormation_tickDir = 0;
+A3C_UI_CustomFormation_Poses = [];
+A3C_UI_CustomFormation_lineLength = 0;
+
+
+
+
+
+BR_A3C_GRENADEMODE = false;
+
+A3C_Prevent_attach_IR = false;
+A3C_Prevent_attach_IR_Laser = false;
+A3C_Prevent_attach_Flashlight = false;
+
+A3C_Prevent_UGLSHOT = false;
+A3C_Prevent_ATSHOT = false;
+A3C_Prevent_TANKSHOT = false;
+A3C_Prevent_STATICSHOT = false;
+
+
+//-- HARDCODED UI CTRL VARIABLES >>> ALL NEED TO BE CHANGED TO QGVAR?
+
+A3C_UI_MAP_UNITBUTTONCEIL = 16;
+
 A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT = 709109;
 A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT = 709115;
 A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT = 8007;
@@ -624,6 +654,7 @@ A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2 = 1010102;
 
 A3C_SHARED_GAMEUI_TREE_CONTROL = 202020;
 A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT = 303030;
+A3C_RADIAL_GAMEUI_AllButtonAreas =  [A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT, 8071]; //-- dashboard and selector-extension
 
 
 
@@ -637,19 +668,6 @@ A3C_MAP_OVERLAY_GAMEUI_WPMENU_ActionTypeGroup = 709203;
 A3C_MAP_OVERLAY_GAMEUI_WPMENU_PreCondCtrls = 709202;
 
 A3C_MAP_OVERLAY_GAMEUI_WPMENU_MacroConfirm = [709131,709132,709133,709134];
-
-A3C_RADIAL_GAMEUI_AllButtonAreas =  [A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT, 8071]; //-- dashboard and selector-extension
-
-BR_A3C_GRENADEMODE = false;
-
-A3C_Prevent_attach_IR = false;
-A3C_Prevent_attach_IR_Laser = false;
-A3C_Prevent_attach_Flashlight = false;
-
-A3C_Prevent_UGLSHOT = false;
-A3C_Prevent_ATSHOT = false;
-A3C_Prevent_TANKSHOT = false;
-A3C_Prevent_STATICSHOT = false;
 
 [] spawn {
 	sleep 1;

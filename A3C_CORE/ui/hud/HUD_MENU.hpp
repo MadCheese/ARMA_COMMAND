@@ -151,7 +151,7 @@ class HUD_Display_ObjectSelector
 {
 	idd = 100060;
 	movingenable = true;
-
+	onKeyDown = "_this call A3C_UI_HUD_ObjectSelector_onKeyDown; true";
 	onKeyUp = "_this call A3C_UI_HUD_ObjectSelector_onKeyUp;";
 
 	class ControlsBackground {

@@ -13,7 +13,7 @@ A3C_UI_RADIAL_onKeyDown =	{
 	
 	[_key] call A3C_UI_Shared_FNC_AddDownkey;
 
-	player groupchat format ["[RADIAL] onKeyDown , %1 (%2)", _key, keyname _key];
+	// player groupchat format ["[RADIAL] onKeyDown , %1 (%2)", _key, keyname _key];
 
 	//-- Safety: clear A3C_UI_DOWNKEYS - not used in radial
 	
@@ -32,26 +32,14 @@ A3C_UI_RADIAL_onKeyDown =	{
 A3C_UI_RADIAL_onKeyUp = {
 	params ["_display", "_key"];
 
-	player globalchat format ["[RADIAL] onKeyUp , %1 (%2)", _key, keyname _key];
+	// player globalchat format ["[RADIAL] onKeyUp , %1 (%2)", _key, keyname _key];
 
 	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
 
 	if (_key == (A3C_RadialMenu_KEY_ID select 0)) exitWith {
-		[] call A3C_UI_RADIAL_CloseDisplay;
-		// A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
-		showCommandingMenu "";
-		A3C_DISABLE_RADIAL = false;
+		[_display] call A3C_UI_Shared_fnc_ReleaseMenuKey;	
 		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
 			A3C_RD_UNITS = [];
-		};
-		if ((count A3C_HUD_UnitIndicators) > 0) then {
-			{inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];
-		} else {
-			{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];
-		};
-		//-- security: remove any possible extra Radial-ActionEH's
-		if (!isNil 'A3C_UI_RADIAL_EH_KEYUP_CONFIRM') then {
-			(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
 		};
 	};
 

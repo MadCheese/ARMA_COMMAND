@@ -2412,7 +2412,7 @@ A3C_LB_Change = {
 			_color = "MAIN";
 			
 			_backCol = [1,1,1,1];
-			_isTablet = (isNull (findDisplay 100040));
+			_isTablet = (isNull (findDisplay 100030)); //???????
 			//systemchat str [_dest];
 			_compare = if (_isTablet) then {A3C_SELECTED_UNITS} else {A3C_RD_UNITS};
 			if (_dest in _compare) then {
@@ -2531,7 +2531,9 @@ A3C_LB_Change = {
 						_patients_lb = [(_patients select 0)];
 					};
 				};
-				if (_doubleClick && (_lb > 0)) then { //-- lb > 0 means 'heal all' was not selected :)
+				private _lbMin = if (lbSize (findDisplay _a3c_dsp displayCtrl 8055) == 1) then {0} else {1};
+				
+				if (_doubleClick && (_lb >= _lbMin)) then { //-- lb > 0 means 'heal all' was not selected :)
 					//-- double click: cancel for individual unit
 					private _patient = _patients select (_lb - 1);
 					// systemchat format ["Double click - patients: %1", _patient];
@@ -3258,7 +3260,7 @@ A3C_ACTIVATEGOCODE = {
 
 
 //-- Change group-formation according to input. Used by radial formation section
-A3C_FNC_FORMMENU = {
+A3C_Shared_setFormation = {
 	private _formation = _this select 0;
 	private _groups= if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {[group player]} else {A3C_RD_UNITS};
 	{
@@ -3272,7 +3274,7 @@ A3C_FNC_FORMMENU = {
 
 
 
-A3C_LEAVESERVER = {
+A3C_fnc_leaveServer = {
 	{
 
 		{
@@ -3290,7 +3292,9 @@ A3C_LEAVESERVER = {
 
 
 
-A3C_getSideName = {
+
+
+A3C_fnc_getSideName = {
 	params ["_sideNumber"];
 	private _sideName = switch (_sideNumber) do {
 		case 0 : {EAST};
@@ -3354,7 +3358,7 @@ A3C_HC_getAllGroups_Player = {
 
 				_isAvailable && {
 					private _uavSideNumber = getNumber (configFile >> "CfgVehicles" >> typeOf _x >> "side");
-					private _uavSide = [_uavSideNumber] call A3C_getSideName;
+					private _uavSide = [_uavSideNumber] call A3C_fnc_getSideName;
 					private _isFriendly = (side player) == _uavSide;
 					_isFriendly 
 				}

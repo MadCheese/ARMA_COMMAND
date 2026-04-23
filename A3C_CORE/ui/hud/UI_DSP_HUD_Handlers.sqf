@@ -303,15 +303,7 @@ A3C_UI_HUD_onKeyUp = {
 	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
 
 	if (_key == A3C_RadialMenu_KEY_ID select 0) exitWith {
-		A3C_DISABLE_RADIAL = false;
-		{inGameUISetEventHandler [_x, 'true']} foreach ['PrevAction','NextAction'];
-		if (A3C_AI_HighCommand_Action_ID != "" && {!(A3C_isHud3dTag)}) then {
-			[] call A3C_AI_SHARED_Action_CancelPositionalProcess;
-		};
-
-		if (!isNull A3C_OBJECTPLACER) then {
-			deleteVehicle A3C_OBJECTPLACER;
-		};
+		[_display] call A3C_UI_Shared_fnc_ReleaseMenuKey;	
 	};
 
 	switch (true) do {
@@ -545,27 +537,19 @@ A3C_UI_HUD_onMouseZChanged = {
 
 //------------------- OBJECT SELECTOR BINDS
 
+A3C_UI_HUD_ObjectSelector_onKeyDown = {
+	params ["_display", "_key", "_shift", "_ctrl", "_alt"];
+	private _objectSelectorListbox = _display displayCtrl 800803;
+	if (_key >= 2 && _key <= 10) then {
+		[_key, _objectSelectorListbox] spawn A3C_UI_Shared_ObjectSelector_Listbox_NumberControl;
+	};
+};
+
 A3C_UI_HUD_ObjectSelector_onKeyUp = {
 	params ["_display", "_key"];
-	systemchat 'A3C_UI_HUD_ObjectSelector_onKeyUp';
+	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
 	if (_key == (A3C_RadialMenu_KEY_ID select 0)) then {
-		A3C_DISABLE_RADIAL = false;
-		//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CANCEL];
-		//(findDisplay 46) displayRemoveEventHandler ['KeyUp', A3C_UI_RADIAL_EH_KEYUP_CONFIRM];
-		(findDisplay 100060) closeDisplay 0;
-		A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
-		{player groupSelectUnit [_x,false]} foreach units player;
-		showCommandingMenu "";
-		A3C_UI_RADIAL_Current_Remfire_Units = [];
-		A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-		A3C_UI_HUD_3D_TAG_reposition = false;
-
-		if (!isNull A3C_OBJECTPLACER) then {
-			deleteVehicle A3C_OBJECTPLACER;
-		};
-
-
-		{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];
+		[_display] call A3C_UI_Shared_fnc_ReleaseMenuKey;
 	};
 };
 
@@ -584,16 +568,8 @@ A3C_UI_HUD_HudMenu_onKeyDown = {
 
 A3C_UI_HUD_HudMenu_onKeyUp = {
 	params ["_display", "_key"];
+	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
 	if (_key == (A3C_HUD_MENU_KEY_ID select 0)) then {
-		_display closeDisplay 0;
-		showCommandingMenu "";		
-		if (profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
-			if !(profileNamespace getVariable 'A3C_HUD_isOpen') then {
-				[] call A3C_HUD_OPEN_MENU;
-			};
-		} else {
-			("A3C_HUD_MENU_UI" call BIS_fnc_rscLayer) cutText ["","PLAIN"];
-			profileNamespace setVariable ['A3C_HUD_isOpen',false];
-		};		
+		[_display] call A3C_UI_Shared_fnc_ReleaseMenuKey;	
 	};
 };

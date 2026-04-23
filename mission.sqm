@@ -17,9 +17,9 @@ class EditorData
 	class Camera
 	{
 		pos[]={14378.188,54.605328,16683.764};
-		dir[]={-0.50318909,-0.59927905,0.62264878};
-		up[]={-0.376674,0.8005442,0.46609727};
-		aside[]={0.77777952,-1.098444e-06,0.62855852};
+		dir[]={-0.50318241,-0.59927112,0.62264085};
+		up[]={-0.37667122,0.80054611,0.46609512};
+		aside[]={0.77777004,2.9802322e-08,0.62854892};
 	};
 };
 binarizationWanted=0;
@@ -3452,6 +3452,7 @@ class Mission
 					};
 					id=4986;
 					type="B_Soldier_TL_F";
+					atlOffset=-9.5367432e-07;
 				};
 				class Item1
 				{
@@ -3618,7 +3619,6 @@ class Mission
 					};
 					id=4988;
 					type="B_Soldier_GL_F";
-					atlOffset=9.5367432e-07;
 				};
 				class Item2
 				{
@@ -3975,6 +3975,7 @@ class Mission
 			{
 			};
 			id=4985;
+			atlOffset=-9.5367432e-07;
 		};
 		class Item64
 		{
@@ -3991,6 +3992,7 @@ class Mission
 			};
 			id=4997;
 			type="B_static_AT_F";
+			atlOffset=-0.0010118484;
 		};
 	};
 	class Connections

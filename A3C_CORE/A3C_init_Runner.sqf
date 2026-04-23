@@ -238,7 +238,7 @@ A3C_is_Initialized = true;
 	// 	sleep 1;
 	// };
 
-// 	[] call A3C_LEAVESERVER;
+// 	[] call A3C_fnc_leaveServer;
 	
 // };
 
@@ -343,7 +343,7 @@ A3C_is_Initialized = true;
 		waituntil {!alive player};
 		//diag_log "ENDED 2";
 
-		[] call A3C_LEAVESERVER;
+		[] call A3C_fnc_leaveServer;
 	};
 
 };

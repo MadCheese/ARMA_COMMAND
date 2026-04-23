@@ -24,7 +24,7 @@ A3C_AI_action_resumeDestination = {
 						_unit dowatch objnull;
 						_unit lookAt objnull;
 						_unit setunitpos "UP";
-						if !(A3C_C_FORM_ACTIVE) then {
+						if !(A3C_UI_CustomFormation_BOOL_formationActive) then {
 							if ((_expD select 1) in ["DoNotPlanFormation","FORMATION PLANNED"]) then {
 								_unit doFollow player;
 							} else {

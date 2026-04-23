@@ -50,17 +50,7 @@ A3C_FNC_UAV_KEY = {
 	
 	// A3C_LAST_USED_UAV = if (isUnitUAV cameraOn) then {cameraOn} else {objNull};
 
-	A3C_getSideName = {
-		params ["_sideNumber"];
-		private _sideName = switch (_sideNumber) do {
-			case 0 : {EAST};
-			case 1 : {WEST};
-			case 2 : {resistance};
-			case 3 : {civilian};
-			default {"UNKNOWN"};
-		};
-		_sideName
-	};
+	
 
 	if (_ctrl) then {
 		
@@ -71,7 +61,7 @@ A3C_FNC_UAV_KEY = {
 
 			_isAvailable && {
 				private _uavSideNumber = getNumber (configFile >> "CfgVehicles" >> typeOf _x >> "side");
-				private _uavSide = [_uavSideNumber] call A3C_getSideName;
+				private _uavSide = [_uavSideNumber] call A3C_fnc_getSideName;
 				private _isFriendly = _playerSide == _uavSide;
 				_isFriendly
 			}

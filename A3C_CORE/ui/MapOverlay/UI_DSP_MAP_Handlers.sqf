@@ -748,14 +748,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 					
 					{
 						_gp = _x;
-						while {(count (waypoints _gp)) > 1} do {
-							{
-								if (_forEachIndex > 0) then {
-									deletewaypoint _x;
-									A3C_BLACKLIST_WAYPOINT_EDIT = A3C_BLACKLIST_WAYPOINT_EDIT - [_x];
-								};
-							} foreach waypoints _gp;
-						};
+						[_gp, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
 					} foreach A3C_SELECTED_UNITS;
 					publicVariable 'A3C_BLACKLIST_WAYPOINT_EDIT';
 					
@@ -1688,16 +1681,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 						if (A3C_UI_MAPICONS_BOARDING_DRAW isEqualTo []) then {
 							//-- dragged without vehicle modifier: delete all waypoints
 							private _gp = A3C_SELECTED_UNITS select 0;
-							// _wps = waypoints _gp;
-							// while {!(_wps isEqualTo [])} do {
-							// 	//-- delete ALL existing waypoints
-							// 	deleteWaypoint (waypoints _gp select 0);
-							// 	hintsilent 'deleting wp';
-							// };
-							// {deleteWaypoint _x} foreach _wps;
-							// hintsilent 'wps deleted';
-							// //-- add wp on position (default 1st wp)
-							// [_gp,position leader _gp] call A3C_HC_ADD_WP;
+
 							//-- add actual waypoint
 							//-- clear all waypoints
 							{
@@ -1708,14 +1692,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 							
 							{
 								_gp = _x;
-								while {(count (waypoints _gp)) > 1} do {
-									{
-										if (_forEachIndex > 0) then {
-											deletewaypoint _x;
-											A3C_BLACKLIST_WAYPOINT_EDIT = A3C_BLACKLIST_WAYPOINT_EDIT - [_x];
-										};
-									} foreach waypoints _gp;
-								};
+								[_gp, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
 								{
 									_x remoteExec ["unassignVehicle",0];
 									moveOut _x;
@@ -2223,8 +2200,7 @@ A3C_UI_MAP_onKeyDown_Overlay = {
 	// disableSerialization;
 	params ["_display","_key","_shift","_ctrl","_alt"];
 	
-	// player commandchat format ["Display %1, A3C_UI_MAP_onKeyDown_Overlay: %2 - %3", _display, keyName _key, round time];
-
+	
 	
 	
 	//-- 1: MAP KEYBIND (close map > Does not work if overlay is open)
@@ -2240,12 +2216,21 @@ A3C_UI_MAP_onKeyDown_Overlay = {
 	//-- CTRL key must block default engine bind to disable map drawing
 	if (_key == 29) then {_blockDefault = true;};
 
-	//-- Disable Numbers (#TODO: Check why this is dependent on selectedUnits). Also Avoids weapon switch?
+	//-- Disable Numbers (ie to disable weapon switch) or control objectSelector-Listbox
+	private _mapObjectSelectorListbox = _display displayCtrl 800803;
+	private _mapObjectSelectorShown = ctrlShown _mapObjectSelectorListbox;
+
 	if (
-		count groupselectedUnits player == 0
-		&& {_key >= 2 && _key <= 10}
+		_key >= 2 && _key <= 10
+		&& {
+			count groupselectedUnits player == 0
+			|| { _mapObjectSelectorShown }
+		}
 	) exitWith {
-		true	
+		if (_mapObjectSelectorShown) then {
+			[_key, _mapObjectSelectorListbox] spawn A3C_UI_Shared_ObjectSelector_Listbox_NumberControl;
+		};
+		true
 	};
 
 	//-- 2: DEFAULT EXIT CONDITIONS
@@ -2262,28 +2247,14 @@ A3C_UI_MAP_onKeyDown_Overlay = {
 
 	[_key] call A3C_UI_Shared_FNC_AddDownkey;
 
+	// player commandchat format ["Display %1, A3C_UI_MAP_onKeyDown_Overlay: %2 - %3", _display, keyName _key, round time];
 
-	private _mapObjectSelector = _display displayCtrl 8008;
+
+
+	
 	switch (true) do {
-		//-- 3: Check if keybind should control ObjectSelector //-- #
-		case
-		(
-			ctrlShown _mapObjectSelector &&
-			{
-				private _lbSize = lbSize _mapObjectSelector;
-				_key >= 0 && _key <= 9 &&
-				{(_key - 1) <= _lbSize}
-			}
-		) : {
-			private _keyValueIndex = _key - 2;
+		
 
-			[_mapObjectSelector, _keyValueIndex] spawn {
-				sleep 0.1;
-				params ["_mapObjectSelector","_keyValueIndex"];
-				[_mapObjectSelector, _keyValueIndex, true] call A3C_setCurSel;
-			};
-			_blockDefault = true;
-		};
 		//-- switch Squad-Bar pages
 		case
 		(
@@ -2373,7 +2344,7 @@ A3C_UI_MAP_onKeyDown_Overlay = {
 A3C_UI_MAP_onKeyUp_Overlay = {
 	params ["_display","_key","_shift","_ctrl","_alt"];
 	
-	player commandchat format ["MAP KEY-UP: %1 (%2)", _key, keyName _key];
+	// player commandchat format ["MAP KEY-UP: %1 (%2)", _key, keyName _key];
 
 	if (player != (leader group player)) exitwith {false};
 	if ( !isNull(findDisplay 312) ) exitWith {false}; //-- ZEUS interface is open. Prevent most A3C stuff

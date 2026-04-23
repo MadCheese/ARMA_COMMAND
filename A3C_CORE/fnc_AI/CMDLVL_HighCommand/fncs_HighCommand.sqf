@@ -324,6 +324,32 @@ A3C_HC_AssignVehicle = { //--#TODO: change from call to spawn and add delay if g
 	A3C_Boarding_ACTIVE = false;
 };
 
+A3C_HighCommand_deleteAllWaypoints = {
+	params ["_group"];
+	private _mode = if (count _this > 1) then {_this select 1} else {"ALL"};
+	private _waypoints = waypoints _group;
+
+	if (_mode == "ACTIVE") then {
+		_waypoints = _waypoints select {_x select 1 >= currentWaypoint _group};
+	};
+	//-- reverse array because last
+	reverse _waypoints;
+	{
+		if ((count (waypoints _group)) == 1) exitWith {};
+		for "_i" from 1 to 10 do {
+			if !(_x in (waypoints _group)) exitWith {};
+			A3C_BLACKLIST_WAYPOINT_EDIT = A3C_BLACKLIST_WAYPOINT_EDIT - [_x];
+			deleteWaypoint _x;
+		};
+	} foreach _waypoints;
+	private _leaderVic = vehicle leader _group;
+	private _standByPos = _leaderVic getPos [5, getDir _leaderVic];
+	((waypoints _group) select 1) setWaypointPosition [_standByPos, 0];
+	[leader _group, _standByPos] call A3C_DoMove;
+	// systemchat format ["All Waypoints deleted for %1", groupID _group];
+};
+
+
 
 A3C_HC_INSERT_ACTION_WP = {
 	private ["_callerUID","_group","_data","_var","_formation","_wpI","_actionType","_wp","_wpA","_wps","_wpC","_wpCurr","_wpsActive","_next","_condition","_insCondition","_statements","_leadVic","_exit"];

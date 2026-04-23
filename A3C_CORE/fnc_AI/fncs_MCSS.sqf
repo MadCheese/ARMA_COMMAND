@@ -1183,7 +1183,7 @@ MCSS_fnc_orderIndividual = {
 		{_logics = _logics - [_x]; deletevehicle _x; } foreach _logics;
 		_unit assignTeam _c;
 		_unit setVariable ["A3C_ASSIGNEDTEAM",_c];
-		if !(A3C_C_FORM_ACTIVE) then {
+		if !(A3C_UI_CustomFormation_BOOL_formationActive) then {
 			if ((_d select 1) in ["DoNotPlanFormation","FORMATION PLANNED"]) then {
 				_unit doFollow player;
 			} else {

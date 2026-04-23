@@ -52,6 +52,8 @@ A3C_UI_ARSENAL_CREATELB = {
 			[_box1, _foreachIndex] call A3C_setCurSel;
 		};
 	} foreach units player;
+
+	//-- NOTE: This EH actually needs to be added each time since it only exists during display lifetime.
 	_box1 ctrlAddEventHandler
 	[
 		"LBSelChanged",
@@ -484,7 +486,7 @@ A3C_ObjectSelector_LB_Change = {
 		switch (A3C_OBJECTSELECTOR_MODE) do {
 
 			case ("DELETE") : {
-
+				// systemchat str [_lb, A3C_SELECTED_HC_GROUPS_SETTINGS];
 				switch (_lb) do {
 					case (0) : {
 						{
@@ -506,11 +508,6 @@ A3C_ObjectSelector_LB_Change = {
 				with uiNamespace do {
 					(findDisplay 100060) closeDisplay 0;
 				};
-				
-
-				
-
-				
 			};
 
 			case ("CARGO_WAYPOINTS") : {
@@ -1307,13 +1304,7 @@ A3C_ObjectSelector_LB_Change = {
 
 
 					_gp = A3C_RD_UNITS select 0;
-					while {(count (waypoints _gp)) > 1} do {
-						{
-							if (_forEachIndex > 0) then {
-								deletewaypoint _x;
-							};
-						} foreach waypoints _gp;
-					};
+					[_gp, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
 
 
 					_wp =
@@ -1467,14 +1458,7 @@ A3C_RADIAL_ACTION_HC_LANDING_FNC = {
 				} foreach (units _x);
 			} foreach A3C_SELECTED_UNITS;
 
-			//_gp = A3C_RD_UNITS select 0;
-			while {(count (waypoints _gp)) > 1} do {
-				{
-					if (_forEachIndex > 0) then {
-						deletewaypoint _x;
-					};
-				} foreach waypoints _gp;
-			};
+			[_gp, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
 		};
 
 

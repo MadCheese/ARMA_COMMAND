@@ -21,7 +21,7 @@
 #include "A3C_CORE\ui\suppression\A3C_SUPPRESSION_DRAW.hpp"
 #include "A3C_CORE\ui\HUD\HUD_MENU.hpp"
 #include "A3C_CORE\ui\HUD\HUD_DYNAMIC\A3C_DSP_HUD_DYNAMIC.hpp"
-#include "A3C_CORE\ui\HUD\HUD_Formation_Menu.hpp"
+#include "A3C_CORE\ui\HUD\customFormation\UI_DSP_CustomFormation.hpp"
 #include "A3C_CORE\ui\HUD\HUD_CAM_UI.hpp"
 
 //#include "A3C_CORE\ui\HUD\HUD_MENU_WIP.hpp"

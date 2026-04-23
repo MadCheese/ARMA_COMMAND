@@ -106,6 +106,7 @@ A3C_getVehicleBodyDimensions = {
 	//width and length might be swapped?
 };
 
+
 A3C_isEmptySquareOnSurfaceLevel = {
 	params ["_testPos","_building","_bDir","_highestZ_ASL"];
 	private _isUsable = true;
