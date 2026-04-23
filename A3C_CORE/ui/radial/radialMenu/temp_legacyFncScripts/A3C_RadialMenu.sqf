@@ -149,7 +149,7 @@ if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
 
 
 with uiNameSpace do {
-	A3C_RADIAL = (finddisplay 46) createDisplay "A3C_MENU";
+	(findDisplay 46) createDisplay "A3C_DSP_RadialMenu";
 };
 
 if (_cursorObjectSelection) then {
@@ -159,20 +159,8 @@ if (_cursorObjectSelection) then {
 {inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];
 
 
-//
 
-
-
-
-//-- set Menu Color according to dayTime
-//for "_i" from 8000 to 8004 do {
-//	if (sunormoon < 1) then {
-//		((findDisplay 100040) displayCtrl _i) ctrlSetTextColor [0,0.5,0.8,0.6];
-//	} else {
-//		((findDisplay 100040) displayCtrl _i) ctrlSetTextColor [0,0,0,0.9];
-//	};
-//};
-["RADIAL"] call A3C_GET_UI_BG_COLOR;
+["RADIAL"] call A3C_UI_Shared_GetBackgroundColor;
 
 for "_i" from 10008 to 10039 do {
 	((findDisplay 100040) displayCtrl _i) ctrlShow false;

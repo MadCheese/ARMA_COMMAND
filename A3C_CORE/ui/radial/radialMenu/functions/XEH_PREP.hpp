@@ -6,6 +6,7 @@ A3C_PREP(groupCtrl);
 A3C_PREP(refresh);
 A3C_PREP(onLoad);
 A3C_PREP(onUnload);
+A3C_PREP(ctrlGroup);
 
 // UI event handlers.
 A3C_PREP_SUBDIR(handlers,onKeyDown);

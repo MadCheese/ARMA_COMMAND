@@ -101,7 +101,7 @@ if !(profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
 ((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 12) ctrlSetTextColor [1,1,1,0.7];
 //((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 15) ctrlSetText "A3C_CORE\ui\pictures\BG_HUD_Menu.paa";
 
-["HUD_MENU"] call A3C_GET_UI_BG_COLOR;
+["HUD_MENU"] call A3C_UI_Shared_GetBackgroundColor;
 [0] call A3C_UI_HUD_FORM_BUTTON;
 
 

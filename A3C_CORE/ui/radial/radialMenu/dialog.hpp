@@ -8,7 +8,7 @@
 #define TEAMCOL_FRAME_H ((0.03 * safezoneH) + ((safezoneY + safeZoneH) * 0.0141935))
 
 
-class A3C_MENU
+class A3C_DSP_RadialMenu
 {
 	idd = IDD_RADIAL_MENU;
 	movingEnable = false;
@@ -27,7 +27,7 @@ class A3C_MENU
 		//---------------------------------------------------------------------------------------------
 		class RADIAL_BG_CORE: A3C_RscPicture
 		{
-			idc = 8000;
+			idc = IDC_RADIAL_BG_CORE;
 			text = "A3C_CORE\ui\pictures\BG_Radial_Core.paa";
 			x = 7 * GUI_GRID_W + GUI_GRID_X;
 			y = 2.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -41,7 +41,7 @@ class A3C_MENU
 		//---------------------------------------------------------------------------------------------
 		//---------- A3C-SETTINGS BUTTON --------------------------------------------------------------
 		//---------------------------------------------------------------------------------------------
-		class A3C_SETTINGS_IMG: A3C_RscPicture
+		class RADIAL_SETTINGS_IMG: A3C_RscPicture
 		{
 			idc = -1;
 			text = "A3C_CORE\ui\pictures\icon_menu_preferences.paa";
@@ -52,7 +52,7 @@ class A3C_MENU
 			h = 0.0679966 * safezoneH;
 		};
 
-		class A3C_SETTINGS_BTN : A3C_RscButton_Invisible
+		class RADIAL_SETTINGS_BTN : A3C_RscButton_Invisible
 		{
 			idc = -1;
 			x = (safezoneW + safezoneX) - (0.0354167 * safezoneW);
@@ -68,7 +68,7 @@ class A3C_MENU
 		//---------------------------------------------------------------------------------------------
 		class RADIAL_BG_TOP: A3C_RscPicture
 		{
-			idc = 8001;
+			idc = IDC_RADIAL_BG_TOP; //8001;
 			x = 7 * GUI_GRID_W + GUI_GRID_X;
 			y = 2.5 * GUI_GRID_H + GUI_GRID_Y;
 			w = 25.5 * GUI_GRID_W;
@@ -76,7 +76,7 @@ class A3C_MENU
 		};
 		class RADIAL_BG_RIGHT: A3C_RscPicture
 		{
-			idc = 8002;
+			idc = IDC_RADIAL_BG_RIGHT; //8002;
 			x = 7 * GUI_GRID_W + GUI_GRID_X;
 			y = 2.5 * GUI_GRID_H + GUI_GRID_Y;
 			w = 25.5 * GUI_GRID_W;
@@ -84,7 +84,7 @@ class A3C_MENU
 		};
 		class RADIAL_BG_BOTTOM: A3C_RscPicture
 		{
-			idc = 8003;
+			idc = IDC_RADIAL_BG_BOTTOM; //8003;
 			x = 7 * GUI_GRID_W + GUI_GRID_X;
 			y = 2.5 * GUI_GRID_H + GUI_GRID_Y;
 			w = 25.5 * GUI_GRID_W;
@@ -92,7 +92,7 @@ class A3C_MENU
 		};
 		class RADIAL_BG_LEFT: A3C_RscPicture
 		{
-			idc = 8004;
+			idc = IDC_RADIAL_BG_LEFT; //8004;
 			x = 7 * GUI_GRID_W + GUI_GRID_X;
 			y = 2.5 * GUI_GRID_H + GUI_GRID_Y;
 			w = 25.5 * GUI_GRID_W;
@@ -596,6 +596,7 @@ class A3C_MENU
 
 		class A3C_Left_Btn_4_1: A3C_RscButton_Invisible
 		{
+            //-- NOTE: THIS IS ONE OF THE TRICKY ONES FOR LOOPED CONTROL
 			idc = 10039;
 			onMouseButtonDown = "[_this,(A3C_OUTER_RING_BTN_fnc_16 select 0)] spawn (A3C_OUTER_RING_BTN_fnc_16 select 1)";
 			soundPush[] = {"\a3\Ui_f\data\Sound\ReadOut\ReadoutHideClick2",0.316228,1};
@@ -611,6 +612,7 @@ class A3C_MENU
 
 		class ExtraFrame: A3C_RscPicture
 		{
+            //-- NOTE: THIS IS ANOTHER TRICKY ONE FOR LOOPS, FROM 8053 TO 8068
 			idc = 8053;
 			x = 33 * GUI_GRID_W + GUI_GRID_X;
 			y = 2.5 * GUI_GRID_H + GUI_GRID_Y;

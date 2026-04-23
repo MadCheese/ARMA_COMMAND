@@ -907,38 +907,29 @@ A3C_GoCode_Switch = {
 			_result ="D";
 		};
 	};
-	//systemchat str _result;
-		{
-			_data = _x getVariable A3C_CHECKVAR;
-			{
-				if (((_x select 1) select 0) == A3C_MARKERTOSWITCH) then {
-					_x set [3,["GOCODE",_result]];
-				};
-			} foreach _data;
-			_x setvariable [A3C_CHECKVAR,_data,true];
-			//systemchat str (_x getVariable A3C_CHECKVAR);
-		} foreach A3C_GCUNITS;
-	[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
-//	if (A3C_CHECKVAR == "A3C_PLOT") then {
-//		A3C_MARKERS pushBackUnique A3C_MARKERTOSWITCH;
-//	} else {
-//		A3C_MARKERS_TEMP pushBackUnique A3C_MARKERTOSWITCH;
-//	};
 
+	{
+		_data = _x getVariable A3C_CHECKVAR;
+		{
+			if (((_x select 1) select 0) == A3C_MARKERTOSWITCH) then {
+				_x set [3,["GOCODE",_result]];
+			};
+		} foreach _data;
+		_x setvariable [A3C_CHECKVAR,_data,true];
+	} foreach A3C_GCUNITS;
+
+	[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
 	missionNamespace setVariable ["#markerSize_" + A3C_MARKERTOSWITCH, _mSize];
-	//A3C_MARKERTOSWITCH setmarkerSizeLocal _mSize;
-	//systemchat str (markersize A3C_MARKERTOSWITCH);
-	//777
+
 };
 
 
 //-- function to label the unit selector buttons
-A3C_LABEL_SELECTORS = {
+A3C_UI_MAP_labelSelectors = {
 	private ["_mode","_limit","_text","_textCol","_u","_unitIndex","_toolTip"];
 	_mode = _this select 0;
 	_a3c_dsp = if (visibleMap) then {100020} else {100030};
-	//systemchat str _a3c_dsp;
-	//cccccccc
+
 	_text = "";
 	_textCol = [];
 	_backCol = [1,1,1,0.7];
@@ -946,7 +937,6 @@ A3C_LABEL_SELECTORS = {
 	_sub = 7000;
 	_u = objnull;
 	_unitIndex = -1;
-	//systemchat str _mode;
 	for "_i" from 7025 to 7040 do {
 		call compile format ["(findDisplay _a3c_dsp displayCtrl %1) ctrlShow false;",_i];
 	};
@@ -957,7 +947,6 @@ A3C_LABEL_SELECTORS = {
 	};
 	if (_limit > 40) then {_limit = 40};
 
-	//systemchat str (_limit - 24);
 	//-- reset tablet UI
 	_maxWunit = 0.452508 * safezoneW;
 	if (_a3c_dsp == 100030) then {
@@ -983,23 +972,6 @@ A3C_LABEL_SELECTORS = {
 			0.142954 * safezoneH
 		];
 
-
-
-		//(findDisplay 100030 displayCtrl 23001) ctrlSetPosition
-		//[
-		//	0.190691 * safezoneW + safezoneX,
-		//	0.68694 * safezoneH + safezoneY,
-		//	(0.22339 * safezoneW), // min (0.452508 * safezoneW)
-		//	0.0549824 * safezoneH
-		//];
-		//(findDisplay 100030 displayCtrl 23002) ctrlSetPosition
-		//[
-		//	0.419809 * safezoneW + safezoneX,
-		//	0.609965 * safezoneH + safezoneY,
-		//	0.189022 * safezoneW,
-		//	0.142954 * safezoneH
-		//];
-
 		{
 			(findDisplay 100030 displayCtrl _x) ctrlCommit 0;
 		} foreach [11,2302,23001,23002];
@@ -1021,8 +993,6 @@ A3C_LABEL_SELECTORS = {
 			if (_a3c_dsp == 100030) then {
 				if (_i in [33,35,37,39]) then {
 					_mult = switch _i do {
-						//case 31 : {1};
-						//case 32 : {1};
 						case 33 : {1};
 						case 35 : {2};
 						case 37 : {3};
@@ -1035,8 +1005,7 @@ A3C_LABEL_SELECTORS = {
 						case 37 : {0.401021 * safezoneW};
 						case 39 : {0.45206 * safezoneW};
 					};
-					//systemchat str _pW;
-					//systemChat str _mult;
+
 					(findDisplay 100030 displayCtrl 11) ctrlSetPosition
 					[
 						0.167779 * safezoneW + safezoneX,
@@ -1045,7 +1014,7 @@ A3C_LABEL_SELECTORS = {
 						0.175944 * safezoneH
 					];
 
-					//systemchat str _mult;
+
 					(findDisplay 100030 displayCtrl 2301) ctrlSetPosition
 					[
 						0.190691 * safezoneW + safezoneX,
@@ -1053,13 +1022,7 @@ A3C_LABEL_SELECTORS = {
 						_pW, //(0.22339 * safezoneW) + (_mult * (0.057279 * safezoneW)), // min (0.452508 * safezoneW) //0.22339 * safezoneW,
 						1 * safezoneH
 					];
-					//(findDisplay 100030 displayCtrl 23001) ctrlSetPosition
-					//[
-					//	0.190691 * safezoneW + safezoneX,
-					//	0.68694 * safezoneH + safezoneY,
-					//	(0.22339 * safezoneW) + (_mult * (0.057279 * safezoneW)), // min (0.452508 * safezoneW) //0.22339 * safezoneW,
-					//	0.0549824 * safezoneH
-					//];
+
 					(findDisplay 100030 displayCtrl 2302) ctrlSetPosition
 					[
 						((0.43 * safezoneW + safezoneX) + (_mult * (0.057279 * safezoneW))),
@@ -1067,25 +1030,15 @@ A3C_LABEL_SELECTORS = {
 						0.189022 * safezoneW,
 						0.142954 * safezoneH
 					];
-					//(findDisplay 100030 displayCtrl 23002) ctrlSetPosition
-					//[
-					//	((0.419809 * safezoneW + safezoneX) + (_mult * (0.057279 * safezoneW))),
-					//	0.609965 * safezoneH + safezoneY,
-					//	0.189022 * safezoneW,
-					//	0.142954 * safezoneH
-					//];
+
 					{
 						(findDisplay 100030 displayCtrl _x) ctrlCommit 0;
 					} foreach [11,2301,2302,23001,23002];
 					ctrlsetfocus (finddisplay 100030 displayctrl 2301)
-				} else {
-					//systemchat "2";
-
 				};
 			};
 			if (_mode in ["INF","AIR"]) then {
-				//systemchat str A3C_SELECTED_UNITS;
-				//private ["_opacT"];
+
 				//-- "INF" and "AIR" share function only have one difference
 				_unitIndex = ( (_i - 24) + (A3C_BUTTONPAGE_TABLET * 16) );
 				_u = ((profileNamespace getvariable "A3C_GROUPUNITS") select _unitIndex);
@@ -1423,7 +1376,7 @@ A3C_TAB_TOGGLE_CONTROLS = {
 					(findDisplay _a3c_dsp displayCtrl _i) ctrlShow true;
 				",_i];
 			};
-			//[A3C_MAP_CommandMode] call A3C_LABEL_SELECTORS;
+			//[A3C_MAP_CommandMode] call A3C_UI_MAP_labelSelectors;
 
 			if (count A3C_WAYPOINTS_TEMP > 0) then {
 				//{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true} foreach [7041,7092];
@@ -1779,7 +1732,7 @@ A3C_START_TABMODE = {
 		private _refIndex = [_refItem, _refArray] call MCSS_fnc_getArrayIndex;
 		A3C_BUTTONPAGE_TABLET = (floor ( (_refIndex + _refDif) / 16)) max 0;
 	};
-	//[_mode] call A3C_LABEL_SELECTORS;
+	//[_mode] call A3C_UI_MAP_labelSelectors;
 };
 
 
@@ -2060,7 +2013,7 @@ A3C_SWITCHPAGE_TABLET = {
 			};
 		} else {
 			if !(isnull (findDisplay _a3c_dsp)) then {
-				//[A3C_MAP_CommandMode] call A3C_LABEL_SELECTORS;
+				//[A3C_MAP_CommandMode] call A3C_UI_MAP_labelSelectors;
 			};
 		};
 
@@ -4089,7 +4042,7 @@ A3C_CHECK_FOR_DEAD_WIP = { //-- currently unused
 					[_x] join grpnull;
 					//waituntil {!(_x in (units group player))}; //--how's this working in 'call' scope?
 					A3C_SELECTED_UNITS = A3C_SELECTED_UNITS - [_x];
-					//[A3C_MAP_CommandMode] call A3C_LABEL_SELECTORS;
+					//[A3C_MAP_CommandMode] call A3C_UI_MAP_labelSelectors;
 				};
 			};
 		};

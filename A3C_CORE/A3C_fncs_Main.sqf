@@ -2030,7 +2030,7 @@ MCSS_fnc_RevealCursorPos = {
 
 A3C_BTN_COLOR_RESET = { //-- currently unused
 	//if (!(isnull (findDisplay 100020)) OR !(isnull (findDisplay 100030))) then {
-		//[A3C_MAP_CommandMode] call A3C_LABEL_SELECTORS;
+		//[A3C_MAP_CommandMode] call A3C_UI_MAP_labelSelectors;
 	//};
 	if !(isnull (findDisplay 100040)) then {
 		[] call A3C_UI_RADIAL_LABEL_SELECTORS;
@@ -2084,42 +2084,7 @@ A3C_UNIT_CONTINUE = {
 
 
 
-A3C_GET_UI_BG_COLOR = {
-	params ["_mode"];
-	if (sunormoon < 1) then {
-		switch (_mode) do {
-			case ("RADIAL") : {
-				{
-					((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [0,0.5,0.8,0.6];
-				} foreach [8000,8001,8002,8003,8004,8053,8072];
-				((findDisplay 100040) displayCtrl 8096) ctrlSetTextColor [0,0.5,0.8,0.6];
 
-			};
-			case ("HUD_MENU") : {
-				((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 15) ctrlSetTextColor [0,0.5,0.8,0.4];
-			};
-		};
-
-	} else {
-		switch (_mode) do {
-			case ("RADIAL") : {
-				{
-					((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [0,0,0,0.6];
-				} foreach [8000,8001,8002,8003,8004,8053,8072];
-				((findDisplay 100040) displayCtrl 8096) ctrlSetTextColor [0,0,0,0.6];
-			};
-			case ("HUD_MENU") : {
-				((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 15) ctrlSetTextColor [0,0,0,0.4];
-			};
-		};
-	};
-	if (_mode == "HUD_MENU") then {
-		if ((currentVisionMode player) == 1) then {
-			((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 15) ctrlSetTextColor [0,0.5,0.8,0.4];
-		};
-	};
-
-};
 
 
 
@@ -2946,13 +2911,13 @@ A3C_GROUP_RESET = {
 	for "_i" from 7025 to 7040 do {(findDisplay _a3c_dsp displayCtrl _i) ctrlShow false};
 	if (A3C_MAP_CommandMode == "HC") then {
 		if ((count A3C_HC_getAllGroups_Player_Current ) > 0) then {
-			//["HC"] call A3C_LABEL_SELECTORS;
+			//["HC"] call A3C_UI_MAP_labelSelectors;
 		} else {
 			A3C_MAP_CommandMode = "INF";
 			["INF"] call A3C_START_TABMODE;
 		};
 	} else {
-		//[A3C_MAP_CommandMode] call A3C_LABEL_SELECTORS;
+		//[A3C_MAP_CommandMode] call A3C_UI_MAP_labelSelectors;
 	};
 
 	{

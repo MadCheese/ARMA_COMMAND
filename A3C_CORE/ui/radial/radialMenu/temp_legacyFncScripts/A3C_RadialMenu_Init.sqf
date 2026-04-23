@@ -1,3 +1,5 @@
+#include "..\script_component.hpp"
+#include "..\dialog_defines.hpp"
 
 if (isDedicated) exitwith {};
 
@@ -178,9 +180,9 @@ A3C_UI_RADIAL_populateOuterRing_Grenades = {
 
 	//-- label parent button
 	private _col = if (count A3C_AI_GREN_ARRAY == 0) then {[1,1,1,0.3]} else{[1,1,1,0.6]};
-	(findDisplay 100040 displayCtrl 9015) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_grenade.paa";
-	(findDisplay 100040 displayCtrl 9015) ctrlSetTextColor _col;
-	(findDisplay 100040 displayCtrl 9016) ctrlSetToolTip "AI Grenades";
+	(findDisplay IDD_RADIAL_MENU displayCtrl 9015) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_grenade.paa";
+	(findDisplay IDD_RADIAL_MENU displayCtrl 9015) ctrlSetTextColor _col;
+	(findDisplay IDD_RADIAL_MENU displayCtrl 9016) ctrlSetToolTip "AI Grenades";
 
 
 	//-- sort grenades by usability
@@ -206,27 +208,34 @@ A3C_UI_RADIAL_populateOuterRing_Grenades = {
 	if (A3C_RADIALMODE == "GRENADE" ) then {//&& {BV_GREN == 0}
 		//-- reset outer ring buttons
 		for "_i" from 10008 to 10039 do {
-			(findDisplay 100040 displayCtrl _i) ctrlShow false;
+			(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
 			if (_i % 2 == 0) then {
-				(findDisplay 100040 displayCtrl _i) ctrlSetText "";
+				(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetText "";
 			} else {
-				(findDisplay 100040 displayCtrl _i) ctrlSetTooltip "";
+				(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetTooltip "";
 			};
 		};
 
 		_outerRingBackGroundIDs = ["PlaceHolder","Left","bottom","Right","Top"];
 
-		//-- outer ring backgrounds
-		for "_i" from 8001 to 8004 do {
-			_ind = _i - 8000;
+		// Outer ring backgrounds.
+		private _outerRingBackgrounds = (["backgrounds"] call FUNC(ctrlGroup)) select [1, 4];
 
-			if ( _ind <= ((ceil ((count A3C_AI_GREN_ARRAY) / 4) ) min 3)    ) then {
-				(findDisplay 100040 displayCtrl _i) ctrlShow true; //-- outer circle backgroud shown
-				(findDisplay 100040 displayCtrl _i) ctrlSetText (format ["A3C_CORE\ui\pictures\BG_Radial_OuterRing_%1.paa",_outerRingBackGroundIDs select _ind]);
+		{
+			private _ctrl = _x;
+			private _ind = _forEachIndex + 1;
+
+			if (_ind <= ((ceil ((count A3C_AI_GREN_ARRAY) / 4)) min 3)) then {
+				_ctrl ctrlShow true; // Outer circle background shown.
+				_ctrl ctrlSetText format [
+					"A3C_CORE\ui\pictures\BG_Radial_OuterRing_%1.paa",
+					_outerRingBackGroundIDs select _ind
+				];
 			} else {
-				(findDisplay 100040 displayCtrl _i) ctrlShow false; //-- outer circle backgroud hidden
+				_ctrl ctrlShow false; // Outer circle background hidden.
 			};
-		};
+		} forEach _outerRingBackgrounds;
+		
 		if (count A3C_AI_GREN_ARRAY == 0) exitWith {};
 		//-- label buttons-images and fncs
 		{
@@ -234,8 +243,8 @@ A3C_UI_RADIAL_populateOuterRing_Grenades = {
 			_imgID = ((10039 - (_foreachIndex * 2)) - 1);
 			_buttonitem = 16 - _foreachIndex;
 			//systemchat str _btnID;
-			_btnClicker = findDisplay 100040 displayCtrl _btnID;
-			_btnImage = findDisplay 100040 displayCtrl _imgID;
+			_btnClicker = findDisplay IDD_RADIAL_MENU displayCtrl _btnID;
+			_btnImage = findDisplay IDD_RADIAL_MENU displayCtrl _imgID;
 			{_x ctrlShow true} foreach [_btnImage,_btnClicker];
 			_btnImage ctrlSetText (gettext (configfile >> "CfgMagazines" >> _x >> "picture"));
 			_btnClicker ctrlSetToolTip (gettext (configfile >> "CfgMagazines" >> _x >> "displayNameShort"));
@@ -273,7 +282,7 @@ A3C_UI_RADIAL_startGTIgrenadeLoop = {
 	{[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS;
 
 	if (isnil "A3C_GREN_MUZZLE") exitwith {
-		((findDisplay 100040) displayCtrl 9016) ctrlSetTooltip "currently no items available";
+		((findDisplay IDD_RADIAL_MENU) displayCtrl 9016) ctrlSetTooltip "currently no items available";
 	};
 	BR_A3C_TACV_throwTheta = 45;
 	BR_A3C_TACV_throwTheta_Add = 0;

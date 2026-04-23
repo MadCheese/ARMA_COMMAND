@@ -158,11 +158,16 @@ if (A3C_EHM) then {
 };
 
 
+//-- Radial Dialog
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\radialMenu\functions\initFunctions.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_UI_FNC.sqf";
 
-call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_INIT.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu_Init_SquadActions.sqf";
+//-- Radial Legacy Functions (to be updated)
+call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\radialMenu\temp_legacyFncScripts\A3C_RadialMenu_UI_FNC.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\radialMenu\temp_legacyFncScripts\A3C_RadialMenu_Init_SquadActions.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\radialMenu\temp_legacyFncScripts\A3C_RadialMenu_Init.sqf";
+A3C_SPAWN_RADIAL = compile preprocessfileLineNumbers "A3C_CORE\ui\radial\radialMenu\temp_legacyFncScripts\A3C_RadialMenu.sqf";
+
+
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\settingsMenu\functions\initFunctions.sqf";
 
 
@@ -174,7 +179,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\CMDLVL_Shared\A3C_AI_Sha
 
 
 
-A3C_SPAWN_RADIAL = compile preprocessfileLineNumbers "A3C_CORE\ui\radial\A3C_RadialMenu.sqf";
+
 
 
 

@@ -467,7 +467,7 @@ A3C_HUD_OPEN_MENU = {
 		((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 17) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_false.paa";
 		(findDisplay 100050 displayCtrl 13) ctrlSetTooltip "UI: Hidden";
 	};
-	["HUD_MENU"] call A3C_GET_UI_BG_COLOR;
+	["HUD_MENU"] call A3C_UI_Shared_GetBackgroundColor;
 	[1] call A3C_HUD_GoCode_BUTTON;
 
 };
