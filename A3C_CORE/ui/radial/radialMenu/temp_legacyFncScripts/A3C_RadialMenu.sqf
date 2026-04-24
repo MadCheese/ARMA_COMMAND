@@ -1,3 +1,6 @@
+#include "..\script_component.hpp"
+#include "..\dialog_defines.hpp"
+
 
 params ["_data","_cursorObjectSelection"];
 
@@ -162,15 +165,24 @@ if (_cursorObjectSelection) then {
 
 ["RADIAL"] call A3C_UI_Shared_GetBackgroundColor;
 
-for "_i" from 10008 to 10039 do {
-	((findDisplay 100040) displayCtrl _i) ctrlShow false;
-};
+//-- Hide all outer ring controls (images + buttons)
+{
+    _x ctrlShow false;
+} forEach (["radial_outerButtonMacros"] call FUNC(ctrlGroup));
 
+// // Seems unused
+// ((findDisplay 100040) displayCtrl 8005) ctrlSetText (toUpper (groupId (group player)));
 
-((findDisplay 100040) displayCtrl 8005) ctrlSetText (toUpper (groupId (group player)));
 {
 	((findDisplay 100040) displayCtrl _x) ctrlShow false
-} foreach [8054,8055,8067,8068,8071,8095,8096];
+} foreach
+[
+	IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX, //8054,
+	IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_BOX, //8055,
+	IDC_RADIAL_EXTENSIONLEFT_CTRLSGROUP, //8071,
+	IDC_RADIAL_EXTENSIONLEFT_TC_BOX, //8095,
+	IDC_RADIAL_EXTENSIONLEFT_BG //8096
+];
 
 
 

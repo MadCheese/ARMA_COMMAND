@@ -177,9 +177,7 @@ A3C_AI_action_toggleIrStrobeHC = { //-- only for HC!
 		params ["_randomSleepMax"];
 		sleep (_randomSleepMax + 1);
 		A3C_Prevent_attach_IR = false;
-		_targetArray = if (!isNull findDisplay 100040) then {A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED} else {A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS};
-		//systemchat str _targetArray;
-		[_targetArray] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+		[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 	};
 
 };

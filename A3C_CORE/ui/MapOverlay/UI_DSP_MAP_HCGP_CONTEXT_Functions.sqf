@@ -1,3 +1,8 @@
+#include "..\radial\radialMenu\script_component.hpp"
+#include "..\radial\radialMenu\dialog_defines.hpp"
+
+
+
 
 if (isDedicated) exitWith {};
 
@@ -28,7 +33,6 @@ A3C_Switch_Vehicle_Lights = {
 			[_vehicle, [_selName, _mode]] remoteExec ["sethitPointDamage",_vehicle];		
 		};
 	} foreach ((getAllHitPointsDamage _vehicle) select 0);
-
 };
 
 
@@ -55,7 +59,7 @@ A3C_MAP_fnc_GroupMenu_Action_BTN = {
 	_buttonArray params ["_buttonImage","_buttonClicker"];
 	_fncArray = call compile format ["A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_%1",_mode];
 	[_data,_buttonArray,(_fncArray select 0)] spawn (_fncArray select 1);
-	[] spawn { sleep 0.1; [A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS] call A3C_MAP_fnc_GroupMenu_LabelActionButtons};
+	[] spawn { sleep 0.1; [false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons};
 
 	/*
 	switch (_mode) do {
@@ -85,62 +89,88 @@ A3C_HC_engineOffUnits = [];
 
 
 
-//-- Hardcoded GROUPMENU ACTIONBUTTONS array
-A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS =
-[
-	[8007161,8007162,8007163], //-- row 1
-	[8007171,8007172,8007173],
-	[8007181,8007182,8007183],
-	[8007191,8007192,8007193],
-	[8007201,8007202,8007203],
 
-	[8007211,8007212,8007213], //- row 2
-	[8007221,8007222,8007223],
-	[8007231,8007232,8007233],
-	[8007241,8007242,8007243],
-	[8007251,8007252,8007253]
-];
 
-/*
-[
-	"RADIAL"/"MAP" //-- if Radial, use positioning
-	[
-		["Pos","iconName"/vehicleType], //-- pos = wait for mapclick / 3dPositioner // "iconName"/vehicleType only relevant for Radial?
-		["Selector",|]
-	]
-]
-*/	
 
 
 
 A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
-	params ["_btnArray"];
+	params [["_doToggle", true]];
 	
-	private _doToggle = if (count _this > 1) then {_this select 1} else {true};
-	//-- static / flyinheight
-	//-- suppression or arty
-	// paradrop
-	//-- vehicle board
-	//-- unstuck
-	//A3C_SELECTED_HC_GROUPS_SETTINGS
+	private _mapDisplayIdd = 100020; // TODO: replace once map dialog has defines.
+	private _radialDisplayIdd = IDD_RADIAL_MENU;
 
-	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
-	if (!isNull findDisplay 100040) then {
-		_a3c_dsp = 100040;
+	private _display = displayNull;
+	private _displayIdd = -1;
+	private _uiContext = "";
+
+	if (!isNull findDisplay _radialDisplayIdd) then {
+		_display = findDisplay _radialDisplayIdd;
+		_displayIdd = _radialDisplayIdd;
+		_uiContext = "RADIAL";
+	} else {
+		if (!isNull findDisplay _mapDisplayIdd) then {
+			_display = findDisplay _mapDisplayIdd;
+			_displayIdd = _mapDisplayIdd;
+			_uiContext = "MAP";
+		};
 	};
-	if ({!isNull findDisplay _x} count [100020,100030,100040] == 0) exitWith {};
+
+	if (isNull _display) exitWith {};
+
+	private _a3c_dsp = _displayIdd; // Legacy compatibility inside this function.
+
+	//-- define button arrays:
+	private _btnArray = switch (_uiContext) do {
+		case "RADIAL": {
+			[
+				[-1, IDC_RADIAL_OUTERTOP_1_IMG, IDC_RADIAL_OUTERTOP_1_BTN],
+				[-1, IDC_RADIAL_OUTERTOP_2_IMG, IDC_RADIAL_OUTERTOP_2_BTN],
+				[-1, IDC_RADIAL_OUTERTOP_3_IMG, IDC_RADIAL_OUTERTOP_3_BTN],
+				[-1, IDC_RADIAL_OUTERTOP_4_IMG, IDC_RADIAL_OUTERTOP_4_BTN],
+
+				[-1, IDC_RADIAL_OUTERRIGHT_1_IMG, IDC_RADIAL_OUTERRIGHT_1_BTN],
+				[-1, IDC_RADIAL_OUTERRIGHT_2_IMG, IDC_RADIAL_OUTERRIGHT_2_BTN],
+				[-1, IDC_RADIAL_OUTERRIGHT_3_IMG, IDC_RADIAL_OUTERRIGHT_3_BTN],
+				[-1, IDC_RADIAL_OUTERRIGHT_4_IMG, IDC_RADIAL_OUTERRIGHT_4_BTN],
+
+				[-1, IDC_RADIAL_OUTERBOTTOM_1_IMG, IDC_RADIAL_OUTERBOTTOM_1_BTN],
+				[-1, IDC_RADIAL_OUTERBOTTOM_2_IMG, IDC_RADIAL_OUTERBOTTOM_2_BTN],
+				[-1, IDC_RADIAL_OUTERBOTTOM_3_IMG, IDC_RADIAL_OUTERBOTTOM_3_BTN],
+				[-1, IDC_RADIAL_OUTERBOTTOM_4_IMG, IDC_RADIAL_OUTERBOTTOM_4_BTN],
+
+				[-1, IDC_RADIAL_OUTERLEFT_1_IMG, IDC_RADIAL_OUTERLEFT_1_BTN],
+				[-1, IDC_RADIAL_OUTERLEFT_2_IMG, IDC_RADIAL_OUTERLEFT_2_BTN],
+				[-1, IDC_RADIAL_OUTERLEFT_3_IMG, IDC_RADIAL_OUTERLEFT_3_BTN],
+				[-1, IDC_RADIAL_OUTERLEFT_4_IMG, IDC_RADIAL_OUTERLEFT_4_BTN]
+			]
+		};
+
+		case "MAP": {
+			missionNamespace getVariable ["A3C_UI_MAP_BTN_DATA_GROUPMENU_ACTIONS", []] // placeholder until map dialog is refactored
+		};
+
+		default { [] };
+	};
+
+
+	
 	//-- wipe action controls
 
 	[] call A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_WIPE;
+
 	{
-		_x params ["_img","_btn","_bg"];
-		(findDisplay _a3c_dsp displayCtrl _img) ctrlSetText "";
-		(findDisplay _a3c_dsp displayCtrl _btn) ctrlSetToolTip "";
+		_x params ["_bgIDC", "_imgIDC", "_btnIDC"];
+
+		(_display displayCtrl _imgIDC) ctrlSetText "";
+		(_display displayCtrl _btnIDC) ctrlSetToolTip "";
+
 		{
-			_ct = findDisplay _a3c_dsp displayCtrl _x;
-			_ct ctrlShow false; 
-		} foreach _x;
-	} foreach _btnArray;
+			if (_x >= 0) then {
+				(_display displayCtrl _x) ctrlShow false;
+			};
+		} forEach [_bgIDC, _imgIDC, _btnIDC];
+	} forEach _btnArray;
 
 	A3C_REMFIRE_MAGTYPES = [];
 
@@ -413,36 +443,6 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			} else {
 				_actions pushBackUnique "FLYINGHEIGHT";
 			};
-
-
-
-			////_artySupImg = "";
-			
-			//if !(_isArty) then {
-
-			//};
-			//(finddisplay _a3c_dsp displayCtrl 800718) ctrlSetText _artySupImg;
-			//if ({_x in (A3C_SUPPRESSION_UNITS_SQ + A3C_SUPPRESSION_UNITS_AI)} count units _gp > 0) then { //--aaa !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				//(finddisplay _a3c_dsp displayCtrl 800718) ctrlSetTextColor [1,0,0,1];
-				//(finddisplay _a3c_dsp displayCtrl 800719) ctrlSetToolTip "Suppressive Fire (Active)";
-			//};
-		} else {
-			//-- spawn player group cargo monitor
-			[_a3c_dsp] spawn { //-- MOVE THIS                                                    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				params ["_a3c_dsp"];
-				while {ctrlShown (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT)} do {
-					if ({ {group _x != group player} count (crew vehicle _x) > 0} count units player > 0) then {
-						//(finddisplay _a3c_dsp displayCtrl 800722) ctrlSetTextColor [1,1,1,1];
-						//(finddisplay _a3c_dsp displayCtrl 800723) ctrlShow true;
-						//(finddisplay _a3c_dsp displayCtrl 800723) ctrlSetTooltip "CTRL+RMB to dismount other groups";
-					} else {
-						//(finddisplay _a3c_dsp displayCtrl 800722) ctrlSetTextColor [1,1,1,0.2];
-						//(finddisplay _a3c_dsp displayCtrl 800723) ctrlShow false;
-						//(finddisplay _a3c_dsp displayCtrl 800723) ctrlSetTooltip "No cargo-groups assigned";
-					};
-					sleep 0.5;
-				};
-			};
 		};
 		private _addUnstuck = false;
 		if ({_v = vehicle leader _x; (_v isKindOf "AIR" && {((getPosATL _v) select 2) > 2})} count A3C_SELECTED_HC_GROUPS_SETTINGS == 0) then {
@@ -453,23 +453,16 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		if (_addUnStuck) then {
 			_actions pushBackUnique "UNSTUCK";
 		};
-		(findDisplay _a3c_dsp displayCtrl 800713) ctrlSetText toUpper (groupID _gp);
+		if (!isNull findDisplay _mapDisplayIdd) then {
+			(findDisplay _mapDisplayIdd displayCtrl 800713) ctrlSetText toUpper (groupID _gp);
+		};
 	} else {
-		(findDisplay _a3c_dsp displayCtrl 800713) ctrlSetText "Multiple Groups";
+		if (!isNull findDisplay _mapDisplayIdd) then {
+			(findDisplay _mapDisplayIdd displayCtrl 800713) ctrlSetText "Multiple Groups";
+		};
 	};
 
-
-	// if ({vehicle (leader _x) isKindOf "AIR"} count A3C_SELECTED_HC_GROUPS_SETTINGS == 0) then {
-	// 	if ({!(_x getVariable ["A3C_VehicleLightsOn", true])} count A3C_SELECTED_HC_GROUPS_SETTINGS > 0) then {
-	// 		_actions pushBack "VEHICLE_LIGHTS_ON";
-	// 	};
-	// 	if ({(_x getVariable ["A3C_VehicleLightsOn", true])} count A3C_SELECTED_HC_GROUPS_SETTINGS > 0) then {
-	// 		_actions pushBack "VEHICLE_LIGHTS_OFF";
-	// 	};
-	// };
-
 	_actions pushBackUnique "DELETEGROUP";
-
 
 	if ({unitIsUAV (vehicle (leader _x))} count A3C_SELECTED_HC_GROUPS_SETTINGS == 0) then {
 		_actions pushBack "VEHICLE";  //-- TO DO: add vehicle boarding for all-selected once working
@@ -859,7 +852,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 	{
 
-		if (_foreachIndex < 10) then {
+		// if (_foreachIndex < 10) then {
+		if (_forEachIndex < ((count _btnArray) min 10)) then {
 			_actionName = _x;
 			private _params = [];
 			private _button_IMG = "";
@@ -1681,17 +1675,23 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 
 
-			_buttonData = _btnArray select _foreachIndex;
+			_buttonData = _btnArray select _forEachIndex;
+			_buttonData params ["_btnBackgroundCtrl", "_btnImageCtrl", "_btnClickerCtrl"];
 
+			if (_btnBackgroundCtrl >= 0) then {
+				(_display displayCtrl _btnBackgroundCtrl) ctrlSetText "#(argb,8,8,3)color(0,0,0,0.4)";
+			};
 
-			_buttonData params ["_btnBackgroundCtrl","_btnImageCtrl","_btnClickerCtrl"];
+			(_display displayCtrl _btnImageCtrl) ctrlSetText _button_IMG;
+			(_display displayCtrl _btnImageCtrl) ctrlSetTextColor _imageColorCode;
+			(_display displayCtrl _btnClickerCtrl) ctrlSetToolTip _button_toolTip;
 
-			(findDisplay _a3c_dsp displayCtrl _btnBackgroundCtrl) ctrlSetText "#(argb,8,8,3)color(0,0,0,0.4)";
-			(findDisplay _a3c_dsp displayCtrl _btnImageCtrl) ctrlSetText _button_IMG;
-			(findDisplay _a3c_dsp displayCtrl _btnImageCtrl) ctrlSetTextColor _imageColorCode;
-			(findDisplay _a3c_dsp displayCtrl _btnClickerCtrl) ctrlSetToolTip _button_toolTip;
 			if (_doToggle) then {
-				{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true} foreach _buttonData;
+				{
+					if (_x >= 0) then {
+						(_display displayCtrl _x) ctrlShow true;
+					};
+				} forEach _buttonData;
 			};
 
 			if (_a3c_dsp == 100040) then {
@@ -1701,8 +1701,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				_buttonFnc deleteAt ((count _buttonFnc) -1);
 				_buttonFnc = _buttonFnc joinString "";
 
-				_buttonFnc = _buttonFnc + " [] spawn { sleep 0.1; [A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED] call A3C_MAP_fnc_GroupMenu_LabelActionButtons}; ";
-
+				_buttonFnc = _buttonFnc + " [] spawn { sleep 0.1; [true] call A3C_MAP_fnc_GroupMenu_LabelActionButtons; }; ";
 
 
 
@@ -1734,7 +1733,6 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 	} foreach _actions;
 	_actions
 };
-
 
 A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 
@@ -1986,7 +1984,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 			[800704,["Red","Blue","Green","Black","White"]]
 		];
 
-	_targetArray = A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS;
+
 	_startBar progressSetPosition 0.75;
 	
 	if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
@@ -2106,7 +2104,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 	};
 
 	
-	[_targetArray] call A3C_MAP_fnc_GroupMenu_LabelActionButtons; //-- unfortunately has to happen after ctrl is shown
+	[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons; //-- unfortunately has to happen after ctrl is shown
 
 	
 	
@@ -2139,11 +2137,7 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 		//-- vehicle is airborne
 
 		_vehicle setVariable ["A3C_ParadropActive",true,true];
-		_targetArray = A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS;
-		if (!isNull findDisplay 100040) then {
-			_targetArray = A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED;
-		};
-		[_targetArray] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+		[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 		[getPlayerUID player, _vehicle] call A3C_Paradrop_Eject;
 		//{
 		//		(finddisplay _a3c_dsp displayCtrl _x) ctrlShow false;

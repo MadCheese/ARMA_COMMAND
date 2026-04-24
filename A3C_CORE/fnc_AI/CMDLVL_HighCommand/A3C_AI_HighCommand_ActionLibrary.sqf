@@ -751,7 +751,7 @@ A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon = {
 	sleep 2;
 	waituntil {true};
 	if (!isNull findDisplay 100040 && {(ctrlShown (findDisplay 100040 displayctrl 8001)) && {A3C_RADIALMODE in ['ACT','HC ACTIONS']}}) then {
-		[A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+		[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 	};
 };
 

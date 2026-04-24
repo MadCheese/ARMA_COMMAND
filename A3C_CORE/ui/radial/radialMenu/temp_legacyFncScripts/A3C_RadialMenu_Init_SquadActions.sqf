@@ -1,4 +1,8 @@
-//---- action buttons: 10008 - 10039
+#include "..\script_component.hpp"
+#include "..\dialog_defines.hpp"
+
+
+
 ///////////////////// ACTUAL SHARED FUNCTIONS
 A3C_UI_SHARED_FIND_BEST_SHOOTERS = {
 	params ["_units","_inputPosASL"];
@@ -29,16 +33,49 @@ A3C_UI_SHARED_FIND_BEST_SHOOTERS = {
 
 
 A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
-	params ["_display","_unitArray","_buttonContainers"]; //-- here the entire display is passed in, not just the idc number
+	params ["_display", "_unitArray"]; //-- _display is the display IDD
 
-	{
-		(findDisplay _display displayCtrl (_x select 0)) ctrlSetText "";
-		(findDisplay _display displayCtrl (_x select 1)) ctrlSetToolTip "";
-		{(findDisplay _display displayCtrl _x) ctrlShow false} foreach _x;
-	} foreach _buttonContainers;
-	private _a3c_dsp = if (!isNull findDisplay 100040) then {100040} else {if (visibleMap) then {100020} else {100030}}; //-- placeholder for future re-use (currently only 100040 is used)
+	private _a3c_dsp = _display;
 	if (isNull findDisplay _a3c_dsp) exitWith {};
 
+	private _outerButtonMacros = ["radial_outerButtonMacros"] call FUNC(ctrlGroup);
+	private _outerImages = ["radial_outerImages"] call FUNC(ctrlGroup);
+	private _outerButtons = ["radial_outerButtons"] call FUNC(ctrlGroup);
+
+	private _outerButtonPairs = [
+		[["outerTop1Img"] call FUNC(ctrl), ["outerTop1Btn"] call FUNC(ctrl)],
+		[["outerTop2Img"] call FUNC(ctrl), ["outerTop2Btn"] call FUNC(ctrl)],
+		[["outerTop3Img"] call FUNC(ctrl), ["outerTop3Btn"] call FUNC(ctrl)],
+		[["outerTop4Img"] call FUNC(ctrl), ["outerTop4Btn"] call FUNC(ctrl)],
+
+		[["outerRight1Img"] call FUNC(ctrl), ["outerRight1Btn"] call FUNC(ctrl)],
+		[["outerRight2Img"] call FUNC(ctrl), ["outerRight2Btn"] call FUNC(ctrl)],
+		[["outerRight3Img"] call FUNC(ctrl), ["outerRight3Btn"] call FUNC(ctrl)],
+		[["outerRight4Img"] call FUNC(ctrl), ["outerRight4Btn"] call FUNC(ctrl)],
+
+		[["outerBottom1Img"] call FUNC(ctrl), ["outerBottom1Btn"] call FUNC(ctrl)],
+		[["outerBottom2Img"] call FUNC(ctrl), ["outerBottom2Btn"] call FUNC(ctrl)],
+		[["outerBottom3Img"] call FUNC(ctrl), ["outerBottom3Btn"] call FUNC(ctrl)],
+		[["outerBottom4Img"] call FUNC(ctrl), ["outerBottom4Btn"] call FUNC(ctrl)],
+
+		[["outerLeft1Img"] call FUNC(ctrl), ["outerLeft1Btn"] call FUNC(ctrl)],
+		[["outerLeft2Img"] call FUNC(ctrl), ["outerLeft2Btn"] call FUNC(ctrl)],
+		[["outerLeft3Img"] call FUNC(ctrl), ["outerLeft3Btn"] call FUNC(ctrl)],
+		[["outerLeft4Img"] call FUNC(ctrl), ["outerLeft4Btn"] call FUNC(ctrl)]
+	];
+
+	//-- Reset outer ring action buttons
+	{
+		_x ctrlShow false;
+	} forEach _outerButtonMacros;
+
+	{
+		_x ctrlSetText "";
+	} forEach _outerImages;
+
+	{
+		_x ctrlSetToolTip "";
+	} forEach _outerButtons;
 
 	A3C_REMFIRE_TankShot_Units = [];
 	A3C_REMFIRE_UGLShot_Units = [];
@@ -273,13 +310,15 @@ A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 
 
 	A3C_DYNAMIC_BUTTON_ACTIONS = _sortedActions;
-	//systemchat str A3C_DYNAMIC_BUTTON_ACTIONS;
+	
+	// systemchat str A3C_DYNAMIC_BUTTON_ACTIONS;
+
+	// {} foreach A3C_DYNAMIC_BUTTON_ACTIONS;
 
 	for "_i" from 0 to ( ((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do { //~~ this could also be a foreach loop?
 		private _action = A3C_DYNAMIC_BUTTON_ACTIONS select _i;
-		private _button = _buttonContainers select _i;
-		private _buttonImage = (findDisplay _display displayCtrl (_button select 0));
-		private _buttonClicker = (findDisplay _display displayCtrl (_button select 1));
+		private _button = _outerButtonPairs select _i;
+		_button params ["_buttonImage", "_buttonClicker"];
 		private _buttonFncData = [];
 		switch (_action) do {
 
@@ -704,17 +743,19 @@ A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 
 		];
 	};
-	//A3C_DYNAMIC_BUTTON_ACTIONS = A3C_DYNAMIC_BUTTON_ACTIONS + ["","","","",""];
 	{
-		if (_foreachIndex < count A3C_DYNAMIC_BUTTON_ACTIONS) then {
-			{(findDisplay _display displayCtrl _x) ctrlShow true} foreach _x;
+		if (_forEachIndex < count A3C_DYNAMIC_BUTTON_ACTIONS) then {
+			_x params ["_buttonImage", "_buttonClicker"];
+			{
+				_x ctrlShow true;
+			} forEach [_buttonImage, _buttonClicker];
 		};
-	} foreach _buttonContainers;
+	} forEach _outerButtonPairs;
 
 };
 
 
-A3C_UI_INV_CONTAINERS = [];
+
 
 
 

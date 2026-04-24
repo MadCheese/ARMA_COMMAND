@@ -1,3 +1,20 @@
+#include "ui\radial\radialMenu\dialog_defines.hpp"
+
+FHINT = {
+	
+	if (!isNil 'TT' && {TT}) then {
+		TT = false;
+		sleep 0.5;
+	};
+	
+	TT = true;
+	while {TT} do {
+		hintsilent str (call _this);
+		sleep 0.1;
+	};
+};
+
+
 A3C_Cursorbox = {
 	(((lineIntersectsSurfaces [AGLToASL positionCameraToWorld [0,0,0],AGLToASL positionCameraToWorld [0,0,viewDistance],vehicle player,objNull,true,1,"GEOM","NONE"]) select 0) select 2) call {
     private ["_obj","_bb","_bbx","_bby","_bbz","_arr","_y","_z"];
@@ -60,19 +77,7 @@ A3C_Cursorbox = {
 };
 };
 
-FHINT = {
-	
-	if (!isNil 'TT' && {TT}) then {
-		TT = false;
-		sleep 0.5;
-	};
-	
-	TT = true;
-	while {TT} do {
-		hintsilent str (call _this);
-		sleep 0.1;
-	};
-};
+
 
 A3CDebugHint = false;
 A3CHint = {

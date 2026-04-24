@@ -885,7 +885,6 @@ A3C_FNC_CBA_KEY = {
 				showHud _shownHud;
 				if (!isNull findDisplay 100040) then {
 					[A3C_CURRENT_COMMAND_LEVEL] call A3C_UI_RADIAL_LABEL_INNER_RING;
-					//[] call A3C_UI_RADIAL_LABEL_SELECTORS;
 				};
 			} else {
 				A3C_CURRENT_COMMAND_LEVEL = "SQUAD";

@@ -180,9 +180,9 @@ A3C_UI_RADIAL_populateOuterRing_Grenades = {
 
 	//-- label parent button
 	private _col = if (count A3C_AI_GREN_ARRAY == 0) then {[1,1,1,0.3]} else{[1,1,1,0.6]};
-	(findDisplay IDD_RADIAL_MENU displayCtrl 9015) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_grenade.paa";
-	(findDisplay IDD_RADIAL_MENU displayCtrl 9015) ctrlSetTextColor _col;
-	(findDisplay IDD_RADIAL_MENU displayCtrl 9016) ctrlSetToolTip "AI Grenades";
+	(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_GRENADES_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_grenade.paa";
+	(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_GRENADES_IMG) ctrlSetTextColor _col;
+	(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_GRENADES_BTN) ctrlSetToolTip "AI Grenades";
 
 
 	//-- sort grenades by usability
@@ -206,20 +206,25 @@ A3C_UI_RADIAL_populateOuterRing_Grenades = {
 	] call BIS_fnc_sortBy;
 
 	if (A3C_RADIALMODE == "GRENADE" ) then {//&& {BV_GREN == 0}
-		//-- reset outer ring buttons
-		for "_i" from 10008 to 10039 do {
-			(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-			if (_i % 2 == 0) then {
-				(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetText "";
-			} else {
-				(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetTooltip "";
-			};
-		};
+		//-- Reset outer ring controls
+		{
+			_x ctrlShow false;
+		} forEach (["radial_outerButtonMacros"] call FUNC(ctrlGroup));
+
+		//-- Clear outer ring images
+		{
+			_x ctrlSetText "";
+		} forEach (["radial_outerImages"] call FUNC(ctrlGroup));
+
+		//-- Clear outer ring button tooltips
+		{
+			_x ctrlSetTooltip "";
+		} forEach (["radial_outerButtons"] call FUNC(ctrlGroup));
 
 		_outerRingBackGroundIDs = ["PlaceHolder","Left","bottom","Right","Top"];
 
 		// Outer ring backgrounds.
-		private _outerRingBackgrounds = (["backgrounds"] call FUNC(ctrlGroup)) select [1, 4];
+		private _outerRingBackgrounds = (["radial_outerRingBackgrounds"] call FUNC(ctrlGroup)) select [1, 4];
 
 		{
 			private _ctrl = _x;
@@ -238,18 +243,40 @@ A3C_UI_RADIAL_populateOuterRing_Grenades = {
 		
 		if (count A3C_AI_GREN_ARRAY == 0) exitWith {};
 		//-- label buttons-images and fncs
+		private _grenadeSlots = [
+			[["outerLeft4Img"] call FUNC(ctrl), ["outerLeft4Btn"] call FUNC(ctrl), 16],
+			[["outerLeft3Img"] call FUNC(ctrl), ["outerLeft3Btn"] call FUNC(ctrl), 15],
+			[["outerLeft2Img"] call FUNC(ctrl), ["outerLeft2Btn"] call FUNC(ctrl), 14],
+			[["outerLeft1Img"] call FUNC(ctrl), ["outerLeft1Btn"] call FUNC(ctrl), 13],
+
+			[["outerBottom4Img"] call FUNC(ctrl), ["outerBottom4Btn"] call FUNC(ctrl), 12],
+			[["outerBottom3Img"] call FUNC(ctrl), ["outerBottom3Btn"] call FUNC(ctrl), 11],
+			[["outerBottom2Img"] call FUNC(ctrl), ["outerBottom2Btn"] call FUNC(ctrl), 10],
+			[["outerBottom1Img"] call FUNC(ctrl), ["outerBottom1Btn"] call FUNC(ctrl), 9],
+
+			[["outerRight4Img"] call FUNC(ctrl), ["outerRight4Btn"] call FUNC(ctrl), 8],
+			[["outerRight3Img"] call FUNC(ctrl), ["outerRight3Btn"] call FUNC(ctrl), 7],
+			[["outerRight2Img"] call FUNC(ctrl), ["outerRight2Btn"] call FUNC(ctrl), 6],
+			[["outerRight1Img"] call FUNC(ctrl), ["outerRight1Btn"] call FUNC(ctrl), 5],
+
+			[["outerTop4Img"] call FUNC(ctrl), ["outerTop4Btn"] call FUNC(ctrl), 4],
+			[["outerTop3Img"] call FUNC(ctrl), ["outerTop3Btn"] call FUNC(ctrl), 3],
+			[["outerTop2Img"] call FUNC(ctrl), ["outerTop2Btn"] call FUNC(ctrl), 2],
+			[["outerTop1Img"] call FUNC(ctrl), ["outerTop1Btn"] call FUNC(ctrl), 1]
+		];
+
 		{
-			_btnID = (10039 - (_foreachIndex * 2));
-			_imgID = ((10039 - (_foreachIndex * 2)) - 1);
-			_buttonitem = 16 - _foreachIndex;
-			//systemchat str _btnID;
-			_btnClicker = findDisplay IDD_RADIAL_MENU displayCtrl _btnID;
-			_btnImage = findDisplay IDD_RADIAL_MENU displayCtrl _imgID;
-			{_x ctrlShow true} foreach [_btnImage,_btnClicker];
-			_btnImage ctrlSetText (gettext (configfile >> "CfgMagazines" >> _x >> "picture"));
-			_btnClicker ctrlSetToolTip (gettext (configfile >> "CfgMagazines" >> _x >> "displayNameShort"));
-			call compile format
-			[
+			private _slot = _grenadeSlots select _forEachIndex;
+			_slot params ["_btnImage", "_btnClicker", "_buttonitem"];
+
+			{
+				_x ctrlShow true;
+			} forEach [_btnImage, _btnClicker];
+
+			_btnImage ctrlSetText (getText (configFile >> "CfgMagazines" >> _x >> "picture"));
+			_btnClicker ctrlSetToolTip (getText (configFile >> "CfgMagazines" >> _x >> "displayNameShort"));
+
+			call compile format [
 				"
 					A3C_OUTER_RING_BTN_fnc_%1 =
 					[
@@ -263,7 +290,7 @@ A3C_UI_RADIAL_populateOuterRing_Grenades = {
 				_buttonitem,
 				_x
 			];
-		} foreach A3C_AI_GREN_ARRAY;
+		} forEach (A3C_AI_GREN_ARRAY select [0, count _grenadeSlots]);
 	};
 };
 
@@ -282,7 +309,7 @@ A3C_UI_RADIAL_startGTIgrenadeLoop = {
 	{[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS;
 
 	if (isnil "A3C_GREN_MUZZLE") exitwith {
-		((findDisplay IDD_RADIAL_MENU) displayCtrl 9016) ctrlSetTooltip "currently no items available";
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_GRENADES_BTN) ctrlSetTooltip "currently no items available";
 	};
 	BR_A3C_TACV_throwTheta = 45;
 	BR_A3C_TACV_throwTheta_Add = 0;

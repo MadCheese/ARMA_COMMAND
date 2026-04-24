@@ -134,17 +134,16 @@ A3C_UI_Shared_GetBackgroundColor = {
 		switch (_mode) do {
 			case ("RADIAL") : {
 				{
-					((findDisplay IDD_RADIAL_MENU) displayCtrl _x) ctrlSetTextColor [0,0.5,0.8,0.6];
+					(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlSetTextColor [0,0.5,0.8,0.6];
 				} foreach [
 					IDC_RADIAL_BG_CORE,
 					IDC_RADIAL_BG_TOP,
 					IDC_RADIAL_BG_RIGHT,
 					IDC_RADIAL_BG_BOTTOM,
 					IDC_RADIAL_BG_LEFT,
-					8053,
-					8072
+					8053
 				];
-				((findDisplay IDD_RADIAL_MENU) displayCtrl 8096) ctrlSetTextColor [0,0.5,0.8,0.6];
+				(findDisplay IDD_RADIAL_MENU displayCtrl 8096) ctrlSetTextColor [0,0.5,0.8,0.6];
 
 			};
 			case ("HUD_MENU") : {
@@ -156,9 +155,9 @@ A3C_UI_Shared_GetBackgroundColor = {
 		switch (_mode) do {
 			case ("RADIAL") : {
 				{
-					((findDisplay IDD_RADIAL_MENU) displayCtrl _x) ctrlSetTextColor [0,0,0,0.6];
+					(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlSetTextColor [0,0,0,0.6];
 				} foreach [IDC_RADIAL_BG_CORE,IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT,IDC_RADIAL_BG_BOTTOM,RADIAL_BG_LEFT,8053,8072];
-				((findDisplay IDD_RADIAL_MENU) displayCtrl 8096) ctrlSetTextColor [0,0,0,0.6];
+				(findDisplay IDD_RADIAL_MENU displayCtrl 8096) ctrlSetTextColor [0,0,0,0.6];
 			};
 			case ("HUD_MENU") : {
 				((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 15) ctrlSetTextColor [0,0,0,0.4];
@@ -173,73 +172,29 @@ A3C_UI_Shared_GetBackgroundColor = {
 
 };
 
-
-//-- HARDCODED RADIAL BUTTON DATA FOR DIFFERENT INNER RING PARENTS
-A3C_UI_RADIAL_BTN_DATA_OUTER_RING = []; //-- all avaliable outer ring buttons. ACTIONS uses all if necessary
-for "_i" from 10008 to 10039 step 2 do {
-	A3C_UI_RADIAL_BTN_DATA_OUTER_RING pushBack [_i, _i + 1];
-};
-A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED = []; //-- outer ring buttons for RadialHC Actions
-for "_i" from 10008 to 10039 step 2 do {
-	A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED pushBack [-2,_i, _i + 1];
-};
-
-
-A3C_UI_RADIAL_BTN_DATA_ROE = [];
-for "_i" from 10008 to 10015 step 2 do {
-	A3C_UI_RADIAL_BTN_DATA_ROE pushBack [_i, _i + 1];
-};
-
-A3C_UI_RADIAL_BTN_DATA_BRAIN_STANCE_GOCODE = [];
-for "_i" from 10016 to 10023 step 2 do {
-	A3C_UI_RADIAL_BTN_DATA_BRAIN_STANCE_GOCODE pushBack [_i, _i + 1];
-};
-A3C_UI_RADIAL_BTN_DATA_ITEM_VEHICLE = [];
-for "_i" from 10024 to 10031 step 2 do {
-	A3C_UI_RADIAL_BTN_DATA_BRAIN_STANCE_GOCODE pushBack [_i, _i + 1];
-};
-
-
-for "_i" from 9001 to 9028 do { //-- inner ring buttons
-	if (_i % 2 == 0) then {
-		A3C_RADIAL_GAMEUI_AllButtonAreas pushBack _i;
-	};
-};
-for "_i" from 10008 to 10039 do { //-- outer ring buttons
-	if (_i % 2 == 0) then {
-		A3C_RADIAL_GAMEUI_AllButtonAreas pushBack _i;
-	};
-};
-
 A3C_UI_RADIAL_TOGGLE_OUTER_RING = {
 
     params ["_bool"];
 
-    // Outer ring buttons/images (still numeric for now).
-    for "_i" from 10008 to 10039 do {
-        ((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlShow _bool;
-    };
-
-    // Outer ring backgrounds (now symbolic via control group).
-    {
-        _x ctrlShow _bool;
-    } forEach (["outerRingBackgrounds"] call FUNC(ctrlGroup));
+	// Outer ring backgrounds/buttons/images
+	{
+		_x ctrlShow _bool;
+	} forEach (
+		(["radial_outerButtonMacros"] call FUNC(ctrlGroup))
+		+ (["radial_outerRingBackgrounds"] call FUNC(ctrlGroup))
+	);
 };
 A3C_UI_RADIAL_LABEL_INNER_RING = {
 	params ["_commandLevel"];
 
-	//-- clean wipe
-	for "_i" from 9001 to 9028 do { //-- inner ring buttons
-		(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-	};
-	// Outer ring backgrounds.
+	//-- Clean wipe: hide all radial UI elements (inner ring, outer ring buttons, and outer backgrounds)
 	{
 		_x ctrlShow false;
-	} forEach (["outerRingBackgrounds"] call FUNC(ctrlGroup));
-
-	for "_i" from 10008 to 10039 do { //-- outer ring buttons
-		(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-	};
+	} forEach (
+		(["radial_innerButtonMacros"] call FUNC(ctrlGroup))
+		+ (["radial_outerButtonMacros"] call FUNC(ctrlGroup))
+		+ (["radial_outerRingBackgrounds"] call FUNC(ctrlGroup))
+	);
 
 
 
@@ -258,8 +213,8 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 	if (_commandLevel == "SQUAD") then {
 		showHud ([false] + (shownhud select [1,10]));
 
-		(findDisplay IDD_RADIAL_MENU displayCtrl 21000) ctrlShow true;
-		(findDisplay IDD_RADIAL_MENU displayCtrl 21001) ctrlShow true;
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_CORE_REFRESHDATA_IMG) ctrlShow true;
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_CORE_REFRESHDATA_BTN) ctrlShow true;
 
 
 		(findDisplay IDD_RADIAL_MENU displayCtrl 9001) ctrlSetText  "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
@@ -272,19 +227,15 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 		(findDisplay IDD_RADIAL_MENU displayCtrl 9007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";
 		(findDisplay IDD_RADIAL_MENU displayCtrl 9008) ctrlSetToolTip "AI STANCES (RMB: TOGGLE GOCODES)";
 
-		((findDisplay IDD_RADIAL_MENU) displayctrl 9009) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_rifle.paa";// ((getText (configfile >> "CfgWeapons" >> (primaryWeapon (A3C_RD_UNITS select 0)) >> "picture")));
+		(findDisplay IDD_RADIAL_MENU displayctrl 9009) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_rifle.paa";// ((getText (configfile >> "CfgWeapons" >> (primaryWeapon (A3C_RD_UNITS select 0)) >> "picture")));
 		(findDisplay IDD_RADIAL_MENU displayCtrl 9010) ctrlSetToolTip "WEAPON ITEMS";
 		(findDisplay IDD_RADIAL_MENU displayCtrl 9011) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_vehicleboard.paa";
 		(findDisplay IDD_RADIAL_MENU displayCtrl 9012) ctrlSetToolTip "LMB: TOGGLE VEHICLE OPTIONS || RMB: DISMOUNT SELECTED UNITS";
 
 		
-
-
-
-
-		for "_i" from 9001 to 9028 do {
-			(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow true;
-		};
+		{
+			_x ctrlShow true;
+		} forEach (["radial_innerButtonMacros"] call FUNC(ctrlGroup));
 
 
 		(findDisplay IDD_RADIAL_MENU displayCtrl 8005) ctrlSetText (toUpper (groupID group player));
@@ -301,8 +252,8 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 
 		
 
-		(findDisplay IDD_RADIAL_MENU displayCtrl 21000) ctrlShow false;
-		(findDisplay IDD_RADIAL_MENU displayCtrl 21001) ctrlShow false;
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_CORE_REFRESHDATA_IMG) ctrlShow false;
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_CORE_REFRESHDATA_BTN) ctrlShow false;
 		
 		(findDisplay IDD_RADIAL_MENU displayCtrl 9001) ctrlShow true;
 		(findDisplay IDD_RADIAL_MENU displayCtrl 9001) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_pin.paa";
@@ -370,11 +321,9 @@ A3C_UI_RADIAL_RESET_DYNAMIC_BTNS = {
 	A3C_OUTER_RING_BTN_fnc_15 = [[],{}]; //-- Left Ring Button 3
 	A3C_OUTER_RING_BTN_fnc_16 = [[],{}]; //-- Left							 Ring Button 4
 
-	for "_i" from 10008 to 10039 do { //BBBBBBB
-		if (_i % 2 == 0) then {
-			(findDisplay 100040 displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
-		};
-	};
+	{
+		_x ctrlSetTextColor [1,1,1,0.6];
+	} forEach (["radial_outerButtons"] call FUNC(ctrlGroup));
 };
 
 A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign fncs and images to buttons
@@ -385,7 +334,18 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 	_shift = if ((count _this) > 2) then {(_this select 2)} else {false};
 	_doToggle = if ((count _this) > 3) then {(_this select 3)} else {true};
 
+	
+	
+	
 	A3C_RD_BOOL_UNITS = true;
+
+
+	//-- define outer ring buttons:
+	private _outerButtonMacros = ["radial_outerButtonMacros"] call FUNC(ctrlGroup);
+	private _outerImages = ["radial_outerImages"] call FUNC(ctrlGroup);
+	private _outerButtons = ["radial_outerButtons"] call FUNC(ctrlGroup);
+
+
 	
 	//-- exit if fnc-area was defined
 	if (!(_mode == 'FORM') && !(A3C_RADIAL_HOVER) && (_btn == -1)) exitwith {};
@@ -402,6 +362,9 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 	[] call A3C_UI_RADIAL_RESET_DYNAMIC_BTNS; //-- reset outer ring buttons
 
 	A3C_LBR_1 = "";
+
+
+	//-- 
 	for "_i" from 0 to 45 do {
 		if (ctrlType (findDisplay IDD_RADIAL_MENU displayCtrl (10101 + _i)) != -1) then {
 			ctrlDelete (findDisplay IDD_RADIAL_MENU displayCtrl (10101 + _i));
@@ -433,22 +396,26 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 				if (_btn != -1) then {
 					BV_RINGFORM = 1;
 				};
-				//-- reset outer ring buttons
-				for "_i" from 10008 to 10039 do { //BBBBBBB
-					(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-					if (_i % 2 == 0) then {
-						(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetText "";
-					} else {
-						(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetTooltip "";
-					};
-				};
+				
+				//-- Outer ring reset: hide all, clear images and tooltips
+				{
+					_x ctrlShow false;
+				} forEach (["radial_outerButtonMacros"] call FUNC(ctrlGroup));
+
+				{
+					_x ctrlSetText "";
+				} forEach (["radial_outerImages"] call FUNC(ctrlGroup));
+
+				{
+					_x ctrlSetTooltip "";
+				} forEach (["radial_outerButtons"] call FUNC(ctrlGroup));
 
 				_formations = ["COLUMN", "STAG COLUMN", "WEDGE", "ECH LEFT", "ECH RIGHT", "VEE", "LINE", "FILE", "DIAMOND"];
 
 				_outerRingBackGroundIDs = ["PlaceHolder", "Left", "bottom", "Right", "Top"];
 
 				// Outer ring backgrounds.
-				private _outerRingBackgrounds = ["outerRingBackgrounds"] call FUNC(ctrlGroup);
+				private _outerRingBackgrounds = ["radial_outerRingBackgrounds"] call FUNC(ctrlGroup);
 
 				{
 					private _ind = _forEachIndex + 1;
@@ -540,10 +507,13 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					BV_CBMODE = 0;
 
 					[0] call A3C_GREN_DATA;
-					//-- hide right extension buttons - does this happen here??
-					for "_i" from 8053 to 8068 do {
-						(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-					};
+					
+
+					//-- RIGHT EXTENSION: hide all controls
+					{
+						_x ctrlShow false;
+					} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
+					
 				} else {
 					BV_GREN = 0;
 					[false] call A3C_UI_RADIAL_TOGGLE_OUTER_RING;
@@ -563,30 +533,34 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					BV_CBMODE = 0;
 					BV_GREN = 0;
 
-					//-- hide right extension buttons - does this happen here??
-					for "_i" from 8053 to 8068 do {
-						(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-					};
-					[IDD_RADIAL_MENU,A3C_RD_UNITS,A3C_UI_RADIAL_BTN_DATA_OUTER_RING] call A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS;
-					_outerRingBackGroundIDs = ["Placeholder","Top","Right","bottom"];
-					private _outerRingBackgrounds = ["outerRingBackgrounds"] call FUNC(ctrlGroup);
+					//-- RIGHT EXTENSION: hide all controls
+					{
+						_x ctrlShow false;
+					} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
 
+					[IDD_RADIAL_MENU,A3C_RD_UNITS] call A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS;
+					
+					_outerRingBackGroundIDs = ["Placeholder","Top","Right","bottom"];
+					private _outerRingBackgrounds = ["radial_outerRingBackgrounds"] call FUNC(ctrlGroup);
+					//-- Update outer ring backgrounds for available action pages
 					{
 						private _ind = _forEachIndex + 1;
 
 						if (_ind <= ((ceil ((count A3C_DYNAMIC_BUTTON_ACTIONS) / 4)) min 3)) then {
-							_x ctrlShow true; // Outer circle background shown.
+							_x ctrlShow true;
 							_x ctrlSetText format [
 								"A3C_CORE\ui\pictures\BG_Radial_OuterRing_%1.paa",
 								_outerRingBackGroundIDs select _ind
 							];
 						} else {
-							_x ctrlShow false; // Outer circle background hidden.
+							_x ctrlShow false;
 						};
 					} forEach _outerRingBackgrounds;
-					for "_i" from 10008 to 10039 do { //-- outer ring buttons
-						(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
-					};
+
+					//-- Reset outer ring button/image color
+					{
+						_x ctrlSetTextColor [1,1,1,0.6];
+					} forEach (["radial_outerButtonMacros"] call FUNC(ctrlGroup));
 				} else {
 					BV_ACT = 0;
 					[false] call A3C_UI_RADIAL_TOGGLE_OUTER_RING;
@@ -602,13 +576,13 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 						"" //-- placer color-params
 					] call A3C_AI_SHARED_Action_StartPositionalProcess;	
 				} else {
-					for "_i" from 10008 to 10039 do {
-						(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-					};
-					// Outer ring backgrounds.
+					//-- Hide outer ring buttons/images and backgrounds
 					{
-						_x ctrlShow false; // Outer circle background hidden.
-					} forEach (["outerRingBackgrounds"] call FUNC(ctrlGroup));
+						_x ctrlShow false;
+					} forEach (
+						(["radial_outerButtonMacros"] call FUNC(ctrlGroup))
+						+ (["radial_outerRingBackgrounds"] call FUNC(ctrlGroup))
+					);
 				};
 				
 			};
@@ -627,45 +601,45 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 							BV_ROE = 1;
 						};
 
-						{((findDisplay IDD_RADIAL_MENU) displayCtrl _x) ctrlShow true} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT]; 
-						((findDisplay IDD_RADIAL_MENU) displayCtrl IDC_RADIAL_BG_TOP) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Top.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl IDC_RADIAL_BG_RIGHT) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right_Var1.paa";
+						{(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow true} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT]; 
+						(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_TOP) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Top.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right_Var1.paa";
+						
 						//-- TOP RING
-						for "_i" from 10008 to 10015 do {
-							((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlShow true;
-							if (_i % 2 == 0) then {
-								//-- ICONS
-								((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
-								private _ico = switch _i do {
-									case (10008) : {"A3C_CORE\ui\pictures\icon_menu_ROE_FAW.paa"};
-									case (10010) : {"A3C_CORE\ui\pictures\icon_menu_ROE_FOT.paa"};
-									case (10012)  : {"A3C_CORE\ui\pictures\icon_menu_ROE_FOML.paa"};
-									case (10014) : {
-										if ({_x in A3C_DANGER_UNITS} count A3C_RD_UNITS == 0) then {
-											"A3C_CORE\ui\pictures\icon_menu_autocombat_enabled.paa"
-										} else {
-											"A3C_CORE\ui\pictures\icon_menu_autocombat_disabled.paa"
-										}
-									};
-								};
-								((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlSetText _ico;
+						{
+							_x ctrlShow true;
+						} forEach (["radial_outerTopMacros"] call FUNC(ctrlGroup));
+
+						private _topIcons = [
+							"A3C_CORE\ui\pictures\icon_menu_ROE_FAW.paa",
+							"A3C_CORE\ui\pictures\icon_menu_ROE_FOT.paa",
+							"A3C_CORE\ui\pictures\icon_menu_ROE_FOML.paa",
+							if ({_x in A3C_DANGER_UNITS} count A3C_RD_UNITS == 0) then {
+								"A3C_CORE\ui\pictures\icon_menu_autocombat_enabled.paa"
 							} else {
-								//-- BUTTONS
-								private _toolTip = switch _i do {
-									case (10009) : {"TARGET SELECTION: AUTONOMOUS"};
-									case (10011) : {"TARGET SELECTION: DESIGNATED ONLY"};
-									case (10013)  : {"FIRE ON MY LEAD"};
-									case (10015) : {
-										if ({_x in A3C_DANGER_UNITS} count A3C_RD_UNITS == 0) then {
-											"DISABLE AUTOCOMBAT"
-										} else {
-											"ENABLE AUTOCOMBAT"
-										}
-									};
-								};
-								((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlSetTooltip _toolTip;
-							};
-						};
+								"A3C_CORE\ui\pictures\icon_menu_autocombat_disabled.paa"
+							}
+						];
+
+						private _topTooltips = [
+							"TARGET SELECTION: AUTONOMOUS",
+							"TARGET SELECTION: DESIGNATED ONLY",
+							"FIRE ON MY LEAD",
+							if ({_x in A3C_DANGER_UNITS} count A3C_RD_UNITS == 0) then {
+								"DISABLE AUTOCOMBAT"
+							} else {
+								"ENABLE AUTOCOMBAT"
+							}
+						];
+
+						{
+							_x ctrlSetTextColor [1,1,1,0.6];
+							_x ctrlSetText (_topIcons select _forEachIndex);
+						} forEach (["radial_outerTopImages"] call FUNC(ctrlGroup));
+
+						{
+							_x ctrlSetTooltip (_topTooltips select _forEachIndex);
+						} forEach (["radial_outerTopButtons"] call FUNC(ctrlGroup));
 
 						private _behaviorIcon = "\a3\ui_f\data\IGUI\Cfg\Revive\overlayIconsGroup\f100_ca.paa";
 						private _combatModeIcon ="\a3\ui_f\data\IGUI\RscCustomInfo\Sensors\Targets\AssignedTarget_ca.paa";
@@ -677,21 +651,24 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 						//"\a3\ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa"
 						//"\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\target_ca.paa"
 
-						for "_i" from 10016 to 10023 do {
-							((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlShow false;
-						};
+						//-- RIGHT RING: hide all controls (images + buttons)
+						{
+							_x ctrlShow false;
+						} forEach (["radial_outerRightMacros"] call FUNC(ctrlGroup));
 
 
 						// //-- RIGHT RING - COMBAT MODES / BEHAVIOUR MACRO SELECTOR
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10016) ctrlShow true;
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10017) ctrlShow true;
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10016) ctrlSetText _combatModeIcon;
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10017) ctrlSetTooltip "COMBAT MODES AND BEHAVIOUR";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10016) ctrlSetTextColor [1,1,1,0.4];
-						//-- HIDE RIGHT EXTENTION
-						for "_i" from 8053 to 8068 do {
-							(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-						};
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10016) ctrlShow true;
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10017) ctrlShow true;
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10016) ctrlSetText _combatModeIcon;
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10017) ctrlSetTooltip "COMBAT MODES AND BEHAVIOUR";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10016) ctrlSetTextColor [1,1,1,0.4];
+						
+						//-- HIDE RIGHT EXTENSION (all controls)
+						{
+							_x ctrlShow false;
+						} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
+
 						BV_MEDICAL = 0;
 						BV_CBMODE = 0;
 						BV_GREN = 0;
@@ -741,9 +718,9 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 				A3C_RADIALMODE = "HC ACTIONS";
 				A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_RD_UNITS;
 
-				_actions = [A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED,_doToggle] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+				_actions = [_doToggle] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 
-				private _outerRingBackgrounds = ["outerRingBackgrounds"] call FUNC(ctrlGroup);
+				private _outerRingBackgrounds = ["radial_outerRingBackgrounds"] call FUNC(ctrlGroup);
 
 				{
 					_x ctrlShow false;
@@ -769,9 +746,10 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					} forEach (_outerRingBackgrounds select [0, ceil (count _actions / 4)]);
 				};
 
-				for "_i" from 10008 to 10039 do { //-- outer ring buttons
-					(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
-				};
+				//-- Outer ring buttons/images: reset text color
+				{
+					_x ctrlSetTextColor [1,1,1,0.6];
+				} forEach (["radial_outerButtonMacros"] call FUNC(ctrlGroup));
 
 			};
 
@@ -783,7 +761,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 				BV_LB2 = 7;
 				BV_GREN = 0;
 				_bv = "BV_BRAIN";
-				{((findDisplay IDD_RADIAL_MENU) displayCtrl _x) ctrlSetTextColor [1,1,1,0.6]} foreach [10016,10018,10020,10022];
+				{(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlSetTextColor [1,1,1,0.6]} foreach [10016,10018,10020,10022];
 				if (_btn == 1) then {
 					//-- right click macro unit lookdir+unitpos reset
 					 player groupRadio "SentBehaviourSafe";
@@ -793,42 +771,47 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					[false] call A3C_UI_RADIAL_TOGGLE_OUTER_RING;
 					if (BV_BRAIN == 0) then {
 
-						((findDisplay IDD_RADIAL_MENU) displayCtrl IDC_RADIAL_BG_RIGHT) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl IDC_RADIAL_BG_RIGHT) ctrlShow true;
+						(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlShow true;
 						if (_btn != -1) then {
 							BV_BRAIN = 1;
 						};
-						{((findDisplay IDD_RADIAL_MENU) displayCtrl _x) ctrlShow false} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_BOTTOM,IDC_RADIAL_BG_LEFT];
-						for "_i" from 10016 to 10023 do {
-							((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlShow true;
-						};
-						for "_i" from 8053 to 8068 do {
-							(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-						};
+						{(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_BOTTOM,IDC_RADIAL_BG_LEFT];
+
+						//-- RIGHT RING: show all controls (images + buttons)
+						{
+							_x ctrlShow true;
+						} forEach (["radial_outerRightMacros"] call FUNC(ctrlGroup));
+
+						//-- RIGHT EXTENSION: hide all controls
+						{
+							_x ctrlShow false;
+						} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
+
 						BV_MEDICAL = 0;
 						BV_CBMODE = 0;
 
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10016) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_resetWatchdir.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10017) ctrlSetTooltip "RESET WATCHDIR";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10016) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_resetWatchdir.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10017) ctrlSetTooltip "RESET WATCHDIR";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
 						if (profileNameSpace getVariable ["A3C_AUTOMEDIC", false]) then {
-							((findDisplay IDD_RADIAL_MENU) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_medic_auto.paa";
-							((findDisplay IDD_RADIAL_MENU) displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
-							((findDisplay IDD_RADIAL_MENU) displayCtrl 10019) ctrlSetTooltip "AI Healing: LMB: open medical controls. || SHIFT+LMB: Closest Medic Heal Player || RMB: AUTO-MEDICS";
+							(findDisplay IDD_RADIAL_MENU displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_medic_auto.paa";
+							(findDisplay IDD_RADIAL_MENU displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
+							(findDisplay IDD_RADIAL_MENU displayCtrl 10019) ctrlSetTooltip "AI Healing: LMB: open medical controls. || SHIFT+LMB: Closest Medic Heal Player || RMB: AUTO-MEDICS";
 						} else {
 							if ( {_u = _x; {_u getHitPointDamage _x > 0.2} count A3C_HUMAN_HITPOINTS > 0 } count (units player) > 0 ) then {
-								((findDisplay IDD_RADIAL_MENU) displayCtrl 10018) ctrlSetTextColor [1,0.3,0.3,0.6];
-								((findDisplay IDD_RADIAL_MENU) displayCtrl 10019) ctrlSetTooltip "AI Healing: LMB: open medical controls. || SHIFT+LMB: Closest Medic Heal Player || RMB: AUTO-MEDICS";
+								(findDisplay IDD_RADIAL_MENU displayCtrl 10018) ctrlSetTextColor [1,0.3,0.3,0.6];
+								(findDisplay IDD_RADIAL_MENU displayCtrl 10019) ctrlSetTooltip "AI Healing: LMB: open medical controls. || SHIFT+LMB: Closest Medic Heal Player || RMB: AUTO-MEDICS";
 							} else {
-								((findDisplay IDD_RADIAL_MENU) displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
-								((findDisplay IDD_RADIAL_MENU) displayCtrl 10019) ctrlSetTooltip "No units wounded";
+								(findDisplay IDD_RADIAL_MENU displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
+								(findDisplay IDD_RADIAL_MENU displayCtrl 10019) ctrlSetTooltip "No units wounded";
 							};
 						};
 
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10020) ctrlSetText "\a3\ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa"; //"A3C_CORE\ui\pictures\icon_menu_takeCover.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10021) ctrlSetTooltip "Behaviour & CombatMode";//"FIND COVER";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_reArm.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10023) ctrlSetTooltip "RE-ARM (LMB: choose target, RMB: find target)";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10020) ctrlSetText "\a3\ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa"; //"A3C_CORE\ui\pictures\icon_menu_takeCover.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10021) ctrlSetTooltip "Behaviour & CombatMode";//"FIND COVER";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_reArm.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10023) ctrlSetTooltip "RE-ARM (LMB: choose target, RMB: find target)";
 
 						A3C_OUTER_RING_BTN_fnc_5 =
 						[
@@ -866,12 +849,12 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 									if (profileNameSpace getVariable ["A3C_AUTOMEDIC", false]) then {
 										profileNameSpace setVariable ["A3C_AUTOMEDIC", false];
 										if ( {_u = _x; {_u getHitPointDamage _x > 0.2} count A3C_HUMAN_HITPOINTS > 0 } count (units player) > 0 ) then {
-											((findDisplay IDD_RADIAL_MENU) displayCtrl 10018) ctrlSetTextColor [1,0.3,0.3,0.6];
-											((findDisplay IDD_RADIAL_MENU) displayCtrl 10019) ctrlSetTooltip "AI Healing: LMB: open medical controls. SHIFT+LMB: Closest Medic Heal Player (AUTO-mode coming soon)";
+											(findDisplay IDD_RADIAL_MENU displayCtrl 10018) ctrlSetTextColor [1,0.3,0.3,0.6];
+											(findDisplay IDD_RADIAL_MENU displayCtrl 10019) ctrlSetTooltip "AI Healing: LMB: open medical controls. SHIFT+LMB: Closest Medic Heal Player (AUTO-mode coming soon)";
 										} else {
-											((findDisplay IDD_RADIAL_MENU) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
-											((findDisplay IDD_RADIAL_MENU) displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
-											((findDisplay IDD_RADIAL_MENU) displayCtrl 10019) ctrlSetTooltip "No units wounded";
+											(findDisplay IDD_RADIAL_MENU displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
+											(findDisplay IDD_RADIAL_MENU displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
+											(findDisplay IDD_RADIAL_MENU displayCtrl 10019) ctrlSetTooltip "No units wounded";
 										};
 									};
 									//--
@@ -886,9 +869,11 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 											["MEDICAL"] call A3C_UI_RADIAL_LABEL_LB;
 										} else {
 											BV_MEDICAL = 0;
-											for "_i" from 8053 to 8058 do {
-												(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-											};
+
+											//-- RIGHT EXTENSION: hide all controls
+											{
+												_x ctrlShow false;
+											} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
 										};
 									} else {
 										//-- shift: shortCut to heal only player
@@ -918,11 +903,14 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 									//-- right click: toggle auto-medic
 									if !(profileNameSpace getVariable "A3C_AUTOMEDIC") then {
 										profileNameSpace setVariable ["A3C_AUTOMEDIC", true];
-										((findDisplay IDD_RADIAL_MENU) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_medic_auto.paa";
-										((findDisplay IDD_RADIAL_MENU) displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
-										for "_i" from 8053 to 8068 do {
-											(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-										};
+										(findDisplay IDD_RADIAL_MENU displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_medic_auto.paa";
+										(findDisplay IDD_RADIAL_MENU displayCtrl 10018) ctrlSetTextColor [1,1,1,0.6];
+										
+										//-- RIGHT EXTENSION: hide all controls
+										{
+											_x ctrlShow false;
+										} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
+
 										[] spawn A3C_HEAL_AUTOLOOP;
 									};
 								};
@@ -938,9 +926,10 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 
 
 
-								for "_i" from 8053 to 8058 do {
-									(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-								};
+								//-- RIGHT EXTENSION: hide all controls
+								{
+									_x ctrlShow false;
+								} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
 
 
 								BV_MEDICAL = 0; //-- reset MedicalButton value to 0 (for closing/opening extension)
@@ -954,11 +943,8 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 									{lbCLear (findDisplay IDD_RADIAL_MENU displayCtrl _x)} foreach [8054,8055];
 									["CBMODE"] call A3C_UI_RADIAL_LABEL_LB;
 								} else {
-									//-- close right extension: combat mode
+									//-- combat mode
 									BV_CBMODE = 0;
-									for "_i" from 8053 to 8058 do {
-										(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-									};
 								};
 							}
 						];
@@ -972,9 +958,12 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 
 								BV_MEDICAL = 0; //-- reset button values for functions that spawn extensions, close extension
 								BV_CBMODE = 0;
-								for "_i" from 8053 to 8058 do {
-									(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-								};
+
+								//-- RIGHT EXTENSION: hide all controls
+								{
+									_x ctrlShow false;
+								} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
+
 								A3C_LBR_1 = "REARM";
 								if (_button == 0) then {
 									A3C_ReArm_options = [];
@@ -999,36 +988,52 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 				{
 					(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false;
 				} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT,IDC_RADIAL_BG_BOTTOM,IDC_RADIAL_BG_LEFT];
+				
+				//-- Reset outer ring action buttons
 				{
-					(findDisplay IDD_RADIAL_MENU displayCtrl (_x select 0)) ctrlSetText "";
-					(findDisplay IDD_RADIAL_MENU displayCtrl (_x select 1)) ctrlSetToolTip "";
-					{(finddisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false} foreach _x;
-				} foreach A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED;
+					_x ctrlShow false;
+				} forEach _outerButtonMacros;
+
+				{
+					_x ctrlSetText "";
+				} forEach _outerImages;
+
+				{
+					_x ctrlSetToolTip "";
+				} forEach _outerButtons;
+
 				_img = "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
 				_color = [1,1,1,0.5];
-				for "_i" from 10016 to 10023 do {
+				
+				//-- RIGHT RING: show all controls (images + buttons)
+				{
+					_x ctrlShow true;
+				} forEach (["radial_outerRightMacros"] call FUNC(ctrlGroup));
 
-					if (_i % 2 == 0) then {
-						_img = switch (_i - 10016) do {
-							case 0 : {"A3C_CORE\ui\pictures\icon_menu_stance_Auto.paa"};
-							case 2 : {"A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa"};
-							case 4 : {"A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa"};
-							case 6 : {"A3C_CORE\ui\pictures\icon_menu_Stance_Prone_RAD.paa"};
-						};
-						(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetText _img;
-						(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetTextColor _color;
-					} else {
-						_toolTip = switch (_i - 10016) do {
-							case 1 : {"AUTO"};
-							case 3 : {"UP"};
-							case 5 : {"CROUCH"};
-							case 7 : {"PRONE"};
-						};
-						(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetTooltip _toolTip;
+				//-- RIGHT RING: set icons + color (images)
+				private _rightIcons = [
+					"A3C_CORE\ui\pictures\icon_menu_stance_Auto.paa",
+					"A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa",
+					"A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa",
+					"A3C_CORE\ui\pictures\icon_menu_Stance_Prone_RAD.paa"
+				];
 
-					};
-					(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow true;
-				};
+				{
+					_x ctrlSetText (_rightIcons select _forEachIndex);
+					_x ctrlSetTextColor _color;
+				} forEach (["radial_outerRightImages"] call FUNC(ctrlGroup));
+
+				//-- RIGHT RING: set tooltips (buttons)
+				private _rightTooltips = [
+					"AUTO",
+					"UP",
+					"CROUCH",
+					"PRONE"
+				];
+
+				{
+					_x ctrlSetTooltip (_rightTooltips select _forEachIndex);
+				} forEach (["radial_outerRightButtons"] call FUNC(ctrlGroup));
 
 				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlShow true;
 				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
@@ -1090,22 +1095,29 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 		case ("STANCE") : {
 			if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
 				_bv = "BV_STANCES";
-				((findDisplay IDD_RADIAL_MENU) displayCtrl IDC_RADIAL_BG_RIGHT) ctrlShow true;
-				((findDisplay IDD_RADIAL_MENU) displayCtrl IDC_RADIAL_BG_RIGHT) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
-				{((findDisplay IDD_RADIAL_MENU) displayCtrl _x) ctrlShow false} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_BOTTOM,IDC_RADIAL_BG_LEFT];
-				for "_i" from 10016 to 10023 do {
-					((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlShow true;
-				};
-				for "_i" from 10008 to 10015 do {
-					((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlShow false;
-				};
+				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlShow true;
+				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
+				{(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_BOTTOM,IDC_RADIAL_BG_LEFT];
+				
+				//-- RIGHT RING: show all controls (images + buttons)
+				{
+					_x ctrlShow true;
+				} forEach (["radial_outerRightMacros"] call FUNC(ctrlGroup));
+				
+				//-- OUTER RING: hide all non-right segments (top, bottom, left)
+				{
+					_x ctrlShow false;
+				} forEach (
+					(["radial_outerTopMacros"] call FUNC(ctrlGroup)) +
+					(["radial_outerBottomMacros"] call FUNC(ctrlGroup)) +
+					(["radial_outerLeftMacros"] call FUNC(ctrlGroup))
+				);
 
-				for "_i" from 10024 to 10039 do {
-					((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlShow false;
-				};
-				for "_i" from 8053 to 8068 do {
-					(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-				};
+				//-- RIGHT EXTENSION: hide all controls
+				{
+					_x ctrlShow false;
+				} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
+
 				BV_MEDICAL = 0;
 				BV_CBMODE = 0;
 				BV_GREN = 0;
@@ -1118,15 +1130,15 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 						["STANCE",0] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 					} else {
 						BV_STANCES = 3;
-						((findDisplay IDD_RADIAL_MENU) displayctrl 10007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10016) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10017) ctrlSetTooltip "GoCode A";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_B.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10019) ctrlSetTooltip "GoCode B";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10020) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_C.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10021) ctrlSetTooltip "GoCode C";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_D.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10023) ctrlSetTooltip "GoCode D";
+						(findDisplay IDD_RADIAL_MENU displayctrl 10007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10016) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10017) ctrlSetTooltip "GoCode A";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_B.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10019) ctrlSetTooltip "GoCode B";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10020) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_C.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10021) ctrlSetTooltip "GoCode C";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_D.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10023) ctrlSetTooltip "GoCode D";
 						[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
 
 						A3C_OUTER_RING_BTN_fnc_5 =
@@ -1181,18 +1193,18 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 							BV_STANCES = 1;
 						};
 						
-						((findDisplay IDD_RADIAL_MENU) displayctrl 9007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";
+						(findDisplay IDD_RADIAL_MENU displayctrl 9007) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";
 
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10016) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_auto.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10017) ctrlSetTooltip "AUTO";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10019) ctrlSetTooltip "STAND";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10020) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10021) ctrlSetTooltip "CROUCH";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_Stance_Prone_RAD.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl 10023) ctrlSetTooltip "PRONE";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10016) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_auto.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10017) ctrlSetTooltip "AUTO";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10018) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10019) ctrlSetTooltip "STAND";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10020) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10021) ctrlSetTooltip "CROUCH";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_Stance_Prone_RAD.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl 10023) ctrlSetTooltip "PRONE";
 						{
-							((findDisplay IDD_RADIAL_MENU) displayCtrl _x)ctrlSetTextColor [1,1,1,0.6];
+							(findDisplay IDD_RADIAL_MENU displayCtrl _x)ctrlSetTextColor [1,1,1,0.6];
 						} foreach [9007,10016,10018,10020,10022];
 
 						A3C_OUTER_RING_BTN_fnc_5 =
@@ -1239,10 +1251,11 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 
 					} else {
 						BV_STANCES = 0;
-						for "_i" from 10016 to 10023 do {
-							((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlShow false;
-						};
-						((findDisplay IDD_RADIAL_MENU) displayCtrl IDC_RADIAL_BG_RIGHT) ctrlShow false;
+						//-- RIGHT RING: hide all controls (images + buttons)
+						{
+							_x ctrlShow false;
+						} forEach (["radial_outerRightMacros"] call FUNC(ctrlGroup));
+						(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlShow false;
 					};
 				};
 			} else {
@@ -1252,38 +1265,51 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 				{
 					(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false;
 				} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT,IDC_RADIAL_BG_BOTTOM,IDC_RADIAL_BG_LEFT];
+				
+				//-- Reset outer ring action buttons
 				{
-					(findDisplay IDD_RADIAL_MENU displayCtrl (_x select 0)) ctrlSetText "";
-					(findDisplay IDD_RADIAL_MENU displayCtrl (_x select 1)) ctrlSetToolTip "";
-					{(finddisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false} foreach _x;
-				} foreach A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED;
+					_x ctrlShow false;
+				} forEach _outerButtonMacros;
+
+				{
+					_x ctrlSetText "";
+				} forEach _outerImages;
+
+				{
+					_x ctrlSetToolTip "";
+				} forEach _outerButtons;
+
 				_img = "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
 
-				for "_i" from 10016 to 10023 do {
+				//-- RIGHT RING: show all controls (images + buttons)
+				{
+					_x ctrlShow true;
+				} forEach (["radial_outerRightMacros"] call FUNC(ctrlGroup));
 
-					if (_i % 2 == 0) then {
+				//-- RIGHT RING: set icons
+				private _rightIcons = [
+					"A3C_CORE\ui\pictures\icon_menu_gocode_A.paa",
+					"A3C_CORE\ui\pictures\icon_menu_gocode_B.paa",
+					"A3C_CORE\ui\pictures\icon_menu_gocode_C.paa",
+					"A3C_CORE\ui\pictures\icon_menu_gocode_D.paa"
+				];
 
+				{
+					_x ctrlSetText (_rightIcons select _forEachIndex);
+				} forEach (["radial_outerRightImages"] call FUNC(ctrlGroup));
 
-						_img = switch (_i - 10016) do {
-							case 0 : {"A3C_CORE\ui\pictures\icon_menu_gocode_A.paa"};
-							case 2 : {"A3C_CORE\ui\pictures\icon_menu_gocode_B.paa"};
-							case 4 : {"A3C_CORE\ui\pictures\icon_menu_gocode_C.paa"};
-							case 6 : {"A3C_CORE\ui\pictures\icon_menu_gocode_D.paa"};
-						};
+				//-- RIGHT RING: set tooltips
+				private _rightTooltips = [
+					"GOCODE A",
+					"GOCODE B",
+					"GOCODE C",
+					"GOCODE D"
+				];
 
-						(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetText _img;
-					} else {
-						_toolTip = switch (_i - 10016) do {
-							case 1 : {"GOCODE A"};
-							case 3 : {"GOCODE B"};
-							case 5 : {"GOCODE C"};
-							case 7 : {"GOCODE D"};
-						};
-						(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetTooltip _toolTip;
+				{
+					_x ctrlSetTooltip (_rightTooltips select _forEachIndex);
+				} forEach (["radial_outerRightButtons"] call FUNC(ctrlGroup));
 
-					};
-					(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow true;
-				};
 				[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0]; //-- check gocodes and assign color
 
 				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlShow true;
@@ -1373,11 +1399,12 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 				if (!("SILENCER" in _itemCategories) && {{count ([_x,"MuzzleSlot",0,(currentWeapon _x)] call MCSS_fnc_getWeaponItems) > 0} count A3C_RD_UNITS > 0}) then {
 					_itemCategories pushBack "SILENCER";
 				};
-				{((findDisplay IDD_RADIAL_MENU) displayCtrl _x) ctrlShow false} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT,IDC_RADIAL_BG_BOTTOM,IDC_RADIAL_BG_LEFT]; //-- hide all outer curcle bg's
+				{(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT,IDC_RADIAL_BG_BOTTOM,IDC_RADIAL_BG_LEFT]; //-- hide all outer curcle bg's
 
-				for "_i" from 10008 to 10039 do {
-					((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlShow false; //-- hide all outer curcle buttons
-				};
+				//-- Hide all outer ring buttons/images
+				{
+					_x ctrlShow false;
+				} forEach (["radial_outerButtonMacros"] call FUNC(ctrlGroup));
 
 				if (count _itemCategories == 0) exitWith {};
 
@@ -1386,12 +1413,15 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 						BV_ITEMS = 1;
 					};
 					
-					((findDisplay IDD_RADIAL_MENU) displayCtrl IDC_RADIAL_BG_BOTTOM) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
-					((findDisplay IDD_RADIAL_MENU) displayCtrl IDC_RADIAL_BG_BOTTOM) ctrlShow true;
+					(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_BOTTOM) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
+					(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_BOTTOM) ctrlShow true;
 
-					for "_i" from 8053 to 8068 do {
-						(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false; //-- hide other UI if shown
-					};
+					//-- RIGHT EXTENSION: hide all controls
+					{
+						_x ctrlShow false;
+					} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
+
+
 					{
 
 
@@ -1423,7 +1453,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlSetText _SwitchWeaponImage;
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlShow true;
-								((findDisplay IDD_RADIAL_MENU) displayCtrl _buttonClickerID) ctrlSetToolTip _SwitchWeaponToolTip;
+								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonClickerID) ctrlSetToolTip _SwitchWeaponToolTip;
 								
 								_fnc = {
 									params ["_btnData","_inputParams"];
@@ -1502,7 +1532,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlSetText _strobeImage;
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlShow true;
-								((findDisplay IDD_RADIAL_MENU) displayCtrl _buttonClickerID) ctrlSetToolTip _strobeToolTip;
+								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonClickerID) ctrlSetToolTip _strobeToolTip;
 
 								_fnc = {
 									params ["_btnData","_inputParams"];
@@ -1602,7 +1632,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlSetText _nvgImage;
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlShow true;
-								((findDisplay IDD_RADIAL_MENU) displayCtrl _buttonClickerID) ctrlSetToolTip _nvgToolTip;
+								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonClickerID) ctrlSetToolTip _nvgToolTip;
 
 								_fnc = {
 									params ["_btnData","_inputParams"];
@@ -1708,7 +1738,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlSetText _flashlightImage;
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlShow true;
-								((findDisplay IDD_RADIAL_MENU) displayCtrl _buttonClickerID) ctrlSetToolTip _flashlightToolTip;
+								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonClickerID) ctrlSetToolTip _flashlightToolTip;
 
 
 								_fnc = {
@@ -1809,11 +1839,20 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 
 									//-- switch LASER icon if necessary
 									if ({_x isIRLaserOn (currentWeapon _x)} count _units == 0) then {
-										for "_i" from 10031 to 10008 step - 1 do {
-											if ("IRlaser" in ctrlText (findDisplay IDD_RADIAL_MENU displayCtrl _i)) then {
-												(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_IRlaser_OFF.paa";
+										//-- Search used item slots in reverse allocation order.
+										//-- This currently reaches beyond bottom because this category may grow:
+										//-- additional actions should spill from bottom into right, then top.
+										private _searchImages = reverse (
+											(["radial_outerTopImages"] call FUNC(ctrlGroup))
+											+ (["radial_outerRightImages"] call FUNC(ctrlGroup))
+											+ (["radial_outerBottomImages"] call FUNC(ctrlGroup))
+										);
+
+										{
+											if ("IRlaser" in ctrlText _x) exitWith {
+												_x ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_IRlaser_OFF.paa";
 											};
-										};
+										} forEach _searchImages;
 									};
 
 
@@ -1843,7 +1882,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlSetText _LaserImage;
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlShow true;
-								((findDisplay IDD_RADIAL_MENU) displayCtrl _buttonClickerID) ctrlSetToolTip _LaserToolTip;
+								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonClickerID) ctrlSetToolTip _LaserToolTip;
 
 
 								_fnc = {
@@ -1943,11 +1982,20 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 
 									//-- switch FLASHLIGHT icon if necessary
 									if ({_x isFlashlightOn (currentWeapon _x)} count _units == 0) then {
-										for "_i" from 10031 to 10008 step - 1 do {
-											if ("FlashLight" in ctrlText (findDisplay IDD_RADIAL_MENU displayCtrl _i)) then {
-												(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_FlashLight_OFF.paa";
+										//-- Search used item slots in reverse allocation order.
+										//-- This currently reaches beyond bottom because this category may grow:
+										//-- additional actions should spill from bottom into right, then top.
+										private _searchImages = reverse (
+											(["radial_outerTopImages"] call FUNC(ctrlGroup))
+											+ (["radial_outerRightImages"] call FUNC(ctrlGroup))
+											+ (["radial_outerBottomImages"] call FUNC(ctrlGroup))
+										);
+
+										{
+											if ("FlashLight" in ctrlText _x) exitWith {
+												_x ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_FlashLight_OFF.paa";
 											};
-										};
+										} forEach _searchImages;
 									};
 								};
 								[_buttonImgID,_buttonClickerID] spawn {
@@ -1975,7 +2023,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlSetText _silencerImage;
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlSetTextColor [1,1,1,0.3];
 								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonImgID) ctrlShow true;
-								((findDisplay IDD_RADIAL_MENU) displayCtrl _buttonClickerID) ctrlSetToolTip _silencerToolTip;
+								(findDisplay IDD_RADIAL_MENU displayCtrl _buttonClickerID) ctrlSetToolTip _silencerToolTip;
 
 								_fnc = {
 									params ["_btnData","_inputParams"];
@@ -2099,38 +2147,52 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 				{
 					(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false;
 				} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT,IDC_RADIAL_BG_LEFT];
+				
+				//-- Reset outer ring action buttons
 				{
-					(findDisplay IDD_RADIAL_MENU displayCtrl (_x select 0)) ctrlSetText "";
-					(findDisplay IDD_RADIAL_MENU displayCtrl (_x select 1)) ctrlSetToolTip "";
-					{(finddisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false} foreach _x;
-				} foreach A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED;
+					_x ctrlShow false;
+				} forEach _outerButtonMacros;
+
+				{
+					_x ctrlSetText "";
+				} forEach _outerImages;
+
+				{
+					_x ctrlSetToolTip "";
+				} forEach _outerButtons;
+				
 				_img = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\attack_ca.paa";
 				_color = [1,1,1,0]; //momo
 
-				for "_i" from 10024 to 10031 do {
+				//-- BOTTOM RING: show all controls (images + buttons)
+				{
+					_x ctrlShow true;
+				} forEach (["radial_outerBottomMacros"] call FUNC(ctrlGroup));
 
-					if (_i % 2 == 0) then {
-						_color = switch (_i - 10024) do {
-							case 0 : {[0,1,0,0.5]};
-							case 2 : {[1,1,0,0.5]};
-							case 4 : {[1,0,0,0.5]};
-							case 6 : {[0.17,0.86,0.92,0.5]};
-							default {[1,1,1,0.5]};
-						};
-						(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetText _img;
-						(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetTextColor _color;
-					} else {
-						_toolTip = switch (_i - 10024) do {
-							case 1 : {"SAFE"};
-							case 3 : {"AWARE"};
-							case 5 : {"COMBAT"};
-							case 7 : {"STEALTH"};
-						};
-						(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetTooltip _toolTip;
+				//-- BOTTOM RING: set icons + colors
+				private _bottomColors = [
+					[0,1,0,0.5],
+					[1,1,0,0.5],
+					[1,0,0,0.5],
+					[0.17,0.86,0.92,0.5]
+				];
 
-					};
-					(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow true;
-				};
+				{
+					_x ctrlSetText _img;
+					_x ctrlSetTextColor (_bottomColors select _forEachIndex);
+				} forEach (["radial_outerBottomImages"] call FUNC(ctrlGroup));
+
+				//-- BOTTOM RING: set tooltips
+				private _bottomTooltips = [
+					"SAFE",
+					"AWARE",
+					"COMBAT",
+					"STEALTH"
+				];
+
+				{
+					_x ctrlSetTooltip (_bottomTooltips select _forEachIndex);
+				} forEach (["radial_outerBottomButtons"] call FUNC(ctrlGroup));
 
 				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_BOTTOM) ctrlShow true;
 				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_BOTTOM) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
@@ -2204,75 +2266,99 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					} foreach A3C_RD_UNITS;
 					player groupradio "SentCmdGetOut"; 
 				} else {
-					for "_i" from IDC_RADIAL_BG_TOP to IDC_RADIAL_BG_LEFT do { //-- outer ring backgrounds
-						(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-					};
-					for "_i" from 10008 to 10039 do {
-						((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlShow false;
-						((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
-					};
+					//-- Hide all outer ring backgrounds
+					{
+						_x ctrlShow false;
+					} forEach (["radial_outerRingBackgrounds"] call FUNC(ctrlGroup));
+
+					//-- Hide all outer ring controls (buttons + images)
+					{
+						_x ctrlShow false;
+					} forEach (["radial_outerButtonMacros"] call FUNC(ctrlGroup));
+
+					//-- Reset visual state of outer ring images (text color used as tint)
+					{
+						_x ctrlSetTextColor [1,1,1,0.6];
+					} forEach (["radial_outerImages"] call FUNC(ctrlGroup));
+
 					BV_MEDICAL = 0;
 					BV_CBMODE = 0;
 					if (BV_VEHS == 0) then {
-						((findDisplay IDD_RADIAL_MENU) displayCtrl IDC_RADIAL_BG_BOTTOM) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
-						((findDisplay IDD_RADIAL_MENU) displayCtrl IDC_RADIAL_BG_BOTTOM) ctrlShow true;
+						(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_BOTTOM) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Bottom.paa";
+						(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_BOTTOM) ctrlShow true;
 						if (_btn != -1) then {
 							BV_VEHS = 1;
 						};
-						{((findDisplay IDD_RADIAL_MENU) displayCtrl _x) ctrlShow false} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT,IDC_RADIAL_BG_LEFT];
-						{((findDisplay IDD_RADIAL_MENU) displayCtrl _x) ctrlShow false} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT,IDC_RADIAL_BG_LEFT];
+						{(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT,IDC_RADIAL_BG_LEFT];
+						{(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT,IDC_RADIAL_BG_LEFT];
 
 						private _classes = [];
-						private _classArray = ["CAR","TANK","HELICOPTER","PLANE","SHIP","STATICWEAPON"];
+						private _classArray = ["CAR", "TANK", "HELICOPTER", "PLANE", "SHIP", "STATICWEAPON"];
+
 						{
 							private _soldier = _x;
+
 							{
-								private _entities = (_soldier nearentities [_x,220]) select {
-									canMove _x && 
+								private _entities = (_soldier nearEntities [_x, 220]) select {
+									canMove _x &&
 									{
-										(side _x == civilian) OR {((side _x) getfriend (side player)) > 0.6} 
+										(side _x == civilian) || {((side _x) getFriend (side player)) > 0.6}
 									}
 								};
+
 								if (count _entities > 0) then {
 									_classes pushBackUnique _x;
 								};
-							} foreach (_classArray - _classes);
-						} foreach A3C_RD_UNITS;
+							} forEach (_classArray - _classes);
+						} forEach A3C_RD_UNITS;
+
 						private _classCount = count _classes;
-						private _btnId = 12;
-						private _classIndex = 0;
+
 						if (_classCount > 0) then {
-							(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_BOTTOM) ctrlShow true;
+							(["bgBottom"] call FUNC(ctrl)) ctrlShow true;
+
 							if (_classCount > 4) then {
-								(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlShow true;
-								(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
+								private _bgRight = ["bgRight"] call FUNC(ctrl);
+								_bgRight ctrlShow true;
+								_bgRight ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa";
 							};
-							for "_i" from 10031 to (10031 - ((_classCount - 1) * 2)) step - 2 do {
-								private _btClicker = (findDisplay IDD_RADIAL_MENU displayCtrl _i);
-								private _btnImg = (findDisplay IDD_RADIAL_MENU displayCtrl (_i - 1));
-								private _currentClass = _classes select _classIndex;
-								private _btnData = switch (_currentClass) do { //-- [_icon,_toolTip]
-									case ("CAR") : {
-										["\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\car_ca.paa","WHEELED"]
+
+							private _vehicleClassSlots = [
+								[["outerBottom4Img"] call FUNC(ctrl), ["outerBottom4Btn"] call FUNC(ctrl), 12],
+								[["outerBottom3Img"] call FUNC(ctrl), ["outerBottom3Btn"] call FUNC(ctrl), 11],
+								[["outerBottom2Img"] call FUNC(ctrl), ["outerBottom2Btn"] call FUNC(ctrl), 10],
+								[["outerBottom1Img"] call FUNC(ctrl), ["outerBottom1Btn"] call FUNC(ctrl), 9],
+								[["outerRight4Img"] call FUNC(ctrl), ["outerRight4Btn"] call FUNC(ctrl), 8],
+								[["outerRight3Img"] call FUNC(ctrl), ["outerRight3Btn"] call FUNC(ctrl), 7]
+							];
+
+							{
+								private _currentClass = _x;
+								private _slot = _vehicleClassSlots select _forEachIndex;
+								_slot params ["_btnImg", "_btnClicker", "_btnId"];
+
+								private _btnData = switch (_currentClass) do {
+									case "CAR": {
+										["\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\car_ca.paa", "WHEELED"]
 									};
-									case ("TANK") : {
-										["\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\tank_ca.paa","TRACKED"]
+									case "TANK": {
+										["\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\tank_ca.paa", "TRACKED"]
 									};
-									case ("HELICOPTER") : {
-										["\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\helicopter_ca.paa","HELICOPTERS"]
+									case "HELICOPTER": {
+										["\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\helicopter_ca.paa", "HELICOPTERS"]
 									};
-									case ("PLANE") : {
-										["\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\plane_ca.paa","JETS"]
+									case "PLANE": {
+										["\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\plane_ca.paa", "JETS"]
 									};
-									case ("SHIP") : {
-										["\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\naval_ca.paa","SHIPS"]
+									case "SHIP": {
+										["\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\naval_ca.paa", "SHIPS"]
 									};
-									case ("STATICWEAPON") : {
-										["\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\static_ca.paa","STATIC WEAPONS"]
+									case "STATICWEAPON": {
+										["\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\static_ca.paa", "STATIC WEAPONS"]
 									};
 								};
-								call compile format 
-								[
+
+								call compile format [
 									"
 										A3C_OUTER_RING_BTN_fnc_%1 =
 										[
@@ -2287,14 +2373,16 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 									A3C_RD_UNITS,
 									_currentClass
 								];
-								_btnImg ctrlSetText (_btnData select 0);
-								_btClicker ctrlSetTooltip (_btnData select 1);
-								{_x ctrlShow true} foreach [_btnImg,_btClicker];
 
-								_btnId = _btnId - 1;
-								_classIndex = _classIndex + 1;
-							};
+								_btnImg ctrlSetText (_btnData select 0);
+								_btnClicker ctrlSetTooltip (_btnData select 1);
+
+								{
+									_x ctrlShow true;
+								} forEach [_btnImg, _btnClicker];
+							} forEach (_classes select [0, count _vehicleClassSlots]);
 						};
+
 					} else {
 						BV_VEHS = 0;
 					};
@@ -2305,39 +2393,69 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 				{
 					(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false;
 				} foreach [IDC_RADIAL_BG_TOP,IDC_RADIAL_BG_RIGHT,IDC_RADIAL_BG_BOTTOM,IDC_RADIAL_BG_LEFT];
+				
+				//-- Reset outer ring action buttons
 				{
-					(findDisplay IDD_RADIAL_MENU displayCtrl (_x select 0)) ctrlSetText "";
-					(findDisplay IDD_RADIAL_MENU displayCtrl (_x select 1)) ctrlSetToolTip "";
-					{(finddisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false} foreach _x;
-				} foreach A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED;
+					_x ctrlShow false;
+				} forEach _outerButtonMacros;
+
+				{
+					_x ctrlSetText "";
+				} forEach _outerImages;
+
+				{
+					_x ctrlSetToolTip "";
+				} forEach _outerButtons;
+
 				_img = "\a3\ui_f\data\Map\Markers\Military\dot_ca.paa";
-				_color = [1,1,1,0]; //momo
+				_color = [1,1,1,0];
 
-				for "_i" from 10022 to 10031 do {
-					if (_i % 2 == 0) then {
-						_color = switch (_i - 10022) do {
-							case 0 : {[1,0,0,0.5]};
-							case 2 : {[1,1,0,0.5]};
-							case 4 : {[1,1,1,0.5]};
-							case 6 : {[0,1,0,0.5]};
-							case 8 : {[0,0,1,0.5]};
-						};
-						(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetText _img;
-						(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetTextColor _color;
-					} else {
-						_toolTip = switch (_i - 10022) do {
-							case 1 : {"RED || Fire at will, engage at will"};
-							case 3 : {"YELLOW || Fire at will"};
-							case 5 : {"WHITE || Hold fire, engage at will"};
-							case 7 : {"GREEN || Hold fire - defend only"};
-							case 9 : {"BLUE || Never fire"};
-						};
-						(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlSetTooltip _toolTip;
+				//-- RIGHT/BOTTOM RING: show ROE controls
+				private _roeMacros = [
+					["outerRight4Img"] call FUNC(ctrl),
+					["outerRight4Btn"] call FUNC(ctrl)
+				] + (["radial_outerBottomMacros"] call FUNC(ctrlGroup));
 
-					};
+				{
+					_x ctrlShow true;
+				} forEach (_roeMacros select {!isNull _x});
 
-					(finddisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow true;
-				};
+				//-- RIGHT/BOTTOM RING: set ROE icons + colors
+				private _roeImages = [
+					["outerRight4Img"] call FUNC(ctrl)
+				] + (["radial_outerBottomImages"] call FUNC(ctrlGroup));
+
+				private _roeColors = [
+					[1,0,0,0.5],
+					[1,1,0,0.5],
+					[1,1,1,0.5],
+					[0,1,0,0.5],
+					[0,0,1,0.5]
+				];
+
+				{
+					_x ctrlSetText _img;
+					_x ctrlSetTextColor (_roeColors select _forEachIndex);
+				} forEach (_roeImages select {!isNull _x});
+
+				//-- RIGHT/BOTTOM RING: set ROE tooltips
+				private _roeButtons = [
+					["outerRight4Btn"] call FUNC(ctrl)
+				] + (["radial_outerBottomButtons"] call FUNC(ctrlGroup));
+
+				private _roeTooltips = [
+					"RED || Fire at will, engage at will",
+					"YELLOW || Fire at will",
+					"WHITE || Hold fire, engage at will",
+					"GREEN || Hold fire - defend only",
+					"BLUE || Never fire"
+				];
+
+				{
+					_x ctrlSetTooltip (_roeTooltips select _forEachIndex);
+				} forEach (_roeButtons select {!isNull _x});
+
+
 				{
 					(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow false;
 				} foreach [IDC_RADIAL_BG_RIGHT,IDC_RADIAL_BG_BOTTOM];
@@ -2481,14 +2599,17 @@ A3C_UI_RADIAL_LABEL_LB = {
 	_lbText2 = "";
 	_array1 = [];
 	_array2 = [];
-	(findDisplay IDD_RADIAL_MENU displayCtrl 8053) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
-	{(findDisplay IDD_RADIAL_MENU displayCtrl _x) ctrlShow true} foreach [8053,8054];
-	for "_i" from 8057 to 8058 do {
-		(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow true;
-	};
-	for "_i" from 8059 to 8068 do {
-		(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow false;
-	};
+
+	(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_BACKGROUND) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
+	(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_BACKGROUND) ctrlShow true;
+	(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX) ctrlShow true;
+
+	
+
+
+	(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_HEADER) ctrlShow true;
+	(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_HEADER) ctrlShow true;
+
 	
 	
 
@@ -2747,8 +2868,8 @@ A3C_UI_RADIAL_LABEL_LB = {
 					private _buttonColor = [1,1,1,1];
 
 					private _fei = _foreachIndex;
-					private _btnImg  = (findDisplay IDD_RADIAL_MENU) ctrlCreate ["A3C_RscPicture", 10101 + (_fei * 2)];
-					private _btnClicker  = (findDisplay IDD_RADIAL_MENU) ctrlCreate ["A3C_RscButton_Invisible", 10101 + (_fei * 2) + 1];
+					private _btnImg  = findDisplay IDD_RADIAL_MENU ctrlCreate ["A3C_RscPicture", 10101 + (_fei * 2)];
+					private _btnClicker  = findDisplay IDD_RADIAL_MENU ctrlCreate ["A3C_RscButton_Invisible", 10101 + (_fei * 2) + 1];
 					_btnIcon = "";
 					_btnTooltip = "";
 
@@ -2877,8 +2998,8 @@ A3C_UI_RADIAL_LABEL_LB = {
 					//-- macro buttons
 					for "_i" from 0 to 1 do {
 
-						private _btnImg  = (findDisplay IDD_RADIAL_MENU) ctrlCreate ["A3C_RscPicture", 11101 + (_i * 2)];
-						private _btnClicker  = (findDisplay IDD_RADIAL_MENU) ctrlCreate ["A3C_RscButton_Invisible", 11101 + (_i * 2) + 1];
+						private _btnImg  = findDisplay IDD_RADIAL_MENU ctrlCreate ["A3C_RscPicture", 11101 + (_i * 2)];
+						private _btnClicker  = findDisplay IDD_RADIAL_MENU ctrlCreate ["A3C_RscButton_Invisible", 11101 + (_i * 2) + 1];
 
 						_btnIcon = switch (_i) do {
 							case (0) : {"\a3\ui_f\data\IGUI\Cfg\Cursors\getIn_ca.paa"};
@@ -2974,7 +3095,7 @@ A3C_UI_RADIAL_BTN_REINIT = {
 	} foreach A3C_RD_UNITS;
 
 
-	((findDisplay IDD_RADIAL_MENU) displayctrl 9009) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_rifle.paa";
+	(findDisplay IDD_RADIAL_MENU displayctrl 9009) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_rifle.paa";
 
 	[0] call A3C_GREN_DATA;
 	{
@@ -2988,7 +3109,7 @@ A3C_UI_RADIAL_BTN_REINIT = {
 	} foreach A3C_RD_UNITS;
 
 	switch (A3C_RADIALMODE) do {
-		case ("ITEMSS") : {
+		case ("ITEMS") : {
 			_w = "";
 			_t = "";
 			if (({(currentweapon _x) == (handGunWeapon _x)} count A3C_RD_UNITS) > 0) then {
@@ -2999,11 +3120,11 @@ A3C_UI_RADIAL_BTN_REINIT = {
 				_t = "Hand Gun";
 			};
 
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10028) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_pistol_switch.paa";
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10029) ctrlSetToolTip (format ["Switch to %1",_t]);
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10028) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_pistol_switch.paa";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10029) ctrlSetToolTip (format ["Switch to %1",_t]);
 
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10030) ctrlSetText "";
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10031) ctrlSetToolTip "";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10030) ctrlSetText "";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10031) ctrlSetToolTip "";
 			BV_MEDICAL = 0;
 			BV_CBMODE = 0;
 
@@ -3012,8 +3133,8 @@ A3C_UI_RADIAL_BTN_REINIT = {
 			} else {
 				"A3C_CORE\ui\pictures\icon_menu_item_IRlaser_OFF.paa"
 			};
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10026) ctrlSetText _laserImage;
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10027) ctrlSetToolTip "LMB: ENABLE IR (requires 'DANGER') , RMB: DISABLE IR";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10026) ctrlSetText _laserImage;
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10027) ctrlSetToolTip "LMB: ENABLE IR (requires 'DANGER') , RMB: DISABLE IR";
 
 			_strobeImage = if ({count (_x getvariable "A3C_STROBE") > 0} count (A3C_RD_UNITS - [player]) > 0) then {
 				"A3C_CORE\ui\pictures\icon_menu_item_IRstrobe_ON.paa"
@@ -3021,8 +3142,8 @@ A3C_UI_RADIAL_BTN_REINIT = {
 				"A3C_CORE\ui\pictures\icon_menu_item_IRstrobe_OFF.paa"
 			};
 
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10030) ctrlSetText _strobeImage;
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10031) ctrlSetToolTip "LMB: ATTACH IR-STROBES , RMB: DETACH IR-STROBES";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10030) ctrlSetText _strobeImage;
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10031) ctrlSetToolTip "LMB: ATTACH IR-STROBES , RMB: DETACH IR-STROBES";
 
 		};
 		case ("VEHS") : { //~~unused
@@ -3031,22 +3152,21 @@ A3C_UI_RADIAL_BTN_REINIT = {
 			BV_CBMODE = 0;
 
 
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10024) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\plane_ca.paa";
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10025) ctrlSetToolTip "JET";
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10026) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\helicopter_ca.paa";
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10027) ctrlSetToolTip "HELI";
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10028) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\tank_ca.paa";
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10029) ctrlSetToolTip "TRACKED";
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10030) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\car_ca.paa";
-			((findDisplay IDD_RADIAL_MENU) displayCtrl 10031) ctrlSetToolTip "WHEELED";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10024) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\plane_ca.paa";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10025) ctrlSetToolTip "JET";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10026) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\helicopter_ca.paa";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10027) ctrlSetToolTip "HELI";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10028) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\tank_ca.paa";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10029) ctrlSetToolTip "TRACKED";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10030) ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayGarage\car_ca.paa";
+			(findDisplay IDD_RADIAL_MENU displayCtrl 10031) ctrlSetToolTip "WHEELED";
 
-			for "_i"from 10024 to 10031 step 2 do {
-				((findDisplay IDD_RADIAL_MENU) displayCtrl _i) ctrlSetTextColor [1,1,1,0.6];
-			};
-
+			//-- BOTTOM RING: reset icon color
+			{
+				_x ctrlSetTextColor [1,1,1,0.6];
+			} forEach (["radial_outerBottomImages"] call FUNC(ctrlGroup));
 		};
 	};
-
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3054,7 +3174,7 @@ A3C_UI_RADIAL_BTN_REINIT = {
 
 A3C_UI_RADIAL_CloseDisplay = {
 	showHud ([true]  + (shownhud select [1,10]));
-	(findDisplay IDD_RADIAL_MENU) closeDisplay 0;
+	findDisplay IDD_RADIAL_MENU closeDisplay 0;
 };
 
 
@@ -3092,106 +3212,6 @@ A3C_UI_RADIAL_CTRLS_QUICKTOGGLE = {
 	};
 	_bool
 };
-
-
-
-A3C_UI_RADIAL_LABEL_SELECTORS = { //~~ currently unused
-	
-	systemchat'alert lbselectorradial';
-
-	private ["_mode","_limit","_text","_textCol","_backCol","_u","_unitIndex"];
-	//_mode = _this select 0;  //~~??
-	_text = "";
-	_textCol = [];
-	_backCol = [1,1,1,0.7];
-	_u = objnull;
-	_unitIndex = -1;
-	_a3c_dsp = IDD_RADIAL_MENU;
-	_sub = 8000;
-	_from = 8073;
-	_to = 8090;
-	private _unitArray = A3C_RD_UNITS; //if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {A3C_RD_UNITS} else {A3C_HC_getAllGroups_Player_Current};
-
-	private _referenceArray1 = if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {((profileNamespace getvariable "A3C_GROUPUNITS") - [player])} else {_r = A3C_HC_getAllGroups_Player_Current_ORGANIZED; A3C_HC_MENU_REFERENCE_UNITS = _r; _r};
-	private _referenceArray2 = if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {(profileNamespace getvariable "A3C_GROUPUNITS")} else {_referenceArray1};
-
-	_showHOLDCONT = if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {true} else {false};
-	for "_i" from 8097 to 9000 do {
-		(findDisplay IDD_RADIAL_MENU displayCtrl _i) ctrlShow _showHOLDCONT;
-	};
-
-	_limit = 72 + ((count _referenceArray1) - (A3C_BUTTONPAGE_TABLET * 18));
-	if (_limit > 90) then {_limit = 90};
-	for "_i" from 73 to 90  do {
-		if (_i <= _limit) then {
-			_unitIndex = ( (_i - 72) + (A3C_BUTTONPAGE_TABLET * 18) );
-			if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
-				_unitindex = _unitindex - 1;
-			};
-			_u = (_referenceArray2 select _unitIndex);
-			if ((typename _u == "OBJECT" && {isNull _u}) OR (typename _u == "GROUP" && {{!isNull _x} count units _u == 0})) then {
-				_text = 'N/A';
-				_textCol = [0,0,0,0.2];
-				_backCol = [1,0,0,0.2];
-			} else {
-				_backCol = if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {[_u] call A3C_GET_UB_COLOR} else {[A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity};
-
-				call compile format
-				[
-					"
-						if (_u in _unitArray) then {
-							_textCol = [1,1,1,1];
-							A3C_UNIT_%1_BV = 1;
-						} else {
-							_textCol = [1,1,1,0.5];
-							A3C_UNIT_%1_BV = 0;
-						};
-					",
-					_unitIndex
-				];
-				if ((typename _u == "OBJECT" && {!alive _u}) OR (typename _u == "GROUP" && {{alive _x} count units _u == 0})) then {
-					_text = 'N/A';
-					_textCol =  [0.5,0.5,0.5,0.2];
-				} else {
-					if (typename _u == "OBJECT") then {
-						_text = [_u] call MCSS_fnc_NAMESTRING;
-					} else {
-						_text = groupID _u;
-					};
-				};
-				if (typename _u == "OBJECT") then {
-					if (isPlayer _u) then {
-						_backCol = [0.86,0.47,0.56,1];
-					} else {
-
-						[_u,_i] spawn {
-							private ['_unit','_control'];
-							_unit = _this select 0;
-							_control = _this select 1;
-							_unit setvariable ['A3C_Unt_Btn',_control,true];
-						};
-					};
-				};
-			};
-			(findDisplay _a3c_dsp displayCtrl (_sub + _i)) ctrlShow true;
-			(findDisplay _a3c_dsp displayCtrl (_sub + _i)) ctrlsettext _text;
-			(findDisplay _a3c_dsp displayCtrl (_sub + _i)) ctrlSetTextColor _textCol;
-			(findDisplay _a3c_dsp displayCtrl (_sub + _i)) ctrlSetBackgroundColor _backCol;
-		} else {
-			//-- no unit for button
-			(findDisplay _a3c_dsp displayCtrl (_sub + _i)) ctrlShow false;
-		};
-	};
-	if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
-		if (count A3C_RD_UNITS > 0 ) then {
-			if (ctrlShown (findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_TOP)) then {
-				["ROE",0] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
-			};
-		};
-	};
-
-};
-
 
 
 

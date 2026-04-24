@@ -442,8 +442,8 @@ A3C_fnc_toggle_WeaponAttachMent = {
 		case ("FLASHLIGHT") : {A3C_Prevent_attach_Flashlight = true};
 	};
 	_refGroups = [];
-	_targetArray = if (!isNull findDisplay 100040) then {A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED} else {A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS};
-	[_targetArray] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+	
+	[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 	[_totalSleep,_type,_mode] spawn {
 		params ["_totalSleep","_type","_mode"];
 		sleep _totalSleep;
@@ -459,8 +459,7 @@ A3C_fnc_toggle_WeaponAttachMent = {
 			};
 		};
 		sleep 1;
-		_targetArray = if (!isNull findDisplay 100040) then {A3C_UI_RADIAL_BTN_DATA_OUTER_RING_MIXED} else {A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS};
-		[_targetArray] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+		[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 	};
 };
 
@@ -2028,14 +2027,6 @@ MCSS_fnc_RevealCursorPos = {
 
 
 
-A3C_BTN_COLOR_RESET = { //-- currently unused
-	//if (!(isnull (findDisplay 100020)) OR !(isnull (findDisplay 100030))) then {
-		//[A3C_MAP_CommandMode] call A3C_UI_MAP_labelSelectors;
-	//};
-	if !(isnull (findDisplay 100040)) then {
-		[] call A3C_UI_RADIAL_LABEL_SELECTORS;
-	};
-};
 
 
 A3C_UNIT_HOLD = {
@@ -2061,7 +2052,6 @@ A3C_UNIT_HOLD = {
 	} foreach _units;
 	[_coverUnits,1] spawn A3C_AI_Squad_action_FindCoverExecute;
 	player groupchat  _unitNames + " HOLD";
-	//[] call A3C_BTN_COLOR_RESET; //~~ STILL USED?
 	[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 };
 
@@ -2078,7 +2068,6 @@ A3C_UNIT_CONTINUE = {
 		_unitNames = _unitNames + ([_x,1] call MCSS_fnc_NAMESTRING)
 	} foreach _units;
 	player groupchat  _unitNames + " MOVE";
-	//[] call A3C_BTN_COLOR_RESET; //~~ STILL USED?
 	[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 };
 
@@ -2420,36 +2409,15 @@ A3C_LB_Change = {
 
 			if (_isTablet) then {
 				{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
-				//if (A3C_MAP_CommandMode != "HC") then {
-					
-				//};
-				
-				//for "_i" from 7025 to 7040 do {
-				//	if (ctrlShown (findDisplay _a3c_dsp displayCtrl _i)) then {
-				//		if ( ((profileNamespace getvariable "A3C_GROUPUNITS") select ( (_i - 7024) + (A3C_BUTTONPAGE_TABLET * 16) )) in _units) then {
-				//			(findDisplay _a3c_dsp displayCtrl _i) ctrlSetBackgroundColor _backCol;
-				//		};
-				//	};
-				//};
 			} else {
 				(findDisplay 100040 displayCtrl 8095) ctrlShow false;
-				//for "_i" from 8073 to 8090 do {
-				//	if (ctrlShown (findDisplay 100040 displayCtrl _i)) then {
-				//		if ( ((profileNamespace getvariable "A3C_GROUPUNITS") select ( (_i - 8072) + (A3C_BUTTONPAGE_TABLET * 18) )) in _units) then {
-				//			(findDisplay 100040 displayCtrl _i) ctrlSetBackgroundColor _backCol;
-				//		};
-				//	};
-				//};
+
 			};
 			[_a3c_dsp,A3C_MAP_CommandMode] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
 			[] spawn {
 				sleep 0.1;
 				[0] call A3C_UI_MAP_RESIZE_TEAMCOLORS_Y;
 			};
-			
-			
-
-			//[] call A3C_BTN_COLOR_RESET;
 		};
 		case (4) : {
 			_gp = [A3C_HC_getAllGroups_Player_Current select (_btn - 1)];

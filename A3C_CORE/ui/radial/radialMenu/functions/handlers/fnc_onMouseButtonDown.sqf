@@ -18,10 +18,9 @@ if (count _ins > 0) then {
     _clickedVehicle = (_ins select 0) select 2;
 };
 
-if ({ 
-    _ctrl = findDisplay 100040 displayCtrl _x;
-    ctrlShown _ctrl && {[[_sX, _sY], _ctrl] call MCSS_fnc_isClickPosInCTRLArea}
-} count A3C_RADIAL_GAMEUI_AllButtonAreas > 0) exitWith {};
+if ({
+    ctrlShown _x && {[[_sX, _sY], _x] call MCSS_fnc_isClickPosInCTRLArea}
+} count (["radial_clickBlockAreas"] call FUNC(ctrlGroup)) > 0) exitWith {};
 
 private _unitDetected = false;
 

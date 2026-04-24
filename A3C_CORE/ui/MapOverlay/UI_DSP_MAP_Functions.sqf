@@ -2009,15 +2009,8 @@ A3C_SWITCHPAGE_TABLET = {
 	if (_switchPages) then {
 		if (_a3c_dsp == 100040) then {
 			if !(isnull (findDisplay 100040)) then {
-				//[] call A3C_UI_RADIAL_LABEL_SELECTORS;
-			};
-		} else {
-			if !(isnull (findDisplay _a3c_dsp)) then {
-				//[A3C_MAP_CommandMode] call A3C_UI_MAP_labelSelectors;
 			};
 		};
-
-
 	};
 };
 

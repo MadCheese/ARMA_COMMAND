@@ -1,12 +1,130 @@
 #define IDD_RADIAL_MENU 100040
 
 //-- CONTROLS
-#define IDC_RADIAL_BG_CORE               100
 
-#define IDC_RADIAL_BG_TOP                101
-#define IDC_RADIAL_BG_RIGHT              102
-#define IDC_RADIAL_BG_BOTTOM             103
-#define RADIAL_BG_LEFT                   104
+//-- BACKGROUNDS (CORE AND RINGS)
+#define IDC_RADIAL_BG_CORE                            100
+
+#define IDC_RADIAL_BG_TOP                             101
+#define IDC_RADIAL_BG_RIGHT                           102
+#define IDC_RADIAL_BG_BOTTOM                          103
+#define IDC_RADIAL_BG_LEFT                            104
+
+//-- CORE BUTTON
+#define IDC_RADIAL_CORE_REFRESHDATA_IMG               105    
+#define IDC_RADIAL_CORE_REFRESHDATA_BTN               106 
+
+//-- INNER RING BUTTONS
+#define IDC_RADIAL_INNERRING_ACTIONS_IMG              107
+#define IDC_RADIAL_INNERRING_ACTIONS_BTN              108
+#define IDC_RADIAL_INNERRING_ROE_IMG                  109
+#define IDC_RADIAL_INNERRING_ROE_BTN                  110
+#define IDC_RADIAL_INNERRING_AUTO_IMG                 111
+#define IDC_RADIAL_INNERRING_AUTO_BTN                 112
+#define IDC_RADIAL_INNERRING_STANCES_IMG              113
+#define IDC_RADIAL_INNERRING_STANCES_BTN              114
+#define IDC_RADIAL_INNERRING_ITEMS_IMG                115
+#define IDC_RADIAL_INNERRING_ITEMS_BTN                116
+#define IDC_RADIAL_INNERRING_VEHICLES_IMG             117
+#define IDC_RADIAL_INNERRING_VEHICLES_BTN             118
+#define IDC_RADIAL_INNERRING_FORMATION_IMG            119
+#define IDC_RADIAL_INNERRING_FORMATION_BTN            120
+#define IDC_RADIAL_INNERRING_GRENADES_IMG             121
+#define IDC_RADIAL_INNERRING_GRENADES_BTN             122
+
+
+//-- OUTER RING BUTTONS
+
+//-- TOP BUTTONS
+#define IDC_RADIAL_OUTERTOP_1_IMG                     123
+#define IDC_RADIAL_OUTERTOP_1_BTN                     124
+#define IDC_RADIAL_OUTERTOP_2_IMG                     125
+#define IDC_RADIAL_OUTERTOP_2_BTN                     126
+#define IDC_RADIAL_OUTERTOP_3_IMG                     127
+#define IDC_RADIAL_OUTERTOP_3_BTN                     128
+#define IDC_RADIAL_OUTERTOP_4_IMG                     129
+#define IDC_RADIAL_OUTERTOP_4_BTN                     130
+#define IDC_RADIAL_OUTERRIGHT_1_IMG                   131
+#define IDC_RADIAL_OUTERRIGHT_1_BTN                   132
+#define IDC_RADIAL_OUTERRIGHT_2_IMG                   133
+#define IDC_RADIAL_OUTERRIGHT_2_BTN                   134
+#define IDC_RADIAL_OUTERRIGHT_3_IMG                   135
+#define IDC_RADIAL_OUTERRIGHT_3_BTN                   136
+#define IDC_RADIAL_OUTERRIGHT_4_IMG                   137
+#define IDC_RADIAL_OUTERRIGHT_4_BTN                   138
+#define IDC_RADIAL_OUTERBOTTOM_1_IMG                  139
+#define IDC_RADIAL_OUTERBOTTOM_1_BTN                  140
+#define IDC_RADIAL_OUTERBOTTOM_2_IMG                  141
+#define IDC_RADIAL_OUTERBOTTOM_2_BTN                  142
+#define IDC_RADIAL_OUTERBOTTOM_3_IMG                  143
+#define IDC_RADIAL_OUTERBOTTOM_3_BTN                  144
+#define IDC_RADIAL_OUTERBOTTOM_4_IMG                  145
+#define IDC_RADIAL_OUTERBOTTOM_4_BTN                  146
+#define IDC_RADIAL_OUTERLEFT_1_IMG                    147
+#define IDC_RADIAL_OUTERLEFT_1_BTN                    148
+#define IDC_RADIAL_OUTERLEFT_2_IMG                    149
+#define IDC_RADIAL_OUTERLEFT_2_BTN                    150
+#define IDC_RADIAL_OUTERLEFT_3_IMG                    151
+#define IDC_RADIAL_OUTERLEFT_3_BTN                    152
+#define IDC_RADIAL_OUTERLEFT_4_IMG                    153
+#define IDC_RADIAL_OUTERLEFT_4_BTN                    154
+
+//-- EXTENSION RIGHT
+#define IDC_RADIAL_EXTENSIONRIGHT_BACKGROUND          155
+#define IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_HEADER    156
+#define IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX       157
+#define IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_HEADER     158
+#define IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_BOX        159
+#define IDC_RADIAL_EXTENSIONRIGHT_GO_BTN              160
+
+//-- DASHBOARD
+#define IDC_RADIAL_DASHBOARD_PARENT                   161
+#define IDC_RADIAL_DASHBOARD_BG                       162
+#define IDC_RADIAL_DASHBOARD_GROUPNAME                163
+#define IDC_RADIAL_DASHBOARD_GROUPICON                164
+#define IDC_RADIAL_DASHBOARD_TXT_UNITSIZE             165
+#define IDC_RADIAL_DASHBOARD_TXT_LOCATION             166
+#define IDC_RADIAL_DASHBOARD_TXT_TASK                 167 
+#define IDC_RADIAL_DASHBOARD_PGBARS_BG                168
+#define IDC_RADIAL_DASHBOARD_PG_HEALTH_TXT            169
+#define IDC_RADIAL_DASHBOARD_PG_HEALTH_BAR            170
+#define IDC_RADIAL_DASHBOARD_PG_ROSTER_TXT            171
+#define IDC_RADIAL_DASHBOARD_PG_ROSTER_STRUCTURED     172
+
+//-- EXTENSION LEFT
+#define IDC_RADIAL_EXTENSIONLEFT_REVEALER             173
+#define IDC_RADIAL_EXTENSIONLEFT_HIDER                174
+#define IDC_RADIAL_EXTENSIONLEFT_BG                   175
+#define IDC_RADIAL_EXTENSIONLEFT_CTRLSGROUP           176
+#define IDC_RADIAL_EXTENSIONLEFT_HOLD_IMG             177
+#define IDC_RADIAL_EXTENSIONLEFT_HOLD_BTN             178
+#define IDC_RADIAL_EXTENSIONLEFT_CONTINUE_IMG         179
+#define IDC_RADIAL_EXTENSIONLEFT_CONTINUE_BTN         180
+#define IDC_RADIAL_EXTENSIONLEFT_TEAMCOLOR_BG         181
+#define IDC_RADIAL_EXTENSIONLEFT_TEAMCOLOR_FRAME      182
+#define IDC_RADIAL_EXTENSIONLEFT_TREE                 183
+#define IDC_RADIAL_EXTENSIONLEFT_TCBOX_RED_IMG        184
+#define IDC_RADIAL_EXTENSIONLEFT_TCBOX_RED_BTN        185
+#define IDC_RADIAL_EXTENSIONLEFT_TCBOX_GREEN_IMG      186
+#define IDC_RADIAL_EXTENSIONLEFT_TCBOX_GREEN_BTN      187
+#define IDC_RADIAL_EXTENSIONLEFT_TCBOX_BLUE_IMG       188
+#define IDC_RADIAL_EXTENSIONLEFT_TCBOX_BLUE_BTN       189
+#define IDC_RADIAL_EXTENSIONLEFT_TCBOX_YELLOW_IMG     190
+#define IDC_RADIAL_EXTENSIONLEFT_TCBOX_YELLOW_BTN     191
+#define IDC_RADIAL_EXTENSIONLEFT_TCBOX_WHITE_IMG      192
+#define IDC_RADIAL_EXTENSIONLEFT_TCBOX_WHITE_BTN      193
+#define IDC_RADIAL_EXTENSIONLEFT_TCBOX_PURPLE_IMG     194
+#define IDC_RADIAL_EXTENSIONLEFT_TCBOX_PURPLE_BTN     195
+#define IDC_RADIAL_EXTENSIONLEFT_TC_BOX               196
+
+
+
+   
+
+
+
+
+
 
 
 
