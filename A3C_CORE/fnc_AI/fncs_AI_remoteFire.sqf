@@ -279,7 +279,7 @@ A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH = {
 		} foreach _shooters;
 		sleep 2;
 		waituntil {{_x getVariable ['A3C_unit_is_Remote_Firing',false] && {alive _x}} count _shooters == 0};
-		if (!isNull findDisplay IDD_RADIAL_MENU && {(ctrlShown (findDisplay IDC_RADIAL_BG_LEFT displayctrl IDC_RADIAL_BG_TOP)) && {A3C_RADIALMODE in ['ACT','HC ACTIONS']}}) then {
+		if (!isNull findDisplay IDD_RADIAL_MENU && {(ctrlShown (findDisplay IDD_RADIAL_MENU displayctrl IDC_RADIAL_BG_TOP)) && {A3C_RADIALMODE in ['ACT','HC ACTIONS']}}) then {
 			[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 		};
 	};

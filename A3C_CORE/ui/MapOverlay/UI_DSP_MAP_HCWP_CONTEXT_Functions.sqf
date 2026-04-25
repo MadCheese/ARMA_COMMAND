@@ -1655,7 +1655,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 		} foreach units _group;
 	};
 
-	[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
+	[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 	A3C_HC_ACTIVE_WPOS = [0,0,0];
 
 	if (A3C_HC_EDIT_ACTION == "TRANSPORT UNLOAD") then {

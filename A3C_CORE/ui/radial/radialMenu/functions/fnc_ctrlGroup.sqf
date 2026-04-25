@@ -17,8 +17,11 @@ switch (_name) do {
             ["bgTop"] call FUNC(ctrl),
             ["bgRight"] call FUNC(ctrl),
             ["bgBottom"] call FUNC(ctrl),
-            ["bgLeft"] call FUNC(ctrl)
-            // add more (8053,8072)
+            ["bgLeft"] call FUNC(ctrl),
+
+            // extensions
+            ["extensionLeftBg"] call FUNC(ctrl),
+            ["extensionRightBackground"] call FUNC(ctrl)
         ] select {!isNull _x}
     };
 
@@ -311,6 +314,33 @@ switch (_name) do {
             ["extensionRightLbSubselHeader"] call FUNC(ctrl),
             ["extensionRightLbSubselBox"] call FUNC(ctrl),
             ["extensionRightGoBtn"] call FUNC(ctrl)
+        ] select {!isNull _x}
+    };
+
+    case "radial_extensionRightListboxes": {
+        [
+            ["extensionRightLbSourcesBox"] call FUNC(ctrl),
+            ["extensionRightLbSubselBox"] call FUNC(ctrl)
+        ] select {!isNull _x}
+    };
+
+    case "radial_extensionLeft": {
+        [
+            ["extensionLeftCtrlsGroup"] call FUNC(ctrl),
+            ["extensionLeftBg"] call FUNC(ctrl),
+            ["extensionLeftHoldImg"] call FUNC(ctrl),
+            ["extensionLeftHoldBtn"] call FUNC(ctrl),
+            ["extensionLeftContinueImg"] call FUNC(ctrl),
+            ["extensionLeftContinueBtn"] call FUNC(ctrl)
+        ] select {!isNull _x}
+    };
+
+    case "radial_holdContinueMacros": {
+        [
+            ["extensionLeft_hold_img"] call FUNC(ctrl),
+            ["extensionLeft_hold_btn"] call FUNC(ctrl),
+            ["extensionLeft_continue_img"] call FUNC(ctrl),
+            ["extensionLeft_continue_btn"] call FUNC(ctrl)
         ] select {!isNull _x}
     };
 

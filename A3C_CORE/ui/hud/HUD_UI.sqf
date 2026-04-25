@@ -790,7 +790,7 @@ A3C_ObjectSelector_LB_Change = {
 							A3C_HC_ACTIVE_FORM_POST
 						];
 						_wp setWaypointScript _wpScript;
-						[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
+						[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 					} else {
 
 						
@@ -1554,7 +1554,7 @@ A3C_RADIAL_ACTION_HC_LANDING_FNC = {
 					];
 					A3C_GOCODES_HC pushbackUnique _subCondition;
 					publicVariable 'A3C_GOCODES_HC';
-					[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
+					[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 
 				};
 				case ("TRANSPORT UNLOAD") : {

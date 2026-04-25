@@ -78,7 +78,7 @@
 #define IDC_RADIAL_EXTENSIONRIGHT_GO_BTN              160
 
 //-- DASHBOARD
-#define IDC_RADIAL_DASHBOARD_PARENT                   161
+#define IDC_RADIAL_DASHBOARD_PARENT                   303030 // We use a unified numeric idc because map uses it too. 161
 #define IDC_RADIAL_DASHBOARD_BG                       162
 #define IDC_RADIAL_DASHBOARD_GROUPNAME                163
 #define IDC_RADIAL_DASHBOARD_GROUPICON                164

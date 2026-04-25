@@ -441,7 +441,7 @@ A3C_HC_INSERT_ACTION_WP = {
 	if (_condition select 0 == "GoCode") then {
 		A3C_GOCODES_HC pushbackUnique (_condition select 1);
 		publicVariable 'A3C_GOCODES_HC'; 
-		[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
+		[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 		_insCondition = format ["A3C_GoCode_Activate_%1",(_condition select 1)];
 	} else {
 		if (_condition select 0 == "NONE") then {
@@ -1567,7 +1567,7 @@ A3C_HC_REMOVE_WP_RC = {
 	};
 
 	//-- refresh gocodes, since deleted waypoint may have been the only one with gocode attached 
-	[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];	
+	[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];	
 };
 
 

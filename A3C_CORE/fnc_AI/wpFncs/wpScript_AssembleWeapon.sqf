@@ -104,5 +104,5 @@ waitUntil {[] call _exitCondition};
 _group setVariable ["A3C_ASSEMBLING",nil,true];
 
 //-- SCRIPT END
-[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0]; //-- check gocodes and assign color
+[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0]; //-- check gocodes and assign color
 true

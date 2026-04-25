@@ -140,9 +140,10 @@ class A3C_DSP_RadialMenu
 		};
 		class RADIAL_INNERRING_ACTIONS_BTN: A3C_RscButton_Invisible
 		{
+			idc = IDC_RADIAL_INNERRING_ACTIONS_BTN; //9002;
 			onMouseEnter = "['ACTIONS'] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
 			onMouseButtonDown = "['ACTIONS',(_this select 1)] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
-			idc = IDC_RADIAL_INNERRING_ACTIONS_BTN; //9002;
+			
 			x = 15.48 * GUI_GRID_W + GUI_GRID_X;
 			y = 7.11 * GUI_GRID_H + GUI_GRID_Y;
 			w = 4 * GUI_GRID_W;

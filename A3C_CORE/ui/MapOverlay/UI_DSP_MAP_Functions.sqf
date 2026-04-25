@@ -918,7 +918,7 @@ A3C_GoCode_Switch = {
 		_x setvariable [A3C_CHECKVAR,_data,true];
 	} foreach A3C_GCUNITS;
 
-	[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
+	[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 	missionNamespace setVariable ["#markerSize_" + A3C_MARKERTOSWITCH, _mSize];
 
 };
@@ -3998,7 +3998,7 @@ A3C_UNDO = {
 		(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow false;
 		(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor [1,1,1,0.2];
 	};
-	[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
+	[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 };
 
 //-- REVERT AND DELETE ALL DATA CREATED DURING THE PLANNING STAGE
@@ -4342,7 +4342,7 @@ A3C_SET_ORDER_WIP = {
 		};
 		[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
 	} else {
-		[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
+		[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 	};
 
 };

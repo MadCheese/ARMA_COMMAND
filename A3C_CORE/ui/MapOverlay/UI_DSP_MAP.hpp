@@ -680,7 +680,7 @@ class A3C_DSP_MapOverlay
 			tooltip = "disband selected units to reserve";
 		};
 
-		class A3C_COMBO_ENEMYTARGET: A3C_RscCombo
+		class A3C_COMBO_ENEMYTARGET: A3C_RscCombo //-- name is misleading as control is used in multiple places
 		{
 			idc = 7078;
 			onLBSelChanged = " [A3C_LB_MODE,(_this select 1),100020] call A3C_LB_Change";

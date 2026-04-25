@@ -214,7 +214,7 @@ lbClear (findDisplay _display displayCtrl 8004);
 {inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];
 
 
-[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
+[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 
 {_x setvariable ["A3C_SYNC_PARTNERS",[],true]} foreach units group player;
 

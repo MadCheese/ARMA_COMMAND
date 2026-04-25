@@ -2184,7 +2184,7 @@ A3C_AI_Shared_executeUnitPlot = {
 			};
 			((_data select _cycle) select 2) set [1,"NONE"];
 			_unit setvariable ["A3C_PLOT",_switchdata,true];
-			[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
+			[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 		};
 
 		_vehicle = vehicle _unit; //-- refresh
@@ -2199,7 +2199,7 @@ A3C_AI_Shared_executeUnitPlot = {
 		//	};
 		//	((_data select _cycle) select 2) set [1,"NONE"];
 		//	_unit setvariable ["A3C_PLOT",_switchdata,true];
-		//	[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
+		//	[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 		//};
 
 

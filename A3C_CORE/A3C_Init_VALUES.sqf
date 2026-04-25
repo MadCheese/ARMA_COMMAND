@@ -591,9 +591,7 @@ GREEN_LINES = [];
 BLUE_LINES = [];
 
 
-
-
-
+A3C_GOCODES_HC = [];
 
 
 

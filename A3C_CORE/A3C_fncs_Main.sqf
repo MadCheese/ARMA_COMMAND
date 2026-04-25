@@ -267,7 +267,6 @@ A3C_fnc_generateWpWedgePositions = {
 	private _doWedge = true;
 	if (isOnRoad _pos) then {
 		_doWedge = false;
-		//_refArray1 = if (!isNull findDisplay 100040) then {A3C_RD_UNITS} else {A3C_SELECTED_UNITS};
 		if (count _refArray1 > 0) then {
 			_usedRoads = [];
 			_refArray1 = [_refArray1,[],{(vehicle leader _x) distance _pos},"ASCEND"] call BIS_fnc_sortBy;
@@ -2077,179 +2076,27 @@ A3C_UNIT_CONTINUE = {
 
 
 
-A3C_GOCODES_HC = [];
-
-A3C_TOGGLE_GOCODE_CTRLS = {
-	//-- Enables goCode UI buttons for clients
-	if (isDedicated) exitWith {};
-
-	
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
-	if (isnull (findDisplay _a3c_dsp)) exitWith {};
-
-	private _rootPos = if (isnull (findDisplay _a3c_dsp)) then {[]} else {//-- only for tablet
-		[
-			A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_X,
-			A3C_MAP_GAMEUI_MENU_Y,
-			A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_W,
-			A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_H
-		]
-	};
-	private _findGoCode = {
-		params ["_mode"];
-		private _cond1 = false;
-		{
-			private ["_u"];
-			_u = _x;
-			{
-				private ["_var"];
-				_var = _x;
-
-				{
-					if ((_x select 3) isEqualto ["GOCODE",_mode]) then {
-						if (_var == "A3C_PLOT") then {
-							if ( ((_u getvariable "A3C_CURRENTWAYPOINT_INDEX") - 1 ) <= _forEachIndex) then {
-								_cond1 = true;
-							};
-						} else {
-							_cond1 = true;
-						};
-					};
-				} foreach (_u getvariable [_var,[]]);
-			} foreach ["A3C_PLOT","A3C_PLOT_TEMP"];
-		} foreach (profileNamespace getvariable "A3C_GROUPUNITS");
-
-		private _cond2 = false;
-		{
-			_gp = _x;
-			private _wpts = (waypoints _gp);
-
-			{
-				if ((_x select 1) < currentWaypoint _gp) then {
-					_wpts = _wpts - [_x];
-				};
-			} foreach _wpts;
 
 
-			{
-				private _wpCond = "";
-				private _actionScript = "";
 
-				if (waypointType _x == "SCRIPTED") then {
-					_wpCond = waypointScript _x;
-					_actionScript = "";
-				} else {
-					_wpCond = (waypointStatements _x) select 0;
-					_actionScript = (waypointStatements _x) select 1;
-				};
-
-			
-				//-- check if "GoCode" and "X" are in condition or actionscript
-				{
-					private _checkString = _x;
-					if (["GoCode",_checkString] call BIS_fnc_inString) then {
-						//if ([str _mode,_checkString] call BIS_fnc_inString) then {
-						if ({[_x,_checkString] call BIS_fnc_inString} count [format ["Activate_%1",_mode],str _mode] > 0) then {
-							_cond2 = true;
-						};
-					};
-				} foreach [_wpCond,_actionScript];
-			} foreach _wpts;
-		} foreach A3C_HC_getAllGroups_Player_Current;
-		[_cond1,_cond2]
-	};
-
-	private _ctrls = [];
-	private _buttonsPlaced = 0; //-- only for tablet
-	{
-		private _mode = _x;
-		private _btnPos = +(_rootPos);
-
-			
-	
-
-		
-		([_mode] call _findGoCode) params ["_cond1","_cond2"];
-		
-		if (_a3c_dsp == 100040) then {
-			private _ctrl = switch (_mode) do {
-				case ("A") : {10016};
-				case ("B") : {10018};
-				case ("C") : {10020};
-				case ("D") : {10022};
-			};
-			if (_cond1 OR _cond2) then {
-				//((findDisplay 100040) displayctrl 9007) ctrlSetTextColor [0.8,0.6,0,0.6];
-				((findDisplay 100040) displayctrl _ctrl) ctrlSetTextColor [0.8,0.6,0,0.6];
-			} else {
-				//((findDisplay 100040) displayctrl 9007) ctrlSetTextColor [1,1,1,0.2];
-				((findDisplay 100040) displayctrl _ctrl) ctrlSetTextColor [1,1,1,0.2];
-			};
-
-		} else {
-			(findDisplay 12 displayCtrl 51) ctrlEnable true;
-			private _ctrls = switch (_mode) do {
-				case ("A") : {[709100,709101]};
-				case ("B") : {[709102,709103]};
-				case ("C") : {[709104,709105]};
-				case ("D") : {[709106,709107]};
-			};
-			if (_cond1 OR _cond2) then {
-				if !(isnull (findDisplay _a3c_dsp)) then {
-					_btnPos set [0, A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_X - (A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_W * _buttonsPlaced)];
-					{
-						_btnItem = findDisplay _a3c_dsp displayCtrl _x;
-						_btnItem ctrlSetPosition _btnPos;
-						_btnItem ctrlCommit 0;
-						_btnItem ctrlShow true;
-					} foreach _ctrls;
-					_buttonsPlaced = _buttonsPlaced + 1;
-				} else {
-					{((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [0.8,0.6,0,0.6]} foreach _ctrls;
-				}
-			} else {
-				if !(isnull (findDisplay _a3c_dsp)) then {
-					_btnPos set [1,safeZoneY -A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_H];
-					{
-						_btnItem = findDisplay _a3c_dsp displayCtrl _x;
-						_btnItem ctrlShow false;
-						_btnItem ctrlSetPosition _btnPos;
-						_btnItem ctrlCommit 0;
-					} foreach _ctrls;
-				} else {
-					{((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [1,1,1,0.2]} foreach _ctrls;
-				};
-			};
-			if ( !isnull (findDisplay _a3c_dsp)) then {
-				private _bgControl = (findDisplay _a3c_dsp) displayCtrl 709099;
-				if (_buttonsPlaced > 0) then {		
-					private _bgWidth = A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_W * _buttonsPlaced;
-					private _bgPos = 
-					[
-						A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_X - (_bgWidth - A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_W),
-						A3C_MAP_GAMEUI_MENU_Y,
-						_bgWidth,
-						A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_H
-					];
-					_bgControl ctrlSetPosition _bgPos;
-					_bgControl ctrlCommit 0;
-					_bgControl ctrlShow true; // -- default
-				} else {
-					_bgControl ctrlShow false;
-				};	
-			};
-		};
-	} foreach ["D","C","B","A"]; //-- reverse so that they rear ABCD from left to right
-};
 
 
 
 A3C_LB_TICKTIME = time;
 
 A3C_LB_Change = {
-
+	// systemchat "A3C_LB_Change";
 	if (A3C_CurSel) exitWith {};
-	// player sidechat format ["LB CHANGE, A3C_CurSel: %1, %2", A3C_CurSel, _this];
+
+	/*
+		Currently a shared function between map and Radial.
+		Radial uses it for Right Extension- and teamcolor-listboxes
+		Map uses it for target assignment, Teamcolor assignment and the Squad waypoint context menu
+		ToDo: Split them up For radial and Map :)
+
+	*/
+
+
 
 	//~~ #TODO: rearrange to have logical order
 	//-- modes:
@@ -3182,9 +3029,9 @@ A3C_ACTIVATEGOCODE = {
 	
 	[] spawn {
 		sleep 0.5;
-		[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
+		[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 		sleep 2;
-		[] remoteExec ["A3C_TOGGLE_GOCODE_CTRLS",0];
+		[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 	};
 };
 
