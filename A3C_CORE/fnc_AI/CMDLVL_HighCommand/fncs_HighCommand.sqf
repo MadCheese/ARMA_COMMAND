@@ -1359,7 +1359,7 @@ A3C_AI_HighCommand_ActionDistribute_boardGroupsToVehicle = {
 
 	//-- Boarding HC-units via map-ui pt 1
 	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
-	(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
+	(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 	if (_button == 0) then {
 		A3C_UI_MAPICONS_HC_VICS = [] call A3C_fnc_getBoardableVehicles;
 		if (_a3c_dsp == 100040) then {

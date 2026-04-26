@@ -1,6 +1,6 @@
-A3C_WeaponHolderClasses = ["WeaponHolderSimulated", "GroundWeaponHolder"];
-A3C_LBR_1 = "MEDICAL";
-A3C_ReArm_Options = [];
+#include "..\ui\radial\radialMenu\dialog_defines.hpp"
+
+
 
 
 

@@ -1,4 +1,5 @@
 #include "..\..\ui\SHARED\shared_ui_defines.hpp"
+#include "..\..\ui\radial\radialMenu\dialog_defines.hpp"
 
 
 
@@ -15,7 +16,7 @@ A3C_AI_HighCommand_Action_joinPlayerGroup = {
 	private _isRadial = _a3c_dsp == 100040;
 	//-- UI-Reaction
 	if !(_isRadial) then {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	} else {
 		//-- no actual action - just close menu
@@ -26,7 +27,7 @@ A3C_AI_HighCommand_Action_joinPlayerGroup = {
 };
 
 A3C_AI_HighCommand_Action_mergeGroups = {
-	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 	// (findDisplay 12 displayCtrl 51) ctrlEnable true;
 	A3C_isMergeGroupActive = true;
 	hint "Click on the group to join";
@@ -46,7 +47,7 @@ A3C_AI_HighCommand_Action_heliHoverInPlace = {
 	if (_var select 0) then {
 		//-- cancel action
 		if !(_isRadial) then {
-			{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+			{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 			(findDisplay 12 displayCtrl 51) ctrlEnable true;
 		};
 		{
@@ -77,7 +78,7 @@ A3C_AI_HighCommand_Action_RefreshGroup = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 
@@ -181,7 +182,7 @@ A3C_AI_HighCommand_Action_VehicleRemote = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 	
@@ -197,7 +198,7 @@ A3C_AI_HighCommand_Action_ConvoyHalt = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 	};
 
 	hint format ["%1 convoy(s) have been ordered to halt!", count A3C_GROUP_CONVOYS];
@@ -252,7 +253,7 @@ A3C_AI_HighCommand_Action_DeleteGroups = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 	};
 
 	if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
@@ -267,7 +268,7 @@ A3C_AI_HighCommand_Action_DeleteGroups = {
 	} else {
 		// if (visibleMap) then {
 			(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
-			(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
+			(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 		// } else {
 		// 	with uiNamespace do {
 		// 		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
@@ -287,7 +288,7 @@ A3C_AI_HighCommand_Action_convoyCreate = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 	//-- create convoy group
@@ -303,7 +304,7 @@ A3C_AI_HighCommand_Action_convoyRejoin = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 	//-- rejoin convoy
@@ -350,7 +351,7 @@ A3C_AI_HighCommand_Action_limitSpeed = {
 		} foreach ["FULL PACE","JOGGING PACE","COMBAT PACE","WALKING PACE"];			
 			
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 		private _parent = findDisplay _a3c_dsp displayCtrl 8008;
 		private _listBox = findDisplay _a3c_dsp displayCtrl 800803;
@@ -387,7 +388,7 @@ A3C_AI_HighCommand_Action_reBoardGroupToVehicle = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 	[A3C_SELECTED_HC_GROUPS_SETTINGS] spawn A3C_AI_HIGHCOMMAND_fnc_reboardGroupToVehicle;
@@ -402,7 +403,7 @@ A3C_AI_HighCommand_Action_chargeMavic = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 	if (isClass (configFile >> "CfgVehicles" >> "mavic_3_BLU")) then {
@@ -454,7 +455,7 @@ A3C_AI_HighCommand_Action_flyInHeight = {
 	private _text = findDisplay _a3c_dsp displayCtrl 800802;
 	private _listBox = findDisplay _a3c_dsp displayCtrl 800803;
 
-	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	A3C_OBJECTSELECTOR_MODE = "flyInHeight"; //-- !! CHECK IF STILL NEEDED!
 	lbClear _listBox;
@@ -499,7 +500,7 @@ A3C_AI_HighCommand_Action_reArm = {
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
-		(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 	};
 };
 
@@ -511,7 +512,7 @@ A3C_AI_HighCommand_Action_groupHeal = {
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
-		(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 	};
 	[A3C_SELECTED_HC_GROUPS_SETTINGS select 0] call A3C_AI_HIGHCOMMAND_fnc_groupHeal;
 };
@@ -540,7 +541,7 @@ A3C_AI_HighCommand_Action_transferOwnership = {
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
 		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
-		(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 	};
 };
 
@@ -576,7 +577,7 @@ A3C_AI_HighCommand_Action_unAssembleWeapon = { // #TODO This fnc requires invest
 	_parent = findDisplay _a3c_dsp displayCtrl 8008;
 	_text = findDisplay _a3c_dsp displayCtrl 800802;
 	_listBox = findDisplay _a3c_dsp displayCtrl 800803;
-	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 
 

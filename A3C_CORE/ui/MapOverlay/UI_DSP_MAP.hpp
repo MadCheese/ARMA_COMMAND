@@ -1,4 +1,4 @@
-
+#include "..\SHARED\shared_ui_defines.hpp"
 
 #define GRIDX( num ) ( num * ( pixelGrid * pixelW * 2.5 ))
 #define GRIDY( num ) ( num * ( pixelGrid * pixelH * 2.5 ))
@@ -2267,7 +2267,7 @@ class A3C_DSP_MapOverlay
 				{
 					idc = 800712;
 					text = "X";
-					action = "(findDisplay 100020 displayCtrl 8007) ctrlShow false; A3C_SELECTED_HC_GROUPS_SETTINGS = []; (findDisplay 100020 displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;";
+					action = "(findDisplay 100020 displayCtrl 8007) ctrlShow false; A3C_SELECTED_HC_GROUPS_SETTINGS = []; (findDisplay 100020 displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;";
 					x = GRIDX( 8 ); 
 					y = GRIDY( 0 );
 					w = GRIDX( 2 );
@@ -2783,3 +2783,5 @@ class A3C_DSP_MapOverlay
 		};						          	
 	};
 };
+
+

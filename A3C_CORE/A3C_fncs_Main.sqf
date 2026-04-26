@@ -1,4 +1,6 @@
 #include "ui\SHARED\shared_ui_defines.hpp"
+#include "ui\radial\radialMenu\dialog_defines.hpp"
+
 
 
 //---------------------------------------------------------------------------------------------
@@ -2091,6 +2093,8 @@ A3C_LB_Change = {
 	// systemchat "A3C_LB_Change";
 	if (A3C_CurSel) exitWith {};
 
+	params ["_mode","_lb","_a3c_dsp"];
+	
 	/*
 		Currently a shared function between map and Radial.
 		Radial uses it for Right Extension- and teamcolor-listboxes
@@ -2099,8 +2103,7 @@ A3C_LB_Change = {
 
 	*/
 
-
-
+	
 	//~~ #TODO: rearrange to have logical order
 	//-- modes:
 	//-- 0: SQ-WPContext-Heli
@@ -2108,11 +2111,14 @@ A3C_LB_Change = {
 	//-- 2: SQ-WPContext-Infantry
 	//-- 3: Squad-Level Teamcolor assignment
 
-	private _mode = _this select 0; //--> A3C_LB_MODE
-	private _lb = _this select 1;
+
 	private _doubleClick = false;
 	if (isnil "_mode") exitWith {};
-	private _a3c_dsp = if (count _this > 2) then {_this select 2} else {100030};
+
+
+
+
+
 	private _btn = 0;
 	private _gp = objnull;
 	private _targetUnits = A3C_SELECTED_UNITS;
@@ -2216,9 +2222,11 @@ A3C_LB_Change = {
 			_color = "MAIN";
 			
 			_backCol = [1,1,1,1];
-			_isTablet = (isNull (findDisplay 100030)); //???????
-			//systemchat str [_dest];
-			_compare = if (_isTablet) then {A3C_SELECTED_UNITS} else {A3C_RD_UNITS};
+			_isMap = (!isNull (findDisplay 100020));
+
+
+
+			_compare = if (_isMap) then {A3C_SELECTED_UNITS} else {A3C_RD_UNITS};
 			if (_dest in _compare) then {
 				{_units pushback _x} foreach _compare - [_dest];
 			};
@@ -2252,12 +2260,12 @@ A3C_LB_Change = {
 				private _treeVar = _x getVariable ["A3C_TREESEL_INDEX",[]];
 				if (count _treeVar > 0) then {
 					private _btn = _treeVar select ((count _treeVar) -1); //-- make sure we fetch the sub-button
-					private _ct_tree1 = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+					private _ct_tree1 = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 					_ct_tree1 tvSetColor [_btn,_backCol];
 				};
 			} foreach _compare;
 
-			if (_isTablet) then {
+			if (_isMap) then {
 				{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 			} else {
 				(findDisplay 100040 displayCtrl 8095) ctrlShow false;

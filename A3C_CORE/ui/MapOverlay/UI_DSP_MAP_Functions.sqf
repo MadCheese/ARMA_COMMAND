@@ -121,7 +121,7 @@ A3C_UI_MAP_Overlay_ResizeTeamColorsXWH = {
 	
 	_ctrlH = 0.0110018 * safezoneH; //-- HARDCODED h value of first teamcolor box
 
-	_totalW = (ctrlPosition (findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL)) select 2; 
+	_totalW = (ctrlPosition (findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR)) select 2; 
 
 	_gapW = A3C_MAP_GAMEUI_PADDING_Y / 2; 
 
@@ -1517,7 +1517,7 @@ A3C_START_TABMODE = {
 
 	//-- reset Timeout
 	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout) ctrlSetText (str A3C_TIMEOUT_VAL);
-	(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
+	(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 	
 
 	//A3C_HELI_HELI_WP_BEHAVIOUR = "NONE";
@@ -2133,7 +2133,7 @@ A3C_BTN_FNC_TEAMCOLOR = {
 	_a3c_dsp = if (visibleMap) then {100020} else {100030};
 
 
-	private _CT_TREE = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+	private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 	_CT_TREE tvSetCurSel [-1];
 
 	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
@@ -4841,8 +4841,8 @@ A3C_UI_MAP_FNC_CTEDIT_ACTIVATE_DASHBOARD = {
 
 	if (_a3c_dsp == 100040) exitWith {}; //-- temp solution until figured out
 
-	private _textCtrl = findDisplay _a3c_dsp displayCtrl 11001;
-	private _editCtrl = findDisplay _a3c_dsp displayCtrl 800713;
+	private _textCtrl = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_GROUPNAME;
+	private _editCtrl = findDisplay _a3c_dsp displayCtrl IDC_MAP_DASHBOARD_GROUPNAME_EDIT;
 	private _groupName = str (parsetext (ctrlText _editCtrl));
 
 	if (_mode == "ON") then {

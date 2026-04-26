@@ -1,8 +1,7 @@
-A3C_VEHSAV= [];
-A3C_VEHROLES = [];
-A3C_BOARD_UNITS = [];
-A3C_BOARD_UNITS_ACTIVE = if (isNil "A3C_BOARD_UNITS_ACTIVE") then {[]} else {A3C_BOARD_UNITS_ACTIVE};
-A3C_TURRETS = [];
+#include "..\ui\radial\radialMenu\dialog_defines.hpp"
+
+
+
 TAG_fnc_turretRole = { //-- unused
 	params[ "_unit", "_vehicle" ];
 	

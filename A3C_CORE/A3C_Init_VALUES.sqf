@@ -594,9 +594,15 @@ BLUE_LINES = [];
 A3C_GOCODES_HC = [];
 
 
+A3C_VEHSAV= [];
+A3C_VEHROLES = [];
+A3C_BOARD_UNITS = [];
+A3C_BOARD_UNITS_ACTIVE = if (isNil "A3C_BOARD_UNITS_ACTIVE") then {[]} else {A3C_BOARD_UNITS_ACTIVE};
+A3C_TURRETS = [];
 
-
-
+A3C_WeaponHolderClasses = ["WeaponHolderSimulated", "GroundWeaponHolder"];
+A3C_LBR_1 = "MEDICAL";
+A3C_ReArm_Options = [];
 
 
 
@@ -663,8 +669,8 @@ A3C_MAP_OVERLAY_GAMEUI_WPMENU_PreCondCtrls = 709202;
 
 A3C_MAP_OVERLAY_GAMEUI_WPMENU_MacroConfirm = [709131,709132,709133,709134];
 
-A3C_SHARED_GAMEUI_TREE_CONTROL = 202020;
-A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT = 303030;
+IDC_MAP_DASHBOARD_GROUPNAME_EDIT = 800713; //-- temp until map dialog is implemented
+
 
 
 

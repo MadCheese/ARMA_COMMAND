@@ -1,3 +1,4 @@
+#include "..\..\dialog_defines.hpp"
 #include "..\..\script_component.hpp"
 #include "..\..\..\..\SHARED\shared_ui_defines.hpp"
 
@@ -106,7 +107,7 @@ if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
 };
 
 if (_unitDetected) then {
-    private _CT_TREE = findDisplay 100040 displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+    private _CT_TREE = findDisplay 100040 displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
     _CT_TREE tvSetCurSel [-1];
 
     if (count A3C_RD_UNITS == 1) then {

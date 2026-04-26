@@ -1,3 +1,5 @@
+#include "..\..\SHARED\shared_ui_defines.hpp"
+
 #define IDD_RADIAL_MENU 100040
 
 //-- CONTROLS

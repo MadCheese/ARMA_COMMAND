@@ -1,3 +1,5 @@
+#include "shared_ui_defines.hpp"
+
 A3C_UI_Shared_FNC_AddDownkey = {
 	//-- purpose: exclude ALT from downkey collection in order to prevent lingering in A3C_UI_DOWNKEYS
 	params ["_key"];
@@ -109,7 +111,7 @@ A3C_UI_SHARED_createDashBoard = {
 			100040
 		}
 	};
-	(findDisplay _a3c_dsp displayCtrl 800713) ctrlSetTextColor [1,1,1,0]; //-- hide ct-edit box because of it's frame
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_DASHBOARD_GROUPNAME_EDIT) ctrlSetTextColor [1,1,1,0]; //-- hide ct-edit box because of it's frame
 	
 	_ref_selected_units = A3C_SELECTED_HC_GROUPS_SETTINGS; //if (_a3c_dsp == 100040) then {} else {A3C_SELECTED_HC_GROUPS_SETTINGS};
 
@@ -123,7 +125,7 @@ A3C_UI_SHARED_createDashBoard = {
 		A3C_UI_SHARED_createDashBoard_ExtraControls = [];
 
 
-		_parent = (findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT);
+		_parent = (findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT);
 
 		_parent ctrlSetPosition 
 		[
@@ -134,7 +136,7 @@ A3C_UI_SHARED_createDashBoard = {
 		];
 		
 
-		_backGround = (findDisplay _a3c_dsp displayCtrl 11015);
+		_backGround = (findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_BG);
 		_backGround ctrlSetPosition 
 		[
 			4.9593e-007 * safezoneW,
@@ -144,7 +146,7 @@ A3C_UI_SHARED_createDashBoard = {
 		];
 		
 
-		_structuredText = (findDisplay _a3c_dsp displayCtrl 11014);
+		_structuredText = (findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PG_ROSTER_STRUCTURED);
 		_structuredText ctrlSetPosition 
 		[
 			0.104004 * safezoneW,
@@ -195,8 +197,8 @@ A3C_UI_SHARED_createDashBoard = {
 		
 
 		_bgColor = if (_a3c_dsp == 100040 && {sunOrMoon < 1}) then {[0,0.5,0.8,0.6]} else {[0,0,0,0.6]};
-		(findDisplay _a3c_dsp displayCtrl 11015) ctrlSetTextColor _bgColor;	
-		(findDisplay _a3c_dsp displayCtrl 11014) ctrlSetBackGroundColor [0,0,0,0.2];
+		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_BG) ctrlSetTextColor _bgColor;	
+		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PG_ROSTER_STRUCTURED) ctrlSetBackGroundColor [0,0,0,0.2];
 		
 		private _currentTask = "Idle";
 		
@@ -501,12 +503,12 @@ A3C_UI_SHARED_createDashBoard = {
 			} foreach _staminaValues;
 		};
 		
-		//-- set images and text(findDisplay _a3c_dsp displayCtrl 11001) ctrlSetText _groupID;
+		//-- set images and text(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_GROUPNAME) ctrlSetText _groupID;
 		{(findDisplay _a3c_dsp displayCtrl _x) ctrlSetText _groupID;} foreach [11001,800713];
-		(findDisplay _a3c_dsp displayCtrl 11002) ctrlSetText _groupIcon;
-		(findDisplay _a3c_dsp displayCtrl 11003) ctrlSetText _unitSize;
-		(findDisplay _a3c_dsp displayCtrl 11004) ctrlSetText _location;
-		(findDisplay _a3c_dsp displayCtrl 11005) ctrlSetText _currentTask;
+		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_GROUPICON) ctrlSetText _groupIcon;
+		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_TXT_UNITSIZE) ctrlSetText _unitSize;
+		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_TXT_LOCATION) ctrlSetText _location;
+		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_TXT_TASK) ctrlSetText _currentTask;
 
 		_macroIndex = 1;
 
@@ -526,7 +528,7 @@ A3C_UI_SHARED_createDashBoard = {
 					};
 					_ctrl ctrlSetPosition _ctrlPos;
 					_ctrl ctrlCommit 0;
-				} foreach [A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT,11014,11015];
+				} foreach [IDC_SHARED_UI_DASHBOARD_PARENT,11014,11015];
 			};
 			
 			//-- generate ctrl positions
@@ -547,12 +549,12 @@ A3C_UI_SHARED_createDashBoard = {
 			];
 
 			//-- create new progress bar macro
-			_bg_ProgressBar  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",12003 + _macroIndex + 2, findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+			_bg_ProgressBar  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",12003 + _macroIndex + 2, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
 			_bg_ProgressBar ctrlSetPosition _ctrlPosBar;
 			_bg_ProgressBar ctrlSetText "#(argb,8,8,3)color(0.5,0.5,0.5,0.5)";
 
 			
-			_actualProgressBar  = (findDisplay _a3c_dsp) ctrlCreate ["RscProgress",12003 + _macroIndex + 1, findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+			_actualProgressBar  = (findDisplay _a3c_dsp) ctrlCreate ["RscProgress",12003 + _macroIndex + 1, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
 			_actualProgressBar ctrlSetPosition _ctrlPosBar;
 
 			_progressCol = switch (true) do {
@@ -566,7 +568,7 @@ A3C_UI_SHARED_createDashBoard = {
 			_actualProgressBar ctrlSetTextColor _progressCol; //;
 			
 
-			_barTextCtrl = (findDisplay _a3c_dsp) ctrlCreate ["A3C_RscText_GroupDashboard",12003 + _macroIndex, findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT]; //--12003 is the 'ammunition'-bar idc, we build up from here
+			_barTextCtrl = (findDisplay _a3c_dsp) ctrlCreate ["A3C_RscText_GroupDashboard",12003 + _macroIndex, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT]; //--12003 is the 'ammunition'-bar idc, we build up from here
 			_barTextCtrl ctrlSetText _descriptionText;
 			
 			_barTextCtrl ctrlSetPosition _ctrlPosText;
@@ -584,11 +586,11 @@ A3C_UI_SHARED_createDashBoard = {
 		//-- set fixed Progress Bars
 		{
 			_txtctrl = switch (_foreachIndex) do {
-				case (0) : {findDisplay _a3c_dsp displayCtrl 12000};
-				case (1) : {findDisplay _a3c_dsp displayCtrl 12002};
+				case (0) : {findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PG_HEALTH_TXT};
+				case (1) : {findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PGBARS_BG};
 			};
 			_ctrl = switch (_foreachIndex) do {
-				case (0) : {findDisplay _a3c_dsp displayCtrl 12001};
+				case (0) : {findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PG_HEALTH_BAR};
 				case (1) : {findDisplay _a3c_dsp displayCtrl 12003};
 			};
 			_progressCol = switch (true) do {
@@ -668,7 +670,7 @@ A3C_UI_SHARED_createDashBoard = {
 		];
 		
 		if (count ([units _group] call A3C_FINDMEDICS) > 0) then {
-			_healingCapableIcon  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",13000, findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+			_healingCapableIcon  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",13000, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
 			_healingCapableIcon ctrlSetPosition _supportButtonBasePos;
 			_healingCapableIcon ctrlSettext "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
 			_healingCapableIcon ctrlSetTextColor [1,1,1,0.6];
@@ -683,7 +685,7 @@ A3C_UI_SHARED_createDashBoard = {
 				//_supportButtonBasePos set [0,0.134387 * safezoneW];
 				_supportButtonBasePos set [1,(3.09064e-006 * safezoneH) + (0.0340016 * safezoneH)];
 			};
-			_repairingCapableIcon  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",13001, findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+			_repairingCapableIcon  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",13001, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
 			_repairingCapableIcon ctrlSetPosition _supportButtonBasePos;
 			_repairingCapableIcon ctrlSettext "A3C_CORE\ui\pictures\icon_menu_action_repair_noBG.paa"; // "\a3c_ui\menu\icon_menu_action_repair.paa";
 			_repairingCapableIcon ctrlSetTextColor [1,1,1,0.6];
@@ -768,11 +770,11 @@ A3C_UI_SHARED_createDashBoard = {
 		} foreach _structuredUnits;
 
 		_structuredText = parseText _structuredText; 
-		(findDisplay _a3c_dsp displayCtrl 11014) ctrlSetStructuredText _structuredText;
-		(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow true;
+		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PG_ROSTER_STRUCTURED) ctrlSetStructuredText _structuredText;
+		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow true;
 
 	} else {
-		(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 	};
 };
 

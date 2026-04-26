@@ -271,7 +271,7 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 		[0] call A3C_GREN_DATA;
 		[] call A3C_UI_RADIAL_populateOuterRing_Grenades;
 
-		(findDisplay IDD_RADIAL_MENU displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 
 	} else {
 		showHud ([true] + (shownhud select [1,10]));
@@ -3040,7 +3040,7 @@ A3C_UI_RADIAL_CTRLS_QUICKTOGGLE = {
 		};
 		
 	} else {
-		(findDisplay IDD_RADIAL_MENU displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false; //-- hide HC-dashboard
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false; //-- hide HC-dashboard
 		A3C_UI_RADIAL_CTRLS_SHOWN_ACTIVATED = false;
 		{
 			_x ctrlShow true;
@@ -3192,7 +3192,7 @@ A3C_UI_RADIAL_FNC_TEAMCOLOR = {
 	};
 	
 
-	private _CT_TREE = findDisplay IDD_RADIAL_MENU displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+	private _CT_TREE = findDisplay IDD_RADIAL_MENU displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 	_CT_TREE tvSetCurSel [-1];
 
 	A3C_RD_UNITS = groupselectedUnits player;

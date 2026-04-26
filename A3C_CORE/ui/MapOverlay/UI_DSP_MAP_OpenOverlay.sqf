@@ -173,7 +173,7 @@ if (_ceil > A3C_BUTTONPAGE_TABLET) then {
 
 
 
-private _ct_tree = findDisplay _display displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+private _ct_tree = findDisplay _display displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 
 //-- overlay step 1: spawn Selector Box
 if (_display == 100020 && {!visibleMap}) exitWith {(findDisplay _display) closeDisplay 0};

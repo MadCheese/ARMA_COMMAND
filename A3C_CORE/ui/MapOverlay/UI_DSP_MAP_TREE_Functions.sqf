@@ -1,4 +1,5 @@
 #include "..\SHARED\shared_ui_defines.hpp"
+#include "..\radial\radialMenu\dialog_defines.hpp"
 
 
 //[_CT_TREE,"SQUAD_VEH", [_veh,_crewUnits],_mainTreeIndex,_foreachIndex] call A3C_UI_MAP_TREE_ADD_ITEM;
@@ -203,7 +204,7 @@ A3C_UI_MAP_TREE_LABEL = {
 	
 
 	
-	_CT_TREE = (findDisplay _a3c_dsp) displayctrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+	_CT_TREE = (findDisplay _a3c_dsp) displayctrl IDC_SHARED_UI_TREE_SELECTOR;
 
 	tvClear _CT_TREE;
 	
@@ -888,7 +889,7 @@ A3C_UI_MAP_TREE_ADJUST_TOP_ROW = { //asasas
 	params ["_ctrl","_animTime"];
 
 	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
-	//private _ctrl = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+	//private _ctrl = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 	//systemChat str (_a3c_dsp);
 	//-- not executed via radial - map only!
 	 
@@ -896,7 +897,7 @@ A3C_UI_MAP_TREE_ADJUST_TOP_ROW = { //asasas
 	private _ctrlX = A3C_MAP_OVERLAY_GAMEUI_TREEX;
 	private _ctrlH = 0.034 * safezoneH; //-- HARDCODED h value of first teamcolor box
 	//private A3C_MAP_GAMEUI_Upper_buttonH = 0.04 * safezoneH; //0.0330053 * safezoneH;
-	private _totalW = (ctrlPosition (findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL)) select 2;
+	private _totalW = (ctrlPosition (findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR)) select 2;
 	//--adjust height for teamcolor controls
 	[_animTime] call A3C_UI_MAP_RESIZE_TEAMCOLORS_Y;
 	_ctrlY = A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y - _ctrlH - (A3C_MAP_GAMEUI_PADDING_Y / 2); //0.85733 * safezoneH + safezoneY; //-- HARDCODED y value of first box
@@ -1282,7 +1283,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 	// if (true) exitWith {};
 	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
 	private _modes = if (_a3c_dsp == 100040) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
-	private _CT_TREE = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+	private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 	private _mainTreeIndex = 0;
 	
 	private _refArray = [];

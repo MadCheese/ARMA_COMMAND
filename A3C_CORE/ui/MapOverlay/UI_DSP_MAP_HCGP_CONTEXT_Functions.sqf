@@ -454,11 +454,11 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			_actions pushBackUnique "UNSTUCK";
 		};
 		if (!isNull findDisplay _mapDisplayIdd) then {
-			(findDisplay _mapDisplayIdd displayCtrl 800713) ctrlSetText toUpper (groupID _gp);
+			(findDisplay _mapDisplayIdd displayCtrl IDC_MAP_DASHBOARD_GROUPNAME_EDIT) ctrlSetText toUpper (groupID _gp);
 		};
 	} else {
 		if (!isNull findDisplay _mapDisplayIdd) then {
-			(findDisplay _mapDisplayIdd displayCtrl 800713) ctrlSetText "Multiple Groups";
+			(findDisplay _mapDisplayIdd displayCtrl IDC_MAP_DASHBOARD_GROUPNAME_EDIT) ctrlSetText "Multiple Groups";
 		};
 	};
 
@@ -1564,7 +1564,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[_a3c_dsp] spawn {
 								params ["_a3c_dsp"];
 								(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
-								(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
+								(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 								hintSilent "A3C: Please relay map-coordinates via mapclick!";
 								playsound "TacticalPing4";
 								sleep 0.5;
@@ -1807,7 +1807,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 		systemchat "A3C: Please relay map-coordinates via mapclick!";
 		sleep 0.5; //~~ small delay needed for mapclick
 		A3C_HC_GroupMenu_SuppressionRequested = true;
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 		[
 			"A3C_SUP_MAPCLICK",
@@ -1992,13 +1992,13 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 
 		waitUntil {
 			isNull findDisplay _a3c_dsp ||
-			{ ctrlShown ((findDisplay _a3c_dsp) displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) }
+			{ ctrlShown ((findDisplay _a3c_dsp) displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) }
 		};
 
 		private _display = findDisplay _a3c_dsp;
 		if (isNull _display) exitWith {};
 
-		private _dashboardCtrl = _display displayCtrl 11015;
+		private _dashboardCtrl = _display displayCtrl IDC_SHARED_UI_DASHBOARD_BG;
 		if (isNull _dashboardCtrl) exitWith {
 			systemChat "layout failed: 11015 not found";
 		};
@@ -2157,7 +2157,7 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 				};
 
 			} else {
-				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 				(findDisplay 12 displayCtrl 51) ctrlEnable true;
 			};
 
@@ -2202,7 +2202,7 @@ A3C_AI_HIGHCOMMAND_fnc_mergeGroups = {
 	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
 	
 
-	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	if (count _groupArray <= 1) then {
 		[_groupArray] spawn A3C_REJOIN_GROUPS;
@@ -2329,7 +2329,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 
 
 	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
-	(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
+	(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 
 	private _showPlayerHint = false;
 
@@ -2370,13 +2370,13 @@ A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 				//systemchat str (_x getVariable ["A3C_HC_GroupColor","oi"]);
 				
 				if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
-					_ctrlText = ctrlText (findDisplay _a3c_dsp displayCtrl 800713);
+					_ctrlText = ctrlText (findDisplay _a3c_dsp displayCtrl IDC_MAP_DASHBOARD_GROUPNAME_EDIT);
 					if (groupID _x != _ctrlText) then {
 						[_x,[_ctrlText]] remoteExec ["setGroupIDGlobal", leader _x];
 						_button = _x getVariable ["A3C_TREESEL_INDEX",[]];
 						
 						if (count _button > 0) then {
-							private _CT_TREE = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+							private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 							_button = _button select 0;
 							_CT_TREE tvSetText [_button, _ctrlText];
 						};
@@ -2401,7 +2401,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 	};
 
 
-	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 };
 
@@ -2440,7 +2440,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 				_leaders = [];
 				_subs = [];
 
-				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 				(findDisplay 12 displayCtrl 51) ctrlEnable true;
 				A3C_ConvoyGroups = A3C_ConvoyGroups - [_entry];
 				private _groupArrays = [];
@@ -2473,7 +2473,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 	} else {
 		//-- create new convoy in order
 		if (count A3C_SELECTED_HC_GROUPS_SETTINGS >= 2) then {
-			{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT];
+			{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
 			(findDisplay 12 displayCtrl 51) ctrlEnable true;
 			private ["_drivers","_nonDrivers"];
 			_drivers = [];

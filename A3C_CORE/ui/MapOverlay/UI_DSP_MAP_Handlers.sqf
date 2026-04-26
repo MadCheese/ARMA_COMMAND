@@ -38,7 +38,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 	
 	//-- contextMenues are open
 	if ({ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,8008] > 0) exitwith {};
-	private _ctls = if (visibleMap) then {[A3C_SHARED_GAMEUI_TREE_CONTROL,7077,7071,709099,8008]} else {[]};
+	private _ctls = if (visibleMap) then {[IDC_SHARED_UI_TREE_SELECTOR,7077,7071,709099,8008]} else {[]};
 	//-- exit if mouseclick was within certain controls
 	if ({[[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea} count _ctls > 0) exitWith {};
 
@@ -288,7 +288,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 		},
 		"ASCEND"
 	] call BIS_fnc_sortBy;
-	(findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT) ctrlShow false;
+	(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 	private _gpIconsCount = count _gpIcons;
 	if (_gpIconsCount > 0) exitWith {
 
@@ -343,7 +343,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 				
 				//~~
 				//-- #TODO: #HuiHui -- streamline this duplicate code for visualizing selection change in tree-UI
-				private _CT_TREE = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+				private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 				_CT_TREE tvSetCurSel [-1];
 
 				
@@ -467,7 +467,7 @@ A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 						[A3C_SQ_CLICKED_UNIT]
 					};
 
-					private _CT_TREE = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+					private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 					_CT_TREE tvSetCurSel [-1];
 
 					if (count A3C_SELECTED_UNITS == 1) then {
@@ -1145,7 +1145,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 	
 		//~~
 		//-- #TODO: #HuiHui -- streamline this duplicate code for visualizing selection change in tree-UI
-		private _CT_TREE = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+		private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 		_CT_TREE tvSetCurSel [-1];
 		//sleep 0.7;
 		//playsound 'A3C_MenuSound1';
@@ -1532,7 +1532,7 @@ A3C_UI_MAP_onOnMouseButtonUp_Overlay = {
 				};
 				_pageMode = "HC";
 			};
-			private _CT_TREE = findDisplay _a3c_dsp displayCtrl A3C_SHARED_GAMEUI_TREE_CONTROL;
+			private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 			_CT_TREE tvSetCurSel [-1];
 			if (count A3C_SELECTED_UNITS == 1) then {
 				_CT_TREE tvSetCurSel [-1];
@@ -2171,7 +2171,7 @@ A3C_UI_MAP_onKeyDown_Map = { //-- This handler is needed because ESC behaves dif
 		case (_key == 1) : {
 			private _display = findDisplay 100020;
 			private _groupContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT;
-			private _groupDashboardHC = _display displayCtrl A3C_SHARED_GAMEUI_GroupDashboard_CTRLPARENT;
+			private _groupDashboardHC = _display displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT;
 			private _wpContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT;
 			private _blockDefault = false;
 			if (ctrlShown _groupContextmenuHC) then {
