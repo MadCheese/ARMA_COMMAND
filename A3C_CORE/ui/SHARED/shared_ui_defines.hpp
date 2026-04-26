@@ -1,0 +1,20 @@
+//-- DASHBOARD
+#define IDC_SHARED_UI_DASHBOARD_PARENT                   303030 // We use a unified numeric idc because map uses it too. 161
+#define IDC_SHARED_UI_DASHBOARD_BG                       303031 
+#define IDC_SHARED_UI_DASHBOARD_GROUPNAME                303032 
+#define IDC_SHARED_UI_DASHBOARD_GROUPICON                303033 
+#define IDC_SHARED_UI_DASHBOARD_TXT_UNITSIZE             303034 
+#define IDC_SHARED_UI_DASHBOARD_TXT_LOCATION             303035 
+#define IDC_SHARED_UI_DASHBOARD_TXT_TASK                 303036 
+#define IDC_SHARED_UI_DASHBOARD_PGBARS_BG                303037 
+#define IDC_SHARED_UI_DASHBOARD_PG_HEALTH_TXT            303038 
+#define IDC_SHARED_UI_DASHBOARD_PG_HEALTH_BAR            303039 
+#define IDC_SHARED_UI_DASHBOARD_PG_ROSTER_TXT            303040 
+#define IDC_SHARED_UI_DASHBOARD_PG_ROSTER_STRUCTURED     303041
+
+
+
+//-- SELECTION TREE
+#define IDC_SHARED_UI_TREE_SELECTOR                      202020
+
+

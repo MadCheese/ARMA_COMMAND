@@ -124,7 +124,7 @@ class A3C_DSP_MapOverlay
 		};
 
 		
-		class A3C_SHARED_GAMEUI_TREE_CONTROL: A3C_CT_TREE
+		class IDC_SHARED_UI_TREE_SELECTOR: A3C_CT_TREE
 		{
 			idc = 202020;
 
@@ -354,7 +354,7 @@ class A3C_DSP_MapOverlay
 			tooltip = "WP Condition: NONE (LMB to cycle through options)";
 		};
 
-		class A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout: A3C_CT_EDIT
+		class 7009: A3C_CT_EDIT
 		{
 			idc = 7009;
 			type = 2;
@@ -859,7 +859,7 @@ class A3C_DSP_MapOverlay
 			tooltip = "Selected units CONTINUE";
 		};
 		
-		class A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1: A3C_RscPicture
+		class 1010101: A3C_RscPicture
 		{
 			idc = 1010101;
 
@@ -870,7 +870,7 @@ class A3C_DSP_MapOverlay
 			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 		};
 		
-		class A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2: A3C_RscPicture
+		class 1010102: A3C_RscPicture
 		{
 			idc = 1010102;
 
@@ -883,7 +883,7 @@ class A3C_DSP_MapOverlay
 
 
 		///----- ACTION BUTTONS: SUB-SETTINGS
-		class A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT: A3C_RscControlsGroup_NoScroll
+		class 8009: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8009;
 			x = 0.289346 * safezoneW + safezoneX;
@@ -1061,7 +1061,7 @@ class A3C_DSP_MapOverlay
 		
 		
 		
-		class A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT: A3C_RscControlsGroup_NoScroll
+		class 8010: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8010;
 			x = 0.289346 * safezoneW + safezoneX;
@@ -1249,7 +1249,7 @@ class A3C_DSP_MapOverlay
 		
 		
 		
-		class A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT: A3C_RscControlsGroup
+		class 709109: A3C_RscControlsGroup
 		{
 			idc = 709109;
 			x = 62 * GUI_GRID_W + GUI_GRID_X;
@@ -1344,7 +1344,7 @@ class A3C_DSP_MapOverlay
 			};
 		};
 
-		class A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT:  A3C_RscControlsGroup_NoScroll
+		class 709115:  A3C_RscControlsGroup_NoScroll
 		{
 			idc = 709115;
 
@@ -2058,7 +2058,7 @@ class A3C_DSP_MapOverlay
 
 
 
-		class A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT: A3C_RscControlsGroup_NoScroll
+		class 8007: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8007;
 			x = 0;
@@ -2628,34 +2628,29 @@ class A3C_DSP_MapOverlay
 				};
 			};
 		};
-		class DASH_PARENT: A3C_RscControlsGroup_NoScroll
+		class SHARED_UI_DASHBOARD_PARENT: A3C_RscControlsGroup_NoScroll
 		{
-			idc = 303030;
+			idc = IDC_SHARED_UI_DASHBOARD_PARENT; //303030;
 			x = 33.5 * GUI_GRID_W + GUI_GRID_X;
-
-			y = 100; 
+			y = 100;
 			w = 0.240009 * safezoneW;
 			h = 0.289024 * safezoneH + (1.5 * (0.021 / (getResolution select 5)));
-			
-			
 
 			class Controls
 			{
-				
-				class DASH_BG: A3C_RscPicture
+				class SHARED_UI_DASHBOARD_BG: A3C_RscPicture
 				{
-					idc = 11015;
+					idc = IDC_SHARED_UI_DASHBOARD_BG; //11015;
 					text = "#(argb,8,8,3)color(1,1,1,0.6)";
-					
 					x = 4.9593e-007 * safezoneW;
 					y = 0 * safezoneH;
 					w = 0.240009 * safezoneW;
 					h = 0.221018 * safezoneH + (1.5 * (0.021 / (getResolution select 5)));
 				};
-				
-				class DASH_TEXT_GROUPNAME: A3C_RscText
+
+				class SHARED_UI_DASHBOARD_GROUPNAME: A3C_RscText
 				{
-					idc = 11001;
+					idc = IDC_SHARED_UI_DASHBOARD_GROUPNAME; //11001;
 					text = "";
 					style = 0;
 					x = -5.72227e-008 * safezoneW;
@@ -2664,13 +2659,110 @@ class A3C_DSP_MapOverlay
 					h = 0.0340028 * safezoneH;
 					sizeEx = "0.04 / (getResolution select 5)";
 				};
-				class DASH_TEXT_GROUPNAME_EDIT: A3C_CT_Edit
+
+				class SHARED_UI_DASHBOARD_GROUPICON: A3C_RscPicture
 				{
-					
-					idc = 800713; //11001
+					idc = IDC_SHARED_UI_DASHBOARD_GROUPICON; //11002;
+					x = 0.168007 * safezoneW;
+					y = -2.21673e-008 * safezoneH;
+					w = 0.0720028 * safezoneW;
+					h = 0.11901 * safezoneH;
+				};
+
+				class SHARED_UI_DASHBOARD_TXT_UNITSIZE: A3C_RscText
+				{
+					idc = IDC_SHARED_UI_DASHBOARD_TXT_UNITSIZE; //11003;
+					text = "Unit Size:";
+					style = 0;
+					x = -5.72227e-008 * safezoneW;
+					y = (-2.21673e-008 * safezoneH) + (0.0340028 * safezoneH) + (0.005 / (getResolution select 5));
+					w = 0.160006 * safezoneW;
+					h = 0.021 / (getResolution select 5);
+					sizeEx = "0.021 / (getResolution select 5)";
+				};
+
+				class SHARED_UI_DASHBOARD_TXT_LOCATION: A3C_RscText
+				{
+					idc = IDC_SHARED_UI_DASHBOARD_TXT_LOCATION; //11004;
+					text = "Location:";
+					style = 0;
+					x = -5.72227e-008 * safezoneW;
+					y = (-2.21673e-008 * safezoneH) + (0.0340028 * safezoneH) + (0.005 / (getResolution select 5)) + (1.1 * (0.021 / (getResolution select 5)));
+					w = 0.160006 * safezoneW;
+					h = 0.021 / (getResolution select 5);
+					sizeEx = "0.021 / (getResolution select 5)";
+				};
+
+				class SHARED_UI_DASHBOARD_TXT_TASK: A3C_RscText
+				{
+					idc = IDC_SHARED_UI_DASHBOARD_TXT_TASK; //11005;
+					text = "Current Task:";
+					style = 0;
+					x = -5.72227e-008 * safezoneW;
+					y = (-2.21673e-008 * safezoneH) + (0.0340028 * safezoneH) + (0.005 / (getResolution select 5)) + (2.2 * (0.021 / (getResolution select 5)));
+					w = 0.160006 * safezoneW;
+					h = 0.021 / (getResolution select 5);
+					sizeEx = "0.021 / (getResolution select 5)";
+				};
+
+				class SHARED_UI_DASHBOARD_PGBARS_BG: A3C_RscPicture
+				{
+					idc = IDC_SHARED_UI_DASHBOARD_PGBARS_BG; //12002;
+					text = "#(argb,8,8,3)color(0.5,0.5,0.5,0.5)";
+					x = (0.00800027 - 0.002) * safezoneW;
+					y = (0.136011 * safezoneH);
+					w = 0.0800031 * safezoneW;
+					h = 0.0085007 * safezoneH;
+				};
+
+				class SHARED_UI_DASHBOARD_PG_HEALTH_TXT: A3C_RscText
+				{
+					idc = IDC_SHARED_UI_DASHBOARD_PG_HEALTH_TXT; //12000;
+					text = "Health (Soldiers)";
+					style = 0;
+					x = -3.81485e-008 * safezoneW;
+					y = (0.136011 * safezoneH) - (0.021 / (getResolution select 5));
+					w = 0.0800031 * safezoneW;
+					h = 0.021 / (getResolution select 5);
+					sizeEx = "0.021 / (getResolution select 5)";
+				};
+
+				class SHARED_UI_DASHBOARD_PG_HEALTH_BAR: A3C_RscProgress
+				{
+					idc = IDC_SHARED_UI_DASHBOARD_PG_HEALTH_BAR; //12001;
+					x = (0.00800027 - 0.002) * safezoneW;
+					y = (0.136011 * safezoneH);
+					w = 0.0800031 * safezoneW;
+					h = 0.0085007 * safezoneH;
+				};
+
+				class SHARED_UI_DASHBOARD_PG_ROSTER_TXT: A3C_RscText
+				{
+					idc = IDC_SHARED_UI_DASHBOARD_PG_ROSTER_TXT; //11012;
+					text = "Roster";
+					style = 0;
+					x = 0.0960037 * safezoneW;
+					y = (0.136011 * safezoneH) - (0.021 / (getResolution select 5));
+					w = 0.0480019 * safezoneW;
+					h = 0.021 / (getResolution select 5);
+					sizeEx = "0.021 / (getResolution select 5)";
+				};
+
+				class SHARED_UI_DASHBOARD_PG_ROSTER_STRUCTURED: A3C_RscStructuredText
+				{
+					idc = IDC_SHARED_UI_DASHBOARD_PG_ROSTER_STRUCTURED; //11014;
+					x = 0.104004 * safezoneW;
+					y = 0.136011 * safezoneH;
+					w = 0.136005 * safezoneW;
+					h = 0.085007 * safezoneH + (1.5 * (0.021 / (getResolution select 5)));
+				};
+
+				//-- MAP HAS ONE ADDITIONAL CONTROL: CT EDIT FOR GROUP NAME EDITING
+				class MAP_DASHBOARD_GROUPNAME_EDIT: A3C_CT_Edit
+				{
+					idc = IDC_MAP_DASHBOARD_GROUPNAME_EDIT; //800713;
 					type = 2;
 					style = 0;
-					//font = "PuristaLight";
 					sizeEx = "0.04 / (getResolution select 5)";
 					autocomplete = "false";
 
@@ -2685,107 +2777,7 @@ class A3C_DSP_MapOverlay
 					colorBackground[] = {1,1,1,0};
 					colorDisabled[] = {0,0,0,0};
 					colorSelection[] = {1,1,1,0.2};
-					colorText[] = {1,1,1,0}; //-- hidden by default, revealded later
-				};
-				
-				class DASH_GROUPICON: A3C_RscPicture
-				{
-					idc = 11002;
-					x = 0.168007 * safezoneW;
-					y = -2.21673e-008 * safezoneH;
-					w = 0.0720028 * safezoneW;
-					h = 0.11901 * safezoneH;
-				};
-
-				class DASH_TEXT_UNITSIZE: A3C_RscText
-				{
-					idc = 11003;
-					text = "Unit Size:";
-					style = 0;
-					x = -5.72227e-008 * safezoneW;
-					y = (-2.21673e-008 * safezoneH) + (0.0340028 * safezoneH) + (0.005 / (getResolution select 5));
-					w = 0.160006 * safezoneW;
-					h = 0.021 / (getResolution select 5);
-					sizeEx = "0.021 / (getResolution select 5)";
-				};
-
-				class DASH_text_Location_1: A3C_RscText
-				{
-					idc = 11004;
-					text = "Location:";
-					style = 0;
-					x = -5.72227e-008 * safezoneW;
-					y = (-2.21673e-008 * safezoneH) + (0.0340028 * safezoneH) + (0.005 / (getResolution select 5)) + (1.1 * (0.021 / (getResolution select 5)) );
-					w = 0.160006 * safezoneW;
-					h = 0.021 / (getResolution select 5);
-					sizeEx = "0.021 / (getResolution select 5)";
-				};
-				class DASH_TEXT_TASK: A3C_RscText
-				{
-					idc = 11005;
-					text = "Current Task:";
-					style = 0;
-					x = -5.72227e-008 * safezoneW;
-					y = (-2.21673e-008 * safezoneH) + (0.0340028 * safezoneH) + (0.005 / (getResolution select 5))  + (2.2 * (0.021 / (getResolution select 5)) );
-					w = 0.160006 * safezoneW;
-					h = 0.021 / (getResolution select 5);
-					sizeEx = "0.021 / (getResolution select 5)";
-				};
-
-				class DASH_BAR_BG_HEALTH: A3C_RscPicture
-				{
-					idc = 12002;
-					text = "#(argb,8,8,3)color(0.5,0.5,0.5,0.5)";
-					x = (0.00800027 - 0.002) * safezoneW;
-					y = (0.136011 * safezoneH);
-					w = 0.0800031 * safezoneW;
-					h = 0.0085007 * safezoneH;
-				};
-
-
-				
-				class DASH_text_Health: A3C_RscText
-				{
-					idc = 12000;
-					text = "Health (Soldiers)";
-					style = 0;
-					x = -3.81485e-008 * safezoneW;
-					y = (0.136011 * safezoneH) - ( 0.021 / (getResolution select 5));
-					w = 0.0800031 * safezoneW;
-					h = 0.021 / (getResolution select 5);
-					sizeEx = "0.021 / (getResolution select 5)";
-				};
-
-				class DASH_BAR_HEALTH: A3C_RscProgress
-				{
-					idc = 12001;
-					x = (0.00800027 - 0.002) * safezoneW;
-					y = (0.136011 * safezoneH);
-					w = 0.0800031 * safezoneW;
-					h = 0.0085007 * safezoneH;
-				};
-
-
-
-				class DASH_TEXT_UNITS: A3C_RscText
-				{
-					idc = 11012;
-					text = "Roster";
-					style = 0;
-					x = 0.0960037 * safezoneW;
-					y = (0.136011 * safezoneH) - ( 0.021 / (getResolution select 5));
-					w = 0.0480019 * safezoneW;
-					h = 0.021 / (getResolution select 5); //0.0085007 * safezoneH;
-					sizeEx = "0.021 / (getResolution select 5)";
-				};
-
-				class DASH_TEXTBOX_UNITS_STRCT: A3C_RscStructuredText
-				{
-					idc = 11014;
-					x = 0.104004 * safezoneW;
-					y = 0.136011 * safezoneH;
-					w = 0.136005 * safezoneW;
-					h = 0.085007 * safezoneH + (1.5 * (0.021 / (getResolution select 5)));
+					colorText[] = {1,1,1,0};
 				};
 			};
 		};						          	

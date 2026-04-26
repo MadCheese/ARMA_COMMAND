@@ -1,3 +1,5 @@
+#include "..\SHARED\shared_ui_defines.hpp"
+
 
 if (isDedicated) exitwith {};
 

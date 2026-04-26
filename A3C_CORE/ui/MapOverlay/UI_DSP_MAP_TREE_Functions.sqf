@@ -1,3 +1,5 @@
+#include "..\SHARED\shared_ui_defines.hpp"
+
 
 //[_CT_TREE,"SQUAD_VEH", [_veh,_crewUnits],_mainTreeIndex,_foreachIndex] call A3C_UI_MAP_TREE_ADD_ITEM;
 A3C_UI_MAP_TREE_ADD_ITEM = {

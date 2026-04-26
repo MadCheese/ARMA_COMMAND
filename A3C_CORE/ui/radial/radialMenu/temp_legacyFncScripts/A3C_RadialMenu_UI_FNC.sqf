@@ -1,5 +1,6 @@
 #include "..\script_component.hpp"
 #include "..\dialog_defines.hpp"
+#include "..\..\..\SHARED\shared_ui_defines.hpp"
 
 A3C_UI_RADIAL_LB_ADD = {
 	DISABLESERIALIZATION;

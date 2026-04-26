@@ -1,4 +1,5 @@
 #include "..\..\script_component.hpp"
+#include "..\..\..\..\SHARED\shared_ui_defines.hpp"
 
 params ["_display", "_button", "_sX", "_sY", "_shift", "_ctrl", "_alt"];
 

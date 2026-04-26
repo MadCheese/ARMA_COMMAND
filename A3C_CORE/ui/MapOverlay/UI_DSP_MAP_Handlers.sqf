@@ -1,3 +1,6 @@
+#include "..\SHARED\shared_ui_defines.hpp"
+
+
 A3C_UI_MAP_onOnMouseButtonDown_Overlay = {
 
 	/*

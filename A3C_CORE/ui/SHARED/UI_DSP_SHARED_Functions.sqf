@@ -163,7 +163,7 @@ A3C_UI_SHARED_createDashBoard = {
 			_mapBarDims params ["_mapBarX","_mapBarY","_mapBarW","_mapBarH"];
 			_mapBarY = _mapBarY + _mapBarH;
 
-			(ctrlPosition (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT)) params ["_gpX","_gpY","_gpW","_gpH"];
+			(ctrlPosition (findDisplay _a3c_dsp displayCtrl 8007)) params ["_gpX","_gpY","_gpW","_gpH"];
 
 
 			_parentPos = ctrlPosition _parent;
