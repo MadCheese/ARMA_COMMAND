@@ -54,19 +54,9 @@ if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
             A3C_RD_UNITS = [_group];
         };
 
-        private _ind = [_group, _hcAll] call MCSS_fnc_GetArrayIndex;
-        A3C_BUTTONPAGE_TABLET = (ceil ((_ind + 1) / 18)) - 1;
 
-        if (count A3C_RD_UNITS == 0) then {
-            (findDisplay 100040 displayCtrl 8005) ctrlSetText "SELECT UNIT";
-        } else {
-            if (count A3C_RD_UNITS == 1) then {
-                (findDisplay 100040 displayCtrl 8005) ctrlSetText (groupID (A3C_RD_UNITS select 0));
-            } else {
-                (findDisplay 100040 displayCtrl 8005) ctrlSetText "MULTIPLE GROUPS";
-            };
-        };
 
+        
         A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_RD_UNITS;
         [] call A3C_UNITSEL_REFRESH_UI;
         [] call A3C_UI_SHARED_createDashBoard;
@@ -107,7 +97,7 @@ if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
 };
 
 if (_unitDetected) then {
-    private _CT_TREE = findDisplay 100040 displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
+    private _CT_TREE = findDisplay IDD_RADIAL_MENU displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
     _CT_TREE tvSetCurSel [-1];
 
     if (count A3C_RD_UNITS == 1) then {

@@ -1,3 +1,4 @@
+#include "..\ui\radial\radialMenu\script_component.hpp"
 #include "..\ui\radial\radialMenu\dialog_defines.hpp"
 
 
@@ -1073,16 +1074,20 @@ A3C_ReArm_OpenUI = {
 	BV_LB2 = 11;
 
 	//-- Populate UI headers
-	(findDisplay 100040 displayCtrl 8057) ctrlSetText "Containers";
+	(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_HEADER) ctrlSetText "Containers";
 	if (_isSingleUnit) then {
-		(findDisplay 100040 displayCtrl 8058) ctrlSetText "Content: DoubleClick to equip";
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_HEADER) ctrlSetText "Content: DoubleClick to equip";
 	} else {
-		(findDisplay 100040 displayCtrl 8058) ctrlSetText "Content (info only)";
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_HEADER) ctrlSetText "Content (info only)";
 	};
-	(findDisplay 100040 displayCtrl 8053) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
-	(findDisplay 100040 displayCtrl 8056) ctrlSetText "Re-Arm";
-	{lbCLear (findDisplay 100040 displayCtrl _x)} foreach [8054, 8055];
-	{(findDisplay 100040 displayCtrl _x) ctrlShow true} foreach [8053,8054,8055,8056,8057,8058];
+	(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_BACKGROUND) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_ExtensionRight.paa";
+	(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_GO_BTN) ctrlSetText "Re-Arm";
+	{
+		lbClear _x;
+	} forEach (["radial_extensionRightListboxes"] call FUNC(ctrlGroup));
+	{
+		_x ctrlShow true;
+	} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
 
 
 	//-- Find and sort re-Arm sources
@@ -1139,12 +1144,12 @@ A3C_ReArm_OpenUI = {
 				(getText (configfile >> "CfgVehicles" >> (typeOf _x) >> "displayName")) + _addString,
 				(typeOf _v),
 				_v,
-				(findDisplay 100040 displayCtrl 8054),
+				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX),
 				_img
 			]
 		] call A3C_UI_RADIAL_LB_ADD;
 	} foreach A3C_ReArm_Options;
-	[findDisplay 100040 displayCtrl 8054, 0, true] call A3C_setCurSel;		
+	[findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX, 0, true] call A3C_setCurSel;		
 };
 
 

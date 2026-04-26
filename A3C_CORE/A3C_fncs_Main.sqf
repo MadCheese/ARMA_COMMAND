@@ -2268,7 +2268,7 @@ A3C_LB_Change = {
 			if (_isMap) then {
 				{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 			} else {
-				(findDisplay 100040 displayCtrl 8095) ctrlShow false;
+				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONLEFT_TC_BOX) ctrlShow false;
 
 			};
 			[_a3c_dsp,A3C_MAP_CommandMode] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;

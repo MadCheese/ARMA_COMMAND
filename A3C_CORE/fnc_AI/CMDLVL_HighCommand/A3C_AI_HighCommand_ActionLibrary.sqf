@@ -756,7 +756,7 @@ A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon = {
 	[_array, A3C_REMOTE_BLACKFISH] remoteExec ['bis_fnc_spawn', _leaderVic];
 	sleep 2;
 	waituntil {true};
-	if (!isNull findDisplay 100040 && {(ctrlShown (findDisplay 100040 displayctrl 8001)) && {A3C_RADIALMODE in ['ACT','HC ACTIONS']}}) then {
+	if (!isNull findDisplay IDD_RADIAL_MENU && {(ctrlShown (findDisplay IDD_RADIAL_MENU displayctrl IDC_RADIAL_BG_TOP)) && {A3C_RADIALMODE in ['ACT','HC ACTIONS']}}) then {
 		[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 	};
 };

@@ -148,47 +148,7 @@ A3C_UI_MAP_TREE_ADD_ITEM = {
 	};
 };
 
-// A3C_UI_MAP_TREE_SortByPower = {
-// 	private _vehicles = _this;
-// 	_vehicles = 
-// 	[
-// 		_vehicles,
-// 		[],
-// 		{
-			
-// 			_veh = _x select 0;
-// 			_armor = getnumber (configfile >> "Cfgvehicles" >> typeof _veh >> "armor");
-// 			_val = 0;
-// 			{
-				
-// 				if (_veh isKindOf _x) exitWith {
-// 					_val = 7000 - (1000 * _forEachIndex);
-// 					_val = _val + _armor + ((count weapons _veh) * 100);
-// 					//systemchat str _val;
-// 				};
-// 			} foreach ["PLANE","HELICOPTER","TANK","CAR","SHIP","STATICWEAPON"];
-// 			_val
-// 		},
-// 		"DESCEND"
-// 	] call BIS_fnc_sortBy;
 
-
-// 	_vehicles = 
-// 	[
-// 		_vehicles,
-// 		[],
-// 		{
-// 			private _gp = _x;
-// 			_lv = vehicle leader _gp;
-// 			_armor = getNumber (configfile >> "CfgVehicles" >> typeOf _lv >> "armor");
-// 			_weaponCount = count weapons _lv;
-// 			_cargoFactor = if ({group _x != _gp} count crew _lv > 0) then {1000} else {0};
-// 			_val = _armor * _weaponCount * _cargoFactor;
-// 			_val
-// 		},
-// 		"DESCEND"
-// 	] call BIS_fnc_sortBy;
-// };
 
 A3C_UI_MAP_TREE_LABEL = {
 
@@ -583,7 +543,7 @@ A3C_UI_MAP_TREE_OPEN_COLLAPSE = {
 		[_ctrl,_animTime] call A3C_UI_MAP_TREE_ADJUST_TOP_ROW;
 		
 	} else {
-		private _ctrlGroup = findDisplay 100040 displayCtrl 8071;
+		private _ctrlGroup = findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONLEFT_CTRLSGROUP;
 		private _ctrlGroupPos = ctrlPosition _ctrlGroup;
 
 		//-- to extend tree, extend the H value of Tree and Ctrlsgroup, then set y to (0.5 - ((realGroupH) * 0.5))
@@ -597,210 +557,16 @@ A3C_UI_MAP_TREE_OPEN_COLLAPSE = {
 		_ctrlGroupPos set [1,0.5 - (_newCtrlH / 2)];
 		_ctrlGroupPos set [3,_newCtrlH];
 		{
-			_ct = (findDisplay 100040 displayCtrl _x);
+			_ct = (findDisplay IDD_RADIAL_MENU displayCtrl _x);
 			_ct ctrlSetPosition _ctrlGroupPos;
 			_ct ctrlCommit _animTime; 
-		} foreach [8071,8096];
-	};
-};
-
-
-/*
-
-//-- animate tree collapse
-A3C_UI_MAP_TREE_OPEN_COLLAPSE1 = {
-	
-
-	params ["_ctrlData","_mode","_isInit","_animTime"]; 
-	//-- _mode == "OPEN" or "COLLAPSE"
-	//-- _isInit == true (when initializing/refreshing tree) or false
-	_ctrlData params ["_ctrl","_selectedParent"];
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
-	private _isMainParent = count _selectedParent == 1;
-	
-	//if (_isInit && {!(_isMainParent)}) exitWith {};
-
-	private _openTrees = if (_a3c_dsp == 100040) then {
-		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {A3C_RADIAL_TREES_OPEN_SQ} else {A3C_RADIAL_TREES_OPEN_HC}
-	} else {
-		A3C_UI_MAP_TREES_OPEN
-	};
-
-	playsound "ReadOutHideClick1"; 
-	//systemchat str _openTrees;
-
-	
-	//if (!isNull findDisplay 100040) exitWith {
-	//	if (_mode == "OPEN") then {
-	//		_ctrl tvExpand _selectedParent;
-	//		_openTrees pushBackUnique _selectedParent;
-	//	} else {
-	//		{
-	//			if (_x isEqualTo _selectedParent) exitWith { //-- no idea why it only works like this, adding to copied global array works with pushBack (as above) but not with +/- [_x]
-	//				_openTrees deleteAt _foreachIndex;
-	//			};
-	//		} foreach _openTrees;
-	//		//_openTrees = _openTrees - [_selectedParent];
-	//		_ctrl tvCollapse _selectedParent;
-	//		//systemChat 'AY';
-	//	};
-	//};
-	
-
-	if (isNull _ctrl) then {_mode = "COLLAPSE"};
-	//player sidechat str _mode;		
-	private _mainEntryCount = _ctrl tvCount [];
-	private _subEntryCount = (_ctrl tvCount _selectedParent);
-
-
-	//systemchat 'aiaiai';
-	//copytoclipboard str _this;
-	
-	
-	//private _minCtrlH = (A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_MAIN * _mainEntryCount) ; //-- tree should at minimum have the size of settings bar; 
-	private _minCtrlH = if (_a3c_dsp != 100040) then {
-		(A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_H); //(_minCtrlH + A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_MAIN); // -- 1 extra to avoid scrollbar
-	} else {
-		(safeZoneY + safeZoneH) * 0.2
-	};
-	private _maxCtrlH = if (_a3c_dsp != 100040) then {
-
-		A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_Y - 
-		A3C_MAP_GAMEUI_MENU_Y +//-
-		A3C_MAP_GAMEUI_Upper_buttonH +
-		A3C_MAP_GAMEUI_PADDING_Y
-		//A3C_MAP_OVERLAY_GAMEUI_teamcolorboxH
-		
-		//(safeZoneH + A3C_MAP_GAMEUI_MENU_Y) -
-		//(
-		//	(
-		//		A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_H + 
-		//		(A3C_MAP_GAMEUI_PADDING_Y * 2) +
-		//		A3C_MAP_GAMEUI_Upper_buttonH +
-		//		A3C_MAP_OVERLAY_GAMEUI_teamcolorboxH
-		//	)
-		//)
-			
-	} else {
-		(safeZoneY + safeZoneH) - ((A3C_GAMEUI_COMMANDBAR_H + A3C_MAP_GAMEUI_PADDING_Y )* 2.5)
-	};
-
-	private _treePos = (ctrlPosition _ctrl);
-	_treePos params ["_currentX","_currentY","_currentW","_currentH"];
-
-
-	private _differenceH =  (A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_SUB * _subEntryCount);
-	private _effectiveH = 0;
-
-
-	private _ctrlPosCollapsed = if (_a3c_dsp != 100040) then {
-		[
-			A3C_MAP_OVERLAY_GAMEUI_TREEX,
-			(safezoneH + safezoneY) - A3C_MAP_GAMEUI_PADDING_Y - _minCtrlH, 
-			A3C_MAP_OVERLAY_GAMEUI_TREEW,
-			_minCtrlH 
-		]
-	} else {
-		[
-			_currentX, //-- stays constant
-			_currentY, //-- stays constant because only h is extended downwards
-			_currentW, //-- stays constant
-			_minCtrlH
-		]
-	};
-
-	private _safetyPadding = 4 * A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_SUB;
-
-	//-- force initial UI-Background on initialized / refreshed calls
-	_currentH = _safetyPadding; //if (_isInit) then {_minCtrlH} else {_safetyPadding};
-
-	//systemChat str _isInit;
-
-	
-	//A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y = _ctrlPosCollapsed select 1;
-	if (_mode == "OPEN") then {
-		if (count _openTrees == 0 OR {_isInit}) then {
-			_currentH = _safetyPadding;
-		};
-		_effectiveH = ((_currentH + _differenceH) min _maxCtrlH) max _minCtrlH;
-		_ctrl tvExpand _selectedParent;
-		_openTrees pushBackUnique _selectedParent;	
-	} else {
-		//---- ~~ THIS PART CAN BE DONE BETTER! (maybe entirety of global UI variable defaults)
-		_openTreesH = _safetyPadding; //0;
-
-		if (_isMainParent) then { //-- main parents close all their child parents along
-			//_openTrees = _openTrees select {_x select 0 != _selectedParent select 0}; //-- remove all childTrees from open_array
-			while { {_x select 0 == _selectedParent select 0} count  _openTrees > 0 } do { //-- again, complicated workaround because the copied array can not be redefined without losing connection
-				{
-					if (_x select 0 == _selectedParent select 0) exitWith {
-						_openTrees deleteAt _foreachIndex;
-					};
-				} foreach _openTrees;	
-			};	
-		};
-
-		{
-			if (_x isEqualTo _selectedParent) exitWith { //-- no idea why it only works like this, adding to copied global array works with pushBack (as above) but not with +/- [_x]
-				_openTrees deleteAt _foreachIndex;
-			};
-		} foreach _openTrees;
-
-		//-- create _openTreesH from remaining open parents
-		{
-			_count = _ctrl tvCount _x;
-			
-			_openTreesH = _openTreesH + (_count * A3C_MAP_OVERLAY_GAMEUI_TREEROWHEIGHT_SUB);
-		} foreach (_openTrees -  [_selectedParent]);
-		_effectiveH = (( _openTreesH ) min _maxCtrlH) max _minCtrlH; // _minCtrlH +
-		_ctrl tvCollapse _selectedParent;
-			
-	};
-
-	if (_a3c_dsp != 100040) then {
-		A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y = (safeZoneY + safeZoneH) - A3C_MAP_GAMEUI_PADDING_Y - _effectiveH;
-		//((_ctrlPosCollapsed select 1) + _minCtrlH ) - _effectiveH;
-		_ctrl ctrlSetPosition
-		[
-			A3C_MAP_OVERLAY_GAMEUI_TREEX,
-			A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y, // max A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_Y,
-			_ctrlPosCollapsed select 2,
-			_effectiveH //max A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_H
+		} foreach [
+			IDC_RADIAL_EXTENSIONLEFT_CTRLSGROUP,
+			IDC_RADIAL_EXTENSIONLEFT_BG
 		];
-		_ctrl ctrlCommit _animTime; 
-		[_ctrl,_animTime] call A3C_UI_MAP_TREE_ADJUST_TOP_ROW;
-		
-	} else {
-		private _ctrlGroup = findDisplay 100040 displayCtrl 8071;
-		private _ctrlGroupPos = ctrlPosition _ctrlGroup;
-
-		//-- to extend tree, extend the H value of Tree and Ctrlsgroup, then set y to (0.5 - ((realGroupH) * 0.5))
-
-		_newPos = +(_ctrlPosCollapsed);
-		_newPos set [3,_effectiveH];
-		//_newPos set [1,0];
-		_ctrl ctrlSetPosition _newPos;
-		_ctrl ctrlCommit _animTime; 
-
-		_newCtrlH = _currentY + _effectiveH;
-		_ctrlGroupPos set [1,0.5 - (_newCtrlH / 2)];
-		_ctrlGroupPos set [3,_newCtrlH];
-		{
-			_ct = (findDisplay 100040 displayCtrl _x);
-			_ct ctrlSetPosition _ctrlGroupPos;
-			_ct ctrlCommit _animTime; 
-		} foreach [8071,8096];
 	};
-	
-	
-
-	//-- open MAP-WP-Settings
-	
-		// set y for Teamcolor boxes and _additionalbuttonCombos
-		
 };
 
-*/
 
 A3C_UI_MAP_RESIZE_TEAMCOLORS_Y = {
 	//-- this function matches the teamcolor bars to the height of the CT_TREE control depending on teamcolor presence (otherwise sets bars out of bounds)
