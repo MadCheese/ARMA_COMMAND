@@ -782,7 +782,7 @@ class A3C_DSP_RadialMenu
 
 				class RADIAL_EXTENSIONLEFT_TEAMCOLOR_BG: A3C_RscPicture
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TEAMCOLOR_BG; //7077;
+					idc = IDC_UI_SHARED_TEAMCOLOR_BG; //7077;
 					text = "#(argb,8,8,3)color(0,0,0,0.3)";
 					x = 0;
 					y = 2 * GUI_GRID_H + GUI_GRID_Y;
@@ -791,7 +791,7 @@ class A3C_DSP_RadialMenu
 				};
 				class RADIAL_EXTENSIONLEFT_TEAMCOLOR_FRAME: A3C_RscFrame
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TEAMCOLOR_FRAME; //7079;
+					idc = IDC_SHARED_UI_TEAMCOLOR_FRAME; //7079;
 					x = 0;
 					y = 2 * GUI_GRID_H + GUI_GRID_Y;
 					w = BAR_W;
@@ -831,7 +831,7 @@ class A3C_DSP_RadialMenu
 				//-- Teamcolor boxes
 				class RADIAL_EXTENSIONLEFT_TCBOX_RED_IMG: A3C_RscPicture
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TCBOX_RED_IMG; //1000;
+					idc = IDC_SHARED_UI_TCBOX_RED_IMG; //1000;
 					colorText[] = {1,0,0,0.6};
 					text = "#(argb,8,8,3)color(1,1,1,0.6)";
 					x = 0;
@@ -841,7 +841,7 @@ class A3C_DSP_RadialMenu
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_RED_BTN : A3C_RscButton_Invisible
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TCBOX_RED_BTN; //1001;
+					idc = IDC_SHARED_UI_TCBOX_RED_BTN; //1001;
 					x = 0;
 					y = 2 * GUI_GRID_H + GUI_GRID_Y;
 					w = 0;
@@ -852,7 +852,7 @@ class A3C_DSP_RadialMenu
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_GREEN_IMG: A3C_RscPicture
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TCBOX_GREEN_IMG; //1002;
+					idc = IDC_SHARED_UI_TCBOX_GREEN_IMG; //1002;
 					colorText[] = {0,1,0,0.6};
 					text = "#(argb,8,8,3)color(1,1,1,0.6)";
 					x = 0;
@@ -862,7 +862,7 @@ class A3C_DSP_RadialMenu
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_GREEN_BTN : A3C_RscButton_Invisible
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TCBOX_GREEN_BTN; //1003;
+					idc = IDC_SHARED_UI_TCBOX_GREEN_BTN; //1003;
 					x = 0;
 					y = 2 * GUI_GRID_H + GUI_GRID_Y;
 					w = 0;
@@ -873,7 +873,7 @@ class A3C_DSP_RadialMenu
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_BLUE_IMG: A3C_RscPicture
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TCBOX_BLUE_IMG; //1004;
+					idc = IDC_SHARED_UI_TCBOX_BLUE_IMG; //1004;
 					colorText[] = {0,0,1,0.6};
 					text = "#(argb,8,8,3)color(1,1,1,0.6)";
 					x = 0;
@@ -883,7 +883,7 @@ class A3C_DSP_RadialMenu
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_BLUE_BTN : A3C_RscButton_Invisible
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TCBOX_BLUE_BTN; //1005;
+					idc = IDC_SHARED_UI_TCBOX_BLUE_BTN; //1005;
 					x = 0;
 					y = 2 * GUI_GRID_H + GUI_GRID_Y;
 					w = 0;
@@ -894,7 +894,7 @@ class A3C_DSP_RadialMenu
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_YELLOW_IMG: A3C_RscPicture
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TCBOX_YELLOW_IMG; //1006;
+					idc = IDC_SHARED_UI_TCBOX_YELLOW_IMG; //1006;
 					colorText[] = {1,1,0,0.6};
 					text = "#(argb,8,8,3)color(1,1,1,0.6)";
 					x = 0;
@@ -904,7 +904,7 @@ class A3C_DSP_RadialMenu
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_YELLOW_BTN : A3C_RscButton_Invisible
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TCBOX_YELLOW_BTN; //1007;
+					idc = IDC_SHARED_UI_TCBOX_YELLOW_BTN; //1007;
 					x = 0;
 					y = 2 * GUI_GRID_H + GUI_GRID_Y;
 					w = 0;
@@ -915,7 +915,7 @@ class A3C_DSP_RadialMenu
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_WHITE_IMG: A3C_RscPicture
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TCBOX_WHITE_IMG; //1008;
+					idc = IDC_SHARED_UI_TCBOX_WHITE_IMG; //1008;
 					colorText[] = {1,1,1,0.6};
 					text = "#(argb,8,8,3)color(1,1,1,0.6)";
 					x = 0;
@@ -925,7 +925,7 @@ class A3C_DSP_RadialMenu
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_WHITE_BTN : A3C_RscButton_Invisible
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TCBOX_WHITE_BTN; //1009;
+					idc = IDC_SHARED_UI_TCBOX_WHITE_BTN; //1009;
 					x = 0;
 					y = 2 * GUI_GRID_H + GUI_GRID_Y;
 					w = 0;
@@ -936,7 +936,7 @@ class A3C_DSP_RadialMenu
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_PURPLE_IMG: A3C_RscPicture
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TCBOX_PURPLE_IMG; //1010;
+					idc = IDC_SHARED_UI_TCBOX_PURPLE_IMG; //1010;
 					colorText[] = {0.5,0.2,0.6,0.6};
 					text = "#(argb,8,8,3)color(1,1,1,0.6)";
 					x = 0;
@@ -946,7 +946,7 @@ class A3C_DSP_RadialMenu
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_PURPLE_BTN : A3C_RscButton_Invisible
 				{
-					idc = IDC_RADIAL_EXTENSIONLEFT_TCBOX_PURPLE_BTN; //1011;
+					idc = IDC_SHARED_UI_TCBOX_PURPLE_BTN; //1011;
 					x = 0;
 					y = 2 * GUI_GRID_H + GUI_GRID_Y;
 					w = 0;

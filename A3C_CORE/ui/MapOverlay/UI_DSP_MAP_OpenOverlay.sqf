@@ -189,18 +189,10 @@ if (A3C_SELECTED_UNITS isEqualTo []) then {
 
 
 
-
-
-
-
 [0] call A3C_UI_MAP_FNC_ResetMapClick;
 
 
-//-- #Unclear - is this necessary? seems to be the little rscCombo?
-lbClear (findDisplay _display displayCtrl 8004);
-{
-	[findDisplay _display displayCtrl 8095, _x] call A3C_addLbEntry;
-} foreach ["None","A","B","C","D"];
+
 
 
 //-- create enemy force tracker

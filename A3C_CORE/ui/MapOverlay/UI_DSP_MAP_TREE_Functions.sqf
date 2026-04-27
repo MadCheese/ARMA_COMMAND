@@ -583,16 +583,10 @@ A3C_UI_MAP_RESIZE_TEAMCOLORS_Y = {
 	//--adjust height for teamcolor controls
 	_ctrlY = if (_a3c_dsp == 100040) then 
 	{
-		//_parentPos = ctrlPosition (findDisplay _a3c_dsp displayCtrl 8071);
-		_refFramePos = ctrlPosition (findDisplay _a3c_dsp displayCtrl 7077);
-		//_teamboxH =  (ctrlPosition (findDisplay _a3c_dsp displayCtrl 1000)) select 3;
-		(_refFramePos select 1)
-		// ( (_parentPos select 1) + (_refFramePos select 1)) 
-		//+ ((_refFramePos select 3 - _ctrlH) / 2)
-		 //- (_teamboxH / 2)
-		//  + ((_refFramePos select 3) / 4)  
 
-		 //- (A3C_MAP_GAMEUI_PADDING_Y / 2) 
+		_refFramePos = ctrlPosition (findDisplay _a3c_dsp displayCtrl IDC_UI_SHARED_TEAMCOLOR_BG);
+
+		(_refFramePos select 1)
 	} else {
 		A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y - _ctrlH - (A3C_MAP_GAMEUI_PADDING_Y / 2)
 	}; //0.85733 * safezoneH + safezoneY; //-- HARDCODED y value of first box
@@ -679,7 +673,7 @@ A3C_UI_MAP_TREE_ADJUST_TOP_ROW = { //asasas
 
 		];
 		_btnCtrl ctrlCommit _animTime;
-	} foreach [7077,7079]; 
+	} foreach [IDC_UI_SHARED_TEAMCOLOR_BG,IDC_SHARED_UI_TEAMCOLOR_FRAME]; 
 
 	if (_a3c_dsp == 100040) exitWith {}; //-- radial menu does not have the same settings buttons and can exit UNNEXESSARY!!!
 
