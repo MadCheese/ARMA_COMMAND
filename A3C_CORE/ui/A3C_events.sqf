@@ -1,3 +1,6 @@
+#include "radial\radialMenu\dialog_defines.hpp"
+#include "radial\radialMenu\script_component.hpp"
+
 
 if (isDedicated) exitwith {};
 
@@ -428,7 +431,7 @@ A3C_FNC_CBA_KEY = {
 		case ("SUPPRESSION") : {
 
 			if (_mode == "DOWN") then {
-				if (!visibleMap && (isNull (findDisplay 100030))) then {
+				if (!visibleMap) then {
 					if (player == (leader group player)) then {
 						if !(!isNull objectParent player && cameraView == "INTERNAL") then {
 							if ((count (groupSelectedUnits player)) == 0) then {
@@ -478,48 +481,6 @@ A3C_FNC_CBA_KEY = {
 			};
 		};
 
-		// Grenade player WTF IS THIS
-		case ("GRENADE") : {
-			if (_mode == "DOWN") then {
-				//-- prevent grenade throw when unit is unconscious
-				if !([player] call A3C_isUnconscious) then {
-					//-- prevent grenade throw when planning
-					if (!visibleMap && (isNull (findDisplay 100030))) then {
-						//systemchat 'oi';
-						A3C_DISABLE_RADIAL = true;
-						showCommandingMenu "";
-						A3C_GREN_ALLOW_UNITSWITCH = if (count A3C_RD_UNITS == 1) then {false} else {true};
-						BR_A3C_TACV_oefId = ["BR_A3C_TACV_oefId", "onEachFrame", "BR_A3C_OEFControl"] call BIS_fnc_addStackedEventHandler;
-					};
-				};
-			} else {
-				if !(A3C_BOOL_REMFIRE) then {
-					_cun = ((groupselectedunits player) select 0);
-					if !(isPlayer _cun) then {
-						if (A3C_DISABLE_RADIAL) then {
-							A3C_DISABLE_RADIAL = false;
-							BR_A3C_TEMP_gfeh = _cun addEventHandler ["fired",
-							{
-								_unit = _this select 0;
-								if (_this select 1 == "THROW") then {
-									(_this select 6) setVelocity BR_A3C_TACV_throwVel;
-								};
-								if ((side _unit) == WEST) then {
-									[_unit] call A3C_Gren_Phrase;
-								};
-								_unit removeEventHandler ["fired", BR_A3C_TEMP_gfeh];
-								_add = if (BR_A3C_TACV_throwV0 <= BR_A3C_TACV_GV0MaxS) then {BR_A3C_TACV_throwV0 * BR_A3C_TACV_fatAdd} else {BR_A3C_TACV_throwV0 * BR_A3C_TACV_fatAdd * 2};
-								_unit setFatigue ((getFatigue _unit) + _add);
-							}];
-							_cun forceWeaponFire ["SmokeShellMuzzle","SmokeShellMuzzle"];
-							["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
-						};
-					};
-				} else {
-
-				};
-			};
-		};
 		case ("LOCK") : {
 			if (_mode == "DOWN") then {
 				if (A3C_MODIFIER_LOCK) then {
@@ -534,7 +495,7 @@ A3C_FNC_CBA_KEY = {
 		case ("GREN_P") : {
 		//systemchat str _this;
 			//-- prevent grenade throw when planning
-			if (!visibleMap && (isNull (findDisplay 100030))) then {
+			if (!visibleMap) then {
 
 				if (_mode == "DOWN") then {
 
@@ -883,7 +844,7 @@ A3C_FNC_CBA_KEY = {
 
 				};
 				showHud _shownHud;
-				if (!isNull findDisplay 100040) then {
+				if (!isNull findDisplay IDD_RADIAL_MENU) then {
 					[A3C_CURRENT_COMMAND_LEVEL] call A3C_UI_RADIAL_LABEL_INNER_RING;
 				};
 			} else {

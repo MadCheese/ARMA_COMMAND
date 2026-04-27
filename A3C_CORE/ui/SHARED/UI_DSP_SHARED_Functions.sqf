@@ -1,4 +1,6 @@
 #include "shared_ui_defines.hpp"
+#include "..\radial\radialMenu\script_component.hpp"
+#include "..\radial\radialMenu\dialog_defines.hpp"
 
 A3C_UI_Shared_FNC_AddDownkey = {
 	//-- purpose: exclude ALT from downkey collection in order to prevent lingering in A3C_UI_DOWNKEYS
@@ -35,7 +37,7 @@ A3C_UI_Shared_fnc_ReleaseMenuKey = {
 	//-- unified function for all KeyUp handlers for RADIAL/ObjectSelector Key-Release
 	params ["_display"];
 
-	private _radialDisplay = findDisplay 100040;
+	private _radialDisplay = findDisplay IDD_RADIAL_MENU;
 	private _hudDisplay = findDisplay 100050;
 	private _mainDisplay = findDisplay 46;
 
@@ -52,6 +54,15 @@ A3C_UI_Shared_fnc_ReleaseMenuKey = {
 	} else {
 		if (!_isMainDisplay) then {
 			_display closeDisplay 0;
+		} else {
+			//-- cancel grenade action if currently used
+			if (!isNull A3C_GTI_UNIT) then {
+				A3C_GTI_UNIT removeEventHandler ["fired", BR_A3C_TEMP_gfeh];
+				A3C_GREN_MUZZLE = "";
+				A3C_GTI_UNIT = objnull;
+				A3C_AI_GREN_ARRAY = [];
+				["BR_A3C_TACV_oefId", "onEachFrame"] call BIS_fnc_removeStackedEventHandler;    
+			};
 		};
 	};
 
@@ -102,18 +113,12 @@ A3C_UI_Shared_ObjectSelector_Listbox_NumberControl = {
 // #TODO: Dashboard fnc could do with optimization for speed
 
 A3C_UI_SHARED_createDashBoard = {
-	private _a3c_dsp = if (visibleMap) then {
-		100020
-	} else {
-		if (!isNull findDisplay 100030) then {
-			100030
-		} else {
-			100040
-		}
-	};
+	
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+
 	(findDisplay _a3c_dsp displayCtrl IDC_MAP_DASHBOARD_GROUPNAME_EDIT) ctrlSetTextColor [1,1,1,0]; //-- hide ct-edit box because of it's frame
 	
-	_ref_selected_units = A3C_SELECTED_HC_GROUPS_SETTINGS; //if (_a3c_dsp == 100040) then {} else {A3C_SELECTED_HC_GROUPS_SETTINGS};
+	_ref_selected_units = A3C_SELECTED_HC_GROUPS_SETTINGS; 
 
 
 	if (count _ref_selected_units == 1) then {
@@ -196,7 +201,7 @@ A3C_UI_SHARED_createDashBoard = {
 		private _unitSize = format ["Unitsize: %1",count units _group];
 		
 
-		_bgColor = if (_a3c_dsp == 100040 && {sunOrMoon < 1}) then {[0,0.5,0.8,0.6]} else {[0,0,0,0.6]};
+		_bgColor = if (_a3c_dsp == IDD_RADIAL_MENU && {sunOrMoon < 1}) then {[0,0.5,0.8,0.6]} else {[0,0,0,0.6]};
 		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_BG) ctrlSetTextColor _bgColor;	
 		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PG_ROSTER_STRUCTURED) ctrlSetBackGroundColor [0,0,0,0.2];
 		
@@ -521,7 +526,7 @@ A3C_UI_SHARED_createDashBoard = {
 					_ctrlPos = ctrlPosition _ctrl;
 					_ctrlPosH = (_ctrlPos select 3) + (1.5 * (0.021 / (getResolution select 5)));
 					_ctrlPos set [3,_ctrlPosH];
-					if (_foreachindex == 0 && {_a3c_dsp == 100040}) then {
+					if (_foreachindex == 0 && {_a3c_dsp == IDD_RADIAL_MENU}) then {
 						//-- adjust parent Y
 						_ctrlPosY = (_ctrlPos select 1) - (0.75 * (0.021 / (getResolution select 5)));
 						_ctrlPos set [1,_ctrlPosY];
@@ -784,7 +789,7 @@ A3C_UI_Shared_fnc_toggleGocodeCtrls = {
 	if (isDedicated) exitWith {};
 
 	
-	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
 	if (isnull (findDisplay _a3c_dsp)) exitWith {};
 
 	private _rootPos = if (isnull (findDisplay _a3c_dsp)) then {[]} else {//-- only for tablet
@@ -871,17 +876,17 @@ A3C_UI_Shared_fnc_toggleGocodeCtrls = {
 		
 		([_mode] call _findGoCode) params ["_cond1","_cond2"];
 		
-		if (_a3c_dsp == 100040) then {
+		if (_a3c_dsp == IDD_RADIAL_MENU) then {
 			private _ctrl = switch (_mode) do {
-				case ("A") : {10016};
-				case ("B") : {10018};
-				case ("C") : {10020};
-				case ("D") : {10022};
+				case ("A") : {IDC_RADIAL_OUTERRIGHT_1_IMG};
+				case ("B") : {IDC_RADIAL_OUTERRIGHT_2_IMG};
+				case ("C") : {IDC_RADIAL_OUTERRIGHT_3_IMG};
+				case ("D") : {IDC_RADIAL_OUTERRIGHT_4_IMG};
 			};
 			if (_cond1 OR _cond2) then {
-				((findDisplay 100040) displayctrl _ctrl) ctrlSetTextColor [0.8,0.6,0,0.6];
+				(findDisplay IDD_RADIAL_MENU displayctrl _ctrl) ctrlSetTextColor [0.8,0.6,0,0.6];
 			} else {
-				((findDisplay 100040) displayctrl _ctrl) ctrlSetTextColor [1,1,1,0.2];
+				(findDisplay IDD_RADIAL_MENU displayctrl _ctrl) ctrlSetTextColor [1,1,1,0.2];
 			};
 
 		} else {
@@ -903,7 +908,7 @@ A3C_UI_Shared_fnc_toggleGocodeCtrls = {
 					} foreach _ctrls;
 					_buttonsPlaced = _buttonsPlaced + 1;
 				} else {
-					{((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [0.8,0.6,0,0.6]} foreach _ctrls;
+					{(findDisplay 100020 displayCtrl _x) ctrlSetTextColor [0.8,0.6,0,0.6]} foreach _ctrls;
 				}
 			} else {
 				if !(isnull (findDisplay _a3c_dsp)) then {
@@ -915,7 +920,7 @@ A3C_UI_Shared_fnc_toggleGocodeCtrls = {
 						_btnItem ctrlCommit 0;
 					} foreach _ctrls;
 				} else {
-					{((findDisplay 100040) displayCtrl _x) ctrlSetTextColor [1,1,1,0.2]} foreach _ctrls;
+					{(findDisplay 100020 displayCtrl _x) ctrlSetTextColor [1,1,1,0.2]} foreach _ctrls;
 				};
 			};
 			if ( !isnull (findDisplay _a3c_dsp)) then {

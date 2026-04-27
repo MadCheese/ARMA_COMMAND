@@ -1043,20 +1043,20 @@ if (isDedicated) exitWith {};
 /////////////////  U I  -  F U N C T I O N S
 
 A3C_UPDATE_UI_REARM = {
-	private _display = findDisplay 100040;
+	private _display = findDisplay IDD_RADIAL_MENU;
 	if (isNull _display) exitWith {};
 
-	private _listboxSources = _display displayCtrl 8054;
+	private _listboxSources = _display displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX;
 	if (isNull _listboxSources) exitWith {};
 
-	private _listboxContent = _display displayCtrl 8055;
+	private _listboxContent = _display displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_BOX;
 	if (isNull _listboxContent) exitWith {};
 
 	if (ctrlShown _listboxSources && {A3C_LBR_1 == "REARM"}) then {
 		private _currentLBCurSelSource = lbCurSel _listboxSources;
 		private _currentLBCurSelContent = lbCurSel _listboxContent;
 		if (_currentLBCurSelSource >= 0) then {
-			[_currentLBCurSelSource, 100040] call A3C_Rearm_LBChange_Source;
+			[_currentLBCurSelSource] call A3C_Rearm_LBChange_Source;
 		};
 
 		if (_currentLBCurSelContent >= 0 && {_currentLBCurSelContent < lbSize _listboxContent}) then {
@@ -1154,12 +1154,12 @@ A3C_ReArm_OpenUI = {
 
 
 A3C_Rearm_LBChange_Source = {
-	params ["_lb", "_a3c_dsp"];
+	params ["_lb"];
 
 	A3C_REARM_CARGO = [];
 
-	private _display = findDisplay _a3c_dsp;
-	private _ctrlCargo = _display displayCtrl 8055;
+	private _display = findDisplay IDD_RADIAL_MENU;
+	private _ctrlCargo = _display displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_BOX;
 
 	lbClear _ctrlCargo;
 
@@ -1299,12 +1299,12 @@ A3C_Rearm_LBChange_Source = {
 };
 
 A3C_Rearm_LBChange_SourceContent = {
-	params ["_lb", "_doubleClick", "_a3c_dsp"];
+	params ["_lb", "_doubleClick"];
 
 	if (_lb >= 0) then {
 		if (_doubleClick && {count A3C_RD_UNITS == 1}) then {
 
-			private _lbText = (findDisplay _a3c_dsp displayCtrl 8055) lbText _lb;
+			private _lbText = (findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_BOX) lbText _lb;
 			private _item = if (_lbText == "Open Inventory") then {"INVENTORY"} else {A3C_REARM_CARGO select (_lb - 1)};
 			private _unit = A3C_RD_UNITS select 0;
 

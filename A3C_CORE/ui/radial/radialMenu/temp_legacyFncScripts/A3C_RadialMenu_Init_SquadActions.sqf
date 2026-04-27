@@ -692,7 +692,7 @@ A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 								(findDisplay _display) closeDisplay 0;
 								
 
-								private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}}; //~~ how does this differ from _display unless it's 100060?	
+								private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060}; //~~ how does this differ from _display unless it's 100060?	
 								A3C_OBJECTSELECTOR_MODE = if (_a3c_dsp == 100060) then {"STATIC_ASSEMBLE_SQUAD"} else {"PLACEHOLDER"};
 								if (count _staticData == 1) then {
 									[0] call A3C_ObjectSelector_LB_Change;

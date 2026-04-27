@@ -1,5 +1,8 @@
-#include "ui\SHARED\shared_ui_defines.hpp"
+
+#include "ui\radial\radialMenu\script_component.hpp"
 #include "ui\radial\radialMenu\dialog_defines.hpp"
+#include "ui\SHARED\shared_ui_defines.hpp"
+
 
 
 
@@ -2269,7 +2272,7 @@ A3C_LB_Change = {
 				{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 			} else {
 				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONLEFT_TC_BOX) ctrlShow false;
-
+				//-- to do: update tree!
 			};
 			[_a3c_dsp,A3C_MAP_CommandMode] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
 			[] spawn {
@@ -2370,10 +2373,10 @@ A3C_LB_Change = {
 			};
 		};
 		case (10) : {
-			[_lb, _a3c_dsp] call A3C_Rearm_LBChange_Source;
+			[_lb] call A3C_Rearm_LBChange_Source;
 		};
 		case (11) : {
-			[_lb, _doubleClick, _a3c_dsp] call A3C_Rearm_LBChange_SourceContent;
+			[_lb, _doubleClick] call A3C_Rearm_LBChange_SourceContent;
 		};
 		case (12) : {
 			
@@ -2562,7 +2565,8 @@ A3C_GROUP_RESET = {
 	if (is3DEN) exitwith {};
 	setGroupIconsVisible [false,false];
 	private ["_units","_knowData","_recreateLogic"];
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+
 
 	//////////////////////
 	//-- EXTRAS FIRST: unflip all vehicles
@@ -2737,13 +2741,10 @@ A3C_GROUP_RESET = {
 	for "_i" from 7025 to 7040 do {(findDisplay _a3c_dsp displayCtrl _i) ctrlShow false};
 	if (A3C_MAP_CommandMode == "HC") then {
 		if ((count A3C_HC_getAllGroups_Player_Current ) > 0) then {
-			//["HC"] call A3C_UI_MAP_labelSelectors;
 		} else {
 			A3C_MAP_CommandMode = "INF";
 			["INF"] call A3C_START_TABMODE;
 		};
-	} else {
-		//[A3C_MAP_CommandMode] call A3C_UI_MAP_labelSelectors;
 	};
 
 	{
@@ -2858,7 +2859,9 @@ A3C_AI_Shared_cancelUnitPlot = {
 	_shift = _this select 1;
 	_ctrl = _this select 2;
 	
-	_a3c_dsp = if (visibleMap) then {100020} else {100030};
+	private _a3c_dsp = 100020;
+	
+
 	_data = [];
 
 	if ( !(_shift) && !(_ctrl)  ) exitwith {
@@ -3004,7 +3007,7 @@ A3C_DeleteGroup = {
 //-- Used by Radial and Tablet
 A3C_ACTIVATEGOCODE = {
 	_code = _this select 0;
-	_a3c_dsp = if (visibleMap) then {100020} else {100030};
+	private _a3c_dsp = 100020;
 	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	_ctrls = switch (_code) do {
 		case ("A") : {[709100,709101]};

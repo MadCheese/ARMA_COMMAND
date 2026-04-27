@@ -1,7 +1,10 @@
+#include "..\radial\radialMenu\dialog_defines.hpp"
+#include "..\radial\radialMenu\script_component.hpp"
 
 
 
-if  (!isnull (finddisplay 100040)) exitwith {};
+
+if  (!isnull findDisplay IDD_RADIAL_MENU) exitwith {};
 if  (!isnull (findDisplay 100010)) exitwith {};
 if  (!isnull (finddisplay 100050)) exitwith {};
 if ((count A3C_HUD_UnitIndicators) == 0) exitWith {};

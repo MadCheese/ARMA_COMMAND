@@ -1,4 +1,5 @@
-
+#include "..\ui\radial\radialMenu\script_component.hpp"
+#include "..\ui\radial\radialMenu\dialog_defines.hpp"
 
 //------------------------------------------------  G T I  G R E N A D E S   --------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------
@@ -295,15 +296,9 @@ A3C_GREN_DATA = {
 	_doChange = if (count _this > 1) then {_this select 1} else {true};
 	_unit = objnull;
 	_mags = [];
-	_units = if !(isnull (finddisplay 100040)) then {A3C_RD_UNITS} else {A3C_SELECTED_UNITS};
-	_display = if (visibleMap) then {100020} else {100030};
+	_units = if !(isnull findDisplay IDD_RADIAL_MENU) then {A3C_RD_UNITS} else {A3C_SELECTED_UNITS};
+	_display = 100020;
 
-	//{
-	//	if ((vehicle _x) isKindOf "AIR") then {
-	//		_units = _units - [_x];
-	//	};
-	//} foreach _units;
-	//A3C_AI_GREN_ARRAY
 
 
 	A3C_AI_GREN_ARRAY = [];
@@ -368,7 +363,7 @@ A3C_GREN_DATA = {
 		};
 	};
 
-	if !(isnull (finddisplay 100040)) then {
+	if !(isnull findDisplay IDD_RADIAL_MENU) then {
 		[A3C_GREN_MUZZLE,0,_doChange] call A3C_UI_RADIAL_populateOuterRing_Grenades;
 	} else {
 		(findDisplay _display displayCtrl 7064) ctrlSetTextColor [1,1,1,1];

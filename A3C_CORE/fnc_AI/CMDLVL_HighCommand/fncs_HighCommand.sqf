@@ -1,4 +1,6 @@
 #include "..\..\ui\SHARED\shared_ui_defines.hpp"
+#include "..\..\ui\radial\radialMenu\script_component.hpp"
+#include "..\..\ui\radial\radialMenu\dialog_defines.hpp"
 
 
 ////////////////////////  GETTERS
@@ -749,26 +751,30 @@ A3C_HC_INSERT_ACTION_WP = {
 	
 	//--adjust editing wp-index for clients who may be editing a waypoint of this group
 	[
-		[_group,_wpI],
+		[_group, _wpI],
 		{
-			params ["_group","_wpI"];
+			params ["_group", "_wpI"];
+
 			if (isDedicated) exitWith {};
-			if (isNil 'A3C_HC_ACTIVEGROUP') exitWith {};
-			if ({ctrlShown (findDisplay _x displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT)} count [100020,100030] > 0 ) then {
-				if (A3C_HC_ACTIVEGROUP == _group) then {
-					if (_wpI < A3C_HC_ACTIVE_IND) then {
-						A3C_HC_ACTIVE_IND = A3C_HC_ACTIVE_IND + 1;
-						//systemchat str _wpi;
-					};
-					if (_wpI == A3C_HC_ACTIVE_IND) then {
-						{
-							(findDisplay _x displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT) ctrlShow false;
-						} foreach [100020,100030];
-					};
+			if (isNil "A3C_HC_ACTIVEGROUP") exitWith {};
+
+			private _display = findDisplay 100020;
+			if (isNull _display) exitWith {};
+
+			private _wpMenu = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT;
+			if !(ctrlShown _wpMenu) exitWith {};
+
+			if (A3C_HC_ACTIVEGROUP == _group) then {
+				if (_wpI < A3C_HC_ACTIVE_IND) then {
+					A3C_HC_ACTIVE_IND = A3C_HC_ACTIVE_IND + 1;
+				};
+
+				if (_wpI == A3C_HC_ACTIVE_IND) then {
+					_wpMenu ctrlShow false;
 				};
 			};
 		}
-	] remoteExec ["bis_fnc_call", 0]; 
+	] remoteExec ["BIS_fnc_call", 0];
 	
 	
 	
@@ -1209,7 +1215,7 @@ A3C_HC_FNC_CompleteWaypoint = {
 	//systemchat format ["%1 has completed a waypoint",groupId _group];
 	//systemchat str ({_x == driver vehicle _x && {vehicle _x iskindof "AIR"}} count units _group);
 	private _currentWaypoint = currentWaypoint _group;
-	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
+	private _a3c_dsp = 100020;
 	if (ctrlShown (findDisplay _a3c_dsp displayctrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT)) then {
 		if ([_group,_currentWaypoint] isEqualTo [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]) then {
 			(findDisplay _a3c_dsp displayctrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT) ctrlShow false;
@@ -1353,7 +1359,7 @@ A3C_AI_HighCommand_ActionDistribute_boardGroupsToVehicle = {
 	params ["_button","_ctrl"];
 	private ["_group","_a3c_dsp"];
 	//if !(count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) exitWith {systemchat 'A3C: Boarding/Dismount function is only compatible with single selections'};
-	_a3c_dsp = if (visibleMap) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
 	
 	
 
@@ -1362,7 +1368,7 @@ A3C_AI_HighCommand_ActionDistribute_boardGroupsToVehicle = {
 	(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 	if (_button == 0) then {
 		A3C_UI_MAPICONS_HC_VICS = [] call A3C_fnc_getBoardableVehicles;
-		if (_a3c_dsp == 100040) then {
+		if (_a3c_dsp == IDD_RADIAL_MENU) then {
 
 			A3C_UI_HUD_ASSIGNVEHICLE = true;
 			[

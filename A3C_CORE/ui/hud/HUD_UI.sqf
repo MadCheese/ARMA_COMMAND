@@ -371,7 +371,7 @@ A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG = {
 
 	};
 	
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 	_parent = findDisplay _a3c_dsp displayCtrl 8008;
 	_text = findDisplay _a3c_dsp displayCtrl 800802;
 	_listBox = findDisplay _a3c_dsp displayCtrl 800803;
@@ -468,7 +468,7 @@ A3C_isArtyAwaitingSuborder = false;
 A3C_ObjectSelector_LB_Change = {
 	params ["_lb"];
 	private ["_doubleClick","_tickTime"];
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 	//_vehicle = if (count _this > 1) then {_this select 1) else {};
 	_doubleClick = false;
 	_tickTime = (time - A3C_LB_TICKTIME);
@@ -732,110 +732,7 @@ A3C_ObjectSelector_LB_Change = {
 				};
 
 			};
-			/*
-			case ("HELI_OVERWATCH_1") : {
-				//-- ask for details
-				A3C_Heli_Overwatch_Height = parseNumber (_listBox lbText _lb);
-				_text ctrlSetText "Select Overwatch Direction";
-				{
-					_ctrlPos = ctrlPosition _x;
-					_ctrlPos set [3,(_ctrlPos select 3) + (  (1)   * (0.0440051 * safezoneH) )];
-					_x ctrlSetPosition _ctrlPos;
-					_x ctrlCommit 0;
-				} foreach [_parent,_listBox];
-				
-				lbClear _listBox;
-				{
-					[_listBox, _x] call A3C_addLbEntry;
-				} foreach ["NORTH","NORTH-EAST","EAST","SOUTH-EAST","SOUTH","SOUTH-WEST","WEST","NORTH-WEST"];
-				
-				A3C_OBJECTSELECTOR_MODE = "HELI_OVERWATCH_2";
-			};
-			case ("HELI_OVERWATCH_2") : {
-				//_direction = ["NORTH","NORTHEAST","EAST","SOUTHEAST","SOUTH","SOUTHWEST","WEST","NORTHWEST"] select _lb;
-
-				
-				
-				_direction = switch (_lb) do {
-					case (0) : {0};
-					case (1) : {45};
-					case (2) : {90};
-					case (3) : {135};
-					case (4) : {180};
-					case (5) : {225};
-					case (6) : {270};
-					case (7) : {315};
-				};
-				private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
-
-				private _var = (vehicle leader A3C_HC_ACTIVEGROUP ) getVariable ["A3C_Freeze_helicopter",[false,0]];
-				private _calledFromWaypointMenu = if (_var select 1 == -1) then {true} else {false}; //-- rather unconventional method of knowing if the action was called from wp-menu
-
-				if (_a3c_dsp in [100020,100030]) then {
-					_parent ctrlShow false;
-					if (_calledFromWaypointMenu) then {
-						
-						_group = A3C_HC_ACTIVEGROUP;
-						_wp = [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND];
-						_wp setWaypointtype "SCRIPTED";
-						_wp setWaypointStatements ["true",""]; //[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]
-						private _cond = _var select 2;
-						_wpScript = format 
-						[
-							"A3C_CORE\fnc_AI\wpFncs\wpScript_heli_overwatch.sqf ['%1',%2,%3,%4,'%5']",
-							getPlayerUID player,
-							_direction,
-							A3C_Heli_Overwatch_Height,
-							_cond,
-							A3C_HC_ACTIVE_FORM_POST
-						];
-						_wp setWaypointScript _wpScript;
-						[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
-					} else {
-
-						
-
-						[_group,A3C_Heli_Overwatch_Height,_direction] spawn {
-							params ["_group","_overwatch_height","_direction"];
-							
-							//-- start action
-							{
-								_vehicle = vehicle _x;
-								if (_x == driver _vehicle && {[_vehicle] call A3C_fnc_isAttackHelicopter}) then {
-									//00 disable movement
-									{_vehicle disableAI _x; } foreach ["TARGET","PATH"]; //,  ["ALL"] ,,"AUTOTARGET","FSM","SUPPRESSION","COVER","AUTOCOMBAT","MOVE"
-									//-- rotate chopper
-									private _targetPos = _vehicle getPos [1000,_direction];
-									_vehicle domove _targetPos;
-									_vehicle setVariable ["A3C_Freeze_helicopter",[true,_direction],true];
-									_heliHeight = (getPosVisual _vehicle) select 2;
-
-									_adjustZvelocity = if (_heliHeight < _overwatch_height) then {7} else {-7};
-									//-- adjust altitude
-									[_vehicle,_overwatch_height,_adjustZvelocity] spawn {
-										params ["_vehicle","_overwatch_height","_adjustZvelocity"];
-										while {abs ((getposATL _vehicle select 2) - _overwatch_height) > 20} do {
-											_vehicle setVelocity [0,0,_adjustZvelocity];
-											private _var = _vehicle getVariable ["A3C_Freeze_helicopter",[false,0]];
-											if !(_var select 0) exitWith {};
-										};
-									}; //-- after action is done, heli automatically adjusts altitude
-								};
-							} foreach (units _group);
-						
-							
-						};
-					};
-
-					
-				} else {
-
-				};
-				A3C_OBJECTSELECTOR_MODE = "";
-				
-			};
-			//["TARGET","AUTOTARGET","FSM","SUPPRESSION","COVER","AUTOCOMBAT","PATH"] //"MOVE",
-			*/
+			
 			case ("ARTY_0") : {
 				
 				A3C_OBJECTSELECTOR_MODE = "ARTY_1";
@@ -848,9 +745,9 @@ A3C_ObjectSelector_LB_Change = {
 					private _displayName = getText (configfile >> "CfgMagazines" >> _x >> "displayName");
 					_displayName == _lbText
 				};
-				//{} foreach ;
+
 				lbClear _listBox;
-				//if (true) exitWith {};
+
 				_text ctrlSetText "Select amount of shells";
 				ctrlSetFocus _listBox;
 
@@ -862,7 +759,6 @@ A3C_ObjectSelector_LB_Change = {
 					_selectedShell = _shellDSPs select 0;
 					_ammoAmount = (_selectedShell select 1) min 100;
 
-					// systemChat format ["Ammo Amount arty_0 (HUD_UI): %1", _ammoAmount];
 
 					private _candidates = [1,2,3,4,8,10,20,30,40,50,75,100];
 					private _lbEntries = [];

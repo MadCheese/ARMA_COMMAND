@@ -1,3 +1,7 @@
+#include "..\ui\radial\radialMenu\script_component.hpp"
+#include "..\ui\radial\radialMenu\dialog_defines.hpp"
+
+
 //-----------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------  R U L E S  O F  E N G A G E M E N T     ------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------
@@ -139,8 +143,8 @@ A3C_TOGGLEDANGER = {
 			A3C_DANGER_UNITS pushback _x;
 		} foreach _units;
 		hint format ["AUTOCOMBAT DISABLED FOR %1", _unitNames];
-		((findDisplay 100040) displayCtrl 10014) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_autocombat_disabled.paa";
-		((findDisplay 100040) displayCtrl 10015) ctrlSetTooltip "ENABLE AUTOCOMBAT";
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_OUTERTOP_4_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_autocombat_disabled.paa";
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_OUTERTOP_4_BTN) ctrlSetTooltip "ENABLE AUTOCOMBAT";
 		sleep 2;
 		hint "";
 	} else {
@@ -154,8 +158,8 @@ A3C_TOGGLEDANGER = {
 
 		} foreach _units;
 		hint format ["AUTOCOMBAT ENABLED FOR %1", _unitNames];
-		((findDisplay 100040) displayCtrl 10014) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_autocombat_enabled.paa";
-		((findDisplay 100040) displayCtrl 10015) ctrlSetTooltip "DISABLE AUTOCOMBAT";
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_OUTERTOP_4_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_autocombat_enabled.paa";
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_OUTERTOP_4_BTN) ctrlSetTooltip "DISABLE AUTOCOMBAT";
 		sleep 2;
 		hint "";
 	};

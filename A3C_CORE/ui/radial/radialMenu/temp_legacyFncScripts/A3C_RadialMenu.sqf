@@ -17,8 +17,7 @@ if (isNil 'A3C_is_Initialized') exitWith {
 //if (visiblemap) exitWith {};
 if  (!isnull (findDisplay 602)) exitwith {};
 if  (!isnull (finddisplay 100020)) exitwith {};
-if  (!isnull (finddisplay 100030)) exitwith {};
-if  (!isnull (finddisplay 100040)) exitwith {};
+if  (!isnull findDisplay IDD_RADIAL_MENU) exitwith {};
 if  (!isnull (findDisplay 100010)) exitwith {};
 if  (!isnull (finddisplay 100050)) exitwith {};
 
@@ -170,19 +169,14 @@ if (_cursorObjectSelection) then {
     _x ctrlShow false;
 } forEach (["radial_outerButtonMacros"] call FUNC(ctrlGroup));
 
-// // Seems unused
-// ((findDisplay 100040) displayCtrl 8005) ctrlSetText (toUpper (groupId (group player)));
+
 
 {
-	((findDisplay 100040) displayCtrl _x) ctrlShow false
-} foreach
-[
-	IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX, //8054,
-	IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_BOX, //8055,
-	IDC_RADIAL_EXTENSIONLEFT_CTRLSGROUP, //8071,
-	IDC_RADIAL_EXTENSIONLEFT_TC_BOX, //8095,
-	IDC_RADIAL_EXTENSIONLEFT_BG //8096
-];
+    _x ctrlShow false;
+} forEach (
+    (["radial_extensionRight"] call FUNC(ctrlGroup))
+    + (["radial_extensionLeft"] call FUNC(ctrlGroup))
+);
 
 
 
@@ -322,16 +316,4 @@ if (_cursorObjectSelection && {!isNull _cursorTarget && {side _cursorTarget in [
 	setMousePosition [0.5,0.5];
 };
 
-
-
-
-
-
-
-
-//if (profileNameSpace getVariable "A3C_NUM_VAR") then {
-//	((findDisplay 100040) displayCtrl 8027) ctrlSetTextColor [0,1,0,0.6];
-//} else {
-//	((findDisplay 100040) displayCtrl 8027) ctrlSetTextColor [1,0,0,0.6];
-//};
 

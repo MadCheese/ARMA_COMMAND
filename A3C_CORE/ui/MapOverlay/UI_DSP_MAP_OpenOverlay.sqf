@@ -1,4 +1,6 @@
 #include "..\SHARED\shared_ui_defines.hpp"
+#include "..\radial\radialMenu\script_component.hpp"
+#include "..\radial\radialMenu\dialog_defines.hpp"
 
 //---------------------------------------------------------------------------------------------------------
 //--------------------  THIS FUNCTION IS SPAWNED EACH TIME THE OVERLAY IS OPENED  -------------------------
@@ -27,7 +29,7 @@ if (isDedicated) exitwith {};
 if (isMultiplayer && isServer && !(hasInterface)) exitwith {};
 if !(player == leader group player) exitwith {};
 
-if (!isNull findDisplay 100040) exitWith {};
+if (!isNull findDisplay IDD_RADIAL_MENU) exitWith {};
 
 //-- prevent opening overlay when radial is expecting action. Note: should be added to main HUD keyDown and prevent map
 //-- from opening because that would swallow the keyUp event
@@ -123,16 +125,8 @@ A3C_MAP_Y = 0.5;
 
 A3C_DIAG_ACTIVE = true;
 
-//-- close map if opened to prevent double map issues
-if (_display == 100030) then {
-	if (visibleMap) then {
-		openMap false;
-		sleep 0.2;
-	};
-} else {
-	//-- force map to shut down briefing / diary
-	processDiaryLink createDiaryLink ['Map', player, ''];
-};
+//-- force map to shut down briefing / diary
+processDiaryLink createDiaryLink ['Map', player, ''];
 
 //---------------------------------------------------------------------------------------------
 //---------- ADD UI ---------------------------------------------------------------------------

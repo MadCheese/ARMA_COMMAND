@@ -397,7 +397,7 @@ A3C_UI_MAP_TREE_LABEL = {
 	};
 	
 
-	private _openTrees = if (_a3c_dsp in [100020,100030]) then {
+	private _openTrees = if (_a3c_dsp == 100020) then {
 		A3C_UI_MAP_TREES_OPEN
 	} else {
 		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
@@ -432,7 +432,7 @@ A3C_UI_MAP_TREE_OPEN_COLLAPSE = {
 	//-- _mode == "OPEN" or "COLLAPSE"
 	//-- _isInit == true (when initializing/refreshing tree) or false when toggled by player
 	_ctrlData params ["_ctrl","_selectedParent"];
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
 	private _isMainParent = count _selectedParent == 1;
 
 	private _openTrees = if (_a3c_dsp == 100040) then {
@@ -574,7 +574,7 @@ A3C_UI_MAP_RESIZE_TEAMCOLORS_Y = {
 
 
 
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
 
 	//-- Hardcoded Values (from .hpp)
 	//private _ctrlX = A3C_MAP_OVERLAY_GAMEUI_TREEX;
@@ -654,7 +654,7 @@ A3C_UI_MAP_RESIZE_TEAMCOLORS_Y = {
 A3C_UI_MAP_TREE_ADJUST_TOP_ROW = { //asasas
 	params ["_ctrl","_animTime"];
 
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
 	//private _ctrl = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 	//systemChat str (_a3c_dsp);
 	//-- not executed via radial - map only!
@@ -737,7 +737,7 @@ A3C_TREE_TVCHANGE = {
 	params ["_control","_tvSelTo"];
 
 	_tvSelTo params ["_parentTo","_childTo"];
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
 	private _isRadial = _a3c_dsp == 100040;
 	private _shift = 42 in A3C_UI_DOWNKEYS;
 	private _ctrl = 29 in A3C_UI_DOWNKEYS;
@@ -918,7 +918,7 @@ A3C_TREE_BOXCLICK = {
 	params ["_displayCtrl","_mouseButton","_sX","_sY","_shift","_ctrl","_alt"];
 	
 	private _left = _mouseButton == 0;
-	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
+	private _a3c_dsp = 100020;
 
 	if (!(_left) && {count A3C_SELECTED_UNITS > 0}) then {
 		if (_shift && {A3C_MAP_CommandMode != "HC"}) then { //~~ TO DO: ALIGN TEAMCOLORS THROUGH COMMAND LEVELS AND ALLOW FOR HC TEAMCOLOR VIA LISTBOX
@@ -1047,7 +1047,7 @@ A3C_UI_MAP_UnitTree_CtrlDelete = {
 A3C_UI_MAP_UnitTree_Sync = {
 
 	// if (true) exitWith {};
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
 	private _modes = if (_a3c_dsp == 100040) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
 	private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 	private _mainTreeIndex = 0;

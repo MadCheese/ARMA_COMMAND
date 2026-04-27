@@ -192,7 +192,7 @@ sleep 2;
 //systemchat 'now';
 {[_x] call A3C_UNIT_INIT} foreach (units group player);
 {_x setvariable ["A3C_FORMATION_INDEX", [_x] call A3C_GETUNITINDEX, true]} foreach units group player;
-(findDisplay 100030 displayCtrl 7043) ctrlMapCursor ["Track","HC_overFriendly"]; // ~ ?
+
 profileNamespace setvariable ["A3C_GROUPUNITS",(units group player)];
 player setvariable ["A3C_FORMATION_INDEX", 1, true];
 

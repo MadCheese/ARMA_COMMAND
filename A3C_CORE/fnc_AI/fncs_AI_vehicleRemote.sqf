@@ -1,6 +1,6 @@
 A3C_GP_RC_UIVehicleRemoteFnc = {
 
-    private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100040}};
+    private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
     private _isRadial = _a3c_dsp == 100040;
 
 

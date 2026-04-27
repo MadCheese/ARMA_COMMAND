@@ -1,5 +1,8 @@
 #include "..\..\ui\SHARED\shared_ui_defines.hpp"
 #include "..\..\ui\radial\radialMenu\dialog_defines.hpp"
+#include "..\..\ui\radial\radialMenu\script_component.hpp"
+
+
 
 
 
@@ -12,8 +15,8 @@
 //---------------------------- MAP ONLY
 
 A3C_AI_HighCommand_Action_joinPlayerGroup = {
-	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
-	private _isRadial = _a3c_dsp == 100040;
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if !(_isRadial) then {
 		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
@@ -38,8 +41,8 @@ A3C_AI_HighCommand_Action_mergeGroups = {
 
 A3C_AI_HighCommand_Action_heliHoverInPlace = {
 	private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
-	private _isRadial = _a3c_dsp == 100040;
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
+	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	
 	private _var = (vehicle leader _group) getVariable ["A3C_Freeze_helicopter",[false,0]];
 
@@ -68,8 +71,8 @@ A3C_AI_HighCommand_Action_heliHoverInPlace = {
 //---------------------------- SHARED (MAP+RADIAL)
 
 A3C_AI_HighCommand_Action_RefreshGroup = {
-	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
-	private _isRadial = _a3c_dsp == 100040;
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 
 	//-- UI-Reaction
 	if (_isRadial) then {
@@ -176,8 +179,8 @@ A3C_AI_HighCommand_Action_RefreshGroup = {
 };
 
 A3C_AI_HighCommand_Action_VehicleRemote = {
-	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
-	private _isRadial = _a3c_dsp == 100040;
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	if (_isRadial) then {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
@@ -191,8 +194,8 @@ A3C_AI_HighCommand_Action_VehicleRemote = {
 
 
 A3C_AI_HighCommand_Action_ConvoyHalt = {
-	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
-	private _isRadial = _a3c_dsp == 100040;
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if (_isRadial) then {
 		A3C_DISABLE_RADIAL = true;
@@ -246,8 +249,8 @@ A3C_AI_HighCommand_Action_ConvoyHalt = {
 
 
 A3C_AI_HighCommand_Action_DeleteGroups = {
-	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
-	private _isRadial = _a3c_dsp == 100040;
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if (_isRadial) then {
 		A3C_DISABLE_RADIAL = true;
@@ -280,8 +283,8 @@ A3C_AI_HighCommand_Action_DeleteGroups = {
 };
 
 A3C_AI_HighCommand_Action_convoyCreate = {
-	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
-	private _isRadial = _a3c_dsp == 100040;
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if (_isRadial) then {
 		//-- no actual action - just close menu
@@ -296,8 +299,8 @@ A3C_AI_HighCommand_Action_convoyCreate = {
 };
 
 A3C_AI_HighCommand_Action_convoyRejoin = {
-	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
-	private _isRadial = _a3c_dsp == 100040;
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if (_isRadial) then {
 		//-- no actual action - just close menu
@@ -313,8 +316,8 @@ A3C_AI_HighCommand_Action_convoyRejoin = {
 
 A3C_AI_HighCommand_Action_limitSpeed = {
 	A3C_OBJECTSELECTOR_MODE = "SPEEDLIMIT";
-	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
-	private _isRadial = _a3c_dsp == 100040;
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 
 	if (_isRadial) then {
 		_a3c_dsp = 100060;
@@ -380,8 +383,8 @@ A3C_AI_HighCommand_Action_orderDetonation = {
 };
 
 A3C_AI_HighCommand_Action_reBoardGroupToVehicle = {
-	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
-	private _isRadial = _a3c_dsp == 100040;
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if (_isRadial) then {
 		//-- no actual action - just close menu
@@ -395,8 +398,8 @@ A3C_AI_HighCommand_Action_reBoardGroupToVehicle = {
 };
 
 A3C_AI_HighCommand_Action_chargeMavic = {
-	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
-	private _isRadial = _a3c_dsp == 100040;
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if (_isRadial) then {
 		//-- no actual action - just close menu
@@ -442,7 +445,7 @@ A3C_AI_HighCommand_Action_vehicleSmoke = {
 
 A3C_AI_HighCommand_Action_flyInHeight = {
 
-	private _group = if (!isNull findDisplay 100040) then {A3C_RD_UNITS select 0} else {A3C_SELECTED_HC_GROUPS_SETTINGS select 0}; //~~ same same??
+	private _group = if (!isNull findDisplay IDD_RADIAL_MENU) then {A3C_RD_UNITS select 0} else {A3C_SELECTED_HC_GROUPS_SETTINGS select 0}; //~~ same same??
 	private _a3c_dsp = if (visibleMap) then {100020} else {100060};
 
 	if (_a3c_dsp == 100060) then {
@@ -495,7 +498,7 @@ A3C_AI_HighCommand_Action_reArm = {
 	player groupradio 'SentCmdRearm';
 	private _a3c_dsp = if (visibleMap) then {100020} else {100060};
 
-	if (!isNull findDisplay 100040) then {
+	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
@@ -507,7 +510,7 @@ A3C_AI_HighCommand_Action_reArm = {
 A3C_AI_HighCommand_Action_groupHeal = {
 	private _a3c_dsp = if (visibleMap) then {100020} else {100060};
 
-	if (!isNull findDisplay 100040) then {
+	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
@@ -534,9 +537,9 @@ A3C_AI_HighCommand_Action_transferOwnership = {
 	};
 
 	[[clientOwner, _group], _transferFnc] remoteExec ['bis_fnc_call', 2];
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 
-	if (!isNull findDisplay 100040) then {
+	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
@@ -556,12 +559,12 @@ A3C_AI_HighCommand_Action_unAssembleWeapon = { // #TODO This fnc requires invest
 	_wpn = if (_mode == 0) then {objNull} else {_this select 1};
 
 
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 
 
 
 	//-- main display EH to disable radial until key is let go
-	if (!isNull findDisplay 100040 && _a3c_dsp == 100060 ) then {
+	if (!isNull findDisplay IDD_RADIAL_MENU && _a3c_dsp == 100060 ) then {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	};
@@ -809,7 +812,7 @@ A3C_AI_HighCommand_Action_landAircraft = {
 	};
 
 
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 	_parent = findDisplay _a3c_dsp displayCtrl 8008;
 	_text = findDisplay _a3c_dsp displayCtrl 800802;
 	_listBox = findDisplay _a3c_dsp displayCtrl 800803;
@@ -1126,7 +1129,7 @@ A3C_AI_HighCommand_Action_placeCharge = {
 			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
 		};
 
-		private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+		private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 		private _parent = findDisplay _a3c_dsp displayCtrl 8008;
 		private _text = findDisplay _a3c_dsp displayCtrl 800802;
 		private _listBox = findDisplay _a3c_dsp displayCtrl 800803;

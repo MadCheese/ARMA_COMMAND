@@ -233,7 +233,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		private _gp = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
 		_leaderVic = vehicle (leader _gp);
 
-		if (_a3c_dsp == 100040 && {typeOf _leaderVic in ["B_T_VTOL_01_armed_F", "B_T_VTOL_01_armed_fixed_F"]}) then {
+		if (_a3c_dsp == IDD_RADIAL_MENU && {typeOf _leaderVic in ["B_T_VTOL_01_armed_F", "B_T_VTOL_01_armed_fixed_F"]}) then {
 			_actions PushBack "VTOL_CANNON";
 			_actions PushBack "VTOL_GATLING";
 			if (typeOf _leaderVic == "B_T_VTOL_01_armed_fixed_F") then {
@@ -307,7 +307,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 
 		//-- add FPV drone to 3D Menu   /// unitIsUAV _leaderVic
-		if ( ( (typeOf _leaderVic) in ["B_Crocus_AT", "B_Crocus_AP"]) && {_a3c_dsp == 100040}) then {
+		if ( ( (typeOf _leaderVic) in ["B_Crocus_AT", "B_Crocus_AP"]) && {_a3c_dsp == IDD_RADIAL_MENU}) then {
 			if !("uav_fpv" in (toLower (waypointScript [_gp, currentwaypoint _gp]))) then {
 				_actions pushBackUnique "UAV_FPV";
 			};
@@ -326,10 +326,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					if (A3C_IsRappel) then {
 						
 						if (_isRotor && {isPlayer (leader _gp) OR {{group _x != _gp} count (crew _leaderVic) > 0}}) then {
-							//if (isNull findDisplay 100040 OR {}) then {
-								_actions pushBackUnique "RAPPEL";
-								
-							//};
+							_actions pushBackUnique "RAPPEL";
 
 						};
 					};
@@ -337,7 +334,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				//if ([_leaderVic] call A3C_fnc_isAttackHelicopter ) then {
 				private _var = (_leaderVic) getVariable ["A3C_Freeze_helicopter",[false,0]];
 				if (_var select 0) then {
-					if (_a3c_dsp != 100040) then { //~~ TEMPORARY - MAKE THIS ACCESSIBLE VIA RADIAL AS WELL!
+					if (_a3c_dsp != IDD_RADIAL_MENU) then { //~~ TEMPORARY - MAKE THIS ACCESSIBLE VIA RADIAL AS WELL!
 						_actions pushBackUnique "HELI_OVERWATCH";
 					};		
 				};
@@ -348,7 +345,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					//-- vehicle can load an object(s)
 					_actions pushBackUnique "PARALOAD";
 				};
-				if (!isNull findDisplay 100040 && {A3C_israppel}) then {
+				if (!isNull findDisplay IDD_RADIAL_MENU && {A3C_israppel}) then {
 					if (_isRotor && {{((assignedVehicleRole _x) select 0) == "cargo"} count crew _leaderVic > 0}) then {
 						_actions pushBackUnique "RAPPEL";
 					};
@@ -356,7 +353,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			};
 			if (!(_isRotor) && {_leaderVic isKindOf "PLANE"}) then {
 				_casModes = [typeof _leaderVic] call MCSS_fnc_getCASmodes;
-				if (count _casModes > 0 && {_a3c_dsp == 100040}) then {
+				if (count _casModes > 0 && {_a3c_dsp == IDD_RADIAL_MENU}) then {
 					_actions pushBackUnique "CAS-STRIKE";
 				};
 			};
@@ -373,7 +370,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			
 
 
-			if (!isNull findDisplay 100040) then {
+			if (!isNull findDisplay IDD_RADIAL_MENU) then {
 
 				
 
@@ -546,11 +543,11 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				!(_leaderVic getVariable ["A3C_ParadropActive",false])
 			} &&
 			{
-				_a3c_dsp == 100040 OR {((getPosATL _leaderVic) select 2) > 1}
+				_a3c_dsp == IDD_RADIAL_MENU OR {((getPosATL _leaderVic) select 2) > 1}
 			}
 		} count A3C_SELECTED_HC_GROUPS_SETTINGS > 0
 	) then {
-		if (_a3c_dsp == 100040) then {
+		if (_a3c_dsp == IDD_RADIAL_MENU) then {
 			_actions pushBackUnique "LANDING"; //-- aircraft landings: further evaluation is to be made when action is CALLED
 		};
 	};
@@ -562,7 +559,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		};
 	};
 
-	if (!isNull findDisplay 100040) then {
+	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		private _HCunits = units player - [player];
 		{
 			{
@@ -659,7 +656,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						A3C_HC_LightsOnUnits pushbackUnique (group _u);
 					};
 				};
-				if ((!isNull findDisplay 100040) && {_x == (gunner vehicle _x)}) then {
+				if ((!isNull findDisplay IDD_RADIAL_MENU) && {_x == (gunner vehicle _x)}) then {
 					if (isNull objectParent _x) then {
 						if ([_x] call A3C_HasAT) then {
 							A3C_REMFIRE_ATShot_Units pushBackUnique _x;
@@ -1398,7 +1395,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						);
 
 						if (_doSpecifyLandingPos) then {
-							if (!isNull findDisplay 100040) then {
+							if (!isNull findDisplay IDD_RADIAL_MENU) then {
 
 								private _vehicleType = "A3C_HeliPad";
 								private _colorString = "";
@@ -1446,7 +1443,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
 					];
 					_buttonFnc = {					
-						if (!isNull findDisplay 100040) then {
+						if (!isNull findDisplay IDD_RADIAL_MENU) then {
 							[
 								false, //-- isBusy
 								"CAS-STRIKE", //-- actionID
@@ -1464,7 +1461,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_params = [] ;
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
 					_button_toolTip = "";
-					if (_a3c_dsp == 100040) then {
+					if (_a3c_dsp == IDD_RADIAL_MENU) then {
 						_button_toolTip =  format
 						[
 							"RAPPEL CARGO - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1. Creates wp on destination and origin.",
@@ -1476,7 +1473,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 					_buttonFnc = {
 						
-						if (!isNull findDisplay 100040) then {
+						if (!isNull findDisplay IDD_RADIAL_MENU) then {
 							[
 								false, //-- isBusy
 								"RAPPEL", //-- actionID
@@ -1519,7 +1516,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_suppression.paa";
 					_button_toolTip = "";
-					if (_a3c_dsp == 100040) then {
+					if (_a3c_dsp == IDD_RADIAL_MENU) then {
 						_button_toolTip =  format
 						[
 							"SUPPRESSIVE FIRE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
@@ -1536,7 +1533,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_params = [];
 					_button_IMG = "a3c_ui\menu\icon_menu_action_Artillery.paa";
 					_button_toolTip = "";
-					if (_a3c_dsp == 100040) then {
+					if (_a3c_dsp == IDD_RADIAL_MENU) then {
 						_button_toolTip =  format
 						[
 							"FIRE ARTILLERY - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
@@ -1547,10 +1544,10 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					}; 
 					_buttonFnc = {
 						
-						private _a3c_dsp = if (visibleMap) then {100020} else {100040};
+						private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
 
 
-						if (_a3c_dsp == 100040) then {
+						if (_a3c_dsp == IDD_RADIAL_MENU) then {
 
 							[
 								false, //-- isBusy
@@ -1639,7 +1636,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
 							};
 
-							private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+							private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 							private _parent = findDisplay _a3c_dsp displayCtrl 8008;
 							private _text = findDisplay _a3c_dsp displayCtrl 800802;
 							private _listBox = findDisplay _a3c_dsp displayCtrl 800803;
@@ -1694,7 +1691,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				} forEach _buttonData;
 			};
 
-			if (_a3c_dsp == 100040) then {
+			if (_a3c_dsp == IDD_RADIAL_MENU) then {
 
 				_buttonFnc = (str _buttonFnc) splitString "";
 				_buttonFnc deleteAt 0;
@@ -1736,12 +1733,16 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 
-	private _a3c_dsp = if (visibleMap) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+
+
+	
+
 	 //~~ has to be RD becasue it can also be called on squad units (subideal, maybe just have one array for everything. A3C_SELECTED_UNITS)
-	private _refUnits = if (_a3c_dsp == 100040) then {A3C_RD_UNITS} else {A3C_SELECTED_UNITS};
+	private _refUnits = if (_a3c_dsp == IDD_RADIAL_MENU) then {A3C_RD_UNITS} else {A3C_SELECTED_UNITS};
 	private _remFire_units = [];
-	if (!isNull findDisplay 100040) then {
-		_a3c_dsp = 100040;
+	if (!isNull findDisplay IDD_RADIAL_MENU) then {
+		_a3c_dsp = IDD_RADIAL_MENU;
 		_refUnits = A3C_RD_UNITS;
 	};
 	private _chatMessageParts = [];
@@ -1751,7 +1752,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 		private _group = _x;
 		private _leaderVic = (vehicle leader _group);
 
-		if (_a3c_dsp in [100020,100030]) then {
+		if (_a3c_dsp == 100020) then {
 			if (_group in _refUnits) then { //~~ ?? what does this do ecxactly? making sure that group menu switches the button pages?
 				["HC"] call A3C_START_TABMODE;
 			};
@@ -1858,7 +1859,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 	private ["_a3c_dsp"];
 	A3C_HC_NearStatics = [];
 
-	_a3c_dsp = if (visibleMap) then {100020} else {100030};
+	private _a3c_dsp = 100020;
 
 	
 	
@@ -2121,10 +2122,9 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 	params ["_call"];
 	private ["_vehicle","_cargoObjects"];
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 
 
-	//_targetVehicle = if (!isNull findDisplay 100040) then {} else {};
 
 	_vehicle = if (isNull _call) then {
 
@@ -2148,7 +2148,7 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 		if (count _cargoObjects > 0) then {
 
 			A3C_OBJECTSELECTOR_MODE = "PARALOAD";
-			if (!isNull findDisplay 100040) then {
+			if (!isNull findDisplay IDD_RADIAL_MENU) then {
 				A3C_DISABLE_RADIAL = true;
 				[] call A3C_UI_RADIAL_CloseDisplay;
 
@@ -2199,7 +2199,7 @@ A3C_AI_HIGHCOMMAND_fnc_mergeGroups = {
 	params ["_groupArray"];
 	if (count _groupArray == 0) exitWith {};
 	A3C_SELECTED_HC_GROUPS_SETTINGS = +(_groupArray);
-	private _a3c_dsp = if (visibleMap) then {100020} else {if (!isNull findDisplay 100030) then {100030} else {100060}};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 	
 
 	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
@@ -2302,7 +2302,7 @@ A3C_Map_HC_groupContext_LB_Switch = {
 A3C_GROUP_STANCE_Selected = "AUTO";
 A3C_GP_Btns_Stances = {
 	params ["_stance","_mode"]; //-- #TODO: _mode is always 1
-	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
+	private _a3c_dsp = 100020;
 	A3C_GROUP_STANCE_Selected = _stance;
 	if (profileNameSpace getVariable ["HC_GROUP_RESPONSE", false]) then {
 		{
@@ -2328,7 +2328,7 @@ A3C_GP_Btns_Stances = {
 A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 
 
-	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
+	private _a3c_dsp = 100020;
 	(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 
 	private _showPlayerHint = false;
@@ -2408,7 +2408,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 A3C_HC_FocusGroup = grpNull;
 
 A3C_MAP_HC_setFocusGroup = {
-	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
+	private _a3c_dsp = 100020;
 	if !(count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) exitWith {};
 	private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
 	if ( {isPlayer _x} count units _group > 0) exitWith {
@@ -2430,7 +2430,7 @@ A3C_MAP_HC_setFocusGroup = {
 A3C_CONVOY_GROUPORDER = [];
 
 A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
-	private _a3c_dsp = if (visibleMap) then {100020} else {100030};
+	private _a3c_dsp = 100020;
 	if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
 		//-- rejoin Convoy to former groups
 		{

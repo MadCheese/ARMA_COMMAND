@@ -1455,7 +1455,7 @@ class A3C_DSP_MapOverlay
 				class WP_BEHAVIOUR: A3C_RscCombo_Dot
 				{
 					idc = 709139;
-					onLBSelChanged = "[709139,(_this select 1),100020] call A3C_LB_HC";
+					onLBSelChanged = "[709139,(_this select 1)] call A3C_LB_HC";
 
 					x = 0 * GUI_GRID_W;
 					y = 2.5 * GUI_GRID_H;
@@ -1506,7 +1506,7 @@ class A3C_DSP_MapOverlay
 				class WP_COMBATMODE: A3C_RscCombo_Dot
 				{
 					idc = 709140;
-					onLBSelChanged = "[709140,(_this select 1),100020] call A3C_LB_HC";
+					onLBSelChanged = "[709140,(_this select 1)] call A3C_LB_HC";
 
 					x = 0 * GUI_GRID_W;
 					y = 4.5 * GUI_GRID_H;
@@ -1555,7 +1555,7 @@ class A3C_DSP_MapOverlay
 				{
 					idc = 709138;
 					
-					onLBSelChanged = "[709138,(_this select 1),100020] call A3C_LB_HC";
+					onLBSelChanged = "[709138,(_this select 1)] call A3C_LB_HC";
 					x = 0 * GUI_GRID_W;
 					y = 6.5 * GUI_GRID_H;
 					w = 9 * GUI_GRID_W;
@@ -1603,7 +1603,7 @@ class A3C_DSP_MapOverlay
 				{
 					idc = 709128;	
 					
-					onLBSelChanged = "[709128,(_this select 1),100020] call A3C_LB_HC";
+					onLBSelChanged = "[709128,(_this select 1)] call A3C_LB_HC";
 					x = 0 * GUI_GRID_W;
 					y = 8.5 * GUI_GRID_H;
 					w = 9 * GUI_GRID_W;
@@ -1664,7 +1664,7 @@ class A3C_DSP_MapOverlay
 						class Cond_Type_PRE: A3C_RscCombo_Dot
 						{
 							idc = 709123;
-							onLBSelChanged = "[709123,(_this select 1),100020] call A3C_LB_HC";
+							onLBSelChanged = "[709123,(_this select 1)] call A3C_LB_HC";
 							x = 0 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H;
 							w = 4.5 * GUI_GRID_W;
@@ -1681,7 +1681,7 @@ class A3C_DSP_MapOverlay
 							idc = 709124;
 
 							
-							onLBSelChanged = "[709124,(_this select 1),100020] call A3C_LB_HC";
+							onLBSelChanged = "[709124,(_this select 1)] call A3C_LB_HC";
 							x = 4.5 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H; //y = 18 * GUI_GRID_H;
 							w = 4.5 * GUI_GRID_W;
@@ -1739,7 +1739,7 @@ class A3C_DSP_MapOverlay
 						class WP_TYPEACTION: A3C_RscCombo_Dot
 						{
 							idc = 709141;
-							onLBSelChanged = "[709141,(_this select 1),100020] call A3C_LB_HC";
+							onLBSelChanged = "[709141,(_this select 1)] call A3C_LB_HC";
 
 							x = 0 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H;
@@ -1857,7 +1857,7 @@ class A3C_DSP_MapOverlay
 						{
 							idc = 709129;
 							
-							onLBSelChanged = "[709129,(_this select 1),100020] call A3C_LB_HC";
+							onLBSelChanged = "[709129,(_this select 1)] call A3C_LB_HC";
 							x = 0 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H; 
 							w = 9 * GUI_GRID_W;
@@ -1906,7 +1906,7 @@ class A3C_DSP_MapOverlay
 							idc = 709125;
 
 							
-							onLBSelChanged = "[709125,(_this select 1),100020] call A3C_LB_HC";
+							onLBSelChanged = "[709125,(_this select 1)] call A3C_LB_HC";
 							
 							x = 0 * GUI_GRID_W;
 							y = 2.5 * GUI_GRID_H; 
@@ -1922,7 +1922,7 @@ class A3C_DSP_MapOverlay
 							idc = 709126;
 
 							
-							onLBSelChanged = "[709126,(_this select 1),100020] call A3C_LB_HC";
+							onLBSelChanged = "[709126,(_this select 1)] call A3C_LB_HC";
 							
 							x = 4.5 * GUI_GRID_W;
 							y = 2.5 * GUI_GRID_H; 
@@ -1989,7 +1989,7 @@ class A3C_DSP_MapOverlay
 						{
 							idc = 709145;
 							
-							onLBSelChanged = "[709145,(_this select 1),100020] call A3C_LB_HC";
+							onLBSelChanged = "[709145,(_this select 1)] call A3C_LB_HC";
 							x = 0 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H;
 							w = 9 * GUI_GRID_W;
@@ -2038,7 +2038,7 @@ class A3C_DSP_MapOverlay
 							idc = 709147;
 
 							
-							onLBSelChanged = "[709147,(_this select 1),100020] call A3C_LB_HC";
+							onLBSelChanged = "[709147,(_this select 1)] call A3C_LB_HC";
 							
 							x = 0 * GUI_GRID_W;
 							y = 2.5 * GUI_GRID_H;

@@ -584,6 +584,8 @@ A3C_Prevent_attach_Silencer = false;
 A3C_Prevent_attach_NVG = false;
 A3C_Prevent_SwitchWeapon = false;
 
+A3C_SNAP_MAP_BOOL = false;
+
 
 //-- DEBUG
 RED_LINES = [];

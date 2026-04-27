@@ -151,7 +151,8 @@ A3C_UI_FNC_ADD_KEYBINDS =
 			"Open suppression display"
 		],
 		{
-			if (visibleMap OR (!isNull (findDisplay 100030))) exitWith {};
+			if (visibleMap) exitWith {};
+			
 			if !(player == leader group player) exitWith {};
 			if ((count groupSelectedUnits player) == 0) then {
 				{

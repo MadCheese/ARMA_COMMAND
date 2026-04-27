@@ -1,3 +1,7 @@
+#include "..\..\ui\radial\radialMenu\dialog_defines.hpp"
+#include "..\..\ui\radial\radialMenu\script_component.hpp"
+
+
 //---------------------------------------------------------------------------------------------
 //---------- 1. Non positional actions --------------------------------------------------------
 //---------------------------------------------------------------------------------------------
@@ -119,7 +123,7 @@ A3C_AI_Squad_Action_unAssembleWeapon = {
 A3C_AI_Squad_Action_openInventory = {
 	params ["_target", "_source"];
 	A3C_UI_INV_TARGET_UNIT = _target;
-	(findDisplay 100040) closeDisplay 0;
+	findDisplay IDD_RADIAL_MENU closeDisplay 0;
 	{player groupSelectUnit [_x,false]} foreach units player; showCommandingMenu "";
 	[_target,_source] spawn A3C_UI_RADIAL_INV_LB_CREATE;
 };
