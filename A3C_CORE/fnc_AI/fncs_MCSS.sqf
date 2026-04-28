@@ -334,7 +334,7 @@ MCSS_fnc_findOverwatchNear = {
 	{
 		private ["_refPos"];
 		_refPos = +(_x); _refPos set [2, (_refPos select 2) + 1];
-		if ([(ATLtoASL _refPos),(ATLtoASL _targetPos)] call MCSS_fnc_LOS_SIMPLE) exitwith {
+		if ([(ATLtoASL _refPos),(ATLtoASL _targetPos)] call MCSS_fnc_LOS_SIMPLE) exitWith {
 			_return = _x;
 		};
 
@@ -486,7 +486,7 @@ MCSS_fnc_GetOut = {
 	//	};
 	//};
 	while {alive _unit} do {
-		if (isNull _unit) exitwith {_abort = true};
+		if (isNull _unit) exitWith {_abort = true};
 		if (!isNull objectParent _unit) then {
 			[_unit,vehicle _unit] remoteExec ["leaveVehicle",_unit];
 			_unit remoteExec ["unassignVehicle",0];
@@ -494,7 +494,7 @@ MCSS_fnc_GetOut = {
 			//systemChat str time;
 			//_unit action ["eject",vehicle _unit];
 		};
-		if (isNull objectParent _unit) exitwith {};
+		if (isNull objectParent _unit) exitWith {};
 		sleep 0.1;
 	};
 	sleep 2;
@@ -553,7 +553,7 @@ MCSS_fnc_getSafePos = {
 				_exit = true;
 			};
 		};
-		if (_exit) exitwith {};
+		if (_exit) exitWith {};
 		_attempts = _attempts + 1;
 	};
 	_exit = false;
@@ -576,14 +576,14 @@ MCSS_fnc_isInString = {
 		_exit = false;
 		if (_x == (_checked select 0)) then {
 			for "_i" from 1 to ((count _checked) min ((count _compared) - _forEachIndex)) do {
-				if !((_checked select _i) == (_compared select (_forEachIndex + _i))) exitwith {_return = false};
+				if !((_checked select _i) == (_compared select (_forEachIndex + _i))) exitWith {_return = false};
 				if (_i == (count _checked)) then {
 					_exit = true;
 					_return = true;
 				};
 			};
 		};
-		if (_exit) exitwith {};
+		if (_exit) exitWith {};
 	} foreach _compared;
 	_return
 };
@@ -733,7 +733,7 @@ MCSS_fnc_getClosestBPos = {
 	_aslPos = +(getPosASL _unit);
 	_aslPos set [2, (_aslPos select 2) + 0.1];
 	_bpc = ([_bld] call MCSS_fnc_countBPos);
-	if (_bpc == 0) exitwith {[]};
+	if (_bpc == 0) exitWith {[]};
 	_poses = [];
 	for "_i" from 0 to _bpc do {
 		_poses pushback (_bld buildingpos _i);
@@ -765,7 +765,7 @@ MCSS_fnc_getClosestBPos = {
 			_poses = A3C_OCC_BPOSES;
 		};
 	};
-	if (count _poses == 0) exitwith {[]};
+	if (count _poses == 0) exitWith {[]};
 	_poses = [_poses,[],{_x distance _unit},"ASCEND"] call BIS_fnc_sortBy;
 	_poses select 0
 };
@@ -922,7 +922,7 @@ MCSS_fnc_LOS_Cover_old = {
 //	} else {
 //		{
 //			_armor = getnumber (configfile >> "Cfgvehicles" >> typeof _x >> "armor");
-//			if (_armor >= 100) exitwith {
+//			if (_armor >= 100) exitWith {
 //				_return = false;
 //			};
 //		} foreach _objs;
@@ -948,7 +948,7 @@ MCSS_fnc_LOF = {
 	//Unit to be in line of weapon
 	_b = _this select 1;
 
-	if (weaponlowered _a) exitwith {false};
+	if (weaponlowered _a) exitWith {false};
 	
 	_range = [position _a, getDir _a , 45, position _b ] call mcss_inAngleSector;
 	//systemchat str [([_a, position _b] call BIS_fnc_relativeDirTo),_range];
@@ -1250,10 +1250,10 @@ MCSS_fnc_GetMuzzle = {
 	private ["_mag"];
 	_mag = _this select 0;
 	_return = "";
-	if ( !((typename _mag) == "STRING") && {isnull _mag}) exitwith {_return};
+	if ( !((typename _mag) == "STRING") && {isnull _mag}) exitWith {_return};
 	{
 		_magazines = getarray (configfile >> "CfgWeapons" >> "Throw" >> _x >> "magazines");
-		if (_mag in _magazines) exitwith {
+		if (_mag in _magazines) exitWith {
 			_return = _x;
 		};
 	} foreach A3C_THROW_MUZZLES;

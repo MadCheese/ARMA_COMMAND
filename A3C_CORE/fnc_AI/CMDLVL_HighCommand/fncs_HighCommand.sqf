@@ -889,7 +889,7 @@ A3C_HC_INSERT_ACTION_WP = {
 				};
 			};
 			//systemchat 'loop';
-			if (_exit) exitwith {
+			if (_exit) exitWith {
 				if (!isNull _hPad) then { //-- this will be executed too early!
 					deleteVehicle _hPad;
 					{
@@ -1018,7 +1018,7 @@ A3C_HC_ForceGround = {
 	private ["_vehicle"];
 	_vehicle = _this;
 	while {canMove _vehicle} do {
-		if (((getPosATL _vehicle) select 2) < 1) exitwith {
+		if (((getPosATL _vehicle) select 2) < 1) exitWith {
 			[_vehicle,0] remoteExec ["flyInHeight",_vehicle];
 		};
 		sleep 0.5;
@@ -1209,7 +1209,7 @@ A3C_HC_FNC_SYNC_WP = {
 A3C_HC_FNC_CompleteWaypoint = {
 	private ["_group","_waypoints"];
 	
-	//if (true) exitwith {};
+	//if (true) exitWith {};
 	_group = _this select 0;
 	_waypoints = waypoints _group;
 	//systemchat format ["%1 has completed a waypoint",groupId _group];
@@ -1223,7 +1223,7 @@ A3C_HC_FNC_CompleteWaypoint = {
 	};
 	//systemchat format ["current waypoint is %1",currentWaypoint _group];
 	
-	if ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) exitwith {};
+	if ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) exitWith {};
 	
 	if ({waypointtype _x == "CYCLE"} count _waypoints == 0) then {
 		[_group, currentwaypoint _group] setwaypointstatements ['false',''];

@@ -1,4 +1,4 @@
-if (isDedicated) exitwith {};
+if (isDedicated) exitWith {};
 
 
 //------------------------------------------  M A P  P L A N N I N G  ----------------------------

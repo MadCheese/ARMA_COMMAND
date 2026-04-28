@@ -1,5 +1,5 @@
-#include "..\radial\radialMenu\script_component.hpp"
-#include "..\radial\radialMenu\dialog_defines.hpp"
+#include "..\..\radial\radialMenu\script_component.hpp"
+#include "..\..\radial\radialMenu\dialog_defines.hpp"
 
 
 
@@ -704,7 +704,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					//_am = (getText (configfile >> "CfgMagazines" >> _x >> "ammo"));
 					//_array = "true" configClasses (configfile >> "CfgAmmo" >> _am >> "NVGMarkers");
 
-					//if (count _array > 0) exitwith {
+					//if (count _array > 0) exitWith {
 				//		A3C_HC_IROnUnits pushBackUnique _u; //-- drivers added to IR
 					//};
 				} foreach (magazines _u);
@@ -2534,7 +2534,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 			_drivers  = [_drivers ,[],{(vehicle _x) distance2D _refPos},"ASCEND"] call BIS_fnc_sortBy;
 			_leader = if (count _drivers > 0) then {_drivers select 0} else {leader (_refUnits select 0)};
 
-			if (count _drivers == 0) exitwith {
+			if (count _drivers == 0) exitWith {
 				systemchat "A3C: Convoy can not be created without drivers :)";
 			};
 

@@ -15,18 +15,18 @@ if (isNil 'A3C_is_Initialized') exitWith {
 
 
 //if (visiblemap) exitWith {};
-if  (!isnull (findDisplay 602)) exitwith {};
-if  (!isnull (finddisplay 100020)) exitwith {};
-if  (!isnull findDisplay IDD_RADIAL_MENU) exitwith {};
-if  (!isnull (findDisplay 100010)) exitwith {};
-if  (!isnull (finddisplay 100050)) exitwith {};
+if  (!isnull (findDisplay 602)) exitWith {};
+if  (!isnull (finddisplay 100020)) exitWith {};
+if  (!isnull findDisplay IDD_RADIAL_MENU) exitWith {};
+if  (!isnull (findDisplay 100010)) exitWith {};
+if  (!isnull (finddisplay 100050)) exitWith {};
 
 
 
 
 
 
-if (A3C_DISABLE_RADIAL) exitwith {};
+if (A3C_DISABLE_RADIAL) exitWith {};
 _exit = false;
 if !(player == (leader group player)) then {
 	_exit = true;
@@ -38,7 +38,7 @@ if !(player == (leader group player)) then {
 	};
 
 };
-if (_exit) exitwith {};
+if (_exit) exitWith {};
 
 
 

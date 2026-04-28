@@ -1,8 +1,8 @@
-#include "..\SHARED\shared_ui_defines.hpp"
-#include "..\radial\radialMenu\dialog_defines.hpp"
-#include "..\radial\radialMenu\script_component.hpp"
+#include "..\..\SHARED\shared_ui_defines.hpp"
+#include "..\..\radial\radialMenu\dialog_defines.hpp"
+#include "..\..\radial\radialMenu\script_component.hpp"
 
-if (isDedicated) exitwith {};
+if (isDedicated) exitWith {};
 
 /////////////////////////////   DRAW FNCS (MOVE TO OWN SCRIPT WITH UI FNCS)    ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////  
@@ -840,7 +840,7 @@ A3C_GetTrackerMarkSize = {
 		_valY = 1;
 	} else {
 		{
-			if (_forEachIndex > 19) exitwith {};
+			if (_forEachIndex > 19) exitWith {};
 			if (_forEachIndex == 1) then {_valX = 0.75};
 			_valX = _valX + 0.045;
 			_valY = _valY + 0.045; //0,0225
@@ -856,7 +856,7 @@ A3C_GoCode_Switch = {
 	_bPos = 0;
 	_mSize = [1,1];
 	//systemchat "1";
-	if (_lb > 4) exitwith {
+	if (_lb > 4) exitWith {
 		_bPos = A3C_TAB_BUILDING buildingPos (_lb - 5);
 		{
 			private ["_soldier","_data"];
@@ -935,7 +935,7 @@ A3C_FIND_SMOKELESS_WP = {
 		} else {
 			_result = position _unit;
 		};
-		if (_exit) exitwith {};
+		if (_exit) exitWith {};
 	};
 	_result
 };
@@ -1085,7 +1085,7 @@ A3C_GET_UNITBUTTON = {
 	_return = 0;
 	_unitArray = (profileNamespace getvariable "A3C_GROUPUNITS");
 	{
-		if (_foreachIndex > 15) exitwith {};
+		if (_foreachIndex > 15) exitWith {};
 		if (_x == _unit) then {_return = (7024 + _foreachIndex)};
 	} foreach _unitArray;
 	_return;
@@ -1795,7 +1795,7 @@ A3C_MAP_DelLoopObs = {
 	//-- this function cancels the dragging of LookDir arrows and AIC-waypointarrows while setting them
 	//-- executes when mouse is dragged into map controls
 	//~~ this whole solution is sloppy, there has to be a better way  || ~~ is this still true? yes, just pausing would be better. But that's complex.
-	systemchat format ["A3C_MAP_DelLoopObs, %1: ", round time ];
+	// systemchat format ["A3C_MAP_DelLoopObs, %1: ", round time ];
 	A3C_BOOL_MAP_MU = true;
 	if (A3C_BOOL_MAP_MD) then {
 		A3C_BOOL_MAP_MD = false;
@@ -2298,7 +2298,7 @@ A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP = {
 
 		case ("SQ_ACTION") : {
 
-			if (Count A3C_SELECTED_UNITS == 0) exitWIth {
+			if (Count A3C_SELECTED_UNITS == 0) exitWith {
 				_exit = true;
 			};
 
@@ -3371,10 +3371,10 @@ A3C_BTN_HC = {
 	_isLoop = false;
 	_loopPos = [0,0,0];
 	_loopDest = [0,0,0];
-	if ( (_mode == 0) && ((count A3C_SELECTED_UNITS) == 0)) exitwith {};
-	if ( (_mode == 0) && (A3C_MAP_CommandMode == "HC") ) exitwith {};
-	if ( (_mode == 1) && ((count A3C_HC_getAllGroups_Player_Current ) == 0)) exitwith {};
-	if ( (_mode == 1) && A3C_BOOL_REJOINING) exitwith {};
+	if ( (_mode == 0) && ((count A3C_SELECTED_UNITS) == 0)) exitWith {};
+	if ( (_mode == 0) && (A3C_MAP_CommandMode == "HC") ) exitWith {};
+	if ( (_mode == 1) && ((count A3C_HC_getAllGroups_Player_Current ) == 0)) exitWith {};
+	if ( (_mode == 1) && A3C_BOOL_REJOINING) exitWith {};
 	_data = [];
 	_fnc_Tracker = {
 		private ["_group","_marker"];
@@ -3388,7 +3388,7 @@ A3C_BTN_HC = {
 			A3C_TRACKER_ENEMYGROUPS pushback _group;
 		};
 		while {!(isnull (finddisplay _a3c_dsp))} do {
-			if ({alive _x} count units _group == 0) exitwith {deletemarkerLocal _marker};
+			if ({alive _x} count units _group == 0) exitWith {deletemarkerLocal _marker};
 			if ((side (leader _group)) == (side player)) then {
 				_marker setMarkerPosLocal (position (leader _group));
 			};
@@ -3682,7 +3682,7 @@ A3C_UNDO = {
 				if ((_waypoint select 1) == ((_p select 0) select 1) ) then {
 					[_u,_p] call A3C_SUP_REMOVE_POLY;
 					_var = _var - [_p];
-				}; //~~ exitwith??
+				}; //~~ exitWith??
 			} foreach _var;
 			_u setvariable ["A3C_UNIT_POLYS",_var,true];
 			_u setvariable ["A3C_PLOT_TEMP",(_u getvariable "A3C_PLOT_TEMP") - [((_u getvariable "A3C_PLOT_TEMP") select ((count (_u getvariable "A3C_PLOT_TEMP")) - 1))],true];

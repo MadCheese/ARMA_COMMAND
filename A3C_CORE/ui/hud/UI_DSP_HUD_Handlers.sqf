@@ -197,7 +197,7 @@ A3C_UI_HUD_onKeyDown = {
 			) then {
 				// open map / overlay
 				A3C_WeaponCurr = currentWeapon player;
-				nul = [100020] execVM "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_OpenOverlay.sqf";
+				nul = [100020] execVM "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_OpenOverlay.sqf";
 
 				private _groupUnits = (units group player) - [player];
 				if (count _groupUnits > 0) then {

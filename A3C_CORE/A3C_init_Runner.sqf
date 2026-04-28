@@ -1,6 +1,6 @@
 
-if (isDedicated) exitwith {};
-if (is3den) exitwith {};
+if (isDedicated) exitWith {};
+if (is3den) exitWith {};
 waituntil {alive player};
 
 if (isNil 'A3C_CLIENT_IDS') then {
@@ -90,7 +90,7 @@ A3C_KILLED_EVH = { //-- only used by player
 
 
 	_gpShuffleUnits = [];
-	if !(_body == A3C_ZEUS_UNIT) exitwith {
+	if !(_body == A3C_ZEUS_UNIT) exitWith {
 		selectplayer A3C_ZEUS_UNIT;
 	};
 	_body removeEventHandler ["KILLED", A3C_KILLED];	//-- remove EH so that it won't be stacked later
@@ -229,7 +229,7 @@ A3C_is_Initialized = true;
 // 		};
 // 	}];
 
-// 	[] execVM "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_drawMapUI.sqf";
+// 	[] execVM "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_drawMapUI.sqf";
 // 	[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
 
 // 	//-- In game loop - once per second
@@ -335,7 +335,7 @@ A3C_is_Initialized = true;
 			};
 		}];
 
-		[] execVM "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_drawMapUI.sqf";
+		[] execVM "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_drawMapUI.sqf";
 		[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
 
 		waitUntil {isNull (findDisplay 46)};

@@ -611,7 +611,7 @@ A3C_DUDA_CHOPPER_RAIL = {
 				};
 			};
 		};
-		if( _distanceToPosition <= 2 ) exitwith {};
+		if( _distanceToPosition <= 2 ) exitWith {};
 		
 		//_vehicle setVectorUp [0,0,1];
 		[_vehicle,[0,0,1]] remoteExec ["setVectorUp",_vehicle];

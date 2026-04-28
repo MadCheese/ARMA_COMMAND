@@ -2,7 +2,7 @@
 #include "radial\radialMenu\script_component.hpp"
 
 
-if (isDedicated) exitwith {};
+if (isDedicated) exitWith {};
 
 //----------------------------------  K E Y -  A N D  M O U S E B I N D S  -----------------------
 
@@ -249,7 +249,7 @@ A3C_FNC_CBA_KEY = {
 	_refPos = [];
 	
 
-	if (player != (units player select 0) ) exitwith {}; // && {!([player] call A3C_isUnconscious)}//-- #NOTE: seems incomplete. this could enable keybind when player is not
+	if (player != (units player select 0) ) exitWith {}; // && {!([player] call A3C_isUnconscious)}//-- #NOTE: seems incomplete. this could enable keybind when player is not
 
 
 	if ( !isNull(findDisplay 312) ) exitWith {}; //-- ZEUS interface is open. Prevent most A3C stuff
@@ -725,7 +725,7 @@ A3C_FNC_CBA_KEY = {
 						if (isnull (findDisplay 100020)) then {
 							profilenamespace setvariable ["A3C_MAP_OVERLAY_SHOWN",true];
 							A3C_OPACITY = 0.8;
-							nul = [100020] execVM "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_OpenOverlay.sqf";
+							nul = [100020] execVM "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_OpenOverlay.sqf";
 
 						} else {
 							A3C_OPACITY = 0;
@@ -1147,7 +1147,7 @@ A3C_Setorder_HUD = {
 			sleep 0.1;
 			_dest = ((expectedDestination (_x select 0)) select 0);
 			while {true} do {
-				if !((_x select 0) getvariable "A3C_PEEL_ACTIVE") exitwith {
+				if !((_x select 0) getvariable "A3C_PEEL_ACTIVE") exitWith {
 					_exit = true;
 					(_x select 0) setvariable ["A3C_PEEL_ACTIVE",true,false];
 				};
@@ -1171,7 +1171,7 @@ A3C_Setorder_HUD = {
 				//hint str (((expectedDestination (_x select 0)) select 0) distance _dest);
 				if ((((expectedDestination (_x select 0)) select 0) distance _dest) > 1) then {_exitLoop = true};
 				if (currentcommand (_x select 0) == "STOP") then {_exitLoop = true;};
-				if (_exitLoop) exitwith {
+				if (_exitLoop) exitWith {
 					_exitLoop = false;
 					(_x select 0) setvariable ["A3C_PEEL_ACTIVE",false,false];
 					_movingUnits = _movingUnits - [(_x select 0)];
@@ -1180,10 +1180,10 @@ A3C_Setorder_HUD = {
 				sleep 0.1;
 			};
 		};
-		if (_exit) exitwith {};
+		if (_exit) exitWith {};
 		_counter = 1;
 		while {_counter < (_timeout / 0.1)} do {
-			if (({!(_x getvariable "A3C_PEEL_ACTIVE")} count _movingUnits) > 0) exitwith {};
+			if (({!(_x getvariable "A3C_PEEL_ACTIVE")} count _movingUnits) > 0) exitWith {};
 			sleep 0.1;
 			_counter = _counter +1;
 		};

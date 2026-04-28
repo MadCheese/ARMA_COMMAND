@@ -59,7 +59,7 @@ MAP_UI_fnc_drawMapUI = {
 
 	//systemchat str _this;
 	//if (visibleMap && {isnull (findDisplay 100020)}) exitWith {};
-	//if (A3C_OPACITY == 0) exitwith {};
+	//if (A3C_OPACITY == 0) exitWith {};
 	private _ctrlMapScale = ctrlMapScale (_this select 0);
 
 	A3C_HC_WP_SYNC_ARRAYS = [];
@@ -1588,7 +1588,7 @@ MAP_UI_fnc_drawMapUI = {
 					//hintsilent str _t;
 					
 					{
-						if ( ((_poly select 0) select 2) == (_x select 1) ) exitwith {
+						if ( ((_poly select 0) select 2) == (_x select 1) ) exitWith {
 							_root1 = waypointPosition _x;
 							_draw = true;
 						};

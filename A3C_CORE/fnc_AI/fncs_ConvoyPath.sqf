@@ -401,7 +401,7 @@ A3C_CONVOY_fncPID = {
 
 
 		
-		if (_doExit) exitwith {
+		if (_doExit) exitWith {
 			
 		};
 

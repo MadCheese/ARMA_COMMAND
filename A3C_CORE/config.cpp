@@ -5,7 +5,8 @@
 
 #include "ui\A3C_BaseClasses.hpp"
 
-#include "ui\MapOverlay\UI_DSP_MAP.hpp"
+// #include "ui\mapOverlay\LEGACY\UI_DSP_MAP.hpp"
+#include "ui\mapOverlay\dialog.hpp"
 
 #include "ui\HUD\HUD_MENU.hpp"
 #include "ui\HUD\HUD_DYNAMIC\A3C_DSP_HUD_DYNAMIC.hpp"

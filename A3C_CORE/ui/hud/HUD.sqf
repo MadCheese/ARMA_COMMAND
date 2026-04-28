@@ -1,5 +1,5 @@
 
-if (isDedicated) exitwith {};
+if (isDedicated) exitWith {};
 
 
 A3C_HUD_COLLIDER = objnull;
@@ -320,11 +320,11 @@ A3C_HUD_ADD_SELECTED = {
 		hint "";
 	};
 	_unit = (_this select 0);
-	if (!alive _unit) exitwith {
+	if (!alive _unit) exitWith {
 		player reveal [_unit,4]; //-- unit is dead - exit and inform player
 	};
 	if (isPlayer _unit) exitWith {};
-	if !(_unit == driver (vehicle _unit)) exitwith {};
+	if !(_unit == driver (vehicle _unit)) exitWith {};
 	_btn = (_this select 1);
 	A3C_HUD_UNITS pushback _unit;
 
@@ -838,7 +838,7 @@ A3C_HUD_LOOP = {
 		_exit = false;
 		_aimingHeight = 0;
 		A3C_HUD_COLLIDER = objnull;
-		if ((count A3C_HUD_UnitIndicators) == 0) exitwith {};
+		if ((count A3C_HUD_UnitIndicators) == 0) exitWith {};
 		private _excludeObjects = nearestTerrainObjects [position (A3C_HUD_UnitIndicators select 0), ["BUSH"], (count A3C_HUD_UnitIndicators) * A3C_HUD_SPACING];
 		//hintsilent str _excludeObjects;
 		if !(A3C_MODIFIER_LOCK) then {
@@ -964,7 +964,7 @@ A3C_HUD_LOOP = {
 									};
 								};
 							};
-							if (_exit) exitwith {};
+							if (_exit) exitWith {};
 
 							if !(isnull A3C_HUD_COLLIDER) then {
 								//systemchat str time;
@@ -1016,7 +1016,7 @@ A3C_HUD_Orient_Indicators = {
 	_altAmount = 0;
 	_arrow = objnull;
 	_count = (count A3C_HUD_UNITS);
-	if (_count == 0) exitwith {};
+	if (_count == 0) exitWith {};
 	_altAmount = (_count - 1);
 	_watchdir = 0;
 	//if (_altAmount == 0) then {
@@ -1300,7 +1300,7 @@ A3C_HUD_CREATEFORMATION = {
 			A3C_HUD_RADIUS_MIN = 1;
 			if (count A3C_HUD_UnitIndicators> 1) then {
 				while {true} do {
-					if ((([_pos,A3C_HUD_RADIUS_MIN,0] call BIS_fnc_RelPos) distance2D ([_pos,A3C_HUD_RADIUS_MIN,_step] call BIS_fnc_RelPos)) > 2) exitwith {};
+					if ((([_pos,A3C_HUD_RADIUS_MIN,0] call BIS_fnc_RelPos) distance2D ([_pos,A3C_HUD_RADIUS_MIN,_step] call BIS_fnc_RelPos)) > 2) exitWith {};
 					A3C_HUD_RADIUS_MIN = A3C_HUD_RADIUS_MIN + 1;
 				};
 			};
@@ -1667,9 +1667,9 @@ A3C_HUD_MOVE = {
 	_exit = false;
 
 	//while {alive _unit} do {
-	//	if !(_unit getvariable ["A3C_HOLD",false]) exitwith {};
+	//	if !(_unit getvariable ["A3C_HOLD",false]) exitWith {};
 	//	if (currentcommand _unit == "STOP") exitWith {_exit = true};
-	//	if ( ((expectedDestination _unit) select 1) in ["DoNotPlanFormation","FORMATION PLANNED"]) exitwith {_exit = true};
+	//	if ( ((expectedDestination _unit) select 1) in ["DoNotPlanFormation","FORMATION PLANNED"]) exitWith {_exit = true};
 	//	sleep 0.1 + (random 0.9);
 	//};
 
@@ -1698,15 +1698,15 @@ A3C_HUD_MOVE = {
 
 			//while {alive _unit} do {
 			//	_order = ((expectedDestination _unit) select 1);
-			//	if (_unit distance _atlPos < 3) exitwith {};
+			//	if (_unit distance _atlPos < 3) exitWith {};
 			//	if (currentcommand _unit == "STOP") then {
 			//		if !( _order == "LEADER PLANNED") then {
 			//			_exit = true;
 			//		};
 			//		// ~ Author Note: Add formation exit!!
 			//	};
-			//	if (["formation",_order] call MCSS_fnc_isInString ) exitwith {};
-			//	if (_exit) exitwith {};
+			//	if (["formation",_order] call MCSS_fnc_isInString ) exitWith {};
+			//	if (_exit) exitWith {};
 			//	sleep 0.1;
 			//};
 
@@ -1717,7 +1717,7 @@ A3C_HUD_MOVE = {
 				systemchat str _unit;
 				if !(_exit) then {
 					while {alive _unit} do {
-						if (speed _unit < 0.1) exitwith {};
+						if (speed _unit < 0.1) exitWith {};
 						sleep 0.1;
 					};
 					//systemchat "3";

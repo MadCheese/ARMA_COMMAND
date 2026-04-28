@@ -4,9 +4,9 @@
 
 
 
-if  (!isnull findDisplay IDD_RADIAL_MENU) exitwith {};
-if  (!isnull (findDisplay 100010)) exitwith {};
-if  (!isnull (finddisplay 100050)) exitwith {};
+if  (!isnull findDisplay IDD_RADIAL_MENU) exitWith {};
+if  (!isnull (findDisplay 100010)) exitWith {};
+if  (!isnull (finddisplay 100050)) exitWith {};
 if ((count A3C_HUD_UnitIndicators) == 0) exitWith {};
 
 
@@ -21,7 +21,7 @@ if !(player == (leader group player)) then {
 	};
 
 };
-if (_exit) exitwith {};
+if (_exit) exitWith {};
 
 _data = _this select 0;
 _btn = _data select 1;

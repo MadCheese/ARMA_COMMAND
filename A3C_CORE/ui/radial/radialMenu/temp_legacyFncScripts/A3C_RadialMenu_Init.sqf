@@ -1,7 +1,7 @@
 #include "..\script_component.hpp"
 #include "..\dialog_defines.hpp"
 
-if (isDedicated) exitwith {};
+if (isDedicated) exitWith {};
 
 A3C_HC_MENU_REFERENCE_UNITS = [];
 A3C_RADIALMODE = "";
@@ -300,15 +300,15 @@ A3C_UI_RADIAL_startGTIgrenadeLoop = {
 
 	_unit = objnull;
 	{
-		if ( ( {A3C_GREN_MUZZLE == _x} count (magazines _x)) > 0) exitwith {
+		if ( ( {A3C_GREN_MUZZLE == _x} count (magazines _x)) > 0) exitWith {
 			_unit = _x;
 			A3C_GTI_UNIT = _x;
 		};
 	} foreach A3C_RD_UNITS;
-	if (isnull _unit) exitwith {};
+	if (isnull _unit) exitWith {};
 	{[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS;
 
-	if (isnil "A3C_GREN_MUZZLE") exitwith {
+	if (isnil "A3C_GREN_MUZZLE") exitWith {
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_GRENADES_BTN) ctrlSetTooltip "currently no items available";
 	};
 	BR_A3C_TACV_throwTheta = 45;

@@ -13,7 +13,7 @@ A3C_Babe_fnc_detect = {
 	};
 	private _mc_dir = if (isNil '_destination') then {getDir _climber} else {_climber getDir _destination};
 	_babe_em_vars = _climber getvariable "babe_em_vars";
-	if !(_babe_em_vars select 2) exitwith {false};
+	if !(_babe_em_vars select 2) exitWith {false};
 	
 	_refPos1 = (((getPosASL _climber) getPos [0.5,_mc_dir]) select [0,2]) + [(getPosASL _climber) select 2];
 	_refPos2 = (_refPos1 select [0,2]) + [0];
@@ -63,7 +63,7 @@ A3C_Babe_fnc_detect = {
 
 	//_cos = 0;
 	//-- drop to lower position	
-	//if (_cos > 0.8) exitwith {
+	//if (_cos > 0.8) exitWith {
 	if (_doDrop) exitWith {
 		//systemchat str time;
 		for "_i" from 0 to 20 do { 
@@ -444,7 +444,7 @@ A3C_Babe_fnc_EM = {
 
 	_babe_em_vars = _climber getvariable "babe_em_vars";
 
-	if ((_babe_em_vars select 0) or (damage _climber) > 0.85 or _st in _stnope or vehicle _climber != _climber) exitwith {}; 
+	if ((_babe_em_vars select 0) or (damage _climber) > 0.85 or _st in _stnope or vehicle _climber != _climber) exitWith {}; 
 
 	if (_climber == player) then {
 		_babe_em_vars set [0, false];
@@ -499,7 +499,7 @@ A3C_Babe_fnc_EM = {
 	_stmpn = 2;
 	_stmpn = _stmpn * 0.5 + _stmpn * 0.5 * (load _climber);
 
-	if (str _pos == "[0,0,0]") exitwith {
+	if (str _pos == "[0,0,0]") exitWith {
 		if (isTouchingGround _climber && {!(_babe_em_vars select 0) && (getstamina _climber > 8) && isNil "_climbonly"}) then {
 			[_climber, _wlj] call babe_em_fnc_jump
 		};
@@ -641,7 +641,7 @@ A3C_Babe_fnc_EM = {
 		};
 		_over = true;	
 	};
-	if (_anm == "") exitwith  {
+	if (_anm == "") exitWith  {
 		if (isTouchingGround _climber && {!(_babe_em_vars select 0) && (getstamina _climber > 8) && isNil "_climbonly"}) then {
 			[_climber, _wlj] call babe_em_fnc_jump			
 		};

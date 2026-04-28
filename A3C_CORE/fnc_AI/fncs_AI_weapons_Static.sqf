@@ -284,7 +284,7 @@ A3C_getSelectionBackpackStatics = {
 	{
 		_wpn = (_x select 1);
 		{
-			if (_wpn == (_x select 1)) exitwith {
+			if (_wpn == (_x select 1)) exitWith {
 				A3C_STATIC_PACKS = A3C_STATIC_PACKS - [_x];
 			};
 		} foreach A3C_STATIC_PACKS;

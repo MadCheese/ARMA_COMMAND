@@ -606,7 +606,7 @@ A3C_LANDPLANE = {
 				_landingTime = -1;
 			};
 		};
-		if (_exit && _touchDownCount >= 3) exitwith {};
+		if (_exit && _touchDownCount >= 3) exitWith {};
 		if (_dynamicLanding) then {
 			if (speed _vehicle < 10) then {
 				if (surfaceIsWater _inputPosition) then { //_dynamicLanding??
@@ -629,7 +629,7 @@ A3C_LANDPLANE = {
 				};
 			};
 		};
-		if (_exit) exitwith {};
+		if (_exit) exitWith {};
 		sleep _sleep;
 	};
 
@@ -719,7 +719,7 @@ A3C_LANDPLANE = {
 				_pos = (position _x);
 				private _nearestObjects = (nearestObjects [_pos, ["Stall_base_F","VASI","Motorcycle","WheeledAPC","WheeledAPC","Wreck","UnknownObject","Ammobox","Thing","air","Car","Tank"], 12]);
 				if ((sizeOf (typeOf _vehicle)) < (sizeOf (typeOf _x)) ) then {
-					//if !( count (_pos isFlatEmpty [5,-1,-1,-1,0,false,_x]) == 0 ) exitwith { //[10, -1, -1, -1, -1, false, _x]
+					//if !( count (_pos isFlatEmpty [5,-1,-1,-1,0,false,_x]) == 0 ) exitWith { //[10, -1, -1, -1, -1, false, _x]
 					if (count _nearestObjects == 0) then {
 						_hangar = _x;
 						_exit = true;
@@ -728,7 +728,7 @@ A3C_LANDPLANE = {
 					if (isNull _hangar) then {
 						_pos = ([(position _x),((sizeOf typeOf _x) * 0.7),_dir] call BIS_fnc_RelPos);
 						_nearestObjects = (nearestObjects [_pos, ["Stall_base_F","VASI","Motorcycle","WheeledAPC","WheeledAPC","Wreck","UnknownObject","Ammobox","Thing","air","Car","Tank"], 12]);
-						if !( count (_pos isFlatEmpty [10,-1,-1,20,0,false,_x]) == 0 ) exitwith { //[10, -1, -1, -1, -1, false, _x]
+						if !( count (_pos isFlatEmpty [10,-1,-1,20,0,false,_x]) == 0 ) exitWith { //[10, -1, -1, -1, -1, false, _x]
 							if (count _nearestObjects == 0) then {
 								if ({_pos inArea _x} count _prohibitedAreas == 0) then {
 									// aaa here
@@ -1535,14 +1535,14 @@ MCSS_fnc_moduleCAS = {
 	private _gp = group _pilot;
 
 
-	//if (!isserver && {local _x} count (objectcurators _logic) == 0) exitwith {};
+	//if (!isserver && {local _x} count (objectcurators _logic) == 0) exitWith {};
 
 	if (_activated) then {
 		if (_logic call bis_fnc_isCuratorEditable) then {
 			waituntil {!isnil {_logic getvariable "vehicle"} || isnull _logic};
 		};
 
-		if (isnull _logic) exitwith {};
+		if (isnull _logic) exitWith {};
 
 
 		if ({local _x} count (objectcurators _logic) > 0) then {
@@ -1550,12 +1550,12 @@ MCSS_fnc_moduleCAS = {
 			_logic setpos position _logic;
 		};
 
-		//if !(isserver) exitwith {};
+		//if !(isserver) exitWith {};
 
 		_planeClass = _logic getvariable ["vehicle","B_Plane_CAS_01_F"];
 		_planeCfg = configfile >> "cfgvehicles" >> _planeClass;
 
-		if !(_planeClass == (typeOf _plane)) exitwith {
+		if !(_planeClass == (typeOf _plane)) exitWith {
 			["Planetypes do not match",nil] call bis_fnc_error;
 			false
 		};
@@ -1572,7 +1572,7 @@ MCSS_fnc_moduleCAS = {
 			_r < 20
 		};
 
-		//if !(isclass _planeCfg) exitwith {["Vehicle class '%1' not found",_planeClass] call bis_fnc_error; false};
+		//if !(isclass _planeCfg) exitWith {["Vehicle class '%1' not found",_planeClass] call bis_fnc_error; false};
 
 
 		_dirVar = _fnc_scriptname + typeof _logic;
@@ -1600,7 +1600,7 @@ MCSS_fnc_moduleCAS = {
 				};
 			};
 		} foreach (_planeClass call bis_fnc_weaponsEntityType);
-		if (count _weapons == 0) exitwith {
+		if (count _weapons == 0) exitWith {
 			["No weapon of types %2 wound on '%1'",_planeClass,_weaponTypes] call bis_fnc_error;
 			false
 		};
@@ -1919,10 +1919,10 @@ A3C_BEHAVIOUR_SQ_HELI_PICKANDDROP = {
 		_maxdist = 20;
 		_landingpos = [];
 		while {count _landingpos == 0} do {
-			if (isNull _unit) exitwith {_abort = true};
+			if (isNull _unit) exitWith {_abort = true};
 			_landingpos = ([_movePos,[0,_maxdist]] call MCSS_fnc_getSafePos);
 			_maxdist = _maxdist + 20;
-			if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitwith {_abort = true};
+			if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitWith {_abort = true};
 		};
 		_pad = "Land_HelipadEmpty_F" createvehicle _landingpos;
 		[_unit,_landingpos] call A3C_DOMOVE;
@@ -1961,13 +1961,13 @@ A3C_BEHAVIOUR_SQ_HELI_PICKANDDROP = {
 		};
 
 		while {(alive _unit)} do {
-			if (isNull _unit) exitwith {_abort = true};
+			if (isNull _unit) exitWith {_abort = true};
 			if (_vehicle iskindof "AIR") then {
 				{_unit disableAI _x} foreach ["TARGET","AUTOTARGET","FSM","AUTOCOMBAT"]; //"THREAT_PATH","PATHPLAN",
 				_unit dotarget _vehicle; _unit dowatch objnull;
 				{_unit setskill [_x,0]} foreach ["commanding","spotTime","spotDistance"];
 			};
-			if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitwith {
+			if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitWith {
 				_vehicle land "NONE";
 
 				{
@@ -1982,7 +1982,7 @@ A3C_BEHAVIOUR_SQ_HELI_PICKANDDROP = {
 				_vehicle flyinheight 25;
 				_abort = true;
 			};
-			if ( ((position _vehicle) select 2) < 2) exitwith {
+			if ( ((position _vehicle) select 2) < 2) exitWith {
 				deletevehicle _pad;
 				[_unit,(position _vehicle)] call A3C_DOMOVE;
 				_vehicle flyinheight 2;
@@ -1995,7 +1995,7 @@ A3C_BEHAVIOUR_SQ_HELI_PICKANDDROP = {
 					};
 				};
 			};
-			if !(canmove _vehicle) exitwith {};
+			if !(canmove _vehicle) exitWith {};
 			sleep 1;
 		};
 	};
@@ -2039,13 +2039,13 @@ A3C_BEHAVIOUR_SQ_HELI_LANDFINAL = {
 		} foreach (crew _vehicle) - [_unit];
 
 		while {(alive _unit)} do {
-			if (isNull _unit) exitwith {_abort = true};
+			if (isNull _unit) exitWith {_abort = true};
 			{_unit disableAI _x} foreach ["TARGET","AUTOTARGET","FSM","AUTOCOMBAT"]; //"THREAT_PATH","PATHPLAN",
 			_unit dotarget _vehicle; _unit dowatch objnull;
 			{_unit setskill [_x,0]} foreach ["commanding","spotTime","spotDistance"];
 
 
-			if ( ((position _vehicle) select 2) < 2) exitwith {
+			if ( ((position _vehicle) select 2) < 2) exitWith {
 				_vehicle land "LAND";
 				_vehicle flyinheight 0;
 				{_vehicle animateDoor [_x, 1]} foreach ['door_R','door_L','door_rear','door_rear_source','Door_L_source','Door_R_source','DoorL_Front_Open','DoorR_Front_Open','DoorL_Back_Open','DoorR_Back_Open','Door_1_source'];
@@ -2058,8 +2058,8 @@ A3C_BEHAVIOUR_SQ_HELI_LANDFINAL = {
 					params ["_chopper","_pad","_unit"];
 					_chopper = _this select 0;
 					while {(((position _chopper) select 2) < 2)} do {
-						if (isNull _unit) exitwith {_abort = true};
-						if ( {isPlayer _x} count (crew _chopper) == 0 ) exitwith {
+						if (isNull _unit) exitWith {_abort = true};
+						if ( {isPlayer _x} count (crew _chopper) == 0 ) exitWith {
 							sleep 2;
 							//_chopper action ["engineOff", _chopper];
 							[_chopper,["engineOff", _chopper]] remoteExec ["action",_chopper];
@@ -2067,12 +2067,12 @@ A3C_BEHAVIOUR_SQ_HELI_LANDFINAL = {
 							_chopper setvelocity [0,0,0];
 							_chopper flyInHeight 50;
 						};
-						if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitwith {};
+						if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitWith {};
 						sleep 0.1;
 					};
 				};
 			};
-			if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitwith {
+			if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitWith {
 				_abort = true;
 				_vehicle land "NONE";
 			};
@@ -2092,13 +2092,13 @@ A3C_BEHAVIOUR_SQ_HELI_LANDFINAL = {
 			if !(alive _unit) then {_abort = true};
 			if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) then {_abort = true};
 			if (((expectedDestination _unit) select 1) in ["DoNotPlanFormation","FORMATION PLANNED"]) then {_abort = true;};
-			if (_abort) exitwith {};
+			if (_abort) exitWith {};
 			sleep 1;
 		};
 	};
 	if !(_abort) then {
 		while {alive driver _vehicle} do {
-			if ( {[_x] call A3C_HELI_DISCHARGE} count (crew _vehicle) == 0 ) exitwith {
+			if ( {[_x] call A3C_HELI_DISCHARGE} count (crew _vehicle) == 0 ) exitWith {
 				doStop _unit;
 				sleep 1;
 				[_vehicle,["engineOff", _vehicle]] remoteExec ["action",_vehicle];
@@ -2147,7 +2147,7 @@ A3C_BEHAVIOUR_SQ_HELI_Sling = {
 		_veh flyInHeight _cargoHeight;
 
 		//while {canMove _veh} do {
-		//	if (speed _veh < 60) exitwith {};
+		//	if (speed _veh < 60) exitWith {};
 		//	sleep 1;
 		//};
 		//_turnVeh = [_veh,_cargoLocation] spawn A3C_FORCEORIENT;

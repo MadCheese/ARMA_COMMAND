@@ -78,7 +78,7 @@ BR_A3C_fn_relativePos =
 
 
 BR_A3C_OEFControl = {
-	if (isnull A3C_GTI_UNIT) exitwith {};
+	if (isnull A3C_GTI_UNIT) exitWith {};
 	private _isPlayer = A3C_GTI_UNIT == player;
 	private _screenToWorld = [0,0,0];
 	if !(_isPlayer) then {
@@ -259,8 +259,8 @@ BR_A3C_OEFControl = {
 //-- Apply GTI-grenade to player. Triggered by CBA-keyBind
 A3C_GRENADE_PLAYER = {
 	_mode = _this select 0;
-	if (!isNull objectParent player) exitwith {};
-	if ( (count(currentThrowable player)) == 0 ) exitwith {};
+	if (!isNull objectParent player) exitWith {};
+	if ( (count(currentThrowable player)) == 0 ) exitWith {};
 	if ((lifeState player) in ["INJURED","INCAPACITATED"]) exitWith {};
 	A3C_GTI_UNIT = player;
 	if (_mode == "DOWN") then {

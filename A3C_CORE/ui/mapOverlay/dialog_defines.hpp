@@ -1,0 +1,1 @@
+#define IDD_MAP_OVERLAY 100020

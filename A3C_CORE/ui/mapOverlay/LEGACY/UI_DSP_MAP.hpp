@@ -1,4 +1,4 @@
-#include "..\SHARED\shared_ui_defines.hpp"
+#include "..\..\SHARED\shared_ui_defines.hpp"
 
 #define GRIDX( num ) ( num * ( pixelGrid * pixelW * 2.5 ))
 #define GRIDY( num ) ( num * ( pixelGrid * pixelH * 2.5 ))

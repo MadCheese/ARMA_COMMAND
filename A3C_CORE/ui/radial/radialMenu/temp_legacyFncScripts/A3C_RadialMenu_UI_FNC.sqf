@@ -378,7 +378,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 
 	
 	//-- exit if fnc-area was defined
-	if (!(_mode == 'FORM') && !(A3C_RADIAL_HOVER) && (_btn == -1)) exitwith {};
+	if (!(_mode == 'FORM') && !(A3C_RADIAL_HOVER) && (_btn == -1)) exitWith {};
 
 	if (_mode == 'FORM' && {A3C_CURRENT_COMMAND_LEVEL == "SQUAD"}) then {A3C_RADIAL_HOVER = true} else {A3C_RADIAL_HOVER = false};
 	if !(_mode == "FORM") then {

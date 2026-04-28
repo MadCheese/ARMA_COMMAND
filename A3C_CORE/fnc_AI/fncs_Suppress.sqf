@@ -164,7 +164,7 @@ A3C_POLY_ACTION_ON = {
 			_units = _units - [_x];
 		};
 	} foreach _units;
-	if (count _units == 0) exitwith {};
+	if (count _units == 0) exitWith {};
 	
 	
 	
@@ -207,7 +207,7 @@ A3C_POLY_ACTION_ON = {
 			if (count _var > 0) then {
 				_polygon = []; //(_var select 0);
 				{
-					if ( ((_x select 0) select 2) == _wpI) exitwith {
+					if ( ((_x select 0) select 2) == _wpI) exitWith {
 						_polygon = _x;
 					};
 				} foreach _var;
@@ -591,9 +591,9 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 			};
 			
 			while {!isnull _target} do {
-				if (isnull _unit) exitwith {};
-				if (!alive _unit) exitwith {};
-				if ( !isnil '_poly' && {!(_polyID == -1) && ({_polyID == ((_x select 0) select 2)} count A3C_ALL_POLYS == 0)}) exitwith {};
+				if (isnull _unit) exitWith {};
+				if (!alive _unit) exitWith {};
+				if ( !isnil '_poly' && {!(_polyID == -1) && ({_polyID == ((_x select 0) select 2)} count A3C_ALL_POLYS == 0)}) exitWith {};
 				
 				if (_exitRestrictive) exitWith {
 					[[_unit],"SUPPRESSION"] call A3C_POLY_ACTION_OFF;
@@ -659,16 +659,16 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 					while {!isnull _target} do {
 						//hintsilent "searching";
 						if ([_usedMagazine,_restrictiveORIGIN,_restrictiveVAL] call _restrictiveFNC) exitWith {_exitRestrictive = true};
-						if ( !isnil '_poly' && {!(_polyID == -1) && ({_polyID == ((_x select 0) select 2)} count A3C_ALL_POLYS == 0)}) exitwith {};
+						if ( !isnil '_poly' && {!(_polyID == -1) && ({_polyID == ((_x select 0) select 2)} count A3C_ALL_POLYS == 0)}) exitWith {};
 						_exit = false;
 						_cycle = _cycle + 1;
-						if (_cycle > 300) exitwith {
+						if (_cycle > 300) exitWith {
 							_exitMain = true;
 							//"e2 (cycle)" remoteExec ["systemChat",0];
 						};
 						_polys = _actual getvariable ["A3C_UNIT_POLYS",[]];
 
-						if !(_polygon in _polys) exitwith {
+						if !(_polygon in _polys) exitWith {
 							if ({ ((_x select 0) select 1) == _polyMarker} count _polys == 0) then {
 								_exitMain = true;
 								//"e3 (poly lost)" remoteExec ["systemChat",0];
@@ -844,7 +844,7 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 					//if (isnil '_poly') exitWith {};
 					if ([_usedMagazine,_restrictiveORIGIN,_restrictiveVAL] call _restrictiveFNC) exitWith {_exitRestrictive = true};
 					//-- exit if poly no longer exists 
-					if ( !isnil '_poly' && {!(_polyID == -1) && ({_polyID == ((_x select 0) select 2)} count A3C_ALL_POLYS == 0)}) exitwith {};
+					if ( !isnil '_poly' && {!(_polyID == -1) && ({_polyID == ((_x select 0) select 2)} count A3C_ALL_POLYS == 0)}) exitWith {};
 					//-- exit and reset loop if polygon was dragged!
 					if ({_polyID == ((_x select 0) select 2) && {_dist = (((_x select 0) select 0) distance2d _center); _dist > 1}} count A3C_ALL_POLYS > 0) exitWith {sleep 1;}; 
 					
@@ -854,7 +854,7 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 					_count = _count + 1;
 					sleep 1;
 					_polys = _actual getvariable ["A3C_UNIT_POLYS",[]];
-					if !(_polygon in _polys) exitwith {
+					if !(_polygon in _polys) exitWith {
 						{
 							if ((_x select 0) select 1 == _polyMarker) then {
 								_target setpos ((_x select 0) select 0);
@@ -886,7 +886,7 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 						};
 					};
 					if (_exitMain) exitWith {};
-					//if (_count >= 3) exitwith {};
+					//if (_count >= 3) exitWith {};
 				};
 				if (_exitMain && {_groupPlayer}) exitWith {
 					if !(isnull _target) then {
@@ -923,7 +923,7 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 			_unit setVariable ["A3C_POLY_ACTION_ACTIVE",true,true];
 			while {alive _unit} do {
 				_polys = _actual getvariable ["A3C_UNIT_POLYS",[]];
-				//if (behaviour _unit != "SAFE") exitwith {};
+				//if (behaviour _unit != "SAFE") exitWith {};
 				if ({ ((_x select 0) select 1) == _polyMarker} count _polys == 0) then {_exitMain = true};
 				_polygon = [];
 				_exitMain = true;
@@ -965,7 +965,7 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 
 				_tgts = [(side _unit),_radius,"ENEMY",_center,["MAN","CAR","TANK"]] call MCSS_fnc_NearEntities;
 				_pause = if (count _tgts > 0) then {0.1} else {1};
-				if ( {(getposASL vehicle _x) inPolygon _pgD} count _tgts > 0) exitwith {
+				if ( {(getposASL vehicle _x) inPolygon _pgD} count _tgts > 0) exitWith {
 					//~~ lots of room for improvement as far as behaviour is concerned
 					[_unit,"RED"] remoteExec ["setCombatMode",_unit];
 					[_unit,"COMBAT"] remoteExec ["setBehaviour",_unit];
@@ -1115,7 +1115,7 @@ A3C_SUP_REMOVE_POLY = {
 	_unit = _this select 0;
 	_polygon = _this select 1;
 
-	if (count _polygon == 0) exitwith {};
+	if (count _polygon == 0) exitWith {};
 
 	_markers = [(_polygon select 0) select 1] + (_polygon select 2);
 
@@ -1179,9 +1179,9 @@ if (isDedicated) exitWith {};
 //-- CLIENT STUFF: UI, CONTROLS ETC
 
 A3C_SUP_MouseDown = {
-	if (A3C_SUP_BOOL_MD) exitwith {};
+	if (A3C_SUP_BOOL_MD) exitWith {};
 	
-	if (_this select 1 == 1) exitwith {
+	if (_this select 1 == 1) exitWith {
 		[] call A3C_SUP_CloseDisplay; //(findDisplay 100070) closeDisplay 0;
 	};
 	A3C_SUP_BOOL_MD = true;
@@ -1193,7 +1193,7 @@ A3C_SUP_MouseMoving = {
 	A3C_SUP_MOUSEPOS = [_this select 1,_this select 2];
 	_mouseX = A3C_SUP_MOUSEPOS select 0;
 	_mouseY = A3C_SUP_MOUSEPOS select 1;
-	if !(A3C_SUP_BOOL_MD) exitwith {};
+	if !(A3C_SUP_BOOL_MD) exitWith {};
 	
 	_ctrl = (findDisplay 100070 displayCtrl 3);
 	_cPos = ctrlPosition _ctrl;

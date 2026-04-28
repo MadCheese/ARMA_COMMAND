@@ -837,7 +837,7 @@ A3C_REARM_QUALITY = {
 	_iC = if (_holder isKindOf "MAN") then {[(items _holder)]} else {(itemCargo _holder)};
 	_bC = if (_holder isKindOf "MAN") then {[(backpack _holder)]} else {(backpackCargo _holder)};
 	
-	if (typeName _unit == "STRING") exitwith {
+	if (typeName _unit == "STRING") exitWith {
 		{_quali = _quali + 10} foreach _mC;
 		{_quali = _quali + 5} foreach _wC;
 		{_quali = _quali + 1} foreach _iC;

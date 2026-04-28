@@ -1,6 +1,6 @@
-#include "..\SHARED\shared_ui_defines.hpp"
-#include "..\radial\radialMenu\script_component.hpp"
-#include "..\radial\radialMenu\dialog_defines.hpp"
+#include "..\..\SHARED\shared_ui_defines.hpp"
+#include "..\..\radial\radialMenu\script_component.hpp"
+#include "..\..\radial\radialMenu\dialog_defines.hpp"
 
 //---------------------------------------------------------------------------------------------------------
 //--------------------  THIS FUNCTION IS SPAWNED EACH TIME THE OVERLAY IS OPENED  -------------------------
@@ -14,7 +14,7 @@ params ["_display"];
 //---------- EXIT BLOCK -----------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------
 
-if  (!isnull (finddisplay _display)) exitwith {};
+if  (!isnull (finddisplay _display)) exitWith {};
 
 if (isNil 'A3C_is_Initialized') exitWith {
 	hint "ARMA COMMAND IS INITIALIZING - STAND BY";
@@ -25,9 +25,9 @@ if (isNil 'A3C_is_Initialized') exitWith {
 };
 
 
-if (isDedicated) exitwith {};
-if (isMultiplayer && isServer && !(hasInterface)) exitwith {};
-if !(player == leader group player) exitwith {};
+if (isDedicated) exitWith {};
+if (isMultiplayer && isServer && !(hasInterface)) exitWith {};
+if !(player == leader group player) exitWith {};
 
 if (!isNull findDisplay IDD_RADIAL_MENU) exitWith {};
 
@@ -48,7 +48,7 @@ if
 	&& { {["A3C_Terminal", _x] call BIS_fnc_instring} count ((Items player) + (assignedItems player)) == 0 }
 ) exitWith {};
 
-if (dialog && {_display == 12}) exitwith {}; //-- exit if some dialog is open
+if (dialog && {_display == 12}) exitWith {}; //-- exit if some dialog is open
 if (!visibleMap && {_display == 12}) exitWith {}; //-- only allow when map is open
 
 //---------------------------------------------------------------------------------------------

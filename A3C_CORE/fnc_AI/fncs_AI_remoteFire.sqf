@@ -325,7 +325,7 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 	_velo = [0,0,0];
 	A3C_HC_FOCUS_ARTY_POS = ASLtoATL _targetPos;
 	//-- exit if no mode has ben detected (?)
-	if (_weaponGroup == "EXIT") exitwith {};
+	if (_weaponGroup == "EXIT") exitWith {};
 
 	_unit setVariable ["A3C_unit_is_Remote_Firing",true,true];
 
@@ -503,9 +503,9 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 			[_unit,_tankTarget] remoteExec ["doTarget",_unit];
 			private _counter = 0;
 			while {alive _tank} do {
-				if (_tank aimedattarget [_tankTarget] == 1) exitwith {sleep 3};
+				if (_tank aimedattarget [_tankTarget] == 1) exitWith {sleep 3};
 				if ([getPosATL _tankTarget, _unit] call MCSS_fnc_LOS_Vehicle) exitWith {sleep 3};
-				if (_counter >= 100) exitwith {};
+				if (_counter >= 100) exitWith {};
 				sleep 0.1;
 				_counter = _counter + 1;
 			};
@@ -729,9 +729,9 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 			sleep 2;
 			for "_i" from 0 to 80 do {
 				_unit doTarget _target;
-				if !(alive _unit) exitwith {};
+				if !(alive _unit) exitWith {};
 				
-				if ([_unit,_target] call MCSS_fnc_LOF) exitwith {
+				if ([_unit,_target] call MCSS_fnc_LOF) exitWith {
 
 					_unit setVariable ["A3C_PAUSE_PLAN",true,true];
 

@@ -15,7 +15,7 @@ A3C_AI_Squad_action_FindCoverExecute = {
 	_units = _units select {isNull objectparent _x && {!isPlayer _x}};
 
 	_mode = if (count _this > 1) then {_this select 1} else {0};
-	if ((count _units) == 0 ) exitwith {};
+	if ((count _units) == 0 ) exitWith {};
 	if (_mode == 0) then {
 		_busyUnits = _units select {count (_x getVariable ["A3C_PLOT",[]]) > 0};
 		if (count _busyUnits > 0) then {
@@ -461,12 +461,12 @@ A3C_AI_Squad_action_FindCoverExecute = {
 							
 						};
 					};					
-					if ((count _positionCheck) > 0) exitwith {};
+					if ((count _positionCheck) > 0) exitWith {};
 					
 				};
-				if ((count _positionCheck) > 0) exitwith {};
+				if ((count _positionCheck) > 0) exitWith {};
 			};
-			if ((count _positionCheck) > 0) exitwith {};
+			if ((count _positionCheck) > 0) exitWith {};
 			*/
 			
 			_bBox2d = [_x,1] call MCSS_fnc_BBOX;
@@ -510,9 +510,9 @@ A3C_AI_Squad_action_FindCoverExecute = {
 						
 					};
 				};
-				//if ((count _positionCheck) > 0) exitwith {};
+				//if ((count _positionCheck) > 0) exitWith {};
 			} foreach _bBox2d;
-			//if ((count _positionCheck) > 0) exitwith {};
+			//if ((count _positionCheck) > 0) exitWith {};
 		} foreach _coverobjects;
 		//sleep 0.01;		
 	} forEach _unitClusters;
@@ -547,14 +547,14 @@ A3C_AI_Squad_action_FindCoverExecute = {
 						//};
 					};
 				} foreach _realCoverPoses;
-				if ((count (_softC + _hardC)) > 0) exitwith {};			
+				if ((count (_softC + _hardC)) > 0) exitWith {};			
 			};
 			//diag_log [_softC , _hardC];
 			//diag_log (_softC select ((count _softC) - 1));
 			//systemchat str  (count _softC);
 			//diag_log _hardC;
 			//-- no cover. lay down
-			if ((count (_softC + _hardC)) == 0) exitwith {
+			if ((count (_softC + _hardC)) == 0) exitWith {
 				_soldier setUnitPos "DOWN";
 			};
 			//systemchat str _hardC select 0;

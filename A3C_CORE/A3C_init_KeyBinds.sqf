@@ -1,4 +1,4 @@
-if (isDedicated) exitwith {};
+if (isDedicated) exitWith {};
 
 
 

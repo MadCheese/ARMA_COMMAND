@@ -82,7 +82,7 @@ A3C_Cursorbox = {
 A3CDebugHint = false;
 A3CHint = {
 	params ["_object","_mode"];
-	//if (count _this < 1) exitWIth {};
+	//if (count _this < 1) exitWith {};
 	if (A3CDebugHint) then {
 		A3CDebugHint = false;
 		sleep 0.1;

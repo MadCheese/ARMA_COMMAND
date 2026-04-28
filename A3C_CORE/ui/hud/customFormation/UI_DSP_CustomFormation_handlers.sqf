@@ -57,7 +57,7 @@ A3C_UI_CustomFormation_onMouseButtonDown = {
 A3C_UI_CustomFormation_onMouseButtonUp = {
 	params ["_display","_button","_posX","_posY"];
 	if !(A3C_UI_CustomFormation_BOOL_isMouseUp) exitWith {};
-	if (_button == 1) exitwith {};
+	if (_button == 1) exitWith {};
 	//systemchat str [_posX toFixed 2,_posY toFixed 2];
 	A3C_UI_CustomFormation_BOOL_isMouseUp = false;
 	A3C_UI_CustomFormation_BOOL_DRAW = false;
@@ -131,8 +131,8 @@ A3C_UI_CustomFormation_onMouseMoving = {
 };
 
 A3C_UI_CustomFormation_onLBselChanged = {
-	if (A3C_CurSel) exitwith {};
-	if (_this select 0 == 0) exitwith {
+	if (A3C_CurSel) exitWith {};
+	if (_this select 0 == 0) exitWith {
 		with uiNameSpace do {
 			A3C_UI_CustomFormation_saveLB = 0;
 		};

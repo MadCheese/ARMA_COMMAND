@@ -57,7 +57,7 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 		params ["_u","_roofPoses","_bdg"];
 		sleep 2;
 		while {alive _u} do {
-			if (isTouchingGround _u) exitwith {
+			if (isTouchingGround _u) exitWith {
 				private _dest = [0,0,0];
 				_roofPoses = [_roofPoses,[],{_u distance2D (_x select 1)},"ASCEND"] call BIS_fnc_sortBy;
 				{
@@ -74,14 +74,14 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 					//[[_u, _bdg],A3C_RAIL_INF] remoteExec ["bis_fnc_spawn",_u];
 				};
 			};
-			if !(isNull objectParent _u) exitwith {};
+			if !(isNull objectParent _u) exitWith {};
 			sleep 0.5;
 		};
 	};
 
 	private _exit = false;
 	while {(getPos _aircraft select 2) < 15} do {
-		if (!alive _unit OR !alive _aircraft) exitwith {_exit = true};
+		if (!alive _unit OR !alive _aircraft) exitWith {_exit = true};
 		sleep 1;
 	};
 
@@ -137,7 +137,7 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 		//-- SQUAD LEVEL: WAIT UNTIL VEHICLE STOPS OR REACHES WAYPOINT
 		if (isPlayer leader _group && {_isHeli}) then {
 			while {_aircraft distance2d _movePos > 300} do {
-				if (!alive _unit) exitwith {};
+				if (!alive _unit) exitWith {};
 				if !(canMove _aircraft) exitWith {};
 				if (speed _aircraft < 20) exitWith {};
 				//systemchat 'loop';
@@ -152,7 +152,7 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 		//-- security: wait until speed is below 40 (limitspeed was set to 0 above)
 //		if (speed _aircraft > 40) then {
 //			while {speed _aircraft > 40} do {
-//				if (!alive _unit) exitwith {};
+//				if (!alive _unit) exitWith {};
 //				sleep 0.1;
 //			};
 //		};
@@ -186,7 +186,7 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 	} else {
 		//-- waypoint is in the open. Simply wait for it to come to a halt NOT USED CURRENTLY. ABOVE BOOL IS TRUE, RAIL IS ALWAYS USED
 		while {speed _aircraft > 0} do {
-			if (!alive _unit) exitwith {};
+			if (!alive _unit) exitWith {};
 			if !(canMove _aircraft) exitWith {};
 			sleep 0.1;
 		};
@@ -199,7 +199,7 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 
 	};
 	//
-	if (!alive _unit) exitwith {};
+	if (!alive _unit) exitWith {};
 	//-- prepare rappel
 	//'prepare rappell' remoteExec ["systemchat",0];
 	[_aircraft,[0,0,0]] remoteExec ["setVelocity",_aircraft];
@@ -353,7 +353,7 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 		private _rappelComplete = true;
 		//private _helpers = [];
 		{
-			if (alive _x && {!isTouchingGround _x}) exitWIth {
+			if (alive _x && {!isTouchingGround _x}) exitWith {
 				_rappelComplete = false;
 				//if (vehicle _x == _aircraft) then {
 					//if (count (assignedVehicleRole _x) == 0) then {
@@ -391,7 +391,7 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 
 		if (_rappelComplete) exitWith {};
 		
-		//if ({ (!isTouchingGround _x) OR (!alive _x) OR (((getPosATL _x) select 2) > 0.2) } count _rapUnitsAll == 0) exitwith {};    // //if ({(animationstate _x in ["ar_01_idle","ar_01_aim"]) && (  )} count _rapUnits == 0) exitwith {}; // OR (objectparent _x == _aircraft)
+		//if ({ (!isTouchingGround _x) OR (!alive _x) OR (((getPosATL _x) select 2) > 0.2) } count _rapUnitsAll == 0) exitWith {};    // //if ({(animationstate _x in ["ar_01_idle","ar_01_aim"]) && (  )} count _rapUnits == 0) exitWith {}; // OR (objectparent _x == _aircraft)
 		//{deletevehicle _x} foreach _helpers;
 
 

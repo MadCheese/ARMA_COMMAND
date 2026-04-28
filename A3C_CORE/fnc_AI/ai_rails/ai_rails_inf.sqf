@@ -56,7 +56,7 @@ A3C_RAIL_INF = {
 	[_unit, (position vehicle _unit)] remoteExec ["doMove",_unit]; //-- prevent unit from any autonomous movement
 	[_unit, (position vehicle _unit)] remoteExec ["moveTo",_unit];	
 	sleep (random 0.3);	
-	if (_dest isEqualTo []) exitwith {};
+	if (_dest isEqualTo []) exitWith {};
 	private _dir = [_unit,_dest] call BIS_fnc_dirTo;
 	private _tm = time;
 	private _pos = getPosASL _unit;	
@@ -86,7 +86,7 @@ A3C_forceDestination = {
 	private _unitPos = getpos _unit; //_unit doMove _unitPos; _unit moveTo _unitPos;
 	private _dirto = [_unitPos,_destination] call BIS_fnc_dirTo;	
 	
-	if (((_unitPos select 2) > 1) && {abs ((_unitPos select 2) - (_destination select 2)) > 0.2}) exitwith {};
+	if (((_unitPos select 2) > 1) && {abs ((_unitPos select 2) - (_destination select 2)) > 0.2}) exitWith {};
 	{[_unit,_x] remoteExec ["disableAI",_unit]} foreach ["ANIM","MOVE","PATH"];
 	
 	
@@ -229,7 +229,7 @@ A3C_forceDestination = {
 		
 	};
 	//systemchat str _anims;
-	//if (true) exitwith {};
+	//if (true) exitWith {};
 	
 
 	
@@ -256,7 +256,7 @@ A3C_forceDestination = {
 	_moveTime = 0;
 	while {alive _unit} do {
 		_dist = _unit distance2D _destination;
-		if (_dist < 0.3) exitwith {};
+		if (_dist < 0.3) exitWith {};
 		if ({_unit distance2d _x > _originaldist} count [_initPos,_destination] > 1) exitWith {};
 		if ("ladder" in animationState _unit) exitWith {};
 		sleep 0.1;
@@ -273,7 +273,7 @@ A3C_forceDestination = {
 	while {alive _unit} do {	
 		
 		_dirto = [_unitPos,_destination] call BIS_fnc_dirTo;	
-		if ( ((expectedDestination _unit) select 0) distance2d _dest > 1) exitwith {	
+		if ( ((expectedDestination _unit) select 0) distance2d _dest > 1) exitWith {	
 			_exit = true; 
 		};
 		
@@ -299,9 +299,9 @@ A3C_forceDestination = {
 				_c = 0;
 			};
 		};
-		if (_c >= 2) exitwith {};
+		if (_c >= 2) exitWith {};
 		_dist = _unit distance2D _destination;
-		if (_dist < 0.2) exitwith {};		
+		if (_dist < 0.2) exitWith {};		
 	};
 	*/
 	
@@ -319,8 +319,8 @@ A3C_forceDestination = {
 	
 	sleep 1;
 	
-	//if (_exit) exitwith {};
-	//if ((typename _target == "OBJECT") && {_target isKindOf "house"}) exitwith {};
+	//if (_exit) exitWith {};
+	//if ((typename _target == "OBJECT") && {_target isKindOf "house"}) exitWith {};
 	//_unit setposASL _destination;
 	
 	

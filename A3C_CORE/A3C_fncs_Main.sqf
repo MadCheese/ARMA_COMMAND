@@ -1334,7 +1334,7 @@ A3C_HouseData = {
 						{
 							_r = _x;
 
-							if (_i in _r) exitwith {
+							if (_i in _r) exitWith {
 								(_rooms select _foreachindex) pushbackunique _n;
 							};
 						} foreach _rooms;
@@ -1347,7 +1347,7 @@ A3C_HouseData = {
 	_combine = [];
 	_array = [];
 	for "_i" from 0 to ((count _rooms) -1) do {
-		if (count _rooms <= _i ) exitwith {};
+		if (count _rooms <= _i ) exitWith {};
 		_r = _rooms select _i;
 		{
 			_rc = _x;
@@ -1377,7 +1377,7 @@ A3C_DOORPOSITIONS = {
 	_amount = (getNumber (configfile >> "CfgVehicles" >> (typeOf _building) >> "numberOfDoors"));
 	for "_i" from 1 to _amount do {
 		_doorPos = _building selectionPosition (format ["Door_%1_trigger", _i]);
-		if (_doorPos isEqualTo [0,0,0]) exitwith {};
+		if (_doorPos isEqualTo [0,0,0]) exitWith {};
 		_result pushback (_building modelToWorld _doorPos);
 	};
 	_result
@@ -1874,7 +1874,7 @@ A3C_UNIT_INIT = {
 	if (profileNameSpace getVariable "A3C_SKILL_VAR")  then {
 		_unit setskill 1;
 	};
-	if ( (typename (_unit getvariable ["A3C_VVNI",[]])) == "SCALAR" && {!([(getplayerUID player),(vehicleVarname _unit)] call BIS_fnc_inString )}) exitwith { //~~ ALERT: is this really compatible when joining units that were previoudly assigned a number??
+	if ( (typename (_unit getvariable ["A3C_VVNI",[]])) == "SCALAR" && {!([(getplayerUID player),(vehicleVarname _unit)] call BIS_fnc_inString )}) exitWith { //~~ ALERT: is this really compatible when joining units that were previoudly assigned a number??
 		//systemchat format ["unit %1 is already initialized", vehiclevarname _unit];
 	};
 
@@ -1987,14 +1987,14 @@ A3C_UNIT_INIT = {
 		_it = _x;
 		_am = (getText (configfile >> "CfgMagazines" >> _x >> "ammo"));
 		_array = "true" configClasses (configfile >> "CfgAmmo" >> _am >> "NVGMarkers");
-		if (count _array == 0) exitwith {
+		if (count _array == 0) exitWith {
 			_unit addMagazine _irType;
 		};
 	} foreach (magazines _unit);
 	//systemchat 'unit init done';
 };
 
-if (isDedicated) exitwith {};
+if (isDedicated) exitWith {};
 
 
 
@@ -2423,7 +2423,7 @@ A3C_GETUNITINDEX = {
 	_index = 2;
 	_teamMembers = (profileNamespace getvariable "A3C_GROUPUNITS");
 	for "_i" from 0 to ((count _teamMembers) -1) do {
-		if (_unit == (_teamMembers select _i)) exitwith {_index = _i};
+		if (_unit == (_teamMembers select _i)) exitWith {_index = _i};
 	};
 	_index = _index + 1;
 	_index;
@@ -2462,7 +2462,7 @@ A3C_JOIN_UNIT = {
 		_soldier = _x;
 		if !(_soldier in _unitArray) then {
 			for "_i" from 0 to (count _unitArray) do {
-				if ( (!alive (_unitArray select _i)) && !( (_unitArray select _i) in (units group player) ) ) exitwith {
+				if ( (!alive (_unitArray select _i)) && !( (_unitArray select _i) in (units group player) ) ) exitWith {
 					//[_soldier] call A3C_UNIT_INIT; //-- need to init later because it requires the unit to be in _unitArray
 					_initArray pushBackUnique _soldier;
 					_unitArray set [_i,_soldier];
@@ -2486,7 +2486,7 @@ A3C_JOIN_UNIT = {
 			_soldier = _x;
 			if !(_soldier in _unitArray) then {
 				for "_i" from 0 to (count _unitArray) do {
-					if ( (!alive (_unitArray select _i)) && !( (_unitArray select _i) in (units group player) ) ) exitwith {
+					if ( (!alive (_unitArray select _i)) && !( (_unitArray select _i) in (units group player) ) ) exitWith {
 						[_soldier] call A3C_UNIT_INIT;
 						_unitArray set [_i,_soldier];
 
@@ -2562,7 +2562,7 @@ A3C_REFRESHING = false;
 //-- RESET ALL GROUP SETTINGS
 
 A3C_GROUP_RESET = {
-	if (is3DEN) exitwith {};
+	if (is3DEN) exitWith {};
 	setGroupIconsVisible [false,false];
 	private ["_units","_knowData","_recreateLogic"];
 	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
@@ -2836,7 +2836,7 @@ A3C_GROUP_RESET = {
 	//systemchat 'hey';
 	
 	//-- refresh map UI and HUD UI
-	[] execVM "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_drawMapUI.sqf";
+	[] execVM "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_drawMapUI.sqf";
 	[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
 
 
@@ -2864,7 +2864,7 @@ A3C_AI_Shared_cancelUnitPlot = {
 
 	_data = [];
 
-	if ( !(_shift) && !(_ctrl)  ) exitwith {
+	if ( !(_shift) && !(_ctrl)  ) exitWith {
 		{
 			//[_x] call A3C_RESET_WIP;
 			_x setvariable ["A3C_PLOT_TEMP",[],true];

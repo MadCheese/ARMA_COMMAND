@@ -1,5 +1,5 @@
 
-if (is3DEN) exitwith {};
+if (is3DEN) exitWith {};
 
 //--- A3C init
 
@@ -107,7 +107,7 @@ publicVariable 'RHS_ENGINE_STARTUP_OFF';
 
 
 //-- Init Client Only
-if (isDedicated) exitwith {};
+if (isDedicated) exitWith {};
 
 
 
@@ -135,12 +135,16 @@ A3C_SPAWN_HUD_MENU = compile preprocessfileLineNumbers "A3C_CORE\ui\HUD\A3C_SPAW
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_DYNAMIC\UI_DSP_HUD_DYNAMIC_Handlers.sqf";
 
 //-- Map Overlay
-call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_Functions.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_Handlers.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_Handlers_dispatched.sqf";
 
-call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_HCGP_CONTEXT_Functions.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_HCWP_CONTEXT_Functions.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\functions\initFunctions.sqf";
+
+
+call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_Functions.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_Handlers.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_Handlers_dispatched.sqf";
+
+call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_HCGP_CONTEXT_Functions.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_HCWP_CONTEXT_Functions.sqf";
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_findCover.sqf";     //-- Not HC/remote compatible yet

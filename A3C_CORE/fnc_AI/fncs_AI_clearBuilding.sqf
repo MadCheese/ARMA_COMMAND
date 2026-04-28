@@ -8,7 +8,7 @@ profilenamespace setvariable ["A3C_PROFILEVAR_BUILDINGS_CLEAR",profileNameSpace 
 		_pgs = _x select 1;
 		private _exct = true;
 		{
-			if (_x select 0 == _bt) exitwith {
+			if (_x select 0 == _bt) exitWith {
 				_exct = false;
 			};
 		} foreach _data;
@@ -410,7 +410,7 @@ A3C_HouseData = {
 						{
 							_r = _x;
 							
-							if (_i in _r) exitwith {
+							if (_i in _r) exitWith {
 								(_rooms select _foreachindex) pushbackunique _n;
 							};
 						} foreach _rooms;
@@ -423,7 +423,7 @@ A3C_HouseData = {
 	_combine = [];
 	_array = [];
 	for "_i" from 0 to ((count _rooms) -1) do {
-		if (count _rooms <= _i ) exitwith {};
+		if (count _rooms <= _i ) exitWith {};
 		_r = _rooms select _i;
 		{
 			_rc = _x;

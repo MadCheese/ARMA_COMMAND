@@ -35,7 +35,7 @@ A3C_ROE_FOML_RELEASE = {
 //-- Fire at will / Fire only on target
 A3C_RadialMenu_ROE = {
 	_mode = _this select 0;
-	if (count (groupSelectedUnits player) == 0) exitwith {};
+	if (count (groupSelectedUnits player) == 0) exitWith {};
 	//systemchat str _mode;
 	_unitNames = "";
 	switch (_mode) do {
@@ -58,7 +58,7 @@ A3C_RadialMenu_ROE = {
 				[_unit] spawn {
 					_unit = _this select 0;
 					while {alive _unit} do {
-						if !(_unit getvariable "A3C_ROE") exitwith {_unit enableAI "AUTOTARGET"};
+						if !(_unit getvariable "A3C_ROE") exitWith {_unit enableAI "AUTOTARGET"};
 						_unit disableAI "AUTOTARGET";
 						sleep 5;
 					};
@@ -123,7 +123,7 @@ A3C_TOGGLEDANGER = {
 			};
 		};
 	} foreach _units;
-	if (count _units == 0) exitwith {};
+	if (count _units == 0) exitWith {};
 	_unitNames = "";
 
 	private  _autocombatIMG = "A3C_CORE\ui\pictures\icon_menu_autocombat_enabled.paa";

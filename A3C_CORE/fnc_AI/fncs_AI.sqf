@@ -56,7 +56,7 @@ A3C_AI_Shared_action_UNSTUCK = {
 			private _hgt = _pos select 2;
 			for "_i" from 1 to 5 do {
 				_res = (_pos findEmptyPosition [5,_dist,(typeOf _vehicle)]);
-				if ((count _res) > 0) exitwith {};
+				if ((count _res) > 0) exitWith {};
 				_dist = _dist + 5;
 			};
 			if (_vehicle isKindOf "SHIP") then {
@@ -87,7 +87,7 @@ A3C_AI_Shared_action_UNSTUCK = {
 							] call BIS_fnc_sortBy;
 							_road = _roads select 0;
 							_res1 = (position _road findEmptyPosition [0,5,(typeOf _vehicle)]);
-							if ((count _res1) > 0) exitwith {
+							if ((count _res1) > 0) exitWith {
 								_res = _res1;
 								_roadDir = getDir _x;
 								if (abs (_refDir - _roadDir) > abs (_refDir - (_roadDir + 180)) ) then {
@@ -150,7 +150,7 @@ A3C_AI_Shared_action_UNSTUCK = {
 						if (count _roads > 0) then {
 							{
 								_res1 = (position _x findEmptyPosition [0,5,(typeOf _vehicle)]);
-								if ((count _res1) > 0) exitwith {
+								if ((count _res1) > 0) exitWith {
 									_res = _res1;
 
 									//-- align the vehicle with the road, in direction of the driver's destination
@@ -198,7 +198,7 @@ A3C_AI_Shared_action_UNSTUCK = {
 					[_vehicle,([(getposASL (driver _vehicle)),0.5,(getDir (driver _vehicle))] call BIS_fnc_RelPos)] remoteExec ["setposASL",_vehicle];
 				};
 			};
-			if ((count _res) == 0) exitwith {};
+			if ((count _res) == 0) exitWith {};
 			private _act = true;
 			if (isMultiplayer) then {
 				private _enemies = [(driver _vehicle),"ARRAY"] call MCSS_fnc_NearEnemies;
@@ -595,7 +595,7 @@ A3C_SpawnGoCode = {
 	params ["_unit","_goCode","_movePos","_origDest","_data","_cycle"];
 	private _abort = false;
 	while {!(_goCode == "NONE")} do {
-		if ([_unit] call A3C_ExitRoute_isWpAborted) exitwith {_abort = true};
+		if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {_abort = true};
 		if !(A3C_BOOL_MOVINGMARKER) then {
 			//-- exit stop
 			if ([_unit,_movePos,1] call A3C_ExitRoute_isUnitStopped) then {
@@ -607,8 +607,8 @@ A3C_SpawnGoCode = {
 			_abort = true;
 			//{dostop _x} foreach [_unit,effectivecommander (vehicle _unit)];
 		};
-		if (_abort) exitwith {};
-		if (call compile format ["A3C_GoCode_Activate_%1",(parseText _goCode)]) exitwith {};
+		if (_abort) exitWith {};
+		if (call compile format ["A3C_GoCode_Activate_%1",(parseText _goCode)]) exitWith {};
 		sleep 0.1;
 	};
 };
@@ -690,7 +690,7 @@ A3C_AI_Shared_executeUnitPlot = {
 		} foreach ["A3C_PLOT","A3C_PLOT_TEMP"];
 	};
 
-	if (count _data == 0) exitwith {};
+	if (count _data == 0) exitWith {};
 
 
 	if (currentCommand _unit == "STOP") then {
@@ -702,7 +702,7 @@ A3C_AI_Shared_executeUnitPlot = {
 
 	//-- reset unit's planning stage array
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	if (!alive _unit) exitwith {_abort = true};
+	if (!alive _unit) exitWith {_abort = true};
 
 	_unit setVariable ["A3C_unitIsOnMainRoute",true,true];
 
@@ -741,9 +741,9 @@ A3C_AI_Shared_executeUnitPlot = {
 
 		_data = (_unit getvariable ["A3C_PLOT",[]]);
 
-		if (_cycle >= count _data) exitwith {};
+		if (_cycle >= count _data) exitWith {};
 
-		if (_cycle >= (count (_unit getvariable "A3C_PLOT")) ) exitwith {};
+		if (_cycle >= (count (_unit getvariable "A3C_PLOT")) ) exitWith {};
 
 
 		_vehicle = vehicle _unit;
@@ -813,7 +813,7 @@ A3C_AI_Shared_executeUnitPlot = {
 		_unit lookat objnull;
 		//if (_abortData select 0) exitWith {}; //-- not dnecessary as _abort is still true?
 		//-- exit function if required (_abort returns true), delete lines/markers and reset values
-		if (_abort) exitwith {
+		if (_abort) exitWith {
 			{_unit enableAI _x} foreach ["TARGET","AUTOTARGET","FSM","AUTOCOMBAT"]; //"THREAT_PATH","PATHPLAN",
 			_unit forcespeed -1;
 			_vehicle forcespeed -1;
@@ -823,7 +823,7 @@ A3C_AI_Shared_executeUnitPlot = {
 			[_unit] call A3C_RESET;
 		};
 
-		if (isNull _unit) exitwith {};
+		if (isNull _unit) exitWith {};
 
 		
 
@@ -1151,8 +1151,8 @@ A3C_AI_Shared_executeUnitPlot = {
 			_data = (_unit getvariable ["A3C_PLOT",[]]);
 			//if (_cycle > ((count _data) -1)) exitWith {};
 
-			if (_cycle >= count _data) exitwith {};
-			if (_cycle >= (count (_unit getvariable ["A3C_PLOT",[]])) ) exitwith {
+			if (_cycle >= count _data) exitWith {};
+			if (_cycle >= (count (_unit getvariable ["A3C_PLOT",[]])) ) exitWith {
 				if (A3C_DEBUG) then {
 					systemchat format ["%1 exit no more data",name _unit];
 				};
@@ -1171,8 +1171,8 @@ A3C_AI_Shared_executeUnitPlot = {
 			_doExit = false;
 			_landingdata = if ((_wpAction select 0) == "LANDING") then {_wpAction select 1} else {""};
 			_wpTimeoutValue = if ((_wpAction select 0) == "TIMEOUT") then {_wpAction select 1} else {0};
-			if (_complete) exitwith {};
-			if ((_wpAction select 0) in ["GRENADE","SUPPRESSION"]) exitwith {};
+			if (_complete) exitWith {};
+			if ((_wpAction select 0) in ["GRENADE","SUPPRESSION"]) exitWith {};
 			
 			if (_unit == driver _vehicle) then {
 				
@@ -1208,7 +1208,7 @@ A3C_AI_Shared_executeUnitPlot = {
 				
 				//-- NON NEGOTIOABLE EXIT CONDITIONS
 				//-- check if wp is completed (first because STOPPED and BREAK are subordinate and share conditions).
-				if ([_unit,_movePos,_variDist,_inBuilding,_wpRadius,_wpTimeoutValue] call A3C_ExitRoute_isWpCompleted) exitwith {
+				if ([_unit,_movePos,_variDist,_inBuilding,_wpRadius,_wpTimeoutValue] call A3C_ExitRoute_isWpCompleted) exitWith {
 					_doExit = true;
 					_unit setunitpos _unitPosDest;
 					if (_inBuilding) then {
@@ -1503,7 +1503,7 @@ A3C_AI_Shared_executeUnitPlot = {
 //		if (combatmode _unit == "BLUE") then { //~~ IFFY: make an additional variable in objectNamespace for BLUE waypoints as opposed to global setting
 //			[_unit,["COMBATMODE","YELLOW"]] call MCSS_fnc_orderIndividual; //-- reset combatmode so unit can cover other hub-units
 //		};
-		if (isnull _unit) exitwith {};
+		if (isnull _unit) exitWith {};
 		if !(_abort) then {
 			//-- Spawn AI Rail
 			if !((_wpAction select 0) in ["GRENADE","SUPPRESSION","REARM"]) then {
@@ -1690,10 +1690,10 @@ A3C_AI_Shared_executeUnitPlot = {
 			///////////////////////////////////////////
 			while {true} do {
 				// systemchat str ["HUB",time];
-				if ((_wpAction select 0) in ["GRENADE","SUPPRESSION"]) exitwith {};
+				if ((_wpAction select 0) in ["GRENADE","SUPPRESSION"]) exitWith {};
 
 
-				if ([_unit] call A3C_ExitRoute_isWpAborted) exitwith {
+				if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {
 					_abort = true;
 				};
 				if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitWith {
@@ -1715,7 +1715,7 @@ A3C_AI_Shared_executeUnitPlot = {
 					};
 				};
 
-				if (_abort) exitwith {};
+				if (_abort) exitWith {};
 				_otherUnits = units group player - [player,_unit];
 				_hubComplete = true;
 				{
@@ -1731,7 +1731,7 @@ A3C_AI_Shared_executeUnitPlot = {
 						} foreach _unitData;
 					};
 				} foreach _otherUnits;
-				if (_hubComplete) exitwith {};
+				if (_hubComplete) exitWith {};
 				sleep 1; //~~ #UNCLEAR  is this needed? [might be irrelevant for single units - CONFIRMED]
 			};
 		};
@@ -1796,7 +1796,7 @@ A3C_AI_Shared_executeUnitPlot = {
 			while {true} do {
 
 				//~~ Authors note: WRITE ALL THESE _ABORT CHECKS INTO A FUNC!!!!!
-				if ([_unit] call A3C_ExitRoute_isWpAborted) exitwith {_abort = true};
+				if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {_abort = true};
 				if !(A3C_BOOL_MOVINGMARKER) then {
 					//-- exit stop
 					if ([_unit,_movePos,1] call A3C_ExitRoute_isUnitStopped) then {
@@ -1813,7 +1813,7 @@ A3C_AI_Shared_executeUnitPlot = {
 				if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) then {
 					_abort = true;
 				};
-				if (_abort) exitwith {};
+				if (_abort) exitWith {};
 				private ["_syncComplete","_pickUp"];
 				_syncComplete = true;
 				_data = (_unit getvariable ["A3C_PLOT",[]]);
@@ -1871,7 +1871,7 @@ A3C_AI_Shared_executeUnitPlot = {
 						_soldier setVariable ["A3C_PLOT",_dataCompared,true];
 					};
 				} foreach _otherUnits;
-				if (_syncComplete) exitwith {
+				if (_syncComplete) exitWith {
 					//if (assignedVehicle player == _vehicle) then {
 					//	A3C_BOARD_UNITS_ACTIVE pushBackUnique player;
 					//};
@@ -1940,8 +1940,8 @@ A3C_AI_Shared_executeUnitPlot = {
 
 		if (_unit == driver _vehicle && {!(_vehicle isKindOf "AIR") && {!(_abort) && {(_wpAction select 0) == "CARGO_IN"}}}) then {
 			while {canmove _vehicle} do {
-				if (isNull _unit) exitwith {_abort = true};
-				if ({(assignedvehicle _x == _vehicle) && !(_x in _vehicle) && (alive _x)} count units group player == 0) exitwith {};
+				if (isNull _unit) exitWith {_abort = true};
+				if ({(assignedvehicle _x == _vehicle) && !(_x in _vehicle) && (alive _x)} count units group player == 0) exitWith {};
 				if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitWith {_abort = true};
 				_unit dowatch objnull;
 				sleep 1;
@@ -2003,7 +2003,7 @@ A3C_AI_Shared_executeUnitPlot = {
 			//systemchat format ["loop IN %1",(str _unit)];
 
 			while {canmove _vehicle} do {
-				if (isNull _unit) exitwith {_abort = true};
+				if (isNull _unit) exitWith {_abort = true};
 				_vehicle = vehicle _unit;
 				_unit dowatch objnull;
 				_vehicle limitspeed 0;
@@ -2051,7 +2051,7 @@ A3C_AI_Shared_executeUnitPlot = {
 
 
 				if !(_unit == (driver _vehicle)) then {_exit = true};
-				if (_exit) exitwith {};
+				if (_exit) exitWith {};
 				if !(_exit) then {
 					sleep 0.01;
 				};
@@ -2075,10 +2075,10 @@ A3C_AI_Shared_executeUnitPlot = {
 		if ( (_landingdata == "LANDFINAL") && !(_abort) ) then {
 			_timenow = (time + 10);
 			while {time < _timenow} do {
-				if (isNull _unit) exitwith {_abort = true};
+				if (isNull _unit) exitWith {_abort = true};
 				_vehicle flyinheight 0;
 				sleep 0.05;
-				if (({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) OR !(_unit == (driver _vehicle)) ) exitwith {  //~~ TO DO: CHECK EXACTLY WHAT THIS DOES (relates to new UI setup / non driver planning)
+				if (({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) OR !(_unit == (driver _vehicle)) ) exitWith {  //~~ TO DO: CHECK EXACTLY WHAT THIS DOES (relates to new UI setup / non driver planning)
 					_abort = true;
 					_vehicle land "NONE";
 				};
@@ -2103,7 +2103,7 @@ A3C_AI_Shared_executeUnitPlot = {
 			_counter = 0;
 			if (_wpTimeoutValue > 0) then {_threshold = (_wpTimeoutValue / 0.1)};
 			while {_counter < _threshold} do {
-				if ([_unit] call A3C_ExitRoute_isWpAborted) exitwith {_abort = true};
+				if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {_abort = true};
 				_vehicle = vehicle _unit; //-- refresh
 				if !(A3C_BOOL_MOVINGMARKER) then {
 					//-- exit stop
@@ -2141,7 +2141,7 @@ A3C_AI_Shared_executeUnitPlot = {
 					_wpMarkerMain setmarkerTextLocal str (ceil (_wpTimeoutValue - (_counter * 0.1)) );
 				};
 
-				if (_abort) exitwith {};
+				if (_abort) exitWith {};
 				if (_vehicle isKindOf "AIR") then {
 					if (_landingdata in ["PICKUP","DROPOFF"]) then {
 						_vehicle setvelocity [0,0,0];
@@ -2154,7 +2154,7 @@ A3C_AI_Shared_executeUnitPlot = {
 		};
 
 
-		if (isnull _unit) exitwith {};
+		if (isnull _unit) exitWith {};
 
 		///////////////////////////////////////////
 		//-- CHECK FOR GO-CODES
@@ -2164,7 +2164,7 @@ A3C_AI_Shared_executeUnitPlot = {
 			_goCode = (_wpCondition select 1);
 			if !(_goCode == "NONE") then {
 				while {!(_goCode == "NONE")} do {
-					if ([_unit] call A3C_ExitRoute_isWpAborted) exitwith {_abort = true};
+					if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {_abort = true};
 					if !(A3C_BOOL_MOVINGMARKER) then {
 						//-- exit stop
 						if ([_unit,_movePos,1] call A3C_ExitRoute_isUnitStopped) then {
@@ -2177,8 +2177,8 @@ A3C_AI_Shared_executeUnitPlot = {
 						_abort = true;
 						//{dostop _x} foreach [_unit,effectivecommander _vehicle];
 					};
-					if (_abort) exitwith {};
-					if (call compile format ["A3C_GoCode_Activate_%1",(parseText _goCode)]) exitwith {};
+					if (_abort) exitWith {};
+					if (call compile format ["A3C_GoCode_Activate_%1",(parseText _goCode)]) exitWith {};
 					sleep 0.1;
 				};
 			};
@@ -2232,7 +2232,7 @@ A3C_AI_Shared_executeUnitPlot = {
 		if (_cycle == (count _data)) then {
 			while {(alive _unit)} do {
 				if (isnull _unit) then {_abort = true};
-				if ((count(_unit getvariable ["A3C_PLOT_TEMP",[]])) == 0) exitwith {};
+				if ((count(_unit getvariable ["A3C_PLOT_TEMP",[]])) == 0) exitWith {};
 				sleep 0.5;
 			};
 
@@ -2300,7 +2300,7 @@ A3C_AI_Shared_executeUnitPlot = {
 
 
 
-//if (isDedicated) exitwith {};
+//if (isDedicated) exitWith {};
 
 
 

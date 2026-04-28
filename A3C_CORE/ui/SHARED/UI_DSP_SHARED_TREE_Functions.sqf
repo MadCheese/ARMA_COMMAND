@@ -1,4 +1,4 @@
-#include "..\SHARED\shared_ui_defines.hpp"
+#include "shared_ui_defines.hpp"
 #include "..\radial\radialMenu\dialog_defines.hpp"
 
 

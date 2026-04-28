@@ -209,13 +209,13 @@ A3C_MEDICAL_START = {
 		private ["_medic","_patient"];
 		_medic = _x;
 		//systemChat format ["%1-1",_foreachINdex];
-		if ((count _patients_designated) == 0) exitwith {
+		if ((count _patients_designated) == 0) exitWith {
 			private _medics_active = (_group getVariable ["A3C_MEDICS_ACTIVE", [] ]);
 			_medics_active = _medics_active - [_medic];
 			_group setVariable ["A3C_MEDICS_ACTIVE", _medics_active ];
 		};
 		//systemChat format ["%1-2",_foreachINdex];
-		//if ((count A3C_MEDICS_ACTIVE) == 0) exitwith {};
+		//if ((count A3C_MEDICS_ACTIVE) == 0) exitWith {};
 		_patients_designated = [_patients_designated,[],{_x distance2d _medic},"ASCEND"] call BIS_fnc_sortBy;
 		if (_medic in _patients_designated) then {
 			_patient = _medic;
@@ -261,7 +261,7 @@ A3C_MEDICAL_START = {
 						[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
 					};
 
-					if (currentcommand _healer == "STOP" && {!( ((expectedDestination _healer ) select 1) == "LEADER PLANNED")}) exitwith {
+					if (currentcommand _healer == "STOP" && {!( ((expectedDestination _healer ) select 1) == "LEADER PLANNED")}) exitWith {
 						//systemchat 'medi stop';
 					};
 					_patients_designated = group _healer getVariable ["A3C_PATIENTS_DESIGNATED", [] ]; 
@@ -273,8 +273,8 @@ A3C_MEDICAL_START = {
 							};
 						};
 					};
-					if ((count _patients_designated) == 0) exitwith {};
-					if (({_x distance2d _healer < 80} count _patients_designated) == 0) exitwith {};
+					if ((count _patients_designated) == 0) exitWith {};
+					if (({_x distance2d _healer < 80} count _patients_designated) == 0) exitWith {};
 					_patients_designated = [_patients_designated,[],{_x distance2d _healer},"ASCEND"] call BIS_fnc_sortBy;
 					_patient = _patients_designated select 0;
 					_patients_designated = _patients_designated - [_patient];
@@ -397,7 +397,7 @@ A3C_AI_Shared_Action_Heal = {
 	private _objParentUnit = objectParent _unit;
 	private _objParentPatient = objectParent _patient;
 	private _vehicleHeal = _objParentUnit == _objParentPatient;
-	if (isplayer _unit) exitwith {};
+	if (isplayer _unit) exitWith {};
 	_isPlayer = (_patient == player);
 	_expDest = [_patient] call A3C_fnc_setDestination; //expectedDestination _patient;
 	_objs = [];
@@ -523,14 +523,14 @@ A3C_AI_Shared_Action_Heal = {
 				//-- #WIP note: we might want to include self healing if not unconscious - but without re-calling the same fnc obviously.
 				//-- That means moving healing stuff into a fnc (logical anyways)
 
-				if !(({alive _x} count [_unit,_patient]) > 0) exitwith {
+				if !(({alive _x} count [_unit,_patient]) > 0) exitWith {
 					//terminate _scr;
 					if (count (_unit getVariable ["A3C_PLOT",[]]) > 0) then {
 						_unit setvariable ["A3C_ABORT_Data",[true,false],true];
 						waitUntil {count (_unit getVariable ["A3C_PLOT",[]]) == 0};
 					};
 				};
-				if (count (_unit getVariable ["A3C_PLOT",[]]) == 0) exitwith {
+				if (count (_unit getVariable ["A3C_PLOT",[]]) == 0) exitWith {
 					// systemchat "AAAAA";
 				};
 				//if (unitReady _unit) exitWith {
@@ -565,7 +565,7 @@ A3C_AI_Shared_Action_Heal = {
 			[_unit, position _unit] call A3C_DoMove;
 			for "_i" from 1 to 30 do {
 				if (_patient getVariable ["A3C_AbortHealing", false]) exitWith {};
-				if ((player distance2d _unit) < 5) exitwith {_skip = false};
+				if ((player distance2d _unit) < 5) exitWith {_skip = false};
 				sleep 1;
 			};
 		};

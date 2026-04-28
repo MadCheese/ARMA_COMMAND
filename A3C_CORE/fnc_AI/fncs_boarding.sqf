@@ -471,7 +471,7 @@ A3C_boardSquadUnittoSeat = {
 	if (isNull _unit OR {!alive _unit}) then {_exit = true;};
 	// if ((_unit distance2d _tv) >= ((sizeOf (typeOf _tv)) /1) + 15) then {_exit = true};  /// /3
 		
-	if (_exit) exitwith {
+	if (_exit) exitWith {
 		if (_unit in A3C_RD_UNITS) then {
 			A3C_BOARD_UNITS pushbackUnique _unit;		
 		};
