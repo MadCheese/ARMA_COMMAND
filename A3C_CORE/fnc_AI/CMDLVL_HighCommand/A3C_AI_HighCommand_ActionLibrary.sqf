@@ -446,7 +446,7 @@ A3C_AI_HighCommand_Action_vehicleSmoke = {
 A3C_AI_HighCommand_Action_flyInHeight = {
 
 	private _group = if (!isNull findDisplay IDD_RADIAL_MENU) then {A3C_RD_UNITS select 0} else {A3C_SELECTED_HC_GROUPS_SETTINGS select 0}; //~~ same same??
-	private _a3c_dsp = if (visibleMap) then {100020} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 
 	if (_a3c_dsp == 100060) then {
 		with uiNameSpace do {
@@ -496,7 +496,7 @@ A3C_AI_HighCommand_Action_reArm = {
 						
 	{[_x] spawn A3C_ReArm_Auto_Evaluate} foreach (units _gp);
 	player groupradio 'SentCmdRearm';
-	private _a3c_dsp = if (visibleMap) then {100020} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 
 	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		A3C_DISABLE_RADIAL = true;
@@ -508,7 +508,7 @@ A3C_AI_HighCommand_Action_reArm = {
 };
 
 A3C_AI_HighCommand_Action_groupHeal = {
-	private _a3c_dsp = if (visibleMap) then {100020} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 
 	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		A3C_DISABLE_RADIAL = true;
@@ -999,7 +999,8 @@ A3C_AI_HighCommand_Action_casStrike = {
 	};
 
 
-	private _a3c_dsp = if (visibleMap) then {100020} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
+	
 	private _parent = findDisplay _a3c_dsp displayCtrl 8008;
 	private _text = findDisplay _a3c_dsp displayCtrl 800802;
 	private _listBox = findDisplay _a3c_dsp displayCtrl 800803;

@@ -76,7 +76,7 @@ A3C_AI_Squad_Action_unAssembleWeapon = {
 			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
 		};
 
-		private _a3c_dsp = if (visibleMap) then {100020} else {100060};
+		private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 		private _parent = findDisplay _a3c_dsp displayCtrl 8008;
 		private _text = findDisplay _a3c_dsp displayCtrl 800802;
 		private _listBox = findDisplay _a3c_dsp displayCtrl 800803;
@@ -174,7 +174,7 @@ A3C_AI_Squad_Action_placeCharge = {
 			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
 		};
 
-		private _a3c_dsp = if (visibleMap) then {100020} else {100060};
+		private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 		private _parent = findDisplay _a3c_dsp displayCtrl 8008;
 		private _text = findDisplay _a3c_dsp displayCtrl 800802;
 		private _listBox = findDisplay _a3c_dsp displayCtrl 800803;

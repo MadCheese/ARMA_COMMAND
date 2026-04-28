@@ -1809,7 +1809,7 @@ A3C_MAP_DelLoopObs = {
 	//-- this function cancels the dragging of LookDir arrows and AIC-waypointarrows while setting them
 	//-- executes when mouse is dragged into map controls
 	//~~ this whole solution is sloppy, there has to be a better way  || ~~ is this still true? yes, just pausing would be better. But that's complex.
-
+	systemchat format ["A3C_MAP_DelLoopObs, %1: ", round time ];
 	A3C_BOOL_MAP_MU = true;
 	if (A3C_BOOL_MAP_MD) then {
 		A3C_BOOL_MAP_MD = false;
@@ -2150,8 +2150,8 @@ A3C_UI_MAP_SPAWN_TIMEOUTBOX = {
 };
 
 
-//[-25] call A3C_TOGGLE_SUBSELECTION;
-A3C_TOGGLE_SUBSELECTION = {
+//[-25] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP;
+A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP = {
 
 	params ["_originButton","_actionButton","_subSet","_doToggleCntrls"];
 	private _a3c_dsp = 100020;
@@ -2475,24 +2475,14 @@ A3C_TOGGLE_SUBSELECTION = {
 		];
 	};
 
-	//private _subsetButtonSize = ctrlPosition (findDisplay _a3c_dsp displayCtrl 800901); //-- 800901 is just the first image. we only need the size. Same for all subset buttons
-	//for "_i" from 0 to 1 do {
-	//	_subsetButtonSize deleteAt 0;
-	//};
-	//private _subsetButtonSize = [A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W, A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H] ;
-
-
-//A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H
 	//-- create positional array for subset bar
 	private _subsetBarPos =
 	[
 		((_originButtonPos select 0) + (_shiftFactorX * A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W)) max A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_X_EXPANDED,
 		_ctrlFrameOriginalY -  (A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H * _subset) //(_originButtonPos select 1) - ((_subsetButtonSize select 1) + ((_subsetButtonSize select 1) * _gap)   )
-		//(_subsetButtonSize select 0) * _selectionAmount,
-		//(_subsetButtonSize select 1) * 2
+
 
 	];
-	//systemchat str _subsetBarPos;
 
 
 	//-- assign button images and functions
@@ -2615,18 +2605,6 @@ A3C_TOGGLE_SUBSELECTION = {
 				_toolTip
 			];
 		};
-		/*
-		{
-			_ctrl = findDisplay _a3c_dsp displayCtrl _x;
-			_ctrlPos = ctrlPosition _ctrl;
-			_ctrlPos set [2,A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H];
-			_ctrlPos set [3,A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H];
-			_ctrl ctrlSetPosition _ctrlPos;
-			//_ctrl ctrlSetPositionW A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-			//_ctrl ctrlSetPositionH A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-			_ctrl ctrlCommit 0;
-		} foreach _x;
-		*/
 	} foreach _subsetCtrls;
 
 	//-- shortcut for button background fields
@@ -2809,7 +2787,7 @@ A3C_fnc_SUBSET = {
 			A3C_TEMP_ACTION = ["NONE","NONE"];
 		};
 		case ("SQ_ACTION_GRENADE") : {
-			[[_buttonImageID,_buttonClickerID],"SQ_ACTION_GRENADE",2,true] call A3C_TOGGLE_SUBSELECTION;
+			[[_buttonImageID,_buttonClickerID],"SQ_ACTION_GRENADE",2,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP;
 		};
 
 		case ("SQ_HELIHEIGHT_MAX") : {

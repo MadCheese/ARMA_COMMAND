@@ -34,3 +34,7 @@
 
 #define IDC_UI_SHARED_TEAMCOLOR_BG         1012 //7077
 #define IDC_SHARED_UI_TEAMCOLOR_FRAME      1013 //7079
+
+
+
+//-- OBJECTSELECTOR (#NOTE: when done, rename!)
