@@ -7,7 +7,19 @@
 // player sideChat "A3C_UI_MAP_onOnMouseMoving_Overlay";
 params ["_display","_sX","_sY","_unUsed"];
 private _a3c_dsp = 100020;
-private _ctls = [13,7071,IDC_UI_SHARED_TEAMCOLOR_BG,202020,709099,8009,8010,709109,709115,8007];
+private _ctls = [
+	IDC_MAP_UFSB_FRAME,
+	IDC_MAP_TOP_EXTRAS_BACKGROUND,
+	IDC_UI_SHARED_TEAMCOLOR_BG,
+	202020,
+	709099,
+	8009,
+	8010,
+	709109,
+	709115,
+	8007
+];
+
 A3C_MAP_X = _this select 1;
 A3C_MAP_Y = _this select 2;
 if ({[[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea} count _ctls > 0) then {

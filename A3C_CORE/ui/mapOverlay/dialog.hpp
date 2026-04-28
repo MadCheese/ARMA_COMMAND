@@ -35,21 +35,35 @@ class A3C_DSP_MapOverlay
 		//---------------------------------------------------------------------------------------------
 		
 		
-		//-- DESPITE SEEMINGLY A3C_MAP_DelLoopObs NOT EVER FIRING, THIS DOES PREVENT NEW SQ WAYPOINTS WHEN USING UFSB Controls
-		class A3C_RscPicture_ControlFrame_1: A3C_RscButton_Invisible
+		
+
+		class MAP_INPUT_CAPTURE: A3C_RscButton_Invisible
 		{
-			idc = 11;
+			idc = IDC_MAP_INPUT_CAPTURE; //12;
+			onMouseMoving = EXPAND_AND_QUOTE(_this call FUNC(onMouseMoving));
+			x = safezoneX;
+			y = safezoneY;
+			w = safezoneW;
+			h = safezoneH;
+		};
+
+		//---------- UNFOLDABLE SQUAD CONTROL BACKGROUND ----------------------------------------------
+		
+		//-- DESPITE SEEMINGLY A3C_MAP_DelLoopObs NOT EVER FIRING, THIS DOES PREVENT NEW SQ WAYPOINTS WHEN USING UFSB Controls
+		//-- to do: remove this entirely, have a check within mouseButtonDown and exit if hovering over set of boxes
+		class MAP_INPUT_BLOCKER: A3C_RscButton_Invisible
+		{
+			idc = IDC_MAP_INPUT_BLOCKER; //11;
 			onMouseEnter = "[] call A3C_MAP_DelLoopObs; ";
 			x = 0.21933 * safezoneW + safezoneX;
 			y = 100 * safezoneH + safezoneY;
 			w = 0.555611 * safezoneW;
 			h = (0.231037 * safezoneH) + (2* (0.0330046 * safezoneH));
 		};
-
-		//---------- UNFOLDABLE SQUAD CONTROL BACKGROUND ----------------------------------------------
-		class A3C_RscPicture_ControlFrame: A3C_RscPicture
+		
+		class MAP_UFSB_BACKGROUND: A3C_RscPicture
 		{
-			idc = 10;
+			idc = IDC_MAP_UFSB_BACKGROUND; //10;
 			text = "#(argb,8,8,3)color(0,0,0,0.6)";
 			x = 0.21933 * safezoneW + safezoneX;
 			y = 100 * safezoneH + safezoneY;
@@ -57,9 +71,9 @@ class A3C_DSP_MapOverlay
 			h = (0.231037 * safezoneH) + (2* (0.0330046 * safezoneH));
 		};
 		
-		class A3C_RscPicture_ControlFrame_Frame: A3C_RscFrame 
+		class MAP_UFSB_FRAME: A3C_RscFrame 
 		{
-			idc = 13;
+			idc = IDC_MAP_UFSB_FRAME; //13;
 			
 			colorBackground[] = 
 			{
@@ -86,15 +100,7 @@ class A3C_DSP_MapOverlay
 		
 		
 		
-		class A3C_MAP_FULLSCREEN: A3C_RscButton_Invisible
-		{
-			idc = 12;
-			onMouseMoving = EXPAND_AND_QUOTE(_this call FUNC(onMouseMoving));
-			x = safezoneX;
-			y = safezoneY;
-			w = safezoneW;
-			h = safezoneH;
-		};
+		
 
 		
 
@@ -107,38 +113,19 @@ class A3C_DSP_MapOverlay
 	class Controls 
 	{
 
-		//---------------------------------------------------------------------------------------------
-		//---------- STARTUP VISUALIZATION ------------------------------------------------------------
-		//---------------------------------------------------------------------------------------------
-		class START_BAR: A3C_RscProgress
-		{
-			idc = 404040;
-			x = 14 * GUI_GRID_W + GUI_GRID_X;
-			y = 11.5 * GUI_GRID_H + GUI_GRID_Y;
-			w = 18.5 * GUI_GRID_W;
-			h = 0.25 * GUI_GRID_H;
-		};
-		class START_TEXT: A3C_RscTEXT
-		{
-			idc = 404041;
-			text = "";
-			style = 0;
-			x = 14 * GUI_GRID_W + GUI_GRID_X;
-			y = 8.5 * GUI_GRID_H + GUI_GRID_Y;
-			w = 18.5 * GUI_GRID_W;
-			h = 2.5 * GUI_GRID_H;
-			sizeEx = 0.07 / (getResolution select 5);
-			font = "PuristaMedium";
-		};
+		
 
 
 		//---------------------------------------------------------------------------------------------
 		//---------- RIGHT SIDE STATIC CONTROL: TREE, TEAM COLORS, EXTRAS -----------------------------
 		//---------------------------------------------------------------------------------------------
 		
+		//-- Tree and teamcolors are shared between radial and mapOverlay
+		
+		//-- Note: background is already part of tree itself
 		class IDC_SHARED_UI_TREE_SELECTOR: A3C_CT_TREE
 		{
-			idc = 202020;
+			idc = IDC_SHARED_UI_TREE_SELECTOR;
 
 			colorBackground[] = {0,0,0,0.6};
 			onMouseButtonDown = "_this call A3C_TREE_BOXCLICK;";
@@ -153,45 +140,11 @@ class A3C_DSP_MapOverlay
 
 		};
 
-		class A3C_TOP_ROW_BG: A3C_RscPicture
+		//-- Teamcolor Row
+
+		class MAP_TEAMCOLOR_BG: A3C_RscPicture
 		{
-			idc = 7071;
-
-			text = "#(argb,8,8,3)color(0,0,0,0.6)";
-			x = 0.288066 * safezoneW + safezoneX;
-			y = (safezoneH + safezoneY);
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-		};
-		class A3C_TOP_ROW_BG_FRAME: A3C_RscFrame
-		{
-			idc = 7074;
-			x = 0.288066 * safezoneW + safezoneX;
-			y = safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-			colorBackground[] = 
-			{
-				0,
-				0,
-				0,
-				1
-			};
-			colorText[] = 
-			{
-				0,
-				0,
-				0,
-				1
-			};
-
-			sizeEx = 0.7 * GUI_GRID_H;
-		};
-
-
-		class A3C_TOP_TEAMCOLOR_BG: A3C_RscPicture
-		{
-			idc = 7077;
+			idc = IDC_UI_SHARED_TEAMCOLOR_BG; //7077;
 
 			text = "#(argb,8,8,3)color(0,0,0,0.6)";
 			x = 0.288066 * safezoneW + safezoneX;
@@ -199,9 +152,10 @@ class A3C_DSP_MapOverlay
 			w = 0.03 * safezoneW;
 			h = 0.0330053 * safezoneH;
 		};
-		class A3C_TOP_TEAMCOLOR_FRAME: A3C_RscFrame
+
+		class MAP_TEAMCOLOR_FRAME: A3C_RscFrame
 		{
-			idc = 7079;
+			idc = IDC_SHARED_UI_TEAMCOLOR_FRAME; //7079;
 			x = 0.298066 * safezoneW + safezoneX;
 			y = safezoneH + safezoneY;
 			w = 0.03 * safezoneW;
@@ -223,19 +177,22 @@ class A3C_DSP_MapOverlay
 
 			sizeEx = 0.7 * GUI_GRID_H;
 		};
+
+
 		//-- Teamcolor Selectors -- 1000+
+
 		
-		class A3C_TAB_REDBOX: A3C_RscPicture
+		class MAP_TCBOX_RED_IMG: A3C_RscPicture
 		{
-			idc = 1000;
+			idc = IDC_SHARED_UI_TCBOX_RED_IMG; //1000;
 			x = 0.24797 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
 			h = 0.0110018 * safezoneH;
 		};
-		class A3C_TAB_REDBOX_2: A3C_RscButton_Invisible
+		class MAP_TCBOX_RED_BTN: A3C_RscButton_Invisible
 		{
-			idc = 1001;
+			idc = IDC_SHARED_UI_TCBOX_RED_BTN; //1001;
 			onMouseButtonDown = "['Red',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
 
 			x = 0.24797 * safezoneW + safezoneX;
@@ -244,17 +201,17 @@ class A3C_DSP_MapOverlay
 			h = 0.0110018 * safezoneH;
 			tooltip = "team red. LMB to select, Shift+LMB to add";
 		};
-		class A3C_TAB_GREENBOX: A3C_RscPicture
+		class MAP_TCBOX_GREEN_IMG: A3C_RscPicture
 		{
-			idc = 1002;
+			idc = IDC_SHARED_UI_TCBOX_GREEN_IMG; //1002;
 			x = 0.33198 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
 			h = 0.0110018 * safezoneH;
 		};
-		class A3C_TAB_GREENBOX_2: A3C_RscButton_Invisible
+		class MAP_TCBOX_GREEN_BTN: A3C_RscButton_Invisible
 		{
-			idc = 1003;
+			idc = IDC_SHARED_UI_TCBOX_GREEN_BTN; //1003;
 			onMouseButtonDown = "['GREEN',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
 			x = 0.33198 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
@@ -262,17 +219,17 @@ class A3C_DSP_MapOverlay
 			h = 0.0110018 * safezoneH;
 			tooltip = "select team green. LMB to select, Shift+LMB to add";
 		};
-		class A3C_TAB_BLUEBOX: A3C_RscPicture
+		class MAP_TCBOX_BLUE_IMG: A3C_RscPicture
 		{
-			idc = 1004;
+			idc = IDC_SHARED_UI_TCBOX_BLUE_IMG; //1004;
 			x = 0.41599 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
 			h = 0.0110018 * safezoneH;
 		};
-		class A3C_TAB_BLUEBOX_2: A3C_RscButton_Invisible
+		class MAP_TCBOX_BLUE_BTN: A3C_RscButton_Invisible
 		{
-			idc = 1005;
+			idc = IDC_SHARED_UI_TCBOX_BLUE_BTN; //1005;
 			onMouseButtonDown = "['Blue',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
 
 			x = 0.41599 * safezoneW + safezoneX;
@@ -281,17 +238,17 @@ class A3C_DSP_MapOverlay
 			h = 0.0110018 * safezoneH;
 			tooltip = "select team blue. LMB to select, Shift+LMB to add";
 		};
-		class A3C_TAB_YELLOWBOX: A3C_RscPicture
+		class MAP_TCBOX_YELLOW_IMG: A3C_RscPicture
 		{
-			idc = 1006;
+			idc = IDC_SHARED_UI_TCBOX_YELLOW_IMG; //1006;
 			x = 0.5 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
 			h = 0.0110018 * safezoneH;
 		};
-		class A3C_TAB_YELLOWBOX_2: A3C_RscButton_Invisible
+		class MAP_TCBOX_YELLOW_BTN: A3C_RscButton_Invisible
 		{
-			idc = 1007;
+			idc = IDC_SHARED_UI_TCBOX_YELLOW_BTN; //1007;
 			onMouseButtonDown = "['YELLOW',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
 
 			x = 0.5 * safezoneW + safezoneX;
@@ -300,17 +257,17 @@ class A3C_DSP_MapOverlay
 			h = 0.0110018 * safezoneH;
 			tooltip = "select team yellow. LMB to select, Shift+LMB to add";
 		};
-		class A3C_TAB_WHITEBOX: A3C_RscPicture
+		class MAP_TCBOX_WHITE_IMG: A3C_RscPicture
 		{
-			idc = 1008;
+			idc = IDC_SHARED_UI_TCBOX_WHITE_IMG; //1008;
 			x = 0.58401 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
 			h = 0.0110018 * safezoneH;
 		};
-		class A3C_TAB_WHITEBOX_2: A3C_RscButton_Invisible
+		class MAP_TCBOX_WHITE_BTN: A3C_RscButton_Invisible
 		{
-			idc = 1009;
+			idc = IDC_SHARED_UI_TCBOX_WHITE_BTN; //1009;
 			onMouseButtonDown = "['MAIN',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
 
 			x = 0.58401 * safezoneW + safezoneX;
@@ -320,17 +277,17 @@ class A3C_DSP_MapOverlay
 			tooltip = "select team white. LMB to select, Shift+LMB to add";
 		};
 		
-		class A3C_TAB_PURPLEBOX: A3C_RscPicture
+		class MAP_TCBOX_PURPLE_IMG: A3C_RscPicture
 		{
-			idc = 1010;
+			idc = IDC_SHARED_UI_TCBOX_PURPLE_IMG; //1010;
 			x = 0.66802 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
 			h = 0.0110018 * safezoneH;
 		};
-		class A3C_TAB_PURPLEBOX_2: A3C_RscButton_Invisible
+		class MAP_TCBOX_PURPLE_BTN: A3C_RscButton_Invisible
 		{
-			idc = 1011;
+			idc = IDC_SHARED_UI_TCBOX_PURPLE_BTN; //1011;
 			onMouseButtonDown = "['PURPLE',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
 
 			x = 0.66802 * safezoneW + safezoneX;
@@ -341,17 +298,76 @@ class A3C_DSP_MapOverlay
 		};
 
 		//---------- EXTRAS --------------------------------------------
-		class A3C_Leavegroup_IMG: A3C_RscPicture
+		
+		//-- Top Row / Extras - Teamcolors
+		class MAP_TOP_EXTRAS_BACKGROUND: A3C_RscPicture
 		{
-			idc = 7075;
+			idc = IDC_MAP_TOP_EXTRAS_BACKGROUND; //7071;
+
+			text = "#(argb,8,8,3)color(0,0,0,0.6)";
+			x = 0.288066 * safezoneW + safezoneX;
+			y = (safezoneH + safezoneY);
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+		};
+		class MAP_TOP_EXTRAS_FRAME: A3C_RscFrame
+		{
+			idc = IDC_MAP_TOP_EXTRAS_FRAME; //7074;
+			x = 0.288066 * safezoneW + safezoneX;
+			y = safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+			colorBackground[] = 
+			{
+				0,
+				0,
+				0,
+				1
+			};
+			colorText[] = 
+			{
+				0,
+				0,
+				0,
+				1
+			};
+
+			sizeEx = 0.7 * GUI_GRID_H;
+		};
+
+
+		class MAP_TOP_REFRESH_IMG: A3C_RscPicture
+		{
+			idc = IDC_MAP_TOP_REFRESH_IMG; //7072;
+			x = 0.288066 * safezoneW + safezoneX;
+			y = 0.94007 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+		};
+		class A3C_Refresh_Data_1_Clk: A3C_RscButton_Invisible
+		{
+			idc = IDC_MAP_TOP_REFRESH_BTN; //7073;
+			onmousebuttondown = "[(units group player) - [player]] call A3C_GROUP_RESET;";
+
+			x = 0.288066 * safezoneW + safezoneX;
+			y = 0.94007 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+			tooltip = "refresh group";
+		};
+
+
+		class MAP_TOP_DISBAND_IMG: A3C_RscPicture
+		{
+			idc = IDC_MAP_TOP_DISBAND_IMG; //7075;
 			x = 0.729118 * safezoneW + safezoneX;
 			y = safezoneY - (0.0220035 * safezoneH);
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
-		class A3C_Leavegroup_1_Click: A3C_RscButton_Invisible
+		class MAP_TOP_DISBAND_BTN: A3C_RscButton_Invisible
 		{
-			idc = 7076;
+			idc = IDC_MAP_TOP_DISBAND_BTN; //7076;
 			action = "[0] spawn A3C_BTN_HC";
 			
 			x = 0.729118 * safezoneW + safezoneX;
@@ -361,26 +377,18 @@ class A3C_DSP_MapOverlay
 			tooltip = "disband selected units to reserve";
 		};
 
-		class A3C_IMG_TOGGLETRACKER_BG: A3C_RscPicture
+		class MAP_TOP_TOGGLETRACKER_IMG: A3C_RscPicture
 		{
-			idc = 1219;
+			idc = IDC_MAP_TOP_TOGGLETRACKER_IMG; //1219;
 			x = 0.746302 * safezoneW + safezoneX;
 			y = 0.94007 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
 		};
-		class A3C_IMG_TOGGLETRACKER_IMG: A3C_RscPicture
+
+		class MAP_TOP_TOGGLETRACKER_BTN: A3C_RscButton_Invisible
 		{
-			idc = 1220;
-			x = 0.746302 * safezoneW + safezoneX;
-			y = 0.94007 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-			colorText[] = {1,1,1,0.6};
-		};
-		class A3C_BTN_TOGGLETRACKER_CLK: A3C_RscButton_Invisible
-		{
-			idc = 7096;
+			idc = IDC_MAP_TOP_TOGGLETRACKER_BTN; //7096;
 			action = "[] call A3C_TAB_TOGGLE_TRACKER;";
 
 			x = 0.746302 * safezoneW + safezoneX;
@@ -648,25 +656,7 @@ class A3C_DSP_MapOverlay
 			tooltip = "LMB: delete session. shift+LMB: delete active orders. ctrl+LMB: skip currentwaypoint"; //--- 	ToDo: 	Localize;
 		};
 		
-		class A3C_Refresh_Data_IMG: A3C_RscPicture
-		{
-			idc = 7072;
-			x = 0.288066 * safezoneW + safezoneX;
-			y = 0.94007 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-		};
-		class A3C_Refresh_Data_1_Clk: A3C_RscButton_Invisible
-		{
-			idc = 7073;
-			onmousebuttondown = "[(units group player) - [player]] call A3C_GROUP_RESET;";
-
-			x = 0.288066 * safezoneW + safezoneX;
-			y = 0.94007 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-			tooltip = "refresh group";
-		};
+		
 
 		//-- UNFOLDABLE SQUAD BAR (UFSQB): POPUP SUB SELECTION
 		class 8010: A3C_RscControlsGroup_NoScroll
@@ -1085,10 +1075,7 @@ class A3C_DSP_MapOverlay
 			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 		};
 
-
-		//---------------------------------------------------------------------------------------------
-		//---------- HCGP-CONTEXT: ACTIONS (SEPARATE) --------------------------------------------
-		//---------------------------------------------------------------------------------------------
+		//---------- SUB SELECTION  ------------------------------------------------------------
 		class 8009: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8009;
@@ -1263,6 +1250,39 @@ class A3C_DSP_MapOverlay
 				};
 			};
 		};
+
+
+		//---------------------------------------------------------------------------------------------
+		//---------- HCGP-CONTEXT: ACTIONS (SEPARATE) --------------------------------------------
+		//---------------------------------------------------------------------------------------------
+		
+
+		//---------- STARTUP VISUALIZATION ------------------------------------------------------------
+
+		
+		
+		class MAP_HCGP_STARTUP_BAR: A3C_RscProgress
+		{
+			idc = IDC_MAP_HCGP_STARTUP_BAR; //404040;
+			x = 14 * GUI_GRID_W + GUI_GRID_X;
+			y = 11.5 * GUI_GRID_H + GUI_GRID_Y;
+			w = 18.5 * GUI_GRID_W;
+			h = 0.25 * GUI_GRID_H;
+		};
+		class MAP_HCGP_STARTUP_TEXT: A3C_RscTEXT
+		{
+			idc = 404041;
+			text = "";
+			style = 0;
+			x = 14 * GUI_GRID_W + GUI_GRID_X;
+			y = 8.5 * GUI_GRID_H + GUI_GRID_Y;
+			w = 18.5 * GUI_GRID_W;
+			h = 2.5 * GUI_GRID_H;
+			sizeEx = 0.07 / (getResolution select 5);
+			font = "PuristaMedium";
+		};
+		
+		
 
 		//---------- HCGP-CONTEXT: STANCES --------------------------------------------
 		class 709109: A3C_RscControlsGroup

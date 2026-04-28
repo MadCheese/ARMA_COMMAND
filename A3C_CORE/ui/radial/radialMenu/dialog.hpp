@@ -780,6 +780,8 @@ class A3C_DSP_RadialMenu
 					tooltip = "Selected units CONTINUE";
 				};
 
+				//-- Tree and teamcolors are shared between radial and mapOverlay
+
 				class RADIAL_EXTENSIONLEFT_TEAMCOLOR_BG: A3C_RscPicture
 				{
 					idc = IDC_UI_SHARED_TEAMCOLOR_BG; //7077;

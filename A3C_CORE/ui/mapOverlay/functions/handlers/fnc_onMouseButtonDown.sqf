@@ -37,7 +37,17 @@ if (A3C_UI_MAP_isCircleMenu) exitWith {
 
 //-- contextMenues are open
 if ({ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,8008] > 0) exitWith {};
-private _ctls = if (visibleMap) then {[IDC_SHARED_UI_TREE_SELECTOR,IDC_UI_SHARED_TEAMCOLOR_BG,7071,709099,8008]} else {[]};
+private _ctls = if (visibleMap) then {
+	[
+		IDC_SHARED_UI_TREE_SELECTOR,
+		IDC_UI_SHARED_TEAMCOLOR_BG,
+		IDC_MAP_TOP_EXTRAS_BACKGROUND,
+		709099,
+		8008
+	]
+} else {
+	[]
+};
 //-- exit if mouseclick was within certain controls
 if ({[[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea} count _ctls > 0) exitWith {};
 

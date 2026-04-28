@@ -1,6 +1,6 @@
 #include "shared_ui_defines.hpp"
 #include "..\radial\radialMenu\dialog_defines.hpp"
-
+#include "..\mapOverlay\dialog_defines.hpp"
 
 //[_CT_TREE,"SQUAD_VEH", [_veh,_crewUnits],_mainTreeIndex,_foreachIndex] call A3C_UI_MAP_TREE_ADD_ITEM;
 A3C_UI_MAP_TREE_ADD_ITEM = {
@@ -540,7 +540,7 @@ A3C_UI_MAP_TREE_OPEN_COLLAPSE = {
 			_effectiveH
 		];
 		_ctrl ctrlCommit _animTime; 
-		[_ctrl,_animTime] call A3C_UI_MAP_TREE_ADJUST_TOP_ROW;
+		[_ctrl,_animTime] call A3C_UI_SHARED_TREE_ADJUST_TOP_ROW;
 		
 	} else {
 		private _ctrlGroup = findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONLEFT_CTRLSGROUP;
@@ -645,7 +645,7 @@ A3C_UI_MAP_RESIZE_TEAMCOLORS_Y = {
 
 
 //-- fnc to adjust Height of teamcolor and toprow-controls to tree-size
-A3C_UI_MAP_TREE_ADJUST_TOP_ROW = { //asasas
+A3C_UI_SHARED_TREE_ADJUST_TOP_ROW = { //asasas
 	params ["_ctrl","_animTime"];
 
 	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
@@ -676,16 +676,20 @@ A3C_UI_MAP_TREE_ADJUST_TOP_ROW = { //asasas
 	} foreach [IDC_UI_SHARED_TEAMCOLOR_BG,IDC_SHARED_UI_TEAMCOLOR_FRAME]; 
 
 	if (_a3c_dsp == 100040) exitWith {}; //-- radial menu does not have the same settings buttons and can exit UNNEXESSARY!!!
-
+	
+	//-- ADDITIONAL MAP SPECIFIC UI REACTIONS
+	
+	
 	private _additionalbuttonCombos = 
 	[
-		[7072,7073], //-- refresh button
-		[7075,7076], //-- disband button
-		[1220,7096]  //-- tracker toggle
+		[IDC_MAP_TOP_REFRESH_IMG,IDC_MAP_TOP_REFRESH_BTN],             //-- refresh button
+		[IDC_MAP_TOP_DISBAND_IMG,IDC_MAP_TOP_DISBAND_BTN],             //-- disband button
+		[IDC_MAP_TOP_TOGGLETRACKER_IMG,IDC_MAP_TOP_TOGGLETRACKER_BTN]  //-- tracker toggle
 	];
-	(findDisplay _a3c_dsp displayCtrl 1220) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_toggleForceTracker.paa";
-	(findDisplay _a3c_dsp displayCtrl 7072) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_refresh.paa"; 
-	(findDisplay _a3c_dsp displayCtrl 7075) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_hc_disband.paa"; 
+	
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_TOP_REFRESH_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_refresh.paa"; 
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_TOP_DISBAND_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_hc_disband.paa";
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_TOP_TOGGLETRACKER_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_toggleForceTracker.paa"; 
 
 
 	//-- adjust height and pos for settings controls
@@ -693,6 +697,7 @@ A3C_UI_MAP_TREE_ADJUST_TOP_ROW = { //asasas
 	_ctrlY = _ctrlY - A3C_MAP_GAMEUI_Upper_buttonH - (A3C_MAP_GAMEUI_PADDING_Y / 2);
 
 	//-- adjust top button bg and frame
+	
 	{
 		_btnCtrl = (findDisplay _a3c_dsp displayCtrl _x);
 		_btnCtrl ctrlSetPosition
@@ -704,9 +709,11 @@ A3C_UI_MAP_TREE_ADJUST_TOP_ROW = { //asasas
 
 		];
 		_btnCtrl ctrlCommit _animTime;
-	} foreach [7071,7074];	
-	
-	//private _macroSize = 
+	} foreach [
+		IDC_MAP_TOP_EXTRAS_BACKGROUND,
+		IDC_MAP_TOP_EXTRAS_FRAME
+	];
+
 	{
 		_xPos = _ctrlX + (A3C_MAP_GAMEUI_Upper_buttonH * _foreachIndex); //!!!! TEMP!
 		{

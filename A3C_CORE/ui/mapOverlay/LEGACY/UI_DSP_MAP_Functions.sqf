@@ -1,6 +1,8 @@
 #include "..\..\SHARED\shared_ui_defines.hpp"
-#include "..\..\radial\radialMenu\dialog_defines.hpp"
-#include "..\..\radial\radialMenu\script_component.hpp"
+
+
+#include "..\dialog_defines.hpp"
+#include "..\script_component.hpp"
 
 if (isDedicated) exitWith {};
 
@@ -107,72 +109,6 @@ A3C_UI_MAP_DRAW_Polyframe = {
 
 /////////////////////////////   UI FNCS (MOVE TO OWN SCRIPT)    ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////   
-A3C_UI_MAP_Overlay_ResizeTeamColorsXWH = {
-	params ["_a3c_dsp","_mode"];
-	
-
-	//-- DYNAMIC TEAMCOLOR BOXES
-
-	
-	if (_mode == "HC") exitWith {}; //~~ TEMPORARY: Exit for HC after removing teamcolor Boxes. TO DO: Align HC Teamcolors with Default-Colors and add funtionality
-
-
-	//-- Hardcoded Values (from .hpp)
-	_ctrlX = if (_a3c_dsp == IDD_RADIAL_MENU) then {0} else {A3C_MAP_OVERLAY_GAMEUI_TREEX}; 
-	
-	_ctrlH = 0.0110018 * safezoneH; //-- HARDCODED h value of first teamcolor box
-
-	_totalW = (ctrlPosition (findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR)) select 2; 
-
-	_gapW = A3C_MAP_GAMEUI_PADDING_Y / 2; 
-
-	_teamColors = [];
-	_grunts = ((units player) - [player]);
-	if (_mode == "HC") then {
-
-	} else {
-		{
-			_col = _x;
-			if ({private _assignedTeam = if (player == cameraOn) then {assignedTeam _x} else {_x getVariable ["A3C_ASSIGNEDTEAM","MAIN"]}; _assignedTeam == _col} count _grunts > 0) then {
-				_teamColors pushBack _col;
-			};
-		} foreach ["RED","GREEN","BLUE","YELLOW","MAIN"];
-		if (count _teamColors > 1) then {
-			_teamColors pushBack "PURPLE";
-		};
-	};
-
-	if (count _teamColors == 0) exitWith {};
-	
-	_gapAmount = (count _teamColors) - 1;
-	_dynamicButtonW = (_totalW - (_gapAmount * _gapW)) / (count _teamColors);
-
-
-	{
-		_color = _x;
-		_btnCtrls = switch (_color) do {
-			case ("RED") : {[1000,1001]};
-			case ("GREEN") : {[1002,1003]};
-			case ("BLUE") : {[1004,1005]};
-			case ("YELLOW") : {[1006,1007]};
-			case ("MAIN") : {[1008,1009]};
-			case ("PURPLE") : {[1010,1011]};
-		};
-		{
-			_ctrl = (findDisplay _a3c_dsp displayCtrl _x);
-			_ctrlY = if (_a3c_dsp == IDD_RADIAL_MENU) then {(ctrlPosition _ctrl) select 1} else {safeZoneY + safezoneH};
-			_ctrl ctrlSetPosition
-			[
-				_ctrlX,
-				_ctrlY,
-				_dynamicButtonW,
-				_ctrlH
-			];
-			_ctrl ctrlCommit 0;
-		} foreach _btnCtrls;
-		_ctrlX = _ctrlX + _dynamicButtonW + _gapW;
-	} foreach _teamColors;
-};
 
 
 
@@ -293,7 +229,12 @@ A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls = {
 			A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_H
 		];
 		_settingsCtrl ctrlCommit _animTime;
-	} foreach [10,11,13];
+	} foreach [
+		// 10,11,13
+		IDC_MAP_INPUT_BLOCKER,
+		IDC_MAP_UFSB_BACKGROUND,
+		IDC_MAP_UFSB_FRAME
+	];
 	if (_mode == "COLLAPSE") then {
 		{
 			(findDisplay 100020 displayCtrl _x) ctrlShow false;
@@ -311,137 +252,6 @@ A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls = {
 
 
 
-A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP = {
-	params ["_mode"];
-	
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
-	_parent = findDisplay _a3c_dsp displayCtrl 8008;
-	_text = findDisplay _a3c_dsp displayCtrl 800802;
-	_listBox = findDisplay _a3c_dsp displayCtrl 800803;
-	//if !(visibleMap) then {
-	//};
-
-	ctrlSetFocus _listBox;
-	
-	lbClear _listBox;
-	ctrlSetFocus _listBox;
-	private _ctrlShow = true;
-	switch (_mode) do {
-
-		case ("DELETE") : {
-			// systemchat 'oioi';
-			A3C_OBJECTSELECTOR_MODE = "DELETE";
-			private _ref = A3C_SELECTED_HC_GROUPS_SETTINGS;
-			_text ctrlSetText format ["REALLY DELETE %1 GROUP%2?",count _ref, if (count _ref <= 1) then {""} else {"S"}];
-
-			{
-				[_listBox, _x] call A3C_addLbEntry;
-			} foreach ["YES","NO"];
-		};
-
-		case ("MULTIWAYPOINT") : {
-			A3C_OBJECTSELECTOR_MODE = "MULTIWAYPOINT";
-			private _ref = A3C_SELECTED_UNITS select {(driver (vehicle leader _x))  in units _x};
-			_text ctrlSetText format ["GIVE WAYPOINT TO %1 GROUP%2",count _ref, if (count _ref <= 1) then {""} else {"S"}];
-
-			{
-				[_listBox, _x] call A3C_addLbEntry;
-			} foreach ["YES","NO"];
-		};
-		case ("ARTY") : {
-
-				hintSilent "";
-				
-				A3C_OBJECTSELECTOR_MODE = "ARTY_0";
-				_text ctrlSetText "Ammo Within Range";
-
-				MCSS_REMOTE_ARTILLERY_ARRAY = [];
-				
-				{
-					private _units = units _x;
-					{
-						private _v = objectParent _x;
-
-						private _cond = !isNull _v && {
-							_x == gunner _v && {
-								_artyAmmo = (getArtilleryAmmo [_v]) select {A3C_HC_FOCUS_ARTY_POS inRangeOfArtillery [[_v], _x]};
-								count _artyAmmo > 0
-							}
-						};
-
-						if (_cond) then {
-							MCSS_REMOTE_ARTILLERY_ARRAY set [count MCSS_REMOTE_ARTILLERY_ARRAY,_v];
-						};
-
-					} foreach _units;
-				} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
-
-				private _shellDSPs = [true,true,A3C_HC_FOCUS_ARTY_POS] call A3C_getArtilleryAmmo;
-
-				if (_shellDSPs isEqualTo []) then {
-					_ctrlShow = false;
-					hint "SELECTED POSITION IS OUT OF RANGE FOR ALL AMMO-TYPES";
-					playsound "TacticalPing"
-				} else {
-					{
-						[_listBox, _x select 0] call A3C_addLbEntry;
-					} foreach _shellDSPs;
-
-					[_parent,_listBox, count _shellDSPs] call A3C_OBJECTSEL_RESIZE;
-					
-				};
-		};
-		case ("A3C_CTRL_DET_SELECT") :{
-			A3C_OBJECTSELECTOR_MODE = "CTRL_DET";
-			_text ctrlSetText "Select Ammo Type";
-			private _availableAmmo = [];
-			private _targetVehicle = (A3C_TEMP_ACTION select 1) select 0;
-			{
-				_soldier = _x;
-				{
-					if (getText (configfile >> "CfgMagazines" >> _x >> "nameSound") in ["satchelcharge","mine"]) then {
-						private _allowAdding = false;
-						private _ammo = getText (configfile >> "CfgMagazines" >> _x >> "ammo");
-						private _mineTrigger = getText (configfile >> "CfgAmmo" >> _ammo >> "mineTrigger");
-						if (_mineTrigger == "RemoteTrigger") then {
-							_allowAdding = true;
-						} else {
-							if (isNull _targetVehicle) then {
-								_allowAdding = true;
-							};
-						};
-						if (_allowAdding) then {
-							_availableAmmo pushBackUnique _x;
-						};
-					};
-				} foreach magazines _x;
-			} foreach A3C_SELECTED_UNITS;
-			if (count _availableAmmo > 4) then {
-				_parentPos = ctrlPosition _parent;
-				_parentPos set [3,(_parentPos select 3) + (  ((count _availableAmmo) - 4)   * (0.0440051 * safezoneH) )];
-				_parent ctrlSetPosition _parentPos;
-				_parent ctrlCommit 0;
-			};
-
-			{
-				private _lbText = (getText (configfile >> "CfgMagazines" >> _x >> "displayName"));
-				[_listBox, _lbText] call A3C_addLbEntry;
-			} foreach _availableAmmo;
-
-		};
-	};
-	
-	if (_ctrlShow) then {
-		_parent ctrlShow true;
-		_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
-		_parent ctrlCommit 0;
-	} else {
-		with uiNamespace do {
-			(findDisplay 100060) closeDisplay 0;
-		};
-	};
-	
-};
 
 
 
@@ -557,87 +367,7 @@ A3C_UI_MAP_FNC_SYNC_LoadVehicleInVehicle = {
 
 
 
-A3C_UNITSEL_REFRESH_UI = {
 
-	// if (true) exitWith {};
-
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
-	
-	private _commandMode = if (_a3c_dsp == IDD_RADIAL_MENU) then {
-		A3C_CURRENT_COMMAND_LEVEL
-	} else {
-		if (A3C_MAP_CommandMode == "HC") then {
-			"HIGHCOMMAND"
-		} else {
-			"SQUAD"
-		};
-	};
-	
-	//-- security:
-	if (_commandMode == "SQUAD") then {
-		A3C_SELECTED_UNITS = A3C_SELECTED_UNITS select {typename _x == "OBJECT"};
-	} else {
-		A3C_SELECTED_UNITS = A3C_SELECTED_UNITS select {typename _x == "GROUP"};
-	};
-
-	if (_a3c_dsp == IDD_RADIAL_MENU) then {
-		private _radialHoverReal = A3C_RADIAL_HOVER;
-		A3C_RADIAL_HOVER = true;
-		if (_commandMode == "SQUAD") then {
-			//-- radial squad
-
-			if ("act" in tolower A3C_RADIALMODE) then {	
-				BV_ACT = 0;
-				["ACTIONS",-1] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
-			};
-
-
-
-			//-- Medical controls opened: reset Listbox entries and medical data  uuu
-			if (BV_MEDICAL == 1) then {
-				["MEDICAL"] call A3C_UI_RADIAL_LABEL_LB;
-			};
-			if (A3C_LBR_1 == "REARM") then {
-				A3C_ReArm_options = [];
-				[] call A3C_ReArm_OpenUI;
-			};
-			
-
-			if (A3C_RADIALMODE == "VEHS") then {
-				[A3C_RD_UNITS] call A3C_UI_RADIAL_FINDVEHS;
-			};
-			[] call A3C_UI_RADIAL_BTN_REINIT;	
-		} else {
-			//-- radial highCommand
-			if ("act" in tolower A3C_RADIALMODE) then {
-				["ROE",-1,false,true] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
-				//A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_RD_UNITS;
-			};
-			//if (count A3C_RD_UNITS == 1) then {
-				[] call A3C_UI_SHARED_createDashBoard;
-			//};
-		};
-		A3C_RADIAL_HOVER = _radialHoverReal;
-	} else {
-		if (_commandMode == "SQUAD") then {
-			//-- map/table - squad
-			_mode = "COLLAPSE";
-			if (count A3C_SELECTED_UNITS > 0) then {
-				_mode = "OPEN";
-				// private _vehicle = if ()
-				private _infModeTo = if (vehicle (A3C_SELECTED_UNITS select 0) isKindOf "AIR") then {"AIR"} else {"INF"};
-				[_infModeTo] call A3C_UI_MAP_REFRESH_BARCONTROLS;
-			};
-			[_mode,0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
-
-			
-		} else {
-			//-- map/tablet - high command
-			["COLLAPSE",0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
-		};
-
-	};
-};
 
 
 
