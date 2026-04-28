@@ -21,19 +21,27 @@ class A3C_DSP_MapOverlay
 
 	onMouseButtonDown = "_this spawn A3C_UI_MAP_onOnMouseButtonDown_Overlay; true";
 	onMouseButtonUp = "_this spawn A3C_UI_MAP_onOnMouseButtonUp_Overlay; false";
-
-	
-			
-			
-			
-
-			
+		
 	class ControlsBackground 
 	{	
 	
 		//---------------------------------------------------------------------------------------------
 		//---------- BACKGROUNDS & CONTROL FIELDS -----------------------------------------------------
 		//---------------------------------------------------------------------------------------------
+		
+		
+		// //-- THIS NEVER FIRES... TRIED LAYERING ON TOP >> STILL NOTHING, SEEMS REDUNDANT
+		// class A3C_RscPicture_ControlFrame_1: A3C_RscButton_Invisible
+		// {
+		// 	idc = 11;
+		// 	onMouseEnter = "[] call A3C_MAP_DelLoopObs; ";
+		// 	x = 0.21933 * safezoneW + safezoneX;
+		// 	y = 100 * safezoneH + safezoneY;
+		// 	w = 0.555611 * safezoneW;
+		// 	h = (0.231037 * safezoneH) + (2* (0.0330046 * safezoneH));
+		// };
+
+		//---------- UNFOLDABLE SQUAD CONTROL BACKGROUND ----------------------------------------------
 		class A3C_RscPicture_ControlFrame: A3C_RscPicture
 		{
 			idc = 10;
@@ -44,18 +52,6 @@ class A3C_DSP_MapOverlay
 			h = (0.231037 * safezoneH) + (2* (0.0330046 * safezoneH));
 		};
 		
-		//-- THIS NEVER FIRES... TRIED LAYERING ON TOP >> STILL NOTHING, SEEMS REDUNDANT
-		class A3C_RscPicture_ControlFrame_1: A3C_RscButton_Invisible
-		{
-			idc = 11;
-			onMouseEnter = "[] call A3C_MAP_DelLoopObs; ";
-			x = 0.21933 * safezoneW + safezoneX;
-			y = 100 * safezoneH + safezoneY;
-			w = 0.555611 * safezoneW;
-			h = (0.231037 * safezoneH) + (2* (0.0330046 * safezoneH));
-		};
-
-		//---------- UNFOLDABLE SQUAD CONTROL BACKGROUND ----------------------------------------------
 		class A3C_RscPicture_ControlFrame_Frame: A3C_RscFrame 
 		{
 			idc = 13;
@@ -2827,5 +2823,4 @@ class A3C_DSP_MapOverlay
 		};						          	
 	};
 };
-
 

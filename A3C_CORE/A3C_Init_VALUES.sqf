@@ -692,6 +692,22 @@ A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS =
 	[8007251,8007252,8007253]
 ];
 
+A3C_UI_MAP_UFSQB_SettingsButtonPairs =  //-- in reverse order
+[
+	[8002,8003], //-- continue button
+	[8000,8001], //-- hold button
+	[7069,7070], //-- cancel data
+	[7092,7041], //-- undo
+	[7022,7007],  //-- condition
+	[7066], //-- Spacing Input
+	[7050,7051], //-- squad formations
+	[7064,7065], //-- squad actions
+	[7062,7063], //combatmode
+	[7046,7047], //-- stance2
+	[7048,7049], //-- wp-speed
+	[7044,7045] //-- stance1
+];
+
 [] spawn {
 	sleep 1;
 	A3C_SHOWNHUD = shownHud; //-- shownHud select 6 is false if this fires earlier

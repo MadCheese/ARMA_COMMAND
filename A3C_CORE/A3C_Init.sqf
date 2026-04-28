@@ -116,9 +116,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\UI_createSafeEventHandler.sq
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_init_keyBinds.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\A3C_events.sqf";
 
-//-- Shared UI fncs
-call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_Functions.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_Handlers_dispatched.sqf";
+
 
 //-- HUD (findDisplay 46)
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers.sqf";
@@ -140,7 +138,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_DYNAMIC\UI_DSP_HUD_D
 call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_Functions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_Handlers.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_Handlers_dispatched.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_TREE_Functions.sqf";
+
 call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_HCGP_CONTEXT_Functions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_HCWP_CONTEXT_Functions.sqf";
 
@@ -148,7 +146,10 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\MapOverlay\UI_DSP_MAP_HCWP_C
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_findCover.sqf";     //-- Not HC/remote compatible yet
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Boarding.sqf";         //-- Not HC/remote compatible yet
 
-
+//-- Shared UI fncs
+call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_Functions.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_Handlers_dispatched.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_TREE_Functions.sqf";
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_ROE.sqf";

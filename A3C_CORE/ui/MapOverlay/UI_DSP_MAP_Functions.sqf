@@ -199,21 +199,7 @@ A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls = {
 	};
 	if (_doExit) exitWith {};
 
-	private _settingsButtonsPairs =  //-- in reverse order
-	[
-		[8002,8003], //-- continue button
-		[8000,8001], //-- hold button
-		[7069,7070], //-- cancel data
-		[7092,7041], //-- undo
-		[7022,7007],  //-- condition
-		[7066], //-- Spacing Input
-		[7050,7051], //-- squad formations
-		[7064,7065], //-- squad actions
-		[7062,7063], //combatmode
-		[7046,7047], //-- stance2
-		[7048,7049], //-- wp-speed
-		[7044,7045] //-- stance1
-	];
+	
 
 	
 	_padding = A3C_MAP_GAMEUI_PADDING_Y / 2;
@@ -262,7 +248,7 @@ A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls = {
 		} foreach _x;
 		sleep 0.0001;
 		_xPos = _xPos - _macroWidth;	
-	} foreach _settingsButtonsPairs;
+	} foreach A3C_UI_MAP_UFSQB_SettingsButtonPairs;
 
 	//-- EXECUTE / CANCEL buttons
 	_xPos = (A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_X - _padding) -  (11.5 * _macroWidth); //-- 11.5 is half a button offset to last button (CONTINUE)
