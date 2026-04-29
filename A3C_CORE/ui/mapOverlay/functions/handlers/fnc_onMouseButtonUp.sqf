@@ -924,7 +924,7 @@ A3C_BOOL_DRAGLINE = false;
 if (A3C_TAB_TOGGLE_VAR == 0) then {
 	{
 		(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true;
-	} foreach [7018,IDC_MAP_UFSB_WPCONDITION_IMG,IDC_MAP_UFSB_UNDO_BTN];
+	} foreach [IDC_MAP_UFSB_CommitAll, IDC_MAP_UFSB_WPCONDITION_IMG, IDC_MAP_UFSB_UNDO_BTN];
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor [1,1,1,1];
 };
 

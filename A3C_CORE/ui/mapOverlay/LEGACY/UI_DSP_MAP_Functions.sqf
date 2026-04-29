@@ -489,33 +489,31 @@ A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls = {
 	_xPos = (A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_X - _padding) -  (11.5 * _macroWidth); //-- 11.5 is half a button offset to last button (CONTINUE)
 	_buttonWidthFull = (3 * _macroWidth);
 	{
-		
-		if (_foreachIndex > 0) then {
-			_xPos = _xPos + (4 * _macroWidth);				
+		if (_forEachIndex > 0) then {
+			_xPos = _xPos + (4 * _macroWidth);
 		};
-		
-		_btnCtrl = (findDisplay 100020 displayCtrl _x);
-		_btnCtrl ctrlSetPosition
-		[
+
+		private _btnCtrl = _x;
+
+		_btnCtrl ctrlSetPosition [
 			A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_X,
 			A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_Y,
 			0,
 			A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_BUTTON_H
 		];
-		if (_mode == "OPEN") then {
 
-			_btnCtrl ctrlSetPosition
-			[
+		if (_mode == "OPEN") then {
+			_btnCtrl ctrlSetPosition [
 				_xPos,
 				A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_Y + ((A3C_MAP_GAMEUI_PADDING_Y + A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_BUTTON_H) * 1.25),
 				_buttonWidthFull,
 				A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_COMMITBUTTON_H
 			];
-			
 		};
+
 		_btnCtrl ctrlCommit _animTime;
 		sleep 0.0001;
-	} foreach [7018,7019,7020];
+	} forEach (["map_ufsb_ctrlsBottom"] call FUNC(ctrlGroup));
 
 	//-- animate BG frame WP SETTINGS
 	{
@@ -538,10 +536,10 @@ A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls = {
 		{
 			(findDisplay 100020 displayCtrl _x) ctrlShow false;
 		} foreach [
-			A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT,
-			A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT,
-			A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1,
-			A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2,
+			IDC_MAP_UFSB_Subselection_01_Parent,
+			IDC_MAP_UFSB_Subselection_02_Parent,
+			IDC_MAP_UFSB_Subselection_01_BG,
+			IDC_MAP_UFSB_Subselection_02_BG,
 			IDC_MAP_UFSB_TIMEOUT_POPUP
 		];
 	};
@@ -1142,8 +1140,8 @@ A3C_TAB_TOGGLE_CONTROLS = {
 				IDC_MAP_UFSB_WPCONDITION_IMG,
 				IDC_MAP_UFSB_WPCONDITION_BTN,
 				IDC_MAP_UFSB_TIMEOUT_POPUP,
-				7018,
-				7019,
+				IDC_MAP_UFSB_CommitAll,
+				IDC_MAP_UFSB_CommitSelected,
 				7097,
 				7098,
 				70981,
@@ -1175,8 +1173,8 @@ A3C_TAB_TOGGLE_CONTROLS = {
 			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true} foreach [
 				IDC_MAP_UFSB_WPCONDITION_IMG,
 				IDC_MAP_UFSB_WPCONDITION_BTN,
-				7018,
-				7019,
+				IDC_MAP_UFSB_CommitAll,
+				IDC_MAP_UFSB_CommitSelected,
 				7097,
 				7098,
 				70981,
@@ -1236,7 +1234,7 @@ A3C_UI_MAP_BARSETTINGS_LABEL = {
 		//-- TOGGLE SUBSELECTION OFF ON MODESWITCHs
 		{
 			(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-		} foreach [A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2]; 
+		} foreach [IDC_MAP_UFSB_Subselection_01_Parent,IDC_MAP_UFSB_Subselection_02_Parent,IDC_MAP_UFSB_Subselection_01_BG,IDC_MAP_UFSB_Subselection_02_BG]; 
 	};
 };
 
@@ -1258,7 +1256,12 @@ A3C_UI_MAP_UFSB_RefreshControlBar = {
 			if (A3C_LAST_SUBSET_ACTION == "SQ_FORMATION") then {
 				{
 					(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-				} foreach [A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2];
+				} foreach [
+					IDC_MAP_UFSB_Subselection_01_Parent,
+					IDC_MAP_UFSB_Subselection_02_Parent,
+					IDC_MAP_UFSB_Subselection_01_BG,
+					IDC_MAP_UFSB_Subselection_02_BG
+				];
 			};
 		};
 		_tColHold = [1,1,1,0.2];
@@ -1302,13 +1305,13 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 
 	{
 		(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-	} foreach [A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2];
+	} foreach [IDC_MAP_UFSB_Subselection_01_Parent,IDC_MAP_UFSB_Subselection_02_Parent,IDC_MAP_UFSB_Subselection_01_BG,IDC_MAP_UFSB_Subselection_02_BG];
 
 
 
 	private _lowerBar = [
-		7018,
-		7019,
+		IDC_MAP_UFSB_CommitAll,
+		IDC_MAP_UFSB_CommitSelected,
 		7072,
 		IDC_MAP_UFSB_UNDO_IMG,
 		IDC_MAP_UFSB_UNDO_BTN,
@@ -2106,8 +2109,8 @@ A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP = {
 		_ctrlFramePos = ctrlPosition _ctrlFrame;
 	};
 
-	private _subsetCtrl_1 = (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT);
-	private _subsetCtrl_2 = (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT);
+	private _subsetCtrl_1 = (findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_01_Parent);
+	private _subsetCtrl_2 = (findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_02_Parent);
 
 
 	private _shiftFactorX = 0;
@@ -2120,29 +2123,29 @@ A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP = {
 
 	private _subsetCtrls = if (_subSet == 1) then {
 		[
-			[800901,800911], //-- Button 1
-			[800902,800912], //-- Button 2
-			[800903,800913], //-- Button 3
-			[800904,800914], //-- Button 4
-			[800905,800915], //-- Button 5
-			[800906,800916], //-- Button 6
-			[800907,800917], //-- Button 7
-			[800908,800918], //-- Button 8
-			[800909,800919], //-- Button 9
-			[800910,800910] //-- Button 10
+			[IDC_MAP_UFSB_Subselection_01_IMG_01,IDC_MAP_UFSB_Subselection_01_BTN_01], //-- Button 1
+			[IDC_MAP_UFSB_Subselection_01_IMG_02,IDC_MAP_UFSB_Subselection_01_BTN_02], //-- Button 2
+			[IDC_MAP_UFSB_Subselection_01_IMG_03,IDC_MAP_UFSB_Subselection_01_BTN_03], //-- Button 3
+			[IDC_MAP_UFSB_Subselection_01_IMG_04,IDC_MAP_UFSB_Subselection_01_BTN_04], //-- Button 4
+			[IDC_MAP_UFSB_Subselection_01_IMG_05,IDC_MAP_UFSB_Subselection_01_BTN_05], //-- Button 5
+			[IDC_MAP_UFSB_Subselection_01_IMG_06,IDC_MAP_UFSB_Subselection_01_BTN_06], //-- Button 6
+			[IDC_MAP_UFSB_Subselection_01_IMG_07,IDC_MAP_UFSB_Subselection_01_BTN_07], //-- Button 7
+			[IDC_MAP_UFSB_Subselection_01_IMG_08,IDC_MAP_UFSB_Subselection_01_BTN_08], //-- Button 8
+			[IDC_MAP_UFSB_Subselection_01_IMG_09,IDC_MAP_UFSB_Subselection_01_BTN_09], //-- Button 9
+			[IDC_MAP_UFSB_Subselection_01_IMG_10,IDC_MAP_UFSB_Subselection_01_BTN_10]  //-- Button 10
 		]
 	} else {
 		[
-			[801001,801011], //-- Button 1
-			[801002,801012], //-- Button 2
-			[801003,801013], //-- Button 3
-			[801004,801014], //-- Button 4
-			[801005,801015], //-- Button 5
-			[801006,801016], //-- Button 6
-			[801007,801017], //-- Button 7
-			[801008,801018], //-- Button 8
-			[801009,801019], //-- Button 9
-			[801010,801020]  //-- Button 10
+			[IDC_MAP_UFSB_Subselection_02_IMG_01,IDC_MAP_UFSB_Subselection_02_BTN_01], //-- Button 1
+			[IDC_MAP_UFSB_Subselection_02_IMG_02,IDC_MAP_UFSB_Subselection_02_BTN_02], //-- Button 2
+			[IDC_MAP_UFSB_Subselection_02_IMG_03,IDC_MAP_UFSB_Subselection_02_BTN_03], //-- Button 3
+			[IDC_MAP_UFSB_Subselection_02_IMG_04,IDC_MAP_UFSB_Subselection_02_BTN_04], //-- Button 4
+			[IDC_MAP_UFSB_Subselection_02_IMG_05,IDC_MAP_UFSB_Subselection_02_BTN_05], //-- Button 5
+			[IDC_MAP_UFSB_Subselection_02_IMG_06,IDC_MAP_UFSB_Subselection_02_BTN_06], //-- Button 6
+			[IDC_MAP_UFSB_Subselection_02_IMG_07,IDC_MAP_UFSB_Subselection_02_BTN_07], //-- Button 7
+			[IDC_MAP_UFSB_Subselection_02_IMG_08,IDC_MAP_UFSB_Subselection_02_BTN_08], //-- Button 8
+			[IDC_MAP_UFSB_Subselection_02_IMG_09,IDC_MAP_UFSB_Subselection_02_BTN_09], //-- Button 9
+			[IDC_MAP_UFSB_Subselection_02_IMG_10,IDC_MAP_UFSB_Subselection_02_BTN_10]  //-- Button 10
 		]
 	};
 	//-- reset button controls:
@@ -2385,7 +2388,7 @@ A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP = {
 	if (_subset == 1) then {
 		_originButtonPos = ctrlPosition _originButtonCtrl;
 	} else {
-		private _parentPos = ctrlPosition (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT);
+		private _parentPos = ctrlPosition (findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_01_Parent);
 		_originButtonPos = (ctrlPosition _originButtonCtrl);
 		_originButtonPos =
 		[
@@ -2529,20 +2532,20 @@ A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP = {
 	} foreach _subsetCtrls;
 
 	//-- shortcut for button background fields
-	_bg1 = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1;
-	_bg2 = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2;
+	_bg1 = findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_01_BG;
+	_bg2 = findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_02_BG;
 
 
 	if (_subSet == 1) then {
 		if (_doToggleCntrls) then {
-			if (ctrlShown (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT) && (_actionButton == A3C_LAST_SUBSET_ACTION)) then {
+			if (ctrlShown (findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_01_Parent) && (_actionButton == A3C_LAST_SUBSET_ACTION)) then {
 				_subsetCtrl_1 ctrlShow false;
 				_subsetCtrl_2 ctrlShow false;
 				_bg1 ctrlShow false;
 				_bg2 ctrlShow false;
 				_ctrlFramePos set [1,_ctrlFrameOriginalY];
 			} else {
-				if (ctrlShown (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT)) then {
+				if (ctrlShown (findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_02_Parent)) then {
 					_ctrlFramePos set [1,_ctrlFrameOriginalY];
 					_subsetCtrl_1 ctrlShow false;
 					_subsetCtrl_2 ctrlShow false;
@@ -2568,7 +2571,7 @@ A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP = {
 		};
 	} else {
 		if (_doToggleCntrls) then {
-			if (ctrlShown (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT) && (_actionButton == A3C_LAST_SUBSET_ACTION)) then {
+			if (ctrlShown (findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_02_Parent) && (_actionButton == A3C_LAST_SUBSET_ACTION)) then {
 				_subsetCtrl_2 ctrlShow false;
 				_bg2 ctrlShow false;
 				_ctrlFramePos set [1,_ctrlFrameOriginalY - (1 * A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H)];;
@@ -2615,8 +2618,8 @@ A3C_fnc_SUBSET = {
 	private _originButtonImage = (findDisplay _a3c_dsp displayCtrl (_originButton select 0));
 	private _originButtonClicker = (findDisplay _a3c_dsp displayCtrl (_originButton select 1));
 
-	_bg1 = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1;
-	_bg2 = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2;
+	_bg1 = findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_01_BG;
+	_bg2 = findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_02_BG;
 
 	if (_action == "SQ_COND_TIMEOUT") then {
 		["OPEN"] call A3C_UI_MAP_SPAWN_TIMEOUTBOX;
@@ -2633,8 +2636,8 @@ A3C_fnc_SUBSET = {
 //systemchat str _action;
 	if !(_action in ["SQ_ACTION_GRENADE"]) then {
 		_originButton = _originButtonImage; //~~??
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT) ctrlShow false;
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_01_Parent) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_02_Parent) ctrlShow false;
 		_bg1 ctrlShow false;
 		_bg2 ctrlShow false;
 	};
@@ -2668,8 +2671,8 @@ A3C_fnc_SUBSET = {
 		//systemchat str [_action];
 		A3C_TEMP_ACTION = ["GRENADE",_action];
 		A3C_GREN_MUZZLE = _action;
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT) ctrlShow false;
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_01_Parent) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_02_Parent) ctrlShow false;
 		_bg1 ctrlShow false;
 		_bg2 ctrlShow false;
 
@@ -2690,8 +2693,8 @@ A3C_fnc_SUBSET = {
 		A3C_SPLIT_UNITS = if (_formID == 4) then {A3C_SELECTED_UNITS} else {[]};
 		_originButtonImage ctrlSetText (_buttonImages select _formID);
 		_originButtonClicker ctrlSetToolTip _toolTip;
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT) ctrlShow false;
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_01_Parent) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_Subselection_02_Parent) ctrlShow false;
 		_bg1 ctrlShow false;
 		_bg2 ctrlShow false;
 

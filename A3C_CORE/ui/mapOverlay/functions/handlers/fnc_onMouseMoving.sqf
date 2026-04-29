@@ -13,8 +13,8 @@ private _ctls = [
 	IDC_UI_SHARED_TEAMCOLOR_BG,
 	202020,
 	709099,
-	8009,
-	8010,
+	IDC_MAP_UFSB_Subselection_01_Parent,
+	IDC_MAP_UFSB_Subselection_02_Parent,
 	709109,
 	709115,
 	8007

@@ -677,9 +677,9 @@ class A3C_DSP_MapOverlay
 		
 		//---------- UNFOLDABLE SQUAD-BAR: EXECUTE BUTTONS --------------------------------------------
 		
-		class A3C_WPD_BTN1: A3C_ShortcutButton
+		class MAP_UFSB_CommitAll: A3C_ShortcutButton
 		{
-			idc = 7018;
+			idc = IDC_MAP_UFSB_CommitAll; //7018;
 			
 			action = "['ALL'] spawn A3C_Btn_fnc_Execute";
 			text = "COMMIT ALL";
@@ -695,9 +695,9 @@ class A3C_DSP_MapOverlay
 			size = "0.04 / (getResolution select 5)";
 			sizeEx = "0.04 / (getResolution select 5)";	
 		};
-		class A3C_WPD_BTN2: A3C_ShortcutButton
+		class MAP_UFSB_CommitSelected: A3C_ShortcutButton
 		{
-			idc = 7019;
+			idc = IDC_MAP_UFSB_CommitSelected; //7019;
 			action = "['SELECTED'] spawn A3C_Btn_fnc_Execute";
 			text = "COMMIT";
 			x = 0.316706 * safezoneW + safezoneX;
@@ -711,9 +711,9 @@ class A3C_DSP_MapOverlay
 			size = "0.04 / (getResolution select 5)";
 			sizeEx = "0.04 / (getResolution select 5)";	
 		};
-		class A3C_WPD_BTN3: A3C_ShortcutButton
+		class MAP_UFSB_Exit: A3C_ShortcutButton
 		{
-			idc = 7020;
+			idc = IDC_MAP_UFSB_Exit; //7020;
 			action = "(findDisplay 100020) closeDisplay 0; A3C_SELECTED_UNITS = []; {_x setvariable ['A3C_PLOT_TEMP',[],true];} foreach units group player; openMap false; [1] call A3C_Btn_fnc_Cancel";
 			text = "EXIT";
 			x = 0.517184 * safezoneW + safezoneX;
@@ -728,7 +728,7 @@ class A3C_DSP_MapOverlay
 			sizeEx = "0.04 / (getResolution select 5)";	
 		};
 
-		//----------
+		//---------- UNKNOWN PURPOSE - not used anywhere
 
 		// class A3C_TEXT_07: A3C_RscText
 		// {
@@ -761,212 +761,405 @@ class A3C_DSP_MapOverlay
 		
 		
 		
+		class MAP_UFSB_Subselection_01_BG: A3C_RscPicture
+		{
+			idc = IDC_MAP_UFSB_Subselection_01_BG; //1010101;
+
+			text = "#(argb,8,8,3)color(0,0,0,0.6)";
+			x = 0.289346 * safezoneW + safezoneX;
+			y = 100;
+			w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 10;
+			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+		};
 		
+		class MAP_UFSB_Subselection_02_BG: A3C_RscPicture
+		{
+			idc = IDC_MAP_UFSB_Subselection_02_BG; //1010102;
+
+			text = "#(argb,8,8,3)color(0,0,0,0.6)";
+			x = 0.289346 * safezoneW + safezoneX;
+			y = 100;
+			w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 10;
+			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+		};
 
 		
 		
 		
 		//---------- UNFOLDABLE SQUAD BAR (UFSQB): POPUP SUB SELECTION -------------------------------
 
-		class 8010: A3C_RscControlsGroup_NoScroll
+		//---------- SUB SELECTION  ------------------------------------------------------------
+		class MAP_UFSB_Subselection_01_Parent: A3C_RscControlsGroup_NoScroll
 		{
-			idc = 8010;
+			idc = IDC_MAP_UFSB_Subselection_01_Parent; //8009;
+			x = 0.289346 * safezoneW + safezoneX;
+			y = 100;
+			w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 10;
+			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H * 2;
+			class Controls
+			{
+				class MAP_UFSB_Subselection_01_IMG_01: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_IMG_01; //800901;
+					x = 0;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+				class MAP_UFSB_Subselection_01_BTN_01: A3C_RscButton_Invisible
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_BTN_01; //800911;
+					x = 0* safezoneW;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_01_IMG_02: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_IMG_02; //800902;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 1;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+				class MAP_UFSB_Subselection_01_BTN_02: A3C_RscButton_Invisible
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_BTN_02; //800912;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 1;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_01_IMG_03: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_IMG_03; //800903;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 2;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+				class MAP_UFSB_Subselection_01_BTN_03: A3C_RscButton_Invisible
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_BTN_03; //800913;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 2;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_01_IMG_04: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_IMG_04; //800904;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 3;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+				class MAP_UFSB_Subselection_01_BTN_04: A3C_RscButton_Invisible
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_BTN_04; //800914;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 3;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_01_IMG_05: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_IMG_05; //800905;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 4;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+				class MAP_UFSB_Subselection_01_BTN_05: A3C_RscButton_Invisible
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_BTN_05; //800915;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 4;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_01_IMG_06: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_IMG_06; //800906;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 5;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+				class MAP_UFSB_Subselection_01_BTN_06: A3C_RscButton_Invisible
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_BTN_06; //800916;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 5;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_01_IMG_07: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_IMG_07; //800907;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 6;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+				class MAP_UFSB_Subselection_01_BTN_07: A3C_RscButton_Invisible
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_BTN_07; //800917;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 6;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_01_IMG_08: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_IMG_08; //800908;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 7;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+				class MAP_UFSB_Subselection_01_BTN_08: A3C_RscButton_Invisible
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_BTN_08; //800918;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 7;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_01_IMG_09: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_IMG_09; //800909;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 8;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+				class MAP_UFSB_Subselection_01_BTN_09: A3C_RscButton_Invisible
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_BTN_09; //800919;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 8;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_01_IMG_10: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_IMG_10; //800910;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 9;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+				class MAP_UFSB_Subselection_01_BTN_10: A3C_RscButton_Invisible
+				{
+					idc = IDC_MAP_UFSB_Subselection_01_BTN_10; //800920;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 9;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};	
+			};
+		};
+		
+		class MAP_UFSB_Subselection_02_Parent: A3C_RscControlsGroup_NoScroll
+		{
+			idc = IDC_MAP_UFSB_Subselection_02_Parent; //8010;
 			x = 0.289346 * safezoneW + safezoneX;
 			y = 100;
 			w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 10;
 			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 			class Controls
 			{
-				class IMG_SUBSET_2_1: A3C_RscPicture
+				class MAP_UFSB_Subselection_02_IMG_01: A3C_RscPicture
 				{
-					idc = 801001;
+					idc = IDC_MAP_UFSB_Subselection_02_IMG_01; //801001;
 					text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = 0;
 					y = 0;
 					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
 					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
-				class IMG_SUBSET_2_2: A3C_RscPicture
+				class MAP_UFSB_Subselection_02_BTN_01: A3C_RscButton_Invisible
 				{
-					idc = 801002;
-					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 1;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_2_3: A3C_RscPicture
-				{
-					idc = 801003;
-					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 2;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_2_4: A3C_RscPicture
-				{
-					idc = 801004;
-					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 3;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_2_5: A3C_RscPicture
-				{
-					idc = 801005;
-					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 4;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_2_6: A3C_RscPicture
-				{
-					idc = 801006;
-					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 5;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_2_7: A3C_RscPicture
-				{
-					idc = 801007;
-					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 6;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_2_8: A3C_RscPicture
-				{
-					idc = 801008;
-					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 7;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_2_9: A3C_RscPicture
-				{
-					idc = 801009;
-					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 8;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_2_10: A3C_RscPicture
-				{
-					idc = 801010;
-					text = "#(argb,8,8,3)color(1,1,1,1)";
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 9;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class BTN_SUBSET_2_1: A3C_RscButton_Invisible
-				{
-					idc = 801011;
+					idc = IDC_MAP_UFSB_Subselection_02_BTN_01; //801011;
 					x = 0;
 					y = 0;
 					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
 					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
-				class BTN_SUBSET_2_2: A3C_RscButton_Invisible
+
+				class MAP_UFSB_Subselection_02_IMG_02: A3C_RscPicture
 				{
-					idc = 801012;
+					idc = IDC_MAP_UFSB_Subselection_02_IMG_02; //801002;
+					text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 1;
 					y = 0;
 					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
 					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
-				class BTN_SUBSET_2_3: A3C_RscButton_Invisible
+				class MAP_UFSB_Subselection_02_BTN_02: A3C_RscButton_Invisible
 				{
-					idc = 801013;
+					idc = IDC_MAP_UFSB_Subselection_02_BTN_02; //801012;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 1;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_02_IMG_03: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_02_IMG_03; //801003;
+					text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 2;
 					y = 0;
 					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
 					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
-				class BTN_SUBSET_2_4: A3C_RscButton_Invisible
+				class MAP_UFSB_Subselection_02_BTN_03: A3C_RscButton_Invisible
 				{
-					idc = 801014;
+					idc = IDC_MAP_UFSB_Subselection_02_BTN_03; //801013;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 2;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_02_IMG_04: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_02_IMG_04; //801004;
+					text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 3;
 					y = 0;
 					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
 					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
-				class BTN_SUBSET_2_5: A3C_RscButton_Invisible
+				class MAP_UFSB_Subselection_02_BTN_04: A3C_RscButton_Invisible
 				{
-					idc = 801015;
+					idc = IDC_MAP_UFSB_Subselection_02_BTN_04; //801014;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 3;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_02_IMG_05: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_02_IMG_05; //801005;
+					text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 4;
 					y = 0;
 					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
 					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
-				class BTN_SUBSET_2_6: A3C_RscButton_Invisible
+				class MAP_UFSB_Subselection_02_BTN_05: A3C_RscButton_Invisible
 				{
-					idc = 801016;
+					idc = IDC_MAP_UFSB_Subselection_02_BTN_05; //801015;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 4;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_02_IMG_06: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_02_IMG_06; //801006;
+					text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 5;
 					y = 0;
 					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
 					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
-				class BTN_SUBSET_2_7: A3C_RscButton_Invisible
+				class MAP_UFSB_Subselection_02_BTN_06: A3C_RscButton_Invisible
 				{
-					idc = 801017;
+					idc = IDC_MAP_UFSB_Subselection_02_BTN_06; //801016;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 5;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_02_IMG_07: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_02_IMG_07; //801007;
+					text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 6;
 					y = 0;
 					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
 					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
-				class BTN_SUBSET_2_8: A3C_RscButton_Invisible
+				class MAP_UFSB_Subselection_02_BTN_07: A3C_RscButton_Invisible
 				{
-					idc = 801018;
+					idc = IDC_MAP_UFSB_Subselection_02_BTN_07; //801017;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 6;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_02_IMG_08: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_02_IMG_08; //801008;
+					text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 7;
 					y = 0;
 					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
 					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
-				class BTN_SUBSET_2_9: A3C_RscButton_Invisible
+				class MAP_UFSB_Subselection_02_BTN_08: A3C_RscButton_Invisible
 				{
-					idc = 801019;
+					idc = IDC_MAP_UFSB_Subselection_02_BTN_08; //801018;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 7;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_02_IMG_09: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_02_IMG_09; //801009;
+					text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 8;
 					y = 0;
 					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
 					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
-				class BTN_SUBSET_2_10: A3C_RscButton_Invisible
+				class MAP_UFSB_Subselection_02_BTN_09: A3C_RscButton_Invisible
 				{
-					idc = 801020;
+					idc = IDC_MAP_UFSB_Subselection_02_BTN_09; //801019;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 8;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};
+
+				class MAP_UFSB_Subselection_02_IMG_10: A3C_RscPicture
+				{
+					idc = IDC_MAP_UFSB_Subselection_02_IMG_10; //801010;
+					text = "#(argb,8,8,3)color(1,1,1,1)";
 					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 9;
 					y = 0;
 					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
 					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 				};
+				class MAP_UFSB_Subselection_02_BTN_10: A3C_RscButton_Invisible
+				{
+					idc = IDC_MAP_UFSB_Subselection_02_BTN_10; //801020;
+					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 9;
+					y = 0;
+					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
+					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
+				};	
 			};
 		};
 
-		
-
-		
-
-		
-
-		class A3C_COMBO_ENEMYTARGET: A3C_RscCombo //-- name is misleading as control is used in multiple places
-		{
-			idc = 7078;
-			onLBSelChanged = " [A3C_LB_MODE,(_this select 1),100020] call A3C_LB_Change";
-			x = 0.00166839 * safezoneW + safezoneX;
-			y = 14 * safezoneH + safezoneY;
-			w = 0.0630074 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		
-		
 		//---------------------------------------------------------------------------------------------
 		//---------- MAP TOP RIGHT: GO-CODE CONTROLS --------------------------------------------------
 		//---------------------------------------------------------------------------------------------
@@ -1072,203 +1265,9 @@ class A3C_DSP_MapOverlay
 		
 		
 		
-		class 1010101: A3C_RscPicture
-		{
-			idc = 1010101;
-
-			text = "#(argb,8,8,3)color(0,0,0,0.6)";
-			x = 0.289346 * safezoneW + safezoneX;
-			y = 100;
-			w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 10;
-			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-		};
 		
-		class 1010102: A3C_RscPicture
-		{
-			idc = 1010102;
 
-			text = "#(argb,8,8,3)color(0,0,0,0.6)";
-			x = 0.289346 * safezoneW + safezoneX;
-			y = 100;
-			w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 10;
-			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-		};
-
-		//---------- SUB SELECTION  ------------------------------------------------------------
-		class 8009: A3C_RscControlsGroup_NoScroll
-		{
-			idc = 8009;
-			x = 0.289346 * safezoneW + safezoneX;
-			y = 100;
-			w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 10;
-			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H * 2;
-			class Controls
-			{
-				class IMG_SUBSET_1_1: A3C_RscPicture
-				{
-					idc = 800901;
-					x = 0;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_1_2: A3C_RscPicture
-				{
-					idc = 800902;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 1;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_1_3: A3C_RscPicture
-				{
-					idc = 800903;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 2;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_1_4: A3C_RscPicture
-				{
-					idc = 800904;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 3;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_1_5: A3C_RscPicture
-				{
-					idc = 800905;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 4;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_1_6: A3C_RscPicture
-				{
-					idc = 800906;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 5;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				
-				
-				class IMG_SUBSET_1_7: A3C_RscPicture
-				{
-					idc = 800907;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 6;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_1_8: A3C_RscPicture
-				{
-					idc = 800908;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 7;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_1_9: A3C_RscPicture
-				{
-					idc = 800909;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 8;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class IMG_SUBSET_1_10: A3C_RscPicture
-				{
-					idc = 800910;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 9;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-
-				class BTN_SUBSET_1_1: A3C_RscButton_Invisible
-				{
-					idc = 800911;
-					x = 0* safezoneW;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class BTN_SUBSET_1_2: A3C_RscButton_Invisible
-				{
-					idc = 800912;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 1;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class BTN_SUBSET_1_3: A3C_RscButton_Invisible
-				{
-					idc = 800913;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 2;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class BTN_SUBSET_1_4: A3C_RscButton_Invisible
-				{
-					idc = 800914;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 3;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class BTN_SUBSET_1_5: A3C_RscButton_Invisible
-				{
-					idc = 800915;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 4;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class BTN_SUBSET_1_6: A3C_RscButton_Invisible
-				{
-					idc = 800916;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 5;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				
-				class BTN_SUBSET_1_7: A3C_RscButton_Invisible
-				{
-					idc = 800917;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 6;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class BTN_SUBSET_1_9: A3C_RscButton_Invisible
-				{
-					idc = 800918;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 7;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class BTN_SUBSET_1_0: A3C_RscButton_Invisible
-				{
-					idc = 800919;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 8;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-				class BTN_SUBSET_1_10: A3C_RscButton_Invisible
-				{
-					idc = 800920;
-					x = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W * 9;
-					y = 0;
-					w = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W;
-					h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
-				};
-			};
-		};
+		
 
 
 		//---------------------------------------------------------------------------------------------
@@ -2864,6 +2863,16 @@ class A3C_DSP_MapOverlay
 					
 				};
 			};
+		};
+
+		class A3C_COMBO_ENEMYTARGET: A3C_RscCombo //-- name is misleading as control is used in multiple places
+		{
+			idc = 7078;
+			onLBSelChanged = " [A3C_LB_MODE,(_this select 1),100020] call A3C_LB_Change";
+			x = 0.00166839 * safezoneW + safezoneX;
+			y = 14 * safezoneH + safezoneY;
+			w = 0.0630074 * safezoneW;
+			h = 0.0220035 * safezoneH;
 		};						          	
 	};
 };

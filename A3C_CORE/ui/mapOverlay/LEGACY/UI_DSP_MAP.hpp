@@ -1058,9 +1058,9 @@ class A3C_DSP_MapOverlay
 			tooltip = "Selected units CONTINUE";
 		};
 		
-		class 1010101: A3C_RscPicture
+		class IDC_MAP_UFSB_Subselection_01_BG: A3C_RscPicture
 		{
-			idc = 1010101;
+			idc = IDC_MAP_UFSB_Subselection_01_BG;
 
 			text = "#(argb,8,8,3)color(0,0,0,0.6)";
 			x = 0.289346 * safezoneW + safezoneX;
@@ -1069,9 +1069,9 @@ class A3C_DSP_MapOverlay
 			h = A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H;
 		};
 		
-		class 1010102: A3C_RscPicture
+		class IDC_MAP_UFSB_Subselection_02_BG: A3C_RscPicture
 		{
-			idc = 1010102;
+			idc = IDC_MAP_UFSB_Subselection_02_BG;
 
 			text = "#(argb,8,8,3)color(0,0,0,0.6)";
 			x = 0.289346 * safezoneW + safezoneX;
