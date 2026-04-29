@@ -2059,7 +2059,7 @@ A3C_UNIT_HOLD = {
 	} foreach _units;
 	[_coverUnits,1] spawn A3C_AI_Squad_action_FindCoverExecute;
 	player groupchat  _unitNames + " HOLD";
-	[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
+	[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_RefreshControlBar;
 };
 
 A3C_UNIT_CONTINUE = {
@@ -2075,7 +2075,7 @@ A3C_UNIT_CONTINUE = {
 		_unitNames = _unitNames + ([_x,1] call MCSS_fnc_NAMESTRING)
 	} foreach _units;
 	player groupchat  _unitNames + " MOVE";
-	[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
+	[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_RefreshControlBar;
 };
 
 
@@ -2148,7 +2148,7 @@ A3C_LB_Change = {
 			[_lb] call A3C_SWITCHMARKER;
 		};
 		case (1) : {
-			{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 			if (count A3C_SELECTED_UNITS > 0) then {
 				if (typeName (A3C_SELECTED_UNITS select 0) == "GROUP") then {
 
@@ -2269,7 +2269,7 @@ A3C_LB_Change = {
 			} foreach _compare;
 
 			if (_isMap) then {
-				{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+				{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 			} else {
 				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONLEFT_TC_BOX) ctrlShow false;
 				//-- to do: update tree!
@@ -2285,7 +2285,7 @@ A3C_LB_Change = {
 			{
 				if !(_x in _gp) then {_gp pushback _x};
 			} foreach A3C_SELECTED_UNITS;
-			{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 			[1,_gp] spawn A3C_BTN_HC;
 		};
 		case (5) : {
@@ -2519,7 +2519,7 @@ A3C_JOIN_UNIT = {
 		[_x] call A3C_UNIT_INIT;
 	} foreach _initArray;
 	//systemchat str A3C_MAP_CommandMode;
-	[A3C_MAP_CommandMode] call A3C_START_TABMODE; //-- refresh table if open
+	[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_ApplyMode; //-- refresh table if open
 };
 
 
@@ -2601,7 +2601,7 @@ A3C_GROUP_RESET = {
 	
 	if !(player == leader group player) exitWith {};
 
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	
 	private _units = (units player) - [player];
 	
@@ -2743,7 +2743,7 @@ A3C_GROUP_RESET = {
 		if ((count A3C_HC_getAllGroups_Player_Current ) > 0) then {
 		} else {
 			A3C_MAP_CommandMode = "INF";
-			["INF"] call A3C_START_TABMODE;
+			["INF"] call A3C_UI_MAP_UFSB_ApplyMode;
 		};
 	};
 
@@ -2849,112 +2849,7 @@ A3C_GROUP_RESET = {
 
 
 
-//-- ABORT ALL EXISTING ORDERS
-//-- REMINDER: IN ORDER TO CONTINUE WITH NEW PLOT, YOU FIRST NEED TO WAITUNTIL PLOT IS EMPTY
-//-->> so after [xy] call A3C_AI_Shared_cancelUnitPlot, you need waituntil {_unit getvariable ["A3C_PLOT", []] isEqualTo []}
-A3C_AI_Shared_cancelUnitPlot = {
-	private ["_data"];
-	if (A3C_MAP_CommandMode == "HC") exitWith {};
-	_selectedUnits = _this select 0;
-	_shift = _this select 1;
-	_ctrl = _this select 2;
-	
-	private _a3c_dsp = 100020;
-	
 
-	_data = [];
-
-	if ( !(_shift) && !(_ctrl)  ) exitWith {
-		{
-			//[_x] call A3C_RESET_WIP;
-			_x setvariable ["A3C_PLOT_TEMP",[],true];
-		} foreach _selectedUnits;
-		A3C_USERACTION = [];
-		A3C_USERACTION_ID = 0;
-		A3C_WAYPOINTS_TEMP = [];
-		(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow false;
-		(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,0.2];
-		[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
-	};
-	
-	if (_shift) then {
-
-		{
-			
-			_x setvariable ["A3C_PLOT_TEMP",[],true];
-			A3C_USERACTION = [];
-			A3C_USERACTION_ID = 0;
-			A3C_WAYPOINTS_TEMP = [];
-			(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow false;
-			(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,0.2];
-
-			[_x,(position _x)] call A3C_DOMOVE;
-			[_x] spawn {
-				params ["_unit"];
-				private ["_mainMark","_subMark","_dirMark"];
-				private _a3c_dsp = 100020;
-
-				private _unitPlot = _unit getVariable ["A3C_PLOT",[]];
-				if (count _unitPlot > 0) then {
-					_unit setvariable ["A3C_ABORT_Data",[true,false],true];
-					waitUntil {count (_unit getVariable ["A3C_PLOT",[]]) == 0};
-				};
-				//-- reset abort variable after clearing
-				_unit setvariable ["A3C_ABORT_Data",[false,false],true];
-			
-				//
-				_unit setvariable ["A3C_PLOT_TEMP",[],true];
-				{_unit enableAI _x} foreach ["MOVE","TARGET","AUTOTARGET","FSM","AUTOCOMBAT"]; //,"THREAT_PATH","PATHPLAN"
-				[(vehicle _unit),"UNLOCKED"] remoteExec ["setvehicleLock", (vehicle _unit)];
-				_unit forceSpeed -1;
-				if !(isnull objectparent _unit) then {(vehicle _unit) limitspeed 1000;};
-			};
-		} foreach _selectedUnits;
-	};
-	//_sleep = 0;
-	if (_ctrl) then {
-		{
-
-			private ["_isLoop","_unit","_data"];
-			_unit = _x;
-			_data = (_x getVariable "A3C_PLOT");
-
-			{
-				private ["_wpData"];
-				_wpData = _x;
-				if ( _forEachIndex ==  ((_unit getVariable "A3C_CURRENTWAYPOINT_INDEX") -1)) then {
-					if !([_data,_forEachIndex] call A3C_isWPLOOP) then {
-						{deleteMarkerLocal _x} foreach (_wpData select 1);
-					};
-				};
-			} foreach _data;
-			/*
-			_isLoop = false;
-			if ((_data select ((_x getVariable "A3C_CURRENTWAYPOINT_INDEX") -1) select 10) > -1) then {
-				{
-					if ((_x select 10) < -1) then {_isLoop = true};
-
-					if (_isLoop) then {
-						{
-							deleteMarkerLocal _x
-						} foreach (_x select 1);
-					};
-					if ((_x select 10) > -1) then {_isLoop = false};
-					_x set [8,-1]; //-- reset unit speed??
-				} foreach _data;
-				_x setVariable ["A3C_PLOT",_data,true];
-			};
-			*/
-			_x setvariable ["A3C_ABORT_Data",[false,true],true]; //-- this will make the unit skip wp
-		} foreach _selectedUnits;
-		//_sleep = 0.5;
-	};
-	[] spawn {
-		sleep 0.5;
-		[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
-	};
-	
-};
 
 //-- author note: move to A3C_UI_MAP_Main_init.sqf
 A3C_GET_OPAC = {
@@ -3008,7 +2903,7 @@ A3C_DeleteGroup = {
 A3C_ACTIVATEGOCODE = {
 	_code = _this select 0;
 	private _a3c_dsp = 100020;
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	_ctrls = switch (_code) do {
 		case ("A") : {[709100,709101]};
 		case ("B") : {[709102,709103]};
@@ -3034,7 +2929,7 @@ A3C_ACTIVATEGOCODE = {
 		(parseText _code),
 		{["A3C_Terminal", _x] call BIS_fnc_instring} count ((Items player) + (assignedItems player)) > 0
 	];
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach _ctrls;
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach _ctrls;
 	if (!isNil 'A3C_GOCODES_HC') then {
 		//-- #TODO: find out why 'A3C_GOCODES_HC' is sometimes not defined anymore (overridden by server somehow where it's not defined? we are exiting if isDedicated above)
 		A3C_GOCODES_HC = A3C_GOCODES_HC - [_code];

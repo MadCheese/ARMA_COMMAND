@@ -210,9 +210,9 @@ if (A3C_BOOL_DRAGLINE && {A3C_CONNECTING_MODE == "HCSYNC"}) exitWith  {
 						private _imgID = _idc + 1;
 						private _clickerID = _idc + 2;
 						
-						private _btnBG  = (findDisplay _a3c_dsp) ctrlCreate ["A3C_RscPicture", _bgID];
-						private _btnImg  = (findDisplay _a3c_dsp) ctrlCreate ["A3C_RscPicture", _imgID];
-						private _btnClicker  = (findDisplay _a3c_dsp) ctrlCreate ["A3C_RscButton_Invisible", _clickerID];
+						private _btnBG  = findDisplay _a3c_dsp ctrlCreate ["A3C_RscPicture", _bgID];
+						private _btnImg  = findDisplay _a3c_dsp ctrlCreate ["A3C_RscPicture", _imgID];
+						private _btnClicker  = findDisplay _a3c_dsp ctrlCreate ["A3C_RscButton_Invisible", _clickerID];
 
 						_btnBG ctrlSetText "A3C_UI\markers\icon_marker_vehicleHexagon.paa";
 						_btnImg ctrlSetTextColor ([A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity);
@@ -468,7 +468,7 @@ if (A3C_MapSel_Field_Active) then {
 		//-- toggle or collapse wpsettings bar
 		_foldMode = if (count A3C_SELECTED_UNITS > 0 && {_pageMode != "HC"}) then {"OPEN"} else {"COLLAPSE"};
 		[_foldMode,0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
-		[_pageMode] call A3C_START_TABMODE;
+		[_pageMode] call A3C_UI_MAP_UFSB_ApplyMode;
 	} else {
 		//-- no units in selection field: Check for waypoints
 		
@@ -921,19 +921,13 @@ if !(A3C_BOOL_DRAGLINE) exitWith {};
 A3C_BOOL_DRAGLINE = false;
 
 
-
-
-
-
-
-//A3C_LOOP_CONT  = false;
 if (A3C_TAB_TOGGLE_VAR == 0) then {
 	{
-		((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow true;
-	} foreach [7018,7022,7041];
-	(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor [1,1,1,1];
+		(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true;
+	} foreach [7018,IDC_MAP_UFSB_WPCONDITION_IMG,IDC_MAP_UFSB_UNDO_BTN];
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor [1,1,1,1];
 };
-//A3C_LOOP_CONT  = true;
+
 A3C_DIR = [A3C_CLICKPOS_1,_pos] call bis_fnc_dirto;
 
 A3C_CLICKPOS_2 = _pos;
@@ -950,10 +944,8 @@ if !((A3C_TEMP_ACTION select 0) in ["SUPPRESSION"]) then {  //"GRENADE",
 //-- streamline UI: Suppression and Grenade Plans by resetting Condition
 if ((A3C_TEMP_ACTION select 0) in ["SUPPRESSION","GRENADE"]) then {
 	if ((A3C_TEMP_CONDITION select 0) in ["TIMEOUT","GOCODE"]) then {
-		//if (ctrlShown (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout)) then { // <<-- Sleep Box (Timeout Only)
-			A3C_TEMP_CONDITION = ["GOCODE","D"]; //~~ THIS CAN BE PRETTIER. DON"T PURPOSELY SET VALUE TO BE OVERRIDEN BY FUNC
-			[0] call A3C_BTN_FNC_COND;
-		//};
+		A3C_TEMP_CONDITION = ["GOCODE","D"]; //~~ THIS CAN BE PRETTIER. DON"T PURPOSELY SET VALUE TO BE OVERRIDEN BY FUNC
+		[0] call A3C_BTN_FNC_COND;
 	};
 };
 
@@ -981,7 +973,7 @@ if ((A3C_TEMP_ACTION select 0) == "SUPPRESSION") then { //~~this can also be pre
 
 
 
-(findDisplay _a3c_dsp displayCtrl 7064) ctrlSetTextColor [1,1,1,1];
+(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlSetTextColor [1,1,1,1];
 if ((A3C_TEMP_ACTION select 0) == "SLINGLOAD") then {//~~ unnecessary! change setup in Button Function!
 	A3C_TEMP_ACTION = ["SLINGLOAD","SLINGLOAD"];
 };
@@ -1007,8 +999,8 @@ A3C_TEMP_WP_ID_MAIN = "";
 if !((A3C_TEMP_ACTION select 0) in ["SLINGLOAD"]) then {
 //	if ((A3C_TEMP_ACTION select 0) != "STATIC" OR {count A3C_STATIC_PACKS == 1}) then {
 		A3C_TEMP_ACTION = ["NONE","NONE"];
-		(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-		(findDisplay _a3c_dsp displayCtrl 7065) ctrlSetToolTip "No Action || Use LMB to open settings or mousewheel to cycle";
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_BTN) ctrlSetToolTip "No Action || Use LMB to open settings or mousewheel to cycle";
 	//};
 };
 

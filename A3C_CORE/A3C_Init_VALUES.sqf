@@ -660,7 +660,6 @@ A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2 = 1010102;
 
 
 
-A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout = 7009;
 
 
 A3C_MAP_OVERLAY_GAMEUI_ActionSubCtrls = 709200; //[709142,709130,709125,709126,709129]; //
@@ -676,37 +675,7 @@ IDC_MAP_DASHBOARD_GROUPNAME_EDIT = 800713; //-- temp until map dialog is impleme
 
 
 
-//-- Hardcoded GROUPMENU ACTIONBUTTONS array (HCGP Context)
-A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS =
-[
-	[8007161,8007162,8007163], //-- row 1
-	[8007171,8007172,8007173],
-	[8007181,8007182,8007183],
-	[8007191,8007192,8007193],
-	[8007201,8007202,8007203],
 
-	[8007211,8007212,8007213], //- row 2
-	[8007221,8007222,8007223],
-	[8007231,8007232,8007233],
-	[8007241,8007242,8007243],
-	[8007251,8007252,8007253]
-];
-
-A3C_UI_MAP_UFSQB_SettingsButtonPairs =  //-- in reverse order
-[
-	[8002,8003], //-- continue button
-	[8000,8001], //-- hold button
-	[7069,7070], //-- cancel data
-	[7092,7041], //-- undo
-	[7022,7007],  //-- condition
-	[7066], //-- Spacing Input
-	[7050,7051], //-- squad formations
-	[7064,7065], //-- squad actions
-	[7062,7063], //combatmode
-	[7046,7047], //-- stance2
-	[7048,7049], //-- wp-speed
-	[7044,7045] //-- stance1
-];
 
 [] spawn {
 	sleep 1;

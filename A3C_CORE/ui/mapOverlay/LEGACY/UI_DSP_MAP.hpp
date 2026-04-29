@@ -494,7 +494,7 @@ class A3C_DSP_MapOverlay
 		{
 			idc = 7045;
 			onMouseButtonDown = "[[7044,7045],'SQ_STANCE_1',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP;";
-			onMouseZChanged = "[_this select 1] call A3C_STANCE_BTN_1";
+			onMouseZChanged = "[_this select 1] call A3C_UI_MAP_UFSB_OnStanceTravel";
 
 			x = 0.24797 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
@@ -514,7 +514,7 @@ class A3C_DSP_MapOverlay
 		{
 			idc = 7047;
 			onMouseButtonDown = "[[7046,7047],'SQ_STANCE_2',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP;";
-			onMouseZChanged = "[_this select 1] call A3C_STANCE_BTN_2;";
+			onMouseZChanged = "[_this select 1] call A3C_UI_MAP_UFSB_OnStanceArrival;";
 
 			x = 0.339617 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;

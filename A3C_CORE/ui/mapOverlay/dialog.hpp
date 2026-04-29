@@ -400,13 +400,157 @@ class A3C_DSP_MapOverlay
 		
 		
 		//---------------------------------------------------------------------------------------------
-		//---------- UNFOLDABLE SQUAD-BAR: UI-CONTROLS ------------------------------------------------
+		//---------- UNFOLDABLE SQUAD-BAR (UFSB): UI-CONTROLS -----------------------------------------
 		//---------------------------------------------------------------------------------------------
-		
-		
-		class A3C_TIMEOUT_CHECKBOX1: A3C_RscPicture
+		class MAP_UFSB_STANCE_TRAVEL_IMG: A3C_RscPicture
 		{
-			idc = 7022;
+			idc = IDC_MAP_UFSB_STANCE_TRAVEL_IMG; //7044;
+			x = 0.24797 * safezoneW + safezoneX;
+			y = 0.818596 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+		};
+		class MAP_UFSB_STANCE_TRAVEL_BTN: A3C_RscButton_Invisible
+		{
+			idc = IDC_MAP_UFSB_STANCE_TRAVEL_BTN; //7045;
+			onMouseButtonDown = "[[IDC_MAP_UFSB_STANCE_TRAVEL_IMG,IDC_MAP_UFSB_STANCE_TRAVEL_BTN],'SQ_STANCE_1',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP;";
+			onMouseZChanged = "[_this select 1] call A3C_UI_MAP_UFSB_OnStanceTravel";
+
+			x = 0.24797 * safezoneW + safezoneX;
+			y = 0.818596 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+			tooltip = "stance while en route";
+		};
+		class MAP_UFSB_WP_SPEED_IMG: A3C_RscPicture
+		{
+			idc = IDC_MAP_UFSB_WP_SPEED_IMG; //7048;
+			x = 0.293794 * safezoneW + safezoneX;
+			y = 0.818596 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+		};
+		class MAP_UFSB_WP_SPEED_BTN: A3C_RscButton_Invisible
+		{
+			idc = IDC_MAP_UFSB_WP_SPEED_BTN; //7049;
+			onMouseButtonDown = "[] call A3C_SPEED_BTN";
+			onMouseZChanged = "[] call A3C_SPEED_BTN";
+
+			x = 0.293794 * safezoneW + safezoneX;
+			y = 0.818596 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+			tooltip = "set travel speed";
+		};
+		class MAP_UFSB_STANCE_ARRIVAL_IMG: A3C_RscPicture
+		{
+			idc = IDC_MAP_UFSB_STANCE_ARRIVAL_IMG; //7046;
+			x = 0.339617 * safezoneW + safezoneX;
+			y = 0.818596 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+		};
+		class MAP_UFSB_STANCE_ARRIVAL_BTN: A3C_RscButton_Invisible
+		{
+			idc = IDC_MAP_UFSB_STANCE_ARRIVAL_BTN; //7047;
+			onMouseButtonDown = "[[IDC_MAP_UFSB_STANCE_ARRIVAL_IMG,IDC_MAP_UFSB_STANCE_ARRIVAL_BTN],'SQ_STANCE_2',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP;";
+			onMouseZChanged = "[_this select 1] call A3C_UI_MAP_UFSB_OnStanceArrival;";
+
+			x = 0.339617 * safezoneW + safezoneX;
+			y = 0.818596 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+			tooltip = "set stance upon arrival";
+		};
+
+		class MAP_UFSB_COMBATMODE_IMG: A3C_RscPicture
+		{
+			idc = IDC_MAP_UFSB_COMBATMODE_IMG; //7062;
+			x = 0.385441 * safezoneW + safezoneX;
+			y = 0.818596 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+		};
+		class MAP_UFSB_COMBATMODE_BTN: A3C_RscButton_Invisible
+		{
+			idc = IDC_MAP_UFSB_COMBATMODE_BTN; //7063;
+			onMouseButtonDown = "[] call A3C_BUTTON_CMODE";
+			onMouseZChanged = "[] call A3C_BUTTON_CMODE";
+
+			x = 0.385441 * safezoneW + safezoneX;
+			y = 0.818596 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+			tooltip = "WP Combat-Mode: Default/Engage";
+		};
+
+		class MAP_UFSB_WPACTION_IMG: A3C_RscPicture
+		{
+			idc = IDC_MAP_UFSB_WPACTION_IMG; //7064;
+			x = 0.431265 * safezoneW + safezoneX;
+			y = 0.818596 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+		};
+		class MAP_UFSB_WPACTION_BTN: A3C_RscButton_Invisible
+		{
+			idc = IDC_MAP_UFSB_WPACTION_BTN; //7065;
+			onMouseButtonDown = "[[IDC_MAP_UFSB_WPACTION_IMG, IDC_MAP_UFSB_WPACTION_BTN],'SQ_ACTION',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP";
+			onMouseZChanged = "[(_this select 1),false,true] spawn A3C_BUTTON_wpFiringMode;";
+
+			x = 0.431265 * safezoneW + safezoneX;
+			y = 0.818596 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+			tooltip = "";
+		};
+
+		class MAP_UFSB_WPFORMATION_IMG: A3C_RscPicture
+		{
+			idc = IDC_MAP_UFSB_WPFORMATION_IMG; //7050;
+			x = 0.477088 * safezoneW + safezoneX;
+			y = 0.818596 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+		};
+		class MAP_UFSB_WPFORMATION_BTN: A3C_RscButton_Invisible
+		{
+			idc = IDC_MAP_UFSB_WPFORMATION_BTN; //7051;
+			onMouseButtonDown = "[[IDC_MAP_UFSB_WPFORMATION_IMG,IDC_MAP_UFSB_WPFORMATION_BTN],'SQ_FORMATION',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP";
+			onMouseZChanged = "[_this select 1] call A3C_BUTTON_FORMMODE";
+
+			x = 0.477088 * safezoneW + safezoneX;
+			y = 0.818596 * safezoneH + safezoneY;
+			w = 0.0171838 * safezoneW;
+			h = 0.0330053 * safezoneH;
+			tooltip = "set formation (connected tolooking-direction)";
+		};
+		
+		class MAP_UFSB_SPACING: A3C_CT_EDIT
+		{
+			idc = IDC_MAP_UFSB_SPACING; //7066;
+			type = 2;
+			style = 2;
+			font = "TahomaB";
+			autocomplete = "false";
+			onSetFocus = "['SPACING','ON'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE";
+			onKillFocus = "['SPACING','OFF'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE";
+			colorSelection[] = {1,1,1,1};
+			colorDisabled[] = {};
+			sizeEx = "0.03 / (getResolution select 5)";
+			tooltip = "Set Unit-Spacing";	
+			x = 0.517184 * safezoneW + safezoneX;
+			y = safezoneH + safezoneY;
+			w = 0.0229118 * safezoneW;
+			h = 0.0330053 * safezoneH;
+			colorText[] = {1,1,1,1};
+		};
+		
+		
+		
+		class MAP_UFSB_WPCONDITION_IMG: A3C_RscPicture
+		{
+			idc = IDC_MAP_UFSB_WPCONDITION_IMG; //7022;
 			x = 0.545824 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
@@ -415,8 +559,8 @@ class A3C_DSP_MapOverlay
 
 		class A3C_TIMEOUT_CHECKBOX2: A3C_RscButton_Invisible
 		{
-			idc = 7007;
-			onMouseButtonDown = "[[7022,7007],'SQ_CONDITION',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP";
+			idc = IDC_MAP_UFSB_WPCONDITION_BTN; //7007;
+			onMouseButtonDown = "[[IDC_MAP_UFSB_WPCONDITION_IMG,IDC_MAP_UFSB_WPCONDITION_BTN],'SQ_CONDITION',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP";
 			onMouseZChanged = "[_this select 1] call A3C_BTN_FNC_COND";
 
 			x = 0.545824 * safezoneW + safezoneX;
@@ -425,10 +569,10 @@ class A3C_DSP_MapOverlay
 			h = 0.0330053 * safezoneH;
 			tooltip = "WP Condition: NONE (LMB to cycle through options)";
 		};
-
-		class 7009: A3C_CT_EDIT
+		//-- popup Timeout CT
+		class MAP_UFSB_TIMEOUT_POPUP: A3C_CT_EDIT
 		{
-			idc = 7009;
+			idc = IDC_MAP_UFSB_TIMEOUT_POPUP; //7009;
 			type = 2;
 			style = 2;
 			font = "TahomaB";
@@ -448,36 +592,18 @@ class A3C_DSP_MapOverlay
 			sizeEx = "0.03 / (getResolution select 5)";	
 		};
 
-		class A3C_TEXT_07: A3C_RscText
+		class MAP_UFSB_UNDO_IMG: A3C_RscPicture
 		{
-			idc = 7014;
-
-			x = -0.0498831 * safezoneW + safezoneX;
-			y = 0.00492081 * safezoneH + safezoneY;
-			w = 0.234846 * safezoneW;
-			h = 0.0330053 * safezoneH;
-		};
-		class A3C_TEXT_08: A3C_RscText
-		{
-			idc = 7015;
-
-			x = -0.0326993 * safezoneW + safezoneX;
-			y = 0.0709314 * safezoneH + safezoneY;
-			w = 0.183294 * safezoneW;
-			h = 0.0220035 * safezoneH;
-		};
-		class A3C_map_undo_IMAGE: A3C_RscPicture
-		{
-			idc = 7092;
+			idc = IDC_MAP_UFSB_UNDO_IMG; //7092;
 			x = 0.620287 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
 			colorText[] = {1,1,1,0.7};
 		};
-		class A3C_Undo: A3C_RscButton_Invisible
+		class MAP_UFSB_UNDO_BTN: A3C_RscButton_Invisible
 		{
-			idc = 7041;
+			idc = IDC_MAP_UFSB_UNDO_BTN; //7041;
 			action = "[] call A3C_UNDO";
 			toolTip = "Undo";
 			x = 0.620287 * safezoneW + safezoneX;
@@ -486,167 +612,19 @@ class A3C_DSP_MapOverlay
 			h = 0.0330053 * safezoneH;
 
 		};
-		class RText_7042: A3C_RscText
-		{
-			idc = 7042;
-			x = 0 * GUI_GRID_W + GUI_GRID_X;
-			y = 1 * GUI_GRID_H + GUI_GRID_Y;
-			w = 7.5 * GUI_GRID_W;
-			h = 1 * GUI_GRID_H;
-		};
-		
-		class A3C_TAB_STANCE1: A3C_RscPicture
-		{
-			idc = 7044;
-			x = 0.24797 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-		};
-		class A3C_TAB_STANCE1_2: A3C_RscButton_Invisible
-		{
-			idc = 7045;
-			onMouseButtonDown = "[[7044,7045],'SQ_STANCE_1',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP;";
-			onMouseZChanged = "[_this select 1] call A3C_STANCE_BTN_1";
 
-			x = 0.24797 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-			tooltip = "stance while en route";
-		};
-		class A3C_TAB_STANCE2: A3C_RscPicture
+		class MAP_UFSB_CANCEL_IMG: A3C_RscPicture
 		{
-			idc = 7046;
-			x = 0.339617 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-		};
-		class A3C_TAB_STANCE2_2: A3C_RscButton_Invisible
-		{
-			idc = 7047;
-			onMouseButtonDown = "[[7046,7047],'SQ_STANCE_2',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP;";
-			onMouseZChanged = "[_this select 1] call A3C_STANCE_BTN_2;";
-
-			x = 0.339617 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-			tooltip = "set stance upon arrival";
-		};
-		class A3C_TAB_Speed: A3C_RscPicture
-		{
-			idc = 7048;
-			x = 0.293794 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-		};
-		class A3C_TAB_Speed_2: A3C_RscButton_Invisible
-		{
-			idc = 7049;
-			onMouseButtonDown = "[] call A3C_SPEED_BTN";
-			onMouseZChanged = "[] call A3C_SPEED_BTN";
-
-			x = 0.293794 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-			tooltip = "set travel speed";
-		};
-		class A3C_TAB_FORMM: A3C_RscPicture
-		{
-			idc = 7050;
-			x = 0.477088 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-		};
-		class A3C_TAB_FORMM_2: A3C_RscButton_Invisible
-		{
-			idc = 7051;
-			onMouseButtonDown = "[[7050,7051],'SQ_FORMATION',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP";
-			onMouseZChanged = "[_this select 1] call A3C_BUTTON_FORMMODE";
-
-			x = 0.477088 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-			tooltip = "set formation (connected tolooking-direction)";
-		};
-		
-		class A3C_TAB_CMODE: A3C_RscPicture
-		{
-			idc = 7062;
-			x = 0.385441 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-		};
-		class A3C_TAB_CMODE_2: A3C_RscButton_Invisible
-		{
-			idc = 7063;
-			onMouseButtonDown = "[] call A3C_BUTTON_CMODE";
-			onMouseZChanged = "[] call A3C_BUTTON_CMODE";
-
-			x = 0.385441 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-			tooltip = "WP Combat-Mode: Default/Engage";
-		};
-		class A3C_wpFiringMode: A3C_RscPicture
-		{
-			idc = 7064;
-			x = 0.431265 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-		};
-		class A3C_wpFiringMode_2: A3C_RscButton_Invisible
-		{
-			idc = 7065;
-			onMouseButtonDown = "[[7064,7065],'SQ_ACTION',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP";
-			onMouseZChanged = "[(_this select 1),false,true] spawn A3C_BUTTON_wpFiringMode;";
-
-			x = 0.431265 * safezoneW + safezoneX;
-			y = 0.818596 * safezoneH + safezoneY;
-			w = 0.0171838 * safezoneW;
-			h = 0.0330053 * safezoneH;
-			tooltip = "";
-		};
-		class spacing_input: A3C_CT_EDIT
-		{
-			idc = 7066;
-			type = 2;
-			style = 2;
-			font = "TahomaB";
-			autocomplete = "false";
-			onSetFocus = "['SPACING','ON'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE";
-			onKillFocus = "['SPACING','OFF'] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE";
-			colorSelection[] = {1,1,1,1};
-			colorDisabled[] = {};
-			sizeEx = "0.03 / (getResolution select 5)";
-			tooltip = "Set Unit-Spacing";	
-			x = 0.517184 * safezoneW + safezoneX;
-			y = safezoneH + safezoneY;
-			w = 0.0229118 * safezoneW;
-			h = 0.0330053 * safezoneH;
-			colorText[] = {1,1,1,1};
-		};
-
-		class A3C_Cancel_Data: A3C_RscPicture
-		{
-			idc = 7069;
+			idc = IDC_MAP_UFSB_CANCEL_IMG; //7069;
 			x = 0.660383 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
 			w = 0.0171838 * safezoneW;
 			h = 0.0330053 * safezoneH;
 		};
-		class A3C_Cancel_Data_1: A3C_RscButton_Invisible
+
+		class MAP_UFSB_CANCEL_BTN: A3C_RscButton_Invisible
 		{
-			idc = 7070;
+			idc = IDC_MAP_UFSB_CANCEL_BTN; //7070;
 			onmousebuttondown = "[A3C_SELECTED_UNITS,(_this select 4),(_this select 5)] spawn A3C_AI_Shared_cancelUnitPlot";
 
 			x = 0.660383 * safezoneW + safezoneX;
@@ -655,10 +633,141 @@ class A3C_DSP_MapOverlay
 			h = 0.0330053 * safezoneH;
 			tooltip = "LMB: delete session. shift+LMB: delete active orders. ctrl+LMB: skip currentwaypoint"; //--- 	ToDo: 	Localize;
 		};
+
+		class MAP_UFSB_HOLD_IMG: A3C_RscPicture
+		{
+			idc = IDC_MAP_UFSB_HOLD_IMG; //8000;
+
+			x = 0.626015 * safezoneW + safezoneX;
+			y = 0.94007 * safezoneH + safezoneY;
+			w = 0.0229118 * safezoneW;
+			h = 0.044007 * safezoneH;
+		};
+		class MAP_UFSB_HOLD_BTN: A3C_RscButton_Invisible
+		{
+			idc = IDC_MAP_UFSB_HOLD_BTN; //8001;
+			action = "A3C_SELECTED_UNITS call A3C_UNIT_HOLD";
+
+			x = 0.626015 * safezoneW + safezoneX;
+			y = 0.94007 * safezoneH + safezoneY;
+			w = 0.0229118 * safezoneW;
+			h = 0.044007 * safezoneH;
+			tooltip = "Selected units STANDBY";
+		};
+		class MAP_UFSB_CONTINUE_IMG: A3C_RscPicture
+		{
+			idc = IDC_MAP_UFSB_CONTINUE_IMG; //8002;
+			x = 0.654655 * safezoneW + safezoneX;
+			y = 0.94007 * safezoneH + safezoneY;
+			w = 0.0229118 * safezoneW;
+			h = 0.044007 * safezoneH;
+		};
+		class MAP_UFSB_CONTINUE_BTN: A3C_RscButton_Invisible
+		{
+			idc = IDC_MAP_UFSB_CONTINUE_BTN; //8003;
+			action = "A3C_SELECTED_UNITS call A3C_UNIT_CONTINUE";
+
+			x = 0.654655 * safezoneW + safezoneX;
+			y = 0.94007 * safezoneH + safezoneY;
+			w = 0.0229118 * safezoneW;
+			h = 0.044007 * safezoneH;
+			tooltip = "Selected units CONTINUE";
+		};
+
+		
+		//---------- UNFOLDABLE SQUAD-BAR: EXECUTE BUTTONS --------------------------------------------
+		
+		class A3C_WPD_BTN1: A3C_ShortcutButton
+		{
+			idc = 7018;
+			
+			action = "['ALL'] spawn A3C_Btn_fnc_Execute";
+			text = "COMMIT ALL";
+			
+			x = 0.517184 * safezoneW + safezoneX;
+			y = 2;
+			w = 0.0973751 * safezoneW;
+			h = 0.044007 * safezoneH;
+			font = "TahomaB";
+			tooltip = "Execute all squad-plans";
+			color[] = {1,1,1,1};	
+			colorBackground[] = {1,1,1,1};
+			size = "0.04 / (getResolution select 5)";
+			sizeEx = "0.04 / (getResolution select 5)";	
+		};
+		class A3C_WPD_BTN2: A3C_ShortcutButton
+		{
+			idc = 7019;
+			action = "['SELECTED'] spawn A3C_Btn_fnc_Execute";
+			text = "COMMIT";
+			x = 0.316706 * safezoneW + safezoneX;
+			y = 2;
+			w = 0.160383 * safezoneW;
+			h = 0.044007 * safezoneH;
+			font = "TahomaB";
+			tooltip = "Execute plans for selected units";
+			color[] = {1,1,1,1};	
+			colorBackground[] = {1,1,1,1};
+			size = "0.04 / (getResolution select 5)";
+			sizeEx = "0.04 / (getResolution select 5)";	
+		};
+		class A3C_WPD_BTN3: A3C_ShortcutButton
+		{
+			idc = 7020;
+			action = "(findDisplay 100020) closeDisplay 0; A3C_SELECTED_UNITS = []; {_x setvariable ['A3C_PLOT_TEMP',[],true];} foreach units group player; openMap false; [1] call A3C_Btn_fnc_Cancel";
+			text = "EXIT";
+			x = 0.517184 * safezoneW + safezoneX;
+			y = 2;
+			w = 0.0973751 * safezoneW;
+			h = 0.044007 * safezoneH;
+			font = "TahomaB";
+			tooltip = "Exit and close map";
+			color[] = {1,1,1,1};	
+			colorBackground[] = {1,1,1,1};
+			size = "0.04 / (getResolution select 5)";
+			sizeEx = "0.04 / (getResolution select 5)";	
+		};
+
+		//----------
+
+		// class A3C_TEXT_07: A3C_RscText
+		// {
+		// 	idc = 7014;
+
+		// 	x = -0.0498831 * safezoneW + safezoneX;
+		// 	y = 0.00492081 * safezoneH + safezoneY;
+		// 	w = 0.234846 * safezoneW;
+		// 	h = 0.0330053 * safezoneH;
+		// };
+		// class A3C_TEXT_08: A3C_RscText
+		// {
+		// 	idc = 7015;
+
+		// 	x = -0.0326993 * safezoneW + safezoneX;
+		// 	y = 0.0709314 * safezoneH + safezoneY;
+		// 	w = 0.183294 * safezoneW;
+		// 	h = 0.0220035 * safezoneH;
+		// };
+		
+		// class RText_7042: A3C_RscText
+		// {
+		// 	idc = 7042;
+		// 	x = 0 * GUI_GRID_W + GUI_GRID_X;
+		// 	y = 1 * GUI_GRID_H + GUI_GRID_Y;
+		// 	w = 7.5 * GUI_GRID_W;
+		// 	h = 1 * GUI_GRID_H;
+		// };
+		
+		
+		
 		
 		
 
-		//-- UNFOLDABLE SQUAD BAR (UFSQB): POPUP SUB SELECTION
+		
+		
+		
+		//---------- UNFOLDABLE SQUAD BAR (UFSQB): POPUP SUB SELECTION -------------------------------
+
 		class 8010: A3C_RscControlsGroup_NoScroll
 		{
 			idc = 8010;
@@ -841,59 +950,7 @@ class A3C_DSP_MapOverlay
 			};
 		};
 
-		//---------------------------------------------------------------------------------------------
-		//---------- UNFOLDABLE SQUAD-BAR: EXECUTE BUTTONS --------------------------------------------
-		//---------------------------------------------------------------------------------------------
-		class A3C_WPD_BTN1: A3C_ShortcutButton
-		{
-			idc = 7018;
-			
-			action = "['ALL'] spawn A3C_Btn_fnc_Execute";
-			text = "COMMIT ALL";
-			
-			x = 0.517184 * safezoneW + safezoneX;
-			y = 2;
-			w = 0.0973751 * safezoneW;
-			h = 0.044007 * safezoneH;
-			font = "TahomaB";
-			tooltip = "Execute all squad-plans";
-			color[] = {1,1,1,1};	
-			colorBackground[] = {1,1,1,1};
-			size = "0.04 / (getResolution select 5)";
-			sizeEx = "0.04 / (getResolution select 5)";	
-		};
-		class A3C_WPD_BTN2: A3C_ShortcutButton
-		{
-			idc = 7019;
-			action = "['SELECTED'] spawn A3C_Btn_fnc_Execute";
-			text = "COMMIT";
-			x = 0.316706 * safezoneW + safezoneX;
-			y = 2;
-			w = 0.160383 * safezoneW;
-			h = 0.044007 * safezoneH;
-			font = "TahomaB";
-			tooltip = "Execute plans for selected units";
-			color[] = {1,1,1,1};	
-			colorBackground[] = {1,1,1,1};
-			size = "0.04 / (getResolution select 5)";
-			sizeEx = "0.04 / (getResolution select 5)";	
-		};
-		class A3C_WPD_BTN3: A3C_ShortcutButton
-		{
-			idc = 7020;
-			action = "(findDisplay 100020) closeDisplay 0; A3C_SELECTED_UNITS = []; {_x setvariable ['A3C_PLOT_TEMP',[],true];} foreach units group player; openMap false; [1] call A3C_Btn_fnc_Cancel";
-			text = "EXIT";
-			x = 0.517184 * safezoneW + safezoneX;
-			y = 2;
-			w = 0.0973751 * safezoneW;
-			h = 0.044007 * safezoneH;
-			font = "TahomaB";
-			tooltip = "Exit and close map";
-			color[] = {1,1,1,1};	
-			colorBackground[] = {1,1,1,1};
-			size = "0.04 / (getResolution select 5)";
-			sizeEx = "0.04 / (getResolution select 5)";	
-		};
+		
 
 		
 
@@ -1013,45 +1070,7 @@ class A3C_DSP_MapOverlay
 		};
 
 		
-		class RscMapHold: A3C_RscPicture
-		{
-			idc = 8000;
-
-			x = 0.626015 * safezoneW + safezoneX;
-			y = 0.94007 * safezoneH + safezoneY;
-			w = 0.0229118 * safezoneW;
-			h = 0.044007 * safezoneH;
-		};
-		class RscMapHoldBtn: A3C_RscButton_Invisible
-		{
-			idc = 8001;
-			action = "A3C_SELECTED_UNITS call A3C_UNIT_HOLD";
-
-			x = 0.626015 * safezoneW + safezoneX;
-			y = 0.94007 * safezoneH + safezoneY;
-			w = 0.0229118 * safezoneW;
-			h = 0.044007 * safezoneH;
-			tooltip = "Selected units STANDBY";
-		};
-		class RscMapCont: A3C_RscPicture
-		{
-			idc = 8002;
-			x = 0.654655 * safezoneW + safezoneX;
-			y = 0.94007 * safezoneH + safezoneY;
-			w = 0.0229118 * safezoneW;
-			h = 0.044007 * safezoneH;
-		};
-		class RscMapContBtn: A3C_RscButton_Invisible
-		{
-			idc = 8003;
-			action = "A3C_SELECTED_UNITS call A3C_UNIT_CONTINUE";
-
-			x = 0.654655 * safezoneW + safezoneX;
-			y = 0.94007 * safezoneH + safezoneY;
-			w = 0.0229118 * safezoneW;
-			h = 0.044007 * safezoneH;
-			tooltip = "Selected units CONTINUE";
-		};
+		
 		
 		class 1010101: A3C_RscPicture
 		{

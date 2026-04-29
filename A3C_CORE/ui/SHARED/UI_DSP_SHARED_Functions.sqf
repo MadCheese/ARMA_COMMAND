@@ -559,12 +559,12 @@ A3C_UI_SHARED_createDashBoard = {
 			];
 
 			//-- create new progress bar macro
-			_bg_ProgressBar  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",12003 + _macroIndex + 2, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
+			_bg_ProgressBar  = findDisplay _a3c_dsp ctrlCreate ["RscPicture",12003 + _macroIndex + 2, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
 			_bg_ProgressBar ctrlSetPosition _ctrlPosBar;
 			_bg_ProgressBar ctrlSetText "#(argb,8,8,3)color(0.5,0.5,0.5,0.5)";
 
 			
-			_actualProgressBar  = (findDisplay _a3c_dsp) ctrlCreate ["RscProgress",12003 + _macroIndex + 1, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
+			_actualProgressBar  = findDisplay _a3c_dsp ctrlCreate ["RscProgress",12003 + _macroIndex + 1, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
 			_actualProgressBar ctrlSetPosition _ctrlPosBar;
 
 			_progressCol = switch (true) do {
@@ -578,7 +578,7 @@ A3C_UI_SHARED_createDashBoard = {
 			_actualProgressBar ctrlSetTextColor _progressCol; //;
 			
 
-			_barTextCtrl = (findDisplay _a3c_dsp) ctrlCreate ["A3C_RscText_GroupDashboard",12003 + _macroIndex, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT]; //--12003 is the 'ammunition'-bar idc, we build up from here
+			_barTextCtrl = findDisplay _a3c_dsp ctrlCreate ["A3C_RscText_GroupDashboard",12003 + _macroIndex, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT]; //--12003 is the 'ammunition'-bar idc, we build up from here
 			_barTextCtrl ctrlSetText _descriptionText;
 			
 			_barTextCtrl ctrlSetPosition _ctrlPosText;
@@ -680,7 +680,7 @@ A3C_UI_SHARED_createDashBoard = {
 		];
 		
 		if (count ([units _group] call A3C_FINDMEDICS) > 0) then {
-			_healingCapableIcon  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",13000, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
+			_healingCapableIcon  = findDisplay _a3c_dsp ctrlCreate ["RscPicture",13000, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
 			_healingCapableIcon ctrlSetPosition _supportButtonBasePos;
 			_healingCapableIcon ctrlSettext "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
 			_healingCapableIcon ctrlSetTextColor [1,1,1,0.6];
@@ -695,7 +695,7 @@ A3C_UI_SHARED_createDashBoard = {
 				//_supportButtonBasePos set [0,0.134387 * safezoneW];
 				_supportButtonBasePos set [1,(3.09064e-006 * safezoneH) + (0.0340016 * safezoneH)];
 			};
-			_repairingCapableIcon  = (findDisplay _a3c_dsp) ctrlCreate ["RscPicture",13001, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
+			_repairingCapableIcon  = findDisplay _a3c_dsp ctrlCreate ["RscPicture",13001, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
 			_repairingCapableIcon ctrlSetPosition _supportButtonBasePos;
 			_repairingCapableIcon ctrlSettext "A3C_CORE\ui\pictures\icon_menu_action_repair_noBG.paa"; // "\a3c_ui\menu\icon_menu_action_repair.paa";
 			_repairingCapableIcon ctrlSetTextColor [1,1,1,0.6];
@@ -795,9 +795,9 @@ A3C_UI_Shared_fnc_toggleGocodeCtrls = {
 
 	
 	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
-	if (isnull (findDisplay _a3c_dsp)) exitWith {};
+	if (isnull findDisplay _a3c_dsp) exitWith {};
 
-	private _rootPos = if (isnull (findDisplay _a3c_dsp)) then {[]} else {//-- only for tablet
+	private _rootPos = if (isnull findDisplay _a3c_dsp) then {[]} else {//-- only for tablet
 		[
 			A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_X,
 			A3C_MAP_GAMEUI_MENU_Y,
@@ -903,7 +903,7 @@ A3C_UI_Shared_fnc_toggleGocodeCtrls = {
 				case ("D") : {[709106,709107]};
 			};
 			if (_cond1 OR _cond2) then {
-				if !(isnull (findDisplay _a3c_dsp)) then {
+				if !(isnull findDisplay _a3c_dsp) then {
 					_btnPos set [0, A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_X - (A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_W * _buttonsPlaced)];
 					{
 						_btnItem = findDisplay _a3c_dsp displayCtrl _x;
@@ -916,7 +916,7 @@ A3C_UI_Shared_fnc_toggleGocodeCtrls = {
 					{(findDisplay 100020 displayCtrl _x) ctrlSetTextColor [0.8,0.6,0,0.6]} foreach _ctrls;
 				}
 			} else {
-				if !(isnull (findDisplay _a3c_dsp)) then {
+				if !(isnull findDisplay _a3c_dsp) then {
 					_btnPos set [1,safeZoneY -A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_H];
 					{
 						_btnItem = findDisplay _a3c_dsp displayCtrl _x;
@@ -928,8 +928,8 @@ A3C_UI_Shared_fnc_toggleGocodeCtrls = {
 					{(findDisplay 100020 displayCtrl _x) ctrlSetTextColor [1,1,1,0.2]} foreach _ctrls;
 				};
 			};
-			if ( !isnull (findDisplay _a3c_dsp)) then {
-				private _bgControl = (findDisplay _a3c_dsp) displayCtrl 709099;
+			if ( !isnull findDisplay _a3c_dsp) then {
+				private _bgControl = findDisplay _a3c_dsp displayCtrl 709099;
 				if (_buttonsPlaced > 0) then {		
 					private _bgWidth = A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_W * _buttonsPlaced;
 					private _bgPos = 
@@ -1222,7 +1222,7 @@ A3C_UNITSEL_REFRESH_UI = {
 				_mode = "OPEN";
 				// private _vehicle = if ()
 				private _infModeTo = if (vehicle (A3C_SELECTED_UNITS select 0) isKindOf "AIR") then {"AIR"} else {"INF"};
-				[_infModeTo] call A3C_UI_MAP_REFRESH_BARCONTROLS;
+				[_infModeTo] call A3C_UI_MAP_UFSB_RefreshControlBar;
 			};
 			[_mode,0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
 

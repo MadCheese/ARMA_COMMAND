@@ -6,6 +6,305 @@
 
 if (isDedicated) exitWith {};
 
+//-- Hardcoded GROUPMENU ACTIONBUTTONS array (HCGP Context)
+A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS =
+[
+	[8007161,8007162,8007163], //-- row 1
+	[8007171,8007172,8007173],
+	[8007181,8007182,8007183],
+	[8007191,8007192,8007193],
+	[8007201,8007202,8007203],
+
+	[8007211,8007212,8007213], //- row 2
+	[8007221,8007222,8007223],
+	[8007231,8007232,8007233],
+	[8007241,8007242,8007243],
+	[8007251,8007252,8007253]
+];
+
+A3C_UI_MAP_UFSQB_SettingsButtonPairs =  
+[
+	[IDC_MAP_UFSB_STANCE_TRAVEL_IMG, IDC_MAP_UFSB_STANCE_TRAVEL_BTN], //-- Stance Travel
+	[IDC_MAP_UFSB_WP_SPEED_IMG, IDC_MAP_UFSB_WP_SPEED_BTN], //-- Travel Speed
+	[IDC_MAP_UFSB_STANCE_ARRIVAL_IMG, IDC_MAP_UFSB_STANCE_ARRIVAL_BTN], //-- Stance Arrival
+	[IDC_MAP_UFSB_COMBATMODE_IMG, IDC_MAP_UFSB_COMBATMODE_BTN], //-- Waypoint-Combatmode
+	[IDC_MAP_UFSB_WPACTION_IMG, IDC_MAP_UFSB_WPACTION_BTN], //-- Squad Waypoint Actions
+	[IDC_MAP_UFSB_WPFORMATION_IMG, IDC_MAP_UFSB_WPFORMATION_BTN], //-- Waypoint Formation
+	[IDC_MAP_UFSB_SPACING], //-- Spacing Input
+	[IDC_MAP_UFSB_WPCONDITION_IMG, IDC_MAP_UFSB_WPCONDITION_BTN],  //-- Waypoint Completion Condition
+	[IDC_MAP_UFSB_UNDO_IMG, IDC_MAP_UFSB_UNDO_BTN], //-- Undo
+	[IDC_MAP_UFSB_CANCEL_IMG, IDC_MAP_UFSB_CANCEL_BTN], //-- Cancel Data
+	[IDC_MAP_UFSB_HOLD_IMG, IDC_MAP_UFSB_HOLD_BTN], //-- Hold Button
+	[IDC_MAP_UFSB_CONTINUE_IMG, IDC_MAP_UFSB_CONTINUE_BTN] //-- Continue Button	
+];
+reverse A3C_UI_MAP_UFSQB_SettingsButtonPairs; //-- reverse to start animation from last button
+
+//---------------------------------------------------------------------------------------------
+//---------- HANDLER FUNCTIONS ----------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+
+A3C_UI_MAP_UFSB_OnStanceTravel = {
+	params ["_mode"];
+	if (_mode < 0) then {_mode = 0};
+	if (_mode > 1) then {_mode = 1};
+	private _a3c_dsp = 100020;
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	if (A3C_MAP_CommandMode in ["INF","HC"]) then {
+		switch (A3C_STANCE1_TEMP) do {
+			case ("DOWN") : {
+				if (_mode == 0) then {
+					//-- switch to STAND
+					A3C_STANCE1_TEMP = "UP";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
+				} else {
+					//-- switch to CROUCH
+					A3C_STANCE1_TEMP = "MIDDLE";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
+				};
+			};
+			case "MIDDLE" : {
+				if (_mode == 0) then {
+					//-- switch to PRONE
+					A3C_STANCE1_TEMP = "DOWN";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
+				} else {
+					//-- switch to STAND
+					A3C_STANCE1_TEMP = "UP";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
+				};
+			};
+			case "UP" : {
+				if (_mode == 0) then {
+					//-- switch to CROUCH
+					A3C_STANCE1_TEMP = "MIDDLE";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
+				} else {
+					//-- switch to PRONE
+					A3C_STANCE1_TEMP = "DOWN";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
+				};
+			};
+		};
+	} else {
+		switch (A3C_HELIHEIGHT) do {
+			case (500) : {
+				if (_mode == 0) then {
+					A3C_HELIHEIGHT = 200; // set to high
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_2.paa";
+				} else {
+					A3C_HELIHEIGHT = 5; // set to lowest
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_4.paa";
+				};
+			};
+			case (200) : {
+				if (_mode == 0) then {
+					A3C_HELIHEIGHT = 25; // set to med
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_3.paa";
+				} else {
+					A3C_HELIHEIGHT = 500; // set to highest
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_1.paa";
+				};
+			};
+			case (25) : {
+				if (_mode == 0) then {
+					A3C_HELIHEIGHT = 5; // set to lowest
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_4.paa";
+				} else {
+					A3C_HELIHEIGHT = 200; // set to high
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_2.paa";
+				};
+			};
+			case (5) : {
+				if (_mode == 0) then {
+					A3C_HELIHEIGHT = 500; // set to highest
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_1.paa";
+				} else {
+					A3C_HELIHEIGHT = 25; // set to med
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_3.paa";
+				};
+			};
+		};
+	};
+
+};
+
+A3C_UI_MAP_UFSB_OnStanceArrival = {
+	params ["_mode"];
+	if (_mode < 0) then {_mode = 0};
+	if (_mode > 1) then {_mode = 1};
+	private _a3c_dsp = 100020;
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	if (A3C_MAP_CommandMode in ["INF","HC"]) then {
+		switch (A3C_STANCE2_TEMP) do {
+			case ("DOWN") : {
+				if (_mode == 0) then {
+					A3C_STANCE2_TEMP = "UP";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "STAND";
+				} else {
+					A3C_STANCE2_TEMP = "MIDDLE";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "CROUCH";
+				};
+			};
+			case "MIDDLE" : {
+				if (_mode == 0) then {
+					A3C_STANCE2_TEMP = "DOWN";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "PRONE";
+				} else {
+					A3C_STANCE2_TEMP = "UP";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "STAND";
+				};
+			};
+			case "UP" : {
+				if (_mode == 0) then {
+					A3C_STANCE2_TEMP = "MIDDLE";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "CROUCH";
+				} else {
+					A3C_STANCE2_TEMP = "DOWN";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "PRONE";
+				};
+			};
+		};
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,0.6];
+	} else {
+		switch (A3C_TEMP_ACTION select 1) do {
+			case ("NONE") : {
+				if (_mode == 0) then {
+					//-- set to PICKUP
+					A3C_TEMP_ACTION = ["LANDING","PICKUP"];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "PICKUP";
+				} else {
+					//-- set to LAND FINAL
+					A3C_TEMP_ACTION = ["LANDING","LANDFINAL"];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "LAND";
+				};
+			};
+			case ("PICKUP") : {
+				if (_mode == 0) then {
+					//-- set to DROPOFF
+					A3C_TEMP_ACTION = ["LANDING","DROPOFF"];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "DROPOFF";
+				} else {
+					//-- set to NONE
+					A3C_TEMP_ACTION = ["LANDING","NONE"];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_fnc_setOpacity); //[0.5,0.5,0.5,0.6];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "MOVE";
+				};
+			};
+			case ("DROPOFF") : {
+				if (_mode == 0) then {
+					if (A3C_IsRappel) then {
+						//-- set to RAPPELL
+						A3C_TEMP_ACTION = ["LANDING","RAPPEL"];
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "RAPPEL";
+					} else {
+						//-- set to SLINGLOAD
+						A3C_TEMP_ACTION = ["SLINGLOAD","SLINGLOAD"];
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_SlingUni.paa";
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "Sling Load/Drop";
+					};
+				} else {
+					//-- set to PICKUP
+					A3C_TEMP_ACTION = ["LANDING","PICKUP"];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "PICKUP";
+				};
+			};
+			case ("RAPPEL") : {
+				if (_mode == 0) then {
+					//-- set to PARADROP
+					A3C_TEMP_ACTION = ["PARADROP","PARADROP"];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "Para-Drop";
+				} else {
+					//-- set to DROPOFF
+					A3C_TEMP_ACTION = ["LANDING","DROPOFF"];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "DROPOFF";
+				};
+			};
+			case ("PARADROP") : {
+				if (_mode == 0) then {
+					//-- set to SLINGLOAD
+					A3C_TEMP_ACTION = ["SLINGLOAD","SLINGLOAD"];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_SlingUni.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "Sling Load/Drop";
+				} else {
+					if (A3C_IsRappel) then {
+						//-- set to RAPPELL
+						A3C_TEMP_ACTION = ["LANDING","RAPPEL"];
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "RAPPEL";
+					} else {
+						//-- set to DROPOFF
+						A3C_TEMP_ACTION = ["LANDING","DROPOFF"];
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "DROPOFF";
+					};
+				};
+			};
+			case ("SLINGLOAD") : {
+				if (_mode == 0) then {
+					//-- set to LAND FINAL
+					A3C_TEMP_ACTION = ["LANDING","LANDFINAL"];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "LAND";
+				} else {
+					//-- set to PARADROP
+					A3C_TEMP_ACTION = ["PARADROP","PARADROP"];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "Para-Drop";
+				};
+			};
+			case ("LANDFINAL") : {
+				if (_mode == 0) then {
+					//-- set to NONE
+					A3C_TEMP_ACTION = ["LANDING","NONE"];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity); //[0.5,0.5,0.5,0.6];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "MOVE";
+				} else {
+					//-- set to SLINGLOAD
+					A3C_TEMP_ACTION = ["SLINGLOAD","SLINGLOAD"];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_SlingUni.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor [1,1,1,1];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlsetToolTip "Sling Load/Drop";
+				};
+			};
+		};
+	};
+};
+
+
+
+
+
+
+
+
 /////////////////////////////   DRAW FNCS (MOVE TO OWN SCRIPT WITH UI FNCS)    ////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////  
 
@@ -238,7 +537,13 @@ A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls = {
 	if (_mode == "COLLAPSE") then {
 		{
 			(findDisplay 100020 displayCtrl _x) ctrlShow false;
-		} foreach [A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2,A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
+		} foreach [
+			A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT,
+			A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT,
+			A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1,
+			A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2,
+			IDC_MAP_UFSB_TIMEOUT_POPUP
+		];
 	};
 
 };
@@ -750,43 +1055,43 @@ A3C_SWITCHMARKER = {
 		case 0 : {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal "A3C_Marker_WAYPOINT";
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "ColorBlufor";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity);
+			(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+			(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity);
 			_newAction = ["LANDING","NONE"];
 		};
 		case 1 : {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal 'A3C_Marker_PICKUP_AIR';
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "DEFAULT";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+			(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
+			(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 			_newAction = ["LANDING","PICKUP"];
 		};
 		case 2 : {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal 'A3C_Marker_DROPOFF_AIR';
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "DEFAULT";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+			(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
+			(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 			_newAction = ["LANDING","DROPOFF"];
 		};
 		case 3 : {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal 'A3C_Marker_LANDING';
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "DEFAULT";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+			(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
+			(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 			_newAction = ["LANDING","LANDFINAL"];
 		};
 		case 4 : {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal 'A3C_Marker_Rappel';
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "DEFAULT";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+			(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
+			(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 			_newAction = ["LANDING","RAPPEL"];
 		};
 		case 5 : {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal 'A3C_Marker_Paradrop';
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "DEFAULT";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
-			((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+			(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
+			(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 			_newAction = ["PARADROP","PARADROP"];
 		};
 	};
@@ -825,7 +1130,7 @@ A3C_GET_UNITBUTTON = {
 
 A3C_TAB_TOGGLE_CONTROLS = {
 	private _a3c_dsp = 100020;
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	switch (A3C_TAB_TOGGLE_VAR) do {
 		case (0) : {
 			for "_i" from 7044 to 7089 do {
@@ -833,7 +1138,18 @@ A3C_TAB_TOGGLE_CONTROLS = {
 					(findDisplay _a3c_dsp displayCtrl _i) ctrlShow false;
 				",_i];
 			};
-			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;} foreach [7007,A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout,7018,7019,7022,7097,7098,70981,70982,70983];
+			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;} foreach [
+				IDC_MAP_UFSB_WPCONDITION_IMG,
+				IDC_MAP_UFSB_WPCONDITION_BTN,
+				IDC_MAP_UFSB_TIMEOUT_POPUP,
+				7018,
+				7019,
+				7097,
+				7098,
+				70981,
+				70982,
+				70983
+			];
 			for "_i" from 7025 to 7041 do {
 				call compile format ["
 					(findDisplay _a3c_dsp displayCtrl _i) ctrlShow false;
@@ -845,8 +1161,8 @@ A3C_TAB_TOGGLE_CONTROLS = {
 				",_i];
 			};
 
-			(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow false;
-			(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,0.2];
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow false;
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,0.2];
 
 			A3C_TAB_TOGGLE_VAR = 1;
 		};
@@ -856,9 +1172,19 @@ A3C_TAB_TOGGLE_CONTROLS = {
 					if !(_i in [7078]) then {(findDisplay _a3c_dsp displayCtrl _i) ctrlShow true;};
 				",_i];
 			};
-			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true} foreach [7007,7018,7019,7022,7097,7098,70981,70982,70983];
+			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true} foreach [
+				IDC_MAP_UFSB_WPCONDITION_IMG,
+				IDC_MAP_UFSB_WPCONDITION_BTN,
+				7018,
+				7019,
+				7097,
+				7098,
+				70981,
+				70982,
+				70983
+			];
 			if !((A3C_TEMP_CONDITION select 0) == "NONE") then {
-				{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP) ctrlShow true;
 			};
 			for "_i" from 7025 to 7040 do {
 				call compile format ["
@@ -872,9 +1198,8 @@ A3C_TAB_TOGGLE_CONTROLS = {
 			};
 
 			if (count A3C_WAYPOINTS_TEMP > 0) then {
-				//{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true} foreach [7041,7092];
-				(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow true;
-				(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,1];
+				(findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow true;
+				(findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,1];
 			};
 			A3C_TAB_TOGGLE_VAR = 0;
 		};
@@ -916,24 +1241,18 @@ A3C_UI_MAP_BARSETTINGS_LABEL = {
 };
 
 
-A3C_UI_MAP_REFRESH_BARCONTROLS = {
+A3C_UI_MAP_UFSB_RefreshControlBar = {
 	params ["_mode"];
 	private _a3c_dsp = 100020;
 	if !(_mode == "HC") then {
-		if (count A3C_SELECTED_UNITS > 0) then {
-			((findDisplay _a3c_dsp) displayCtrl 7014) ctrlShow true;
-			((findDisplay _a3c_dsp) displayCtrl 7042) ctrlShow false;
-		} else {
-			((findDisplay _a3c_dsp) displayCtrl 7014) ctrlShow false;
-			((findDisplay _a3c_dsp) displayCtrl 7042) ctrlShow true;
-		};
+
 		if (count A3C_SELECTED_UNITS > 1) then {
 			if (A3C_FORMMODE_TEMP == 0) then {
 				A3C_FORMMODE_TEMP = 1;
-				((findDisplay _a3c_dsp) displayCtrl 7050) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Straight.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPFORMATION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Straight.paa";
 			};
 		} else {
-			((findDisplay _a3c_dsp) displayCtrl 7050) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_None.paa";
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPFORMATION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_None.paa";
 			A3C_FORMMODE_TEMP = 0;
 
 			if (A3C_LAST_SUBSET_ACTION == "SQ_FORMATION") then {
@@ -951,25 +1270,26 @@ A3C_UI_MAP_REFRESH_BARCONTROLS = {
 			_tColCont = [1,1,1,1];		
 		};
 		
-		(findDisplay _a3c_dsp displayCtrl 8000)	ctrlSetTextColor _tColHold;	
-		(findDisplay _a3c_dsp displayCtrl 8002)	ctrlSetTextColor _tColCont;
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_HOLD_IMG)	ctrlSetTextColor _tColHold;	
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_CONTINUE_IMG)	ctrlSetTextColor _tColCont;
 		_tColCancelData = [1,1,1,0.2];
 		if ({_u = _x; {count (_u getvariable [_x,[]]) > 0} count ["A3C_PLOT","A3C_PLOT_TEMP"] > 0} count A3C_SELECTED_UNITS > 0) then {
 			_tColCancelData = [1,1,1,1];
 		};
-		(findDisplay _a3c_dsp displayCtrl 7069)	ctrlSetTextColor _tColCancelData;
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_CANCEL_IMG)	ctrlSetTextColor _tColCancelData;
 		
-		_a3c_dsp spawn {
+		[] spawn {
 			sleep 0.5;
 			_spacing = if (A3C_MAP_CommandMode == "AIR") then {A3C_SPACING_AIR} else {A3C_SPACING_INF max 2};
 			_spacing = if (_spacing < 10) then {"0" + (str _spacing)} else {str _spacing};
-			(findDisplay _this displayCtrl 7066) ctrlSetText _spacing;	
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_SPACING) ctrlSetText _spacing;	
 		};
 			
 	};
 };
 
-A3C_START_TABMODE = {
+A3C_UI_MAP_UFSB_ApplyMode = {
+	//-- Sets page layout of map overlay's squad bar controls according to mode (A3C_MAP_CommandMode)
 	private ["_mode","_stanceHeight","_stanceLand","_stance2Col","_smokeBool","_spacing","_pagebutton","_stance1TT","_stance2TT","_pageTT","_ctrlBool"];
 	params ["_mode"];
 
@@ -977,24 +1297,30 @@ A3C_START_TABMODE = {
 	private _a3c_dsp = 100020;
 
 	
-	//-- open trere first so that other controls can adjust accodingly | ADD CONDITION / PROFILE
-	//systemchat 'tabmode';
-
 	
 	
-	//--  asasas
-	
-	//if (_mode != A3C_MAP_CommandMode) then {
-		{
-			(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-		} foreach [A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2];
-	//};
+
+	{
+		(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
+	} foreach [A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_1_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_ACTION_SUBSET_2_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_1,A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2];
 
 
-	private _lowerBar = [7018,7019,7072,7092,7041,7069,7070,8000,8001,8002,8003];
 
-	//systemchat str A3C_BUTTONPAGE_TABLET;
-	//systemchat str A3C_SELECTED_UNITS;
+	private _lowerBar = [
+		7018,
+		7019,
+		7072,
+		IDC_MAP_UFSB_UNDO_IMG,
+		IDC_MAP_UFSB_UNDO_BTN,
+		IDC_MAP_UFSB_CANCEL_IMG,
+		IDC_MAP_UFSB_CANCEL_BTN,
+		IDC_MAP_UFSB_HOLD_IMG,
+		IDC_MAP_UFSB_HOLD_BTN,
+		IDC_MAP_UFSB_CONTINUE_IMG,
+		IDC_MAP_UFSB_CONTINUE_BTN
+	];
+
+
 
 	_stanceHeight = "";
 	_stanceLand = "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
@@ -1007,8 +1333,8 @@ A3C_START_TABMODE = {
 	_pageTT = "switch page to AIRCRAFT";
 
 	//-- reset Timeout
-	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout) ctrlSetText (str A3C_TIMEOUT_VAL);
-	(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP) ctrlSetText (str A3C_TIMEOUT_VAL);
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 	
 
 	//A3C_HELI_HELI_WP_BEHAVIOUR = "NONE";
@@ -1016,7 +1342,7 @@ A3C_START_TABMODE = {
 
 	_ctrlBool = true;
 
-	(findDisplay _a3c_dsp displayCtrl 7065) ctrlSetToolTip "No Action || Use LMB to open settings or mousewheel to cycle";
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_BTN) ctrlSetToolTip "No Action || Use LMB to open settings or mousewheel to cycle";
 
 
 	
@@ -1027,29 +1353,15 @@ A3C_START_TABMODE = {
 		case ("INF") : {
 			if (typeName A3C_WP_SPEED_TEMP == "STRING") then {A3C_WP_SPEED_TEMP = -1};
 			_stance2Col = [1,1,1,0.3];
-			//if (A3C_MAP_CommandMode == "INF") then {
-			//	_pn = (parsenumber (ctrlText (findDisplay _a3c_dsp displayCtrl 7066)));
-			//	if (_pn > 0) then {
-			//		A3C_SPACING_INF = _pn;
-			//	};
 
-			//};
-
-			///_spacing = str A3C_SPACING_INF;
-			///if (A3C_SPACING_INF < 10) then {
-			///	_spacing = "0" + _spacing;
-			///};
 			if (hcShownBar) then {hcShowBar false};
 
 			{
-				(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true;
-			} foreach [7007,7022]; //7010,7066
+				(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow true;
+			} foreach [IDC_MAP_UFSB_WPCONDITION_IMG, IDC_MAP_UFSB_WPCONDITION_BTN]; 
 
-			if (A3C_MAP_CommandMode == "HC") then {
-				//(findDisplay _a3c_dsp displayCtrl 7008) ctrlSetText "^";
-				{
-					(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-				} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
+			if (A3C_MAP_CommandMode == "HC") then {		
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP) ctrlShow false;
 			};
 			if ((A3C_TEMP_ACTION select 0) in ["LANDING","SLINGLOAD"]) then {
 				A3C_TEMP_ACTION = ["NONE","NONE"];
@@ -1070,26 +1382,21 @@ A3C_START_TABMODE = {
 					private _cond2 = (count A3C_STATIC_PACKS > 0);
 					if (_cond1 || _cond2) then {
 						A3C_TEMP_ACTION = ["STATIC",[]];
-						(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettext "\A3\Static_f_gamma\data\ui\gear_StaticTurret_MG_high_CA.paa";
-						(findDisplay _a3c_dsp displayCtrl 7065) ctrlSetToolTip "Deploy or Pack Static Weapon || Use LMB to open settings or mousewheel to cycle";
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlsettext "\A3\Static_f_gamma\data\ui\gear_StaticTurret_MG_high_CA.paa";
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_BTN) ctrlSetToolTip "Deploy or Pack Static Weapon || Use LMB to open settings or mousewheel to cycle";
 					} else {
 						A3C_TEMP_ACTION = ["NONE","NONE"];
-						(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettextColor [1,1,1,1];
-						(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlsettextColor [1,1,1,1];
+						(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
 					};
 
 				};
 				default {
 					A3C_TEMP_ACTION = ["NONE","NONE"];
-					(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettextColor [1,1,1,1];
-					(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlsettextColor [1,1,1,1];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
 				};
 			};
-
-
-
-			//(findDisplay _display displayCtrl 7064) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa";
-
 		};
 		case ("AIR") : {
 			if (typename A3C_WP_SPEED_TEMP == "STRING") then {A3C_WP_SPEED_TEMP = -1};
@@ -1098,35 +1405,23 @@ A3C_START_TABMODE = {
 			_stanceLand = "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
 			_stance2Col = [1,1,1,0.8]; //[0,0.3,0.6,0.8]; //  [0.5,0.5,0.5,0.8];
 			_smokeBool = false;
-			//if (A3C_MAP_CommandMode == "AIR") then {
-			//	_pn = (parsenumber (ctrlText (findDisplay _a3c_dsp displayCtrl 7066)));
-			//	if (_pn > 0) then {
-			//		A3C_SPACING_AIR = _pn;
-			//	};
 
-			//};
 			if ((A3C_TEMP_ACTION select 0) in ["GRENADE","SUPPRESSION"]) then {
 				A3C_TEMP_ACTION = ["NONE","NONE"];
 			};
-			//_spacing = str A3C_SPACING_AIR;
-			//if (A3C_SPACING_AIR < 10) then {
-			//	_spacing = "0" + _spacing;
-			//};
+
 			_pagebutton = "A3C_CORE\ui\pictures\icon_Menu_page_aircraft.paa";
 			_stance1TT = "Aircraft flying height";
 			_stance2TT = "MOVE";
 			_pageTT = "switch page to HIGH COMMAND";
 			if (hcShownBar) then {hcShowBar false};
 			{
-				(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true;
-			} foreach [7007,7022]; //7010,7066
+				(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow true;
+			} foreach [IDC_MAP_UFSB_WPCONDITION_IMG, IDC_MAP_UFSB_WPCONDITION_BTN];
 
 
 			if (A3C_MAP_CommandMode == "HC") then {
-				//(findDisplay _a3c_dsp displayCtrl 7008) ctrlSetText "^";
-				{
-					(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-				} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP) ctrlShow false;
 			};
 		};
 		case ("HC") : {
@@ -1147,7 +1442,11 @@ A3C_START_TABMODE = {
 			_ctrlBool = false;
 			{
 				(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-			} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout,7022,7066];
+			} foreach [
+				IDC_MAP_UFSB_TIMEOUT_POPUP,
+				IDC_MAP_UFSB_WPCONDITION_IMG, //~~ WHY ONLY IMAGE????
+				7066
+			];
 			if ((A3C_TEMP_ACTION select 0) in ["GRENADE","SUPPRESSION","LANDING"]) then {
 				A3C_TEMP_ACTION = ["NONE","NONE"];
 			};
@@ -1156,7 +1455,7 @@ A3C_START_TABMODE = {
 
 	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow _ctrlShowLowerBar} foreach _lowerBar;
 
-
+	//-- #WIP Note: this might just be better to apply to all squad bar controls??
 	for "_i" from 7007 to 7007 do { //-- timeout box 7708 removed ~~~~~~
 		(findDisplay _a3c_dsp displayCtrl _i) ctrlShow _ctrlBool;
 	};
@@ -1166,9 +1465,7 @@ A3C_START_TABMODE = {
 	for "_i" from 7062 to 7066 do { //-- cmode - spacing input
 		(findDisplay _a3c_dsp displayCtrl _i) ctrlShow _ctrlBool;
 	};
-	//for "_i" from 7085 to 7088 do { //-- slashses
-	//	(findDisplay _a3c_dsp displayCtrl _i) ctrlShow _ctrlBool;
-	//};
+
 
 	if !(_mode == "AIR") then {
 		_stanceHeight = switch (A3C_STANCE1_TEMP) do {
@@ -1186,36 +1483,36 @@ A3C_START_TABMODE = {
 		//A3C_STANCE1_TEMP = "UP";
 		//A3C_STANCE2_TEMP = "MIDDLE";
 	} else {
-		//~~ this is sloppy, fix this weird 'ctrlBool' thingy
+		
 		{
-			(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-		} foreach [7064,7065];
+			(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false;
+		} foreach [IDC_MAP_UFSB_WPACTION_IMG, IDC_MAP_UFSB_WPACTION_BTN];
 	};
-	[_mode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
+	[_mode] call A3C_UI_MAP_UFSB_RefreshControlBar;
 	
-	(findDisplay _a3c_dsp displayCtrl 7022) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa";
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa";
 	A3C_TEMP_CONDITION = ["NONE","NONE"];
-	((findDisplay _a3c_dsp) displayCtrl 7007) ctrlSetToolTip 'WP Condition: NONE (LMB to cycle through options)';
-	(findDisplay _a3c_dsp displayCtrl 7062) ctrlSetText "\a3\ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa";
-	(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_undo.paa";
-	(findDisplay _a3c_dsp displayCtrl 7069) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_cancel.paa";
-	(findDisplay _a3c_dsp displayCtrl 8000) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_holdcont_hold.paa";
-	(findDisplay _a3c_dsp displayCtrl 8002) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_HoldCont_Continue.paa";
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_BTN) ctrlSetToolTip 'WP Condition: NONE (LMB to cycle through options)';
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_COMBATMODE_IMG) ctrlSetText "\a3\ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa";
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_undo.paa";
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_CANCEL_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_cancel.paa";
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_HOLD_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_holdcont_hold.paa";
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_CONTINUE_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_HoldCont_Continue.paa";
 	
-	(findDisplay _a3c_dsp displayCtrl 7044) ctrlsettext _stanceHeight;
-	(findDisplay _a3c_dsp displayCtrl 7045) ctrlSetTooltip _stance1TT;
-	(findDisplay _a3c_dsp displayCtrl 7046) ctrlsettext _stanceLand;
-	(findDisplay _a3c_dsp displayCtrl 7046) ctrlSetTextColor _stance2Col;
-	(findDisplay _a3c_dsp displayCtrl 7047) ctrlSetTooltip _stance2TT;
-	(findDisplay _a3c_dsp displayCtrl 7062) ctrlSetTextColor [1,1,1,1];
-	(findDisplay _a3c_dsp displayCtrl 7064) ctrlShow _smokeBool;
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_IMG) ctrlsettext _stanceHeight;
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_TRAVEL_BTN) ctrlSetTooltip _stance1TT;
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlsettext _stanceLand;
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_IMG) ctrlSetTextColor _stance2Col;
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlSetTooltip _stance2TT;
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_COMBATMODE_IMG) ctrlSetTextColor [1,1,1,1];
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlShow _smokeBool;
 
 	(findDisplay _a3c_dsp displayCtrl 7067) ctrlsettext _pagebutton;
 	(findDisplay _a3c_dsp displayCtrl 7068) ctrlsetToolTip _pageTT;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout,7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT]; //-- hide rClick contextMenu, undo, small rClick-menu
-	(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow false;
-	(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,0.2];
-	(findDisplay _a3c_dsp displayCtrl 7048) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_UFSB_TIMEOUT_POPUP,7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT]; //-- hide rClick contextMenu, undo, small rClick-menu
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow false;
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,0.2];
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WP_SPEED_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
 
 	if (count A3C_SELECTED_UNITS > 0) then {
 		private _refItem = A3C_SELECTED_UNITS select 0;
@@ -1229,23 +1526,23 @@ A3C_START_TABMODE = {
 
 A3C_SWITCH_COMMAND_PAGE = {
 	private _a3c_dsp = 100020;
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	A3C_SELECTED_UNITS = [];
 	switch (A3C_MAP_CommandMode) do {
 		case ("INF") : {
-			["AIR"] call A3C_START_TABMODE;
+			["AIR"] call A3C_UI_MAP_ApplyMode;
 			A3C_MAP_CommandMode = "AIR";
-		};
+		};A3C_UI_MAP_UFSB_ApplyMode
 		case ("AIR") : {
 			A3C_BUTTONPAGE_TABLET = 0;
-			["HC"] call A3C_START_TABMODE;
+			["HC"] call A3C_UI_MAP_ApplyMode;
 			A3C_MAP_CommandMode = "HC";
-		};
+		};A3C_UI_MAP_UFSB_ApplyMode
 		case ("HC") : {
 			A3C_BUTTONPAGE_TABLET = 0;
-			["INF"] call A3C_START_TABMODE;
+			["INF"] call A3C_UI_MAP_ApplyMode;
 			A3C_MAP_CommandMode = "INF";
-		};
+		};A3C_UI_MAP_UFSB_ApplyMode
 	};
 };
 
@@ -1469,8 +1766,8 @@ A3C_SWITCHPAGE_TABLET = {
 		_a3c_dsp = IDD_RADIAL_MENU;
 	};
 	//ddddd
-	if !(isnull (findDisplay _a3c_dsp)) then {
-		{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	if !(isnull findDisplay _a3c_dsp) then {
+		{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	};
 	_groupCount =  if (A3C_MAP_CommandMode == "HIGHCOMMAN") then {count _hcAll} else {};
 	_groupCount = 0;
@@ -1513,7 +1810,7 @@ A3C_Btn_fnc_Cancel = {
 	if !(currentWeapon player == A3C_WeaponCurr) then {
 		player selectWeapon A3C_WeaponCurr;
 	};
-	//(findDisplay _a3c_dsp) closeDisplay 0;
+	//findDisplay _a3c_dsp closeDisplay 0;
 	if (_mode == 0) then {
 		[_a3c_dsp] call A3C_UI_MAP_FNC_CloseMapOverlay;
 	};
@@ -1545,36 +1842,36 @@ A3C_BTN_FNC_COND = {
 	if (_mode > 1) then {_mode = 1};
 	private ["_a3c_dsp","_goCode"];
 	private _a3c_dsp = 100020;
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	switch (A3C_TEMP_CONDITION select 0) do {
 		case ("NONE") : {
 			if (_mode ==  0) then {
 				A3C_TEMP_CONDITION = ["TIMEOUT",A3C_TIMEOUT_VAL]; //-- TIMEOUT
-				((findDisplay _a3c_dsp) displayCtrl 7022) ctrlSetText 'A3C_CORE\ui\pictures\icon_menu_condition_Timer.paa';
-				((findDisplay _a3c_dsp) displayCtrl 7007) ctrlSetToolTip 'WP Condition: TIMEOUT (LMB to cycle through options)';
-				((findDisplay _a3c_dsp) displayCtrl 7008) ctrlSetText '(';
-				{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow true} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_IMG) ctrlSetText 'A3C_CORE\ui\pictures\icon_menu_condition_Timer.paa';
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_BTN) ctrlSetToolTip 'WP Condition: TIMEOUT (LMB to cycle through options)';
+				(findDisplay _a3c_dsp displayCtrl 7008) ctrlSetText '(';
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP) ctrlShow true;
 			} else {
 				A3C_TEMP_CONDITION = ["GOCODE","D"];
-				((findDisplay _a3c_dsp) displayCtrl 7022) ctrlSetText 'A3C_CORE\ui\pictures\icon_menu_gocode_D.paa';
-				((findDisplay _a3c_dsp) displayCtrl 7007) ctrlSetToolTip 'WP Condition: GoCode D (LMB to cycle through options)';
-				//((findDisplay _a3c_dsp) displayCtrl 7008) ctrlsettext '^';
-				{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_IMG) ctrlSetText 'A3C_CORE\ui\pictures\icon_menu_gocode_D.paa';
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_BTN) ctrlSetToolTip 'WP Condition: GoCode D (LMB to cycle through options)';
+				//(findDisplay _a3c_dsp displayCtrl 7008) ctrlsettext '^';
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP) ctrlShow false;
 			};
 		};
 		case ("TIMEOUT") : {
 			if (_mode ==  0) then {
 				A3C_TEMP_CONDITION = ["GOCODE","A"];
-				((findDisplay _a3c_dsp) displayCtrl 7022) ctrlSetText 'A3C_CORE\ui\pictures\icon_menu_gocode_A.paa';
-				((findDisplay _a3c_dsp) displayCtrl 7007) ctrlSetToolTip 'WP Condition: GoCode A (LMB to cycle through options)';
-				//((findDisplay _a3c_dsp) displayCtrl 7008) ctrlsettext '^';
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_IMG) ctrlSetText 'A3C_CORE\ui\pictures\icon_menu_gocode_A.paa';
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_BTN) ctrlSetToolTip 'WP Condition: GoCode A (LMB to cycle through options)';
+				//(findDisplay _a3c_dsp displayCtrl 7008) ctrlsettext '^';
 			} else {
 				A3C_TEMP_CONDITION = ["NONE","NONE"];
-				((findDisplay _a3c_dsp) displayCtrl 7022) ctrlsettext 'A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa';
-				((findDisplay _a3c_dsp) displayCtrl 7007) ctrlSetToolTip 'WP Condition: NONE (LMB to cycle through options)';
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_IMG) ctrlsettext 'A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa';
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_BTN) ctrlSetToolTip 'WP Condition: NONE (LMB to cycle through options)';
 			};
-			{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
-			//((findDisplay _a3c_dsp) displayCtrl 7008) ctrlsettext '^';
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP) ctrlShow false;
+			//(findDisplay _a3c_dsp displayCtrl 7008) ctrlsettext '^';
 		};
 		case ("GOCODE") : {
 			private ["_goCode"];
@@ -1586,23 +1883,23 @@ A3C_BTN_FNC_COND = {
 				case ("C") : {if (_mode ==  0) then {["GOCODE","D"]} else {["GOCODE","B"]}};
 				case ("D") : {if (_mode ==  0) then {["NONE","NONE"]} else {["GOCODE","C"]}};
 			};
-			//((findDisplay _a3c_dsp) displayCtrl 7008) ctrlsettext '^'; // ~~ sloppy
-			{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
+			//(findDisplay _a3c_dsp displayCtrl 7008) ctrlsettext '^'; // ~~ sloppy
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP) ctrlShow false;
 			if (A3C_TEMP_CONDITION select 0 == "GOCODE") then {
 				private ["_img","_toolTip"];
 				_img = ('A3C_CORE\ui\pictures\icon_menu_gocode_' + (A3C_TEMP_CONDITION select 1) + '.paa');
 				_toolTip = ( 'WP Condition: GoCode ' + (A3C_TEMP_CONDITION select 1) + ' (LMB to cycle through options)' );
-				((findDisplay _a3c_dsp) displayCtrl 7022) ctrlSetText _img;
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_IMG) ctrlSetText _img;
 			} else {
 				if (_mode == 0) then {
-					((findDisplay _a3c_dsp) displayCtrl 7022) ctrlsettext 'A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa';
-					((findDisplay _a3c_dsp) displayCtrl 7007) ctrlSetToolTip 'WP Condition: NONE (LMB to cycle through options)';
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_IMG) ctrlsettext 'A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa';
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_BTN) ctrlSetToolTip 'WP Condition: NONE (LMB to cycle through options)';
 				} else {
 					A3C_TEMP_CONDITION = ["TIMEOUT",A3C_TIMEOUT_VAL]; //-- TIMEOUT
-					((findDisplay _a3c_dsp) displayCtrl 7022) ctrlSetText '\a3\ui_f\data\IGUI\RscTitles\MPProgress\timer_ca.paa';
-					((findDisplay _a3c_dsp) displayCtrl 7007) ctrlSetToolTip 'WP Condition: TIMEOUT (LMB to cycle through options)';
-					//((findDisplay _a3c_dsp) displayCtrl 7008) ctrlSetText '(';
-					{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow true} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_IMG) ctrlSetText '\a3\ui_f\data\IGUI\RscTitles\MPProgress\timer_ca.paa';
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_BTN) ctrlSetToolTip 'WP Condition: TIMEOUT (LMB to cycle through options)';
+					//(findDisplay _a3c_dsp displayCtrl 7008) ctrlSetText '(';
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP) ctrlShow true;
 				};
 			};
 
@@ -1622,7 +1919,7 @@ A3C_BTN_FNC_TEAMCOLOR = {
 	private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 	_CT_TREE tvSetCurSel [-1];
 
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	if !(_shift) then {A3C_SELECTED_UNITS = []};
 	//A3C_SELECTED_UNITS = [];
 	_unitNumber = 0;
@@ -1701,11 +1998,6 @@ A3C_BTN_FNC_TEAMCOLOR = {
 	if (_switch) then {
 		if (({(_x == (driver vehicle _x)) && {typeOf (vehicle _x) iskindOf "AIR"}} count A3C_SELECTED_UNITS) > ((count A3C_SELECTED_UNITS) / 2)) then {
 			A3C_MAP_CommandMode = "AIR";
-			//private _spacing = str A3C_SPACING_AIR;
-			//if (A3C_SPACING_AIR < 10) then {
-			//	_spacing = "0" + _spacing;
-			//};
-			//(findDisplay _a3c_dsp displayCtrl 7066) ctrlSetText _spacing;
 			{
 				if !(typeOf (vehicle _x) iskindOf "AIR") then {
 					A3C_SELECTED_UNITS = A3C_SELECTED_UNITS - [_x];
@@ -1718,102 +2010,15 @@ A3C_BTN_FNC_TEAMCOLOR = {
 				};
 			} foreach A3C_SELECTED_UNITS;
 			A3C_MAP_CommandMode = "INF";
-			//private _spacing = str A3C_SPACING_INF;
-			//if (A3C_SPACING_INF < 10) then {
-			//	_spacing = "0" + _spacing;
-			//};
-			//(findDisplay _a3c_dsp displayCtrl 7066) ctrlSetText _spacing;
+
 		};
 	};
 	A3C_SPLIT_UNITS = A3C_SELECTED_UNITS;
-	[A3C_MAP_CommandMode] call A3C_START_TABMODE;
+	[A3C_MAP_CommandMode] call A3C_UI_MAP_ApplyMode;
 	[] call A3C_UNITSEL_REFRESH_UI;
 };
 
-A3C_STANCE_BTN_1 = {
-	params ["_mode"];
-	if (_mode < 0) then {_mode = 0};
-	if (_mode > 1) then {_mode = 1};
-	private _a3c_dsp = 100020;
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
-	if (A3C_MAP_CommandMode in ["INF","HC"]) then {
-		switch (A3C_STANCE1_TEMP) do {
-			case ("DOWN") : {
-				if (_mode == 0) then {
-					//-- switch to STAND
-					A3C_STANCE1_TEMP = "UP";
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
-				} else {
-					//-- switch to CROUCH
-					A3C_STANCE1_TEMP = "MIDDLE";
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
-				};
-			};
-			case "MIDDLE" : {
-				if (_mode == 0) then {
-					//-- switch to PRONE
-					A3C_STANCE1_TEMP = "DOWN";
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
-				} else {
-					//-- switch to STAND
-					A3C_STANCE1_TEMP = "UP";
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
-				};
-			};
-			case "UP" : {
-				if (_mode == 0) then {
-					//-- switch to CROUCH
-					A3C_STANCE1_TEMP = "MIDDLE";
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
-				} else {
-					//-- switch to PRONE
-					A3C_STANCE1_TEMP = "DOWN";
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
-				};
-			};
-		};
-	} else {
-		switch (A3C_HELIHEIGHT) do {
-			case (500) : {
-				if (_mode == 0) then {
-					A3C_HELIHEIGHT = 200; // set to high
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_2.paa";
-				} else {
-					A3C_HELIHEIGHT = 5; // set to lowest
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_4.paa";
-				};
-			};
-			case (200) : {
-				if (_mode == 0) then {
-					A3C_HELIHEIGHT = 25; // set to med
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_3.paa";
-				} else {
-					A3C_HELIHEIGHT = 500; // set to highest
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_1.paa";
-				};
-			};
-			case (25) : {
-				if (_mode == 0) then {
-					A3C_HELIHEIGHT = 5; // set to lowest
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_4.paa";
-				} else {
-					A3C_HELIHEIGHT = 200; // set to high
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_2.paa";
-				};
-			};
-			case (5) : {
-				if (_mode == 0) then {
-					A3C_HELIHEIGHT = 500; // set to highest
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_1.paa";
-				} else {
-					A3C_HELIHEIGHT = 25; // set to med
-					((findDisplay _a3c_dsp) displayCtrl 7044) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_3.paa";
-				};
-			};
-		};
-	};
 
-};
 
 
 
@@ -1847,13 +2052,13 @@ A3C_getActionsArray = {
 A3C_UI_MAP_SPAWN_TIMEOUTBOX = {
 	params ["_mode"];
 	private _a3c_dsp = 100020;
-	private _timeOutBox = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout;
+	private _timeOutBox = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP;
 	
 	if (_mode == "OPEN") then {
 		private _ctrlFrameOriginalY = if (_a3c_dsp == 100020) then {A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_Y} else {0.598968 * safezoneH + safezoneY};
 		_timeOutBox ctrlSetPosition
 		[
-			(ctrlPosition (findDisplay _a3c_dsp displayCtrl 7022)) select 0,
+			(ctrlPosition (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_IMG)) select 0,
 			_ctrlFrameOriginalY - (1 * A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H),
 			A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_W,
 			A3C_MAP_OVERLAY_GAMEUI_SUBSEL_BUTTON_H
@@ -1872,7 +2077,7 @@ A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP = {
 	params ["_originButton","_actionButton","_subSet","_doToggleCntrls"];
 	private _a3c_dsp = 100020;
 
-	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout) ctrlShow false;
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP) ctrlShow false;
 
 	//-- re-assign STANCE2 to ACTION if on AIRCRAFT PAGE
 	if (A3C_MAP_CommandMode == "AIR") then {
@@ -2414,12 +2619,9 @@ A3C_fnc_SUBSET = {
 	_bg2 = findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_MAP_SUB_BG_2;
 
 	if (_action == "SQ_COND_TIMEOUT") then {
-		//((findDisplay _a3c_dsp) displayCtrl 7008) ctrlSetText '(';
-		//{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow true} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
 		["OPEN"] call A3C_UI_MAP_SPAWN_TIMEOUTBOX;
 	} else {
-		//((findDisplay _a3c_dsp) displayCtrl 7008) ctrlsettext '^';
-		{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout];
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP) ctrlShow false;
 	};
 
 
@@ -2459,8 +2661,8 @@ A3C_fnc_SUBSET = {
 
 
 	if (_action in A3C_AI_GREN_ARRAY) exitWith {
-		_originButtonImage = findDisplay _a3c_dsp displayCtrl 7064;
-		_originButtonClicker = findDisplay _a3c_dsp displayCtrl 7065;
+		_originButtonImage = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG;
+		_originButtonClicker = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_BTN;
 		_originButtonImage ctrlSetText (gettext (configfile >> "CfgMagazines" >> _action >> "picture"));
 		_originButtonClicker ctrlSetToolTip _toolTip;
 		//systemchat str [_action];
@@ -2567,8 +2769,8 @@ A3C_fnc_SUBSET = {
 			_originButtonClicker ctrlSetToolTip "Suppress Area || Use LMB to open settings or mousewheel to cycle";
 			A3C_TEMP_ACTION = ["SUPPRESSION",""];
 			if (A3C_TEMP_CONDITION select 0 == "NONE") then {
-				(findDisplay _a3c_dsp displayCtrl 7022) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_D.paa";
-				(findDisplay _a3c_dsp displayCtrl 7007) ctrlSetToolTip "WP Condition: GoCode D || Use LMB to open selection or mousewheel to cycle";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_D.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_BTN) ctrlSetToolTip "WP Condition: GoCode D || Use LMB to open selection or mousewheel to cycle";
 				A3C_TEMP_CONDITION = ["GOCODE","D"];
 			};
 		};
@@ -2627,7 +2829,7 @@ A3C_fnc_SUBSET = {
 		};
 		case ("SQ_STANCE_2_CROUCH") : {
 			_originButtonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
-			(findDisplay _a3c_dsp displayCtrl 7047) ctrlSetToolTip "EndStance: CROUCH || Use LMB to open selection or mousewheel to cycle";
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_STANCE_ARRIVAL_BTN) ctrlSetToolTip "EndStance: CROUCH || Use LMB to open selection or mousewheel to cycle";
 			A3C_STANCE2_TEMP = "MIDDLE";
 		};
 		case ("SQ_STANCE_2_PRONE") : {
@@ -2671,188 +2873,20 @@ A3C_fnc_SUBSET = {
 
 
 
-A3C_STANCE_BTN_2 = {
-	params ["_mode"];
-	if (_mode < 0) then {_mode = 0};
-	if (_mode > 1) then {_mode = 1};
-	private _a3c_dsp = 100020;
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
-	if (A3C_MAP_CommandMode in ["INF","HC"]) then {
-		switch (A3C_STANCE2_TEMP) do {
-			case ("DOWN") : {
-				if (_mode == 0) then {
-					A3C_STANCE2_TEMP = "UP";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "STAND";
-				} else {
-					A3C_STANCE2_TEMP = "MIDDLE";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "CROUCH";
-				};
-			};
-			case "MIDDLE" : {
-				if (_mode == 0) then {
-					A3C_STANCE2_TEMP = "DOWN";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "PRONE";
-				} else {
-					A3C_STANCE2_TEMP = "UP";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "STAND";
-				};
-			};
-			case "UP" : {
-				if (_mode == 0) then {
-					A3C_STANCE2_TEMP = "MIDDLE";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "CROUCH";
-				} else {
-					A3C_STANCE2_TEMP = "DOWN";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "PRONE";
-				};
-			};
-		};
-		((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,0.6];
-	} else {
-		switch (A3C_TEMP_ACTION select 1) do {
-			case ("NONE") : {
-				if (_mode == 0) then {
-					//-- set to PICKUP
-					A3C_TEMP_ACTION = ["LANDING","PICKUP"];
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "PICKUP";
-				} else {
-					//-- set to LAND FINAL
-					A3C_TEMP_ACTION = ["LANDING","LANDFINAL"];
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "LAND";
-				};
-			};
-			case ("PICKUP") : {
-				if (_mode == 0) then {
-					//-- set to DROPOFF
-					A3C_TEMP_ACTION = ["LANDING","DROPOFF"];
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "DROPOFF";
-				} else {
-					//-- set to NONE
-					A3C_TEMP_ACTION = ["LANDING","NONE"];
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_fnc_setOpacity); //[0.5,0.5,0.5,0.6];
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "MOVE";
-				};
-			};
-			case ("DROPOFF") : {
-				if (_mode == 0) then {
-					if (A3C_IsRappel) then {
-						//-- set to RAPPELL
-						A3C_TEMP_ACTION = ["LANDING","RAPPEL"];
-						((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
-						((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-						((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "RAPPEL";
-					} else {
-						//-- set to SLINGLOAD
-						A3C_TEMP_ACTION = ["SLINGLOAD","SLINGLOAD"];
-						((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_SlingUni.paa";
-						((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-						((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "Sling Load/Drop";
-					};
-				} else {
-					//-- set to PICKUP
-					A3C_TEMP_ACTION = ["LANDING","PICKUP"];
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "PICKUP";
-				};
-			};
-			case ("RAPPEL") : {
-				if (_mode == 0) then {
-					//-- set to PARADROP
-					A3C_TEMP_ACTION = ["PARADROP","PARADROP"];
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "Para-Drop";
-				} else {
-					//-- set to DROPOFF
-					A3C_TEMP_ACTION = ["LANDING","DROPOFF"];
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "DROPOFF";
-				};
-			};
-			case ("PARADROP") : {
-				if (_mode == 0) then {
-					//-- set to SLINGLOAD
-					A3C_TEMP_ACTION = ["SLINGLOAD","SLINGLOAD"];
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_SlingUni.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "Sling Load/Drop";
-				} else {
-					if (A3C_IsRappel) then {
-						//-- set to RAPPELL
-						A3C_TEMP_ACTION = ["LANDING","RAPPEL"];
-						((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
-						((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-						((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "RAPPEL";
-					} else {
-						//-- set to DROPOFF
-						A3C_TEMP_ACTION = ["LANDING","DROPOFF"];
-						((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
-						((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-						((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "DROPOFF";
-					};
-				};
-			};
-			case ("SLINGLOAD") : {
-				if (_mode == 0) then {
-					//-- set to LAND FINAL
-					A3C_TEMP_ACTION = ["LANDING","LANDFINAL"];
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "LAND";
-				} else {
-					//-- set to PARADROP
-					A3C_TEMP_ACTION = ["PARADROP","PARADROP"];
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "Para-Drop";
-				};
-			};
-			case ("LANDFINAL") : {
-				if (_mode == 0) then {
-					//-- set to NONE
-					A3C_TEMP_ACTION = ["LANDING","NONE"];
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity); //[0.5,0.5,0.5,0.6];
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "MOVE";
-				} else {
-					//-- set to SLINGLOAD
-					A3C_TEMP_ACTION = ["SLINGLOAD","SLINGLOAD"];
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_SlingUni.paa";
-					((findDisplay _a3c_dsp) displayCtrl 7046) ctrlSetTextColor [1,1,1,1];
-					((findDisplay _a3c_dsp) displayCtrl 7047) ctrlsetToolTip "Sling Load/Drop";
-				};
-			};
-		};
-	};
-};
+
 A3C_BUTTON_CMODE = {
 	private _a3c_dsp = 100020;
 	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	switch (A3C_CMODE_TEMP) do {
 		case (0) : {
 			A3C_CMODE_TEMP = 1;
-			(findDisplay _a3c_dsp displayCtrl 7062) ctrlSetTextColor [0.52,0.78,0.97,0.6];
-			(findDisplay _a3c_dsp displayCtrl 7063) ctrlSetToolTip "WP Combat-Mode: Disengage";
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_COMBATMODE_IMG) ctrlSetTextColor [0.52,0.78,0.97,0.6];
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_COMBATMODE_BTN) ctrlSetToolTip "WP Combat-Mode: Disengage";
 		};
 		case (1) : {
 			A3C_CMODE_TEMP = 0;
-			(findDisplay _a3c_dsp displayCtrl 7062) ctrlSetTextColor [1,1,1,1];
-			(findDisplay _a3c_dsp displayCtrl 7063) ctrlSetToolTip "WP Combat-Mode: Default/Engage";
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_COMBATMODE_IMG) ctrlSetTextColor [1,1,1,1];
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_COMBATMODE_BTN) ctrlSetToolTip "WP Combat-Mode: Default/Engage";
 		};
 	};
 };
@@ -2869,13 +2903,13 @@ A3C_BUTTON_wpFiringMode = {
 	if (_mode > 1) then {_mode = 1};
 	private _a3c_dsp = 100020;
 	if ((count A3C_SELECTED_UNITS == 0)) exitWith {};
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	private _actions = [];
 	//if !(A3C_BUTTON_SHIFT) then {
 
 
 
-		(findDisplay _a3c_dsp displayCtrl 7064) ctrlSetTextColor [1,1,1,1];
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlSetTextColor [1,1,1,1];
 		_actions = [A3C_SELECTED_UNITS] call A3C_getActionsArray;
 
 		if !(_doExecute) exitWith {
@@ -2904,8 +2938,8 @@ A3C_BUTTON_wpFiringMode = {
 		switch (_sel) do {
 			case ("NONE") : {
 				//-- switches to OFF
-				(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-				(findDisplay _a3c_dsp displayCtrl 7065) ctrlSetToolTip "No Action || Use LMB to open settings or mousewheel to cycle";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_BTN) ctrlSetToolTip "No Action || Use LMB to open settings or mousewheel to cycle";
 				A3C_TEMP_ACTION = ["NONE","NONE"]; //~~ WHEN MORE ACTIONS ARE IN PLACE, ENGAGE THIS!
 			};
 			case ("GRENADE") : {
@@ -2916,32 +2950,32 @@ A3C_BUTTON_wpFiringMode = {
 			case ("SUPPRESSION") : {
 				//-- switches to SUPRESSION
 				A3C_TEMP_ACTION = ["SUPPRESSION",""];
-				(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_suppression.paa";
-				(findDisplay _a3c_dsp displayCtrl 7064) ctrlSetTextColor [1,0,0,1];
-				(findDisplay _a3c_dsp displayCtrl 7065) ctrlSetToolTip "Suppress Area || Use LMB to open settings or mousewheel to cycle";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_suppression.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlSetTextColor [1,0,0,1];
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_BTN) ctrlSetToolTip "Suppress Area || Use LMB to open settings or mousewheel to cycle";
 			};
 			case ("CARGO_IN") : {
 				//-- switches to Cargo In
-				(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
-				(findDisplay _a3c_dsp displayCtrl 7065) ctrlSetToolTip "Load Vehicle || Use LMB to open settings or mousewheel to cycle";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_BTN) ctrlSetToolTip "Load Vehicle || Use LMB to open settings or mousewheel to cycle";
 				A3C_TEMP_ACTION = ["CARGO_IN","PICKUP"];
 			};
 			case ("CARGO_OUT") : {
 				//-- switches to Cargo Out
-				(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
-				(findDisplay _a3c_dsp displayCtrl 7065) ctrlSetToolTip "Unload Vehicle || Use LMB to open settings or mousewheel to cycle";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_BTN) ctrlSetToolTip "Unload Vehicle || Use LMB to open settings or mousewheel to cycle";
 				A3C_TEMP_ACTION = ["CARGO_OUT",""];
 			};
 			case ("CTRL_DET") : {
 				//-- switches to Controlled Detonation
-				(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettext "\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\cargoPut_ca.paa";
-				(findDisplay _a3c_dsp displayCtrl 7065) ctrlSetToolTip "Plant Explosive (Trigger via Radial) || Use LMB to open settings or mousewheel to cycle";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlsettext "\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\cargoPut_ca.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_BTN) ctrlSetToolTip "Plant Explosive (Trigger via Radial) || Use LMB to open settings or mousewheel to cycle";
 				A3C_TEMP_ACTION = ["CTRL_DET",[objNull,""]];
 			};
 			case ("STATIC") : {
 				//-- switches to Static Weapon (Smart Detect)
-				(findDisplay _a3c_dsp displayCtrl 7064) ctrlsettext "\A3\Static_f_gamma\data\ui\gear_StaticTurret_MG_high_CA.paa";
-				(findDisplay _a3c_dsp displayCtrl 7065) ctrlSetToolTip "Deploy or Pack Static Weapon || Use LMB to open settings or mousewheel to cycle";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlsettext "\A3\Static_f_gamma\data\ui\gear_StaticTurret_MG_high_CA.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_BTN) ctrlSetToolTip "Deploy or Pack Static Weapon || Use LMB to open settings or mousewheel to cycle";
 				A3C_TEMP_ACTION = ["STATIC",[]];
 			};
 		};
@@ -2957,13 +2991,13 @@ A3C_BUTTON_wpFiringMode = {
 
 A3C_SPEED_BTN = {
 	private _a3c_dsp = 100020;
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	if (A3C_WP_SPEED_TEMP == (-1) ) then {
 		A3C_WP_SPEED_TEMP = 2;
-		((findDisplay _a3c_dsp) displayCtrl 7048) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WP_SPEED_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
 	} else {
 		A3C_WP_SPEED_TEMP = -1;
-		((findDisplay _a3c_dsp) displayCtrl 7048) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WP_SPEED_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
 	};
 
 
@@ -2974,16 +3008,16 @@ A3C_BUTTON_FORMMODE = {
 	if (_mode < 0) then {_mode = 0};
 	if (_mode > 1) then {_mode = 1};
 	private _a3c_dsp = 100020;
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	switch (A3C_FORMMODE_TEMP) do {
 		case (0) : {};
 		case (1) : {
 			if (_mode == 0) then {
 				A3C_FORMMODE_TEMP = 2;
-				((findDisplay _a3c_dsp) displayCtrl 7050) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Right.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPFORMATION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Right.paa";
 			} else {
 				A3C_FORMMODE_TEMP = 5;
-				((findDisplay _a3c_dsp) displayCtrl 7050) ctrlsettext "\a3\ui_f\data\Map\Markers\Military\circle_ca.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPFORMATION_IMG) ctrlsettext "\a3\ui_f\data\Map\Markers\Military\circle_ca.paa";
 				A3C_SPLIT_UNITS = [];
 			};
 			A3C_SPLIT_UNITS = [];
@@ -2991,42 +3025,42 @@ A3C_BUTTON_FORMMODE = {
 		case (2) : {
 			if (_mode == 0) then {
 				A3C_FORMMODE_TEMP = 3;
-				((findDisplay _a3c_dsp) displayCtrl 7050) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Left.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPFORMATION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Left.paa";
 			} else {
 				A3C_FORMMODE_TEMP = 1;
-				((findDisplay _a3c_dsp) displayCtrl 7050) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Straight.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPFORMATION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Straight.paa";
 			};
 			A3C_SPLIT_UNITS = [];
 		};
 		case (3) : {
 			if (_mode == 0) then {
 				A3C_FORMMODE_TEMP = 4;
-				((findDisplay _a3c_dsp) displayCtrl 7050) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_split.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPFORMATION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_split.paa";
 				A3C_SPLIT_UNITS = A3C_SELECTED_UNITS;
 			} else {
 				A3C_FORMMODE_TEMP = 2;
-				((findDisplay _a3c_dsp) displayCtrl 7050) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Right.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPFORMATION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Right.paa";
 				A3C_SPLIT_UNITS = [];
 			};
 		};
 		case (4) : {
 			if (_mode == 0) then {
 				A3C_FORMMODE_TEMP = 5;
-				((findDisplay _a3c_dsp) displayCtrl 7050) ctrlsettext "\a3\ui_f\data\Map\Markers\Military\circle_ca.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPFORMATION_IMG) ctrlsettext "\a3\ui_f\data\Map\Markers\Military\circle_ca.paa";
 			} else {
 				A3C_FORMMODE_TEMP = 3;
-				((findDisplay _a3c_dsp) displayCtrl 7050) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Left.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPFORMATION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Left.paa";
 			};
 			A3C_SPLIT_UNITS = [];
 		};
 		case (5) : {
 			if (_mode == 0) then {
 				A3C_FORMMODE_TEMP = 1;
-				((findDisplay _a3c_dsp) displayCtrl 7050) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Straight.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPFORMATION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_Straight.paa";
 				A3C_SPLIT_UNITS = [];
 			} else {
 				A3C_FORMMODE_TEMP = 4;
-				((findDisplay _a3c_dsp) displayCtrl 7050) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_split.paa";
+				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPFORMATION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_formDir_split.paa";
 				A3C_SPLIT_UNITS = A3C_SELECTED_UNITS;
 			};
 		};
@@ -3061,7 +3095,7 @@ A3C_BTN_FNC_NOSHIFT = { //-- currently unnused?
 								case ('INF') : {
 									if ( (%2 == driver vehicle %2) OR (isNull (driver vehicle %2)) ) then {
 										if !((vehicle %2) isKindOf 'AIR') then {
-											((findDisplay _a3c_dsp) displayCtrl (7024 + %1) ) ctrlSetTextColor [1,1,1,0.5];
+											(findDisplay _a3c_dsp displayCtrl (7024 + %1) ) ctrlSetTextColor [1,1,1,0.5];
 											A3C_UNIT_%1_BV = 0;
 										};
 									};
@@ -3069,7 +3103,7 @@ A3C_BTN_FNC_NOSHIFT = { //-- currently unnused?
 								case ('AIR') : {
 									if ( (%2 == driver vehicle %2) OR (isNull (driver vehicle %2)) ) then {
 										if ((vehicle %2) isKindOf 'AIR') then {
-											((findDisplay _a3c_dsp) displayCtrl (7024 + %1) ) ctrlSetTextColor [1,1,1,0.5];
+											(findDisplay _a3c_dsp displayCtrl (7024 + %1) ) ctrlSetTextColor [1,1,1,0.5];
 											A3C_UNIT_%1_BV = 0;
 										};
 									};
@@ -3092,7 +3126,7 @@ A3C_BTN_HC = {
 	_mode = _this select 0;
 	_groups = if ((count _this) > 1) then {_this select 1} else {A3C_HC_getAllGroups_Player_Current };
 	private _a3c_dsp = 100020;
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	_unit = objnull;
 	//~~ below is not bulletproof! what if AICOmmand, but not synced to module
 	private _isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
@@ -3117,7 +3151,7 @@ A3C_BTN_HC = {
 		if ( ((side _group) getFriend (side player)) < 0.6) then {
 			A3C_TRACKER_ENEMYGROUPS pushback _group;
 		};
-		while {!(isnull (finddisplay _a3c_dsp))} do {
+		while {!(isnull findDisplay _a3c_dsp)} do {
 			if ({alive _x} count units _group == 0) exitWith {deletemarkerLocal _marker};
 			if ((side (leader _group)) == (side player)) then {
 				_marker setMarkerPosLocal (position (leader _group));
@@ -3286,9 +3320,9 @@ A3C_BTN_HC = {
 
 		if (A3C_MAP_CommandMode in ["INF","AIR"]) then {
 			if ((count units group player) == 1) then {
-				["HC"] call A3C_START_TABMODE;
+				["HC"] call A3C_UI_MAP_ApplyMode;
 				A3C_MAP_CommandMode = "HC";
-			};
+			};A3C_UI_MAP_UFSB_ApplyMode
 		};
 
 		A3C_SELECTED_UNITS = [];
@@ -3311,9 +3345,9 @@ A3C_BTN_HC = {
 
 	if (A3C_MAP_CommandMode == "HC") then {
 		if ((count units group player) == 1) then {
-			["HC"] call A3C_START_TABMODE;
+			["HC"] call A3C_UI_MAP_ApplyMode;
 			A3C_MAP_CommandMode = "HC";
-		};
+		};A3C_UI_MAP_UFSB_ApplyMode
 	};
 	A3C_BOOL_MAP_MD = false;
 	A3C_BOOL_MAP_MU = false;
@@ -3390,7 +3424,7 @@ A3C_HC_getPhonetic = {
 A3C_UNDO = {
 	private ["_syncData"];
 	private _a3c_dsp = 100020;
-	{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
 	_waypoint = A3C_WAYPOINTS_TEMP select ((count A3C_WAYPOINTS_TEMP) -1);
 	_unitNumber = 0;
 	_UndoData = (A3C_USERACTION select ((count A3C_USERACTION) -1));
@@ -3456,13 +3490,11 @@ A3C_UNDO = {
 	A3C_USERACTION = A3C_USERACTION - [_undoData];
 	A3C_USERACTION_ID = (A3C_USERACTION_ID - 1);
 	if (count A3C_WAYPOINTS_TEMP > 0) then {
-		//{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow true} foreach [7041,7092];
-		(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow true;
-		(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,1];
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow true;
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,1];
 	} else {
-		//{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7041,7092];
-		(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow false;
-		(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor [1,1,1,0.2];
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow false;
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor [1,1,1,0.2];
 	};
 	[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 };
@@ -3560,7 +3592,7 @@ A3C_SET_ORDER_WIP = {
 				_units = [(A3C_SPLIT_UNITS select 0)];
 				_btn = _units call A3C_GET_UNITBUTTON;
 				if !(_btn == 0) then {
-					((findDisplay _a3c_dsp) displayCtrl _btn ) ctrlSetTextColor [1,0.63,0,1];
+					(findDisplay _a3c_dsp displayCtrl _btn ) ctrlSetTextColor [1,0.63,0,1];
 				};
 				A3C_SNAP_MAP_BOOL = false;
 
@@ -3616,7 +3648,7 @@ A3C_SET_ORDER_WIP = {
 				A3C_WAYPOINTS_TEMP = A3C_WAYPOINTS_TEMP + [[[(A3C_SPLIT_UNITS select 0)],A3C_TEMP_WP_ID_MAIN,A3C_TEMP_WP_ID_SUB,A3C_FORMMODE_TEMP]];
 				_btn = [(A3C_SPLIT_UNITS select 0)] call A3C_GET_UNITBUTTON;
 				if !(_btn == 0) then {
-					((findDisplay _a3c_dsp) displayCtrl _btn ) ctrlSetTextColor [0.21,0.63,0,1];
+					(findDisplay _a3c_dsp displayCtrl _btn ) ctrlSetTextColor [0.21,0.63,0,1];
 				};
 			} else {
 				if (A3C_FORMMODE_TEMP == 5) then {
@@ -3633,8 +3665,8 @@ A3C_SET_ORDER_WIP = {
 
 	switch (A3C_TEMP_CONDITION select 0) do {
 		case ("TIMEOUT") : {
-			A3C_TEMP_CONDITION set [1,(parsenumber (ctrlText (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout)))];
-			A3C_TIMEOUT_VAL = (parsenumber (ctrlText (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout)));
+			A3C_TEMP_CONDITION set [1,(parsenumber (ctrlText (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP)))];
+			A3C_TIMEOUT_VAL = (parsenumber (ctrlText (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP)));
 		};
 	};
 
@@ -3753,7 +3785,7 @@ A3C_SET_ORDER_WIP = {
 		];
 
 		if !(_x in A3C_ORDER_UNITS) then {A3C_ORDER_UNITS = A3C_ORDER_UNITS + [_x]};
-		A3C_DIAG_SPACING = (parsenumber (ctrlText (findDisplay _a3c_dsp displayCtrl 7066)));
+		A3C_DIAG_SPACING = (parsenumber (ctrlText (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_SPACING)));
 	} foreach _units;
 	//-- replace correct lookingDir marker
 	if (_mode == 1) then {
@@ -3789,7 +3821,7 @@ A3C_SET_ORDER_WIP = {
 				_x setvariable ["A3C_PLOT_TEMP",_switchData,true];
 			} foreach _units;
 		};
-		[A3C_MAP_CommandMode] call A3C_UI_MAP_REFRESH_BARCONTROLS;
+		[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_RefreshControlBar;
 	} else {
 		[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
 	};
@@ -3810,9 +3842,9 @@ A3C_Btn_fnc_Execute = {
 	A3C_USERACTION = [];
 	A3C_USERACTION_ID = 0;
 	private _a3c_dsp = 100020;
-	//{((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false} foreach [7041,7092];
-	(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow false;
-	(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,0.2];
+
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow false;
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,0.2];
 	{
 		private ["_data"];
 		_u = _x;
@@ -3831,10 +3863,6 @@ A3C_Btn_fnc_Execute = {
 			_x setvariable ["A3C_PLOT_TEMP",[],true];
 		};
 	} foreach _addressedUnits;
-	//{
-	//	_x setvariable ["A3C_PLOT_TEMP",[],true];
-	//} foreach A3C_SELECTED_UNITS;
-
 };
 
 
@@ -3873,55 +3901,55 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 					_return  = true;
 					if (_mode == "INF") then {
 						switch (_wpStances select 0) do {
-							case "DOWN" : {((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_prone.paa";};
-							case "MIDDLE" : {((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";};
-							case "UP" : {((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";};
+							case "DOWN" : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_prone.paa";};
+							case "MIDDLE" : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";};
+							case "UP" : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";};
 						};
 						switch (_wpStances select 1) do {
-							case "DOWN" : {((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_prone.paa";};
-							case "MIDDLE" : {((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";};
-							case "UP" : {((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";};
+							case "DOWN" : {(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_prone.paa";};
+							case "MIDDLE" : {(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";};
+							case "UP" : {(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";};
 						};
 
 					};
 					if (_mode == "HELI") then {
 						switch (_wpFlyInHeight) do {
-							case (200) : {((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_1.paa";};
-							case (75) : {((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_2.paa";};
-							case (25) : {((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_3.paa";};
-							case (5) : {((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_4.paa";};
+							case (200) : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_1.paa";};
+							case (75) : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_2.paa";};
+							case (25) : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_3.paa";};
+							case (5) : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_4.paa";};
 						};
 						switch (_wpAction select 1) do {
 							case "NONE" : {
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity);
+								(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+								(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity);
 							};
 							case "PICKUP" : {
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+								(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
+								(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 							};
 							case "DROPOFF" : {
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+								(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
+								(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 							};
 							case "RAPPEL" :{
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+								(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
+								(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 							};
 							case "LANDFINAL" : {
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+								(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
+								(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 							};
 							case "PARADROP" : {
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
-								((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+								(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
+								(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 							};
 						};
 					};
 					if (_wpSpeed == 2) then {
-						((findDisplay _a3c_dsp) displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
+						(findDisplay _a3c_dsp displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
 					} else {
-						((findDisplay _a3c_dsp) displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
+						(findDisplay _a3c_dsp displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
 					};
 				};
 			} foreach _data;
@@ -3942,11 +3970,11 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 
 
 	A3C_MARKERTOSWITCH = _marker;
-	lbClear ((findDisplay _a3c_dsp) displayCtrl 709112);
+	lbClear (findDisplay _a3c_dsp displayCtrl 709112);
 	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlSetPosition [_sx, _sy];
 	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlCommit 0;
 	if (_mode == "HELI") then {
-		((findDisplay _a3c_dsp) displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow true;
+		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow true;
 		A3C_LB_MODE = 0;
 		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlSetPosition [_sx, _sy];
 		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlCommit 0;
@@ -3985,8 +4013,8 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 		if ((count _units) > 0) then {
 			A3C_GCUNITS = _units;
 			A3C_MARKERTOSWITCH = _marker;
-			lbClear ((findDisplay _a3c_dsp) displayCtrl 709112);
-			((findDisplay _a3c_dsp) displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow true;
+			lbClear (findDisplay _a3c_dsp displayCtrl 709112);
+			(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow true;
 			A3C_LB_MODE = 2;
 			(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlSetPosition [_sx, _sy];
 			(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlCommit 0;
@@ -4014,7 +4042,7 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 			
 		};
 	};
-	lbClear ((findDisplay _a3c_dsp) displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT);
+	lbClear (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT);
 	if ((count _units) == 1) then {
 		[findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT, "NONE"] call A3C_addLbEntry;
 		_data =  (_units select 0) getvariable A3C_CHECKVAR;
@@ -4115,31 +4143,31 @@ A3C_CONTEXTBUTTON = {
 						case ("SPEED") : {
 							if (_wpSpeed == -1) then {
 								_x set [8,2];
-								((findDisplay _a3c_dsp) displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
+								(findDisplay _a3c_dsp displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
 							} else {
 								_x set [8,-1];
-								((findDisplay _a3c_dsp) displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
+								(findDisplay _a3c_dsp displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
 							};
 						};
 						case ("STANCE1") : {
 							switch (_wpStances select 0) do {
 								case ("DOWN") : {
 									(_x select 4) set [0,"UP"];
-									((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
+									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											_unit SetUnitPos "UP";
 									};
 								};
 								case ("MIDDLE") : {
 									(_x select 4) set [0,"DOWN"];
-									((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
+									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											_unit SetUnitPos "DOWN";
 									};
 								};
 								case ("UP") : {
 									(_x select 4) set [0,"MIDDLE"];
-									((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
+									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											_unit SetUnitPos "MIDDLE";
 									};
@@ -4150,15 +4178,15 @@ A3C_CONTEXTBUTTON = {
 							switch (_wpStances select 1) do {
 								case ("DOWN") : {
 									(_x select 4) set [1,"UP"];
-									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
+									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
 									};
 								case ("MIDDLE") : {
 									(_x select 4) set [1,"DOWN"];
-									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
+									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
 								};
 								case ("UP") : {
 									(_x select 4) set [1,"MIDDLE"];
-									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
+									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
 								};
 							};
 						};
@@ -4166,28 +4194,28 @@ A3C_CONTEXTBUTTON = {
 							switch (_wpFlyInHeight) do {
 								case (200) : {
 									_x set [9,75];
-									((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_2.paa";
+									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_2.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											(vehicle _unit) flyInHeight 75;
 									};
 								};
 								case (75) : {
 									_x set [9,25];
-									((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_3.paa";
+									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_3.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											(vehicle _unit) flyInHeight 25;
 									};
 								};
 								case (25) : {
 									_x set [9,5];
-									((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_4.paa";
+									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_4.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											(vehicle _unit) flyInHeight 5;
 									};
 								};
 								case (5) : {
 									_x set [9,200];
-									((findDisplay _a3c_dsp) displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_1.paa";
+									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_1.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											(vehicle _unit) flyInHeight 200;
 									};
@@ -4199,16 +4227,16 @@ A3C_CONTEXTBUTTON = {
 							switch (_wpAction select 1) do {
 								case ("NONE") : {
 									(_x select 2) set [1,"PICKUP"];
-									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
-									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
+									(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 									[A3C_MARKERTOSWITCH,"A3C_Marker_PICKUP_AIR","DEFAULT"] call MCSS_fnc_SwitchMarker;
 
 									[findDisplay _a3c_dsp displayCtrl 709112, 1] call A3C_setCurSel;
 								};
 								case ("PICKUP") : {
 									(_x select 2) set [1,"DROPOFF"];
-									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
-									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
+									(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 									[A3C_MARKERTOSWITCH,"A3C_Marker_DROPOFF_AIR","DEFAULT"] call MCSS_fnc_SwitchMarker;
 									[findDisplay _a3c_dsp displayCtrl 709112, 2] call A3C_setCurSel;
 								};
@@ -4216,14 +4244,14 @@ A3C_CONTEXTBUTTON = {
 								case ("DROPOFF") : {
 									if (A3C_IsRappel) then {
 										(_x select 2) set [1,"RAPPEL"];
-										((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
-										((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+										(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
+										(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 										[A3C_MARKERTOSWITCH,"A3C_Marker_Rappel","DEFAULT"] call MCSS_fnc_SwitchMarker;
 										[findDisplay _a3c_dsp displayCtrl 709112, 4] call A3C_setCurSel;
 									} else {
 										(_x select 2) set [1,"LANDFINAL"];
-										((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
-										((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+										(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
+										(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 										[A3C_MARKERTOSWITCH,"A3C_Marker_LANDING","DEFAULT"] call MCSS_fnc_SwitchMarker;
 										[findDisplay _a3c_dsp displayCtrl 709112, 3] call A3C_setCurSel;
 									};
@@ -4231,15 +4259,15 @@ A3C_CONTEXTBUTTON = {
 								};
 								case ("RAPPEL") : {
 									(_x select 2) set [1,"LANDFINAL"];
-									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
-									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
+									(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
 									[A3C_MARKERTOSWITCH,"A3C_Marker_LANDING","DEFAULT"] call MCSS_fnc_SwitchMarker;
 									[findDisplay _a3c_dsp displayCtrl 709112, 3] call A3C_setCurSel;
 								};
 								case ("LANDFINAL") : {
 									(_x select 2) set [1,"NONE"];
-									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-									((findDisplay _a3c_dsp) displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_fnc_setOpacity);
+									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+									(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_fnc_setOpacity);
 									[A3C_MARKERTOSWITCH,"A3C_Marker_WAYPOINT","DEFAULT"] call MCSS_fnc_SwitchMarker;
 									[findDisplay _a3c_dsp displayCtrl 709112, 0] call A3C_setCurSel;
 								};
@@ -4321,17 +4349,17 @@ A3C_UI_MAP_FNC_CTEDIT_ACTIVATE = {
 		switch (_controlType) do {
 			case ("TIMEOUT") : {
 				if ((A3C_TEMP_CONDITION select 0) == "TIMEOUT") then {
-					A3C_TIMEOUT_VAL = (parsenumber (ctrlText (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout)));
+					A3C_TIMEOUT_VAL = (parsenumber (ctrlText (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP)));
 				};
 			};
 			case ("SPACING") : {
 				//systemchat 'spacingf';
 				switch (A3C_MAP_CommandMode) do {
 					case ("INF") : {
-						A3C_SPACING_INF = (parsenumber (ctrlText (findDisplay _a3c_dsp displayCtrl 7066))) max 2;
+						A3C_SPACING_INF = (parsenumber (ctrlText (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_SPACING))) max 2;
 					};
 					case ("AIR") : {
-						A3C_SPACING_AIR = (parsenumber (ctrlText (findDisplay _a3c_dsp displayCtrl 7066))) max 30;
+						A3C_SPACING_AIR = (parsenumber (ctrlText (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_SPACING))) max 30;
 					};
 				};
 			};
@@ -4395,7 +4423,112 @@ A3C_UI_MAP_Overlay_getIconsAtMapPos = {
 	_iconsAtPosition
 };
 
+//-- ABORT ALL EXISTING ORDERS
+//-- REMINDER: IN ORDER TO CONTINUE WITH NEW PLOT, YOU FIRST NEED TO WAITUNTIL PLOT IS EMPTY
+//-->> so after [xy] call A3C_AI_Shared_cancelUnitPlot, you need waituntil {_unit getvariable ["A3C_PLOT", []] isEqualTo []}
+A3C_AI_Shared_cancelUnitPlot = {
+	private ["_data"];
+	if (A3C_MAP_CommandMode == "HC") exitWith {};
+	_selectedUnits = _this select 0;
+	_shift = _this select 1;
+	_ctrl = _this select 2;
+	
+	private _a3c_dsp = 100020;
+	
 
+	_data = [];
+
+	if ( !(_shift) && !(_ctrl)  ) exitWith {
+		{
+			//[_x] call A3C_RESET_WIP;
+			_x setvariable ["A3C_PLOT_TEMP",[],true];
+		} foreach _selectedUnits;
+		A3C_USERACTION = [];
+		A3C_USERACTION_ID = 0;
+		A3C_WAYPOINTS_TEMP = [];
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow false;
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,0.2];
+		[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_RefreshControlBar;
+	};
+	
+	if (_shift) then {
+
+		{
+			
+			_x setvariable ["A3C_PLOT_TEMP",[],true];
+			A3C_USERACTION = [];
+			A3C_USERACTION_ID = 0;
+			A3C_WAYPOINTS_TEMP = [];
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow false;
+			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,0.2];
+
+			[_x,(position _x)] call A3C_DOMOVE;
+			[_x] spawn {
+				params ["_unit"];
+				private ["_mainMark","_subMark","_dirMark"];
+				private _a3c_dsp = 100020;
+
+				private _unitPlot = _unit getVariable ["A3C_PLOT",[]];
+				if (count _unitPlot > 0) then {
+					_unit setvariable ["A3C_ABORT_Data",[true,false],true];
+					waitUntil {count (_unit getVariable ["A3C_PLOT",[]]) == 0};
+				};
+				//-- reset abort variable after clearing
+				_unit setvariable ["A3C_ABORT_Data",[false,false],true];
+			
+				//
+				_unit setvariable ["A3C_PLOT_TEMP",[],true];
+				{_unit enableAI _x} foreach ["MOVE","TARGET","AUTOTARGET","FSM","AUTOCOMBAT"]; //,"THREAT_PATH","PATHPLAN"
+				[(vehicle _unit),"UNLOCKED"] remoteExec ["setvehicleLock", (vehicle _unit)];
+				_unit forceSpeed -1;
+				if !(isnull objectparent _unit) then {(vehicle _unit) limitspeed 1000;};
+			};
+		} foreach _selectedUnits;
+	};
+	//_sleep = 0;
+	if (_ctrl) then {
+		{
+
+			private ["_isLoop","_unit","_data"];
+			_unit = _x;
+			_data = (_x getVariable "A3C_PLOT");
+
+			{
+				private ["_wpData"];
+				_wpData = _x;
+				if ( _forEachIndex ==  ((_unit getVariable "A3C_CURRENTWAYPOINT_INDEX") -1)) then {
+					if !([_data,_forEachIndex] call A3C_isWPLOOP) then {
+						{deleteMarkerLocal _x} foreach (_wpData select 1);
+					};
+				};
+			} foreach _data;
+			/*
+			_isLoop = false;
+			if ((_data select ((_x getVariable "A3C_CURRENTWAYPOINT_INDEX") -1) select 10) > -1) then {
+				{
+					if ((_x select 10) < -1) then {_isLoop = true};
+
+					if (_isLoop) then {
+						{
+							deleteMarkerLocal _x
+						} foreach (_x select 1);
+					};
+					if ((_x select 10) > -1) then {_isLoop = false};
+					_x set [8,-1]; //-- reset unit speed??
+				} foreach _data;
+				_x setVariable ["A3C_PLOT",_data,true];
+			};
+			*/
+			_x setvariable ["A3C_ABORT_Data",[false,true],true]; //-- this will make the unit skip wp
+		} foreach _selectedUnits;
+		//_sleep = 0.5;
+	};
+	[] spawn {
+		sleep 0.5;
+		[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_RefreshControlBar;
+	};
+	
+};
 
 
 /*

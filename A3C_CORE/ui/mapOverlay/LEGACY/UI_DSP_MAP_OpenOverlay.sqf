@@ -184,7 +184,7 @@ sleep 0.1;
 //-- overlay step 4: edit button settings (in the background)
 
 if (A3C_SELECTED_UNITS isEqualTo []) then {
-	["INF"] call A3C_START_TABMODE;
+	["INF"] call A3C_UI_MAP_UFSB_ApplyMode;
 };
 
 

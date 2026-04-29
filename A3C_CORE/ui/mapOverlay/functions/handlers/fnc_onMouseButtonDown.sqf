@@ -56,7 +56,7 @@ if ({[[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInC
 //-- ENEMY-TARGET Combo is open - ALWAYS disables mapclick, hides Combo if it's not clicked on directly
 if (ctrlShown (findDisplay _a3c_dsp displayCtrl 7078)) exitWith {
 	if !([[_sX,_sY],findDisplay _a3c_dsp displayCtrl 7078] call MCSS_fnc_isClickPosInCTRLArea) then {
-		((findDisplay _a3c_dsp) displayCtrl 7078) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl 7078) ctrlShow false;
 	};
 };
 
@@ -382,7 +382,7 @@ if (_gpIconsCount > 0) exitWith {
 				//systemchat 'ay';
 				["COLLAPSE",0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
 			};
-			//["HC"] call A3C_START_TABMODE;
+			//["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
 
 			if (!isPlayer leader _gp) then {
 				if ( (count A3C_SELECTED_UNITS == 0) OR (A3C_SQ_CLICKED_UNIT in A3C_SELECTED_UNITS) ) then {
@@ -515,10 +515,10 @@ if (count _sqIcons > 0) exitWith {
 				//A3C_SELECTED_UNITS = [A3C_SQ_CLICKED_UNIT];
 				if (vehicle A3C_SQ_CLICKED_UNIT isKindOf "AIR") then {
 					A3C_MAP_CommandMode = "AIR";
-					["AIR"] call A3C_START_TABMODE;
+					["AIR"] call A3C_UI_MAP_UFSB_ApplyMode;
 				} else {
 					A3C_MAP_CommandMode = "INF";
-					["INF"] call A3C_START_TABMODE;
+					["INF"] call A3C_UI_MAP_UFSB_ApplyMode;
 				};
 			};
 		};			
@@ -533,8 +533,8 @@ if ( !(_left) && (count _trIcons > 0)) exitWith {
 	if (_trIcon select 3 == "ENEMY") then {
 		A3C_LB_MODE = 1;
 		A3C_TRACKED_ENEMYGROUP = _trIcon select 0;
-		lbClear ((findDisplay _a3c_dsp) displayCtrl 7078);
-		((findDisplay _a3c_dsp) displayCtrl 7078) ctrlShow true;
+		lbClear (findDisplay _a3c_dsp displayCtrl 7078);
+		(findDisplay _a3c_dsp displayCtrl 7078) ctrlShow true;
 		ctrlsetfocus (finddisplay _a3c_dsp displayctrl 7078);
 		(findDisplay _a3c_dsp displayCtrl 7078) ctrlSetPosition [_sx, _sy];
 		(findDisplay _a3c_dsp displayCtrl 7078) ctrlCommit 0;
@@ -667,7 +667,7 @@ if (_a3c_dsp == _a3c_dsp && {[[_sX,_sY],findDisplay _a3c_dsp displayCtrl 11] cal
 
 
 if (_left) then {
-	if ( {ctrlShown ((findDisplay _a3c_dsp) displayCtrl _x)} count [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT] > 0) then  { ////~~~~ ?????
+	if ( {ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT] > 0) then  { ////~~~~ ?????
 		_exit = true;
 	};
 };
@@ -676,7 +676,7 @@ if (_left) then {
 _ctls = if (visibleMap) then {[A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,709135,8008]} else {[A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT,709112,709135,8008]};
 {
 	if !([[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea) then {
-		((findDisplay _a3c_dsp) displayCtrl _x) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
 	};
 } foreach _ctls;
 
@@ -695,7 +695,7 @@ if (_exit) exitWith {};
 //-- right Mouse Button
 if !(_left) exitWith {
 	private _resetSelection = true;
-	((findDisplay _a3c_dsp) displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow false;
+	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow false;
 
 
 	if (_resetSelection) then {
@@ -703,7 +703,7 @@ if !(_left) exitWith {
 			A3C_SELECTED_UNITS = [];
 			A3C_SELECTED_HC_GROUPS_SETTINGS = [];
 			["COLLAPSE",0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
-			[A3C_MAP_CommandMode] call A3C_START_TABMODE;
+			[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_ApplyMode;
 		};
 	};
 };
@@ -929,8 +929,8 @@ if ((count A3C_SELECTED_UNITS) == 0) exitWith {};
 
 A3C_BOOL_MAP_MU = true;
 if (A3C_TAB_TOGGLE_VAR == 0) then {
-	(findDisplay _a3c_dsp displayCtrl 7041) ctrlShow true;
-	(findDisplay _a3c_dsp displayCtrl 7092) ctrlSetTextColor  [1,1,1,1];
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow true;
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,1];
 };
 
 
@@ -963,7 +963,7 @@ if (A3C_TAB_BUILDING_BOOL) then {
 };
 
 if ((A3C_TEMP_CONDITION select 0) == "TIMEOUT") then {
-	A3C_TIMEOUT_VAL = (parsenumber (ctrlText (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_CTEDIT_SQTImeout)));
+	A3C_TIMEOUT_VAL = (parsenumber (ctrlText (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP)));
 };
 
 

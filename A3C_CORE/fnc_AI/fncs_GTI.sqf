@@ -1,6 +1,9 @@
 #include "..\ui\radial\radialMenu\script_component.hpp"
 #include "..\ui\radial\radialMenu\dialog_defines.hpp"
 
+#include "..\ui\mapOverlay\script_component.hpp"
+#include "..\ui\mapOverlay\dialog_defines.hpp"
+
 //------------------------------------------------  G T I  G R E N A D E S   --------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------    written by ZAPAT, used and adjusted with permission      ------------------------------------
@@ -366,7 +369,7 @@ A3C_GREN_DATA = {
 	if !(isnull findDisplay IDD_RADIAL_MENU) then {
 		[A3C_GREN_MUZZLE,0,_doChange] call A3C_UI_RADIAL_populateOuterRing_Grenades;
 	} else {
-		(findDisplay _display displayCtrl 7064) ctrlSetTextColor [1,1,1,1];
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlSetTextColor [1,1,1,1];
 		[A3C_GREN_MUZZLE,1,_doChange] call A3C_UI_RADIAL_populateOuterRing_Grenades;
 	};
 

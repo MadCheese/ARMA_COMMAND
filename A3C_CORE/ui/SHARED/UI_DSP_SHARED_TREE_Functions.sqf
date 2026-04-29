@@ -164,7 +164,7 @@ A3C_UI_MAP_TREE_LABEL = {
 	
 
 	
-	_CT_TREE = (findDisplay _a3c_dsp) displayctrl IDC_SHARED_UI_TREE_SELECTOR;
+	_CT_TREE = findDisplay _a3c_dsp displayctrl IDC_SHARED_UI_TREE_SELECTOR;
 
 	tvClear _CT_TREE;
 	
@@ -830,7 +830,7 @@ A3C_TREE_TVCHANGE = {
 			A3C_SELECTED_HC_GROUPS_SETTINGS = [];
 			_control tvSetCurSel [-1];
 			_control tvSetCurSel _tvSelTo;
-			[_infModeTo] call A3C_START_TABMODE;
+			[_infModeTo] call A3C_UI_MAP_UFSB_ApplyMode;
 		};
 	} else {
 		_refArray = A3C_UI_SHARED_TREE_HC_AT_TICK; //-- copy the current HC array so we can address groups even if the hc-structure has changed while planning
@@ -924,9 +924,9 @@ A3C_TREE_BOXCLICK = {
 	if (!(_left) && {count A3C_SELECTED_UNITS > 0}) then {
 		if (_shift && {A3C_MAP_CommandMode != "HC"}) then { //~~ TO DO: ALIGN TEAMCOLORS THROUGH COMMAND LEVELS AND ALLOW FOR HC TEAMCOLOR VIA LISTBOX
 			//-- USER IS MANAGING SQUAD TEAMCOLORS VIA MAP-TREE
-			lbClear ((findDisplay _a3c_dsp) displayCtrl 7078);
+			lbClear (findDisplay _a3c_dsp displayCtrl 7078);
 
-			((findDisplay _a3c_dsp) displayCtrl 7078) ctrlShow true;
+			(findDisplay _a3c_dsp displayCtrl 7078) ctrlShow true;
 			ctrlsetfocus (finddisplay _a3c_dsp displayctrl 7078);
 			A3C_LB_MODE = 3;
 			(findDisplay _a3c_dsp displayCtrl 7078) ctrlSetPosition [_sx, _sy];

@@ -74,7 +74,7 @@ switch (true) do {
 					A3C_SELECTED_UNITS = [];
 				};
 
-				["INF"] call A3C_START_TABMODE;
+				["INF"] call A3C_UI_MAP_UFSB_ApplyMode;
 				A3C_MAP_CommandMode = "INF";
 			};
 			case 3: {
@@ -82,7 +82,7 @@ switch (true) do {
 					A3C_SELECTED_UNITS = [];
 				};
 
-				["AIR"] call A3C_START_TABMODE;
+				["AIR"] call A3C_UI_MAP_UFSB_ApplyMode;
 				A3C_MAP_CommandMode = "AIR";
 			};
 			case 4: {
@@ -90,7 +90,7 @@ switch (true) do {
 					A3C_SELECTED_UNITS = [];
 				};
 
-				["HC"] call A3C_START_TABMODE;
+				["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
 				A3C_MAP_CommandMode = "HC";
 			};
 		};

@@ -1754,7 +1754,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 
 		if (_a3c_dsp == 100020) then {
 			if (_group in _refUnits) then { //~~ ?? what does this do ecxactly? making sure that group menu switches the button pages?
-				["HC"] call A3C_START_TABMODE;
+				["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
 			};
 		};
 
@@ -1993,7 +1993,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 
 		waitUntil {
 			isNull findDisplay _a3c_dsp ||
-			{ ctrlShown ((findDisplay _a3c_dsp) displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) }
+			{ ctrlShown (findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) }
 		};
 
 		private _display = findDisplay _a3c_dsp;
@@ -2382,7 +2382,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 						};
 					};
 					if (A3C_MAP_CommandMode == "HC") then {
-						["HC"] call A3C_START_TABMODE;
+						["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
 					};
 				};
 			};
@@ -2605,7 +2605,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 			systemchat "A3C: New convoy group created";
 			A3C_MAP_CommandMode = "HC";
 			A3C_SELECTED_UNITS = [_newGroup];
-			["HC"] call A3C_START_TABMODE; //-- refresh table if open
+			["HC"] call A3C_UI_MAP_UFSB_ApplyMode; //-- refresh table if open
 			A3C_SELECTED_HC_GROUPS_SETTINGS = [];
 
 
