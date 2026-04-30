@@ -25,4 +25,8 @@ if (_key == 16) then {
     _bool = [0] call A3C_UI_RADIAL_CTRLS_QUICKTOGGLE;
 };
 
+//-- prevent opening of map while using radial
+private _keyControlsMap = (inputAction "showMap") > 0;
+if (_keyControlsMap) exitWith {true};
+
 _bool

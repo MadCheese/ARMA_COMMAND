@@ -1,6 +1,5 @@
 
 
-
 //---------------------------------------  HANDLER-FUNCTIONS  ------------------------------------
 //------------------------------------------------------------------------------------------------
 //-- HUD Main "KeyDown"
@@ -189,6 +188,8 @@ A3C_UI_HUD_onKeyDown = {
 			//-- Safety precaution: clear downkeys while player opens map
 			//-- Hud's keyUp will NOT fire once map is entered.
 			A3C_UI_DOWNKEYS = [];
+
+			
 
 			private _keyIsNotGPS = (inputAction "miniMapToggle") == 0;
 			if (

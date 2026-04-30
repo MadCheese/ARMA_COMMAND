@@ -9,17 +9,17 @@ if (isDedicated) exitWith {};
 //-- Hardcoded GROUPMENU ACTIONBUTTONS array (HCGP Context)
 A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS =
 [
-	[8007161,8007162,8007163], //-- row 1
-	[8007171,8007172,8007173],
-	[8007181,8007182,8007183],
-	[8007191,8007192,8007193],
-	[8007201,8007202,8007203],
+	[IDC_MAP_HCGP_ActionMacro_0_BG,IDC_MAP_HCGP_ActionMacro_0_IMG,IDC_MAP_HCGP_ActionMacro_0_BTN], //-- row 1
+	[IDC_MAP_HCGP_ActionMacro_1_BG,IDC_MAP_HCGP_ActionMacro_1_IMG,IDC_MAP_HCGP_ActionMacro_1_BTN],
+	[IDC_MAP_HCGP_ActionMacro_2_BG,IDC_MAP_HCGP_ActionMacro_2_IMG,IDC_MAP_HCGP_ActionMacro_2_BTN],
+	[IDC_MAP_HCGP_ActionMacro_3_BG,IDC_MAP_HCGP_ActionMacro_3_IMG,IDC_MAP_HCGP_ActionMacro_3_BTN],
+	[IDC_MAP_HCGP_ActionMacro_4_BG,IDC_MAP_HCGP_ActionMacro_4_IMG,IDC_MAP_HCGP_ActionMacro_4_BTN],
 
-	[8007211,8007212,8007213], //- row 2
-	[8007221,8007222,8007223],
-	[8007231,8007232,8007233],
-	[8007241,8007242,8007243],
-	[8007251,8007252,8007253]
+	[IDC_MAP_HCGP_ActionMacro_5_BG,IDC_MAP_HCGP_ActionMacro_5_IMG,IDC_MAP_HCGP_ActionMacro_5_BTN], //- row 2
+	[IDC_MAP_HCGP_ActionMacro_6_BG,IDC_MAP_HCGP_ActionMacro_6_IMG,IDC_MAP_HCGP_ActionMacro_6_BTN],
+	[IDC_MAP_HCGP_ActionMacro_7_BG,IDC_MAP_HCGP_ActionMacro_7_IMG,IDC_MAP_HCGP_ActionMacro_7_BTN],
+	[IDC_MAP_HCGP_ActionMacro_8_BG,IDC_MAP_HCGP_ActionMacro_8_IMG,IDC_MAP_HCGP_ActionMacro_8_BTN],
+	[IDC_MAP_HCGP_ActionMacro_9_BG,IDC_MAP_HCGP_ActionMacro_9_IMG,IDC_MAP_HCGP_ActionMacro_9_BTN]
 ];
 
 A3C_UI_MAP_UFSQB_SettingsButtonPairs =  
@@ -48,7 +48,7 @@ A3C_UI_MAP_UFSB_OnStanceTravel = {
 	if (_mode < 0) then {_mode = 0};
 	if (_mode > 1) then {_mode = 1};
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	if (A3C_MAP_CommandMode in ["INF","HC"]) then {
 		switch (A3C_STANCE1_TEMP) do {
 			case ("DOWN") : {
@@ -133,7 +133,7 @@ A3C_UI_MAP_UFSB_OnStanceArrival = {
 	if (_mode < 0) then {_mode = 0};
 	if (_mode > 1) then {_mode = 1};
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	if (A3C_MAP_CommandMode in ["INF","HC"]) then {
 		switch (A3C_STANCE2_TEMP) do {
 			case ("DOWN") : {
@@ -1094,7 +1094,7 @@ A3C_SWITCHMARKER = {
 		};
 	};
 	if (_hide) then {
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlShow false;
 	};
 	{
 		_unit = _x;
@@ -1128,7 +1128,7 @@ A3C_GET_UNITBUTTON = {
 
 A3C_TAB_TOGGLE_CONTROLS = {
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	switch (A3C_TAB_TOGGLE_VAR) do {
 		case (0) : {
 			for "_i" from 7044 to 7089 do {
@@ -1512,7 +1512,7 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 
 	(findDisplay _a3c_dsp displayCtrl 7067) ctrlsettext _pagebutton;
 	(findDisplay _a3c_dsp displayCtrl 7068) ctrlsetToolTip _pageTT;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_UFSB_TIMEOUT_POPUP,7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT]; //-- hide rClick contextMenu, undo, small rClick-menu
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_UFSB_TIMEOUT_POPUP,7078,IDC_MAP_SQWP_ControlsGroup]; //-- hide rClick contextMenu, undo, small rClick-menu
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow false;
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,0.2];
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WP_SPEED_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
@@ -1529,23 +1529,23 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 
 A3C_SWITCH_COMMAND_PAGE = {
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	A3C_SELECTED_UNITS = [];
 	switch (A3C_MAP_CommandMode) do {
 		case ("INF") : {
-			["AIR"] call A3C_UI_MAP_ApplyMode;
+			["AIR"] call A3C_UI_MAP_UFSB_ApplyMode;
 			A3C_MAP_CommandMode = "AIR";
-		};A3C_UI_MAP_UFSB_ApplyMode
+		};
 		case ("AIR") : {
 			A3C_BUTTONPAGE_TABLET = 0;
-			["HC"] call A3C_UI_MAP_ApplyMode;
+			["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
 			A3C_MAP_CommandMode = "HC";
-		};A3C_UI_MAP_UFSB_ApplyMode
+		};
 		case ("HC") : {
 			A3C_BUTTONPAGE_TABLET = 0;
-			["INF"] call A3C_UI_MAP_ApplyMode;
+			["INF"] call A3C_UI_MAP_UFSB_ApplyMode;
 			A3C_MAP_CommandMode = "INF";
-		};A3C_UI_MAP_UFSB_ApplyMode
+		};
 	};
 };
 
@@ -1770,7 +1770,7 @@ A3C_SWITCHPAGE_TABLET = {
 	};
 	//ddddd
 	if !(isnull findDisplay _a3c_dsp) then {
-		{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+		{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	};
 	_groupCount =  if (A3C_MAP_CommandMode == "HIGHCOMMAN") then {count _hcAll} else {};
 	_groupCount = 0;
@@ -1845,7 +1845,7 @@ A3C_BTN_FNC_COND = {
 	if (_mode > 1) then {_mode = 1};
 	private ["_a3c_dsp","_goCode"];
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	switch (A3C_TEMP_CONDITION select 0) do {
 		case ("NONE") : {
 			if (_mode ==  0) then {
@@ -1922,7 +1922,7 @@ A3C_BTN_FNC_TEAMCOLOR = {
 	private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 	_CT_TREE tvSetCurSel [-1];
 
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	if !(_shift) then {A3C_SELECTED_UNITS = []};
 	//A3C_SELECTED_UNITS = [];
 	_unitNumber = 0;
@@ -2017,7 +2017,7 @@ A3C_BTN_FNC_TEAMCOLOR = {
 		};
 	};
 	A3C_SPLIT_UNITS = A3C_SELECTED_UNITS;
-	[A3C_MAP_CommandMode] call A3C_UI_MAP_ApplyMode;
+	[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_ApplyMode;
 	[] call A3C_UNITSEL_REFRESH_UI;
 };
 
@@ -2879,7 +2879,7 @@ A3C_fnc_SUBSET = {
 
 A3C_BUTTON_CMODE = {
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	switch (A3C_CMODE_TEMP) do {
 		case (0) : {
 			A3C_CMODE_TEMP = 1;
@@ -2906,7 +2906,7 @@ A3C_BUTTON_wpFiringMode = {
 	if (_mode > 1) then {_mode = 1};
 	private _a3c_dsp = 100020;
 	if ((count A3C_SELECTED_UNITS == 0)) exitWith {};
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	private _actions = [];
 	//if !(A3C_BUTTON_SHIFT) then {
 
@@ -2994,7 +2994,7 @@ A3C_BUTTON_wpFiringMode = {
 
 A3C_SPEED_BTN = {
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	if (A3C_WP_SPEED_TEMP == (-1) ) then {
 		A3C_WP_SPEED_TEMP = 2;
 		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WP_SPEED_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
@@ -3011,7 +3011,7 @@ A3C_BUTTON_FORMMODE = {
 	if (_mode < 0) then {_mode = 0};
 	if (_mode > 1) then {_mode = 1};
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	switch (A3C_FORMMODE_TEMP) do {
 		case (0) : {};
 		case (1) : {
@@ -3129,7 +3129,7 @@ A3C_BTN_HC = {
 	_mode = _this select 0;
 	_groups = if ((count _this) > 1) then {_this select 1} else {A3C_HC_getAllGroups_Player_Current };
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	_unit = objnull;
 	//~~ below is not bulletproof! what if AICOmmand, but not synced to module
 	private _isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
@@ -3323,7 +3323,7 @@ A3C_BTN_HC = {
 
 		if (A3C_MAP_CommandMode in ["INF","AIR"]) then {
 			if ((count units group player) == 1) then {
-				["HC"] call A3C_UI_MAP_ApplyMode;
+				["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
 				A3C_MAP_CommandMode = "HC";
 			};A3C_UI_MAP_UFSB_ApplyMode
 		};
@@ -3348,7 +3348,7 @@ A3C_BTN_HC = {
 
 	if (A3C_MAP_CommandMode == "HC") then {
 		if ((count units group player) == 1) then {
-			["HC"] call A3C_UI_MAP_ApplyMode;
+			["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
 			A3C_MAP_CommandMode = "HC";
 		};A3C_UI_MAP_UFSB_ApplyMode
 	};
@@ -3427,7 +3427,7 @@ A3C_HC_getPhonetic = {
 A3C_UNDO = {
 	private ["_syncData"];
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
 	_waypoint = A3C_WAYPOINTS_TEMP select ((count A3C_WAYPOINTS_TEMP) -1);
 	_unitNumber = 0;
 	_UndoData = (A3C_USERACTION select ((count A3C_USERACTION) -1));
@@ -3974,13 +3974,13 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 
 	A3C_MARKERTOSWITCH = _marker;
 	lbClear (findDisplay _a3c_dsp displayCtrl 709112);
-	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlSetPosition [_sx, _sy];
-	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlCommit 0;
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlSetPosition [_sx, _sy];
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlCommit 0;
 	if (_mode == "HELI") then {
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow true;
+		(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlShow true;
 		A3C_LB_MODE = 0;
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlSetPosition [_sx, _sy];
-		(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlCommit 0;
+		(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlSetPosition [_sx, _sy];
+		(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlCommit 0;
 
 		[findDisplay _a3c_dsp displayCtrl 709112, "NONE"] call A3C_addLbEntry;
 		[findDisplay _a3c_dsp displayCtrl 709112, "PICKUP"] call A3C_addLbEntry;
@@ -4017,10 +4017,10 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 			A3C_GCUNITS = _units;
 			A3C_MARKERTOSWITCH = _marker;
 			lbClear (findDisplay _a3c_dsp displayCtrl 709112);
-			(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow true;
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlShow true;
 			A3C_LB_MODE = 2;
-			(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlSetPosition [_sx, _sy];
-			(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlCommit 0;
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlSetPosition [_sx, _sy];
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlCommit 0;
 
 			[findDisplay _a3c_dsp displayCtrl 709112, "NONE"] call A3C_addLbEntry;
 			[findDisplay _a3c_dsp displayCtrl 709112, "A"] call A3C_addLbEntry;
@@ -4045,12 +4045,12 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 			
 		};
 	};
-	lbClear (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT);
+	lbClear (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_ControlsGroup);
 	if ((count _units) == 1) then {
-		[findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT, "NONE"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_ControlsGroup, "NONE"] call A3C_addLbEntry;
 		_data =  (_units select 0) getvariable A3C_CHECKVAR;
 		_wpInd = ( ((_units select 0) getvariable "A3C_CURRENTWAYPOINT_INDEX") - 1 );
-		[findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT, 1] call A3C_setCurSel;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_ControlsGroup, 1] call A3C_setCurSel;
 	};
 };
 
@@ -4279,7 +4279,7 @@ A3C_CONTEXTBUTTON = {
 						case ("DELETE") : {
 
 							if !((markertype A3C_MARKERTOSWITCH) == 'A3C_Marker_HCWP') then { //~~ is this condition still needed since no more HC markers are used??
-								(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow false;
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlShow false;
 								if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 									[[_unit],false,true,true] spawn A3C_AI_Shared_cancelUnitPlot;
 									_unit setvariable ["A3C_BOOL_WP_DELETED",true,true];

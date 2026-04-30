@@ -15,8 +15,8 @@ private _ctls = [
 	709099,
 	IDC_MAP_UFSB_Subselection_01_Parent,
 	IDC_MAP_UFSB_Subselection_02_Parent,
-	709109,
-	709115,
+	IDC_MAP_SQWP_ControlsGroup,
+	IDC_MAP_HCGP_WP_ControlsGroup,
 	8007
 ];
 

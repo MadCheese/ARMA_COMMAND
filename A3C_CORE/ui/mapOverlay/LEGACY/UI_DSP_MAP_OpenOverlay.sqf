@@ -1,6 +1,7 @@
 #include "..\..\SHARED\shared_ui_defines.hpp"
-#include "..\..\radial\radialMenu\script_component.hpp"
-#include "..\..\radial\radialMenu\dialog_defines.hpp"
+
+#include "..\dialog_defines.hpp"
+#include "..\script_component.hpp"
 
 //---------------------------------------------------------------------------------------------------------
 //--------------------  THIS FUNCTION IS SPAWNED EACH TIME THE OVERLAY IS OPENED  -------------------------
@@ -29,7 +30,7 @@ if (isDedicated) exitWith {};
 if (isMultiplayer && isServer && !(hasInterface)) exitWith {};
 if !(player == leader group player) exitWith {};
 
-if (!isNull findDisplay IDD_RADIAL_MENU) exitWith {};
+
 
 //-- prevent opening overlay when radial is expecting action. Note: should be added to main HUD keyDown and prevent map
 //-- from opening because that would swallow the keyUp event
@@ -142,17 +143,17 @@ with uiNameSpace do {
 //-- Hide UI-elements
 {(findDisplay _display displayCtrl _x) ctrlShow false;} foreach 
 [
-	404040, //_startBar,
-	404041, //_startText,
-	A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT,
-	A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,
-	A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,
+	IDC_MAP_HCGP_STARTUP_BAR, //_startBar,
+	IDC_MAP_HCGP_STARTUP_TEXT, //_startText,
+	IDC_MAP_SQWP_ControlsGroup,
+	IDC_MAP_HCGP_WP_ControlsGroup,
+	IDC_MAP_HCGP_ControlsGroup,
 	8008,
 	IDC_MAP_UFSB_Subselection_01_Parent,
 	IDC_MAP_UFSB_Subselection_02_Parent,
 	IDC_MAP_UFSB_Subselection_01_BG,
 	IDC_MAP_UFSB_Subselection_02_BG,
-	A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT
+	IDC_MAP_HCGP_WP_ControlsGroup
 ];
 
 private _ceil = (ceil ((count A3C_SELECTED_UNITS) / A3C_UI_MAP_UNITBUTTONCEIL)) - 1;

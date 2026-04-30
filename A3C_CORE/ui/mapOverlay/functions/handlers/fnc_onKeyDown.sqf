@@ -99,8 +99,8 @@ switch (true) do {
 	//-- Other keybinds
 	case (_key in [28,57,207]) : {
 
-		private _groupContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT;
-		private _wpContextmenuHC = _display displayCtrl A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT;
+		private _groupContextmenuHC = _display displayCtrl IDC_MAP_HCGP_ControlsGroup;
+		private _wpContextmenuHC = _display displayCtrl IDC_MAP_HCGP_WP_ControlsGroup;
 
 		switch (_key) do {
 			case 28: { // Enter

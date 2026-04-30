@@ -1,6 +1,6 @@
-#include "..\..\radial\radialMenu\script_component.hpp"
-#include "..\..\radial\radialMenu\dialog_defines.hpp"
 
+#include "..\dialog_defines.hpp" //-- MAP DEFINES
+#include "..\..\SHARED\shared_ui_defines.hpp" //-- SHARED DEFINES FOR DASHBOARD
 
 
 
@@ -1560,7 +1560,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						} else {
 							[_a3c_dsp] spawn {
 								params ["_a3c_dsp"];
-								(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_ControlsGroup) ctrlShow false;
 								(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 								hintSilent "A3C: Please relay map-coordinates via mapclick!";
 								playsound "TacticalPing4";
@@ -1808,7 +1808,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 		systemchat "A3C: Please relay map-coordinates via mapclick!";
 		sleep 0.5; //~~ small delay needed for mapclick
 		A3C_HC_GroupMenu_SuppressionRequested = true;
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_ControlsGroup,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 		[
 			"A3C_SUP_MAPCLICK",
@@ -1864,8 +1864,8 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 	
 	
 
-	_startBar = findDisplay _a3c_dsp displayCtrl 404040;
-	_startText = findDisplay _a3c_dsp displayCtrl 404041;
+	_startBar = findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_STARTUP_BAR;
+	_startText = findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_STARTUP_TEXT;
 	_startText ctrlSetText "CONNECTING";
 	_startBar progressSetPosition 0.1;
 	{
@@ -1874,7 +1874,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 
 
 
-	_groupMenuCtrlsGroup = (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT);
+	_groupMenuCtrlsGroup = (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_ControlsGroup);
 	_groupMenuCtrlsGroup ctrlShow false; //-- hide until dashboard is shown
 	_groupMenuCtrlsGroup ctrlSetPosition 
 	[
@@ -1882,7 +1882,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 		0.3
 	]; //_menuPos;
 	_groupMenuCtrlsGroup ctrlCommit 0;
-	//(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow true; 
+
 
 	{
 		if (isplayer leader _x && {!(leader _x == player)}) then { //&& {(leader _x) != player}  CHANGE THIS TO WORK ON PLAYER GROUP FOR SINGLE SELECTION!!
@@ -1897,11 +1897,9 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 
 	if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
 		_gp = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
-		//if (_gp == A3C_HC_FocusGroup) then {
-		//	(findDisplay _a3c_dsp displayCtrl 800714) ctrlSetText "#(argb,8,8,3)color(0,0.3,0.6,1)";
-		//} else {
-			(findDisplay _a3c_dsp displayCtrl 800714) ctrlSetText "#(argb,8,8,3)color(0,0.3,0.6,0.2)";
-		//};
+
+		(findDisplay _a3c_dsp displayCtrl 800714) ctrlSetText "#(argb,8,8,3)color(0,0.3,0.6,0.2)";
+
 		private _groupStance = _group getVariable ["A3C_GROUP_STANCE","AUTO"];
 		[_groupStance] call A3C_GP_Btns_Stances; //-- WHY>?
 	} else {
@@ -1921,17 +1919,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 
 
 	disableSerialization;
-	// A3C_Map_HC_groupContext_Behaviour = "";
-	// A3C_Map_HC_groupContext_CMode = "";
-	// A3C_Map_HC_groupContext_Form = "";
-	// A3C_Map_HC_groupContext_Color = "";
 
-	//(finddisplay _a3c_dsp displayCtrl 800716) ctrlSetText  "";
-
-
-
-	//////////////////////// -- aaa
-	//systemchat str _mode;
 	if (_modeNum == 0) then {
 		A3C_Map_HC_groupContext_Color = _group getVariable ["A3C_HC_GroupColor","blue"];
 	};
@@ -1979,10 +1967,10 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 		} foreach (_x select 1);
 	} foreach
 		[
-			[800701,["Careless","Safe","Aware","Combat","Stealth"]], // "Careless (Driver)",
-			[800702,["Never Fire","Defend Only","Engage At Will","Fire At Will","F&E At Will"]],
-			[800703,["Column","Stag Column","Wedge","Ech Left","Ech Right","Vee","Line","File","Diamond"]],
-			[800704,["Red","Blue","Green","Black","White"]]
+			[IDC_MAP_HCGP_LISTBOX_BEHAVIOUR,["Careless","Safe","Aware","Combat","Stealth"]], // "Careless (Driver)",
+			[IDC_MAP_HCGP_LISTBOX_COMBATMODE,["Never Fire","Defend Only","Engage At Will","Fire At Will","F&E At Will"]],
+			[IDC_MAP_HCGP_LISTBOX_FORMATION,["Column","Stag Column","Wedge","Ech Left","Ech Right","Vee","Line","File","Diamond"]],
+			[IDC_MAP_HCGP_LISTBOX_TEAMCOLOR,["Red","Blue","Green","Black","White"]]
 		];
 
 
@@ -2007,11 +1995,11 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 		// Controls that define the top row above the listboxes.
 		// Add every relevant control here if needed.
 		private _topRowCtrls = [
-			800724
+			IDC_MAP_HCGP_STANCES_AUTO_IMG //-- reference point
 		];
 
 		// Extra conditional button macro
-		private _responseCtrls = [800707, 800711];
+		private _responseCtrls = [IDC_MAP_HCGP_CONFIRM_BG, IDC_MAP_HCGP_CONFIRM_BTN];
 		private _showResponseButton = !(profileNamespace getVariable ["HC_GROUP_RESPONSE", false]);
 
 		private _dashboardPos = ctrlPosition _dashboardCtrl;
@@ -2037,7 +2025,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 		// Height of the conditional bottom button area
 		private _responseButtonH = 0;
 		if (_showResponseButton) then {
-			private _responseCtrl = _display displayCtrl 800707;
+			private _responseCtrl = _display displayCtrl IDC_MAP_HCGP_CONFIRM_BG;
 			if !(isNull _responseCtrl) then {
 				_responseButtonH = (ctrlPosition _responseCtrl) select 3;
 			};
@@ -2057,7 +2045,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 				_ctrl ctrlSetPosition _pos;
 				_ctrl ctrlCommit 0;
 			};
-		} forEach [800701, 800702];
+		} forEach [IDC_MAP_HCGP_LISTBOX_BEHAVIOUR, IDC_MAP_HCGP_LISTBOX_COMBATMODE];
 
 		// Bottom row listboxes
 		{
@@ -2069,7 +2057,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 				_ctrl ctrlSetPosition _pos;
 				_ctrl ctrlCommit 0;
 			};
-		} forEach [800703, 800704];
+		} forEach [IDC_MAP_HCGP_LISTBOX_FORMATION, IDC_MAP_HCGP_LISTBOX_TEAMCOLOR];
 
 		// Conditional response button pair
 		{
@@ -2101,7 +2089,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 	if (profileNameSpace getVariable ["HC_GROUP_RESPONSE", false]) then {
 		{
 			(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-		} foreach [800707, 800711];	
+		} foreach [IDC_MAP_HCGP_CONFIRM_BG, IDC_MAP_HCGP_CONFIRM_BTN];	
 	};
 
 	
@@ -2139,9 +2127,7 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 		_vehicle setVariable ["A3C_ParadropActive",true,true];
 		[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
 		[getPlayerUID player, _vehicle] call A3C_Paradrop_Eject;
-		//{
-		//		(finddisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-		//} foreach [800720,800721];
+
 	} else {
 		//-- vehicle is on ground
 		_cargoObjects = [_vehicle] call MCSS_fnc_getNearCargoLoadObjects;
@@ -2157,7 +2143,7 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 				};
 
 			} else {
-				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
+				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_ControlsGroup,IDC_SHARED_UI_DASHBOARD_PARENT];
 				(findDisplay 12 displayCtrl 51) ctrlEnable true;
 			};
 
@@ -2202,7 +2188,7 @@ A3C_AI_HIGHCOMMAND_fnc_mergeGroups = {
 	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 	
 
-	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
+	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_ControlsGroup,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	if (count _groupArray <= 1) then {
 		[_groupArray] spawn A3C_REJOIN_GROUPS;
@@ -2268,19 +2254,19 @@ A3C_Map_HC_groupContext_LB_Switch = {
 	if (A3C_CurSel) exitWith {};
 	private _immediateAction = [];
 	switch (_box) do {
-		case (800701) : {
+		case (IDC_MAP_HCGP_LISTBOX_BEHAVIOUR) : {
 			A3C_Map_HC_groupContext_Behaviour = ["Careless","Safe","Aware","Combat","Stealth"] select _lb; //"Careless (Driver)",
 			_immediateAction = ["setBehaviourStrong", A3C_Map_HC_groupContext_Behaviour];
 		};
-		case (800702) : {
+		case (IDC_MAP_HCGP_LISTBOX_COMBATMODE) : {
 			A3C_Map_HC_groupContext_CMode = ["BLUE","GREEN","WHITE","YELLOW","RED"] select _lb;
 			_immediateAction = ["setCombatMode", A3C_Map_HC_groupContext_CMode];
 		};
-		case (800703) : {
+		case (IDC_MAP_HCGP_LISTBOX_FORMATION) : {
 			A3C_Map_HC_groupContext_Form = ["Column","Stag Column","Wedge","Ech Left","Ech Right","Vee","Line","File","Diamond"] select _lb;
 			_immediateAction = ["setFormation", A3C_Map_HC_groupContext_Form];
 		};
-		case (800704) : {
+		case (IDC_MAP_HCGP_LISTBOX_TEAMCOLOR) : {
 			A3C_Map_HC_groupContext_Color = ["Red","Blue","Green","Black","White"] select _lb;
 			
 		};
@@ -2290,7 +2276,7 @@ A3C_Map_HC_groupContext_LB_Switch = {
 	if (profileNameSpace getVariable ["HC_GROUP_RESPONSE", false]) then {
 		{
 			private _group = _x;
-			if (_box == 800704) then {
+			if (_box == IDC_MAP_HCGP_LISTBOX_TEAMCOLOR) then {
 				_group setVariable ["A3C_HC_GroupColor",A3C_Map_HC_groupContext_Color,true];
 			} else {
 				// private _executingEntity = if (_box ) then {leader _group} else {_group};
@@ -2314,10 +2300,10 @@ A3C_GP_Btns_Stances = {
 		(findDisplay _a3c_dsp displayCtrl _i) ctrlSetTextColor [1,1,1,0.1];
 	};
 	private _ModeButton = switch (_stance) do {
-		case ("AUTO") : {800724};
-		case ("UP") : {800725};
-		case ("MIDDLE") : {800726};
-		case ("DOWN") : {800727};
+		case ("AUTO") : {IDC_MAP_HCGP_STANCES_AUTO_IMG};
+		case ("UP") : {IDC_MAP_HCGP_STANCES_STAND_IMG};
+		case ("MIDDLE") : {IDC_MAP_HCGP_STANCES_CROUCH_IMG};
+		case ("DOWN") : {IDC_MAP_HCGP_STANCES_PRONE_IMG};
 	};
 	(findDisplay _a3c_dsp displayCtrl _ModeButton) ctrlSetTextColor [1,1,1,0.7];
 };
@@ -2401,13 +2387,13 @@ A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 	};
 
 
-	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
+	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_ControlsGroup,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 };
 
 A3C_HC_FocusGroup = grpNull;
 
-A3C_MAP_HC_setFocusGroup = {
+A3C_MAP_HC_setFocusGroup = { //-- NO LONGER USED? / UNUSED
 	private _a3c_dsp = 100020;
 	if !(count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) exitWith {};
 	private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
@@ -2440,7 +2426,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 				_leaders = [];
 				_subs = [];
 
-				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
+				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_ControlsGroup,IDC_SHARED_UI_DASHBOARD_PARENT];
 				(findDisplay 12 displayCtrl 51) ctrlEnable true;
 				A3C_ConvoyGroups = A3C_ConvoyGroups - [_entry];
 				private _groupArrays = [];
@@ -2473,7 +2459,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 	} else {
 		//-- create new convoy in order
 		if (count A3C_SELECTED_HC_GROUPS_SETTINGS >= 2) then {
-			{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,IDC_SHARED_UI_DASHBOARD_PARENT];
+			{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_ControlsGroup,IDC_SHARED_UI_DASHBOARD_PARENT];
 			(findDisplay 12 displayCtrl 51) ctrlEnable true;
 			private ["_drivers","_nonDrivers"];
 			_drivers = [];

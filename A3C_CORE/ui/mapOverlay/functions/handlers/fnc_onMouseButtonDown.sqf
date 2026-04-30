@@ -36,7 +36,7 @@ if (A3C_UI_MAP_isCircleMenu) exitWith {
 };
 
 //-- contextMenues are open
-if ({ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,8008] > 0) exitWith {};
+if ({ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [IDC_MAP_HCGP_WP_ControlsGroup,IDC_MAP_HCGP_ControlsGroup,8008] > 0) exitWith {};
 private _ctls = if (visibleMap) then {
 	[
 		IDC_SHARED_UI_TREE_SELECTOR,
@@ -403,10 +403,10 @@ if (_gpIconsCount > 0) exitWith {
 		} else {
 			
 			//if (_ctrl) then {
-				//(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow true;
+				//(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_ControlsGroup) ctrlShow true;
 				// if ({private _ld = leader _x; isPlayer _ld} count A3C_SELECTED_UNITS == 0) then {
-					(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlSetPosition ([_a3c_dsp,A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT,[_sx, _sy]] call A3C_UI_MAP_fnc_findCtrlSafePos);
-					(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlCommit 0;
+					(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_ControlsGroup) ctrlSetPosition ([_a3c_dsp,IDC_MAP_HCGP_ControlsGroup,[_sx, _sy]] call A3C_UI_MAP_fnc_findCtrlSafePos);
+					(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_ControlsGroup) ctrlCommit 0;
 				// } else {
 					// hint "A3C: "; //-- not needed, should already be executed in actions
 				// };
@@ -445,7 +445,7 @@ if (count _sqIcons > 0) exitWith {
 					_parent = findDisplay _a3c_dsp displayCtrl 8008;
 					_text = findDisplay _a3c_dsp displayCtrl 800802;
 					_listBox = findDisplay _a3c_dsp displayCtrl 800803;
-					//(findDisplay 100020 displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT) ctrlShow false;
+					//(findDisplay 100020 displayCtrl IDC_MAP_HCGP_ControlsGroup) ctrlShow false;
 					A3C_OBJECTSELECTOR_MODE = "PARALOAD_SQ";
 					_parent ctrlShow true;
 					_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
@@ -667,13 +667,13 @@ if (_a3c_dsp == _a3c_dsp && {[[_sX,_sY],findDisplay _a3c_dsp displayCtrl 11] cal
 
 
 if (_left) then {
-	if ( {ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [7078,A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT] > 0) then  { ////~~~~ ?????
+	if ( {ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [7078,IDC_MAP_SQWP_ControlsGroup] > 0) then  { ////~~~~ ?????
 		_exit = true;
 	};
 };
 
 //-- hide other contextmenu's
-_ctls = if (visibleMap) then {[A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT,A3C_MAP_OVERLAY_GAMEUI_HC_WP_MENU_CTRLPARENT,709135,8008]} else {[A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT,709112,709135,8008]};
+_ctls = if (visibleMap) then {[IDC_MAP_SQWP_ControlsGroup,IDC_MAP_HCGP_WP_ControlsGroup,709135,8008]} else {[IDC_MAP_SQWP_ControlsGroup,709112,709135,8008]};
 {
 	if !([[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea) then {
 		(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
@@ -683,7 +683,7 @@ _ctls = if (visibleMap) then {[A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT,A3C_
 if (_exit) exitWith {};
 
 if (visibleMap) then {
-	if !(isnull (findDisplay 100020 displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT)) then {
+	if !(isnull (findDisplay 100020 displayCtrl IDC_MAP_SQWP_ControlsGroup)) then {
 		if ([_a3c_dsp] call A3C_InMapControls) then {
 			_exit = true;
 		};
@@ -695,7 +695,7 @@ if (_exit) exitWith {};
 //-- right Mouse Button
 if !(_left) exitWith {
 	private _resetSelection = true;
-	(findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_SQ_WP_MENU_CTRLPARENT) ctrlShow false;
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlShow false;
 
 
 	if (_resetSelection) then {
@@ -749,7 +749,7 @@ if (((A3C_TEMP_ACTION select 0) == "GRENADE") && {count A3C_AI_GREN_ARRAY == 0})
 //-- Current Mode is HC
 if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 	if ((count A3C_SELECTED_UNITS) > 0) then {
-		if !(ctrlShown (findDisplay _a3c_dsp displayCtrl A3C_MAP_OVERLAY_GAMEUI_GROUP_MENU_CTRLPARENT)) then {
+		if !(ctrlShown (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_ControlsGroup)) then {
 			if (_alt) then {
 				//-- clear all waypoints
 				{

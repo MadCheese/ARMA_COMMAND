@@ -7,6 +7,654 @@
 
 
 
+
+
+A3C_LB_Change = {
+	// systemchat "A3C_LB_Change";
+	if (A3C_CurSel) exitWith {};
+
+	params ["_mode","_lb","_a3c_dsp"];
+	
+	/*
+		Currently a shared function between map and Radial.
+		Radial uses it for Right Extension- and teamcolor-listboxes
+		Map uses it for target assignment, Teamcolor assignment and the Squad waypoint context menu
+		ToDo: Split them up For radial and Map :)
+
+	*/
+
+	
+	//~~ #TODO: rearrange to have logical order
+	//-- modes:
+	//-- 0: SQ-WPContext-Heli
+	//-- 1: Assign Target | Attack/Ignore (Shared by SQ & HC)
+	//-- 2: SQ-WPContext-Infantry
+	//-- 3: Squad-Level Teamcolor assignment
+
+
+	private _doubleClick = false;
+	if (isnil "_mode") exitWith {};
+
+
+
+
+
+	private _btn = 0;
+	private _gp = objnull;
+	private _targetUnits = A3C_SELECTED_UNITS;
+	if ((typeName _mode) == "ARRAY") then {
+		_btn = _mode select 1;
+		_mode = _mode select 0;
+	};
+
+	private _tickTime = (time - A3C_LB_TICKTIME);
+	if ((_tickTime > 0.07) && (_tickTime < 0.3)) then {
+		_doubleClick = true;
+	};
+	A3C_LB_TICKTIME = time;
+	private _dest = switch (_mode) do {
+		case (1) : {A3C_TRACKED_ENEMYGROUP};
+		case (2) : {A3C_GCUNITS};
+		default {objnull}; //-- for _mode in [1,3]
+	};
+
+
+		
+	switch (_mode) do {
+		case (0) : {
+			[_lb] call A3C_SWITCHMARKER;
+		};
+		case (1) : {
+			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+			if (count A3C_SELECTED_UNITS > 0) then {
+				if (typeName (A3C_SELECTED_UNITS select 0) == "GROUP") then {
+
+					{
+						{
+							_soldier = _x;
+							_target = objNull;
+							if ((count units _dest) >= (_foreachIndex + 1)) then {
+								_target = ((units _dest) select _forEachIndex);
+							} else {
+								_target = ((units _dest) select 0);
+							};
+							if (_lb == 1) then {
+								[
+									[_soldier, _target],
+									{
+										params ["_soldier","_target"];
+										_soldier reveal [_target,4];
+										_soldier commandTarget _target;
+										_soldier commandFire _target;
+									}
+								] remoteExec ['bis_fnc_spawn', _soldier];
+								
+								
+							};
+
+						} foreach (units _x);
+						player groupChat format ["%1 - target that enemy!",groupID _x];
+					} foreach A3C_SELECTED_UNITS;
+				} else {
+					{
+						_un = _x;
+
+						if (   ({_un in (vehicle _x)} count A3C_SELECTED_UNITS) > 0) then {
+							if !(_x in _targetUnits) then {
+								if ( ((assignedVehicleRole _x) select 0) == "Turret") then {
+									if ((count ((vehicle _un) weaponsTurret ((assignedVehicleRole _un) select 1))) > 0) then {
+										_targetUnits pushback _x;
+									};
+								};
+							};
+						};
+					} foreach units group player;
+					{
+						_soldier = _x;
+						_target = objnull;
+						if ((count units _dest) >= (_foreachIndex + 1)) then {
+							_target = ((units _dest) select _forEachIndex);
+						} else {
+							_target = ((units _dest) select 0);
+						};
+						_soldier reveal [_target,4];
+						if (_lb == 0) then {
+							if ((assignedTarget _soldier) in (units _dest)) then {
+								_soldier dotarget _objnull;
+								_soldier lookAt objnull;
+								_soldier doWatch objnull;
+							};
+						} else {
+							_soldier commandtarget (vehicle _target);
+							_soldier lookAt (vehicle _target);
+							_soldier doWatch (vehicle _target);
+						};
+					} foreach _targetUnits;
+				};
+			};
+		};
+		case (2) :{
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlShow false;
+			_lb call A3C_GoCode_Switch;
+		};
+		case (3) : {
+			_units = [_dest];
+			_color = "MAIN";
+			
+			_backCol = [1,1,1,1];
+			_isMap = (!isNull (findDisplay 100020));
+
+
+
+			_compare = if (_isMap) then {A3C_SELECTED_UNITS} else {A3C_RD_UNITS};
+			if (_dest in _compare) then {
+				{_units pushback _x} foreach _compare - [_dest];
+			};
+			switch (_lb) do {
+				case (0) : {
+					_color = "RED";
+					_backCol = [A3C_UI_COLOR_RED,1] call A3C_UI_fnc_setOpacity;
+				};
+				case (1) : {
+					_color = "GREEN";
+					_backCol = [0,1,0,1];
+				};
+				case (2) : {
+					_color = "BLUE";
+					_backCol = [A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity;
+				};
+				case (3) : {
+					_color = "YELLOW";
+					_backCol = [A3C_UI_COLOR_YELLOW,1] call A3C_UI_fnc_setOpacity;
+				};
+				case (4) : {
+					_color = "MAIN";
+					_backCol = [1,1,1,1];
+				};
+			};
+
+			{
+
+				_x assignTeam _color;
+				_x setVariable ["A3C_ASSIGNEDTEAM",_color];
+				private _treeVar = _x getVariable ["A3C_TREESEL_INDEX",[]];
+				if (count _treeVar > 0) then {
+					private _btn = _treeVar select ((count _treeVar) -1); //-- make sure we fetch the sub-button
+					private _ct_tree1 = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
+					_ct_tree1 tvSetColor [_btn,_backCol];
+				};
+			} foreach _compare;
+
+			if (_isMap) then {
+				{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+			} else {
+				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONLEFT_TC_BOX) ctrlShow false;
+				//-- to do: update tree!
+			};
+			[_a3c_dsp,A3C_MAP_CommandMode] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
+			[] spawn {
+				sleep 0.1;
+				[0] call A3C_UI_MAP_RESIZE_TEAMCOLORS_Y;
+			};
+		};
+		case (4) : {
+			_gp = [A3C_HC_getAllGroups_Player_Current select (_btn - 1)];
+			{
+				if !(_x in _gp) then {_gp pushback _x};
+			} foreach A3C_SELECTED_UNITS;
+			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+			[1,_gp] spawn A3C_BTN_HC;
+		};
+		case (5) : {
+			//-- WP loop
+		};
+		case (6) : {
+			//-- medic
+			//systemchat "triggered";
+			private _medics = (group player) getVariable ["A3C_MEDICS",[]];
+			if (_lb >= 0) then {
+				private _medics_lb = [];
+				if ((_lb == 0) && ((count _medics) > 1) ) then {
+					_medics_lb = _medics
+				} else {
+					if ((count _medics) > 1) then {
+						_medics_lb = [(_medics select (_lb - 1))];
+					} else {
+						_medics_lb = [(_medics select 0)];
+					};
+				};
+				(group player) setVariable ["A3C_MEDICS_LB",_medics_lb];
+			};
+		};
+		case (7) : {
+			//-- patient
+			//-- default: all patients - to be overridden by single selections
+			private _patients = (group player) getVariable ["A3C_PATIENTS",[]];
+			
+			if (_lb >= 0) then {
+				private _patients_lb = [];
+				if ((_lb == 0) && ((count _patients) > 1) ) then {
+					_patients_lb = _patients;
+				} else {
+					if ((count _patients) > 1) then {
+						_patients_lb = [(_patients select (_lb - 1))];
+					} else {
+						_patients_lb = [(_patients select 0)];
+					};
+				};
+				private _lbMin = if (lbSize (findDisplay _a3c_dsp displayCtrl 8055) == 1) then {0} else {1};
+				
+				if (_doubleClick && (_lb >= _lbMin)) then { //-- lb > 0 means 'heal all' was not selected :)
+					//-- double click: cancel for individual unit
+					private _patient = _patients select (_lb - 1);
+					// systemchat format ["Double click - patients: %1", _patient];
+					_patient setVariable ["A3C_AbortHealing", true];
+					
+					{
+						private _evaluatedPatients = (group player) getVariable[_x, [] ];
+						_evaluatedPatients = _evaluatedPatients - [_patient];
+						(group player) setVariable [_x, _evaluatedPatients];
+						
+					} foreach ["A3C_PATIENTS_ASSIGNED", "A3C_PATIENTS_DESIGNATED"]; //"A3C_PATIENTS_LB", 
+					systemchat format ["HEALING CANCELLED FOR %1", name _patient];
+					[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
+					
+					
+
+				} else {
+					//-- single click: select individual unit
+					(group player) setVariable ["A3C_PATIENTS_LB", _patients_lb];
+				};
+				
+			};
+		};
+		case (8) : {
+			//-- LB 1
+			if (_lb >= 0) then {
+				
+					//systemchat '11';
+					A3C_TARGETVEH = A3C_VEHSAV select _lb;
+					
+					["VEHICLES",1] call A3C_UI_RADIAL_LABEL_LB;
+					
+					
+				
+			};
+		};
+		case (9) : {
+			//-- LB 2
+			if (_lb >= 0) then {
+				
+					// insert function here
+				
+			};
+		};
+		case (10) : {
+			[_lb] call A3C_Rearm_LBChange_Source;
+		};
+		case (11) : {
+			[_lb, _doubleClick] call A3C_Rearm_LBChange_SourceContent;
+		};
+		case (12) : {
+			
+				_mode = switch _lb do {
+					case 0 : {"CARELESS"};
+					case 1 : {"SAFE"};
+					case 2 : {"AWARE"};
+					case 3 : {"COMBAT"};
+					case 4 : {"STEALTH"};
+				};
+				{
+					[_x,["BEHAVIOUR",_mode]] call MCSS_fnc_orderIndividual;
+				} foreach A3C_RD_UNITS;
+			
+		};
+		case (13) : {
+			
+				_mode = switch _lb do {
+					case 0 : {"BLUE"};
+					case 1 : {"GREEN"};
+					case 2 : {"WHITE"};
+					case 3 : {"YELLOW"};
+					case 4 : {"RED"};
+				};
+				{
+					[_x,["COMBATMODE",_mode]] call MCSS_fnc_orderIndividual;
+				} foreach A3C_RD_UNITS;
+			
+		};
+	};
+};
+
+//-- Activate a GoCode
+//-- Used by Radial and Tablet
+A3C_ACTIVATEGOCODE = {
+	_code = _this select 0;
+	private _a3c_dsp = 100020;
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	_ctrls = switch (_code) do {
+		case ("A") : {[709100,709101]};
+		case ("B") : {[709102,709103]};
+		case ("C") : {[709104,709105]};
+		case ("D") : {[709106,709107]};
+	};
+	call compile format
+	[
+		"
+			[] spawn {
+				A3C_GoCode_Activate_%1 = true;
+				if (%2) then {
+					publicVariable 'A3C_GoCode_Activate_%1';
+				};
+				sleep 2.1;
+				A3C_GoCode_Activate_%1 = false;
+				publicVariable 'A3C_GoCode_Activate_%1';
+				if (%2) then {
+					publicVariable 'A3C_GoCode_Activate_%1';
+				};
+			};
+		",
+		(parseText _code),
+		{["A3C_Terminal", _x] call BIS_fnc_instring} count ((Items player) + (assignedItems player)) > 0
+	];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach _ctrls;
+	if (!isNil 'A3C_GOCODES_HC') then {
+		//-- #TODO: find out why 'A3C_GOCODES_HC' is sometimes not defined anymore (overridden by server somehow where it's not defined? we are exiting if isDedicated above)
+		A3C_GOCODES_HC = A3C_GOCODES_HC - [_code];
+		publicVariable 'A3C_GOCODES_HC';
+	};
+	
+	[] spawn {
+		sleep 0.5;
+		[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
+		sleep 2;
+		[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
+	};
+};
+
+
+//-- RESET ALL GROUP SETTINGS
+
+A3C_GROUP_RESET = {
+	if (is3DEN) exitWith {};
+	setGroupIconsVisible [false,false];
+	private ["_units","_knowData","_recreateLogic"];
+	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+
+
+	//////////////////////
+	//-- EXTRAS FIRST: unflip all vehicles
+	//////////////////////
+	private _flipVehicles = [];
+	{
+		{
+			if (!isNull objectParent _x) then {
+				_vU = vectorUp (vehicle _x);
+				_stable = (({(abs _x) > 0.5} count [(_vU select 0),(_vU select 1)] == 0) && (_vu select 2 > 0));
+				if !(_stable) then {
+					if !(vehicle _x isKindOf "AIR") then {
+						_flipVehicles pushBackUnique (vehicle _x);
+					};
+				};
+			};
+		} foreach (units _x);
+	} foreach ([(group player)] + A3C_HC_getAllGroups_Player_Current);
+	{
+		if (isTouchingGround _x) then {
+			_x setPosASL (getPosASL _x);
+			//systemchat '1';
+			//_x setPos ( ((getposASL _x) select [0,2]) + [0]);
+		};
+	} foreach _flipVehicles;
+	//////////////////////
+	//////////////////////
+
+
+
+
+	
+	if !(player == leader group player) exitWith {};
+
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	
+	private _units = (units player) - [player];
+	
+	A3C_REFRESHING = true;
+	_hud = shownHud;
+	_hud set [0,true]; //-- fix for AIS etc hiding the main game's hood
+
+	_groupInitial = group player;
+	_gpID = groupID _groupInitial;
+	private _groupVarnames = _groupInitial call KK_fnc_objectVarNames;
+	//systemchat str _groupVarnames;
+
+	//-- store all things that we know about as this will be reset when unjoining units
+	_knowData = [];
+
+	{
+		if ((player knowsabout _x) > 0) then {
+			_knowData pushback [_x,(player knowsabout _x)];
+		};
+	} foreach (allmissionObjects "ALL");
+
+
+
+
+
+	_stayLeader = true; //if (player == (leader group player)) then {true} else {false}; //~~ assumption: entire fnc is only ever run on player group and exits if player is not leader. will always be true
+	{player reveal [_x,4]} foreach units group player; //~~ why this? dying units somehow a problem
+	_side = side player;
+	
+	_leader = leader _groupInitial;  //~~ !! given that we exit above if leader is not a player, this seems to be code residue. player will always be leader if this gets reached.
+
+
+	_groupTemporary = creategroup _side;
+	
+	{
+		[vehicle _x,"LOCKED"] remoteExec ["setvehicleLock", vehicle _x];
+		private _assignedTeam = if (player == cameraOn) then {assignedTeam _x} else {_x getVariable ["A3C_ASSIGNEDTEAM","MAIN"]};
+		_x setvariable ["A3C_REFRESH_DATA",[_assignedTeam,(expecteddestination _x),(assignedvehicle _x),_x getVariable ["A3C_PLOT_TEMP",[]],_x getVariable ["A3C_PLOT",[]]],true];
+		[_x] joinSilent _groupTemporary;
+	} foreach _units;
+
+
+	//-- Put Player back into the UNIT-1 slot
+	if (_stayLeader) then {
+		//if !(isMultiPlayer) then { //-- ~~ WHY NOT IN MP? Did it crash things??
+			if !((player getvariable "A3C_FORMATION_INDEX") == 1) then {
+				_groupNew = createGroup (side player);
+				[player] joinSilent _groupNew;
+				_groupNew setGroupIDGlobal [_gpID];
+				deletegroup _groupInitial;
+			};
+		//};
+	};
+
+
+	_units joinSilent (group _leader); //-- (group _leader) is used as it could either be _groupNew or _groupInitial, depending on reshuffle occurrence
+	deletegroup _groupTemporary;
+	A3C_DISABLE_RADIAL = false;
+
+	{
+		_u = _x;
+		_x assignTeam ((_x getvariable "A3C_REFRESH_DATA") select 0);
+		_x setVariable ["A3C_ASSIGNEDTEAM",((_x getvariable "A3C_REFRESH_DATA") select 0)];
+
+		switch (((_x getvariable "A3C_REFRESH_DATA") select 1) select 1) do {
+			case ("LEADER PLANNED") : {
+				if (_x == (driver (vehicle _x))) then {
+					if !(_x getvariable ["A3C_HOLD",false]) then {
+						[_x,(((_x getvariable "A3C_REFRESH_DATA") select 1) select 0)] call A3C_DOMOVE;
+					};
+				};
+			};
+			case ("DoNotPlan") : {
+				if (_x == (driver (vehicle _x))) then {
+					//if !(_x getvariable ["A3C_HOLD",false]) then {
+						[_x,(position (vehicle _x))] call A3C_DOMOVE;
+					//};
+				};
+			};
+			case ("VEHICLE PLANNED") : {
+				if (_x == (driver (vehicle _x))) then {
+					[(vehicle _x),"LOCKED"] remoteExec ["setvehicleLock",(vehicle _x)];
+					if !(_x getvariable ["A3C_HOLD",false]) then {
+						[_x,(((_x getvariable "A3C_REFRESH_DATA") select 1) select 0)] call A3C_DOMOVE;
+					};
+					_x assignasdriver (vehicle _x);
+					(vehicle _x) spawn {
+						sleep 5;
+						[_this,"UNLOCKED"] remoteExec ["setvehicleLock", _this];
+					};
+				};
+			};
+		};
+
+
+		_x setdestination ((_x getvariable "A3C_REFRESH_DATA") select 1);
+		if !(isnull ((_x getvariable "A3C_REFRESH_DATA") select 2)) then {
+			if !(_x in ((_x getvariable "A3C_REFRESH_DATA") select 2)) then {
+				_x assignAsCargo ((_x getvariable "A3C_REFRESH_DATA") select 2);
+				[_x] allowGetIn true;
+				[_x] ordergetin true;
+				//if ( (_x == (driver (vehicle _x))) && !(isnull objectparent _x) ) then {
+				//	player commandchat "ALARM";
+				//};
+			};
+		};
+		[_u] call MCSS_fnc_setVehicleVarname;
+		//_x spawn {
+		//	sleep 1;
+		//	systemchat str ((_this getvariable "A3C_REFRESH_DATA") select 4);
+		//	_this setVariable ["A3C_PLOT_TEMP",(_this getvariable "A3C_REFRESH_DATA") select 3,true];
+		//	_this setVariable ["A3C_PLOT",(_this getvariable "A3C_REFRESH_DATA") select 4,true];
+		//};
+		//_x setVariable ["A3C_PLOT_TEMP",(_x getvariable "A3C_REFRESH_DATA") select 3,true];
+		//_x setVariable ["A3C_PLOT",(_x getvariable "A3C_REFRESH_DATA") select 4,true];
+
+	} foreach _units;
+	{
+		//if (isNull (_x getVariable [")) then {
+			[_x] call A3C_UNIT_INIT;
+		//};
+		if (profileNameSpace getVariable "A3C_SKILL_VAR") then {_x setskill 1};
+	} foreach (units group player);
+	profileNamespace setvariable ["A3C_GROUPUNITS",(units group player)];
+	
+
+	{_x setvariable ["A3C_FORMATION_INDEX", [_x] call A3C_GETUNITINDEX, true];} foreach (units group player);
+	if (_stayLeader) then {(group player) selectLeader player};
+	for "_i" from 7025 to 7040 do {(findDisplay _a3c_dsp displayCtrl _i) ctrlShow false};
+	if (A3C_MAP_CommandMode == "HC") then {
+		if ((count A3C_HC_getAllGroups_Player_Current ) > 0) then {
+		} else {
+			A3C_MAP_CommandMode = "INF";
+			["INF"] call A3C_UI_MAP_UFSB_ApplyMode;
+		};
+	};
+
+	{
+		player reveal [(_x select 0),(_x select 1)];
+	} foreach _knowData;
+	_units spawn {
+		sleep 3;
+		{
+			[(vehicle _x),"UNLOCKED"] remoteExec ["setvehicleLock", (vehicle _x)];
+		} foreach _this;
+	};
+	{
+		_marker = _x;
+		_delete = true;
+		{
+			_vari = _x;
+			{
+				_soldier = _x;
+				_data = _soldier getvariable _vari;
+				{
+					if (_marker in (_x select 1)) then {
+						_delete = false
+					};
+				} foreach _data;
+		 	} foreach ((units group player) - [player]);
+		} foreach ["A3C_PLOT","A3C_PLOT_TEMP"];
+		if ({_marker in (_x select 2)} count A3C_ALL_POLYS > 0) then {_delete = false};
+		if (_delete) then {
+			deleteMarkerLocal _x;
+		};
+	} foreach A3C_MARKERS;
+
+	
+
+	
+	//-- re-issue group varnames
+	{
+		call compile format ["%1 = group player",_x]
+	} foreach _groupVarnames;
+
+	A3C_UNITCOUNTER = count (units player);
+
+	if (isMultiPlayer) then {
+		{
+			[_x,(_x getvariable "A3C_REFRESH_DATA") select 0] spawn {
+				params ["_unit","_c"];
+				sleep 0.5;
+				_unit assignTeam _c;
+				_unit setVariable ["A3C_ASSIGNEDTEAM",_c];
+			};
+		} foreach _units;
+	}; //~~ this bit seems like a security residue from the rockapes mp-crashes??
+
+	{
+		{
+			private _veh = (vehicle _x);
+			private _vU = vectorUp _veh;
+			private _stable = {(abs _x) > 0.5} count [(_vU select 0),(_vU select 1)] == 0;
+
+			if !(_stable) exitWith {
+				//_veh setPos (((position _veh) select [0,2]) + [0]);
+				if (isTouchingGround _veh) then {
+					_veh setPosASL (getPosASL _veh);
+				};
+			};
+		} foreach (units _x);
+	} foreach ([group player] +  A3C_HC_getAllGroups_Player_Current);
+	if (player == driver vehicle player) then {
+		[] spawn {
+			sleep 1;
+			player doFollow player;
+			if (currentCommand player == "STOP") then {
+				player doMove (position vehicle player); //-- what does this do again?
+				player moveTo (position vehicle player);
+			};
+		};
+	};
+
+	[] call A3C_UI_FNC_ADD_KEYBINDS;
+	[_a3c_dsp] call A3C_UI_MAP_TREE_LABEL; 
+
+	if (behaviour player != "AWARE") then {
+		player setBehaviour "AWARE";
+	};
+	if (combatMode player != "YELLOW") then {
+		player setCombatMode "YELLOW";
+	};
+
+	//systemchat 'hey';
+	
+	//-- refresh map UI and HUD UI
+	[] execVM "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_drawMapUI.sqf";
+	[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
+
+
+
+	[] spawn {
+		sleep 0.5;
+		A3C_REFRESHING = false;
+	};
+};
+
+
+
 A3C_UI_Shared_FNC_AddDownkey = {
 	//-- purpose: exclude ALT from downkey collection in order to prevent lingering in A3C_UI_DOWNKEYS
 	params ["_key"];
@@ -175,7 +823,7 @@ A3C_UI_SHARED_createDashBoard = {
 			_mapBarDims params ["_mapBarX","_mapBarY","_mapBarW","_mapBarH"];
 			_mapBarY = _mapBarY + _mapBarH;
 
-			(ctrlPosition (findDisplay _a3c_dsp displayCtrl 8007)) params ["_gpX","_gpY","_gpW","_gpH"];
+			(ctrlPosition (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_ControlsGroup)) params ["_gpX","_gpY","_gpW","_gpH"];
 
 
 			_parentPos = ctrlPosition _parent;

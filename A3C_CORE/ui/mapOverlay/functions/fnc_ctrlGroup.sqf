@@ -12,5 +12,14 @@ switch (_name) do {
         ] select {!isNull _x}
     };
 
+    case "map_hcgp_imgs_Stance": {
+        [
+            ["hcgpStanceAutoImg"] call FUNC(ctrl),
+            ["hcgpStanceStandImg"] call FUNC(ctrl),
+            ["hcgpStanceCrouchImg"] call FUNC(ctrl),
+            ["hcgpStanceProneImg"] call FUNC(ctrl)
+        ] select {!isNull _x}
+    };
+
     default { [] };
 };
