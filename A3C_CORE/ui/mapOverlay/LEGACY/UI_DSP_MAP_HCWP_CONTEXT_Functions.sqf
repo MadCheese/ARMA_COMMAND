@@ -1,4 +1,5 @@
 #include "..\dialog_defines.hpp" //-- MAP DEFINES
+#include "..\script_component.hpp" 
 
 if (isDedicated) exitWith {};
 
@@ -153,7 +154,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		{
 			[_uictrl, _x] call A3C_addLbEntry;
 		} foreach ["COLUMN","STAG. COL.","WEDGE","ECH LEFT","ECH RIGHT","VEE","LINE","FILE","DIAMOND","NO CHANGE"];
-	} foreach [IDC_MAP_HCWP_Formation_Combo,IDC_IDC_MAP_HCWP_Action_Formation_Combo];
+	} foreach [IDC_MAP_HCWP_Formation_Combo,IDC_MAP_HCWP_Action_Formation_Combo];
 
 
 
@@ -702,15 +703,14 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	//-- engage prevent lb action
 
 	//-- HEADER: GROUP NAME
-	(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_GROUPNAME_TXT) ctrlSetText (format ["%1 - [%2]",toUpper groupID _gp,_wpIC]);
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_GROUPNAME_TXT) ctrlSetText (format ["%1 - [%2]",toUpper groupID _gp,_wpIC]);
 
 	lbClear (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Speed_Combo);	
 	
-	for "_i" from 709123 to 709126 do {
-		if (_i != 709123 && {!(A3C_HC_EDIT_ACTION in ["CLEAR BUILDING","CAS-STRIKE"])}) then {
-			lbClear (findDisplay _a3c_dsp displayCtrl _i);		
-		};
-		
+	if !(A3C_HC_EDIT_ACTION in ["CLEAR BUILDING", "CAS-STRIKE"]) then {
+		{
+			lbClear _x;
+		} forEach (["map_hcwp_conditionCombos_clearable"] call FUNC(ctrlGroup));
 	};
 	
 	{
@@ -886,23 +886,21 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		case (_wpHasSubSelection) : {IDC_MAP_HCWP_Action_Parent_ADD};
 		default {if (A3C_HC_EDIT_ACTION != "CAS-STRIKE") then {IDC_MAP_HCWP_Type_Parent} else {IDC_MAP_HCWP_Completion_Parent}};
 	};
-	//systemchat str _wpHasSubSelection;
+
 	
 	_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl _refCtrl); 
 	_refH = _refPos select 3;
 	_refY = (_refPos select 1) + _refH;
-	////_refCtrl = (finddisplay _a3c_dsp displayCtrl _refCtrl);
-	///_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl _refCtrl);
-	/////_refY = _refPos select 1;
-	///_refH = _refPos select 3;
-	///_refY = _refY + _refH;
+
 	{
-		_ctrl = (finddisplay _a3c_dsp displayCtrl _x);
-		_ctrlPos = ctrlPosition _ctrl;
-		_ctrlPos set [1,_refY];
+		private _ctrl = _x;
+		private _ctrlPos = ctrlPosition _ctrl;
+
+		_ctrlPos set [1, _refY];
+
 		_ctrl ctrlSetPosition _ctrlPos;
 		_ctrl ctrlCommit 0;
-	} foreach A3C_MAP_OVERLAY_GAMEUI_WPMENU_MacroConfirm;
+	} forEach (["map_hcwp_macro_confirmAndCancel"] call FUNC(ctrlGroup));
 
 
 	//----------------------------------- APPLY LABELS
@@ -919,7 +917,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	};
 	
 
-	private _fullW = (ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_GROUPNAME_BG)) select 2;
+	private _fullW = (ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_GROUPNAME_BG)) select 2;
 	
 	_refPos = ctrlPosition _preCondModeCtrl;
 	_refPos params ["_refX","_refY","_refW","_refH"];
@@ -1008,7 +1006,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	_wpMenuCtrlsGroup ctrlCommit 0;
 	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _lbV4] call A3C_setCurSel;
 	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Formation_Combo, _lbV5] call A3C_setCurSel;
-	[finddisplay _a3c_dsp displayCtrl IDC_IDC_MAP_HCWP_Action_Formation_Combo, _lbV6] call A3C_setCurSel;
+	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Formation_Combo, _lbV6] call A3C_setCurSel;
 
 	(finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Completion_Header_TXT) ctrlSetText _header3Text;
 
@@ -1929,7 +1927,7 @@ A3C_LB_HC = {
 	private _preCondModeCtrl = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Type);
 	private _preCondValCtrl = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode);
 
-	private _fullW = (ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_GROUPNAME_BG)) select 2;
+	private _fullW = (ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_GROUPNAME_BG)) select 2;
 
 
 	if !(A3C_CurSel) then {
@@ -2163,7 +2161,7 @@ A3C_LB_HC = {
 					default {"NO CHANGE"};
 				};
 			};
-			case (IDC_IDC_MAP_HCWP_Action_Formation_Combo) : {
+			case (IDC_MAP_HCWP_Action_Formation_Combo) : {
 				A3C_HC_ACTIVE_FORM_POST = switch (_lb) do {
 					case (0) : {"COLUMN"};
 					case (1) : {"STAG COLUMN"};
@@ -2583,13 +2581,16 @@ A3C_LB_HC = {
 				_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl _refCtrl);
 				private _refH = _refPos select 3;
 				private _refY = (_refPos select 1) + _refH;
+
 				{
-					_ctrl = (finddisplay _a3c_dsp displayCtrl _x);
-					_ctrlPos = ctrlPosition _ctrl;
-					_ctrlPos set [1,_refY]; 
+					private _ctrl = _x;
+					private _ctrlPos = ctrlPosition _ctrl;
+
+					_ctrlPos set [1, _refY];
+
 					_ctrl ctrlSetPosition _ctrlPos;
 					_ctrl ctrlCommit 0;
-				} foreach A3C_MAP_OVERLAY_GAMEUI_WPMENU_MacroConfirm;
+				} forEach (["map_hcwp_macro_confirmAndCancel"] call FUNC(ctrlGroup));
 
 
 				

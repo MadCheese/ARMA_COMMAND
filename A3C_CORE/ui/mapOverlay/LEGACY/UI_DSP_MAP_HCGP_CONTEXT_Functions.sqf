@@ -1904,9 +1904,9 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 		[_groupStance] call A3C_GP_Btns_Stances; //-- WHY>?
 	} else {
 
-		for "_i" from 800724 to 800727 do {
-			(findDisplay _a3c_dsp displayCtrl _i) ctrlSetTextColor [1,1,1,0.1];
-		};
+		{
+			_x ctrlSetTextColor [1,1,1,0.1];
+		} forEach (["map_hcgp_imgs_Stance"] call FUNC(ctrlGroup));
 	};
 
 	
@@ -2296,9 +2296,9 @@ A3C_GP_Btns_Stances = {
 			_x setVariable ["A3C_GROUP_STANCE",_stance,true];
 		} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
 	};
-	for "_i" from 800724 to 800727 do {
-		(findDisplay _a3c_dsp displayCtrl _i) ctrlSetTextColor [1,1,1,0.1];
-	};
+	{
+		_x ctrlSetTextColor [1,1,1,0.1];
+	} forEach (["map_hcgp_imgs_Stance"] call FUNC(ctrlGroup));
 	private _ModeButton = switch (_stance) do {
 		case ("AUTO") : {IDC_MAP_HCGP_STANCES_AUTO_IMG};
 		case ("UP") : {IDC_MAP_HCGP_STANCES_STAND_IMG};

@@ -1113,7 +1113,7 @@ A3C_SWITCHMARKER = {
 
 
 
-A3C_GET_UNITBUTTON = {
+A3C_GET_UNITBUTTON = { //-- #TODO #UNCLEAR is this #UNUSED?
 	_unit = _this select 0;
 	_return = 0;
 	_unitArray = (profileNamespace getvariable "A3C_GROUPUNITS");
@@ -1124,99 +1124,14 @@ A3C_GET_UNITBUTTON = {
 	_return;
 };
 
-//-- Function to toggle the control section for more map visibility - used by talet only (?)
-
-A3C_TAB_TOGGLE_CONTROLS = {
-	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
-	switch (A3C_TAB_TOGGLE_VAR) do {
-		case (0) : {
-			for "_i" from 7044 to 7089 do {
-				call compile format ["
-					(findDisplay _a3c_dsp displayCtrl _i) ctrlShow false;
-				",_i];
-			};
-			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;} foreach [
-				IDC_MAP_UFSB_WPCONDITION_IMG,
-				IDC_MAP_UFSB_WPCONDITION_BTN,
-				IDC_MAP_UFSB_TIMEOUT_POPUP,
-				IDC_MAP_UFSB_CommitAll,
-				IDC_MAP_UFSB_CommitSelected,
-				7097,
-				7098,
-				70981,
-				70982,
-				70983
-			];
-			for "_i" from 7025 to 7041 do {
-				call compile format ["
-					(findDisplay _a3c_dsp displayCtrl _i) ctrlShow false;
-				",_i];
-			};
-			for "_i" from 8000 to 8003 do {
-				call compile format ["
-					(findDisplay _a3c_dsp displayCtrl _i) ctrlShow false;
-				",_i];
-			};
-
-			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow false;
-			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,0.2];
-
-			A3C_TAB_TOGGLE_VAR = 1;
-		};
-		case (1) : {
-			for "_i" from 7044 to 7089 do {
-				call compile format ["
-					if !(_i in [IDC_MAP_DynamicCombo]) then {(findDisplay _a3c_dsp displayCtrl _i) ctrlShow true;};
-				",_i];
-			};
-			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true} foreach [
-				IDC_MAP_UFSB_WPCONDITION_IMG,
-				IDC_MAP_UFSB_WPCONDITION_BTN,
-				IDC_MAP_UFSB_CommitAll,
-				IDC_MAP_UFSB_CommitSelected,
-				7097,
-				7098,
-				70981,
-				70982,
-				70983
-			];
-			if !((A3C_TEMP_CONDITION select 0) == "NONE") then {
-				(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_TIMEOUT_POPUP) ctrlShow true;
-			};
-			for "_i" from 7025 to 7040 do {
-				call compile format ["
-					(findDisplay _a3c_dsp displayCtrl _i) ctrlShow true;
-				",_i];
-			};
-			for "_i" from 8000 to 8003 do {
-				call compile format ["
-					(findDisplay _a3c_dsp displayCtrl _i) ctrlShow true;
-				",_i];
-			};
-
-			if (count A3C_WAYPOINTS_TEMP > 0) then {
-				(findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow true;
-				(findDisplay _a3c_dsp displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,1];
-			};
-			A3C_TAB_TOGGLE_VAR = 0;
-		};
-	};
-};
 
 
 //-- Function to toggle force tracking on and off
-A3C_TAB_TOGGLE_TRACKER = {
+A3C_UI_MAP_TOGGLE_TRACKER = {
 	if (A3C_TRACKER_VISIBLE == 0) then {
 		A3C_TRACKER_VISIBLE = 1;
-		//{
-		//	_x setMarkerAlphaLocal 0.6;
-		//} foreach A3C_TRACKER_MARKERS;
 	} else {
 		A3C_TRACKER_VISIBLE = 0;
-		//{
-		//	_x setMarkerAlphaLocal 0;
-		//} foreach A3C_TRACKER_MARKERS;
 	};
 };
 
@@ -1293,7 +1208,7 @@ A3C_UI_MAP_UFSB_RefreshControlBar = {
 
 A3C_UI_MAP_UFSB_ApplyMode = {
 	//-- Sets page layout of map overlay's squad bar controls according to mode (A3C_MAP_CommandMode)
-	private ["_mode","_stanceHeight","_stanceLand","_stance2Col","_smokeBool","_spacing","_pagebutton","_stance1TT","_stance2TT","_pageTT","_ctrlBool"];
+	private ["_mode","_stanceHeight","_stanceLand","_stance2Col","_smokeBool","_spacing","_pagebutton","_stance1TT","_stance2TT","_pageTT"];
 	params ["_mode"];
 
 
@@ -1309,19 +1224,7 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 
 
 
-	private _lowerBar = [
-		IDC_MAP_UFSB_CommitAll,
-		IDC_MAP_UFSB_CommitSelected,
-		7072,
-		IDC_MAP_UFSB_UNDO_IMG,
-		IDC_MAP_UFSB_UNDO_BTN,
-		IDC_MAP_UFSB_CANCEL_IMG,
-		IDC_MAP_UFSB_CANCEL_BTN,
-		IDC_MAP_UFSB_HOLD_IMG,
-		IDC_MAP_UFSB_HOLD_BTN,
-		IDC_MAP_UFSB_CONTINUE_IMG,
-		IDC_MAP_UFSB_CONTINUE_BTN
-	];
+
 
 
 
@@ -1343,7 +1246,7 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 	//A3C_HELI_HELI_WP_BEHAVIOUR = "NONE";
 	A3C_HELIHEIGHT = 0;
 
-	_ctrlBool = true;
+	private _showUFSBcontrols = _mode != "HC";
 
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_BTN) ctrlSetToolTip "No Action || Use LMB to open settings or mousewheel to cycle";
 
@@ -1442,7 +1345,7 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 			};
 			_smokeBool = false;
 			onHCGroupSelectionChanged {};
-			_ctrlBool = false;
+
 			{
 				(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
 			} foreach [
@@ -1456,21 +1359,19 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 		};
 	};
 
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow _ctrlShowLowerBar} foreach _lowerBar;
-
-	//-- #WIP Note: this might just be better to apply to all squad bar controls??
-	for "_i" from 7007 to 7007 do { //-- timeout box 7708 removed ~~~~~~
-		(findDisplay _a3c_dsp displayCtrl _i) ctrlShow _ctrlBool;
-	};
-	for "_i" from 7044 to 7051 do { //-- stances to form
-		(findDisplay _a3c_dsp displayCtrl _i) ctrlShow _ctrlBool;
-	};
-	for "_i" from 7062 to 7066 do { //-- cmode - spacing input
-		(findDisplay _a3c_dsp displayCtrl _i) ctrlShow _ctrlBool;
-	};
+	//-- Show or hide UFSB controls
+	{
+		_x ctrlShow _showUFSBcontrols;
+	} forEach (["map_ufsb_ctrlsAll"] call FUNC(ctrlGroup));
 
 
-	if !(_mode == "AIR") then {
+
+	if (_mode == "AIR") then {
+		{
+			(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false;
+		} foreach [IDC_MAP_UFSB_WPACTION_IMG, IDC_MAP_UFSB_WPACTION_BTN];
+
+	} else {
 		_stanceHeight = switch (A3C_STANCE1_TEMP) do {
 			case ("AUTO") : {"A3C_CORE\ui\pictures\icon_menu_stance_Auto.paa"};
 			case ("UP") : {"A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa"};
@@ -1483,18 +1384,13 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 			case ("MIDDLE") : {"A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa"};
 			case ("DOWN") : {"A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa"};
 		};
-		//A3C_STANCE1_TEMP = "UP";
-		//A3C_STANCE2_TEMP = "MIDDLE";
-	} else {
-		
-		{
-			(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false;
-		} foreach [IDC_MAP_UFSB_WPACTION_IMG, IDC_MAP_UFSB_WPACTION_BTN];
 	};
+
 	[_mode] call A3C_UI_MAP_UFSB_RefreshControlBar;
+
+	A3C_TEMP_CONDITION = ["NONE","NONE"];
 	
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa";
-	A3C_TEMP_CONDITION = ["NONE","NONE"];
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPCONDITION_BTN) ctrlSetToolTip 'WP Condition: NONE (LMB to cycle through options)';
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_COMBATMODE_IMG) ctrlSetText "\a3\ui_f\data\GUI\Cfg\CommunicationMenu\attack_ca.paa";
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_undo.paa";
@@ -1527,27 +1423,6 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 };
 
 
-A3C_SWITCH_COMMAND_PAGE = {
-	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
-	A3C_SELECTED_UNITS = [];
-	switch (A3C_MAP_CommandMode) do {
-		case ("INF") : {
-			["AIR"] call A3C_UI_MAP_UFSB_ApplyMode;
-			A3C_MAP_CommandMode = "AIR";
-		};
-		case ("AIR") : {
-			A3C_BUTTONPAGE_TABLET = 0;
-			["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
-			A3C_MAP_CommandMode = "HC";
-		};
-		case ("HC") : {
-			A3C_BUTTONPAGE_TABLET = 0;
-			["INF"] call A3C_UI_MAP_UFSB_ApplyMode;
-			A3C_MAP_CommandMode = "INF";
-		};
-	};
-};
 
 
 
@@ -2148,22 +2023,24 @@ A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP = {
 			[IDC_MAP_UFSB_Subselection_02_IMG_10,IDC_MAP_UFSB_Subselection_02_BTN_10]  //-- Button 10
 		]
 	};
-	//-- reset button controls:
+	//-- reset subset button controls:
 	if (_subSet == 1) then {
-		for "_i" from 800901 to 800910 do {
-			(findDisplay _a3c_dsp displayCtrl _i) ctrlSetText "";
-		};
-		for "_i" from 800911 to 800920 do {
-			(findDisplay _a3c_dsp displayCtrl _i) buttonSetAction "";
-		};
+		{
+			_x ctrlSetText "";
+		} forEach (["map_ufsb_subSet_1_images"] call FUNC(ctrlGroup));
+
+		{
+			_x buttonSetAction "";
+		} forEach (["map_ufsb_subSet_1_buttons"] call FUNC(ctrlGroup));
 	};
 	if (_subSet == 2) then {
-		for "_i" from 801001 to 801010 do {
-			(findDisplay _a3c_dsp displayCtrl _i) ctrlSetText "";
-		};
-		for "_i" from 801011 to 801020 do {
-			(findDisplay _a3c_dsp displayCtrl _i) buttonSetAction "";
-		};
+		{
+			_x ctrlSetText "";
+		} forEach (["map_ufsb_subSet_2_images"] call FUNC(ctrlGroup));
+
+		{
+			_x buttonSetAction "";
+		} forEach (["map_ufsb_subSet_2_buttons"] call FUNC(ctrlGroup));
 	};
 	//-- create subset UI-data
 	switch (_actionButton) do {
@@ -3122,12 +2999,11 @@ A3C_BTN_FNC_NOSHIFT = { //-- currently unnused?
 	};
 };
 
-A3C_BTN_HC = {
+A3C_UI_MAP_fnc_disbandUnitsToHighCommand = {
 
 	private ["_isHighCommand","_isLoop","_loopPos","_loopDest","_params"];
 
-	_mode = _this select 0;
-	_groups = if ((count _this) > 1) then {_this select 1} else {A3C_HC_getAllGroups_Player_Current };
+
 	private _a3c_dsp = 100020;
 	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	_unit = objnull;
@@ -3138,10 +3014,12 @@ A3C_BTN_HC = {
 	_isLoop = false;
 	_loopPos = [0,0,0];
 	_loopDest = [0,0,0];
-	if ( (_mode == 0) && ((count A3C_SELECTED_UNITS) == 0)) exitWith {};
-	if ( (_mode == 0) && (A3C_MAP_CommandMode == "HC") ) exitWith {};
-	if ( (_mode == 1) && ((count A3C_HC_getAllGroups_Player_Current ) == 0)) exitWith {};
-	if ( (_mode == 1) && A3C_BOOL_REJOINING) exitWith {};
+
+	if (
+		(count A3C_SELECTED_UNITS) == 0
+		|| {A3C_MAP_CommandMode == "HC"}
+	) exitWith {};
+
 	_data = [];
 	_fnc_Tracker = {
 		private ["_group","_marker"];
@@ -3165,183 +3043,154 @@ A3C_BTN_HC = {
 	//{(vehicle _x) setvehicleLock "LOCKED"} foreach units group player;
 	_unitArray = profileNamespace getvariable "A3C_GROUPUNITS";
 
-	if (_mode == 0) then {
-		// disband units
-		_units = A3C_SELECTED_UNITS;
-		{
-			_sl = _x;
-			if !(_x in A3C_SELECTED_UNITS) then {
-				if ( ({_sl in (vehicle _x)} count A3C_SELECTED_UNITS) > 0) then {
-					if !(_x in (vehicle player)) then {
-						_units pushback _sl;
-					};
+
+	// disband units
+	_units = A3C_SELECTED_UNITS;
+	{
+		_sl = _x;
+		if !(_x in A3C_SELECTED_UNITS) then {
+			if ( ({_sl in (vehicle _x)} count A3C_SELECTED_UNITS) > 0) then {
+				if !(_x in (vehicle player)) then {
+					_units pushback _sl;
 				};
 			};
-		} foreach (units group player) - [player];
-		_newgroup = creategroup (side player);
-		private _disbandedPhonetics = []; //A3C_HC_DISBANDED; //; //
+		};
+	} foreach (units group player) - [player];
+	_newgroup = creategroup (side player);
+	private _disbandedPhonetics = []; //A3C_HC_DISBANDED; //; //
+	{
+		if (["A3C-",groupID _x] call BIS_fnc_instring) then {
+			_disbandedPhonetics pushBackUnique _x;
+		};
+	} foreach A3C_HC_getAllGroups_Player_Current;
+	_newGroup setGroupIDGlobal [ format ["A3C-%1",[(count _disbandedPhonetics + 1) max 1] call A3C_HC_getPhonetic] ];
+	_unit = (A3C_SELECTED_UNITS select 0);
+	_loopPos = position _unit;
+	{
+		_candidate = _x;
+
 		{
-			if (["A3C-",groupID _x] call BIS_fnc_instring) then {
-				_disbandedPhonetics pushBackUnique _x;
+			if (_x == _candidate) then {
+				_unitarray set [_forEachIndex,objnull];
 			};
-		} foreach A3C_HC_getAllGroups_Player_Current;
-		_newGroup setGroupIDGlobal [ format ["A3C-%1",[(count _disbandedPhonetics + 1) max 1] call A3C_HC_getPhonetic] ];
-		_unit = (A3C_SELECTED_UNITS select 0);
-		_loopPos = position _unit;
-		{
-			_candidate = _x;
+		} foreach _unitarray;
+		deletemarkerlocal (_x getvariable 'A3C_TAB_MARKER'); //~~ HCWP ALERT
+		{_unit setVariable [_x,false]} foreach ["A3C_HOLD","A3C_HOLD_COVER"];
+	} foreach _units;
+	_units joinsilent _newGroup;
 
-			{
-				if (_x == _candidate) then {
-					_unitarray set [_forEachIndex,objnull];
-				};
-			} foreach _unitarray;
-			deletemarkerlocal (_x getvariable 'A3C_TAB_MARKER'); //~~ HCWP ALERT
-			{_unit setVariable [_x,false]} foreach ["A3C_HOLD","A3C_HOLD_COVER"];
-		} foreach _units;
-		_units joinsilent _newGroup;
-
-		A3C_HC_DISBANDED pushback _newgroup;
-		_newGroup setvariable ["d_do_not_delete",true,true];
-		if (_isHighCommand) then {
-			player groupchat "Group Added To High Command";
-			player hcSetGroup [_newgroup,"HQ","teamred"];
-		} else {
-			//~~ HCWP ALERT
-			/*
-			call compile format
-			[
-				"
-					A3C_HC_GP_MARKER_%1 = createmarkerLocal ['A3C_HC_GP_MARKER_%1', %2];
-					'A3C_HC_GP_MARKER_%1' setMarkerTypeLocal '%3';
-					'A3C_HC_GP_MARKER_%1' setMarkerSizeLocal [1,0.5];
-					'A3C_HC_GP_MARKER_%1' setMarkerColorLocal 'ColorBlufor';
-					'A3C_HC_GP_MARKER_%1' setMarkerAlphaLocal 0.5;
-					[_newGroup,'A3C_HC_GP_MARKER_%1'] spawn _fnc_tracker;
-					A3C_TRACKER_MARKERS pushback 'A3C_HC_GP_MARKER_%1';
-				",
-				(count A3C_TRACKER_MARKERS),
-				position (leader _newGroup),
-				[_newGroup] call MCSS_fnc_ICONTYPE
-			];
-			*/
-		};
-
-		[(units group player) - [player]] call A3C_GROUP_RESET;
-
-		[_newGroup, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
-
-		if (count (_unit getvariable "A3C_PLOT") > 0) then {
-			{
-				_wpd = _x;
-				_wpD params ["_wpPositions","_wpMarkers","_wpAction","_wpCondition","_wpStances","_wpSyncData","_wpCompleted","_wpCombatMode","_wpSpeed","_wpFlyInHeight","_wpLoopValue","_wpRadius"];
-				private ["_timeOut","_landingData"];
-				_params = [];
-				_timeout = if (_wpAction select 0 == "TIMEOUT") then {_wpAction select 1} else {0};
-				_landingData = if (_wpAction select 0 == "LANDING") then {_wpAction select 1} else {"NONE"};
-				if (_foreachIndex == 0) then {
-					[
-						_newGroup,
-						(position (leader _newGroup)),
-						[],
-						"MOVE",
-						[
-							0,
-							_timeOut,
-							_wpStances select 0,
-							_wpStances select 1,
-							_wpSpeed,
-							"NONE"
-						],
-						false
-					] call A3C_HC_ADD_WP; //-- "NONE" is landingData
-				};
-				if (_forEachIndex >= ((_unit getvariable "A3C_CURRENTWAYPOINT_INDEX") - 1)) then {
-					_params =
-					[
-						_newGroup,
-						((_x select 0) select 0),
-						[],
-						"MOVE",
-						[
-							0,
-							_timeOut,
-							_wpStances select 0,
-							_wpStances select 1,
-							_wpSpeed,
-							_landingData
-						]
-					];
-					if (_wpLoopValue < -1) then {
-						_isLoop = true;
-						_loopPos = (_x select 0);
-
-					};
-					if (_wpLoopValue > -1) then {
-						_loopDest = (_x select 0);
-					};
-					if (_isLoop) then {_params pushback true};
-					_params call A3C_HC_ADD_WP;
-					/*
-					switch (_wpAction select 1) do {
-						case ("DROPOFF") : {
-							_wp setwaypointType "TR UNLOAD"; AUTHOR NOTE: _wp doesn't adress anything anymore!!, include in ADD_WP
-						};
-						case ("PICKUP") : {
-							_wp setwaypointType "TR UNLOAD";
-						};
-						case ("LANDFINAL") : {
-							_wp setwaypointType "TR UNLOAD";
-							_wp setWaypointStatements [((waypointStatements _wp) select 0), (((waypointStatements _wp) select 1) + " {player action ['engineOff', vehicle _x]} foreach thislist; ")];
-						};
-					};
-					*/
-				};
-			} foreach (_unit getvariable "A3C_PLOT");
-			if (_isLoop) then {
-				[
-					_newGroup,
-					([_loopPos,5,([_loopPos,_loopDest] call BIS_fnc_Dirto)] call BIS_fnc_Relpos),
-					[],
-					"CYCLE"
-				] call A3C_HC_ADD_WP;
-			};
-			[_newGroup,0] setWaypointPosition [_loopPos,0];
-		} else {
-			_newGroup setVariable ["AIC_Waypoints",[0,[]],true];
-			//{[_x,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler} foreach (missionNamespace getVariable ["AIC_Group_Controls",[]]);
-			//[_newGroup,(position (leader _newGroup))] call A3C_HC_ADD_WP;
-		};
-
-		[A3C_SELECTED_UNITS,true,false] spawn A3C_AI_Shared_cancelUnitPlot;
-
-		if (hcShownBar) then {
-			hcshowbar false;
-			sleep 0.1;
-			hcShowBar true;
-		};
-
-		if (A3C_MAP_CommandMode in ["INF","AIR"]) then {
-			if ((count units group player) == 1) then {
-				["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
-				A3C_MAP_CommandMode = "HC";
-			};A3C_UI_MAP_UFSB_ApplyMode
-		};
-
-		A3C_SELECTED_UNITS = [];
-		
-		//systemchat str _disbandedPhonetics;
-		
-		{[_x] spawn A3C_HC_ROLES;} foreach units _newGroup;
-
-	} else {
-		// re-join units
-		[_groups] call A3C_AI_HIGHCOMMAND_fnc_mergeGroups; //-- spawn security mechanic
-
+	A3C_HC_DISBANDED pushback _newgroup;
+	_newGroup setvariable ["d_do_not_delete",true,true];
+	if (_isHighCommand) then {
+		player groupchat "Group Added To High Command";
+		player hcSetGroup [_newgroup,"HQ","teamred"];
 	};
 
+	[(units group player) - [player]] call A3C_GROUP_RESET;
 
+	[_newGroup, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
 
+	if (count (_unit getvariable "A3C_PLOT") > 0) then {
+		{
+			_wpd = _x;
+			_wpD params ["_wpPositions","_wpMarkers","_wpAction","_wpCondition","_wpStances","_wpSyncData","_wpCompleted","_wpCombatMode","_wpSpeed","_wpFlyInHeight","_wpLoopValue","_wpRadius"];
+			private ["_timeOut","_landingData"];
+			_params = [];
+			_timeout = if (_wpAction select 0 == "TIMEOUT") then {_wpAction select 1} else {0};
+			_landingData = if (_wpAction select 0 == "LANDING") then {_wpAction select 1} else {"NONE"};
+			if (_foreachIndex == 0) then {
+				[
+					_newGroup,
+					(position (leader _newGroup)),
+					[],
+					"MOVE",
+					[
+						0,
+						_timeOut,
+						_wpStances select 0,
+						_wpStances select 1,
+						_wpSpeed,
+						"NONE"
+					],
+					false
+				] call A3C_HC_ADD_WP; //-- "NONE" is landingData
+			};
+			if (_forEachIndex >= ((_unit getvariable "A3C_CURRENTWAYPOINT_INDEX") - 1)) then {
+				_params =
+				[
+					_newGroup,
+					((_x select 0) select 0),
+					[],
+					"MOVE",
+					[
+						0,
+						_timeOut,
+						_wpStances select 0,
+						_wpStances select 1,
+						_wpSpeed,
+						_landingData
+					]
+				];
+				if (_wpLoopValue < -1) then {
+					_isLoop = true;
+					_loopPos = (_x select 0);
+
+				};
+				if (_wpLoopValue > -1) then {
+					_loopDest = (_x select 0);
+				};
+				if (_isLoop) then {_params pushback true};
+				_params call A3C_HC_ADD_WP;
+				/*
+				switch (_wpAction select 1) do {
+					case ("DROPOFF") : {
+						_wp setwaypointType "TR UNLOAD"; AUTHOR NOTE: _wp doesn't adress anything anymore!!, include in ADD_WP
+					};
+					case ("PICKUP") : {
+						_wp setwaypointType "TR UNLOAD";
+					};
+					case ("LANDFINAL") : {
+						_wp setwaypointType "TR UNLOAD";
+						_wp setWaypointStatements [((waypointStatements _wp) select 0), (((waypointStatements _wp) select 1) + " {player action ['engineOff', vehicle _x]} foreach thislist; ")];
+					};
+				};
+				*/
+			};
+		} foreach (_unit getvariable "A3C_PLOT");
+		if (_isLoop) then {
+			[
+				_newGroup,
+				([_loopPos,5,([_loopPos,_loopDest] call BIS_fnc_Dirto)] call BIS_fnc_Relpos),
+				[],
+				"CYCLE"
+			] call A3C_HC_ADD_WP;
+		};
+		[_newGroup,0] setWaypointPosition [_loopPos,0];
+	} else {
+		_newGroup setVariable ["AIC_Waypoints",[0,[]],true];
+		//{[_x,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler} foreach (missionNamespace getVariable ["AIC_Group_Controls",[]]);
+		//[_newGroup,(position (leader _newGroup))] call A3C_HC_ADD_WP;
+	};
+
+	[A3C_SELECTED_UNITS,true,false] spawn A3C_AI_Shared_cancelUnitPlot;
+
+	if (hcShownBar) then {
+		hcshowbar false;
+		sleep 0.1;
+		hcShowBar true;
+	};
+
+	if (A3C_MAP_CommandMode in ["INF","AIR"]) then {
+		if ((count units group player) == 1) then {
+			["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
+			A3C_MAP_CommandMode = "HC";
+		};A3C_UI_MAP_UFSB_ApplyMode
+	};
+
+	A3C_SELECTED_UNITS = [];
+	
+	
+	{[_x] spawn A3C_HC_ROLES;} foreach units _newGroup;
 
 
 	sleep 0.2;
@@ -3358,8 +3207,6 @@ A3C_BTN_HC = {
 		sleep 1;
 		{(vehicle _x) setvehicleLock "UNLOCKED"} foreach units group player;
 	};
-
-
 };
 
 

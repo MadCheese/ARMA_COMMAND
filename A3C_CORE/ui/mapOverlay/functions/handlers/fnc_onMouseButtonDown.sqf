@@ -382,7 +382,7 @@ if (_gpIconsCount > 0) exitWith {
 				//systemchat 'ay';
 				["COLLAPSE",0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
 			};
-			//["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
+
 
 			if (!isPlayer leader _gp) then {
 				if ( (count A3C_SELECTED_UNITS == 0) OR (A3C_SQ_CLICKED_UNIT in A3C_SELECTED_UNITS) ) then {

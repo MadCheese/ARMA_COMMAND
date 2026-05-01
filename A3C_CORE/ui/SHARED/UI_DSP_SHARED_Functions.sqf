@@ -30,6 +30,8 @@ A3C_LB_Change = {
 	//-- 1: Assign Target | Attack/Ignore (Shared by SQ & HC)
 	//-- 2: SQ-WPContext-Infantry
 	//-- 3: Squad-Level Teamcolor assignment
+	//-- 4: used to be highcommand rejoin - removed 
+	//-- 5: used to be something related to medic but never used
 
 
 	private _doubleClick = false;
@@ -197,17 +199,9 @@ A3C_LB_Change = {
 				[0] call A3C_UI_MAP_RESIZE_TEAMCOLORS_Y;
 			};
 		};
-		case (4) : {
-			_gp = [A3C_HC_getAllGroups_Player_Current select (_btn - 1)];
-			{
-				if !(_x in _gp) then {_gp pushback _x};
-			} foreach A3C_SELECTED_UNITS;
-			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
-			[1,_gp] spawn A3C_BTN_HC;
-		};
-		case (5) : {
-			//-- WP loop
-		};
+
+		//-- 4 and 5 removed
+
 		case (6) : {
 			//-- medic
 			//systemchat "triggered";
@@ -543,8 +537,11 @@ A3C_GROUP_RESET = {
 	
 
 	{_x setvariable ["A3C_FORMATION_INDEX", [_x] call A3C_GETUNITINDEX, true];} foreach (units group player);
+	
 	if (_stayLeader) then {(group player) selectLeader player};
-	for "_i" from 7025 to 7040 do {(findDisplay _a3c_dsp displayCtrl _i) ctrlShow false};
+
+
+	
 	if (A3C_MAP_CommandMode == "HC") then {
 		if ((count A3C_HC_getAllGroups_Player_Current ) > 0) then {
 		} else {

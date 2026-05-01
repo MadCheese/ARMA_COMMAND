@@ -121,8 +121,6 @@ A3C_GRENPHR = "A3C_FireInTheHole";
 
 A3C_DEBUG = if (!isNil 'A3C_DEBUG') then {A3C_DEBUG} else {false};
 
-A3C_BOOL_REJOINING = false;
-
 
 
 
@@ -138,7 +136,7 @@ A3C_DISABLE_TRACKER = if (!isNil 'A3C_DISABLE_TRACKER') then {A3C_DISABLE_TRACKE
 ///////////////////////////////////////////////////////////////////////////////////
 //-- CHECK FOR SERVER SIDE ADDON PRESENCE
 //-- CASES: ADVANCED RAPPELLING
-A3C_checkserverAddon = {
+A3C_checkserverAddon = { //-- this works but is sloppy. we need a way to return value from server.
 	if !(isServer) exitWith {};
 	params ["_inputString","_caller"];
 	private ["_isClass"];
@@ -666,8 +664,6 @@ A3C_UI_MAP_UNITBUTTONCEIL = 16;
 
 
 
-
-A3C_MAP_OVERLAY_GAMEUI_WPMENU_MacroConfirm = [IDC_MAP_HCWP_Confirm_BG,IDC_MAP_HCWP_Confirm_TEXT,IDC_MAP_HCWP_Delete_BG,IDC_MAP_HCWP_Delete_TEXT];
 
 
 

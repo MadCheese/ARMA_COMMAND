@@ -62,40 +62,6 @@ if (_alt && {_key == 15}) exitWith {// safety if user alt-tabs out of the game
 switch (true) do {
 	
 
-	//-- switch Squad-Bar pages
-	case
-	(
-		commandingMenu == ""
-		&& {_key in [2,3,4]}
-	) : {
-		switch (_key) do {
-			case 2: {
-				if !(A3C_MAP_CommandMode == "INF") then {
-					A3C_SELECTED_UNITS = [];
-				};
-
-				["INF"] call A3C_UI_MAP_UFSB_ApplyMode;
-				A3C_MAP_CommandMode = "INF";
-			};
-			case 3: {
-				if !(A3C_MAP_CommandMode == "AIR") then {
-					A3C_SELECTED_UNITS = [];
-				};
-
-				["AIR"] call A3C_UI_MAP_UFSB_ApplyMode;
-				A3C_MAP_CommandMode = "AIR";
-			};
-			case 4: {
-				if !(A3C_MAP_CommandMode == "HC") then {
-					A3C_SELECTED_UNITS = [];
-				};
-
-				["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
-				A3C_MAP_CommandMode = "HC";
-			};
-		};
-		_blockDefault = true;
-	};
 	//-- Other keybinds
 	case (_key in [28,57,207]) : {
 

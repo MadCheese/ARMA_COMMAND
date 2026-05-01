@@ -6,7 +6,7 @@
 #define IDC_MAP_UFSB_BACKGROUND										   102 //10
 #define IDC_MAP_UFSB_FRAME											   103 //13
 
-//-- Unfoldable Squad Bar Controls
+//-- Top Controls (above unit tree)
 #define IDC_MAP_TOP_EXTRAS_BACKGROUND                                  104 //7071
 #define IDC_MAP_TOP_EXTRAS_FRAME                                       105 //7074
 #define IDC_MAP_TOP_REFRESH_IMG										   106 //7072
@@ -15,6 +15,8 @@
 #define IDC_MAP_TOP_DISBAND_BTN										   109 //7076	
 #define IDC_MAP_TOP_TOGGLETRACKER_IMG								   110 //1219
 #define IDC_MAP_TOP_TOGGLETRACKER_BTN								   111 //7096
+
+//-- Unfoldable Squad Bar WP Controls
 #define IDC_MAP_UFSB_STANCE_TRAVEL_IMG								   112 //7044
 #define IDC_MAP_UFSB_STANCE_TRAVEL_BTN								   113 //7045
 #define IDC_MAP_UFSB_WP_SPEED_IMG									   114 //7048	
@@ -106,6 +108,7 @@
 #define IDC_MAP_HCGP_STARTUP_TEXT									   184 //404041
 //-- Parent / CtrlsGroup
 #define IDC_MAP_HCGP_Parent                                            185 //8007
+
 //-- Stance Bar
 #define IDC_MAP_HCGP_STANCES_AUTO_IMG                                  186 //800724
 #define IDC_MAP_HCGP_STANCES_STAND_IMG                                 187 //800725
@@ -170,8 +173,8 @@
 //-- HCGP (HIGH COMMAND WAYPOINT) Context Menu
 //--------------------------------------------
 #define IDC_MAP_HCGP_WP_Parent                                         228 //709115
-#define IDC_MAP_HCGP_WP_GROUPNAME_BG								   229 //709116
-#define IDC_MAP_HCGP_WP_GROUPNAME_TXT								   230 //709121
+#define IDC_MAP_HCGP_GROUPNAME_BG								   229 //709116
+#define IDC_MAP_HCGP_GROUPNAME_TXT								   230 //709121
 #define IDC_MAP_HCWP_Behaviour_Combo								   231 //709139
 #define IDC_MAP_HCWP_CombatMode_Combo								   232 //709140
 #define IDC_MAP_HCWP_Speed_Combo									   233 //709138
@@ -183,7 +186,7 @@
 #define IDC_MAP_HCWP_Type_Parent								       239 //709203
 #define IDC_MAP_HCWP_Type_Action								       240 //709141
 #define IDC_MAP_HCWP_Action_Parent_MAIN						           241 //709200
-#define IDC_IDC_MAP_HCWP_Action_Formation_Combo					       242 //709129
+#define IDC_MAP_HCWP_Action_Formation_Combo					       242 //709129
 #define IDC_MAP_HCWP_Condition_Post_Type							   243 //709125
 #define IDC_MAP_HCWP_Condition_Post_Mode							   244 //709126
 #define IDC_MAP_HCWP_Action_Parent_ADD						           245 //709201
