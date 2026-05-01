@@ -66,7 +66,7 @@ switch (true) do {
 	case (_key in [28,57,207]) : {
 
 		private _groupContextmenuHC = _display displayCtrl IDC_MAP_HCGP_Parent;
-		private _wpContextmenuHC = _display displayCtrl IDC_MAP_HCGP_WP_Parent;
+		private _wpContextmenuHC = _display displayCtrl IDC_MAP_HCWP_Parent;
 
 		switch (_key) do {
 			case 28: { // Enter

@@ -146,9 +146,9 @@ private _controls = createHashMapFromArray [
     ["hcgpActionMacro9Img", _display displayCtrl IDC_MAP_HCGP_ActionMacro_9_IMG],
     ["hcgpActionMacro9Btn", _display displayCtrl IDC_MAP_HCGP_ActionMacro_9_BTN],
 
-    ["hcwpParent", _display displayCtrl IDC_MAP_HCGP_WP_Parent],
-    ["hcwpGroupNameBg", _display displayCtrl IDC_MAP_HCGP_GROUPNAME_BG],
-    ["hcwpGroupNameText", _display displayCtrl IDC_MAP_HCGP_GROUPNAME_TXT],
+    ["hcwpParent", _display displayCtrl IDC_MAP_HCWP_Parent],
+    ["hcwpGroupNameBg", _display displayCtrl IDC_MAP_HCWP_GROUPNAME_BG],
+    ["hcwpGroupNameText", _display displayCtrl IDC_MAP_HCWP_GROUPNAME_TXT],
     ["hcwpBehaviourCombo", _display displayCtrl IDC_MAP_HCWP_Behaviour_Combo],
     ["hcwpCombatModeCombo", _display displayCtrl IDC_MAP_HCWP_CombatMode_Combo],
     ["hcwpSpeedCombo", _display displayCtrl IDC_MAP_HCWP_Speed_Combo],

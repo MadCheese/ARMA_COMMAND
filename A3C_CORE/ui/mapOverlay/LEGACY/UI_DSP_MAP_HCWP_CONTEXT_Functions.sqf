@@ -46,7 +46,7 @@ A3C_UI_MAP_fnc_findCtrlSafePos = {
 	_borders = [safezoneW + safeZoneX,safezoneH + safeZoneY];
 
 	_dimensions = ctrlPosition (findDisplay _display displayCtrl _control);
-	if (_control == IDC_MAP_HCGP_WP_Parent) then {
+	if (_control == IDC_MAP_HCWP_Parent) then {
 		_confPos = ctrlPosition (findDisplay _display displayCtrl IDC_MAP_HCWP_Confirm_BG);
 		_realH = (_confPos select 1) + (_confPos select 3); //-- since baspos for ctrlsgroup is 0, we can use y+w of confirm to get total H
 		_dimensions set [3,_realH];
@@ -86,7 +86,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	
 
 
-	private _wpMenuCtrlsGroup = findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent;
+	private _wpMenuCtrlsGroup = findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent;
 	
 	_wpMenuCtrlsGroup ctrlShow true;
 
@@ -703,7 +703,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	//-- engage prevent lb action
 
 	//-- HEADER: GROUP NAME
-	(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_GROUPNAME_TXT) ctrlSetText (format ["%1 - [%2]",toUpper groupID _gp,_wpIC]);
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_GROUPNAME_TXT) ctrlSetText (format ["%1 - [%2]",toUpper groupID _gp,_wpIC]);
 
 	lbClear (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Speed_Combo);	
 	
@@ -917,7 +917,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	};
 	
 
-	private _fullW = (ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_GROUPNAME_BG)) select 2;
+	private _fullW = (ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_GROUPNAME_BG)) select 2;
 	
 	_refPos = ctrlPosition _preCondModeCtrl;
 	_refPos params ["_refX","_refY","_refW","_refH"];
@@ -1001,7 +1001,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_addLbEntry;
 	} foreach _lbArray4;
 
-	_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCGP_WP_Parent,_ctrlPosWPM] call A3C_UI_MAP_fnc_findCtrlSafePos;
+	_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCWP_Parent,_ctrlPosWPM] call A3C_UI_MAP_fnc_findCtrlSafePos;
 	_wpMenuCtrlsGroup ctrlSetPosition _ctrlPosWPM;
 	_wpMenuCtrlsGroup ctrlCommit 0;
 	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _lbV4] call A3C_setCurSel;
@@ -1081,7 +1081,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 	_group = A3C_HC_ACTIVEGROUP; //_this select 0;
 
 	
-	private _wpMenuCtrlsGroup = findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent;
+	private _wpMenuCtrlsGroup = findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent;
 
 
 	_tPos = [];
@@ -1927,7 +1927,7 @@ A3C_LB_HC = {
 	private _preCondModeCtrl = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Type);
 	private _preCondValCtrl = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode);
 
-	private _fullW = (ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_GROUPNAME_BG)) select 2;
+	private _fullW = (ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_GROUPNAME_BG)) select 2;
 
 
 	if !(A3C_CurSel) then {
@@ -2388,7 +2388,7 @@ A3C_LB_HC = {
 					case ("DEMOLITION") : {
 						A3C_HC_EDIT_ACTION = "DEMOLITION";
 						_ctrlText = "DEMOLITION";
-						(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent) ctrlShow false;
+						(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent) ctrlShow false;
 						(findDisplay 12 displayCtrl 51) ctrlEnable true;
 						_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
 						_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
@@ -2642,10 +2642,10 @@ A3C_LB_HC = {
 		[_a3c_dsp,_ctrlPosWPM] spawn {
 			params ["_a3c_dsp","_ctrlPosWPM"];
 			sleep 0.1;
-			_ctrlPosWPM = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent);
-			_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCGP_WP_Parent,_ctrlPosWPM] call A3C_UI_MAP_fnc_findCtrlSafePos;
-			(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent) ctrlSetPosition _ctrlPosWPM;
-			(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent) ctrlCommit 0;
+			_ctrlPosWPM = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent);
+			_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCWP_Parent,_ctrlPosWPM] call A3C_UI_MAP_fnc_findCtrlSafePos;
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent) ctrlSetPosition _ctrlPosWPM;
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent) ctrlCommit 0;
 		};
 		
 	};

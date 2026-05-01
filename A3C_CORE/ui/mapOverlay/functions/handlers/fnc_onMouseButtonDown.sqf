@@ -36,7 +36,7 @@ if (A3C_UI_MAP_isCircleMenu) exitWith {
 };
 
 //-- contextMenues are open
-if ({ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [IDC_MAP_HCGP_WP_Parent,IDC_MAP_HCGP_Parent,IDC_SHARED_UI_ObjectSelector_Parent] > 0) exitWith {};
+if ({ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [IDC_MAP_HCWP_Parent,IDC_MAP_HCGP_Parent,IDC_SHARED_UI_ObjectSelector_Parent] > 0) exitWith {};
 private _ctls = if (visibleMap) then {
 	[
 		IDC_SHARED_UI_TREE_SELECTOR,
@@ -673,7 +673,7 @@ if (_left) then {
 };
 
 //-- hide other contextmenu's
-_ctls = if (visibleMap) then {[IDC_MAP_SQWP_ControlsGroup,IDC_MAP_HCGP_WP_Parent,709135,IDC_SHARED_UI_ObjectSelector_Parent]} else {[IDC_MAP_SQWP_ControlsGroup,IDC_MAP_SQWP_Combo,709135,IDC_SHARED_UI_ObjectSelector_Parent]};
+_ctls = if (visibleMap) then {[IDC_MAP_SQWP_ControlsGroup,IDC_MAP_HCWP_Parent,709135,IDC_SHARED_UI_ObjectSelector_Parent]} else {[IDC_MAP_SQWP_ControlsGroup,IDC_MAP_SQWP_Combo,709135,IDC_SHARED_UI_ObjectSelector_Parent]};
 {
 	if !([[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea) then {
 		(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;

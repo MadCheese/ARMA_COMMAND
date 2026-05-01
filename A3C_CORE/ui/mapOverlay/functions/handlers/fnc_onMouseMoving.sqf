@@ -16,7 +16,7 @@ private _ctls = [
 	IDC_MAP_UFSB_Subselection_01_Parent,
 	IDC_MAP_UFSB_Subselection_02_Parent,
 	IDC_MAP_SQWP_ControlsGroup,
-	IDC_MAP_HCGP_WP_Parent,
+	IDC_MAP_HCWP_Parent,
 	IDC_MAP_HCGP_Parent
 ];
 

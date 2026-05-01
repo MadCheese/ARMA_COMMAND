@@ -168,63 +168,62 @@
 #define IDC_MAP_HCGP_ActionMacro_9_IMG                                 226 //8007252
 #define IDC_MAP_HCGP_ActionMacro_9_BTN                                 227 //8007253
 
+#define IDC_MAP_DASHBOARD_GROUPNAME_EDIT                               228 //800713
 
-
-//-- HCGP (HIGH COMMAND WAYPOINT) Context Menu
+//-- HCWP (HIGH COMMAND WAYPOINT) Context Menu
 //--------------------------------------------
-#define IDC_MAP_HCGP_WP_Parent                                         228 //709115
-#define IDC_MAP_HCGP_GROUPNAME_BG								   229 //709116
-#define IDC_MAP_HCGP_GROUPNAME_TXT								   230 //709121
-#define IDC_MAP_HCWP_Behaviour_Combo								   231 //709139
-#define IDC_MAP_HCWP_CombatMode_Combo								   232 //709140
-#define IDC_MAP_HCWP_Speed_Combo									   233 //709138
-#define IDC_MAP_HCWP_Formation_Combo								   234 //709128
-#define IDC_MAP_HCWP_Completion_Parent						           235 //709202
-#define IDC_MAP_HCWP_Completion_Header_TXT							   236 //709143
-#define IDC_MAP_HCWP_Condition_Pre_Type								   237 //709123
-#define IDC_MAP_HCWP_Condition_Pre_Mode								   238 //709124
-#define IDC_MAP_HCWP_Type_Parent								       239 //709203
-#define IDC_MAP_HCWP_Type_Action								       240 //709141
-#define IDC_MAP_HCWP_Action_Parent_MAIN						           241 //709200
-#define IDC_MAP_HCWP_Action_Formation_Combo					       242 //709129
-#define IDC_MAP_HCWP_Condition_Post_Type							   243 //709125
-#define IDC_MAP_HCWP_Condition_Post_Mode							   244 //709126
-#define IDC_MAP_HCWP_Action_Parent_ADD						           245 //709201
-#define IDC_MAP_HCWP_Action_Add_Formation_TXT					       246 //709144
-#define IDC_MAP_HCWP_Action_Add_Formation_Combo					       247 //709145
-#define IDC_MAP_HCWP_Action_Add_Completion_TXT					       248 //709146
-#define IDC_MAP_HCWP_Action_Add_Completion_Combo					   249 //709147
-#define IDC_MAP_HCWP_Confirm_BG										   250 //709131	
-#define IDC_MAP_HCWP_Confirm_TEXT									   251 //709132
-#define IDC_MAP_HCWP_Delete_BG										   252 //709133
-#define IDC_MAP_HCWP_Delete_TEXT									   253 //709134
-
+#define IDC_MAP_HCWP_Parent                                            229 //709115
+#define IDC_MAP_HCWP_GROUPNAME_BG								       230 //709116
+#define IDC_MAP_HCWP_GROUPNAME_TXT								       231 //709121
+#define IDC_MAP_HCWP_Behaviour_Combo								   232 //709139
+#define IDC_MAP_HCWP_CombatMode_Combo								   233 //709140
+#define IDC_MAP_HCWP_Speed_Combo									   234 //709138
+#define IDC_MAP_HCWP_Formation_Combo								   235 //709128
+#define IDC_MAP_HCWP_Completion_Parent						           236 //709202
+#define IDC_MAP_HCWP_Completion_Header_TXT							   237 //709143
+#define IDC_MAP_HCWP_Condition_Pre_Type								   238 //709123
+#define IDC_MAP_HCWP_Condition_Pre_Mode								   239 //709124
+#define IDC_MAP_HCWP_Type_Parent								       240 //709203
+#define IDC_MAP_HCWP_Type_Action								       241 //709141
+#define IDC_MAP_HCWP_Action_Parent_MAIN						           242 //709200
+#define IDC_MAP_HCWP_Action_Formation_Combo					           243 //709129
+#define IDC_MAP_HCWP_Condition_Post_Type							   244 //709125
+#define IDC_MAP_HCWP_Condition_Post_Mode							   245 //709126
+#define IDC_MAP_HCWP_Action_Parent_ADD						           246 //709201
+#define IDC_MAP_HCWP_Action_Add_Formation_TXT					       247 //709144
+#define IDC_MAP_HCWP_Action_Add_Formation_Combo					       248 //709145
+#define IDC_MAP_HCWP_Action_Add_Completion_TXT					       249 //709146
+#define IDC_MAP_HCWP_Action_Add_Completion_Combo					   250 //709147
+#define IDC_MAP_HCWP_Confirm_BG										   251 //709131	
+#define IDC_MAP_HCWP_Confirm_TEXT									   252 //709132
+#define IDC_MAP_HCWP_Delete_BG										   253 //709133
+#define IDC_MAP_HCWP_Delete_TEXT									   254 //709134
 
 //-- SQUAD WAYPOINT Context Menu
-#define IDC_MAP_SQWP_ControlsGroup									   254 //709109
-#define IDC_MAP_SQWP_Speed_IMG									       255 //709110
-#define IDC_MAP_SQWP_Speed_BTN									       256 //7091101
-#define IDC_MAP_SQWP_Stance_Travel_IMG								   257 //709111
-#define IDC_MAP_SQWP_Stance_Travel_BTN								   258 //7091111
-#define IDC_MAP_SQWP_Combo									           259 //709112
-#define IDC_MAP_SQWP_Stance_Arrival_IMG								   260 //709113
-#define IDC_MAP_SQWP_Stance_Arrival_BTN								   261 //7091131
-#define IDC_MAP_SQWP_Delete_IMG									       262 //709114
-#define IDC_MAP_SQWP_Delete_BTN									       263 //7091141
+#define IDC_MAP_SQWP_ControlsGroup									   255 //709109
+#define IDC_MAP_SQWP_Speed_IMG									       256 //709110
+#define IDC_MAP_SQWP_Speed_BTN									       257 //7091101
+#define IDC_MAP_SQWP_Stance_Travel_IMG								   258 //709111
+#define IDC_MAP_SQWP_Stance_Travel_BTN								   259 //7091111
+#define IDC_MAP_SQWP_Combo									           260 //709112
+#define IDC_MAP_SQWP_Stance_Arrival_IMG								   261 //709113
+#define IDC_MAP_SQWP_Stance_Arrival_BTN								   262 //7091131
+#define IDC_MAP_SQWP_Delete_IMG									       263 //709114
+#define IDC_MAP_SQWP_Delete_BTN									       264 //7091141
 
 //-- Map Go-Codes (Top Corner)
-#define IDC_MAP_Order_GoCode_BG									       264 //709099
-#define IDC_MAP_Order_GoCode_A_IMG									   265 //709100
-#define IDC_MAP_Order_GoCode_A_BTN									   266 //709101
-#define IDC_MAP_Order_GoCode_B_IMG									   267 //709102
-#define IDC_MAP_Order_GoCode_B_BTN									   268 //709103
-#define IDC_MAP_Order_GoCode_C_IMG									   269 //709104
-#define IDC_MAP_Order_GoCode_C_BTN									   270 //709105
-#define IDC_MAP_Order_GoCode_D_IMG									   271 //709106
-#define IDC_MAP_Order_GoCode_D_BTN									   272 //709107
-#define IDC_MAP_Dir_MousePosToPlayerPos_TXT							   273 //709108
+#define IDC_MAP_Order_GoCode_BG									       265 //709099
+#define IDC_MAP_Order_GoCode_A_IMG									   266 //709100
+#define IDC_MAP_Order_GoCode_A_BTN									   267 //709101
+#define IDC_MAP_Order_GoCode_B_IMG									   268 //709102
+#define IDC_MAP_Order_GoCode_B_BTN									   269 //709103
+#define IDC_MAP_Order_GoCode_C_IMG									   270 //709104
+#define IDC_MAP_Order_GoCode_C_BTN									   271 //709105
+#define IDC_MAP_Order_GoCode_D_IMG									   272 //709106
+#define IDC_MAP_Order_GoCode_D_BTN									   273 //709107
+#define IDC_MAP_Dir_MousePosToPlayerPos_TXT							   274 //709108
 
 //-- Dynamic Map Combo
-#define IDC_MAP_DynamicCombo									       274 //7078
+#define IDC_MAP_DynamicCombo									       275 //7078
 
 
