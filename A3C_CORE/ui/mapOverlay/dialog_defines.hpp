@@ -104,9 +104,9 @@
 //-- Startup
 #define IDC_MAP_HCGP_STARTUP_BAR									   183 //404040
 #define IDC_MAP_HCGP_STARTUP_TEXT									   184 //404041
-
+//-- Parent / CtrlsGroup
+#define IDC_MAP_HCGP_Parent                                            185 //8007
 //-- Stance Bar
-#define IDC_MAP_HCGP_ControlsGroup                                     185 //8007
 #define IDC_MAP_HCGP_STANCES_AUTO_IMG                                  186 //800724
 #define IDC_MAP_HCGP_STANCES_STAND_IMG                                 187 //800725
 #define IDC_MAP_HCGP_STANCES_CROUCH_IMG                                188 //800726
@@ -169,24 +169,24 @@
 
 //-- HCGP (HIGH COMMAND WAYPOINT) Context Menu
 //--------------------------------------------
-#define IDC_MAP_HCGP_WP_ControlsGroup                                  228 //709115
+#define IDC_MAP_HCGP_WP_Parent                                         228 //709115
 #define IDC_MAP_HCGP_WP_GROUPNAME_BG								   229 //709116
 #define IDC_MAP_HCGP_WP_GROUPNAME_TXT								   230 //709121
 #define IDC_MAP_HCWP_Behaviour_Combo								   231 //709139
 #define IDC_MAP_HCWP_CombatMode_Combo								   232 //709140
 #define IDC_MAP_HCWP_Speed_Combo									   233 //709138
 #define IDC_MAP_HCWP_Formation_Combo								   234 //709128
-#define IDC_MAP_HCWP_Completion_ControlsGroup						   235 //709202
+#define IDC_MAP_HCWP_Completion_Parent						           235 //709202
 #define IDC_MAP_HCWP_Completion_Header_TXT							   236 //709143
 #define IDC_MAP_HCWP_Condition_Pre_Type								   237 //709123
 #define IDC_MAP_HCWP_Condition_Pre_Mode								   238 //709124
-#define IDC_MAP_HCWP_Type_ControlsGroup								   239 //709203
+#define IDC_MAP_HCWP_Type_Parent								       239 //709203
 #define IDC_MAP_HCWP_Type_Action								       240 //709141
-#define IDC_MAP_HCWP_Action_ControlsGroup_MAIN						   241 //709200
+#define IDC_MAP_HCWP_Action_Parent_MAIN						           241 //709200
 #define IDC_IDC_MAP_HCWP_Action_Formation_Combo					       242 //709129
 #define IDC_MAP_HCWP_Condition_Post_Type							   243 //709125
 #define IDC_MAP_HCWP_Condition_Post_Mode							   244 //709126
-#define IDC_MAP_HCWP_Action_ControlsGroup_ADD						   245 //709201
+#define IDC_MAP_HCWP_Action_Parent_ADD						           245 //709201
 #define IDC_MAP_HCWP_Action_Add_Formation_TXT					       246 //709144
 #define IDC_MAP_HCWP_Action_Add_Formation_Combo					       247 //709145
 #define IDC_MAP_HCWP_Action_Add_Completion_TXT					       248 //709146
@@ -197,6 +197,31 @@
 #define IDC_MAP_HCWP_Delete_TEXT									   253 //709134
 
 
-//-- SQUAD WAYPOINT Context Menu PLACEHOLDER IDC!!!!
-#define IDC_MAP_SQWP_ControlsGroup									   18200 //709109
+//-- SQUAD WAYPOINT Context Menu
+#define IDC_MAP_SQWP_ControlsGroup									   254 //709109
+#define IDC_MAP_SQWP_Speed_IMG									       255 //709110
+#define IDC_MAP_SQWP_Speed_BTN									       256 //7091101
+#define IDC_MAP_SQWP_Stance_Travel_IMG								   257 //709111
+#define IDC_MAP_SQWP_Stance_Travel_BTN								   258 //7091111
+#define IDC_MAP_SQWP_Combo									           259 //709112
+#define IDC_MAP_SQWP_Stance_Arrival_IMG								   260 //709113
+#define IDC_MAP_SQWP_Stance_Arrival_BTN								   261 //7091131
+#define IDC_MAP_SQWP_Delete_IMG									       262 //709114
+#define IDC_MAP_SQWP_Delete_BTN									       263 //7091141
+
+//-- Map Go-Codes (Top Corner)
+#define IDC_MAP_Order_GoCode_BG									       264 //709099
+#define IDC_MAP_Order_GoCode_A_IMG									   265 //709100
+#define IDC_MAP_Order_GoCode_A_BTN									   266 //709101
+#define IDC_MAP_Order_GoCode_B_IMG									   267 //709102
+#define IDC_MAP_Order_GoCode_B_BTN									   268 //709103
+#define IDC_MAP_Order_GoCode_C_IMG									   269 //709104
+#define IDC_MAP_Order_GoCode_C_BTN									   270 //709105
+#define IDC_MAP_Order_GoCode_D_IMG									   271 //709106
+#define IDC_MAP_Order_GoCode_D_BTN									   272 //709107
+#define IDC_MAP_Dir_MousePosToPlayerPos_TXT							   273 //709108
+
+//-- Dynamic Map Combo
+#define IDC_MAP_DynamicCombo									       274 //7078
+
 

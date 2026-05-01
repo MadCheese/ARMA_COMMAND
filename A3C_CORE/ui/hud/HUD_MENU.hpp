@@ -1,3 +1,5 @@
+#include "..\SHARED\shared_ui_defines.hpp"
+
 
 #define GRIDX( num ) ( num * ( pixelGrid * pixelW * 2 ))
 #define GRIDY( num ) ( num * ( pixelGrid * pixelH * 2 ))
@@ -147,7 +149,7 @@ class A3C_HUD_MENU
 	};
 };
 
-class HUD_Display_ObjectSelector
+class HUD_ObjectSelector
 {
 	idd = 100060;
 	movingenable = true;
@@ -159,9 +161,9 @@ class HUD_Display_ObjectSelector
 
 	class Controls
 	{
-		class 8008: A3C_RscControlsGroup_NoScroll
+		class HUD_ObjectSelector_Parent: A3C_RscControlsGroup_NoScroll
 		{
-			idc = 8008;
+			idc = IDC_SHARED_UI_ObjectSelector_Parent; //8008;
 			x = 0.383108 * safezoneW + safezoneX;
 			y =  0.378986 * safezoneH + safezoneY;
 			w = 0.192528 * safezoneW;
@@ -169,27 +171,26 @@ class HUD_Display_ObjectSelector
 			class Controls
 			{
 
-				class A3C_HUD_ObjectSelector_Description_BG: A3C_RscPicture
+				class HUD_ObjectSelector_Description_BG: A3C_RscPicture
 				{
-					idc = 800801;
+					idc = IDC_SHARED_UI_ObjectSelector_Description_BG; //800801;
 					text = "#(argb,8,8,3)color(0,0.3,0.6,1)";
 					x = 1.8033e-007 * safezoneW;
 					y = -1.80325e-007 * safezoneH;
 					w = 0.192528 * safezoneW;
 					h = 0.0440051 * safezoneH;
 				};
-				class A3C_HUD_ObjectSelector_Description_Text: A3C_RscText
+				class HUD_ObjectSelector_Description_TXT: A3C_RscText
 				{
-					idc = 800802;
-					text = "TEST"; //--- ToDo: Localize;
+					idc = IDC_SHARED_UI_ObjectSelector_Description_TXT; //800802;
 					x = 2.45904e-007 * safezoneW;
 					y = -3.77043e-007 * safezoneH;
 					w = 0.192528 * safezoneW;
 					h = 0.0440051 * safezoneH;
 				};
-				class A3C_HUD_ObjectSelector_ListBox: A3C_LISTBOX
+				class HUD_ObjectSelector_ListBox: A3C_LISTBOX
 				{
-					idc = 800803;
+					idc = IDC_SHARED_UI_ObjectSelector_ListBox; //800803;
 					style = CT_LISTBOX;
 					x = 2.45904e-007 * safezoneW;
 					y = 0.0440052 * safezoneH;

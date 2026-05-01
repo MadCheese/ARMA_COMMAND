@@ -38,3 +38,7 @@
 
 
 //-- OBJECTSELECTOR (#NOTE: when done, rename!)
+#define IDC_SHARED_UI_ObjectSelector_Parent                   8008
+#define IDC_SHARED_UI_ObjectSelector_Description_BG			  800801
+#define IDC_SHARED_UI_ObjectSelector_Description_TXT          800802
+#define IDC_SHARED_UI_ObjectSelector_ListBox	              800803

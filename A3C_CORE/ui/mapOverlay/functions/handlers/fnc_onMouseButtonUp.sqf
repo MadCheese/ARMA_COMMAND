@@ -71,7 +71,7 @@ if (A3C_UI_MAP_BOOL_isHCWaypointPosEdit) then {
 				_CT_TREE tvSetCurSel _button;
 				[
 					[
-						findDisplay 100020 displayCtrl 202020,
+						findDisplay 100020 displayCtrl IDC_SHARED_UI_TREE_SELECTOR,
 						_button select [0,(count _button) - 1]
 					],
 					"OPEN",
@@ -454,7 +454,7 @@ if (A3C_MapSel_Field_Active) then {
 					_CT_TREE tvSetCurSel _button;
 					[
 						[
-							findDisplay 100020 displayCtrl 202020,
+							findDisplay 100020 displayCtrl IDC_SHARED_UI_TREE_SELECTOR,
 							_button select [0,(count _button) - 1]
 						],
 						"OPEN",

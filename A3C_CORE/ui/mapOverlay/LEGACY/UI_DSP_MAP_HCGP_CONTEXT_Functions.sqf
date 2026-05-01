@@ -1560,7 +1560,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						} else {
 							[_a3c_dsp] spawn {
 								params ["_a3c_dsp"];
-								(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_ControlsGroup) ctrlShow false;
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_Parent) ctrlShow false;
 								(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 								hintSilent "A3C: Please relay map-coordinates via mapclick!";
 								playsound "TacticalPing4";
@@ -1637,9 +1637,9 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							};
 
 							private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
-							private _parent = findDisplay _a3c_dsp displayCtrl 8008;
-							private _text = findDisplay _a3c_dsp displayCtrl 800802;
-							private _listBox = findDisplay _a3c_dsp displayCtrl 800803;
+							private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+							private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+							private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 
 							
 							_parent ctrlShow true;
@@ -1808,7 +1808,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 		systemchat "A3C: Please relay map-coordinates via mapclick!";
 		sleep 0.5; //~~ small delay needed for mapclick
 		A3C_HC_GroupMenu_SuppressionRequested = true;
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_ControlsGroup,IDC_SHARED_UI_DASHBOARD_PARENT];
+		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 		[
 			"A3C_SUP_MAPCLICK",
@@ -1874,7 +1874,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 
 
 
-	_groupMenuCtrlsGroup = (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_ControlsGroup);
+	_groupMenuCtrlsGroup = (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_Parent);
 	_groupMenuCtrlsGroup ctrlShow false; //-- hide until dashboard is shown
 	_groupMenuCtrlsGroup ctrlSetPosition 
 	[
@@ -1898,12 +1898,12 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 	if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
 		_gp = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
 
-		(findDisplay _a3c_dsp displayCtrl 800714) ctrlSetText "#(argb,8,8,3)color(0,0.3,0.6,0.2)";
+
 
 		private _groupStance = _group getVariable ["A3C_GROUP_STANCE","AUTO"];
 		[_groupStance] call A3C_GP_Btns_Stances; //-- WHY>?
 	} else {
-		(findDisplay _a3c_dsp displayCtrl 800714) ctrlSetText "#(argb,8,8,3)color(0,0.3,0.6,0.2)";
+
 		for "_i" from 800724 to 800727 do {
 			(findDisplay _a3c_dsp displayCtrl _i) ctrlSetTextColor [1,1,1,0.1];
 		};
@@ -2143,13 +2143,13 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 				};
 
 			} else {
-				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_ControlsGroup,IDC_SHARED_UI_DASHBOARD_PARENT];
+				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 				(findDisplay 12 displayCtrl 51) ctrlEnable true;
 			};
 
-			_parent = findDisplay _a3c_dsp displayCtrl 8008;
-			_text = findDisplay _a3c_dsp displayCtrl 800802;
-			_listBox = findDisplay _a3c_dsp displayCtrl 800803;
+			_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+			_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+			_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 
 			_parent ctrlShow true;
 			_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
@@ -2188,7 +2188,7 @@ A3C_AI_HIGHCOMMAND_fnc_mergeGroups = {
 	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
 	
 
-	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_ControlsGroup,IDC_SHARED_UI_DASHBOARD_PARENT];
+	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	if (count _groupArray <= 1) then {
 		[_groupArray] spawn A3C_REJOIN_GROUPS;
@@ -2199,9 +2199,9 @@ A3C_AI_HIGHCOMMAND_fnc_mergeGroups = {
 				A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
 			};
 		};
-		_parent = findDisplay _a3c_dsp displayCtrl 8008;
-		_text = findDisplay _a3c_dsp displayCtrl 800802;
-		_listBox = findDisplay _a3c_dsp displayCtrl 800803;
+		_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+		_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+		_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 		_parent ctrlShow true;
 		_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
 		_parent ctrlCommit 0;
@@ -2387,33 +2387,18 @@ A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 	};
 
 
-	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_ControlsGroup,IDC_SHARED_UI_DASHBOARD_PARENT];
+	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 };
 
-A3C_HC_FocusGroup = grpNull;
-
-A3C_MAP_HC_setFocusGroup = { //-- NO LONGER USED? / UNUSED
-	private _a3c_dsp = 100020;
-	if !(count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) exitWith {};
-	private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
-	if ( {isPlayer _x} count units _group > 0) exitWith {
-		systemchat "A3C: Group contains a human player and can not be focused";
-	};
-	if (_group == A3C_HC_FocusGroup) then {
-		A3C_HC_FocusGroup = grpNull;
-		(findDisplay _a3c_dsp displayCtrl 800714) ctrlSetText "#(argb,8,8,3)color(0,0.3,0.6,0.2)";
-	} else {
-		A3C_HC_FocusGroup = _group;
-		(findDisplay _a3c_dsp displayCtrl 800714) ctrlSetText "#(argb,8,8,3)color(0,0.3,0.6,1)";
-	};
-};
 
 
 
 
 
-A3C_CONVOY_GROUPORDER = [];
+
+
+
 
 A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 	private _a3c_dsp = 100020;
@@ -2426,7 +2411,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 				_leaders = [];
 				_subs = [];
 
-				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_ControlsGroup,IDC_SHARED_UI_DASHBOARD_PARENT];
+				{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 				(findDisplay 12 displayCtrl 51) ctrlEnable true;
 				A3C_ConvoyGroups = A3C_ConvoyGroups - [_entry];
 				private _groupArrays = [];
@@ -2459,7 +2444,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Convoy = {
 	} else {
 		//-- create new convoy in order
 		if (count A3C_SELECTED_HC_GROUPS_SETTINGS >= 2) then {
-			{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_ControlsGroup,IDC_SHARED_UI_DASHBOARD_PARENT];
+			{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 			(findDisplay 12 displayCtrl 51) ctrlEnable true;
 			private ["_drivers","_nonDrivers"];
 			_drivers = [];

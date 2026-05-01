@@ -45,7 +45,7 @@ A3C_UI_MAP_fnc_findCtrlSafePos = {
 	_borders = [safezoneW + safeZoneX,safezoneH + safeZoneY];
 
 	_dimensions = ctrlPosition (findDisplay _display displayCtrl _control);
-	if (_control == IDC_MAP_HCGP_WP_ControlsGroup) then {
+	if (_control == IDC_MAP_HCGP_WP_Parent) then {
 		_confPos = ctrlPosition (findDisplay _display displayCtrl IDC_MAP_HCWP_Confirm_BG);
 		_realH = (_confPos select 1) + (_confPos select 3); //-- since baspos for ctrlsgroup is 0, we can use y+w of confirm to get total H
 		_dimensions set [3,_realH];
@@ -85,7 +85,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	
 
 
-	private _wpMenuCtrlsGroup = findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_ControlsGroup;
+	private _wpMenuCtrlsGroup = findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent;
 	
 	_wpMenuCtrlsGroup ctrlShow true;
 
@@ -142,7 +142,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	// systemchat 'open menu wp';
 	{
 		(finddisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-	} foreach [IDC_MAP_HCWP_Condition_Pre_Mode,IDC_MAP_HCWP_Action_ControlsGroup_MAIN,IDC_MAP_HCWP_Action_ControlsGroup_ADD]; //-- default: hide precondition val,  actions group and extra selections
+	} foreach [IDC_MAP_HCWP_Condition_Pre_Mode,IDC_MAP_HCWP_Action_Parent_MAIN,IDC_MAP_HCWP_Action_Parent_ADD]; //-- default: hide precondition val,  actions group and extra selections
 	
 
 
@@ -681,7 +681,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 
 
 	if (_wpHasPostCondition) then {
-		(finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_ControlsGroup_MAIN) ctrlShow true;
+		(finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Parent_MAIN) ctrlShow true;
 	};
 
 	
@@ -723,8 +723,8 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	_refY = (_refPos select 1) + _refH;
 
 	//-- ADJUST TYPE-ACTION and PRE-COND / CAS boxes
-	_ref1 = if (A3C_HC_EDIT_ACTION == "CAS-STRIKE") then {IDC_MAP_HCWP_Type_ControlsGroup} else {IDC_MAP_HCWP_Completion_ControlsGroup};
-	_ref2 = if (A3C_HC_EDIT_ACTION == "CAS-STRIKE") then {IDC_MAP_HCWP_Completion_ControlsGroup} else {IDC_MAP_HCWP_Type_ControlsGroup};
+	_ref1 = if (A3C_HC_EDIT_ACTION == "CAS-STRIKE") then {IDC_MAP_HCWP_Type_Parent} else {IDC_MAP_HCWP_Completion_Parent};
+	_ref2 = if (A3C_HC_EDIT_ACTION == "CAS-STRIKE") then {IDC_MAP_HCWP_Completion_Parent} else {IDC_MAP_HCWP_Type_Parent};
 		
 	//-- box1
 	_box =  (finddisplay _a3c_dsp displayCtrl _ref1);
@@ -743,15 +743,15 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 
 
 	//-- adjust type controls
-	private _condMacro = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Completion_ControlsGroup);
+	private _condMacro = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Completion_Parent);
 	//if (true) exitWith {};
 
 	if (_wpHasSubSelection) then {
 		
-		private _box = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_ControlsGroup_ADD);
+		private _box = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Parent_ADD);
 		_ctrlPos = ctrlPosition _box;
 
-		_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_ControlsGroup);
+		_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_Parent);
 		_refH = _refPos select 3;
 		_refY = (_refPos select 1) + _refH;
 		_ctrlPos set [1,_refY];
@@ -843,8 +843,8 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		
 		
 	//} else {
-	//	_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Completion_ControlsGroup);
-	//	private _box = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_ControlsGroup);
+	//	_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Completion_Parent);
+	//	private _box = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_Parent);
 	//	_refH = _refPos select 3;
 	//	_refY = (_refPos select 1) + _refH;
 	//	_refPos set [1,_refY];
@@ -854,20 +854,20 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 
 	//-- ADJUST POSTCONDITION
 	if (_wpHasPostCondition) then {
-		_refCtrl = if (_wpHasSubSelection) then {IDC_MAP_HCWP_Action_ControlsGroup_ADD} else {IDC_MAP_HCWP_Type_ControlsGroup};
+		_refCtrl = if (_wpHasSubSelection) then {IDC_MAP_HCWP_Action_Parent_ADD} else {IDC_MAP_HCWP_Type_Parent};
 		_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl _refCtrl);
 		_refH = _refPos select 3;
 		_refY = (_refPos select 1) + _refH;
 		_refPos set [1,_refY];
 	
-		_ctrl = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_ControlsGroup_MAIN);
+		_ctrl = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Parent_MAIN);
 		_ctrlPos = ctrlPosition _ctrl;
 		
 		//_add = if (_foreachIndex == 0) then {
 		//	//-- action ctrlsGroup -> do nothing
 		//	0
 		//} else {
-		//	(ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_ControlsGroup_MAIN)) select 3;
+		//	(ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Parent_MAIN)) select 3;
 		//};
 		
 		_ctrlPos set [1,_refY]; // + _add
@@ -882,9 +882,9 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	//-- ADJUST CONFIRM / DELETE BUTTONS
 
 	_refCtrl = switch (true) do {
-		case (_wpHasPostCondition) : {IDC_MAP_HCWP_Action_ControlsGroup_MAIN};
-		case (_wpHasSubSelection) : {IDC_MAP_HCWP_Action_ControlsGroup_ADD};
-		default {if (A3C_HC_EDIT_ACTION != "CAS-STRIKE") then {IDC_MAP_HCWP_Type_ControlsGroup} else {IDC_MAP_HCWP_Completion_ControlsGroup}};
+		case (_wpHasPostCondition) : {IDC_MAP_HCWP_Action_Parent_MAIN};
+		case (_wpHasSubSelection) : {IDC_MAP_HCWP_Action_Parent_ADD};
+		default {if (A3C_HC_EDIT_ACTION != "CAS-STRIKE") then {IDC_MAP_HCWP_Type_Parent} else {IDC_MAP_HCWP_Completion_Parent}};
 	};
 	//systemchat str _wpHasSubSelection;
 	
@@ -1003,7 +1003,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_addLbEntry;
 	} foreach _lbArray4;
 
-	_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCGP_WP_ControlsGroup,_ctrlPosWPM] call A3C_UI_MAP_fnc_findCtrlSafePos;
+	_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCGP_WP_Parent,_ctrlPosWPM] call A3C_UI_MAP_fnc_findCtrlSafePos;
 	_wpMenuCtrlsGroup ctrlSetPosition _ctrlPosWPM;
 	_wpMenuCtrlsGroup ctrlCommit 0;
 	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _lbV4] call A3C_setCurSel;
@@ -1083,7 +1083,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 	_group = A3C_HC_ACTIVEGROUP; //_this select 0;
 
 	
-	private _wpMenuCtrlsGroup = findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_ControlsGroup;
+	private _wpMenuCtrlsGroup = findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent;
 
 
 	_tPos = [];
@@ -1661,9 +1661,9 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 		private _cargoGroups = ([A3C_HC_ACTIVEGROUP] call MCSS_fnc_getCargoGroups) select {private _gp = _x; (waypointPosition [_gp, currentWaypoint _gp]) distance2D [0,0,0] == 0};
 		if !(_cargoGroups isEqualTo []) then { //-- here we check for existing cargo units that can have waypoints assigned.
 			//-- Prompt user to select desired option
-			_parent = findDisplay _a3c_dsp displayCtrl 8008;
-			_text = findDisplay _a3c_dsp displayCtrl 800802;
-			_listBox = findDisplay _a3c_dsp displayCtrl 800803;
+			_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+			_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+			_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 
 			ctrlSetFocus _listBox;
 			
@@ -2227,7 +2227,7 @@ A3C_LB_HC = {
 						private _refH = _refPos select 3;
 						private _refY = (_refPos select 1) + _refH;
 						//-- precond/castype box
-						_box =  (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Completion_ControlsGroup);
+						_box =  (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Completion_Parent);
 						_ctrlPos = ctrlPosition _box;
 						_ctrlPos set [1,_refY];
 						_box ctrlSetPosition _ctrlPos;
@@ -2235,7 +2235,7 @@ A3C_LB_HC = {
 						
 						//-- type box
 						_refY = _refY + (_ctrlPos select 3);
-						_box =  (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_ControlsGroup);
+						_box =  (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_Parent);
 						_ctrlPos = ctrlPosition _box;
 						_ctrlPos set [1,_refY];
 						_box ctrlSetPosition _ctrlPos;
@@ -2390,11 +2390,11 @@ A3C_LB_HC = {
 					case ("DEMOLITION") : {
 						A3C_HC_EDIT_ACTION = "DEMOLITION";
 						_ctrlText = "DEMOLITION";
-						(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_ControlsGroup) ctrlShow false;
+						(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent) ctrlShow false;
 						(findDisplay 12 displayCtrl 51) ctrlEnable true;
-						_parent = findDisplay _a3c_dsp displayCtrl 8008;
-						_text = findDisplay _a3c_dsp displayCtrl 800802;
-						_listBox = findDisplay _a3c_dsp displayCtrl 800803;
+						_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+						_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+						_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 
 						ctrlSetFocus _listBox;
 						
@@ -2437,7 +2437,7 @@ A3C_LB_HC = {
 					case ("CAS-STRIKE") : {
 						A3C_HC_EDIT_ACTION = "CAS-STRIKE";
 						_ctrlText = "CAS-STRIKE";
-						(finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_ControlsGroup_MAIN) ctrlShow false;
+						(finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Parent_MAIN) ctrlShow false;
 						_header3Text = "CAS TYPE";
 						lbClear _preCondModeCtrl;
 
@@ -2469,14 +2469,14 @@ A3C_LB_HC = {
 						private _refH = _refPos select 3;
 						private _refY = (_refPos select 1) + _refH;
 						//-- type box
-						_box =  (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_ControlsGroup);
+						_box =  (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_Parent);
 						_ctrlPos = ctrlPosition _box;
 						_ctrlPos set [1,_refY];
 						_box ctrlSetPosition _ctrlPos;
 						_box ctrlCommit 0;
 						//-- precond/castype box
 						_refY = _refY + (_ctrlPos select 3);
-						_box =  (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Completion_ControlsGroup);
+						_box =  (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Completion_Parent);
 						_ctrlPos = ctrlPosition _box;
 						_ctrlPos set [1,_refY];
 						_box ctrlSetPosition _ctrlPos;
@@ -2484,12 +2484,12 @@ A3C_LB_HC = {
 					};
 				};
 
-				_IDC_MAP_HCWP_Action_ControlsGroup_ADD = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_ControlsGroup_ADD);
+				_IDC_MAP_HCWP_Action_Parent_ADD = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Parent_ADD);
 				if (_requiresSubData) then {
-					_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_ControlsGroup);
+					_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_Parent);
 					private _refH = _refPos select 3;
 					private _refY = (_refPos select 1) + _refH;
-					_box =  (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_ControlsGroup_ADD);
+					_box =  (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Parent_ADD);
 					_ctrlPos = ctrlPosition _box;
 					_ctrlPos set [1,_refY];
 					_box ctrlSetPosition _ctrlPos;
@@ -2549,36 +2549,36 @@ A3C_LB_HC = {
 					};
 					
 
-					_IDC_MAP_HCWP_Action_ControlsGroup_ADD ctrlShow true;
+					_IDC_MAP_HCWP_Action_Parent_ADD ctrlShow true;
 				} else {
-					_IDC_MAP_HCWP_Action_ControlsGroup_ADD ctrlShow false;
+					_IDC_MAP_HCWP_Action_Parent_ADD ctrlShow false;
 				};
 
-				_IDC_MAP_HCWP_Action_ControlsGroup_MAIN = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_ControlsGroup_MAIN);
+				_IDC_MAP_HCWP_Action_Parent_MAIN = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Parent_MAIN);
 				if (_requiresPostData) then {
-					_refCtrl = if (_requiresSubData) then {IDC_MAP_HCWP_Action_ControlsGroup_ADD} else {IDC_MAP_HCWP_Type_ControlsGroup};
+					_refCtrl = if (_requiresSubData) then {IDC_MAP_HCWP_Action_Parent_ADD} else {IDC_MAP_HCWP_Type_Parent};
 						
 					_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl _refCtrl);
 					private _refH = _refPos select 3;
 					private _refY = (_refPos select 1) + _refH;
 
 					
-					_ActionctrlPos = ctrlPosition _IDC_MAP_HCWP_Action_ControlsGroup_MAIN;	
+					_ActionctrlPos = ctrlPosition _IDC_MAP_HCWP_Action_Parent_MAIN;	
 					_ActionctrlPos set [1,_refY];
 					
-					_IDC_MAP_HCWP_Action_ControlsGroup_MAIN ctrlSetPosition _ActionctrlPos;
-					_IDC_MAP_HCWP_Action_ControlsGroup_MAIN ctrlCommit 0;	
-					_IDC_MAP_HCWP_Action_ControlsGroup_MAIN ctrlShow true;					
-					//if !(ctrlShown (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_ControlsGroup_MAIN)) then { //-- postStuff is NOT shown
+					_IDC_MAP_HCWP_Action_Parent_MAIN ctrlSetPosition _ActionctrlPos;
+					_IDC_MAP_HCWP_Action_Parent_MAIN ctrlCommit 0;	
+					_IDC_MAP_HCWP_Action_Parent_MAIN ctrlShow true;					
+					//if !(ctrlShown (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Parent_MAIN)) then { //-- postStuff is NOT shown
 					//};		
 				} else {
-					_IDC_MAP_HCWP_Action_ControlsGroup_MAIN ctrlShow false;
+					_IDC_MAP_HCWP_Action_Parent_MAIN ctrlShow false;
 				};
 				
 				_refCtrl = switch (true) do {
-					case (_requiresPostData) : {IDC_MAP_HCWP_Action_ControlsGroup_MAIN};
-					case (_requiresSubData) : {IDC_MAP_HCWP_Action_ControlsGroup_ADD};
-					default {if (A3C_HC_EDIT_ACTION != "CAS-STRIKE") then {IDC_MAP_HCWP_Type_ControlsGroup} else {IDC_MAP_HCWP_Completion_ControlsGroup}};
+					case (_requiresPostData) : {IDC_MAP_HCWP_Action_Parent_MAIN};
+					case (_requiresSubData) : {IDC_MAP_HCWP_Action_Parent_ADD};
+					default {if (A3C_HC_EDIT_ACTION != "CAS-STRIKE") then {IDC_MAP_HCWP_Type_Parent} else {IDC_MAP_HCWP_Completion_Parent}};
 				};
 				_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl _refCtrl);
 				private _refH = _refPos select 3;
@@ -2641,10 +2641,10 @@ A3C_LB_HC = {
 		[_a3c_dsp,_ctrlPosWPM] spawn {
 			params ["_a3c_dsp","_ctrlPosWPM"];
 			sleep 0.1;
-			_ctrlPosWPM = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_ControlsGroup);
-			_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCGP_WP_ControlsGroup,_ctrlPosWPM] call A3C_UI_MAP_fnc_findCtrlSafePos;
-			(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_ControlsGroup) ctrlSetPosition _ctrlPosWPM;
-			(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_ControlsGroup) ctrlCommit 0;
+			_ctrlPosWPM = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent);
+			_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCGP_WP_Parent,_ctrlPosWPM] call A3C_UI_MAP_fnc_findCtrlSafePos;
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent) ctrlSetPosition _ctrlPosWPM;
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent) ctrlCommit 0;
 		};
 		
 	};

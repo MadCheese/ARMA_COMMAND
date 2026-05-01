@@ -700,9 +700,9 @@ A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 									with uiNamespace do {
 										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
 									};
-									_parent = findDisplay _a3c_dsp displayCtrl 8008;
-									_text = findDisplay _a3c_dsp displayCtrl 800802;
-									_listBox = findDisplay _a3c_dsp displayCtrl 800803;
+									_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+									_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+									_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 									
 									_parent ctrlShow true;
 									_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];

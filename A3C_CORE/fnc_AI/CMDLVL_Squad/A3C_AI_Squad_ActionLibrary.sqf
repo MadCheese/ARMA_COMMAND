@@ -77,9 +77,9 @@ A3C_AI_Squad_Action_unAssembleWeapon = {
 		};
 
 		private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
-		private _parent = findDisplay _a3c_dsp displayCtrl 8008;
-		private _text = findDisplay _a3c_dsp displayCtrl 800802;
-		private _listBox = findDisplay _a3c_dsp displayCtrl 800803;
+		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+		private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 
 		A3C_OBJECTSELECTOR_MODE = "STATIC_DISASSEMBLE_SQUAD";
 		_parent ctrlShow true;
@@ -175,9 +175,9 @@ A3C_AI_Squad_Action_placeCharge = {
 		};
 
 		private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
-		private _parent = findDisplay _a3c_dsp displayCtrl 8008;
-		private _text = findDisplay _a3c_dsp displayCtrl 800802;
-		private _listBox = findDisplay _a3c_dsp displayCtrl 800803;
+		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+		private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 
 		A3C_OBJECTSELECTOR_MODE = "PLACE_CHARGE_SQUAD";
 		_parent ctrlShow true;

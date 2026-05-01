@@ -924,28 +924,28 @@ A3C_TREE_BOXCLICK = {
 	if (!(_left) && {count A3C_SELECTED_UNITS > 0}) then {
 		if (_shift && {A3C_MAP_CommandMode != "HC"}) then { //~~ TO DO: ALIGN TEAMCOLORS THROUGH COMMAND LEVELS AND ALLOW FOR HC TEAMCOLOR VIA LISTBOX
 			//-- USER IS MANAGING SQUAD TEAMCOLORS VIA MAP-TREE
-			lbClear (findDisplay _a3c_dsp displayCtrl 7078);
+			lbClear (findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo);
 
-			(findDisplay _a3c_dsp displayCtrl 7078) ctrlShow true;
-			ctrlsetfocus (finddisplay _a3c_dsp displayctrl 7078);
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo) ctrlShow true;
+			ctrlsetfocus (finddisplay _a3c_dsp displayctrl IDC_MAP_DynamicCombo);
 			A3C_LB_MODE = 3;
-			(findDisplay _a3c_dsp displayCtrl 7078) ctrlSetPosition [_sx, _sy];
-			(findDisplay _a3c_dsp displayCtrl 7078) ctrlCommit 0;
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo) ctrlSetPosition [_sx, _sy];
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo) ctrlCommit 0;
 
-			[findDisplay _a3c_dsp displayCtrl 7078, "RED"] call A3C_addLbEntry;
-			[findDisplay _a3c_dsp displayCtrl 7078, "GREEN"] call A3C_addLbEntry;
-			[findDisplay _a3c_dsp displayCtrl 7078, "BLUE"] call A3C_addLbEntry;
-			[findDisplay _a3c_dsp displayCtrl 7078, "YELLOW"] call A3C_addLbEntry;
-			[findDisplay _a3c_dsp displayCtrl 7078, "WHITE"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, "RED"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, "GREEN"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, "BLUE"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, "YELLOW"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, "WHITE"] call A3C_addLbEntry;
 
 			
 			private _assignedTeam = if (player == cameraOn) then {assignedTeam (A3C_SELECTED_UNITS select 0)} else {(A3C_SELECTED_UNITS select 0) getVariable ["A3C_ASSIGNEDTEAM","MAIN"]};
 			switch (_assignedTeam) do { //assignedTeam (_unitArray select _unitIndex)
-				case ('RED') : {[findDisplay _a3c_dsp displayCtrl 7078, 0] call A3C_setCurSel;};
-				case ('GREEN') : {[findDisplay _a3c_dsp displayCtrl 7078, 1] call A3C_setCurSel;};
-				case ('BLUE') : {[findDisplay _a3c_dsp displayCtrl 7078, 2] call A3C_setCurSel;};
-				case ('YELLOW') : {[findDisplay _a3c_dsp displayCtrl 7078, 3] call A3C_setCurSel;};
-				case ('MAIN') : {[findDisplay _a3c_dsp displayCtrl 7078, 4] call A3C_setCurSel;};
+				case ('RED') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, 0] call A3C_setCurSel;};
+				case ('GREEN') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, 1] call A3C_setCurSel;};
+				case ('BLUE') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, 2] call A3C_setCurSel;};
+				case ('YELLOW') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, 3] call A3C_setCurSel;};
+				case ('MAIN') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, 4] call A3C_setCurSel;};
 			};
 			
 		} else {

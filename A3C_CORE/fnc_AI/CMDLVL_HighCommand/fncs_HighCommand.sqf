@@ -761,7 +761,7 @@ A3C_HC_INSERT_ACTION_WP = {
 			private _display = findDisplay 100020;
 			if (isNull _display) exitWith {};
 
-			private _wpMenu = _display displayCtrl IDC_MAP_HCGP_WP_ControlsGroup;
+			private _wpMenu = _display displayCtrl IDC_MAP_HCGP_WP_Parent;
 			if !(ctrlShown _wpMenu) exitWith {};
 
 			if (A3C_HC_ACTIVEGROUP == _group) then {
@@ -1216,9 +1216,9 @@ A3C_HC_FNC_CompleteWaypoint = {
 	//systemchat str ({_x == driver vehicle _x && {vehicle _x iskindof "AIR"}} count units _group);
 	private _currentWaypoint = currentWaypoint _group;
 	private _a3c_dsp = 100020;
-	if (ctrlShown (findDisplay _a3c_dsp displayctrl IDC_MAP_HCGP_WP_ControlsGroup)) then {
+	if (ctrlShown (findDisplay _a3c_dsp displayctrl IDC_MAP_HCGP_WP_Parent)) then {
 		if ([_group,_currentWaypoint] isEqualTo [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]) then {
-			(findDisplay _a3c_dsp displayctrl IDC_MAP_HCGP_WP_ControlsGroup) ctrlShow false;
+			(findDisplay _a3c_dsp displayctrl IDC_MAP_HCGP_WP_Parent) ctrlShow false;
 		};
 	};
 	//systemchat format ["current waypoint is %1",currentWaypoint _group];
@@ -1364,7 +1364,7 @@ A3C_AI_HighCommand_ActionDistribute_boardGroupsToVehicle = {
 	
 
 	//-- Boarding HC-units via map-ui pt 1
-	(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_ControlsGroup) ctrlShow false;
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_Parent) ctrlShow false;
 	(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 	if (_button == 0) then {
 		A3C_UI_MAPICONS_HC_VICS = [] call A3C_fnc_getBoardableVehicles;

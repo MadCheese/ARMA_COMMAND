@@ -48,7 +48,7 @@ A3C_UI_MAP_UFSB_OnStanceTravel = {
 	if (_mode < 0) then {_mode = 0};
 	if (_mode > 1) then {_mode = 1};
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	if (A3C_MAP_CommandMode in ["INF","HC"]) then {
 		switch (A3C_STANCE1_TEMP) do {
 			case ("DOWN") : {
@@ -133,7 +133,7 @@ A3C_UI_MAP_UFSB_OnStanceArrival = {
 	if (_mode < 0) then {_mode = 0};
 	if (_mode > 1) then {_mode = 1};
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	if (A3C_MAP_CommandMode in ["INF","HC"]) then {
 		switch (A3C_STANCE2_TEMP) do {
 			case ("DOWN") : {
@@ -845,19 +845,19 @@ A3C_InMapControls = {
 };
 
 
-A3C_GetDiagDeg = {
+A3C_UI_Map_getDirMousePosToPlayerPos = { //~~ #UNUSED ???
 	//-- get the direction and distance of mousePos and player (for tablet cursor)
 	_data = _this;
 	private _a3c_dsp = 100020;
 	if (_data select 3) then {
-		(findDisplay _a3c_dsp displayCtrl 709108) ctrlShow true;
+		(findDisplay _a3c_dsp displayCtrl IDC_MAP_Dir_MousePosToPlayerPos_TXT) ctrlShow true;
 	} else {
-		(findDisplay _a3c_dsp displayCtrl 709108) ctrlShow false;
+		(findDisplay _a3c_dsp displayCtrl IDC_MAP_Dir_MousePosToPlayerPos_TXT) ctrlShow false;
 	};
 	_worldPos = ((findDisplay _a3c_dsp displayCtrl 7043) posscreentoworld [(_this select 1),(_this select 2)]);
-	(findDisplay _a3c_dsp displayCtrl 709108) ctrlSetPosition [(_this select 1),(_this select 2)];
-	(findDisplay _a3c_dsp displayCtrl 709108) ctrlCommit 0;
-	(findDisplay _a3c_dsp displayCtrl 709108) ctrlSetText  format ["     %1dg, %2m",(round([(vehicle player),_worldPos] call BIS_fnc_dirto)),(round ((vehicle player) distance _worldPos))] ;
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_Dir_MousePosToPlayerPos_TXT) ctrlSetPosition [(_this select 1),(_this select 2)];
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_Dir_MousePosToPlayerPos_TXT) ctrlCommit 0;
+	(findDisplay _a3c_dsp displayCtrl IDC_MAP_Dir_MousePosToPlayerPos_TXT) ctrlSetText  format ["     %1dg, %2m",(round([(vehicle player),_worldPos] call BIS_fnc_dirto)),(round ((vehicle player) distance _worldPos))] ;
 };
 
 
@@ -1053,43 +1053,43 @@ A3C_SWITCHMARKER = {
 		case 0 : {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal "A3C_Marker_WAYPOINT";
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "ColorBlufor";
-			(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-			(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity);
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity);
 			_newAction = ["LANDING","NONE"];
 		};
 		case 1 : {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal 'A3C_Marker_PICKUP_AIR';
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "DEFAULT";
-			(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
-			(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 			_newAction = ["LANDING","PICKUP"];
 		};
 		case 2 : {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal 'A3C_Marker_DROPOFF_AIR';
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "DEFAULT";
-			(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
-			(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 			_newAction = ["LANDING","DROPOFF"];
 		};
 		case 3 : {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal 'A3C_Marker_LANDING';
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "DEFAULT";
-			(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
-			(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 			_newAction = ["LANDING","LANDFINAL"];
 		};
 		case 4 : {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal 'A3C_Marker_Rappel';
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "DEFAULT";
-			(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
-			(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 			_newAction = ["LANDING","RAPPEL"];
 		};
 		case 5 : {
 			//A3C_MARKERTOSWITCH setmarkerTypeLocal 'A3C_Marker_Paradrop';
 			//A3C_MARKERTOSWITCH setmarkerColorLocal "DEFAULT";
-			(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
-			(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 			_newAction = ["PARADROP","PARADROP"];
 		};
 	};
@@ -1128,7 +1128,7 @@ A3C_GET_UNITBUTTON = {
 
 A3C_TAB_TOGGLE_CONTROLS = {
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	switch (A3C_TAB_TOGGLE_VAR) do {
 		case (0) : {
 			for "_i" from 7044 to 7089 do {
@@ -1167,7 +1167,7 @@ A3C_TAB_TOGGLE_CONTROLS = {
 		case (1) : {
 			for "_i" from 7044 to 7089 do {
 				call compile format ["
-					if !(_i in [7078]) then {(findDisplay _a3c_dsp displayCtrl _i) ctrlShow true;};
+					if !(_i in [IDC_MAP_DynamicCombo]) then {(findDisplay _a3c_dsp displayCtrl _i) ctrlShow true;};
 				",_i];
 			};
 			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true} foreach [
@@ -1512,7 +1512,7 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 
 	(findDisplay _a3c_dsp displayCtrl 7067) ctrlsettext _pagebutton;
 	(findDisplay _a3c_dsp displayCtrl 7068) ctrlsetToolTip _pageTT;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_UFSB_TIMEOUT_POPUP,7078,IDC_MAP_SQWP_ControlsGroup]; //-- hide rClick contextMenu, undo, small rClick-menu
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_UFSB_TIMEOUT_POPUP,IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup]; //-- hide rClick contextMenu, undo, small rClick-menu
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow false;
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,0.2];
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WP_SPEED_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
@@ -1529,7 +1529,7 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 
 A3C_SWITCH_COMMAND_PAGE = {
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	A3C_SELECTED_UNITS = [];
 	switch (A3C_MAP_CommandMode) do {
 		case ("INF") : {
@@ -1770,7 +1770,7 @@ A3C_SWITCHPAGE_TABLET = {
 	};
 	//ddddd
 	if !(isnull findDisplay _a3c_dsp) then {
-		{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+		{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	};
 	_groupCount =  if (A3C_MAP_CommandMode == "HIGHCOMMAN") then {count _hcAll} else {};
 	_groupCount = 0;
@@ -1845,7 +1845,7 @@ A3C_BTN_FNC_COND = {
 	if (_mode > 1) then {_mode = 1};
 	private ["_a3c_dsp","_goCode"];
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	switch (A3C_TEMP_CONDITION select 0) do {
 		case ("NONE") : {
 			if (_mode ==  0) then {
@@ -1922,7 +1922,7 @@ A3C_BTN_FNC_TEAMCOLOR = {
 	private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 	_CT_TREE tvSetCurSel [-1];
 
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	if !(_shift) then {A3C_SELECTED_UNITS = []};
 	//A3C_SELECTED_UNITS = [];
 	_unitNumber = 0;
@@ -2879,7 +2879,7 @@ A3C_fnc_SUBSET = {
 
 A3C_BUTTON_CMODE = {
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	switch (A3C_CMODE_TEMP) do {
 		case (0) : {
 			A3C_CMODE_TEMP = 1;
@@ -2906,7 +2906,7 @@ A3C_BUTTON_wpFiringMode = {
 	if (_mode > 1) then {_mode = 1};
 	private _a3c_dsp = 100020;
 	if ((count A3C_SELECTED_UNITS == 0)) exitWith {};
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	private _actions = [];
 	//if !(A3C_BUTTON_SHIFT) then {
 
@@ -2994,7 +2994,7 @@ A3C_BUTTON_wpFiringMode = {
 
 A3C_SPEED_BTN = {
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	if (A3C_WP_SPEED_TEMP == (-1) ) then {
 		A3C_WP_SPEED_TEMP = 2;
 		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WP_SPEED_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
@@ -3011,7 +3011,7 @@ A3C_BUTTON_FORMMODE = {
 	if (_mode < 0) then {_mode = 0};
 	if (_mode > 1) then {_mode = 1};
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	switch (A3C_FORMMODE_TEMP) do {
 		case (0) : {};
 		case (1) : {
@@ -3129,7 +3129,7 @@ A3C_BTN_HC = {
 	_mode = _this select 0;
 	_groups = if ((count _this) > 1) then {_this select 1} else {A3C_HC_getAllGroups_Player_Current };
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	_unit = objnull;
 	//~~ below is not bulletproof! what if AICOmmand, but not synced to module
 	private _isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
@@ -3427,7 +3427,7 @@ A3C_HC_getPhonetic = {
 A3C_UNDO = {
 	private ["_syncData"];
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	_waypoint = A3C_WAYPOINTS_TEMP select ((count A3C_WAYPOINTS_TEMP) -1);
 	_unitNumber = 0;
 	_UndoData = (A3C_USERACTION select ((count A3C_USERACTION) -1));
@@ -3904,55 +3904,55 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 					_return  = true;
 					if (_mode == "INF") then {
 						switch (_wpStances select 0) do {
-							case "DOWN" : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_prone.paa";};
-							case "MIDDLE" : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";};
-							case "UP" : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";};
+							case "DOWN" : {(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_prone.paa";};
+							case "MIDDLE" : {(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";};
+							case "UP" : {(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";};
 						};
 						switch (_wpStances select 1) do {
-							case "DOWN" : {(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_prone.paa";};
-							case "MIDDLE" : {(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";};
-							case "UP" : {(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";};
+							case "DOWN" : {(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_prone.paa";};
+							case "MIDDLE" : {(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";};
+							case "UP" : {(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";};
 						};
 
 					};
 					if (_mode == "HELI") then {
 						switch (_wpFlyInHeight) do {
-							case (200) : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_1.paa";};
-							case (75) : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_2.paa";};
-							case (25) : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_3.paa";};
-							case (5) : {(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_4.paa";};
+							case (200) : {(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_1.paa";};
+							case (75) : {(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_2.paa";};
+							case (25) : {(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_3.paa";};
+							case (5) : {(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_4.paa";};
 						};
 						switch (_wpAction select 1) do {
 							case "NONE" : {
-								(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-								(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity);
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,0.8] call A3C_UI_fnc_setOpacity);
 							};
 							case "PICKUP" : {
-								(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
-								(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 							};
 							case "DROPOFF" : {
-								(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
-								(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 							};
 							case "RAPPEL" :{
-								(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
-								(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 							};
 							case "LANDFINAL" : {
-								(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
-								(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 							};
 							case "PARADROP" : {
-								(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
-								(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 							};
 						};
 					};
 					if (_wpSpeed == 2) then {
-						(findDisplay _a3c_dsp displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
+						(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Speed_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
 					} else {
-						(findDisplay _a3c_dsp displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
+						(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Speed_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
 					};
 				};
 			} foreach _data;
@@ -3973,7 +3973,7 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 
 
 	A3C_MARKERTOSWITCH = _marker;
-	lbClear (findDisplay _a3c_dsp displayCtrl 709112);
+	lbClear (findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo);
 	(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlSetPosition [_sx, _sy];
 	(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlCommit 0;
 	if (_mode == "HELI") then {
@@ -3982,26 +3982,26 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 		(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlSetPosition [_sx, _sy];
 		(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlCommit 0;
 
-		[findDisplay _a3c_dsp displayCtrl 709112, "NONE"] call A3C_addLbEntry;
-		[findDisplay _a3c_dsp displayCtrl 709112, "PICKUP"] call A3C_addLbEntry;
-		[findDisplay _a3c_dsp displayCtrl 709112, "DROPOFF"] call A3C_addLbEntry;
-		[findDisplay _a3c_dsp displayCtrl 709112, "LANDFINAL"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "NONE"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "PICKUP"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "DROPOFF"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "LANDFINAL"] call A3C_addLbEntry;
 		if (A3C_IsRappel) then {
-			[findDisplay _a3c_dsp displayCtrl 709112, "RAPPEL"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "RAPPEL"] call A3C_addLbEntry;
 		};
-		[findDisplay _a3c_dsp displayCtrl 709112, "PARADROP"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "PARADROP"] call A3C_addLbEntry;
 
 		
 
 		_paraSel = if (A3C_IsRappel) then {5} else {4};
 		
 		switch (markertype A3C_MARKERTOSWITCH) do {
-			case ('A3C_Marker_WAYPOINT') : {[findDisplay _a3c_dsp displayCtrl 709112, 0] call A3C_setCurSel;};
-			case ('A3C_Marker_PICKUP_AIR') : {[findDisplay _a3c_dsp displayCtrl 709112, 1] call A3C_setCurSel;};
-			case ('A3C_Marker_DROPOFF_AIR') : {[findDisplay _a3c_dsp displayCtrl 709112, 2] call A3C_setCurSel;};
-			case ('A3C_Marker_LANDING') : {[findDisplay _a3c_dsp displayCtrl 709112, 3] call A3C_setCurSel;};
-			case ('A3C_Marker_RAPPEL') : {[findDisplay _a3c_dsp displayCtrl 709112, 4] call A3C_setCurSel;};
-			case ('A3C_Marker_Paradrop') : {[findDisplay _a3c_dsp displayCtrl 709112, _paraSel] call A3C_setCurSel;};
+			case ('A3C_Marker_WAYPOINT') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 0] call A3C_setCurSel;};
+			case ('A3C_Marker_PICKUP_AIR') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 1] call A3C_setCurSel;};
+			case ('A3C_Marker_DROPOFF_AIR') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 2] call A3C_setCurSel;};
+			case ('A3C_Marker_LANDING') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 3] call A3C_setCurSel;};
+			case ('A3C_Marker_RAPPEL') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 4] call A3C_setCurSel;};
+			case ('A3C_Marker_Paradrop') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, _paraSel] call A3C_setCurSel;};
 
 		};
 		
@@ -4016,41 +4016,41 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 		if ((count _units) > 0) then {
 			A3C_GCUNITS = _units;
 			A3C_MARKERTOSWITCH = _marker;
-			lbClear (findDisplay _a3c_dsp displayCtrl 709112);
+			lbClear (findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo);
 			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlShow true;
 			A3C_LB_MODE = 2;
 			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlSetPosition [_sx, _sy];
 			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlCommit 0;
 
-			[findDisplay _a3c_dsp displayCtrl 709112, "NONE"] call A3C_addLbEntry;
-			[findDisplay _a3c_dsp displayCtrl 709112, "A"] call A3C_addLbEntry;
-			[findDisplay _a3c_dsp displayCtrl 709112, "B"] call A3C_addLbEntry;
-			[findDisplay _a3c_dsp displayCtrl 709112, "C"] call A3C_addLbEntry;
-			[findDisplay _a3c_dsp displayCtrl 709112, "D"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "NONE"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "A"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "B"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "C"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "D"] call A3C_addLbEntry;
 
 			if ( (markertype A3C_MARKERTOSWITCH) == "A3C_Marker_BUILDING") then {
 				A3C_TAB_BUILDING = (nearestBuilding (getmarkerpos A3C_MARKERTOSWITCH));
 				for "_i" from 0 to ([A3C_TAB_BUILDING] call MCSS_fnc_countBPos) do {
-					[findDisplay _a3c_dsp displayCtrl 709112, format ["BPos %1",_i]] call A3C_addLbEntry;
+					[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, format ["BPos %1",_i]] call A3C_addLbEntry;
 				};
 			};
 			
 			switch (_markertype) do { //~~ #BUG - markertype always, "", will ALWAYS use default :S
-				case ('A3C_Marker_GoCode_A') : {[findDisplay _a3c_dsp displayCtrl 709112, 1] call A3C_setCurSel;};
-				case ('A3C_Marker_GoCode_B') : {[findDisplay _a3c_dsp displayCtrl 709112, 2] call A3C_setCurSel;};
-				case ('A3C_Marker_GoCode_C') : {[findDisplay _a3c_dsp displayCtrl 709112, 3] call A3C_setCurSel;};
-				case ('A3C_Marker_GoCode_D') : {[findDisplay _a3c_dsp displayCtrl 709112, 4] call A3C_setCurSel;};
-				default {[findDisplay _a3c_dsp displayCtrl 709112, 0] call A3C_setCurSel;};
+				case ('A3C_Marker_GoCode_A') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 1] call A3C_setCurSel;};
+				case ('A3C_Marker_GoCode_B') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 2] call A3C_setCurSel;};
+				case ('A3C_Marker_GoCode_C') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 3] call A3C_setCurSel;};
+				case ('A3C_Marker_GoCode_D') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 4] call A3C_setCurSel;};
+				default {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 0] call A3C_setCurSel;};
 			};
 			
 		};
 	};
-	lbClear (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_ControlsGroup);
+	lbClear (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent);
 	if ((count _units) == 1) then {
-		[findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_ControlsGroup, "NONE"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent, "NONE"] call A3C_addLbEntry;
 		_data =  (_units select 0) getvariable A3C_CHECKVAR;
 		_wpInd = ( ((_units select 0) getvariable "A3C_CURRENTWAYPOINT_INDEX") - 1 );
-		[findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_ControlsGroup, 1] call A3C_setCurSel;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_WP_Parent, 1] call A3C_setCurSel;
 	};
 };
 
@@ -4146,31 +4146,31 @@ A3C_CONTEXTBUTTON = {
 						case ("SPEED") : {
 							if (_wpSpeed == -1) then {
 								_x set [8,2];
-								(findDisplay _a3c_dsp displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Speed_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
 							} else {
 								_x set [8,-1];
-								(findDisplay _a3c_dsp displayCtrl 709110) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
+								(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Speed_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
 							};
 						};
 						case ("STANCE1") : {
 							switch (_wpStances select 0) do {
 								case ("DOWN") : {
 									(_x select 4) set [0,"UP"];
-									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											_unit SetUnitPos "UP";
 									};
 								};
 								case ("MIDDLE") : {
 									(_x select 4) set [0,"DOWN"];
-									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											_unit SetUnitPos "DOWN";
 									};
 								};
 								case ("UP") : {
 									(_x select 4) set [0,"MIDDLE"];
-									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											_unit SetUnitPos "MIDDLE";
 									};
@@ -4181,15 +4181,15 @@ A3C_CONTEXTBUTTON = {
 							switch (_wpStances select 1) do {
 								case ("DOWN") : {
 									(_x select 4) set [1,"UP"];
-									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Stand.paa";
 									};
 								case ("MIDDLE") : {
 									(_x select 4) set [1,"DOWN"];
-									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Prone.paa";
 								};
 								case ("UP") : {
 									(_x select 4) set [1,"MIDDLE"];
-									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_stance_Crouch.paa";
 								};
 							};
 						};
@@ -4197,28 +4197,28 @@ A3C_CONTEXTBUTTON = {
 							switch (_wpFlyInHeight) do {
 								case (200) : {
 									_x set [9,75];
-									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_2.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_2.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											(vehicle _unit) flyInHeight 75;
 									};
 								};
 								case (75) : {
 									_x set [9,25];
-									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_3.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_3.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											(vehicle _unit) flyInHeight 25;
 									};
 								};
 								case (25) : {
 									_x set [9,5];
-									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_4.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_4.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											(vehicle _unit) flyInHeight 5;
 									};
 								};
 								case (5) : {
 									_x set [9,200];
-									(findDisplay _a3c_dsp displayCtrl 709111) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_1.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_Menu_FlyInHeight_1.paa";
 									if ([_unit,_var,_forEachIndex] call _isCurrent) then {
 											(vehicle _unit) flyInHeight 200;
 									};
@@ -4230,49 +4230,49 @@ A3C_CONTEXTBUTTON = {
 							switch (_wpAction select 1) do {
 								case ("NONE") : {
 									(_x select 2) set [1,"PICKUP"];
-									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
-									(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getIn.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 									[A3C_MARKERTOSWITCH,"A3C_Marker_PICKUP_AIR","DEFAULT"] call MCSS_fnc_SwitchMarker;
 
-									[findDisplay _a3c_dsp displayCtrl 709112, 1] call A3C_setCurSel;
+									[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 1] call A3C_setCurSel;
 								};
 								case ("PICKUP") : {
 									(_x select 2) set [1,"DROPOFF"];
-									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
-									(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 									[A3C_MARKERTOSWITCH,"A3C_Marker_DROPOFF_AIR","DEFAULT"] call MCSS_fnc_SwitchMarker;
-									[findDisplay _a3c_dsp displayCtrl 709112, 2] call A3C_setCurSel;
+									[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 2] call A3C_setCurSel;
 								};
 
 								case ("DROPOFF") : {
 									if (A3C_IsRappel) then {
 										(_x select 2) set [1,"RAPPEL"];
-										(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
-										(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+										(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
+										(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 										[A3C_MARKERTOSWITCH,"A3C_Marker_Rappel","DEFAULT"] call MCSS_fnc_SwitchMarker;
-										[findDisplay _a3c_dsp displayCtrl 709112, 4] call A3C_setCurSel;
+										[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 4] call A3C_setCurSel;
 									} else {
 										(_x select 2) set [1,"LANDFINAL"];
-										(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
-										(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+										(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
+										(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 										[A3C_MARKERTOSWITCH,"A3C_Marker_LANDING","DEFAULT"] call MCSS_fnc_SwitchMarker;
-										[findDisplay _a3c_dsp displayCtrl 709112, 3] call A3C_setCurSel;
+										[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 3] call A3C_setCurSel;
 									};
 
 								};
 								case ("RAPPEL") : {
 									(_x select 2) set [1,"LANDFINAL"];
-									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
-									(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor [1,1,1,1];
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 									[A3C_MARKERTOSWITCH,"A3C_Marker_LANDING","DEFAULT"] call MCSS_fnc_SwitchMarker;
-									[findDisplay _a3c_dsp displayCtrl 709112, 3] call A3C_setCurSel;
+									[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 3] call A3C_setCurSel;
 								};
 								case ("LANDFINAL") : {
 									(_x select 2) set [1,"NONE"];
-									(findDisplay _a3c_dsp displayCtrl 709113) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
-									(findDisplay _a3c_dsp displayCtrl 709113) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_fnc_setOpacity);
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
+									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_fnc_setOpacity);
 									[A3C_MARKERTOSWITCH,"A3C_Marker_WAYPOINT","DEFAULT"] call MCSS_fnc_SwitchMarker;
-									[findDisplay _a3c_dsp displayCtrl 709112, 0] call A3C_setCurSel;
+									[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 0] call A3C_setCurSel;
 								};
 							};
 						};

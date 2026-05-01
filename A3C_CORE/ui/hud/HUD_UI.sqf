@@ -372,9 +372,9 @@ A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG = {
 	};
 	
 	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
-	_parent = findDisplay _a3c_dsp displayCtrl 8008;
-	_text = findDisplay _a3c_dsp displayCtrl 800802;
-	_listBox = findDisplay _a3c_dsp displayCtrl 800803;
+	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 
 	_parent ctrlShow true;
 	_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
@@ -385,8 +385,8 @@ A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG = {
 
 //-- charge is null object in "A3C_UNIT_EXPLOSIVES" variable
 A3C_UI_RADIAL_OBJECTSELECTOR_LABEL_DETONATIONTARGETS = {
-	_parent = (findDisplay 100060 displayCtrl 8008);
-	_listBox = findDisplay 100060 displayCtrl 800803;
+	_parent = (findDisplay 100060 displayCtrl IDC_SHARED_UI_ObjectSelector_Parent);
+	_listBox = findDisplay 100060 displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 	private _hcAll = A3C_HC_getAllGroups_Player_Current;
 	_hcAll pushBackUnique (group player);
 	A3C_UI_RADIAL_Current_Remfire_Units = [];
@@ -472,9 +472,9 @@ A3C_ObjectSelector_LB_Change = {
 	//_vehicle = if (count _this > 1) then {_this select 1) else {};
 	_doubleClick = false;
 	_tickTime = (time - A3C_LB_TICKTIME);
-	_parent = findDisplay _a3c_dsp displayCtrl 8008;
-	_text = findDisplay _a3c_dsp displayCtrl 800802;
-	_listBox = findDisplay _a3c_dsp displayCtrl 800803;
+	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 	if ((_tickTime > 0.07) && (_tickTime < 0.3)) then {
 		_doubleClick = true;
 	};
@@ -504,7 +504,7 @@ A3C_ObjectSelector_LB_Change = {
 				};
 
 				_parent ctrlShow false;
-				(findDisplay _a3c_dsp displayCtrl 8008) ctrlShow false;
+				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent) ctrlShow false;
 				with uiNamespace do {
 					(findDisplay 100060) closeDisplay 0;
 				};
@@ -592,7 +592,7 @@ A3C_ObjectSelector_LB_Change = {
 				[A3C_UI_HUD_3D_TAG_ICON_POS,''] spawn A3C_UI_HUD_3D_TAG;
 				private _groups = +(A3C_SELECTED_HC_GROUPS_SETTINGS);
 				//systemchat str _groups;
-				(findDisplay _a3c_dsp displayCtrl 8008) ctrlShow false;
+				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent) ctrlShow false;
 
 				if (_groups isEqualTo []) exitWith {};
 
@@ -677,7 +677,7 @@ A3C_ObjectSelector_LB_Change = {
 
 			case ("MULTIWAYPOINT") : {
 				A3C_MULTIWAYPOINT = if (_lb == 0) then {true} else {false};
-				(findDisplay _a3c_dsp displayCtrl 8008) ctrlShow false;
+				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent) ctrlShow false;
 			};
 
 			case ("DETONATE_SELECTED_CHARGE_SHARED") : {
@@ -790,7 +790,7 @@ A3C_ObjectSelector_LB_Change = {
 
 			case ("ARTY_1") : {
 				A3C_HC_FOCUS_ARTY_AmmoCount = call compile (_listBox lbText _lb);
-				(findDisplay _a3c_dsp displayCtrl 8008) ctrlShow false;
+				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent) ctrlShow false;
 			
 
 				
@@ -819,7 +819,7 @@ A3C_ObjectSelector_LB_Change = {
 					};
 				};
 
-				//(findDIsplay 100020 displayCtrl 8008) ctrlSHow false;
+				//(findDIsplay 100020 displayCtrl IDC_SHARED_UI_ObjectSelector_Parent) ctrlSHow false;
 				{
 					private _soldier = _x;
 					{
@@ -1269,7 +1269,7 @@ A3C_ObjectSelector_LB_Change = {
 				];
 				[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] setWaypointStatements _statements;
 				
-				(findDisplay _a3c_dsp displayCtrl 8008) ctrlShow false;
+				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent) ctrlShow false;
 			};
 
 			case ("HELI_LANDING_HC_TYPE") : {

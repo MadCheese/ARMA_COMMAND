@@ -65,7 +65,7 @@ A3C_LB_Change = {
 			[_lb] call A3C_SWITCHMARKER;
 		};
 		case (1) : {
-			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 			if (count A3C_SELECTED_UNITS > 0) then {
 				if (typeName (A3C_SELECTED_UNITS select 0) == "GROUP") then {
 
@@ -186,7 +186,7 @@ A3C_LB_Change = {
 			} foreach _compare;
 
 			if (_isMap) then {
-				{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+				{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 			} else {
 				(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONLEFT_TC_BOX) ctrlShow false;
 				//-- to do: update tree!
@@ -202,7 +202,7 @@ A3C_LB_Change = {
 			{
 				if !(_x in _gp) then {_gp pushback _x};
 			} foreach A3C_SELECTED_UNITS;
-			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 			[1,_gp] spawn A3C_BTN_HC;
 		};
 		case (5) : {
@@ -331,12 +331,12 @@ A3C_LB_Change = {
 A3C_ACTIVATEGOCODE = {
 	_code = _this select 0;
 	private _a3c_dsp = 100020;
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	_ctrls = switch (_code) do {
-		case ("A") : {[709100,709101]};
-		case ("B") : {[709102,709103]};
-		case ("C") : {[709104,709105]};
-		case ("D") : {[709106,709107]};
+		case ("A") : {[IDC_MAP_Order_GoCode_A_IMG,IDC_MAP_Order_GoCode_A_BTN]};
+		case ("B") : {[IDC_MAP_Order_GoCode_B_IMG,IDC_MAP_Order_GoCode_B_BTN]};
+		case ("C") : {[IDC_MAP_Order_GoCode_C_IMG,IDC_MAP_Order_GoCode_C_BTN]};
+		case ("D") : {[IDC_MAP_Order_GoCode_D_IMG,IDC_MAP_Order_GoCode_D_BTN]};
 	};
 	call compile format
 	[
@@ -415,7 +415,7 @@ A3C_GROUP_RESET = {
 	
 	if !(player == leader group player) exitWith {};
 
-	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [7078,IDC_MAP_SQWP_ControlsGroup];
+	{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup];
 	
 	private _units = (units player) - [player];
 	
@@ -823,7 +823,7 @@ A3C_UI_SHARED_createDashBoard = {
 			_mapBarDims params ["_mapBarX","_mapBarY","_mapBarW","_mapBarH"];
 			_mapBarY = _mapBarY + _mapBarH;
 
-			(ctrlPosition (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_ControlsGroup)) params ["_gpX","_gpY","_gpW","_gpH"];
+			(ctrlPosition (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_Parent)) params ["_gpX","_gpY","_gpW","_gpH"];
 
 
 			_parentPos = ctrlPosition _parent;
@@ -1162,7 +1162,7 @@ A3C_UI_SHARED_createDashBoard = {
 		};
 		
 		//-- set images and text(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_GROUPNAME) ctrlSetText _groupID;
-		{(findDisplay _a3c_dsp displayCtrl _x) ctrlSetText _groupID;} foreach [11001,800713];
+		{(findDisplay _a3c_dsp displayCtrl _x) ctrlSetText _groupID;} foreach [IDC_SHARED_UI_DASHBOARD_GROUPNAME,IDC_MAP_DASHBOARD_GROUPNAME_EDIT];
 		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_GROUPICON) ctrlSetText _groupIcon;
 		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_TXT_UNITSIZE) ctrlSetText _unitSize;
 		(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_TXT_LOCATION) ctrlSetText _location;
@@ -1545,10 +1545,10 @@ A3C_UI_Shared_fnc_toggleGocodeCtrls = {
 		} else {
 			(findDisplay 12 displayCtrl 51) ctrlEnable true;
 			private _ctrls = switch (_mode) do {
-				case ("A") : {[709100,709101]};
-				case ("B") : {[709102,709103]};
-				case ("C") : {[709104,709105]};
-				case ("D") : {[709106,709107]};
+				case ("A") : {[IDC_MAP_Order_GoCode_A_IMG,IDC_MAP_Order_GoCode_A_BTN]};
+				case ("B") : {[IDC_MAP_Order_GoCode_B_IMG,IDC_MAP_Order_GoCode_B_BTN]};
+				case ("C") : {[IDC_MAP_Order_GoCode_C_IMG,IDC_MAP_Order_GoCode_C_BTN]};
+				case ("D") : {[IDC_MAP_Order_GoCode_D_IMG,IDC_MAP_Order_GoCode_D_BTN]};
 			};
 			if (_cond1 OR _cond2) then {
 				if !(isnull findDisplay _a3c_dsp) then {
@@ -1577,7 +1577,7 @@ A3C_UI_Shared_fnc_toggleGocodeCtrls = {
 				};
 			};
 			if ( !isnull findDisplay _a3c_dsp) then {
-				private _bgControl = findDisplay _a3c_dsp displayCtrl 709099;
+				private _bgControl = findDisplay _a3c_dsp displayCtrl IDC_MAP_Order_GoCode_BG;
 				if (_buttonsPlaced > 0) then {		
 					private _bgWidth = A3C_MAP_OVERLAY_GAMEUI_GOCODE_BUTTONPOS_ROOT_W * _buttonsPlaced;
 					private _bgPos = 
@@ -1673,9 +1673,9 @@ A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP = {
 	params ["_mode"];
 	
 	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
-	_parent = findDisplay _a3c_dsp displayCtrl 8008;
-	_text = findDisplay _a3c_dsp displayCtrl 800802;
-	_listBox = findDisplay _a3c_dsp displayCtrl 800803;
+	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 	//if !(visibleMap) then {
 	//};
 

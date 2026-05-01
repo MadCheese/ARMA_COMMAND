@@ -146,14 +146,14 @@ with uiNameSpace do {
 	IDC_MAP_HCGP_STARTUP_BAR, //_startBar,
 	IDC_MAP_HCGP_STARTUP_TEXT, //_startText,
 	IDC_MAP_SQWP_ControlsGroup,
-	IDC_MAP_HCGP_WP_ControlsGroup,
-	IDC_MAP_HCGP_ControlsGroup,
+	IDC_MAP_HCGP_WP_Parent,
+	IDC_MAP_HCGP_Parent,
 	8008,
 	IDC_MAP_UFSB_Subselection_01_Parent,
 	IDC_MAP_UFSB_Subselection_02_Parent,
 	IDC_MAP_UFSB_Subselection_01_BG,
 	IDC_MAP_UFSB_Subselection_02_BG,
-	IDC_MAP_HCGP_WP_ControlsGroup
+	IDC_MAP_HCGP_WP_Parent
 ];
 
 private _ceil = (ceil ((count A3C_SELECTED_UNITS) / A3C_UI_MAP_UNITBUTTONCEIL)) - 1;

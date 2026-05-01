@@ -50,9 +50,9 @@ A3C_UI_MAP_onKeyDown_Map = { //-- This handler is needed because ESC behaves dif
 	switch (true) do {
 		case (_key == 1) : {
 			private _display = findDisplay 100020;
-			private _groupContextmenuHC = _display displayCtrl IDC_MAP_HCGP_ControlsGroup;
+			private _groupContextmenuHC = _display displayCtrl IDC_MAP_HCGP_Parent;
 			private _groupDashboardHC = _display displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT;
-			private _wpContextmenuHC = _display displayCtrl IDC_MAP_HCGP_WP_ControlsGroup;
+			private _wpContextmenuHC = _display displayCtrl IDC_MAP_HCGP_WP_Parent;
 			private _blockDefault = false;
 			if (ctrlShown _groupContextmenuHC) then {
 				{

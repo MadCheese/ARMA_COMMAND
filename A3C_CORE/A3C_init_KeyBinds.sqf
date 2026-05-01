@@ -207,8 +207,6 @@ A3C_UI_FNC_ADD_KEYBINDS =
 	["A3C", "A3C_KeyFnc_Grenade_Player", ["GetTactical Grenade", "Gives enhanced throwing-options"], {["GREN_P","DOWN"] call A3C_FNC_CBA_KEY}, {["GREN_P","UP"] call A3C_FNC_CBA_KEY}, [35,[false,false,false]],false ] call cba_fnc_addKeybind;
 
 
-	//["A3C", "A3C_KeyFnc_HC_REMOTE_SUP_02", ["HC-Focus Suppression", "Order suppressive fire to focused HC-group"], {["HC_SUPPRESS","DOWN"] call A3C_FNC_CBA_KEY}, {["HC_SUPPRESS","UP"] call A3C_FNC_CBA_KEY}, [199,[false,false,false]],false ] call cba_fnc_addKeybind;
-	//["A3C", "A3C_KeyFnc_HC_REMOTE_02", ["HC-Focus Remote", "Order remote fire (UGL/AT/TANKSHELL) to focused HC-group"], {["HC_REMOTE","DOWN"] call A3C_FNC_CBA_KEY}, {["HC_REMOTE","UP"] call A3C_FNC_CBA_KEY}, [199,[false,true,false]],false ] call cba_fnc_addKeybind;
 
 	["A3C", "A3C_KeyFnc_Formation_Menu_2", ["Custom Formation Menu", "Custom Formation HUD"], {["FORM","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [33,[true,false,false]],true] call cba_fnc_addKeybind; //["FORM","UP"] call A3C_FNC_CBA_KEY
 	["A3C", "A3C_KeyFnc_ZEUS_Remote", ["A3C-ZEUS Exit", "Exit A3C-Zeus Remote"], {["ZEUS","DOWN"] call A3C_FNC_CBA_KEY}, {}, [21,[true,false,false]],false] call cba_fnc_addKeybind;

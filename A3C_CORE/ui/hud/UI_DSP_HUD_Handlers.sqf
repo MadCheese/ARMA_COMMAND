@@ -540,7 +540,7 @@ A3C_UI_HUD_onMouseZChanged = {
 
 A3C_UI_HUD_ObjectSelector_onKeyDown = {
 	params ["_display", "_key", "_shift", "_ctrl", "_alt"];
-	private _objectSelectorListbox = _display displayCtrl 800803;
+	private _objectSelectorListbox = _display displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 	if (_key >= 2 && _key <= 10) then {
 		[_key, _objectSelectorListbox] spawn A3C_UI_Shared_ObjectSelector_Listbox_NumberControl;
 	};

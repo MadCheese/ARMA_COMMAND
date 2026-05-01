@@ -24,7 +24,7 @@ private _blockDefault = false;
 if (_key == 29) then {_blockDefault = true;};
 
 //-- Disable Numbers (ie to disable weapon switch) or control objectSelector-Listbox
-private _mapObjectSelectorListbox = _display displayCtrl 800803;
+private _mapObjectSelectorListbox = _display displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 private _mapObjectSelectorShown = ctrlShown _mapObjectSelectorListbox;
 
 if (
@@ -99,8 +99,8 @@ switch (true) do {
 	//-- Other keybinds
 	case (_key in [28,57,207]) : {
 
-		private _groupContextmenuHC = _display displayCtrl IDC_MAP_HCGP_ControlsGroup;
-		private _wpContextmenuHC = _display displayCtrl IDC_MAP_HCGP_WP_ControlsGroup;
+		private _groupContextmenuHC = _display displayCtrl IDC_MAP_HCGP_Parent;
+		private _wpContextmenuHC = _display displayCtrl IDC_MAP_HCGP_WP_Parent;
 
 		switch (_key) do {
 			case 28: { // Enter

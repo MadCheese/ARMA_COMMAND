@@ -1200,9 +1200,9 @@ class A3C_DSP_MapOverlay
 
 		//---------- CONTEXT MENU ---------------------------------------------------------------------
 
-		class MAP_HCGP_ControlsGroup: A3C_RscControlsGroup_NoScroll
+		class MAP_HCGP_Parent: A3C_RscControlsGroup_NoScroll
 		{
-			idc = IDC_MAP_HCGP_ControlsGroup; //8007;
+			idc = IDC_MAP_HCGP_Parent; //8007;
 
 			x = 0;
 			y = 200;
@@ -1887,9 +1887,9 @@ class A3C_DSP_MapOverlay
 		//---------------------------------------------------------------------------------------------
 		
 
-		class MAP_HCWP_ControlsGroup:  A3C_RscControlsGroup_NoScroll
+		class MAP_HCGP_WP_Parent:  A3C_RscControlsGroup_NoScroll
 		{
-			idc = IDC_MAP_HCWP_ControlsGroup; //709115;
+			idc = IDC_MAP_HCGP_WP_Parent; //709115;
 
 			x = 4 * GUI_GRID_W + GUI_GRID_X;
 			y = 100 * GUI_GRID_H + GUI_GRID_Y;
@@ -1949,7 +1949,7 @@ class A3C_DSP_MapOverlay
 				{
 					idc = -1;
 					text = "X";
-					action = "(findDisplay 100020 displayCtrl IDC_MAP_HCGP_WP_ControlsGroup) ctrlShow false;";
+					action = "(findDisplay 100020 displayCtrl IDC_MAP_HCGP_WP_Parent) ctrlShow false;";
 					
 					x = 9 * GUI_GRID_W;
 					y = 0 * GUI_GRID_H;
@@ -2142,9 +2142,9 @@ class A3C_DSP_MapOverlay
 
 				//-- WAYPOINT-COMPLETION
 				//----------------------
-				class MAP_HCWP_Completion_ControlsGroup:  A3C_RscControlsGroup_NoScroll
+				class MAP_HCWP_Completion_Parent:  A3C_RscControlsGroup_NoScroll
 				{
-					idc = IDC_MAP_HCWP_Completion_ControlsGroup; //709202;
+					idc = IDC_MAP_HCWP_Completion_Parent; //709202;
 
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
 					y = 10 * GUI_GRID_H;
@@ -2219,10 +2219,10 @@ class A3C_DSP_MapOverlay
 				
 				//-- WAYPOINT-TYPE COMBO
 				//----------------------
-				class MAP_HCWP_Type_ControlsGroup:  A3C_RscControlsGroup_NoScroll
+				class MAP_HCWP_Type_Parent:  A3C_RscControlsGroup_NoScroll
 				{
 
-					idc = IDC_MAP_HCWP_Type_ControlsGroup; //709203;
+					idc = IDC_MAP_HCWP_Type_Parent; //709203;
 
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
 					y = 12 * GUI_GRID_H;
@@ -2284,10 +2284,10 @@ class A3C_DSP_MapOverlay
 				//-- WAYPOINT-ACTION SETTINGS MAIN
 				//-----------------------------
 
-				class MAP_HCWP_Action_ControlsGroup_MAIN:  A3C_RscControlsGroup_NoScroll
+				class MAP_HCWP_Action_Parent_MAIN:  A3C_RscControlsGroup_NoScroll
 				{
 
-					idc = IDC_MAP_HCWP_Action_ControlsGroup_MAIN; //709200;
+					idc = IDC_MAP_HCWP_Action_Parent_MAIN; //709200;
 
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
 					y = 10 * GUI_GRID_H;
@@ -2416,10 +2416,10 @@ class A3C_DSP_MapOverlay
 				//-- WAYPOINT-ACTION SETTINGS ADDITIONAL
 				//-----------------------------
 
-				class MAP_HCWP_Action_ControlsGroup_ADD:  A3C_RscControlsGroup_NoScroll
+				class MAP_HCWP_Action_Parent_ADD:  A3C_RscControlsGroup_NoScroll
 				{
 
-					idc = IDC_MAP_HCWP_Action_ControlsGroup_ADD; //709201;
+					idc = IDC_MAP_HCWP_Action_Parent_ADD; //709201;
 
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
 					y = 14 * GUI_GRID_H;
@@ -2566,7 +2566,7 @@ class A3C_DSP_MapOverlay
 					idc = IDC_MAP_HCWP_Delete_TEXT; //709134;
 					text = "DELETE";
 					shadow = 0;
-					action = "[] call A3C_HC_REMOVE_WP_RC; (findDisplay 100020 displayCtrl IDC_MAP_HCGP_WP_ControlsGroup) ctrlShow false;";
+					action = "[] call A3C_HC_REMOVE_WP_RC; (findDisplay 100020 displayCtrl IDC_MAP_HCGP_WP_Parent) ctrlShow false;";
 					x = 4.5 * GUI_GRID_W;
 					y = 14 * GUI_GRID_H;
 					w = 4.5 * GUI_GRID_W;
@@ -2581,9 +2581,9 @@ class A3C_DSP_MapOverlay
 		//---------------------------------------------------------------------------------------------
 		
 		
-		class 8008: A3C_RscControlsGroup_NoScroll
+		class MAP_ObjectSelector_Parent: A3C_RscControlsGroup_NoScroll
 		{
-			idc = 8008;
+			idc = IDC_SHARED_UI_ObjectSelector_Parent; //8008;
 			
 			x = 20 * safezoneW + safezoneX;
 			y = 20 * safezoneH + safezoneY;
@@ -2593,38 +2593,37 @@ class A3C_DSP_MapOverlay
 			class Controls
 			{
 				
-				class A3C_HC_ObjectSelector_Description_BG: A3C_RscPicture
+				class MAP_ObjectSelector_Description_BG: A3C_RscPicture
 				{
-					idc = 800801;
+					idc = IDC_SHARED_UI_ObjectSelector_Description_BG; //800801;
 					text = "#(argb,8,8,3)color(0,0.3,0.6,1)";
 					x = 0;
 					y = 0;
 					w = 0.192528 * safezoneW;
 					h = 0.0440051 * safezoneH;
 				};
-				class A3C_HC_ObjectSelector_Description_Text: A3C_RscText
+				class MAP_ObjectSelector_Description_TXT: A3C_RscText
 				{
-					idc = 800802;
-					//text = "TEST";
+					idc = IDC_SHARED_UI_ObjectSelector_Description_TXT; //800802;
 					x = 0;
 					y = 0;
 					w = 0.192528 * safezoneW;
 					h = 0.0440051 * safezoneH;
 				};
-				class A3C_HC_ObjectSelector_ListBox: A3C_LISTBOX
+				class MAP_ObjectSelector_ListBox: A3C_LISTBOX
 				{
-					idc = 800803;
+					idc = IDC_SHARED_UI_ObjectSelector_ListBox; //800803;
 					style = CT_LISTBOX;
 					x = 0;
 					y = 0.0440052 * safezoneH;
 					w = 0.192528 * safezoneW;
 					h = 0.0990114 * safezoneH;
-					onMouseEnter = "ctrlSetFocus (findDisplay 100020 displayCtrl 800803)";
-					onLBSelChanged = "[(_this select 1)] call A3C_ObjectSelector_LB_Change";
-					
+					onMouseEnter = "ctrlSetFocus (findDisplay 100020 displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox)";
+					onLBSelChanged = "[(_this select 1)] call A3C_ObjectSelector_LB_Change";	
 				};
 			};
 		};
+
 		//---------------------------------------------------------------------------------------------
 		//---------- SQUAD LEVEL WAYPOINT MENU --------------------------------------------------------
 		//---------------------------------------------------------------------------------------------
@@ -2640,81 +2639,81 @@ class A3C_DSP_MapOverlay
 			class Controls
 			{
 
-				class ctg1 :  A3C_RscPicture
+				class MAP_SQWP_Speed_IMG :  A3C_RscPicture
 				{
-					idc = 709110;
+					idc = IDC_MAP_SQWP_Speed_IMG; //709110;
 					text = "A3C_CORE\ui\pictures\icon_menu_speed_full.paa"; 
 					x = 1.5 * GUI_GRID_W + GUI_GRID_X;
 					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 1 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
 				};
-				class ctg1_1 :  A3C_RscButton_Invisible
+				class MAP_SQWP_Speed_BTN :  A3C_RscButton_Invisible
 				{
-					idc = 7091101;
+					idc = IDC_MAP_SQWP_Speed_BTN; //7091101;
 					x = 1.5 * GUI_GRID_W + GUI_GRID_X;
 					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 1 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
 					action = "['SPEED'] call A3C_CONTEXTBUTTON";
 				};
-				class ctg2 :  A3C_RscPicture
+				class MAP_SQWP_Stance_Travel_IMG :  A3C_RscPicture
 				{
-					idc = 709111;
+					idc = IDC_MAP_SQWP_Stance_Travel_IMG; //709111;
 					text = "A3C_CORE\ui\pictures\icon_menu_stance_stand.paa";
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
 					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 1 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
 				};
-				class ctg2_1 :  A3C_RscButton_Invisible
+				class MAP_SQWP_Stance_Travel_BTN :  A3C_RscButton_Invisible
 				{
-					idc = 7091111;
+					idc = IDC_MAP_SQWP_Stance_Travel_BTN; //7091111;
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
 					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 1 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
 					action = "['STANCE1'] call A3C_CONTEXTBUTTON";
 				};
-				class ctg3 :  A3C_RscCombo
+				class MAP_SQWP_Combo :  A3C_RscCombo
 				{
-					idc = 709112;
+					idc = IDC_MAP_SQWP_Combo; //709112;
 					x = 0 * GUI_GRID_W + GUI_GRID_X;
 					y = 0 * GUI_GRID_H + GUI_GRID_Y;
 					w = 5.5 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
 					onLBSelChanged = "[A3C_LB_MODE,(_this select 1),100020] call A3C_LB_Change; ";
 				};
-				class ctg4 :  A3C_RscPicture
+				class MAP_SQWP_Stance_Arrival_IMG :  A3C_RscPicture
 				{
-					idc = 709113;
+					idc = IDC_MAP_SQWP_Stance_Arrival_IMG; //709113;
 					text = "A3C_CORE\ui\pictures\icon_menu_stance_crouch.paa";
 					x = 3 * GUI_GRID_W + GUI_GRID_X;
 					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 1 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
 				};
-				class ctg4_1 :  A3C_RscButton_Invisible
+				class MAP_SQWP_Stance_Arrival_BTN :  A3C_RscButton_Invisible
 				{
-					idc = 7091131;
+					idc = IDC_MAP_SQWP_Stance_Arrival_BTN; //7091131;
 					x = 3 * GUI_GRID_W + GUI_GRID_X;
 					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 1 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
 					action = "['STANCE2'] call A3C_CONTEXTBUTTON";
 				};
-				class ctg5 :  A3C_RscPicture
+				class MAP_SQWP_Delete_IMG :  A3C_RscPicture
 				{
-					idc = 709114;
+					idc = IDC_MAP_SQWP_Delete_IMG; //709114;
 					text = "A3C_CORE\ui\pictures\icon_Menu_trash.paa";
 					x = 4.5 * GUI_GRID_W + GUI_GRID_X;
 					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 1 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
 				};
-				class ctg5_1 :  A3C_RscButton_Invisible
+				class MAP_SQWP_Delete_BTN :  A3C_RscButton_Invisible
 				{
-					idc = 7091141;
+					idc = IDC_MAP_SQWP_Delete_BTN; //7091141;
 					x = 4.5 * GUI_GRID_W + GUI_GRID_X;
 					y = 1.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 1 * GUI_GRID_W;
@@ -2727,18 +2726,18 @@ class A3C_DSP_MapOverlay
 		//---------------------------------------------------------------------------------------------
 		//---------- MAP TOP RIGHT: GO-CODE CONTROLS --------------------------------------------------
 		//---------------------------------------------------------------------------------------------
-		class Order_GoCode_BG: A3C_RscPicture
+		class MAP_Order_GoCode_BG: A3C_RscPicture
 		{
-			idc = 709099;
+			idc = IDC_MAP_Order_GoCode_BG; //709099;
 			text = "#(argb,8,8,3)color(0,0,0,0.6)";
 			x = 0.689022 * safezoneW + safezoneX;
 			y = safezoneY - (0.0220035 * safezoneH);
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
-		class Order_GoCode_A: A3C_RscPicture
+		class MAP_Order_GoCode_A_IMG: A3C_RscPicture
 		{
-			idc = 709100;
+			idc = IDC_MAP_Order_GoCode_A_IMG; //709100;
 
 			text = "A3C_CORE\ui\pictures\icon_menu_gocode_A.paa";
 			x = 0.689022 * safezoneW + safezoneX;
@@ -2746,9 +2745,9 @@ class A3C_DSP_MapOverlay
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
-		class Order_GoCode_A_1: A3C_RscButton_Invisible
+		class MAP_Order_GoCode_A_BTN: A3C_RscButton_Invisible
 		{
-			idc = 709101;
+			idc = IDC_MAP_Order_GoCode_A_BTN; //709101;
 			action = "['A'] call A3C_ACTIVATEGOCODE";
 
 			x = 0.689022 * safezoneW + safezoneX;
@@ -2756,9 +2755,9 @@ class A3C_DSP_MapOverlay
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
-		class Order_GoCode_B: A3C_RscPicture
+		class MAP_Order_GoCode_B_IMG: A3C_RscPicture
 		{
-			idc = 709102;
+			idc = IDC_MAP_Order_GoCode_B_IMG; //709102;
 
 			text = "A3C_CORE\ui\pictures\icon_menu_gocode_B.paa";
 			x = 0.706206 * safezoneW + safezoneX;
@@ -2766,9 +2765,9 @@ class A3C_DSP_MapOverlay
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
-		class Order_GoCode_B_1: A3C_RscButton_Invisible
+		class MAP_Order_GoCode_B_BTN: A3C_RscButton_Invisible
 		{
-			idc = 709103;
+			idc = IDC_MAP_Order_GoCode_B_BTN; //709103;
 			action = "['B'] call A3C_ACTIVATEGOCODE";
 
 			x = 0.706206 * safezoneW + safezoneX;
@@ -2776,9 +2775,9 @@ class A3C_DSP_MapOverlay
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
-		class Order_GoCode_C: A3C_RscPicture
+		class MAP_Order_GoCode_C_IMG: A3C_RscPicture
 		{
-			idc = 709104;
+			idc = IDC_MAP_Order_GoCode_C_IMG; //709104;
 
 			text = "A3C_CORE\ui\pictures\icon_menu_gocode_C.paa";
 			x = 0.689022 * safezoneW + safezoneX;
@@ -2786,9 +2785,9 @@ class A3C_DSP_MapOverlay
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
-		class Order_GoCode_C_1: A3C_RscButton_Invisible
+		class MAP_Order_GoCode_C_BTN: A3C_RscButton_Invisible
 		{
-			idc = 709105;
+			idc = IDC_MAP_Order_GoCode_C_BTN; //709105;
 			action = "['C'] call A3C_ACTIVATEGOCODE";
 
 			x = 0.689022 * safezoneW + safezoneX;
@@ -2796,9 +2795,9 @@ class A3C_DSP_MapOverlay
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
-		class Order_GoCode_D: A3C_RscPicture
+		class MAP_Order_GoCode_D_IMG: A3C_RscPicture
 		{
-			idc = 709106;
+			idc = IDC_MAP_Order_GoCode_D_IMG; //709106;
 
 			text = "A3C_CORE\ui\pictures\icon_menu_gocode_D.paa";
 			x = 0.706206 * safezoneW + safezoneX;
@@ -2806,9 +2805,9 @@ class A3C_DSP_MapOverlay
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
-		class Order_GoCode_D_1: A3C_RscButton_Invisible
+		class MAP_Order_GoCode_D_BTN: A3C_RscButton_Invisible
 		{
-			idc = 709107;
+			idc = IDC_MAP_Order_GoCode_D_BTN; //709107;
 			action = "['D'] call A3C_ACTIVATEGOCODE";
 
 			x = 0.706206 * safezoneW + safezoneX;
@@ -2816,9 +2815,9 @@ class A3C_DSP_MapOverlay
 			w = 0.0114559 * safezoneW;
 			h = 0.0220035 * safezoneH;
 		};
-		class A3C_DIAGDEG: A3C_RscText
+		class MAP_Dir_MousePosToPlayerPos_TXT: A3C_RscText
 		{
-			idc = 709108;
+			idc = IDC_MAP_Dir_MousePosToPlayerPos_TXT; //709108
 
 			x = 0.0245802 * safezoneW + safezoneX;
 			y = 0.0159226 * safezoneH + safezoneY;
@@ -2830,9 +2829,9 @@ class A3C_DSP_MapOverlay
 		//---------- MAP RSC COMBO SELECTOR (DYNAMIC) --------------------------------------------------
 		//---------------------------------------------------------------------------------------------
 
-		class A3C_COMBO_ENEMYTARGET: A3C_RscCombo //-- name is misleading as control is used in multiple places
+		class MAP_DynamicCombo: A3C_RscCombo //-- name is misleading as control is used in multiple places
 		{
-			idc = 7078;
+			idc = IDC_MAP_DynamicCombo; //7078
 			onLBSelChanged = " [A3C_LB_MODE,(_this select 1),100020] call A3C_LB_Change";
 			x = 0.00166839 * safezoneW + safezoneX;
 			y = 14 * safezoneH + safezoneY;

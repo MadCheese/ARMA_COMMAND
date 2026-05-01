@@ -11,13 +11,13 @@ private _ctls = [
 	IDC_MAP_UFSB_FRAME,
 	IDC_MAP_TOP_EXTRAS_BACKGROUND,
 	IDC_UI_SHARED_TEAMCOLOR_BG,
-	202020,
-	709099,
+	IDC_SHARED_UI_TREE_SELECTOR,
+	IDC_MAP_Order_GoCode_BG,
 	IDC_MAP_UFSB_Subselection_01_Parent,
 	IDC_MAP_UFSB_Subselection_02_Parent,
 	IDC_MAP_SQWP_ControlsGroup,
-	IDC_MAP_HCGP_WP_ControlsGroup,
-	8007
+	IDC_MAP_HCGP_WP_Parent,
+	IDC_MAP_HCGP_Parent
 ];
 
 A3C_MAP_X = _this select 1;

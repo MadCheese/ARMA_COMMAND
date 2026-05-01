@@ -1354,7 +1354,7 @@ MCSS_fnc_isClickPosInCTRLArea = {
 	if !(ctrlShown _ctrl) exitWith {false};
 	_boxSize = ctrlPosition _ctrl;
 	_boxSize params ["_x","_y","_w","_h"];
-	if (ctrlIDC _ctrl == 7078) then {
+	if (ctrlIDC _ctrl == IDC_MAP_DynamicCombo) then {
 		_h = _h + (2 * _h);
 	};
 	_center = [ _x + (_w / 2) , _y + (_h / 2) ];
