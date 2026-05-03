@@ -180,7 +180,8 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\CMDLVL_Squad\A3C_AI_Squa
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\CMDLVL_Shared\A3C_AI_Shared_ActionLibrary.sqf";
 
 
-
+//-- Shared UI
+call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\functions\initFunctions.sqf";
 
 
 

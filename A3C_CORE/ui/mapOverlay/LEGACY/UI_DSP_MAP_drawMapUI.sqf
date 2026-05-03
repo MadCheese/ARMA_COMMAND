@@ -1009,7 +1009,7 @@ MAP_UI_fnc_drawMapUI = {
 								'PuristaLight',
 								'center'
 							];
-							private _szEdited = _sz * 1.5;
+							private _szEdited = _sz; // * 1.5;
 							A3C_UI_MAPICONS_HC_WPS pushBack [_group,[_szEdited,_szEdited],(waypointposition _wp),_wp select 1];
 						};
 

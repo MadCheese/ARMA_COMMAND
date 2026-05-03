@@ -219,17 +219,14 @@ BR_A3C_OEFControl = {
 			"GEOM",
 			"NONE"
 		];
-		//if (count _ins == 0) then {_screenToWorld} else {ASLtoATL (_ins select 0 select 0)};
+
 		_throwPos = positionCameraToWorld [0,0,viewDistance];
-		//_throwPos = positionCameraToWorld [0,0,viewDistance];
-		//{str (atan ((eyeDirection player ) select 2))} spawn fhint
-		
+
 		_refDir = if ((abs _refDir) > 0.01) then {_refDir} else {(A3C_GTI_UNIT weapondirection (currentweapon A3C_GTI_UNIT)) select 2};
 		_alpha = atan _refDir;
 		_alpha = _alpha + 13;
 		_alpha = _alpha max 0.01;
-		//_beta = ((_alpha + 45) min 90) max 0;
-		//systemchat str [_alpha,BR_A3C_TACV_throwTheta];
+
 		BR_A3C_TACV_throwTheta = ((_alpha + BR_A3C_TACV_throwTheta_Add) max 0.01) min 89.9;
 	} else {
 		

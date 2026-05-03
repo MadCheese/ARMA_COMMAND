@@ -667,7 +667,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	if (_isLimitedWP) then {
 
 		
-		_combo = (findDisplay _a3c_dsp displayCtrl 709141);
+		_combo = (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_Action);
 		lbClear _combo;
 		[_combo, A3C_HC_EDIT_ACTION] call A3C_addLbEntry;
 		[_combo, 0, true] call A3C_setCurSel;
@@ -1044,7 +1044,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 	_wp = [];
 	_dirTo = 0;
 	_timeout = if (A3C_HC_ACTIVE_PRE_COND_MODE == "TIMEOUT") then {A3C_HC_ACTIVE_PRE_COND_VAL} else {0};
-	private _actionCtrl = (findDisplay _a3c_dsp displayCtrl 709141);
+	private _actionCtrl = (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_Action);
 	private _actionText = _actionCtrl lbText (lbCurSel _actionCtrl);
 
 	_wpMenuCtrlsGroup ctrlShow false;
@@ -1657,7 +1657,7 @@ A3C_HC_CASMODES = [];
 
 A3C_UI_MAP_WPMENU_ADDACTIONS = {
 	private _a3c_dsp = IDD_MAP_OVERLAY;
-	private _actionTypeCombo = (findDisplay _a3c_dsp displayCtrl 709141);
+	private _actionTypeCombo = (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_Action);
 
 	private _leader = leader A3C_HC_ACTIVEGROUP;
 	private _leaderVic = vehicle _leader;
@@ -2115,10 +2115,10 @@ A3C_LB_HC = {
 			
 			// --  TYPE-ACTION COMBO
 			
-			case (709141) : {
-				//systemchat 'oi';
+			case (IDC_MAP_HCWP_Type_Action) : {
+
 				private ["_textCtrl","_ctrlText","_ctrl","_lbSelect"];
-				//_textCtrl = (findDisplay _a3c_dsp displayCtrl 709120);
+
 				_ctrlText = "";
 				private _initActionType = A3C_HC_EDIT_ACTION;
 
@@ -2127,7 +2127,7 @@ A3C_LB_HC = {
 
 				
 
-				private _selectedAction = toUpper ((findDisplay _a3c_dsp displayCtrl 709141) lbText _lb);
+				private _selectedAction = toUpper ((findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_Action) lbText _lb);
 				if (A3C_HC_EDIT_ACTION == "ASSEMBLE WEAPON") then {
 					if (_selectedAction != "ASSEMBLE WEAPON") then { //== changing from assemble to other
 						
