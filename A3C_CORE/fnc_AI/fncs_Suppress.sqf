@@ -241,7 +241,7 @@ A3C_POLY_ACTION_ON = {
 	//-- shared vars for all modes
 	if (_exit) exitWith {
 		//('exit') remoteExec ["systemchat",0];
-		//systemchat 'exit';
+		// systemchat 'exit poly ON';
 	};
 	
 	{
@@ -1032,8 +1032,11 @@ A3C_Turret_HEIGHTRANGE = {
 A3C_POLY_ACTION_OFF = {
 
 	private ["_units","_mode","_run","_playerGroup","_poly"];
+
 	_units = _this select 0;
 	_mode = _this select 1;
+
+	// systemchat format ["A3C_POLY_ACTION_OFF units %1", _units];
 	if (count _units == 0) then {
 		if (!isNull player) then {
 			_units = A3C_SUPPRESSION_UNITS_SQ; //-- auto selection ALL for playerGroup units 
@@ -1059,21 +1062,22 @@ A3C_POLY_ACTION_OFF = {
 						deletevehicle _target;										
 					};
 				};
-				//if (false) then {
-					doStop _x;
-					_x dowatch objnull;
-			
-					//--target is individual per unit
-					
-					
-					_x setvariable ["A3C_SUPPRESSION_TARGET",[0,false,-1],true];
-					_poly = _t getvariable "A3C_POLY_ACTIVE";
-					_t setvariable ["A3C_POLY_ACTIVE",[],true];
-					[_u,_poly] call A3C_SUP_REMOVE_POLY;
+				
+				doStop _x;
+				_x dowatch objnull;
+		
+				//--target is individual per unit
+				
+				
+				_x setvariable ["A3C_SUPPRESSION_TARGET",[0,false,-1],true];
+				_poly = _t getvariable "A3C_POLY_ACTIVE";
+				_t setvariable ["A3C_POLY_ACTIVE",[],true];
+				[_u,_poly] call A3C_SUP_REMOVE_POLY;
 
-					_ed = _x getvariable ["A3C_DEST",(expectedDestination _x)];
-					[_u] call A3C_AI_action_resumeDestination;	
-				//};
+				_ed = _x getvariable ["A3C_DEST",(expectedDestination _x)];
+				// systemchat format ["POLY ACTION OFF: %1", _u];
+				[_u] call A3C_AI_action_resumeDestination;	
+			
 				A3C_SUPPRESSION_UNITS_SQ = A3C_SUPPRESSION_UNITS_SQ - [_u];
 				A3C_SUPPRESSION_UNITS_AI = A3C_SUPPRESSION_UNITS_AI - [_u];
 				

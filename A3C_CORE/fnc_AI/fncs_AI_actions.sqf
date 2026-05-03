@@ -6,10 +6,11 @@
 
 A3C_AI_action_resumeDestination = {
 	params ["_unit"];
+	
 	_expCurrent = (expectedDestination _unit);
 	if ( count _expCurrent > 0 &&  {(_expCurrent select 1) in ["DoNotPlanFormation","FORMATION PLANNED"]  } ) exitWith {}; //-- units are already in formation
 	private _expD = _unit getvariable ["A3C_DEST",[]];
-	//systemchat str _expD;
+	// systemchat format ["A3C_AI_action_resumeDestination %1, %2", name _unit, _expD ];
 	if (!isPLayer _unit) then {
 		if (count _expD > 0) then {
 			_expP = _expD select 0;

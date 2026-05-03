@@ -111,7 +111,7 @@ A3C_BOOL_DISABLEMAPCTRL = false;
 
 A3C_HC_DETONATION_BOOL = false;
 
-A3C_MAP_BOOL_CT_EDIT_ACTIVE = false;
+A3C_UI_MAP_BOOL_CT_EDIT_ACTIVE = false;
 
 
 A3C_TEMP_WP_ID_MAIN = "";
@@ -140,15 +140,17 @@ with uiNameSpace do {
 	(findDisplay 12 displayCtrl 51) ctrlMapCursor ["Track", "Arrow"];
 };
 
+
+
 //-- Hide UI-elements
 {(findDisplay _display displayCtrl _x) ctrlShow false;} foreach 
 [
 	IDC_MAP_HCGP_STARTUP_BAR, //_startBar,
 	IDC_MAP_HCGP_STARTUP_TEXT, //_startText,
-	IDC_MAP_SQWP_ControlsGroup,
+	IDC_MAP_SQWP_Parent,
 	IDC_MAP_HCWP_Parent,
 	IDC_MAP_HCGP_Parent,
-	8008,
+	IDC_SHARED_UI_ObjectSelector_Parent,
 	IDC_MAP_UFSB_Subselection_01_Parent,
 	IDC_MAP_UFSB_Subselection_02_Parent,
 	IDC_MAP_UFSB_Subselection_01_BG,
@@ -171,7 +173,7 @@ if (_ceil > A3C_BUTTONPAGE_TABLET) then {
 private _ct_tree = findDisplay _display displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 
 //-- overlay step 1: spawn Selector Box
-if (_display == 100020 && {!visibleMap}) exitWith {(findDisplay _display) closeDisplay 0};
+if (_display == IDD_MAP_OVERLAY && {!visibleMap}) exitWith {(findDisplay _display) closeDisplay 0};
 [_display,"INF"] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
 sleep 0.1;
 

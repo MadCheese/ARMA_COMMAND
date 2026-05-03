@@ -173,7 +173,7 @@ private _controls = createHashMapFromArray [
     ["hcwpDeleteBg", _display displayCtrl IDC_MAP_HCWP_Delete_BG],
     ["hcwpDeleteText", _display displayCtrl IDC_MAP_HCWP_Delete_TEXT],
 
-    ["sqwpControlsGroup", _display displayCtrl IDC_MAP_SQWP_ControlsGroup],
+    ["sqwpControlsGroup", _display displayCtrl IDC_MAP_SQWP_Parent],
     ["sqwpSpeedImg", _display displayCtrl IDC_MAP_SQWP_Speed_IMG],
     ["sqwpSpeedBtn", _display displayCtrl IDC_MAP_SQWP_Speed_BTN],
     ["sqwpStanceTravelImg", _display displayCtrl IDC_MAP_SQWP_Stance_Travel_IMG],

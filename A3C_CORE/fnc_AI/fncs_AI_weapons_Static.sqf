@@ -639,7 +639,6 @@ A3C_WP_ACTION_STATICWEAPON = { //~~ ISN'T THERE ANOTHER ASSEMBLE FNC? IF YES, DO
 						[_busyUnits select 1,_assistantPos] call A3C_DOMOVE;
 						[_busyUnits select 1,_weaponPos getPos [50,getDir _vehicleWeapon]] remoteExec ["lookAt",_busyUnits select 1];
 
-
 						private _isCorrection = false;
 
 						{

@@ -42,24 +42,6 @@ MAP_UI_fnc_drawMapUI = {
 	};
 
 
-	/*
-	_p1 = screenToWorld [safeZoneX,safeZoneY];
-	_p2 = screenToWorld [safeZoneX + safeZoneW,safeZoneY];
-	_pd = _p1 distance2d _p2;
-	(_this select 0) drawRectangle [
-		(findDisplay 12 displayCtrl 51) posscreentoworld [0.5,0.5],
-		_pd,
-		_pd,
-		0,
-		[1,1,1,1],
-		"#(rgb,8,8,3)color(0,1,0,1)"
-		//"#(rgb,8,8,3)color(0.13,0.13,0.13,1)"
-	];
-	*/
-
-	//systemchat str _this;
-	//if (visibleMap && {isnull (findDisplay 100020)}) exitWith {};
-	//if (A3C_OPACITY == 0) exitWith {};
 	private _ctrlMapScale = ctrlMapScale (_this select 0);
 
 	A3C_HC_WP_SYNC_ARRAYS = [];
@@ -69,7 +51,7 @@ MAP_UI_fnc_drawMapUI = {
 	A3C_UI_MAPICONS_SQUAD = [];
 	A3C_UI_MAPICONS_SQ_WPS_WPDOTS = [];
 	A3C_UI_MAPICONS_SQ_WPS_LOOKDIR = [];
-	//A3C_UI_MAPICONS_SQ_WPS_MAIN_IDS_HANDLED = [];
+
 	A3C_UI_MAPICONS_HC_GROUP = [];
 	A3C_UI_MAPICONS_HC_WPS = [];
 	A3C_UI_MAPICONS_HC_TRACKER = [];
@@ -83,7 +65,7 @@ MAP_UI_fnc_drawMapUI = {
 
 	private _doFindIconGroup = true;
 		
-	//hintsilent str _gpIcons; //_zoomDistanceFac;
+
 
 	////////////////////////////////////////////////////
 	//-- PLANNING STAGE: DIRECTION ARROW OR LOOP-LINE //
@@ -731,8 +713,7 @@ MAP_UI_fnc_drawMapUI = {
 			_leaderPos = getPos (vehicle (leader _group));
 			
 
-			//_isGPScapable = {_u = _x; { _item = _x; {_refString = _x; [_refString,toLower _item] call BIS_fnc_instring} count ["gps","dagr","terminal"] > 0 } count assignedItems _u > 0} count units _group > 0;
-			//_isGPScapable = true; //
+
 			private _allowDrawing = !captive leader _group OR {_group == group player};
 
 			if (_allowDrawing) then { //&& _isGPScapable
@@ -966,11 +947,8 @@ MAP_UI_fnc_drawMapUI = {
 						if (waypointType _wp in ["SAD"]) then { //,"TR UNLOAD"
 							_sz = 20;
 							_color = [1,1,1,_opacity];
-							// if (waypointType _wp == "SAD") then {
-								_wpIcon = "a3c_ui\markers\icon_marker_wp_SAD.paa"
-							// } else {
-								// _wpIcon = "a3c_ui\markers\getout_ca.paa"
-							// };
+							_wpIcon = "a3c_ui\markers\icon_marker_wp_SAD.paa"
+
 						} else {
 							switch (true) do {
 								case ("tr_unload" in (tolower _scr)) : {
@@ -1008,11 +986,6 @@ MAP_UI_fnc_drawMapUI = {
 									_color = [1,1,1,_opacity];
 									_wpIcon = "\a3c_ui\markers\icon_marker_fireSupport.paa"
 								};
-								//case (["TRANSPORT UNLOAD",_scr] call BIS_fnc_instring) : {
-								//	_sz = 20;
-								//	_color = [1,1,1,_opacity];
-								//	_wpIcon = "a3c_ui\markers\getout_ca.paa"
-								//};
 								case ("AssembleWeapon" in _scr) : {
 									_sz = 20;
 									_color = [1,1,1,_opacity];
@@ -1102,9 +1075,9 @@ MAP_UI_fnc_drawMapUI = {
 				} foreach _wps;
 
 
-				if (_group == group player) then {
-					[_group, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
-				};
+				// if (_group == group player) then {
+				// 	[_group, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+				// };
 
 				//-- draw Group Icon
 		
@@ -1415,6 +1388,8 @@ MAP_UI_fnc_drawMapUI = {
 		
 		
 	} foreach (_allGroupsHC); // + [group player]);
+
+
 
 	//-- draw HC waypoint sync lines (has to happen after waypoints are drawn to gather intel)
 	{

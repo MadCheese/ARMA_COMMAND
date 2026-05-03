@@ -1,5 +1,5 @@
 #include "radial\radialMenu\dialog_defines.hpp"
-#include "radial\radialMenu\script_component.hpp"
+#include "mapOverlay\dialog_defines.hpp"
 
 
 if (isDedicated) exitWith {};
@@ -583,19 +583,19 @@ A3C_FNC_CBA_KEY = {
 		case ("MAP") : {
 			//-- This bind controls the toggle of the map-overlay. 
 			profilenamespace setvariable ["A3C_MAP_KEY_ID",[(_btnData select 1),[(_btnData select 2),(_btnData select 3),(_btnData select 4)]]];
-			if !(A3C_MAP_BOOL_CT_EDIT_ACTIVE) then  {
+			if !(A3C_UI_MAP_BOOL_CT_EDIT_ACTIVE) then  {
 				if (visibleMap) then {
 					if (_mode == "DOWN") then {
-						if (isnull (findDisplay 100020)) then {
+						if (isnull (findDisplay IDD_MAP_OVERLAY)) then {
 							profilenamespace setvariable ["A3C_MAP_OVERLAY_SHOWN",true];
 							A3C_OPACITY = 0.8;
-							nul = [100020] execVM "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_OpenOverlay.sqf";
+							nul = [IDD_MAP_OVERLAY] execVM "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_OpenOverlay.sqf";
 
 						} else {
 							A3C_OPACITY = 0;
 							[] spawn {
 								sleep 0.1;
-								(findDisplay 100020) closeDisplay 2;
+								(findDisplay IDD_MAP_OVERLAY) closeDisplay 2;
 								A3C_SELECTED_UNITS = [];
 								{_x setvariable ["A3C_PLOT_TEMP",[],true];} foreach units group player;
 								profilenamespace setvariable ["A3C_MAP_OVERLAY_SHOWN",false];

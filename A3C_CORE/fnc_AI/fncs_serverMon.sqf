@@ -360,6 +360,7 @@ A3C_SERVERMON_fncActions = {
 
 				private _eff = effectiveCommander _lv;
 				[_eff, _nudgePos] call A3C_DOMOVE;
+				
 			} else {
 				if (
 					_driverOk

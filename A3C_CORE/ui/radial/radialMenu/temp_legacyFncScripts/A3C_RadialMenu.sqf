@@ -1,5 +1,6 @@
 #include "..\script_component.hpp"
 #include "..\dialog_defines.hpp"
+#include "..\..\..\mapOverlay\dialog_defines.hpp"
 
 
 params ["_data","_cursorObjectSelection"];
@@ -16,7 +17,7 @@ if (isNil 'A3C_is_Initialized') exitWith {
 
 //if (visiblemap) exitWith {};
 if  (!isnull (findDisplay 602)) exitWith {};
-if  (!isnull (finddisplay 100020)) exitWith {};
+if  (!isnull (finddisplay IDD_MAP_OVERLAY)) exitWith {};
 if  (!isnull findDisplay IDD_RADIAL_MENU) exitWith {};
 if  (!isnull (findDisplay 100010)) exitWith {};
 if  (!isnull (finddisplay 100050)) exitWith {};

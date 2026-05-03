@@ -7,7 +7,7 @@ private ["_exit","_sX","_sY","_sPos","_marker","_veh","_unit","_wpData"];
 A3C_BOOL_MAP_MD = false;
 A3C_BOOL_MOUSEMOVING = false;
 
-private _a3c_dsp = 100020;
+
 _sX = _this select 2;
 _sY = _this select 3;
 private _shift = _this select 4;
@@ -16,7 +16,7 @@ disableserialization;
 
 
 
-private _map1 = if (_a3c_dsp == 100020) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
+private _map1 = findDisplay 12 displayCtrl 51;
 private _sPos = (_map1 posscreentoworld [_sx,_sy]);
 
 private _isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
@@ -55,7 +55,7 @@ if (A3C_UI_MAP_BOOL_isHCWaypointPosEdit) then {
 
 	//~~
 	//-- #TODO: #HuiHui -- streamline this duplicate code for visualizing selection change in tree-UI
-	private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
+	private _CT_TREE = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 	_CT_TREE tvSetCurSel [-1];
 	//sleep 0.7;
 	//playsound 'A3C_MenuSound1';
@@ -71,7 +71,7 @@ if (A3C_UI_MAP_BOOL_isHCWaypointPosEdit) then {
 				_CT_TREE tvSetCurSel _button;
 				[
 					[
-						findDisplay 100020 displayCtrl IDC_SHARED_UI_TREE_SELECTOR,
+						findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_TREE_SELECTOR,
 						_button select [0,(count _button) - 1]
 					],
 					"OPEN",
@@ -210,9 +210,9 @@ if (A3C_BOOL_DRAGLINE && {A3C_CONNECTING_MODE == "HCSYNC"}) exitWith  {
 						private _imgID = _idc + 1;
 						private _clickerID = _idc + 2;
 						
-						private _btnBG  = findDisplay _a3c_dsp ctrlCreate ["A3C_RscPicture", _bgID];
-						private _btnImg  = findDisplay _a3c_dsp ctrlCreate ["A3C_RscPicture", _imgID];
-						private _btnClicker  = findDisplay _a3c_dsp ctrlCreate ["A3C_RscButton_Invisible", _clickerID];
+						private _btnBG  = findDisplay IDD_MAP_OVERLAY ctrlCreate ["A3C_RscPicture", _bgID];
+						private _btnImg  = findDisplay IDD_MAP_OVERLAY ctrlCreate ["A3C_RscPicture", _imgID];
+						private _btnClicker  = findDisplay IDD_MAP_OVERLAY ctrlCreate ["A3C_RscButton_Invisible", _clickerID];
 
 						_btnBG ctrlSetText "A3C_UI\markers\icon_marker_vehicleHexagon.paa";
 						_btnImg ctrlSetTextColor ([A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity);
@@ -241,7 +241,7 @@ if (A3C_BOOL_DRAGLINE && {A3C_CONNECTING_MODE == "HCSYNC"}) exitWith  {
 								[] spawn %2;
 
 							",
-							_a3c_dsp,
+							IDD_MAP_OVERLAY,
 							_btnFnc
 						];
 						_btnClicker ctrlSetToolTip _x;
@@ -442,7 +442,7 @@ if (A3C_MapSel_Field_Active) then {
 			};
 			_pageMode = "HC";
 		};
-		private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
+		private _CT_TREE = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 		_CT_TREE tvSetCurSel [-1];
 		if (count A3C_SELECTED_UNITS == 1) then {
 			_CT_TREE tvSetCurSel [-1];
@@ -454,7 +454,7 @@ if (A3C_MapSel_Field_Active) then {
 					_CT_TREE tvSetCurSel _button;
 					[
 						[
-							findDisplay 100020 displayCtrl IDC_SHARED_UI_TREE_SELECTOR,
+							findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_TREE_SELECTOR,
 							_button select [0,(count _button) - 1]
 						],
 						"OPEN",
@@ -643,7 +643,7 @@ if (A3C_TAB_BUILDING_BOOL) then {
 
 if (A3C_BOOL_DISABLEMAPCTRL && !((typename (_this select 0)) == "SCALAR") ) exitWith {};
 
-private _a3c_dsp = 100020;
+
 
 if !(A3C_BOOL_MAP_MU) exitWith {};
 
@@ -923,7 +923,7 @@ A3C_BOOL_DRAGLINE = false;
 
 if (A3C_TAB_TOGGLE_VAR == 0) then {
 	{
-		(findDisplay _a3c_dsp displayCtrl _x) ctrlShow true;
+		(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow true;
 	} foreach [IDC_MAP_UFSB_CommitAll, IDC_MAP_UFSB_WPCONDITION_IMG, IDC_MAP_UFSB_UNDO_BTN];
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor [1,1,1,1];
 };

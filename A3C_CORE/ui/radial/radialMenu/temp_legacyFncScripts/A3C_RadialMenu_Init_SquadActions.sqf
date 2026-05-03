@@ -3,36 +3,9 @@
 
 
 
-///////////////////// ACTUAL SHARED FUNCTIONS
-A3C_UI_SHARED_FIND_BEST_SHOOTERS = {
-	params ["_units","_inputPosASL"];
-
-	{
-		//private _unitDistance = (eyePos _x) distance _inputPosASL;
-		if (isNull objectParent _x) then {
-			//_refPos = _x getRelPos [((_x distance A3C_SQ_REM_INDICATOR) - 10),(_x getRelDir A3C_SQ_REM_INDICATOR)];
-			if (lineintersects [eyepos _x,_inputPosASL,_x,A3C_SQ_REM_INDICATOR]) then {_units = _units - [_x]};
-		} else {
-			_vehPos = getPosASL (vehicle _x);
-			_vehPos set [2,(_vehPos select 2) + 1.8];
-			if (lineintersects [_vehPos,_inputPosASL,_x,(vehicle _x)]) then {
-				if (count (getArtilleryAmmo [vehicle _x]) == 0) then { //-- artillery does not require vision
-					_units = _units - [_x];
-				};
-			};
-		};
-	} foreach _units;
-	if (count _units == 0) exitWith {
-		systemchat "A3C: No shot on target";
-		[]
-	};
-	_units
-};
 
 
-
-
-A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
+A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 	params ["_display", "_unitArray"]; //-- _display is the display IDD
 
 	private _a3c_dsp = _display;
@@ -223,44 +196,44 @@ A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 	if ({_x in A3C_SUPPRESSION_UNITS_SQ} count A3C_RD_UNITS > 0) then {A3C_DYNAMIC_BUTTON_ACTIONS pushBack "SUPPRESSION_OFF";};
 	if ({!(_x in A3C_SUPPRESSION_UNITS_SQ)} count A3C_RD_UNITS > 0) then {A3C_DYNAMIC_BUTTON_ACTIONS pushBack "SUPPRESSION_ON";};
 
-	if (_a3c_dsp == 100040) then { //-- 3D-HUD Exclusive functions
-		//-- REMFIRE ACTION CHECKS 3-6: Remote Projectiles
 
-		{
-			if (_x == gunner vehicle _x) then {
-				if (isNull objectParent _x) then {
-					if ([_x] call A3C_HasGL) then {
-						A3C_REMFIRE_UGLShot_Units pushBackUnique _x;
-					};
-					if ([_x] call A3C_HasAT) then {
-						A3C_REMFIRE_ATShot_Units pushBackUnique _x;
-					};
+	//-- REMFIRE ACTION CHECKS 3-6: Remote Projectiles
+
+	{
+		if (_x == gunner vehicle _x) then {
+			if (isNull objectParent _x) then {
+				if ([_x] call A3C_HasGL) then {
+					A3C_REMFIRE_UGLShot_Units pushBackUnique _x;
+				};
+				if ([_x] call A3C_HasAT) then {
+					A3C_REMFIRE_ATShot_Units pushBackUnique _x;
+				};
+			} else {
+				//if (vehicle _x isKindOf "STATICWEAPON") then {
+				if (_x == gunner vehicle _x && {[vehicle _x] call A3C_isStaticMissileLauncher}) then {
+					A3C_REMFIRE_StaticShot_Units pushBackUnique _x;
 				} else {
-					//if (vehicle _x isKindOf "STATICWEAPON") then {
-					if (_x == gunner vehicle _x && {[vehicle _x] call A3C_isStaticMissileLauncher}) then {
-						A3C_REMFIRE_StaticShot_Units pushBackUnique _x;
-					} else {
-						if (vehicle _x isKindOf "TANK") then { //(count (getArtilleryAmmo [vehicle _unit])) > 0
-							A3C_REMFIRE_TankShot_Units pushBackUnique _x;
-						};
+					if (vehicle _x isKindOf "TANK") then { //(count (getArtilleryAmmo [vehicle _unit])) > 0
+						A3C_REMFIRE_TankShot_Units pushBackUnique _x;
 					};
 				};
 			};
-		} foreach A3C_RD_UNITS;
+		};
+	} foreach A3C_RD_UNITS;
 
-		if (count A3C_REMFIRE_TankShot_Units > 0) then {
-			A3C_DYNAMIC_BUTTON_ACTIONS pushBack "TANKSHOT";
-		};
-		if (count A3C_REMFIRE_StaticShot_Units > 0) then {
-			A3C_DYNAMIC_BUTTON_ACTIONS pushBack "STATICSHOT";
-		};
-		if (count A3C_REMFIRE_ATShot_Units > 0) then {
-			A3C_DYNAMIC_BUTTON_ACTIONS pushBack "ATSHOT";
-		};
-		if (count A3C_REMFIRE_UGLShot_Units > 0) then {
-			A3C_DYNAMIC_BUTTON_ACTIONS pushBack "UGLSHOT";
-		};
+	if (count A3C_REMFIRE_TankShot_Units > 0) then {
+		A3C_DYNAMIC_BUTTON_ACTIONS pushBack "TANKSHOT";
 	};
+	if (count A3C_REMFIRE_StaticShot_Units > 0) then {
+		A3C_DYNAMIC_BUTTON_ACTIONS pushBack "STATICSHOT";
+	};
+	if (count A3C_REMFIRE_ATShot_Units > 0) then {
+		A3C_DYNAMIC_BUTTON_ACTIONS pushBack "ATSHOT";
+	};
+	if (count A3C_REMFIRE_UGLShot_Units > 0) then {
+		A3C_DYNAMIC_BUTTON_ACTIONS pushBack "UGLSHOT";
+	};
+
 
 
 	//-- action check 6: engine off
@@ -687,42 +660,36 @@ A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 						_staticData = [_assemblingUnitSelection,"PLANNING"] call A3C_getSelectionBackpackStatics;
 						if (count _staticData > 0) then {
 
-							if (_display == 100040) then {
-								A3C_DISABLE_RADIAL = true;
-								(findDisplay _display) closeDisplay 0;
-								
-
-								private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060}; //~~ how does this differ from _display unless it's 100060?	
-								A3C_OBJECTSELECTOR_MODE = if (_a3c_dsp == 100060) then {"STATIC_ASSEMBLE_SQUAD"} else {"PLACEHOLDER"};
-								if (count _staticData == 1) then {
-									[0] call A3C_ObjectSelector_LB_Change;
-								} else {
-									with uiNamespace do {
-										A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
-									};
-									_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-									_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-									_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
-									
-									_parent ctrlShow true;
-									_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
-									_parent ctrlCommit 0;
-									_text ctrlSetText "Select Static Weapon";
-									ctrlSetFocus _listBox;
-									
-									lbClear _listBox;
-									{
-										private _lbText = (getText (configfile >> "CfgVehicles" >> _x select 1 >> "displayName"));
-										[_listBox, _lbText] call A3C_addLbEntry;
-									} foreach _staticData;
-									
-								};
-							} else {
-								//-- PlaceHolder for map-action menu (to do)
-							};
-
-
 							
+							A3C_DISABLE_RADIAL = true;
+							(findDisplay _display) closeDisplay 0;
+							
+
+							private _a3c_dsp = 100060;	
+							A3C_OBJECTSELECTOR_MODE = "STATIC_ASSEMBLE_SQUAD";
+							if (count _staticData == 1) then {
+								[0] call A3C_ObjectSelector_LB_Change;
+							} else {
+								with uiNamespace do {
+									A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+								};
+								_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+								_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+								_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+								
+								_parent ctrlShow true;
+								_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
+								_parent ctrlCommit 0;
+								_text ctrlSetText "Select Static Weapon";
+								ctrlSetFocus _listBox;
+								
+								lbClear _listBox;
+								{
+									private _lbText = (getText (configfile >> "CfgVehicles" >> _x select 1 >> "displayName"));
+									[_listBox, _lbText] call A3C_addLbEntry;
+								} foreach _staticData;
+								
+							};
 						};
 					},
 					false

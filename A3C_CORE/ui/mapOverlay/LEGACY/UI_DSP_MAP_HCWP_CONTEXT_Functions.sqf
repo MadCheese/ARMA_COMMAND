@@ -36,36 +36,9 @@ A3C_HC_RC_LB_MODE = 0;
 A3C_HC_EDIT_COMBOSUBVAL_1 = "CIRCLE_L";
 A3C_HC_EDIT_COMBOSUBVAL_2 = 1000;  
 
-A3C_UI_MAP_fnc_findCtrlSafePos = {
-	params ["_display","_control","_ctrlPos"];
-	private ["_borders","_dimensions","_height","_width"];
 
 
 
-
-	_borders = [safezoneW + safeZoneX,safezoneH + safeZoneY];
-
-	_dimensions = ctrlPosition (findDisplay _display displayCtrl _control);
-	if (_control == IDC_MAP_HCWP_Parent) then {
-		_confPos = ctrlPosition (findDisplay _display displayCtrl IDC_MAP_HCWP_Confirm_BG);
-		_realH = (_confPos select 1) + (_confPos select 3); //-- since baspos for ctrlsgroup is 0, we can use y+w of confirm to get total H
-		_dimensions set [3,_realH];
-	};
-
-
-	_width = (_dimensions select 2);
-	_height = (_dimensions select 3);
-	//systemchat str [_ctrlPos select 1,_height,(_borders select 1)];
-	if ((_ctrlPos select 0) + _width > (_borders select 0)) then {
-		_ctrlPos set [0, (_borders select 0) - _width];
-	};
-	if ((_ctrlPos select 1) + _height > (_borders select 1)) then {
-		_ctrlPos set [1, (_borders select 1) - _height];
-	};
-	_ctrlPos
-};
-
-A3C_HC_ACTIVE_WPOS = [0,0,0];
 
 
 A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
@@ -97,8 +70,6 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	A3C_HC_ACTIVE_IND = _wpIC; 
 	
 	private _wp = [_gp,_wpIC];
-
-	_wpMenu = (findDisplay _a3c_dsp displayCtrl 709135);
 
 	private _leaderVic = vehicle leader A3C_HC_ACTIVEGROUP;
 	
@@ -143,7 +114,11 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	// systemchat 'open menu wp';
 	{
 		(finddisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-	} foreach [IDC_MAP_HCWP_Condition_Pre_Mode,IDC_MAP_HCWP_Action_Parent_MAIN,IDC_MAP_HCWP_Action_Parent_ADD]; //-- default: hide precondition val,  actions group and extra selections
+	} foreach [
+		IDC_MAP_HCWP_Condition_Pre_Mode,
+		IDC_MAP_HCWP_Action_Parent_MAIN,
+		IDC_MAP_HCWP_Action_Parent_ADD
+	]; //-- default: hide precondition val,  actions group and extra selections
 	
 
 
@@ -154,7 +129,10 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		{
 			[_uictrl, _x] call A3C_addLbEntry;
 		} foreach ["COLUMN","STAG. COL.","WEDGE","ECH LEFT","ECH RIGHT","VEE","LINE","FILE","DIAMOND","NO CHANGE"];
-	} foreach [IDC_MAP_HCWP_Formation_Combo,IDC_MAP_HCWP_Action_Formation_Combo];
+	} foreach [
+		IDC_MAP_HCWP_Formation_Combo,
+		IDC_MAP_HCWP_Action_Formation_Combo
+	];
 
 
 
@@ -832,24 +810,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		} foreach _subArray2;
 		[_subCombo2, _lbSel2, true] call A3C_setCurSel;
 
-		
 
-
-		//_condBoxPos = ctrlPosition _condMacro;
-		//_condBoxPos set [1, (_condBoxPos select 1) + (_ctrlPos select 3)];
-		//_condMacro ctrlSetPosition _condBoxPos;
-		//_condMacro ctrlCommit 0;
-
-		
-		
-	//} else {
-	//	_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Completion_Parent);
-	//	private _box = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_Parent);
-	//	_refH = _refPos select 3;
-	//	_refY = (_refPos select 1) + _refH;
-	//	_refPos set [1,_refY];
-	//	_box ctrlSetPosition _refPos;
-	//	_box ctrlCommit 0;
 	};
 
 	//-- ADJUST POSTCONDITION
@@ -863,12 +824,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		_ctrl = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Parent_MAIN);
 		_ctrlPos = ctrlPosition _ctrl;
 		
-		//_add = if (_foreachIndex == 0) then {
-		//	//-- action ctrlsGroup -> do nothing
-		//	0
-		//} else {
-		//	(ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Parent_MAIN)) select 3;
-		//};
+
 		
 		_ctrlPos set [1,_refY]; // + _add
 		_ctrl ctrlSetPosition _ctrlPos;
@@ -1011,7 +967,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	(finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Completion_Header_TXT) ctrlSetText _header3Text;
 
 
-	_wpMenu lbSetSelectColor [0, [1, 0, 0, 0.5]];
+
 
 
 
@@ -1076,7 +1032,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 
 
 A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
-	private _a3c_dsp = 100020;
+	private _a3c_dsp = IDD_MAP_OVERLAY;
 	private ["_group","_wp","_condition","_statements","_statementsINS","_indSel","_indSelActive","_indAdd","_dirTo","_wpCount","_wpsActive","_wpCountActive","_wpA","_wpC","_wpS","_wpI","_polygon","_var","_tPos","_dirTo","_dist"];
 	_group = A3C_HC_ACTIVEGROUP; //_this select 0;
 
@@ -1700,7 +1656,7 @@ A3C_HC_CASMODES = [];
 
 
 A3C_UI_MAP_WPMENU_ADDACTIONS = {
-	private _a3c_dsp = 100020;
+	private _a3c_dsp = IDD_MAP_OVERLAY;
 	private _actionTypeCombo = (findDisplay _a3c_dsp displayCtrl 709141);
 
 	private _leader = leader A3C_HC_ACTIVEGROUP;
@@ -1875,26 +1831,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 	//
 };
 
-A3C_UI_MAP_FNC_HCWPContext_OpenMenu_LB = { //-- no longer used
 
-	private ["_LBmode","_a3c_dsp","_wpMenu","_lb","_array","_landingTypes"];
-	_LBmode = _this select 0;
-	private _a3c_dsp = 100020;
-	if (ctrlshown (findDisplay _a3c_dsp displayCtrl 709135)) exitWith {};
-	_lb = if (_LBmode == 0) then {A3C_HC_LB_IND select 0} else {A3C_HC_LB_IND select 1};
-	_wpMenu = (findDisplay _a3c_dsp displayCtrl 709135);
-	_wpMenu ctrlShow true;
-	_actionTypes = [];
-	_landingTypes = [];
-	A3C_HC_CASMODES = [];
-
-	private _leader = leader A3C_HC_ACTIVEGROUP;
-	private _leaderVic = vehicle _leader;
-	private _isCargoOrInf = !(driver _leaderVic in (units A3C_HC_ACTIVEGROUP)) OR {isnull objectParent _leader};
-	private _canCargo = !(_isCargoOrInf) && {count (fullcrew [_leaderVic,"cargo",true]) > 0};	
-	
-	A3C_HC_RC_LB_MODE = _LBmode;
-};
 
 
 A3C_daytimeZeroComp = {
@@ -1912,13 +1849,13 @@ A3C_daytimeZeroComp = {
 };
 
 
-A3C_HC_CASMODE_VAL = 0;
+
 A3C_LB_HC = {
 	params ["_mode","_lb"];
 	
 	if (isnil "_mode") exitWith {};
 
-	private _a3c_dsp = 100020;
+	private _a3c_dsp = IDD_MAP_OVERLAY;
 
 
 

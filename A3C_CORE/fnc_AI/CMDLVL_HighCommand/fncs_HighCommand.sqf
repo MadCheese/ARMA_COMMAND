@@ -1,6 +1,4 @@
-#include "..\..\ui\SHARED\shared_ui_defines.hpp"
-#include "..\..\ui\radial\radialMenu\script_component.hpp"
-#include "..\..\ui\radial\radialMenu\dialog_defines.hpp"
+#include "..\..\ui\mapOverlay\dialog_defines.hpp" 
 
 
 ////////////////////////  GETTERS
@@ -497,30 +495,10 @@ A3C_HC_INSERT_ACTION_WP = {
 				compile format ["%1 call A3C_fnc_DAYTIME_COMPLETED",_checkParams];
 			};
 		};
-		//systemchat str _specialCondition;
+
 	};
 
-	
-	
-	
-	//if (_actionType == "FULL LANDING") then {
-	//	_specialCondition = {params ["_gp"]; {!(isTouchingGround (vehicle _x))} count units _gp == 0};
-	//	_condition = ["NONE","NONE"];
-	//	_insCondition = "false && false";
-	//	{
-	//		private _vehi = vehicle _x;
-	//		private _runwayLanding = ((getNumber (configfile >> "CfgVehicles" >> typeOf _vehi >> "landingSpeed")) > 10);
-	//		if (_vehi isKindOf "PLANE" && {_runwayLanding}) then {
-	//			if (_x == (driver _vehi)) then {
-	//				[_x] spawn A3C_LANDPLANE;
-	//			};
-	//		} else {
-	//			if (_vehi isKindOf 'HELICOPTER') then {
-	//				[_vehi,'LAND'] remoteExec ["land",_vehi];
-	//			};
-	//		};
-	//	} foreach (units _group);
-	//};
+
 	
 	if (_actionType == "COMBATLANDING") then {
 		{
@@ -538,20 +516,12 @@ A3C_HC_INSERT_ACTION_WP = {
 			};
 		} foreach (units _group);
 	};
-//	if (_actionType == "CLEARBUILDING") then {
-//		_specialCondition = {params ["_gp"]; {_x getVariable ["A3C_CLEARING",false]} count units _gp == 0};
-//		_building = nearestBuilding _WPpos;
-//		[units _group,_building] spawn A3C_AI_Shared_action_CLEARBUILDING;
-//		_insCondition = "false";
-//	};
+
 	
 	if (_actionType == "ASSEMBLE WEAPON") then {
 		[leader _group,_caller] call A3C_WPstatementsASSEMBLE;
 	};
 	
-
-
-	//systemchat str _actionType;
 	_statements = switch (_actionType) do {
 		case ("SUPPRESSION") : {
 			{ [_this,"SUPPRESSION"] call A3C_POLY_ACTION_OFF}
@@ -572,20 +542,7 @@ A3C_HC_INSERT_ACTION_WP = {
 				
 		};
 		
-	//	case ("FULL LANDING") : {
-	//			//{[vehicle _x] spawn A3C_Landplane} foreach (units _group);
-	//		
-	//			if ( _leadVic isKindOf "HELICOPTER") then {
-	//				{ 
-	//					{[(vehicle _x),_x getVariable ["A3C_FLYINHEIGHT",100]] remoteExec ["flyInHeight",(vehicle _x)];} foreach (units _this); 
-	//				} //if (_condition select 0 == "Arrival") then {} else {vehicle _this land "NONE"	
-	//			} else {
-	//				{}
-	//				//{[driver (vehicle _this)] call A3C_LANDPLANE }
-	//			}
-	//		
-	//		
-	//	};
+
 		
 		case ("CAS-STRIKE") : {
 			{}
@@ -597,17 +554,6 @@ A3C_HC_INSERT_ACTION_WP = {
 			{}
 		};
 		default { {} };
-		//case ("STATICWEAPON") : {
-			//_weaponData = [units Tgroup,"PLANNING"] call A3C_getSelectionBackpackStatics;
-			//if (count _data > 0) then {
-			//	[
-			//		(units Tgroup),
-			//		["ASSEMBLE",(_weaponData select 0) select 1],
-			//		position (leader _group),
-			//		getDir (leader _group)	
-			//	] spawn A3C_WP_ACTION_STATICWEAPON;
-			//}; 
-		//};
 	};
 	_fakeStatements = switch (_actionType) do { //-- 'fake' statements are just used to have be able to identify the action for UI purposes (fnc_drawMapUI)
 		case ("SUPPRESSION") : {
@@ -618,21 +564,13 @@ A3C_HC_INSERT_ACTION_WP = {
 		};
 		case ("COMBATLANDING") : {
 			"nul = 'COMBATLANDING_ACTIVE'; "	
-		};
-		
-		//case ("FULL LANDING") : {
-		//	"nul = 'FULL LANDING ACTIVE'; "
-		//};
-		
+		};	
 		case ("CAS-STRIKE") : {
 			"nul = 'CAS-STRIKE_ACTIVE'; "
 		};
 		case ("RAPPELL") : {
 			"nul = 'RAPPELL_ACTIVE_ACTIVE'; "
 		};
-		//case ("CLEARBUILDING") : {
-		//	"nul = 'CLEARBUILDING_ACTIVE'; "
-		//};
 		default {""};
 	};
 	
@@ -641,9 +579,6 @@ A3C_HC_INSERT_ACTION_WP = {
 	
 	
 	
-	
-	//str (count waypoints _group) remoteExec ["systemChat",0];
-
 	
 	private _wpCurr = -1;
 	
@@ -701,12 +636,11 @@ A3C_HC_INSERT_ACTION_WP = {
 							_subString = "," + ((_SubStringArray joinstring ","));
 							_str set [2,_substring];
 							_str = (_str joinString "]") + "]"; //-- re-convert poly-scriptline array to string     + 
-							//systemchat str _str;
 							_actionScript set [_forEachIndex,_str];
 						};
 					} foreach _actionScript;
 					_actionScript = _actionScript joinString ";"; //-- re-convert scriptlineS array to string
-					//_wpAdjust setWayPointStatements [(waypointStatements _wpAdjust) select 0, _actionScript];	
+
 				};
 			};
 		} foreach (waypoints _group);
@@ -719,13 +653,6 @@ A3C_HC_INSERT_ACTION_WP = {
 	};		
 		
 	
-	
-	//if (true) exitWith {
-	//	systemchat 'exit insert hcwp';
-	//};
-	
-	//if (true) exitWith {systemchat 'tadaa';};
-	
 	[(leader _group),_WPpos] spawn {
 		params ["_leader","_WPpos"];
 		for "_i" from 0 to 1 do {
@@ -734,7 +661,6 @@ A3C_HC_INSERT_ACTION_WP = {
 		};
 	};
 
-	//str _var remoteExec ["systemChat",0];	
 	//-- assign new polygon data
 	_group setvariable ["A3C_UNIT_POLYS",_var,true];
 	
@@ -758,7 +684,7 @@ A3C_HC_INSERT_ACTION_WP = {
 			if (isDedicated) exitWith {};
 			if (isNil "A3C_HC_ACTIVEGROUP") exitWith {};
 
-			private _display = findDisplay 100020;
+			private _display = findDisplay IDD_MAP_OVERLAY;
 			if (isNull _display) exitWith {};
 
 			private _wpMenu = _display displayCtrl IDC_MAP_HCWP_Parent;
@@ -777,11 +703,7 @@ A3C_HC_INSERT_ACTION_WP = {
 	] remoteExec ["BIS_fnc_call", 0];
 	
 	
-	
-	
-	
-	//systemchat str _specialCondition;
-	//if (_actionType in ["CAS-STRIKE"]) exitWith {};
+
 	
 	//-- spawn 'real' condition. Shared by all HighCommand Modes.
 	
@@ -790,22 +712,9 @@ A3C_HC_INSERT_ACTION_WP = {
 		private ["_timeInit","_check"];
 		waitUntil {_var isEqualTo (_group getvariable ["A3C_UNIT_POLYS",[]]) };
 		_formation = formation _group;
-//		if (_actionType == "CLEARBUILDING") then {
-//			_group setFormation "FILE";
-//			sleep 1;
-//			waituntil {{alive _x && !(_x getVariable ["A3C_CLEARING",false])} count units _group == 0};
-//			sleep 2;
-//			//aituntil {{alive _x && (_x distance (formationPosition _x) > 2)} count units _group == 0};
-			
-//		};
-//systemchat str _condition;
-		//if (_actionType in ["SUPPRESSION","AMBUSH"]) then {
-			//waitUntil {};
-			
-		//};
+
 		_timeInit = time;
-		//systemchat str _statements;
-		//systemchat str [_condition,_specialCondition];
+
 		
 		_check = switch (toUpper (_condition select 0)) do {
 			case ("TIMEOUT") : { 
@@ -1192,7 +1101,7 @@ A3C_HC_FNC_MoveToWayPointPosition = {
 	if (!isPlayer leader _group) then {
 		//_group setCurrentWaypoint [_group,(currentWaypoint _group)];
 		sleep 1.5;
-		[_leader,waypointposition [_group,_wpi]] call A3C_DOMOVE;
+		[_leader,waypointposition [_group,_wpi]] call A3C_DOMOVE; 
 		sleep 1;
 		_leader setDestination [waypointposition [_group,_wpi],"FORMATION PLANNED",true];
 		//private _grunts = ((units _group) - [_leader]) select {!isPlayer _x && {isNull objectParent _x}};
@@ -1209,19 +1118,18 @@ A3C_HC_FNC_SYNC_WP = {
 A3C_HC_FNC_CompleteWaypoint = {
 	private ["_group","_waypoints"];
 	
-	//if (true) exitWith {};
+
 	_group = _this select 0;
 	_waypoints = waypoints _group;
-	//systemchat format ["%1 has completed a waypoint",groupId _group];
-	//systemchat str ({_x == driver vehicle _x && {vehicle _x iskindof "AIR"}} count units _group);
+
 	private _currentWaypoint = currentWaypoint _group;
-	private _a3c_dsp = 100020;
+	private _a3c_dsp = IDD_MAP_OVERLAY;
 	if (ctrlShown (findDisplay _a3c_dsp displayctrl IDC_MAP_HCWP_Parent)) then {
 		if ([_group,_currentWaypoint] isEqualTo [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]) then {
 			(findDisplay _a3c_dsp displayctrl IDC_MAP_HCWP_Parent) ctrlShow false;
 		};
 	};
-	//systemchat format ["current waypoint is %1",currentWaypoint _group];
+
 	
 	if ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) exitWith {};
 	
@@ -1355,118 +1263,7 @@ A3C_WP_STATEMENTS = {
 };
 
 
-A3C_AI_HighCommand_ActionDistribute_boardGroupsToVehicle = {
-	params ["_button","_ctrl"];
-	private ["_group","_a3c_dsp"];
-	//if !(count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) exitWith {systemchat 'A3C: Boarding/Dismount function is only compatible with single selections'};
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
-	
-	
 
-	//-- Boarding HC-units via map-ui pt 1
-	(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_Parent) ctrlShow false;
-	(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
-	if (_button == 0) then {
-		A3C_UI_MAPICONS_HC_VICS = [] call A3C_fnc_getBoardableVehicles;
-		if (_a3c_dsp == IDD_RADIAL_MENU) then {
-
-			A3C_UI_HUD_ASSIGNVEHICLE = true;
-			[
-				false, //-- isBusy
-				"BoardVehicle_HC", //-- actionID
-				'', //-- Hud-Icon-class
-				[1,0,0,1], //-- Hud-Icon-color
-				"", //-- placer class
-				"" //-- placer color-params
-			] call A3C_AI_SHARED_Action_StartPositionalProcess;
-		} else {
-			if !(A3C_Boarding_ACTIVE) then {
-				A3C_BOARDING_GROUPS = +(A3C_SELECTED_HC_GROUPS_SETTINGS);
-				
-				A3C_BOOL_MOUSEMOVING = true;
-				A3C_MMCode = {
-					_this spawn A3C_UI_MAP_onMouseDrag;
-				};
-				A3C_BOOL_DRAGLINE = true;
-				A3C_CONNECTING_MODE = "HCBOARD";
-				A3C_Boarding_ACTIVE = true;
-			};
-		};
-	} else {
-		private _dismountFnc = {
-			params ["_group"];
-			private _vehicles = [];
-			// _group setVariable ["a3c_assignedgroupvehicle",nil];
-			{
-				_v = [_x] call A3C_AIGetOut; //-- in this case, we do not use remoteExec as we already know we are on the unit's machine. Instead, we return the vehicle
-				if (!isNull _v) then {
-					_vehicles pushBackUnique _v;
-				};
-			} foreach (units _group);
-			{
-				private _var = _x getVariable ["a3c_assignedvehiclecrew",[]];
-				_var = _var select {!(_x select 0 in (units _group))};
-				_x setVariable ["a3c_assignedvehiclecrew",_var];
-			} foreach _vehicles;
-		};
-		_aiGroups = A3C_SELECTED_HC_GROUPS_SETTINGS select {!isPlayer leader _x};
-		// right MB: dismount vehicle
-		{
-			private _group = _x;
-			private _groupsToDismount = if (_ctrl) then {[]} else {[_group]};
-			if (_ctrl) then {
-				{
-					_u = _x;
-					if (!isNull objectParent _u) then {
-						{
-							if (group _x != group _u) then {
-								_groupsToDismount pushBackUnique (group _x);
-							};
-						} foreach (crew (vehicle _u));
-					};
-					
-				} foreach (units _group);
-			};
-			_groupsToDismount = _groupsToDismount - [group player]; //-- precation: We do not want the player accidentally dismounting his own troops (would dismount every single unit from his vehicle)
-			//systemchat str _groupsToDismount;
-			{
-				_testedgroup = _x;
-				[[_testedgroup],_dismountFnc] remoteExec ["bis_fnc_call",leader _testedgroup];	
-			} foreach _groupsToDismount;
-
-			if (count _groupsToDismount > 0) then {
-				
-				if (_ctrl) then {
-					_groupString = "";
-					_dismountCount = count _groupsToDismount;
-					{
-						_prestring = "";
-						_postString = "";
-						if (_foreachIndex == (_dismountCount -1)) then {
-							if (_dismountCount > 1) then {
-								_preString = " and ";
-							};
-						} else {
-							if (_foreachIndex < (_dismountCount -2)) then {
-								_postString = ", ";
-							};
-						};
-						_groupString = _groupString + _preString + groupID _x + _postString;
-					} foreach _groupsToDismount;
-					systemchat format ["A3C: %1 is dismounting %2", groupID _group,_groupString];
-				} else {
-					systemchat format ["A3C: %1 was unassigned from all vehicles", groupID _group];
-					
-				};
-				
-			};
-		} foreach _aiGroups;
-		
-	};
-	
-	
-	
-};
 
 
 A3C_HC_REMOVE_WP_RC = {

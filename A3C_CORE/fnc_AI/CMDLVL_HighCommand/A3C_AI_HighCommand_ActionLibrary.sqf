@@ -1,6 +1,6 @@
 #include "..\..\ui\SHARED\shared_ui_defines.hpp"
 #include "..\..\ui\radial\radialMenu\dialog_defines.hpp"
-#include "..\..\ui\radial\radialMenu\script_component.hpp"
+#include "..\..\ui\mapOverlay\dialog_defines.hpp"
 
 
 
@@ -15,11 +15,11 @@
 //---------------------------- MAP ONLY
 
 A3C_AI_HighCommand_Action_joinPlayerGroup = {
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if !(_isRadial) then {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	} else {
 		//-- no actual action - just close menu
@@ -30,7 +30,7 @@ A3C_AI_HighCommand_Action_joinPlayerGroup = {
 };
 
 A3C_AI_HighCommand_Action_mergeGroups = {
-	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+	{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 	// (findDisplay 12 displayCtrl 51) ctrlEnable true;
 	A3C_isMergeGroupActive = true;
 	hint "Click on the group to join";
@@ -41,7 +41,7 @@ A3C_AI_HighCommand_Action_mergeGroups = {
 
 A3C_AI_HighCommand_Action_heliHoverInPlace = {
 	private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	
 	private _var = (vehicle leader _group) getVariable ["A3C_Freeze_helicopter",[false,0]];
@@ -50,7 +50,7 @@ A3C_AI_HighCommand_Action_heliHoverInPlace = {
 	if (_var select 0) then {
 		//-- cancel action
 		if !(_isRadial) then {
-			{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+			{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 			(findDisplay 12 displayCtrl 51) ctrlEnable true;
 		};
 		{
@@ -71,7 +71,7 @@ A3C_AI_HighCommand_Action_heliHoverInPlace = {
 //---------------------------- SHARED (MAP+RADIAL)
 
 A3C_AI_HighCommand_Action_RefreshGroup = {
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 
 	//-- UI-Reaction
@@ -81,7 +81,7 @@ A3C_AI_HighCommand_Action_RefreshGroup = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 
@@ -179,29 +179,29 @@ A3C_AI_HighCommand_Action_RefreshGroup = {
 };
 
 A3C_AI_HighCommand_Action_VehicleRemote = {
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	if (_isRadial) then {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 	
-	[] call A3C_GP_RC_UIVehicleRemoteFnc;
+	[] call A3C_SHARED_StartVehicleRemote;
 };
 
 
 A3C_AI_HighCommand_Action_ConvoyHalt = {
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if (_isRadial) then {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 	};
 
 	hint format ["%1 convoy(s) have been ordered to halt!", count A3C_GROUP_CONVOYS];
@@ -249,14 +249,14 @@ A3C_AI_HighCommand_Action_ConvoyHalt = {
 
 
 A3C_AI_HighCommand_Action_DeleteGroups = {
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if (_isRadial) then {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 	};
 
 	if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
@@ -274,7 +274,7 @@ A3C_AI_HighCommand_Action_DeleteGroups = {
 			(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 		// } else {
 		// 	with uiNamespace do {
-		// 		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+		// 		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
 		// 	};
 		// };
 		["DELETE"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
@@ -283,7 +283,7 @@ A3C_AI_HighCommand_Action_DeleteGroups = {
 };
 
 A3C_AI_HighCommand_Action_convoyCreate = {
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if (_isRadial) then {
@@ -291,7 +291,7 @@ A3C_AI_HighCommand_Action_convoyCreate = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 	//-- create convoy group
@@ -299,7 +299,7 @@ A3C_AI_HighCommand_Action_convoyCreate = {
 };
 
 A3C_AI_HighCommand_Action_convoyRejoin = {
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if (_isRadial) then {
@@ -307,7 +307,7 @@ A3C_AI_HighCommand_Action_convoyRejoin = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 	//-- rejoin convoy
@@ -316,7 +316,7 @@ A3C_AI_HighCommand_Action_convoyRejoin = {
 
 A3C_AI_HighCommand_Action_limitSpeed = {
 	A3C_OBJECTSELECTOR_MODE = "SPEEDLIMIT";
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 
 	if (_isRadial) then {
@@ -328,7 +328,7 @@ A3C_AI_HighCommand_Action_limitSpeed = {
 		[] call A3C_UI_RADIAL_CloseDisplay;
 		with uiNamespace do {
 			//disableSerialization;
-			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
 			(findDisplay 100060 displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT) ctrlSetText "Select Max Speed";
 		};	
 			
@@ -354,7 +354,7 @@ A3C_AI_HighCommand_Action_limitSpeed = {
 		} foreach ["FULL PACE","JOGGING PACE","COMBAT PACE","WALKING PACE"];			
 			
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
 		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
@@ -383,7 +383,7 @@ A3C_AI_HighCommand_Action_orderDetonation = {
 };
 
 A3C_AI_HighCommand_Action_reBoardGroupToVehicle = {
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if (_isRadial) then {
@@ -391,14 +391,14 @@ A3C_AI_HighCommand_Action_reBoardGroupToVehicle = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 	[A3C_SELECTED_HC_GROUPS_SETTINGS] spawn A3C_AI_HIGHCOMMAND_fnc_reboardGroupToVehicle;
 };
 
 A3C_AI_HighCommand_Action_chargeMavic = {
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	//-- UI-Reaction
 	if (_isRadial) then {
@@ -406,7 +406,7 @@ A3C_AI_HighCommand_Action_chargeMavic = {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	} else {
-		{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 	if (isClass (configFile >> "CfgVehicles" >> "mavic_3_BLU")) then {
@@ -446,11 +446,11 @@ A3C_AI_HighCommand_Action_vehicleSmoke = {
 A3C_AI_HighCommand_Action_flyInHeight = {
 
 	private _group = if (!isNull findDisplay IDD_RADIAL_MENU) then {A3C_RD_UNITS select 0} else {A3C_SELECTED_HC_GROUPS_SETTINGS select 0}; //~~ same same??
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
 
 	if (_a3c_dsp == 100060) then {
 		with uiNameSpace do {
-			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
 		};
 	};
 
@@ -458,7 +458,7 @@ A3C_AI_HighCommand_Action_flyInHeight = {
 	private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
 	private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 
-	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+	{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	A3C_OBJECTSELECTOR_MODE = "flyInHeight"; //-- !! CHECK IF STILL NEEDED!
 	lbClear _listBox;
@@ -496,7 +496,7 @@ A3C_AI_HighCommand_Action_reArm = {
 						
 	{[_x] spawn A3C_ReArm_Auto_Evaluate} foreach (units _gp);
 	player groupradio 'SentCmdRearm';
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
 
 	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		A3C_DISABLE_RADIAL = true;
@@ -508,7 +508,7 @@ A3C_AI_HighCommand_Action_reArm = {
 };
 
 A3C_AI_HighCommand_Action_groupHeal = {
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
 
 	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		A3C_DISABLE_RADIAL = true;
@@ -537,7 +537,7 @@ A3C_AI_HighCommand_Action_transferOwnership = {
 	};
 
 	[[clientOwner, _group], _transferFnc] remoteExec ['bis_fnc_call', 2];
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
 
 	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		A3C_DISABLE_RADIAL = true;
@@ -559,7 +559,7 @@ A3C_AI_HighCommand_Action_unAssembleWeapon = { // #TODO This fnc requires invest
 	_wpn = if (_mode == 0) then {objNull} else {_this select 1};
 
 
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
 
 
 
@@ -572,7 +572,7 @@ A3C_AI_HighCommand_Action_unAssembleWeapon = { // #TODO This fnc requires invest
 	if (_a3c_dsp == 100060 && { {(vehicle _x) isKindOf "staticweapon"} count units _group == 0 }) then {
 		with uiNamespace do {
 			//disableSerialization;
-			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
 		};
 	};
 
@@ -580,7 +580,7 @@ A3C_AI_HighCommand_Action_unAssembleWeapon = { // #TODO This fnc requires invest
 	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
 	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
 	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
-	{(findDisplay 100020 displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+	{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 
 
@@ -801,11 +801,11 @@ A3C_AI_HighCommand_Action_landAircraft = {
 	//("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutRsc ["","PLAIN"];
 	with uiNamespace do {
 		//disableSerialization;
-		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
 	};
 
 
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
 	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
 	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
 	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
@@ -988,11 +988,11 @@ A3C_AI_HighCommand_Action_landAircraft = {
 A3C_AI_HighCommand_Action_casStrike = {
 	with uiNamespace do {
 		//disableSerialization;
-		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
 	};
 
 
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
 	
 	private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
 	private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
@@ -1108,7 +1108,7 @@ A3C_AI_HighCommand_Action_artillery = {
 	A3C_HC_FOCUS_ARTY = objNull;
 	A3C_HC_FOCUS_ARTY_AMMO = ""; //-- what is goin on here
 	with uiNamespace do {
-		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
 	};
 
 	A3C_HC_FOCUS_ARTY_POS = +(A3C_UI_HUD_3D_TAG_ICON_POS);
@@ -1120,10 +1120,10 @@ A3C_AI_HighCommand_Action_placeCharge = {
 	if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
 		with uiNamespace do {
 			//disableSerialization;
-			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
 		};
 
-		private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100060};
+		private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
 		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
 		private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
 		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;

@@ -394,7 +394,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 	A3C_LBR_1 = "";
 
 
-	//-- 
+	//-- Vehicle buttons - idc's are numeric because they are dynamically created with ctrlCreate
 	for "_i" from 0 to 45 do {
 		if (ctrlType (findDisplay IDD_RADIAL_MENU displayCtrl (10101 + _i)) != -1) then {
 			ctrlDelete (findDisplay IDD_RADIAL_MENU displayCtrl (10101 + _i));
@@ -608,7 +608,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 						_x ctrlShow false;
 					} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
 
-					[IDD_RADIAL_MENU,A3C_RD_UNITS] call A3C_UI_SQUAD_DISTRIBUTE_MENU_ACTIONS;
+					[IDD_RADIAL_MENU,A3C_RD_UNITS] call A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS;
 					
 					_outerRingBackGroundIDs = ["Placeholder","Top","Right","bottom"];
 					private _outerRingBackgrounds = ["radial_outerRingBackgrounds"] call FUNC(ctrlGroup);
@@ -3234,6 +3234,7 @@ A3C_UI_RADIAL_UPDATE_MEDICAL = {
 };
 
 A3C_UI_RADIAL_INV_LB_CREATE = {
+	//-- this fnc uses numeric idc's as they refer to the inventory dialog 
 	params ["_target","_source"];
 
 	if (isNull _target) exitWith {};

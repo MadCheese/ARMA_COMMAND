@@ -10,7 +10,7 @@ Best shot right now:
 */
 params ["_displayCtrl","_mouseButton","_sX","_sY","_shift","_ctrl","_alt"];
 private ["_mouseOverIcon","_groupControls","_isHCMark"];
-private _a3c_dsp = 100020;
+
 disableserialization;
 
 A3C_BOOL_MAP_MD = true; 
@@ -27,36 +27,39 @@ if (a3c_is_HC_remote && {!(_left)}) exitWith  {
 
 //------------------------- EXIT CONDITIONS (MAPCLICK NOT ALLOWED)
 
-if (isNull findDisplay _a3c_dsp) exitWith {};
-if (A3C_MAP_BOOL_CT_EDIT_ACTIVE) exitWith {};
+if (isNull findDisplay IDD_MAP_OVERLAY) exitWith {};
+if (A3C_UI_MAP_BOOL_CT_EDIT_ACTIVE) exitWith {};
 if (A3C_UI_MAP_isCircleMenu) exitWith {
 	if !(_left) then {
-		[_a3c_dsp,-1] call A3C_UI_MAP_FNC_CloseSyncCircleMenu;
+		[IDD_MAP_OVERLAY,-1] call A3C_UI_MAP_FNC_CloseSyncCircleMenu;
 	};
 };
 
-//-- contextMenues are open
-if ({ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [IDC_MAP_HCWP_Parent,IDC_MAP_HCGP_Parent,IDC_SHARED_UI_ObjectSelector_Parent] > 0) exitWith {};
-private _ctls = if (visibleMap) then {
-	[
-		IDC_SHARED_UI_TREE_SELECTOR,
-		IDC_UI_SHARED_TEAMCOLOR_BG,
-		IDC_MAP_TOP_EXTRAS_BACKGROUND,
-		IDC_MAP_Order_GoCode_BG,
-		IDC_SHARED_UI_ObjectSelector_Parent
-	]
-} else {
-	[]
-};
+//-- contextMenues are open >> exit
+if ({ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl _x)} count [IDC_MAP_DynamicCombo,IDC_MAP_HCWP_Parent, IDC_MAP_HCGP_Parent, IDC_SHARED_UI_ObjectSelector_Parent] > 0) exitWith {};
+
+
+
+
+private _ctls =
+[
+	IDC_SHARED_UI_TREE_SELECTOR,
+	IDC_UI_SHARED_TEAMCOLOR_BG,
+	IDC_MAP_TOP_EXTRAS_BACKGROUND,
+	IDC_MAP_Order_GoCode_BG,
+	IDC_SHARED_UI_ObjectSelector_Parent,
+	IDC_MAP_INPUT_BLOCKER
+];
+
 //-- exit if mouseclick was within certain controls
-if ({[[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea} count _ctls > 0) exitWith {};
+if ({[[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea} count _ctls > 0) exitWith {};
 
 
 
 //-- ENEMY-TARGET Combo is open - ALWAYS disables mapclick, hides Combo if it's not clicked on directly
-if (ctrlShown (findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo)) exitWith {
-	if !([[_sX,_sY],findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo] call MCSS_fnc_isClickPosInCTRLArea) then {
-		(findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo) ctrlShow false;
+if (ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo)) exitWith {
+	if !([[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo] call MCSS_fnc_isClickPosInCTRLArea) then {
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo) ctrlShow false;
 	};
 };
 
@@ -67,7 +70,7 @@ if (ctrlShown (findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo)) exitWith 
 
 
 private _unitArray = (profileNamespace getvariable "A3C_GROUPUNITS");
-private _map1 = if (_a3c_dsp == 100020) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
+private _map1 = findDisplay 12 displayCtrl 51;
 private _sPos = (_map1 posscreentoworld [_sx,_sy]);
 private _clickdata = (ctrlMapMouseOver _map1); //~~ IS THIS STILL USED?
 private _isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
@@ -226,9 +229,8 @@ if !(_isHighCommand) then {
 				A3C_MMCode = {
 					_this spawn {
 						params ["_clickData","_sX","_sY"];
-						private _a3c_dsp = 100020;
-						if (isNull findDisplay _a3c_dsp) exitWith {};
-						_map1 = if (_a3c_dsp == 100020) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
+						if (isNull findDisplay IDD_MAP_OVERLAY) exitWith {};
+						_map1 = findDisplay 12 displayCtrl 51;
 						A3C_DRAGPOS = (_map1 posscreentoworld [_sx,_sy]);
 					};
 				};
@@ -273,7 +275,7 @@ if !(_isHighCommand) then {
 			_wp_Icon = _wp_Icons select 0;
 			_gp = _wp_Icon select 0;
 			_wp_Index = _wp_Icon select 3;
-			[_gp,_wp_Index,A3C_HC_EDIT_ACTION,_a3c_dsp,[_sx, _sy]] call A3C_UI_MAP_FNC_HCWPContext_OpenMenu;
+			[_gp,_wp_Index,A3C_HC_EDIT_ACTION,IDD_MAP_OVERLAY,[_sx, _sy]] call A3C_UI_MAP_FNC_HCWPContext_OpenMenu;
 			_resetSelection = false;
 		};
 
@@ -297,7 +299,7 @@ _gpIcons =
 	},
 	"ASCEND"
 ] call BIS_fnc_sortBy;
-(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
+(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 private _gpIconsCount = count _gpIcons;
 if (_gpIconsCount > 0) exitWith {
 
@@ -352,7 +354,7 @@ if (_gpIconsCount > 0) exitWith {
 			
 			//~~
 			//-- #TODO: #HuiHui -- streamline this duplicate code for visualizing selection change in tree-UI
-			private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
+			private _CT_TREE = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 			_CT_TREE tvSetCurSel [-1];
 
 			
@@ -365,7 +367,7 @@ if (_gpIconsCount > 0) exitWith {
 						_CT_TREE tvSetCurSel _button;
 						[
 							[
-								findDisplay 100020 displayCtrl IDC_SHARED_UI_TREE_SELECTOR,
+								findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_TREE_SELECTOR,
 								_button select [0,(count _button) - 1]
 							],
 							"OPEN",
@@ -403,10 +405,10 @@ if (_gpIconsCount > 0) exitWith {
 		} else {
 			
 			//if (_ctrl) then {
-				//(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_Parent) ctrlShow true;
+				//(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCGP_Parent) ctrlShow true;
 				// if ({private _ld = leader _x; isPlayer _ld} count A3C_SELECTED_UNITS == 0) then {
-					(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_Parent) ctrlSetPosition ([_a3c_dsp,IDC_MAP_HCGP_Parent,[_sx, _sy]] call A3C_UI_MAP_fnc_findCtrlSafePos);
-					(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_Parent) ctrlCommit 0;
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCGP_Parent) ctrlSetPosition ([IDD_MAP_OVERLAY,IDC_MAP_HCGP_Parent,[_sx, _sy]] call A3C_UI_MAP_fnc_findCtrlSafePos);
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCGP_Parent) ctrlCommit 0;
 				// } else {
 					// hint "A3C: "; //-- not needed, should already be executed in actions
 				// };
@@ -442,10 +444,9 @@ if (count _sqIcons > 0) exitWith {
 			_cargoObjects = ([vehicle A3C_SQ_CLICKED_UNIT] call MCSS_fnc_getNearCargoLoadObjects);
 			if ( ((getPosATL (vehicle A3C_SQ_CLICKED_UNIT)) select 2) < 1) then {
 				if ((count _cargoObjects > 0) && (A3C_SQ_CLICKED_UNIT == driver (vehicle A3C_SQ_CLICKED_UNIT))) then {
-					_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-					_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-					_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
-					//(findDisplay 100020 displayCtrl IDC_MAP_HCGP_Parent) ctrlShow false;
+					_parent = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
+					_text = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+					_listBox = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
 					A3C_OBJECTSELECTOR_MODE = "PARALOAD_SQ";
 					_parent ctrlShow true;
 					_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
@@ -462,7 +463,6 @@ if (count _sqIcons > 0) exitWith {
 					
 					_exit = true;
 				};
-				//systemchat str _sqUnit;
 			};
 		} else {
 			if (A3C_SQ_CLICKED_UNIT == driver (vehicle A3C_SQ_CLICKED_UNIT)) then {
@@ -476,7 +476,7 @@ if (count _sqIcons > 0) exitWith {
 					[A3C_SQ_CLICKED_UNIT]
 				};
 
-				private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
+				private _CT_TREE = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 				_CT_TREE tvSetCurSel [-1];
 
 				if (count A3C_SELECTED_UNITS == 1) then {
@@ -489,7 +489,7 @@ if (count _sqIcons > 0) exitWith {
 							_CT_TREE tvSetCurSel _button;
 							[
 								[
-									findDisplay 100020 displayCtrl IDC_SHARED_UI_TREE_SELECTOR,
+									findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_TREE_SELECTOR,
 									_button select [0,(count _button) - 1]
 								],
 								"OPEN",
@@ -533,15 +533,15 @@ if ( !(_left) && (count _trIcons > 0)) exitWith {
 	if (_trIcon select 3 == "ENEMY") then {
 		A3C_LB_MODE = 1;
 		A3C_TRACKED_ENEMYGROUP = _trIcon select 0;
-		lbClear (findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo);
-		(findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo) ctrlShow true;
-		ctrlsetfocus (finddisplay _a3c_dsp displayctrl IDC_MAP_DynamicCombo);
-		(findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo) ctrlSetPosition [_sx, _sy];
-		(findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo) ctrlCommit 0;
-		[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, "Ignore"] call A3C_addLbEntry;
-		[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, "Attack"] call A3C_addLbEntry;
+		lbClear (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo);
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo) ctrlShow true;
+		ctrlsetfocus (finddisplay IDD_MAP_OVERLAY displayctrl IDC_MAP_DynamicCombo);
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo) ctrlSetPosition [_sx, _sy];
+		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo) ctrlCommit 0;
+		[findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo, "Ignore"] call A3C_addLbEntry;
+		[findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo, "Attack"] call A3C_addLbEntry;
 
-		[findDisplay _a3c_dsp displayCtrl IDC_MAP_DynamicCombo, 0] call A3C_setCurSel;
+		[findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo, 0] call A3C_setCurSel;
 		
 	};
 };
@@ -661,30 +661,15 @@ if (_exit) exitWith {};
 
 
 //-- mapclick is within overlay area >> exit
-if (_a3c_dsp == _a3c_dsp && {[[_sX,_sY],findDisplay _a3c_dsp displayCtrl 11] call MCSS_fnc_isClickPosInCTRLArea}) exitWith {};
+if ([[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_INPUT_BLOCKER] call MCSS_fnc_isClickPosInCTRLArea) exitWith {};
 
 
 
 
-if (_left) then {
-	if ( {ctrlShown (findDisplay _a3c_dsp displayCtrl _x)} count [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_ControlsGroup] > 0) then  { ////~~~~ ?????
-		_exit = true;
-	};
-};
-
-//-- hide other contextmenu's
-_ctls = if (visibleMap) then {[IDC_MAP_SQWP_ControlsGroup,IDC_MAP_HCWP_Parent,709135,IDC_SHARED_UI_ObjectSelector_Parent]} else {[IDC_MAP_SQWP_ControlsGroup,IDC_MAP_SQWP_Combo,709135,IDC_SHARED_UI_ObjectSelector_Parent]};
-{
-	if !([[_sX,_sY],findDisplay _a3c_dsp displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea) then {
-		(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false;
-	};
-} foreach _ctls;
-
-if (_exit) exitWith {};
 
 if (visibleMap) then {
-	if !(isnull (findDisplay 100020 displayCtrl IDC_MAP_SQWP_ControlsGroup)) then {
-		if ([_a3c_dsp] call A3C_InMapControls) then {
+	if !(isnull (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_SQWP_Parent)) then {
+		if ([IDD_MAP_OVERLAY] call A3C_InMapControls) then {
 			_exit = true;
 		};
 	};
@@ -695,7 +680,7 @@ if (_exit) exitWith {};
 //-- right Mouse Button
 if !(_left) exitWith {
 	private _resetSelection = true;
-	(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_ControlsGroup) ctrlShow false;
+	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_SQWP_Parent) ctrlShow false;
 
 
 	if (_resetSelection) then {
@@ -749,7 +734,7 @@ if (((A3C_TEMP_ACTION select 0) == "GRENADE") && {count A3C_AI_GREN_ARRAY == 0})
 //-- Current Mode is HC
 if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 	if ((count A3C_SELECTED_UNITS) > 0) then {
-		if !(ctrlShown (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_Parent)) then {
+		if !(ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCGP_Parent)) then {
 			if (_alt) then {
 				//-- clear all waypoints
 				{
@@ -774,7 +759,7 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 			if (count A3C_SELECTED_UNITS > 2) then {
 				A3C_MULTIWAYPOINT = false;
 				["MULTIWAYPOINT"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
-				waituntil {!ctrlShown (findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent)};
+				waituntil {!ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_ObjectSelector_Parent)};
 			};
 
 			//systemchat str [_clickPos,isOnRoad _clickPos];

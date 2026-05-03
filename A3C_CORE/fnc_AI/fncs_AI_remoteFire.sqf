@@ -465,7 +465,7 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 			publicVariable 'A3C_REMFIRE_UNITS_ACTIVE';
 			with uiNamespace do {
 				//disableSerialization;
-				A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_Display_ObjectSelector";
+				A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
 			};
 			["ARTY"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
 		};
@@ -713,7 +713,7 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 		case ("UGLSHOT") : {
 			//-- FIRE GL-LAUNCHER
 			_muzzle = _primMuzzles select 1;
-			_target = "A3C_Supression_Target_F"   createVehicle [0,0,0]; // "A3C_Supression_Target_F"    "B_SOLDIER_F"  
+			_target = "A3C_Supression_Target_F" createVehicle [0,0,0]; // "A3C_Supression_Target_F"    "B_SOLDIER_F"  
 
 
 			sleep 1;
@@ -742,7 +742,7 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 					if ((_refPos select 2) > 2) then {
 						_refPos = [_refPos,15,_dir] call BIS_fnc_RelPos;
 					};
-					_velo = [_unit,_refPos,300,1] call A3C_THROW_VEL;
+					_velo = [_unit,_refPos,300, 1] call A3C_THROW_VEL;
 					_unit setvariable ["A3C_GRENADE_VEL",_velo,true];
 					private _handlerFunc = {
 						private _shooter = _this select 0;

@@ -48,6 +48,15 @@ switch (_name) do {
     };
 
     //-- ufsb Subsets
+
+    case "map_ufsb_subSet_parentMacros": {
+        [
+            ["ufsbSubselection01Bg"] call FUNC(ctrl),
+            ["ufsbSubselection01Parent"] call FUNC(ctrl),
+            ["ufsbSubselection02Bg"] call FUNC(ctrl),
+            ["ufsbSubselection02Parent"] call FUNC(ctrl)
+        ] select {!isNull _x}
+    };
     case "map_ufsb_subSet_1_images": {
         [
             ["ufsbSubselection01Img01"] call FUNC(ctrl),

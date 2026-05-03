@@ -407,24 +407,16 @@ A3C_DOMOVE = {
 	_unit = _this select 0;
 	_wPos1 = _this select 1;
 
-	
-
 	if (_wPos1 distance2D [0,0,0] < 0.1) exitWith {}; //-- invalid position, would make unit go to [0,0,0]
 
 	_veh = (vehicle _unit);
 
-	//systemChat str ["A3C_DOMOVE",_this];
-	//if (true) exitWith {};
-	//player setpos _wPos1;
+
 
 	private _commanderNotInGroup = !((effectivecommander _veh) in (units _unit));
 
 	private _isCargoAI = _commanderNotInGroup && {!isPlayer _unit && {_unit == leader group _unit}};
 
-	// systemchat format ["_domove: %1:, _commanderNotInGroup %2,  _isCargoAI %3", groupID group _unit, _commanderNotInGroup, _isCargoAI];
-	if (_isCargoAI) exitWith {
-		// systemchat "DOMOVE ABORTED CARGO-AI";
-	};
 
 	
 
@@ -432,17 +424,14 @@ A3C_DOMOVE = {
 
 	
 
-	// systemchat format ["_commanderNotInGroup 1: %1", _commanderNotInGroup];
+
 	//-- if effectiveCommander is not in driver's group, we should transfer command, otherwise driver will not listVehicleSensors
 	if (_commanderNotInGroup) then {
-		// systemchat 'transferring vehicle command';
-		// _veh setEffectiveCommander _unit;
+
 		_veh setEffectiveCommander (driver _veh);
 	};
 
-	// systemchat format ["_commanderNotInGroup 2: %1", !((effectivecommander _veh) in (units (driver _veh)))];
 
-	
 
 	if (!isPlayer (leader group _unit)) exitWith {
 		private _effectiveCommander = effectiveCommander (vehicle _unit);
@@ -459,7 +448,7 @@ A3C_DOMOVE = {
 	
 
 	if (!isNull objectParent _unit && !(_unit in [driver _veh, effectiveCommander _veh])) exitWith {}; //-- unit is not driver or commander - do not move!
-//systemchat "MOVE";
+
 	if (expectedDestination _unit isEqualTo []) then {
 		_unit setDestination [position _unit,"DoNotPlan",true];
 	};

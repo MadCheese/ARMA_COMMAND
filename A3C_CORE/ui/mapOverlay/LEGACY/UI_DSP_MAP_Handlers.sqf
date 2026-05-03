@@ -1,3 +1,4 @@
+#include "..\dialog_defines.hpp"
 #include "..\..\SHARED\shared_ui_defines.hpp"
 
 
@@ -9,7 +10,7 @@
 
 A3C_UI_MAP_onOnMouseMoving_Main = {
 	
-	if (isNull findDisplay 100020) then {
+	if (isNull findDisplay IDD_MAP_OVERLAY) then {
 		// player commandChat "A3C_UI_MAP_onOnMouseMoving_Main";
 		A3C_MAP_X = _this select 1;
 		A3C_MAP_Y = _this select 2;
@@ -49,7 +50,7 @@ A3C_UI_MAP_onKeyDown_Map = { //-- This handler is needed because ESC behaves dif
 
 	switch (true) do {
 		case (_key == 1) : {
-			private _display = findDisplay 100020;
+			private _display = findDisplay IDD_MAP_OVERLAY;
 			private _groupContextmenuHC = _display displayCtrl IDC_MAP_HCGP_Parent;
 			private _groupDashboardHC = _display displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT;
 			private _wpContextmenuHC = _display displayCtrl IDC_MAP_HCWP_Parent;
@@ -91,9 +92,9 @@ A3C_UI_MAP_onMouseDrag = {
 
 	_sx = _this select 1;
 	_sy = _this select 2;
-	private _a3c_dsp = 100020;
+	private _a3c_dsp = IDD_MAP_OVERLAY;
 	disableSerialization;
-	_map1 = if (_a3c_dsp == 100020) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
+	_map1 = findDisplay 12 displayCtrl 51;
 	_sPos = (_map1 posscreentoworld [_sx,_sy]);
 
 	if (A3C_MAP_DRAGPLANNING_ACTIVE) then {
@@ -155,9 +156,9 @@ A3C_UI_MAP_onMouseDrag_HCWP = {
 
 
 
-	private _a3c_dsp = 100020;
+	private _a3c_dsp = IDD_MAP_OVERLAY;
 	disableSerialization;
-	_map1 = if (_a3c_dsp == 100020) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
+	_map1 = findDisplay 12 displayCtrl 51;
 	_posi = _map1 posscreentoworld [(_data select 1),(_data select 2)];
 
 	if !(_waypoint in A3C_Selection_MultiWaypoint) then {
@@ -200,8 +201,8 @@ A3C_UI_MAP_onMouseDrag_MapItem = {
 	_sx = _data select 1;
 	_sy = _data select 2;
 
-	private _a3c_dsp = 100020;
-	_map1 = if (visibleMap) then {findDisplay 12 displayCtrl 51} else {findDisplay _a3c_dsp displayCtrl 7043};
+	private _a3c_dsp = IDD_MAP_OVERLAY;
+	_map1 = findDisplay 12 displayCtrl 51;
 	
 
 
@@ -349,6 +350,7 @@ A3C_UI_MAP_onMouseDrag_MapItem = {
 														A3C_TICKTIME_MoveMark = time;
 														_soldier setdestination [_sPos,"LEADER PLANNED",true];
 														[_soldier,_sPos,true] call A3C_DoMove;
+														// hint str _soldier;
 													};
 												};
 											};
@@ -384,9 +386,9 @@ A3C_UI_MAP_onMouseButtonDown_Loop = {
 	_units = [];
 	_data = [];
 	A3C_LOOPSYNC_START = ["",[0,0,0]];
-	private _a3c_dsp = 100020;
+	private _a3c_dsp = IDD_MAP_OVERLAY;
 	disableSerialization;
-	_map1 = if (_a3c_dsp == 100020) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
+	_map1 = findDisplay 12 displayCtrl 51;
 
 	private _waypointIDS = [];
 	private _squadWaypoints = (["SQ_WP_DOT",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
@@ -504,12 +506,12 @@ A3C_UI_MAP_onMouseButtonUp_Loop = {
 	_units = [];
 	_checkVar = "A3C_PLOT_TEMP";
 	_dragMode = "LOOP";
-	private _a3c_dsp = 100020;
+	private _a3c_dsp = IDD_MAP_OVERLAY;
 	_unitArray = (profileNamespace getvariable "A3C_GROUPUNITS") - [player];
 
 	
 	disableSerialization;
-	_map1 = if (_a3c_dsp == 100020) then {(findDisplay 12 displayCtrl 51)} else {(findDisplay _a3c_dsp displayCtrl 7043)};
+	_map1 = findDisplay 12 displayCtrl 51;
 
 	_clickedItem = (ctrlMapMouseOver _map1);
 	_marker = "";

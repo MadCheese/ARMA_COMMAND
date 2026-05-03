@@ -1,4 +1,5 @@
 #include "shared_ui_defines.hpp"
+#include "script_component.hpp"
 #include "..\radial\radialMenu\dialog_defines.hpp"
 #include "..\mapOverlay\dialog_defines.hpp"
 
@@ -157,7 +158,7 @@ A3C_UI_MAP_TREE_LABEL = {
 
 	//systemChat "LABEL";
 	A3C_UI_SHARED_TREE_HC_AT_TICK = A3C_HC_getAllGroups_Player_Current;
-	private _modes = if (_a3c_dsp == 100040) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
+	private _modes = if (_a3c_dsp == IDD_RADIAL_MENU) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
 	if (count A3C_UI_SHARED_TREE_HC_AT_TICK < 2 && {"HIGHCOMMAND" in _modes}) then {
 		_modes = _modes - ["HIGHCOMMAND"];
 	};
@@ -397,7 +398,7 @@ A3C_UI_MAP_TREE_LABEL = {
 	};
 	
 
-	private _openTrees = if (_a3c_dsp == 100020) then {
+	private _openTrees = if (_a3c_dsp == IDD_MAP_OVERLAY) then {
 		A3C_UI_MAP_TREES_OPEN
 	} else {
 		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
@@ -432,10 +433,10 @@ A3C_UI_MAP_TREE_OPEN_COLLAPSE = {
 	//-- _mode == "OPEN" or "COLLAPSE"
 	//-- _isInit == true (when initializing/refreshing tree) or false when toggled by player
 	_ctrlData params ["_ctrl","_selectedParent"];
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
 	private _isMainParent = count _selectedParent == 1;
 
-	private _openTrees = if (_a3c_dsp == 100040) then {
+	private _openTrees = if (_a3c_dsp == IDD_RADIAL_MENU) then {
 		if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {A3C_RADIAL_TREES_OPEN_SQ} else {A3C_RADIAL_TREES_OPEN_HC}
 	} else {
 		A3C_UI_MAP_TREES_OPEN
@@ -448,12 +449,12 @@ A3C_UI_MAP_TREE_OPEN_COLLAPSE = {
 	private _mainEntryCount = _ctrl tvCount [];
 	private _subEntryCount = (_ctrl tvCount _selectedParent);
 
-	private _minCtrlH = if (_a3c_dsp != 100040) then {
+	private _minCtrlH = if (_a3c_dsp != IDD_RADIAL_MENU) then {
 		(A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_H); 
 	} else {
 		(safeZoneY + safeZoneH) * 0.2
 	};
-	private _maxCtrlH = if (_a3c_dsp != 100040) then {
+	private _maxCtrlH = if (_a3c_dsp != IDD_RADIAL_MENU) then {
 
 		A3C_MAP_OVERLAY_GAMEUI_SETTINGSGROUP_Y - 
 		A3C_MAP_GAMEUI_MENU_Y +//-
@@ -468,7 +469,7 @@ A3C_UI_MAP_TREE_OPEN_COLLAPSE = {
 
 
 
-	private _ctrlPosCollapsed = if (_a3c_dsp != 100040) then {
+	private _ctrlPosCollapsed = if (_a3c_dsp != IDD_RADIAL_MENU) then {
 		[
 			A3C_MAP_OVERLAY_GAMEUI_TREEX,
 			(safezoneH + safezoneY) - A3C_MAP_GAMEUI_PADDING_Y - _minCtrlH, 
@@ -528,7 +529,7 @@ A3C_UI_MAP_TREE_OPEN_COLLAPSE = {
 	_effectiveH = (_effectiveH min _maxCtrlH) max _minCtrlH; //-- FIX CLIPPINGjijiji
 	//systemchat str [_shownEntryCount,_effectiveH];
 
-	if (_a3c_dsp != 100040) then {
+	if (_a3c_dsp != IDD_RADIAL_MENU) then {
 		A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y = (safeZoneY + safeZoneH) - A3C_MAP_GAMEUI_PADDING_Y - _effectiveH;
 
 
@@ -572,74 +573,77 @@ A3C_UI_MAP_RESIZE_TEAMCOLORS_Y = {
 	//-- this function matches the teamcolor bars to the height of the CT_TREE control depending on teamcolor presence (otherwise sets bars out of bounds)
 	params ["_animTime"];
 
-
-
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
+	private _display = findDisplay _a3c_dsp;
+	if (isNull _display) exitWith {};
 
 	//-- Hardcoded Values (from .hpp)
 	//private _ctrlX = A3C_MAP_OVERLAY_GAMEUI_TREEX;
 	private _ctrlH = 0.04 * safezoneH; //-- HARDCODED h value of first teamcolor box
 	
-	//--adjust height for teamcolor controls
-	_ctrlY = if (_a3c_dsp == 100040) then 
-	{
-
-		_refFramePos = ctrlPosition (findDisplay _a3c_dsp displayCtrl IDC_UI_SHARED_TEAMCOLOR_BG);
-
-		(_refFramePos select 1)
+	//-- adjust height for teamcolor controls
+	private _ctrlY = if (_a3c_dsp == IDD_RADIAL_MENU) then {
+		private _refFramePos = ctrlPosition (_display displayCtrl IDC_UI_SHARED_TEAMCOLOR_BG);
+		_refFramePos select 1
 	} else {
 		A3C_MAP_OVERLAY_GAMEUI_TREEBOX_Y - _ctrlH - (A3C_MAP_GAMEUI_PADDING_Y / 2)
-	}; //0.85733 * safezoneH + safezoneY; //-- HARDCODED y value of first box
+	};
 
 	private _refUnits = (units player) - [player];
-	private _teamColors = ["RED","GREEN","BLUE","YELLOW","MAIN","ALL"];
+	private _teamColors = ["RED", "GREEN", "BLUE", "YELLOW", "MAIN", "ALL"];
 	private _teamColorsAssigned = [];
 	
 	{
-		private _assignedTeam = if (player == cameraOn) then {assignedTeam _x} else {_x getVariable ["A3C_ASSIGNEDTEAM","MAIN"]};
-		_teamColorsAssigned pushBackUnique _assignedTeam;
-	} foreach _refUnits;
-
-
-	_teamColor = "RED";
-	
-	for "_i" from 1000 to 1010 step 2 do {
-		_ctrlBar = (findDisplay _a3c_dsp displayCtrl _i);
-		_ctrlBtn = (findDisplay _a3c_dsp displayCtrl (_i + 1));
-		_ctrlPos = ctrlPosition _ctrlBar;
-		
-		_showBool = false;
-		if (_teamColor in _teamColorsAssigned  OR {_teamColor == "ALL" && {count _teamColorsAssigned > 1}}) then {
-			_ctrlPos set [1,_ctrlY];
-			_ctrlPos set [3,_ctrlH];
-			
-			//if (_i % 2 == 0) then {
-				_ctrlBar ctrlSetText "#(argb,8,8,3)color(1,1,1,0.8)";
-				_tCol = switch (_teamColor) do {
-					case ("RED") : {[A3C_UI_COLOR_RED,1] call A3C_UI_fnc_setOpacity};
-					case ("GREEN") : {[0,1,0,1]};
-					case ("BLUE") : {[A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity};
-					case ("YELLOW") : {[A3C_UI_COLOR_YELLOW,1] call A3C_UI_fnc_setOpacity};
-					case ("MAIN") : {[1,1,1,1]};
-					case ("ALL") : {[0.5,0.2,0.6,1]};
-				};
-				_ctrlBar ctrlSetTextColor _tCol;
-				_showBool = true;
-			//};
+		private _assignedTeam = if (player == cameraOn) then {
+			assignedTeam _x
+		} else {
+			_x getVariable ["A3C_ASSIGNEDTEAM", "MAIN"]
 		};
+
+		_teamColorsAssigned pushBackUnique _assignedTeam;
+	} forEach _refUnits;
+
+	private _teamColorCtrls = [_display, "shared_teamColorMacros"] call A3C_UI_SHARED_fnc_ctrlGroup;
+	private _teamColor = "RED";
+	
+	for "_i" from 0 to ((count _teamColorCtrls) - 1) step 2 do {
+		private _ctrlBar = _teamColorCtrls select _i;
+		private _ctrlBtn = _teamColorCtrls select (_i + 1);
+		private _ctrlPos = ctrlPosition _ctrlBar;
+		
+		private _showBool = false;
+
+		if (_teamColor in _teamColorsAssigned || {_teamColor == "ALL" && {count _teamColorsAssigned > 1}}) then {
+			_ctrlPos set [1, _ctrlY];
+			_ctrlPos set [3, _ctrlH];
+
+			_ctrlBar ctrlSetText "#(argb,8,8,3)color(1,1,1,0.8)";
+
+			private _tCol = switch (_teamColor) do {
+				case "RED": {[A3C_UI_COLOR_RED, 1] call A3C_UI_fnc_setOpacity};
+				case "GREEN": {[0, 1, 0, 1]};
+				case "BLUE": {[A3C_UI_COLOR_BLUE, 1] call A3C_UI_fnc_setOpacity};
+				case "YELLOW": {[A3C_UI_COLOR_YELLOW, 1] call A3C_UI_fnc_setOpacity};
+				case "MAIN": {[1, 1, 1, 1]};
+				case "ALL": {[0.5, 0.2, 0.6, 1]};
+			};
+
+			_ctrlBar ctrlSetTextColor _tCol;
+			_showBool = true;
+		};
+
 		{
 			_x ctrlSetPosition _ctrlPos;
 			_x ctrlCommit _animTime;
 			_x ctrlShow _showBool;
-		} foreach [_ctrlBar,_ctrlBtn];
+		} forEach [_ctrlBar, _ctrlBtn];
 		
-		//if (_i % 2 != 0) then {
-			_teamColors = _teamColors - [_teamColor];
-			if (count _teamColors > 0) then {
-				_teamColor = _teamColors select 0;
-			};
-		//};	
-	};	
+		_teamColors = _teamColors - [_teamColor];
+
+		if (count _teamColors > 0) then {
+			_teamColor = _teamColors select 0;
+		};
+	};
 };
 
 
@@ -648,15 +652,14 @@ A3C_UI_MAP_RESIZE_TEAMCOLORS_Y = {
 A3C_UI_SHARED_TREE_ADJUST_TOP_ROW = { //asasas
 	params ["_ctrl","_animTime"];
 
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
-	//private _ctrl = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
-	//systemChat str (_a3c_dsp);
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
+
 	//-- not executed via radial - map only!
 	 
 	//-- Hardcoded Values (from .hpp)
 	private _ctrlX = A3C_MAP_OVERLAY_GAMEUI_TREEX;
 	private _ctrlH = 0.034 * safezoneH; //-- HARDCODED h value of first teamcolor box
-	//private A3C_MAP_GAMEUI_Upper_buttonH = 0.04 * safezoneH; //0.0330053 * safezoneH;
+
 	private _totalW = (ctrlPosition (findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR)) select 2;
 	//--adjust height for teamcolor controls
 	[_animTime] call A3C_UI_MAP_RESIZE_TEAMCOLORS_Y;
@@ -675,7 +678,7 @@ A3C_UI_SHARED_TREE_ADJUST_TOP_ROW = { //asasas
 		_btnCtrl ctrlCommit _animTime;
 	} foreach [IDC_UI_SHARED_TEAMCOLOR_BG,IDC_SHARED_UI_TEAMCOLOR_FRAME]; 
 
-	if (_a3c_dsp == 100040) exitWith {}; //-- radial menu does not have the same settings buttons and can exit UNNEXESSARY!!!
+	if (_a3c_dsp == IDD_RADIAL_MENU) exitWith {}; //-- radial menu does not have the same settings buttons and can exit UNNEXESSARY!!!
 	
 	//-- ADDITIONAL MAP SPECIFIC UI REACTIONS
 	
@@ -738,8 +741,8 @@ A3C_TREE_TVCHANGE = {
 	params ["_control","_tvSelTo"];
 
 	_tvSelTo params ["_parentTo","_childTo"];
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
-	private _isRadial = _a3c_dsp == 100040;
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
+	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	private _shift = 42 in A3C_UI_DOWNKEYS;
 	private _ctrl = 29 in A3C_UI_DOWNKEYS;
 	
@@ -751,7 +754,7 @@ A3C_TREE_TVCHANGE = {
 	_isSquadLevel = _tvSelTo select 0 == 0;
 
 
-	if (_a3c_dsp == 100040) then {
+	if (_a3c_dsp == IDD_RADIAL_MENU) then {
 		_isSquadLevel = _isSquadLevel && {A3C_CURRENT_COMMAND_LEVEL == "SQUAD"};
 	};
 
@@ -919,7 +922,7 @@ A3C_TREE_BOXCLICK = {
 	params ["_displayCtrl","_mouseButton","_sX","_sY","_shift","_ctrl","_alt"];
 	
 	private _left = _mouseButton == 0;
-	private _a3c_dsp = 100020;
+	private _a3c_dsp = IDD_MAP_OVERLAY;
 
 	if (!(_left) && {count A3C_SELECTED_UNITS > 0}) then {
 		if (_shift && {A3C_MAP_CommandMode != "HC"}) then { //~~ TO DO: ALIGN TEAMCOLORS THROUGH COMMAND LEVELS AND ALLOW FOR HC TEAMCOLOR VIA LISTBOX
@@ -1048,8 +1051,8 @@ A3C_UI_MAP_UnitTree_CtrlDelete = {
 A3C_UI_MAP_UnitTree_Sync = {
 
 	// if (true) exitWith {};
-	private _a3c_dsp = if (!isNull (findDisplay 100020)) then {100020} else {100040};
-	private _modes = if (_a3c_dsp == 100040) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
+	private _modes = if (_a3c_dsp == IDD_RADIAL_MENU) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
 	private _CT_TREE = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 	private _mainTreeIndex = 0;
 	
@@ -1269,7 +1272,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 							};
 
 							private _mainEntryCount = _CT_TREE tvCount [];
-							if (_mainEntryCount == 1 && {_a3c_dsp != 100040}) then {
+							if (_mainEntryCount == 1 && {_a3c_dsp != IDD_RADIAL_MENU}) then {
 								_CT_TREE tvAdd [[], "HIGH COMMAND"];
 							};
 							_tvText = switch (true) do {
@@ -1343,7 +1346,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 
 A3C_UI_MAP_TREE_REFRESH_BUTTONVALUES = { //~~ WIP
 	params ["_CT_TREE"];
-	private _modes = if (_a3c_dsp == 100040) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
+	private _modes = if (_a3c_dsp == IDD_RADIAL_MENU) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
 	private _mainTreeIndex = 0;
 	private _refArray = [];
 	if ("SQUAD" in _modes) then {

@@ -19,7 +19,7 @@ A3C_HC_MoveToWaypoint = {
 	// if (speed _leaderVic < 5) then {
 	// if !(_commDest isEqualTo _movePos) then {
 	// if (speed _leaderVic < 5) then {
-		[_effCom,_movePos] call A3C_DOMOVE;
+		[_effCom,_movePos] call A3C_DOMOVE; 
 		// systemchat str [_movePos,_commDest];
 	// };
 

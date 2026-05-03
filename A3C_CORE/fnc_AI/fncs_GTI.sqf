@@ -29,28 +29,130 @@ A3C_Detect_Throw = {
 
 //-- Function adapted from ZAPAT: Get Grenade Velocity
 A3C_THROW_VEL = {
-	params ["_unit","_targetpos"];
-	private _maxdist = if ((count _this) > 2) then {_this select 2} else {30};
-	private _mode = if ((count _this) > 3) then {_this select 3} else {0};
-	private _alpha = 45;
-	private _range = _targetpos distance _unit;
+	params [
+		"_unit",
+		"_targetPosATL",
+		["_maxDist", 30],
+		["_mode", 0],
+		["_uglSpeed", 76],
+		["_originPosATL", []],
+		["_highArc", false],
+		["_uglSpeedCoef", 1.0]
+	];
 
-	if (_maxDist == 300) then {
-		_alpha = 20;
-		if (_range > 80) then {_alpha = 30};
-		if (_range > 150) then {_alpha = 45};
+	private _g = 9.81;
+
+	// _targetPosATL is ATL, so origin must also be ATL.
+	if (_originPosATL isEqualTo []) then {
+		_originPosATL = ASLToATL eyePos _unit;
 	};
 
-	if (_range > _maxDist) then {_range = _maxdist};
-	private _v0 = sqrt(_range * 9.81 / sin (2 * _alpha));
-	private _v0x = cos _alpha * _v0;
-	private _v0z = sin _alpha * _v0;
-	private _throwDir = [_unit,_targetpos] call BIS_fnc_dirTo;
-	private _flyDirSin = sin _throwDir;
-	private _flyDirCos = cos _throwDir;
-	private _vel = [_flyDirSin * _v0x,_flyDirCos * _v0x, _v0z];
+	// UGL should not inherit thrown grenade range limit.
+	if (_mode == 1 && {_maxDist < 300}) then {
+		_maxDist = 300;
+	};
+
+	private _dx = (_targetPosATL select 0) - (_originPosATL select 0);
+	private _dy = (_targetPosATL select 1) - (_originPosATL select 1);
+	private _dz = (_targetPosATL select 2) - (_originPosATL select 2);
+
+	private _range2D = sqrt ((_dx * _dx) + (_dy * _dy));
+
+	if (_range2D < 0.01) exitWith {
+		[0, 0, 0]
+	};
+
+	if (_range2D > _maxDist) then {
+		private _scale = _maxDist / _range2D;
+		_dx = _dx * _scale;
+		_dy = _dy * _scale;
+		_range2D = _maxDist;
+	};
+
+	private _dirX = _dx / _range2D;
+	private _dirY = _dy / _range2D;
+
+	private _vel = [0, 0, 0];
+
+	if (_mode == 1) then {
+		/*
+			UGL mode:
+			Fixed projectile speed, solve angle to hit exact ATL target height.
+
+			_lowArc  = flatter trajectory
+			_highArc = lobbed trajectory
+		*/
+
+		private _v0 = _uglSpeed * _uglSpeedCoef;
+		private _v02 = _v0 * _v0;
+		private _v04 = _v02 * _v02;
+
+		private _disc = _v04 - (_g * ((_g * _range2D * _range2D) + (2 * _dz * _v02)));
+
+		if (_disc < 0) exitWith {
+			// No physical solution at this speed.
+			// Increase _uglSpeed or _uglSpeedCoef.
+			[0, 0, 0]
+		};
+
+		private _sqrtDisc = sqrt _disc;
+
+		private _tanAlpha = if (_highArc) then {
+			(_v02 + _sqrtDisc) / (_g * _range2D)
+		} else {
+			(_v02 - _sqrtDisc) / (_g * _range2D)
+		};
+
+		private _alpha = atan _tanAlpha;
+
+		private _vXY = cos _alpha * _v0;
+		private _vZ = sin _alpha * _v0;
+
+		_vel = [
+			_dirX * _vXY,
+			_dirY * _vXY,
+			_vZ
+		];
+	} else {
+		/*
+			Throw mode:
+			Chosen angle, solve speed needed to hit exact ATL target height.
+		*/
+
+		private _alpha = 45;
+
+		if (_maxDist == 300) then {
+			_alpha = 20;
+			if (_range2D > 80) then { _alpha = 30 };
+			if (_range2D > 150) then { _alpha = 45 };
+		};
+
+		private _cosAlpha = cos _alpha;
+		private _tanAlpha = tan _alpha;
+
+		private _denom = 2 * (_cosAlpha * _cosAlpha) * ((_range2D * _tanAlpha) - _dz);
+
+		if (_denom <= 0) exitWith {
+			// Current angle cannot reach the target height.
+			[0, 0, 0]
+		};
+
+		private _v0 = sqrt ((_g * _range2D * _range2D) / _denom);
+
+		private _vXY = cos _alpha * _v0;
+		private _vZ = sin _alpha * _v0;
+
+		_vel = [
+			_dirX * _vXY,
+			_dirY * _vXY,
+			_vZ
+		];
+	};
+
 	_vel
 };
+
+
 
 if (isDedicated) exitWith {};
 
@@ -83,7 +185,7 @@ BR_A3C_fn_relativePos =
 BR_A3C_OEFControl = {
 	if (isnull A3C_GTI_UNIT) exitWith {};
 	private _isPlayer = A3C_GTI_UNIT == player;
-	private _screenToWorld = [0,0,0];
+	private _screenToWorld = screenToWorld [0.5,0.5];
 	if !(_isPlayer) then {
 		A3C_DISABLE_RADIAL = true;
 		_screenToWorld = screenToWorld [0.5,0.5];
@@ -300,7 +402,7 @@ A3C_GREN_DATA = {
 	_unit = objnull;
 	_mags = [];
 	_units = if !(isnull findDisplay IDD_RADIAL_MENU) then {A3C_RD_UNITS} else {A3C_SELECTED_UNITS};
-	_display = 100020;
+
 
 
 

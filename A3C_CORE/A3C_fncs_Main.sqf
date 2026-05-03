@@ -1804,6 +1804,45 @@ A3C_AI_Squad_wpAction_plantExplosive = {
 
 };
 
+A3C_HC_getPhonetic = {
+	params ["_number"];
+	private ["_return"];
+	_return = "";
+	if (_number > 26) then {
+		_return = str _number;
+	} else {
+		_return = switch (_number) do {
+			case (1) : {"ALPHA"};
+			case (2) : {"BRAVO"};
+			case (3) : {"CHARLIE"};
+			case (4) : {"DELTA"};
+			case (5) : {"ECHO"};
+			case (6) : {"FOXTROT"};
+			case (7) : {"GOLF"};
+			case (8) : {"HOTEL"};
+			case (9) : {"INDIA"};
+			case (10) : {"JULIET"};
+			case (11) : {"KILO"};
+			case (12) : {"LIMA"};
+			case (13) : {"MIKE"};
+			case (14) : {"NOVEMBER"};
+			case (15) : {"OSCAR"};
+			case (16) : {"PAPA"};
+			case (17) : {"QUEBEC"};
+			case (18) : {"ROMEO"};
+			case (19) : {"SIERRA"};
+			case (20) : {"TANGO"};
+			case (21) : {"UNIFORM"};
+			case (22) : {"VICTOR"};
+			case (23) : {"WHISKEY"};
+			case (24) : {"XRAY"};
+			case (25) : {"YANKEE"};
+			case (26) : {"ZULU"};
+		};
+	};
+	_return
+};
+
 A3C_AIGetOut = {
 	params ["_unit"];
 	private _v = objectParent _unit;
@@ -2248,30 +2287,6 @@ KK_fnc_objectVarNames = {
 
 
 
-//-- author note: move to A3C_UI_MAP_Main_init.sqf
-A3C_GET_OPAC = {
-	_return = _this select 0;
-	_obj = _this select 1;
-	_index = _this select 2;
-	_return = _return select [0,3];
-	_op = 1;
-	if (visibleMap) then {
-		if (isNull (findDisplay 100020)) then {
-			_op = 0;
-		};
-	};
-
-	if (_op == 0) then {
-		if (difficulty <=1) then {
-			_op = 1;
-		};
-	};
-
-	_return pushback _op;
-	//hintsilent str _return;
-	_return
-
-};
 
 
 

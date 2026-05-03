@@ -200,7 +200,7 @@
 #define IDC_MAP_HCWP_Delete_TEXT									   254 //709134
 
 //-- SQUAD WAYPOINT Context Menu
-#define IDC_MAP_SQWP_ControlsGroup									   255 //709109
+#define IDC_MAP_SQWP_Parent									   255 //709109
 #define IDC_MAP_SQWP_Speed_IMG									       256 //709110
 #define IDC_MAP_SQWP_Speed_BTN									       257 //7091101
 #define IDC_MAP_SQWP_Stance_Travel_IMG								   258 //709111

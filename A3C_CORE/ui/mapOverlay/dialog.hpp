@@ -413,7 +413,7 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_STANCE_TRAVEL_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_STANCE_TRAVEL_BTN; //7045;
-			onMouseButtonDown = EXPAND_AND_QUOTE([[IDC_MAP_UFSB_STANCE_TRAVEL_IMG,IDC_MAP_UFSB_STANCE_TRAVEL_BTN],'SQ_STANCE_1',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
+			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_STANCE_TRAVEL_IMG,IDC_MAP_UFSB_STANCE_TRAVEL_BTN)],'SQ_STANCE_1',1,true)] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
 			onMouseZChanged = "[_this select 1] call A3C_UI_MAP_UFSB_OnStanceTravel";
 
 			x = 0.24797 * safezoneW + safezoneX;
@@ -453,7 +453,7 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_STANCE_ARRIVAL_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_STANCE_ARRIVAL_BTN; //7047;
-			onMouseButtonDown = EXPAND_AND_QUOTE([[IDC_MAP_UFSB_STANCE_ARRIVAL_IMG,IDC_MAP_UFSB_STANCE_ARRIVAL_BTN],'SQ_STANCE_2',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
+			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_STANCE_ARRIVAL_IMG,IDC_MAP_UFSB_STANCE_ARRIVAL_BTN)],'SQ_STANCE_2',1,true)] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
 			onMouseZChanged = "[_this select 1] call A3C_UI_MAP_UFSB_OnStanceArrival;";
 
 			x = 0.339617 * safezoneW + safezoneX;
@@ -495,7 +495,7 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_WPACTION_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_WPACTION_BTN; //7065;
-			onMouseButtonDown = EXPAND_AND_QUOTE([[IDC_MAP_UFSB_WPACTION_IMG, IDC_MAP_UFSB_WPACTION_BTN],'SQ_ACTION',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
+			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_WPACTION_IMG,IDC_MAP_UFSB_WPACTION_BTN)],'SQ_ACTION',1,true)] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
 			onMouseZChanged = "[(_this select 1),false,true] spawn A3C_BUTTON_wpFiringMode;";
 
 			x = 0.431265 * safezoneW + safezoneX;
@@ -516,7 +516,7 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_WPFORMATION_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_WPFORMATION_BTN; //7051;
-			onMouseButtonDown = EXPAND_AND_QUOTE([[IDC_MAP_UFSB_WPFORMATION_IMG,IDC_MAP_UFSB_WPFORMATION_BTN],'SQ_FORMATION',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
+			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_WPFORMATION_IMG,IDC_MAP_UFSB_WPFORMATION_BTN)],'SQ_FORMATION',1,true)] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
 			onMouseZChanged = "[_this select 1] call A3C_BUTTON_FORMMODE";
 
 			x = 0.477088 * safezoneW + safezoneX;
@@ -557,10 +557,10 @@ class A3C_DSP_MapOverlay
 			h = 0.0330053 * safezoneH;
 		};
 
-		class A3C_TIMEOUT_CHECKBOX2: A3C_RscButton_Invisible
+		class MAP_UFSB_WPCONDITION_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_WPCONDITION_BTN; //7007;
-			onMouseButtonDown = EXPAND_AND_QUOTE([[IDC_MAP_UFSB_WPCONDITION_IMG,IDC_MAP_UFSB_WPCONDITION_BTN],'SQ_CONDITION',1,true] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
+			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_WPCONDITION_IMG,IDC_MAP_UFSB_WPCONDITION_BTN)],'SQ_CONDITION',1,true)] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
 			onMouseZChanged = "[_this select 1] call A3C_BTN_FNC_COND";
 
 			x = 0.545824 * safezoneW + safezoneX;
@@ -714,7 +714,7 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_Exit: A3C_ShortcutButton
 		{
 			idc = IDC_MAP_UFSB_Exit; //7020;
-			action = EXPAND_AND_QUOTE((findDisplay IDD_MAP_OVERLAY) closeDisplay 0; A3C_SELECTED_UNITS = []; {_x setVariable ['A3C_PLOT_TEMP',[],true];} forEach units group player; openMap false; [1] call A3C_Btn_fnc_Cancel);
+			action = "[] call A3C_UI_MAP_UFSB_onExitClick";
 			text = "EXIT";
 			x = 0.517184 * safezoneW + safezoneX;
 			y = 2;
@@ -1324,7 +1324,8 @@ class A3C_DSP_MapOverlay
 					w = GRIDX( 4 );
 					h = GRIDY( 4 );
 					sizeEx = 0.03;
-					onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCGP_LISTBOX_BEHAVIOUR,(_this select 1),IDD_MAP_OVERLAY] call A3C_Map_HC_groupContext_LB_Switch);
+					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(IDC_MAP_HCGP_LISTBOX_BEHAVIOUR,(_this select 1),IDD_MAP_OVERLAY)] call A3C_Map_HC_groupContext_LB_Switch);
+
 					colorBackground[] = {0.2,0.2,0.2,0.7};
 				};
 				
@@ -1338,7 +1339,7 @@ class A3C_DSP_MapOverlay
 					w = GRIDX( 4 );
 					h = GRIDY( 4 );
 					sizeEx = 0.03;
-					onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCGP_LISTBOX_COMBATMODE,(_this select 1),IDD_MAP_OVERLAY] call A3C_Map_HC_groupContext_LB_Switch);
+					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(IDC_MAP_HCGP_LISTBOX_COMBATMODE,(_this select 1),IDD_MAP_OVERLAY)] call A3C_Map_HC_groupContext_LB_Switch);
 					colorBackground[] = {0.6,0.6,0.6,0.7};
 				};
 
@@ -1351,7 +1352,7 @@ class A3C_DSP_MapOverlay
 					w = GRIDX( 4 );
 					h = GRIDY( 4 );
 					sizeEx = 0.03;
-					onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCGP_LISTBOX_FORMATION,(_this select 1),IDD_MAP_OVERLAY] call A3C_Map_HC_groupContext_LB_Switch);
+					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(IDC_MAP_HCGP_LISTBOX_FORMATION,(_this select 1),IDD_MAP_OVERLAY)] call A3C_Map_HC_groupContext_LB_Switch);
 					colorBackground[] = {0.2,0.2,0.2,0.7};
 				};
 				class MAP_HCGP_LISTBOX_TEAMCOLOR: A3C_LISTBOX
@@ -1363,7 +1364,7 @@ class A3C_DSP_MapOverlay
 					w = GRIDX( 4 );
 					h = GRIDY( 4 );
 					sizeEx = 0.03;
-					onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCGP_LISTBOX_TEAMCOLOR,(_this select 1),IDD_MAP_OVERLAY] call A3C_Map_HC_groupContext_LB_Switch);
+					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(IDC_MAP_HCGP_LISTBOX_TEAMCOLOR,(_this select 1),IDD_MAP_OVERLAY)] call A3C_Map_HC_groupContext_LB_Switch);
 					colorBackground[] = {0.6,0.6,0.6,0.7};
 				};
 	
@@ -1441,11 +1442,9 @@ class A3C_DSP_MapOverlay
 					y = GRIDY( 2 );
 					w = GRIDX( 2 );
 					h = GRIDY( 2 );
-					onMouseButtonDown = EXPAND_AND_QUOTE([_this,0,[IDC_MAP_HCGP_ActionMacro_0_BG,IDC_MAP_HCGP_ActionMacro_0_IMG,IDC_MAP_HCGP_ActionMacro_0_BTN]] call A3C_MAP_fnc_GroupMenu_Action_BTN);
+					onMouseButtonDown = EXPAND_AND_QUOTE([ARR_3(_this,0,[ARR_3(IDC_MAP_HCGP_ActionMacro_0_BG,IDC_MAP_HCGP_ActionMacro_0_IMG,IDC_MAP_HCGP_ActionMacro_0_BTN)])] call A3C_MAP_fnc_GroupMenu_Action_BTN);
 				};
 				
-				
-
 				//-- Action Button Macro 1
 				class MAP_HCGP_ActionMacro_1_BG: A3C_RscPicture
 				{
@@ -1472,7 +1471,7 @@ class A3C_DSP_MapOverlay
 					y = GRIDY( 4 );
 					w = GRIDX( 2 );
 					h = GRIDY( 2 );//--buttonup??
-					onMouseButtonDown = EXPAND_AND_QUOTE([_this,1,[IDC_MAP_HCGP_ActionMacro_1_BG,IDC_MAP_HCGP_ActionMacro_1_IMG,IDC_MAP_HCGP_ActionMacro_1_BTN]] call A3C_MAP_fnc_GroupMenu_Action_BTN);
+					onMouseButtonDown = EXPAND_AND_QUOTE([ARR_3(_this,1,[ARR_3(IDC_MAP_HCGP_ActionMacro_1_BG,IDC_MAP_HCGP_ActionMacro_1_IMG,IDC_MAP_HCGP_ActionMacro_1_BTN)])] call A3C_MAP_fnc_GroupMenu_Action_BTN);
 				};
 				
 				
@@ -1503,7 +1502,7 @@ class A3C_DSP_MapOverlay
 					y = GRIDY( 6 );
 					w = GRIDX( 2 );
 					h = GRIDY( 2 );
-					onMouseButtonDown = EXPAND_AND_QUOTE([_this,2,[IDC_MAP_HCGP_ActionMacro_2_BG,IDC_MAP_HCGP_ActionMacro_2_IMG,IDC_MAP_HCGP_ActionMacro_2_BTN]] call A3C_MAP_fnc_GroupMenu_Action_BTN);
+					onMouseButtonDown = EXPAND_AND_QUOTE([ARR_3(_this,2,[ARR_3(IDC_MAP_HCGP_ActionMacro_2_BG,IDC_MAP_HCGP_ActionMacro_2_IMG,IDC_MAP_HCGP_ActionMacro_2_BTN)])] call A3C_MAP_fnc_GroupMenu_Action_BTN);
 				};
 				
 				
@@ -1535,7 +1534,7 @@ class A3C_DSP_MapOverlay
 					y = GRIDY( 8 );
 					w = GRIDX( 2 );
 					h = GRIDY( 2 );
-					onMouseButtonDown = EXPAND_AND_QUOTE([_this,3,[IDC_MAP_HCGP_ActionMacro_3_BG,IDC_MAP_HCGP_ActionMacro_3_IMG,IDC_MAP_HCGP_ActionMacro_3_BTN]] call A3C_MAP_fnc_GroupMenu_Action_BTN);
+					onMouseButtonDown = EXPAND_AND_QUOTE([ARR_3(_this,3,[ARR_3(IDC_MAP_HCGP_ActionMacro_3_BG,IDC_MAP_HCGP_ActionMacro_3_IMG,IDC_MAP_HCGP_ActionMacro_3_BTN)])] call A3C_MAP_fnc_GroupMenu_Action_BTN);
 				};
 				
 				
@@ -1568,7 +1567,7 @@ class A3C_DSP_MapOverlay
 					y = GRIDY( 10 );
 					w = GRIDX( 2 );
 					h = GRIDY( 2 );
-					onMouseButtonDown = EXPAND_AND_QUOTE([_this,4,[IDC_MAP_HCGP_ActionMacro_4_BG,IDC_MAP_HCGP_ActionMacro_4_IMG,IDC_MAP_HCGP_ActionMacro_4_BTN]] call A3C_MAP_fnc_GroupMenu_Action_BTN);
+					onMouseButtonDown = EXPAND_AND_QUOTE([ARR_3(_this,4,[ARR_3(IDC_MAP_HCGP_ActionMacro_4_BG,IDC_MAP_HCGP_ActionMacro_4_IMG,IDC_MAP_HCGP_ActionMacro_4_BTN)])] call A3C_MAP_fnc_GroupMenu_Action_BTN);
 				};
 				
 				
@@ -1598,7 +1597,7 @@ class A3C_DSP_MapOverlay
 					y = GRIDY( 2 );
 					w = GRIDX( 2 );
 					h = GRIDY( 2 );
-					onMouseButtonDown = EXPAND_AND_QUOTE([_this,5,[IDC_MAP_HCGP_ActionMacro_5_BG,IDC_MAP_HCGP_ActionMacro_5_IMG,IDC_MAP_HCGP_ActionMacro_5_BTN]] call A3C_MAP_fnc_GroupMenu_Action_BTN);
+					onMouseButtonDown = EXPAND_AND_QUOTE([ARR_3(_this,5,[ARR_3(IDC_MAP_HCGP_ActionMacro_5_BG,IDC_MAP_HCGP_ActionMacro_5_IMG,IDC_MAP_HCGP_ActionMacro_5_BTN)])] call A3C_MAP_fnc_GroupMenu_Action_BTN);
 				};
 				
 				//-- Action Button Macro 6
@@ -1627,7 +1626,7 @@ class A3C_DSP_MapOverlay
 					y = GRIDY( 4 );
 					w = GRIDX( 2 );
 					h = GRIDY( 2 );
-					onMouseButtonDown = EXPAND_AND_QUOTE([_this,6,[IDC_MAP_HCGP_ActionMacro_6_BG,IDC_MAP_HCGP_ActionMacro_6_IMG,IDC_MAP_HCGP_ActionMacro_6_BTN]] call A3C_MAP_fnc_GroupMenu_Action_BTN);
+					onMouseButtonDown = EXPAND_AND_QUOTE([ARR_3(_this,6,[ARR_3(IDC_MAP_HCGP_ActionMacro_6_BG,IDC_MAP_HCGP_ActionMacro_6_IMG,IDC_MAP_HCGP_ActionMacro_6_BTN)])] call A3C_MAP_fnc_GroupMenu_Action_BTN);
 				};
 				
 				//-- Action Button Macro 7
@@ -1656,7 +1655,7 @@ class A3C_DSP_MapOverlay
 					y = GRIDY( 6 );
 					w = GRIDX( 2 );
 					h = GRIDY( 2 );
-					onMouseButtonDown = EXPAND_AND_QUOTE([_this,7,[IDC_MAP_HCGP_ActionMacro_7_BG,IDC_MAP_HCGP_ActionMacro_7_IMG,IDC_MAP_HCGP_ActionMacro_7_BTN]] call A3C_MAP_fnc_GroupMenu_Action_BTN);
+					onMouseButtonDown = EXPAND_AND_QUOTE([ARR_3(_this,7,[ARR_3(IDC_MAP_HCGP_ActionMacro_7_BG,IDC_MAP_HCGP_ActionMacro_7_IMG,IDC_MAP_HCGP_ActionMacro_7_BTN)])] call A3C_MAP_fnc_GroupMenu_Action_BTN);
 				};
 				
 				//-- Action Button Macro 8
@@ -1685,7 +1684,7 @@ class A3C_DSP_MapOverlay
 					y = GRIDY( 8 );
 					w = GRIDX( 2 );
 					h = GRIDY( 2 );
-					onMouseButtonDown = EXPAND_AND_QUOTE([_this,8,[IDC_MAP_HCGP_ActionMacro_8_BG,IDC_MAP_HCGP_ActionMacro_8_IMG,IDC_MAP_HCGP_ActionMacro_8_BTN]] call A3C_MAP_fnc_GroupMenu_Action_BTN);
+					onMouseButtonDown = EXPAND_AND_QUOTE([ARR_3(_this,8,[ARR_3(IDC_MAP_HCGP_ActionMacro_8_BG,IDC_MAP_HCGP_ActionMacro_8_IMG,IDC_MAP_HCGP_ActionMacro_8_BTN)])] call A3C_MAP_fnc_GroupMenu_Action_BTN);
 				};
 				
 				
@@ -1715,7 +1714,7 @@ class A3C_DSP_MapOverlay
 					y = GRIDY( 10 );
 					w = GRIDX( 2 );
 					h = GRIDY( 2 );
-					onMouseButtonDown = EXPAND_AND_QUOTE([_this,9,[IDC_MAP_HCGP_ActionMacro_9_BG,IDC_MAP_HCGP_ActionMacro_9_IMG,IDC_MAP_HCGP_ActionMacro_9_BTN]] call A3C_MAP_fnc_GroupMenu_Action_BTN);
+					onMouseButtonDown = EXPAND_AND_QUOTE([ARR_3(_this,9,[ARR_3(IDC_MAP_HCGP_ActionMacro_9_BG,IDC_MAP_HCGP_ActionMacro_9_IMG,IDC_MAP_HCGP_ActionMacro_9_BTN)])] call A3C_MAP_fnc_GroupMenu_Action_BTN);
 				};	
 			};
 		};
@@ -1992,7 +1991,7 @@ class A3C_DSP_MapOverlay
 				class MAP_HCWP_Behaviour_Combo: A3C_RscCombo_Dot
 				{
 					idc = IDC_MAP_HCWP_Behaviour_Combo; //709139;
-					onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCWP_Behaviour_Combo,(_this select 1)] call A3C_LB_HC);
+					onLBSelChanged = EXPAND_AND_QUOTE([ARR_2(IDC_MAP_HCWP_Behaviour_Combo,(_this select 1))] call A3C_LB_HC);
 
 					x = 0 * GUI_GRID_W;
 					y = 2.5 * GUI_GRID_H;
@@ -2038,7 +2037,7 @@ class A3C_DSP_MapOverlay
 				class MAP_HCWP_CombatMode_Combo: A3C_RscCombo_Dot
 				{
 					idc = IDC_MAP_HCWP_CombatMode_Combo; //709140;
-					onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCWP_CombatMode_Combo,(_this select 1)] call A3C_LB_HC);
+					onLBSelChanged = EXPAND_AND_QUOTE([ARR_2(IDC_MAP_HCWP_CombatMode_Combo,(_this select 1))] call A3C_LB_HC);
 
 					x = 0 * GUI_GRID_W;
 					y = 4.5 * GUI_GRID_H;
@@ -2082,7 +2081,7 @@ class A3C_DSP_MapOverlay
 				class MAP_HCWP_Speed_Combo: A3C_RscCombo_Dot 
 				{
 					idc = IDC_MAP_HCWP_Speed_Combo; //709138;
-					onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCWP_Speed_Combo, (_this select 1)] call A3C_LB_HC);
+					onLBSelChanged = EXPAND_AND_QUOTE([ARR_2(IDC_MAP_HCWP_Speed_Combo,(_this select 1))] call A3C_LB_HC);
 					x = 0 * GUI_GRID_W;
 					y = 6.5 * GUI_GRID_H;
 					w = 9 * GUI_GRID_W;
@@ -2125,7 +2124,7 @@ class A3C_DSP_MapOverlay
 				class MAP_HCWP_Formation_Combo: A3C_RscCombo_Dot
 				{
 					idc = IDC_MAP_HCWP_Formation_Combo; //709128;
-					onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCWP_Formation_Combo,(_this select 1)] call A3C_LB_HC);
+					onLBSelChanged = EXPAND_AND_QUOTE([ARR_2(IDC_MAP_HCWP_Formation_Combo,(_this select 1))] call A3C_LB_HC);
 					x = 0 * GUI_GRID_W;
 					y = 8.5 * GUI_GRID_H;
 					w = 9 * GUI_GRID_W;
@@ -2185,7 +2184,7 @@ class A3C_DSP_MapOverlay
 						class MAP_HCWP_Condition_Pre_Type: A3C_RscCombo_Dot
 						{
 							idc = IDC_MAP_HCWP_Condition_Pre_Type; //709123;
-							onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCWP_Condition_Pre_Type,(_this select 1)] call A3C_LB_HC);
+							onLBSelChanged = EXPAND_AND_QUOTE([ARR_2(IDC_MAP_HCWP_Condition_Pre_Type,(_this select 1))] call A3C_LB_HC);
 							x = 0 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H;
 							w = 4.5 * GUI_GRID_W;
@@ -2200,7 +2199,7 @@ class A3C_DSP_MapOverlay
 							idc = IDC_MAP_HCWP_Condition_Pre_Mode; //709124;
 
 							
-							onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCWP_Condition_Pre_Mode,(_this select 1)] call A3C_LB_HC);
+							onLBSelChanged = EXPAND_AND_QUOTE([ARR_2(IDC_MAP_HCWP_Condition_Pre_Mode,(_this select 1))] call A3C_LB_HC);
 							x = 4.5 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H; //y = 18 * GUI_GRID_H;
 							w = 4.5 * GUI_GRID_W;
@@ -2259,7 +2258,7 @@ class A3C_DSP_MapOverlay
 						class MAP_HCWP_Type_Action: A3C_RscCombo_Dot
 						{
 							idc = IDC_MAP_HCWP_Type_Action; //709141;
-							onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCWP_Type_Action,(_this select 1)] call A3C_LB_HC);
+							onLBSelChanged = EXPAND_AND_QUOTE([ARR_2(IDC_MAP_HCWP_Type_Action,(_this select 1))] call A3C_LB_HC);
 
 							x = 0 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H;
@@ -2328,7 +2327,7 @@ class A3C_DSP_MapOverlay
 						{
 							idc = IDC_MAP_HCWP_Action_Formation_Combo; //709129;
 							
-							onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCWP_Action_Formation_Combo,(_this select 1)] call A3C_LB_HC);
+							onLBSelChanged = EXPAND_AND_QUOTE([ARR_2(IDC_MAP_HCWP_Action_Formation_Combo,(_this select 1))] call A3C_LB_HC);
 							x = 0 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H; 
 							w = 9 * GUI_GRID_W;
@@ -2377,7 +2376,7 @@ class A3C_DSP_MapOverlay
 							idc = IDC_MAP_HCWP_Condition_Post_Type; //709125;
 
 							
-							onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCWP_Condition_Post_Type,(_this select 1)] call A3C_LB_HC);
+							onLBSelChanged = EXPAND_AND_QUOTE([ARR_2(IDC_MAP_HCWP_Condition_Post_Type,(_this select 1))] call A3C_LB_HC);
 							
 							x = 0 * GUI_GRID_W;
 							y = 2.5 * GUI_GRID_H; 
@@ -2393,7 +2392,7 @@ class A3C_DSP_MapOverlay
 							idc = IDC_MAP_HCWP_Condition_Post_Mode; //709126;
 
 							
-							onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCWP_Condition_Post_Mode,(_this select 1)] call A3C_LB_HC);
+							onLBSelChanged = EXPAND_AND_QUOTE([ARR_2(IDC_MAP_HCWP_Condition_Post_Mode,(_this select 1))] call A3C_LB_HC);
 							
 							x = 4.5 * GUI_GRID_W;
 							y = 2.5 * GUI_GRID_H; 
@@ -2461,7 +2460,7 @@ class A3C_DSP_MapOverlay
 						{
 							idc = IDC_MAP_HCWP_Action_Add_Formation_Combo; //709145
 
-							onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCWP_Action_Add_Formation_Combo,(_this select 1)] call A3C_LB_HC);
+							onLBSelChanged = EXPAND_AND_QUOTE([ARR_2(IDC_MAP_HCWP_Action_Add_Formation_Combo,(_this select 1))] call A3C_LB_HC);
 							x = 0 * GUI_GRID_W;
 							y = 0.5 * GUI_GRID_H;
 							w = 9 * GUI_GRID_W;
@@ -2510,7 +2509,7 @@ class A3C_DSP_MapOverlay
 							idc = IDC_MAP_HCWP_Action_Add_Completion_Combo; //709147;
 
 							
-							onLBSelChanged = EXPAND_AND_QUOTE([IDC_MAP_HCWP_Action_Add_Completion_Combo,(_this select 1)] call A3C_LB_HC);
+							onLBSelChanged = EXPAND_AND_QUOTE([ARR_2(IDC_MAP_HCWP_Action_Add_Completion_Combo,(_this select 1))] call A3C_LB_HC);
 							
 							x = 0 * GUI_GRID_W;
 							y = 2.5 * GUI_GRID_H;
@@ -2625,7 +2624,7 @@ class A3C_DSP_MapOverlay
 		
 		class MAP_SQWP_ControlsGroup: A3C_RscControlsGroup
 		{
-			idc = IDC_MAP_SQWP_ControlsGroup; //709109;
+			idc = IDC_MAP_SQWP_Parent; //709109;
 			x = 62 * GUI_GRID_W + GUI_GRID_X;
 			y = -9.5 * GUI_GRID_H + GUI_GRID_Y;
 			w = 5.5 * GUI_GRID_W;
@@ -2677,7 +2676,7 @@ class A3C_DSP_MapOverlay
 					y = 0 * GUI_GRID_H + GUI_GRID_Y;
 					w = 5.5 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
-					onLBSelChanged = EXPAND_AND_QUOTE([A3C_LB_MODE,(_this select 1),IDD_MAP_OVERLAY] call A3C_LB_Change);
+					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(A3C_LB_MODE,(_this select 1),IDD_MAP_OVERLAY)] call A3C_LB_Change);
 				};
 				class MAP_SQWP_Stance_Arrival_IMG :  A3C_RscPicture
 				{
@@ -2827,7 +2826,7 @@ class A3C_DSP_MapOverlay
 		class MAP_DynamicCombo: A3C_RscCombo //-- name is misleading as control is used in multiple places
 		{
 			idc = IDC_MAP_DynamicCombo; //7078
-			onLBSelChanged = EXPAND_AND_QUOTE([A3C_LB_MODE,(_this select 1),IDD_MAP_OVERLAY] call A3C_LB_Change);
+			onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(A3C_LB_MODE,(_this select 1),IDD_MAP_OVERLAY)] call A3C_LB_Change);
 			x = 0.00166839 * safezoneW + safezoneX;
 			y = 14 * safezoneH + safezoneY;
 			w = 0.0630074 * safezoneW;

@@ -43,7 +43,7 @@ if (
 //-- 2: DEFAULT EXIT CONDITIONS
 if (
 	[_key] call A3C_UI_Shared_blockKeyDownEvent
-	// || {A3C_MAP_BOOL_CT_EDIT_ACTIVE}
+	// || {A3C_UI_MAP_BOOL_CT_EDIT_ACTIVE}
 ) exitWith {};
 
 if (_alt && {_key == 15}) exitWith {// safety if user alt-tabs out of the game
