@@ -1,25 +1,18 @@
 
-//class IGUIBack;
-//class RscStandardDisplay;
+
 
 #include "A3C_CORE\script_mod.hpp"
 #include "A3C_CORE\script_macros.hpp"
 
-//#include "A3C_CORE\ui\baseclasses.hpp"
 #include "A3C_CORE\ui\A3C_BaseClasses.hpp"
 
 
-// #include "A3C_CORE\ui\mapOverlay\LEGACY\A3C_MapControls.hpp"
-//#include "A3C_CORE\ui\mapOverlay\LEGACY\A3C_TAB.hpp"
-// #include "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP.hpp"
+
 #include "A3C_CORE\ui\mapOverlay\dialog.hpp"
 
 
 
-// #include "A3C_CORE\ui\radial\A3C_FORMATION.hpp"
 
-
-// #include "A3C_CORE\ui\radial\UI_DSP_RADIAL.hpp"
 #include "A3C_CORE\ui\radial\radialMenu\dialog.hpp"
 #include "A3C_CORE\ui\radial\settingsMenu\dialog.hpp"
 
@@ -29,19 +22,10 @@
 #include "A3C_CORE\ui\HUD\HUD_MENU.hpp"
 #include "A3C_CORE\ui\HUD\HUD_DYNAMIC\A3C_DSP_HUD_DYNAMIC.hpp"
 #include "A3C_CORE\ui\HUD\customFormation\UI_DSP_CustomFormation.hpp"
-#include "A3C_CORE\ui\HUD\HUD_CAM_UI.hpp"
 
-//#include "A3C_CORE\ui\HUD\HUD_MENU_WIP.hpp"
-//#include "A3C_CORE\ui\mapOverlay\LEGACY\A3C_TAB_WIP.hpp"
-//#include "A3C_CORE\ui\mapOverlay\LEGACY\A3C_MAP_WIP.hpp"
-//#include "A3C_CORE\ui\mapOverlay\LEGACY\A3C_DIALOG_WIP.hpp"
-//#include "A3C_CORE\ui\radial\A3C_RadialMenu_WIP.hpp"
-//#include "A3C_CORE\ui\radial\A3C_FORMATION_WIP.hpp"
+#include "A3C_CORE\ui\hud\squadPlacement\dialog.hpp"
+#include "A3C_CORE\ui\hud\squadPlacement\rscTitles.hpp"
 
-//#include "MCSS_SETFOG.hpp"
-
-//"RadioProtocolENG\Normal\200_CombatShouts\SuppressingE_1.ogg"
-//
 
 
 

@@ -274,10 +274,10 @@ A3C_AI_HighCommand_Action_DeleteGroups = {
 			(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 		// } else {
 		// 	with uiNamespace do {
-		// 		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+		// 		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 		// 	};
 		// };
-		["DELETE"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
+		["DELETE"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
 	};
 	// A3C_SELECTED_HC_GROUPS_SETTINGS = [];
 };
@@ -315,7 +315,7 @@ A3C_AI_HighCommand_Action_convoyRejoin = {
 };
 
 A3C_AI_HighCommand_Action_limitSpeed = {
-	A3C_OBJECTSELECTOR_MODE = "SPEEDLIMIT";
+	A3C_SelectionPromptPanel_MODE = "SPEEDLIMIT";
 	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 
@@ -328,13 +328,13 @@ A3C_AI_HighCommand_Action_limitSpeed = {
 		[] call A3C_UI_RADIAL_CloseDisplay;
 		with uiNamespace do {
 			//disableSerialization;
-			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
-			(findDisplay 100060 displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT) ctrlSetText "Select Max Speed";
+			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
+			(findDisplay 100060 displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT) ctrlSetText "Select Max Speed";
 		};	
 			
-		private _parent = findDisplay 100060 displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-		private _listBox = findDisplay 100060 displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
-		private _text = findDisplay 100060 displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+		private _parent = findDisplay 100060 displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+		private _listBox = findDisplay 100060 displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
+		private _text = findDisplay 100060 displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
 
 		_parent ctrlShow true;
 		_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
@@ -356,9 +356,9 @@ A3C_AI_HighCommand_Action_limitSpeed = {
 	} else {
 		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
-		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
-		private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
+		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
+		private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
 		_parent ctrlShow true;
 		_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
 		_parent ctrlCommit 0;
@@ -378,7 +378,7 @@ A3C_AI_HighCommand_Action_limitSpeed = {
 };
 
 A3C_AI_HighCommand_Action_orderDetonation = {
-	[] call A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG;
+	[] call A3C_UI_RADIAL_SelectionPromptPanel_START_CHARGEDIALOG;
 	A3C_HC_DetoTrigger_Units = nil; //~~ this whole var stoll needed?
 };
 
@@ -450,17 +450,17 @@ A3C_AI_HighCommand_Action_flyInHeight = {
 
 	if (_a3c_dsp == 100060) then {
 		with uiNameSpace do {
-			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 		};
 	};
 
-	private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-	private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-	private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+	private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+	private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+	private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 
 	{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
-	A3C_OBJECTSELECTOR_MODE = "flyInHeight"; //-- !! CHECK IF STILL NEEDED!
+	A3C_SelectionPromptPanel_MODE = "flyInHeight"; //-- !! CHECK IF STILL NEEDED!
 	lbClear _listBox;
 	_parent ctrlShow true;
 	_textSize = (((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 1);
@@ -572,14 +572,14 @@ A3C_AI_HighCommand_Action_unAssembleWeapon = { // #TODO This fnc requires invest
 	if (_a3c_dsp == 100060 && { {(vehicle _x) isKindOf "staticweapon"} count units _group == 0 }) then {
 		with uiNamespace do {
 			//disableSerialization;
-			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 		};
 	};
 
 
-	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 	{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 
@@ -588,7 +588,7 @@ A3C_AI_HighCommand_Action_unAssembleWeapon = { // #TODO This fnc requires invest
 
 
 
-		A3C_OBJECTSELECTOR_MODE = "STATIC_DISASSEMBLE_HC";
+		A3C_SelectionPromptPanel_MODE = "STATIC_DISASSEMBLE_HC";
 		lbClear _listBox;
 		_parent ctrlShow true;
 		[_parent,_listBox, count A3C_HC_NearStatics] call A3C_OBJECTSEL_RESIZE;
@@ -798,17 +798,17 @@ A3C_AI_HighCommand_Action_repair = {
 A3C_AI_HighCommand_Action_landAircraft = {
 	A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
 
-	//("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutRsc ["","PLAIN"];
+
 	with uiNamespace do {
-		//disableSerialization;
-		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+
+		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 	};
 
 
 	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
-	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 
 	_text ctrlSetText "CHECKING LZ";
 	lbClear _listBox;
@@ -964,7 +964,7 @@ A3C_AI_HighCommand_Action_landAircraft = {
 
 	A3C_RADIAL_ACTION_HC_LANDINGDATA = [_landingPosRoot,_landingVector,_forceDefaultLanding];
 
-	A3C_OBJECTSELECTOR_MODE = "HELI_LANDING_HC_TYPE";
+	A3C_SelectionPromptPanel_MODE = "HELI_LANDING_HC_TYPE";
 
 
 
@@ -988,18 +988,18 @@ A3C_AI_HighCommand_Action_landAircraft = {
 A3C_AI_HighCommand_Action_casStrike = {
 	with uiNamespace do {
 		//disableSerialization;
-		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 	};
 
 
 	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
 	
-	private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-	private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-	private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+	private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+	private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+	private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 	_text ctrlSetText "SELECT CAS-TYPE";
 
-	A3C_OBJECTSELECTOR_MODE = "CAS";
+	A3C_SelectionPromptPanel_MODE = "CAS";
 	
 	lbClear _listBox;
 	{
@@ -1108,11 +1108,11 @@ A3C_AI_HighCommand_Action_artillery = {
 	A3C_HC_FOCUS_ARTY = objNull;
 	A3C_HC_FOCUS_ARTY_AMMO = ""; //-- what is goin on here
 	with uiNamespace do {
-		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 	};
 
 	A3C_HC_FOCUS_ARTY_POS = +(A3C_UI_HUD_3D_TAG_ICON_POS);
-	["ARTY"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
+	["ARTY"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
 };
 
 
@@ -1120,15 +1120,15 @@ A3C_AI_HighCommand_Action_placeCharge = {
 	if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
 		with uiNamespace do {
 			//disableSerialization;
-			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 		};
 
 		private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
-		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-		private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+		private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 
-		A3C_OBJECTSELECTOR_MODE = "PLACE_CHARGE_HC";
+		A3C_SelectionPromptPanel_MODE = "PLACE_CHARGE_HC";
 		_parent ctrlShow true;
 		_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
 		_parent ctrlCommit 0;

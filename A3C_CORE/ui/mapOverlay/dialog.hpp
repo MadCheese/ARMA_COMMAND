@@ -2575,9 +2575,9 @@ class A3C_DSP_MapOverlay
 		//---------------------------------------------------------------------------------------------
 		
 		
-		class MAP_ObjectSelector_Parent: A3C_RscControlsGroup_NoScroll
+		class MAP_SelectionPromptPanel_Parent: A3C_RscControlsGroup_NoScroll
 		{
-			idc = IDC_SHARED_UI_ObjectSelector_Parent; //8008;
+			idc = IDC_SHARED_UI_SelectionPromptPanel_Parent; //8008;
 			
 			x = 20 * safezoneW + safezoneX;
 			y = 20 * safezoneH + safezoneY;
@@ -2587,33 +2587,33 @@ class A3C_DSP_MapOverlay
 			class Controls
 			{
 				
-				class MAP_ObjectSelector_Description_BG: A3C_RscPicture
+				class MAP_SelectionPromptPanel_Description_BG: A3C_RscPicture
 				{
-					idc = IDC_SHARED_UI_ObjectSelector_Description_BG; //800801;
+					idc = IDC_SHARED_UI_SelectionPromptPanel_Description_BG; //800801;
 					text = "#(argb,8,8,3)color(0,0.3,0.6,1)";
 					x = 0;
 					y = 0;
 					w = 0.192528 * safezoneW;
 					h = 0.0440051 * safezoneH;
 				};
-				class MAP_ObjectSelector_Description_TXT: A3C_RscText
+				class MAP_SelectionPromptPanel_Description_TXT: A3C_RscText
 				{
-					idc = IDC_SHARED_UI_ObjectSelector_Description_TXT; //800802;
+					idc = IDC_SHARED_UI_SelectionPromptPanel_Description_TXT; //800802;
 					x = 0;
 					y = 0;
 					w = 0.192528 * safezoneW;
 					h = 0.0440051 * safezoneH;
 				};
-				class MAP_ObjectSelector_ListBox: A3C_LISTBOX
+				class MAP_SelectionPromptPanel_ListBox: A3C_LISTBOX
 				{
-					idc = IDC_SHARED_UI_ObjectSelector_ListBox; //800803;
+					idc = IDC_SHARED_UI_SelectionPromptPanel_ListBox; //800803;
 					style = CT_LISTBOX;
 					x = 0;
 					y = 0.0440052 * safezoneH;
 					w = 0.192528 * safezoneW;
 					h = 0.0990114 * safezoneH;
-					onMouseEnter = EXPAND_AND_QUOTE(ctrlSetFocus (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox));
-					onLBSelChanged = "[(_this select 1)] call A3C_ObjectSelector_LB_Change";	
+					onMouseEnter = EXPAND_AND_QUOTE(ctrlSetFocus (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox));
+					onLBSelChanged = "[(_this select 1)] call A3C_SelectionPromptPanel_LB_Change";	
 				};
 			};
 		};

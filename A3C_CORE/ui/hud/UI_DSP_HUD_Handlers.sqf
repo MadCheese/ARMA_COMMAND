@@ -145,7 +145,7 @@ A3C_UI_HUD_onKeyDown = {
             if (typeName _script == "CODE") then {
                 waitUntil {scriptDone _script};
             };
-            //-- wait until objectSelector is closed
+            //-- wait until SelectionPromptPanel is closed
             waitUntil {isNull (findDisplay 100060)};
             
 			if (_oneTimeAction) then {
@@ -538,15 +538,15 @@ A3C_UI_HUD_onMouseZChanged = {
 
 //------------------- OBJECT SELECTOR BINDS
 
-A3C_UI_HUD_ObjectSelector_onKeyDown = {
+A3C_UI_HUD_SelectionPromptPanel_onKeyDown = {
 	params ["_display", "_key", "_shift", "_ctrl", "_alt"];
-	private _objectSelectorListbox = _display displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+	private _SelectionPromptPanelListbox = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 	if (_key >= 2 && _key <= 10) then {
-		[_key, _objectSelectorListbox] spawn A3C_UI_Shared_ObjectSelector_Listbox_NumberControl;
+		[_key, _SelectionPromptPanelListbox] spawn A3C_UI_Shared_SelectionPromptPanel_Listbox_NumberControl;
 	};
 };
 
-A3C_UI_HUD_ObjectSelector_onKeyUp = {
+A3C_UI_HUD_SelectionPromptPanel_onKeyUp = {
 	params ["_display", "_key"];
 	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
 	if (_key == (A3C_RadialMenu_KEY_ID select 0)) then {

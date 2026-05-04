@@ -150,7 +150,7 @@ with uiNameSpace do {
 	IDC_MAP_SQWP_Parent,
 	IDC_MAP_HCWP_Parent,
 	IDC_MAP_HCGP_Parent,
-	IDC_SHARED_UI_ObjectSelector_Parent,
+	IDC_SHARED_UI_SelectionPromptPanel_Parent,
 	IDC_MAP_UFSB_Subselection_01_Parent,
 	IDC_MAP_UFSB_Subselection_02_Parent,
 	IDC_MAP_UFSB_Subselection_01_BG,

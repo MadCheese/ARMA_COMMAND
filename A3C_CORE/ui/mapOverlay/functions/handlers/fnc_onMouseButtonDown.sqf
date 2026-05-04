@@ -36,7 +36,7 @@ if (A3C_UI_MAP_isCircleMenu) exitWith {
 };
 
 //-- contextMenues are open >> exit
-if ({ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl _x)} count [IDC_MAP_DynamicCombo,IDC_MAP_HCWP_Parent, IDC_MAP_HCGP_Parent, IDC_SHARED_UI_ObjectSelector_Parent] > 0) exitWith {};
+if ({ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl _x)} count [IDC_MAP_DynamicCombo,IDC_MAP_HCWP_Parent, IDC_MAP_HCGP_Parent, IDC_SHARED_UI_SelectionPromptPanel_Parent] > 0) exitWith {};
 
 
 
@@ -47,7 +47,7 @@ private _ctls =
 	IDC_UI_SHARED_TEAMCOLOR_BG,
 	IDC_MAP_TOP_EXTRAS_BACKGROUND,
 	IDC_MAP_Order_GoCode_BG,
-	IDC_SHARED_UI_ObjectSelector_Parent,
+	IDC_SHARED_UI_SelectionPromptPanel_Parent,
 	IDC_MAP_INPUT_BLOCKER
 ];
 
@@ -103,7 +103,7 @@ if (_artilleryShortcutCondition) exitWith {
 	A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS;
 	playsound "TacticalPing4";
 	A3C_HC_FOCUS_ARTY_POS = A3C_CLICKPOS_1;
-	["ARTY"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
+	["ARTY"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
 };
 
 
@@ -444,10 +444,10 @@ if (count _sqIcons > 0) exitWith {
 			_cargoObjects = ([vehicle A3C_SQ_CLICKED_UNIT] call MCSS_fnc_getNearCargoLoadObjects);
 			if ( ((getPosATL (vehicle A3C_SQ_CLICKED_UNIT)) select 2) < 1) then {
 				if ((count _cargoObjects > 0) && (A3C_SQ_CLICKED_UNIT == driver (vehicle A3C_SQ_CLICKED_UNIT))) then {
-					_parent = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-					_text = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-					_listBox = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
-					A3C_OBJECTSELECTOR_MODE = "PARALOAD_SQ";
+					_parent = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+					_text = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+					_listBox = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
+					A3C_SelectionPromptPanel_MODE = "PARALOAD_SQ";
 					_parent ctrlShow true;
 					_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
 					_parent ctrlCommit 0;
@@ -758,8 +758,8 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 			A3C_MULTIWAYPOINT = true;
 			if (count A3C_SELECTED_UNITS > 2) then {
 				A3C_MULTIWAYPOINT = false;
-				["MULTIWAYPOINT"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
-				waituntil {!ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_ObjectSelector_Parent)};
+				["MULTIWAYPOINT"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
+				waituntil {!ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent)};
 			};
 
 			//systemchat str [_clickPos,isOnRoad _clickPos];

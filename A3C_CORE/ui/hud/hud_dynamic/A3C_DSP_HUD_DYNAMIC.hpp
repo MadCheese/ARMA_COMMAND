@@ -2,16 +2,14 @@
 #define GRIDX( num ) ( num * ( pixelGrid * pixelW * 2 ))
 #define GRIDY( num ) ( num * ( pixelGrid * pixelH * 2 ))
 
-//NoUIScale
-
-
 //UI element sizes
 #define MAIN_WIDTH 110
 #define MAIN_HEIGHT 60
 
+//-- DYNAMIC HUD DIALOG HOST - used for dynamic dialogs made with createDialog/createDisplay/ctrlCreate
 
-
-
+//-- CURENT USAGE:
+//-- ROE-POPUP (>> RADIAL)
 
 
 class A3C_DSP_HUD_DYNAMIC
@@ -30,12 +28,9 @@ class A3C_DSP_HUD_DYNAMIC
 			y = safezoneY;
 			w = safezoneW;
 			h = safezoneH;
-
 		};
-		
 	}
 
-	
 	class controls 
 	{
 			

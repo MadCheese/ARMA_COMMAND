@@ -465,9 +465,9 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 			publicVariable 'A3C_REMFIRE_UNITS_ACTIVE';
 			with uiNamespace do {
 				//disableSerialization;
-				A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+				A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 			};
-			["ARTY"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
+			["ARTY"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
 		};
 		case ("TANKSHOT") : {
 

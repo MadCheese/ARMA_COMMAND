@@ -23,19 +23,19 @@ private _blockDefault = false;
 //-- CTRL key must block default engine bind to disable map drawing
 if (_key == 29) then {_blockDefault = true;};
 
-//-- Disable Numbers (ie to disable weapon switch) or control objectSelector-Listbox
-private _mapObjectSelectorListbox = _display displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
-private _mapObjectSelectorShown = ctrlShown _mapObjectSelectorListbox;
+//-- Disable Numbers (ie to disable weapon switch) or control SelectionPromptPanel-Listbox
+private _mapSelectionPromptPanelListbox = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
+private _mapSelectionPromptPanelShown = ctrlShown _mapSelectionPromptPanelListbox;
 
 if (
 	_key >= 2 && _key <= 10
 	&& {
 		count groupselectedUnits player == 0
-		|| { _mapObjectSelectorShown }
+		|| { _mapSelectionPromptPanelShown }
 	}
 ) exitWith {
-	if (_mapObjectSelectorShown) then {
-		[_key, _mapObjectSelectorListbox] spawn A3C_UI_Shared_ObjectSelector_Listbox_NumberControl;
+	if (_mapSelectionPromptPanelShown) then {
+		[_key, _mapSelectionPromptPanelListbox] spawn A3C_UI_Shared_SelectionPromptPanel_Listbox_NumberControl;
 	};
 	true
 };

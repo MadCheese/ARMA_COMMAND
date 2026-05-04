@@ -131,7 +131,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_C
 
 A3C_SPAWN_HUD_MENU = compile preprocessfileLineNumbers "A3C_CORE\ui\HUD\A3C_SPAWN_HUD_MENU.sqf";
 
-//-- HUD DYNAMIC (findDisplay 100100)
+
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_DYNAMIC\UI_DSP_HUD_DYNAMIC_Handlers.sqf";
 
 //-- Map Overlay
@@ -178,6 +178,10 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\settingsMenu\function
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\CMDLVL_Squad\A3C_AI_Squad_ActionLibrary.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\CMDLVL_Shared\A3C_AI_Shared_ActionLibrary.sqf";
+
+
+//-- HUD UI elements
+call compile preprocessFileLineNumbers "A3C_CORE\ui\HUD\squadPlacement\functions\initFunctions.sqf";
 
 
 //-- Shared UI

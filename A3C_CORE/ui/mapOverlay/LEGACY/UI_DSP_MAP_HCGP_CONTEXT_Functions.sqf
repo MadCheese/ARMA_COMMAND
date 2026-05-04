@@ -391,13 +391,13 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 		_cargoObjects = [_vehicle] call MCSS_fnc_getNearCargoLoadObjects;
 		if (count _cargoObjects > 0) then {
 
-			A3C_OBJECTSELECTOR_MODE = "PARALOAD";
+			A3C_SelectionPromptPanel_MODE = "PARALOAD";
 			if (!isNull findDisplay IDD_RADIAL_MENU) then {
 				A3C_DISABLE_RADIAL = true;
 				[] call A3C_UI_RADIAL_CloseDisplay;
 
 				with uiNameSpace do {
-					A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+					A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 				};
 
 			} else {
@@ -405,9 +405,9 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 				(findDisplay 12 displayCtrl 51) ctrlEnable true;
 			};
 
-			_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-			_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-			_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+			_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+			_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+			_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 
 			_parent ctrlShow true;
 			_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
@@ -454,17 +454,17 @@ A3C_AI_HIGHCOMMAND_fnc_mergeGroups = {
 		if (_a3c_dsp == 100060) then {
 			with uiNamespace do {
 				//disableSerialization;
-				A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+				A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 			};
 		};
-		_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-		_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-		_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+		_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+		_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+		_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 		_parent ctrlShow true;
 		_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
 		_parent ctrlCommit 0;
 		_text ctrlSetText format ["Really join %1 groups to your squad?",count A3C_SELECTED_HC_GROUPS_SETTINGS];
-		A3C_OBJECTSELECTOR_MODE = "SECU_REJOIN";
+		A3C_SelectionPromptPanel_MODE = "SECU_REJOIN";
 		lbClear _listBox;
 		
 		{

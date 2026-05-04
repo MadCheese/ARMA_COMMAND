@@ -1615,9 +1615,9 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 		private _cargoGroups = ([A3C_HC_ACTIVEGROUP] call MCSS_fnc_getCargoGroups) select {private _gp = _x; (waypointPosition [_gp, currentWaypoint _gp]) distance2D [0,0,0] == 0};
 		if !(_cargoGroups isEqualTo []) then { //-- here we check for existing cargo units that can have waypoints assigned.
 			//-- Prompt user to select desired option
-			_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-			_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-			_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+			_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+			_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+			_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 
 			ctrlSetFocus _listBox;
 			
@@ -1625,7 +1625,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 			ctrlSetFocus _listBox;
 
 
-			A3C_OBJECTSELECTOR_MODE = "CARGO_WAYPOINTS";
+			A3C_SelectionPromptPanel_MODE = "CARGO_WAYPOINTS";
 			_text ctrlSetText "SET WAYPOINTS FOR CARGO GROUPS?";
 			_parent ctrlShow true;
 			_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
@@ -2327,9 +2327,9 @@ A3C_LB_HC = {
 						_ctrlText = "DEMOLITION";
 						(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent) ctrlShow false;
 						(findDisplay 12 displayCtrl 51) ctrlEnable true;
-						_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-						_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-						_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+						_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+						_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+						_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 
 						ctrlSetFocus _listBox;
 						
@@ -2344,7 +2344,7 @@ A3C_LB_HC = {
 						} forEach (units A3C_HC_ACTIVEGROUP);
 						A3C_REMFIRE_MAGTYPES = _allRemfireMagTypes arrayIntersect _allRemfireMagTypes;
 
-						A3C_OBJECTSELECTOR_MODE = "PLACE_CHARGE_HC_MAP";
+						A3C_SelectionPromptPanel_MODE = "PLACE_CHARGE_HC_MAP";
 						_text ctrlSetText "Select Charge";
 						_parent ctrlShow true;
 						_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];

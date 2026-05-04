@@ -726,7 +726,7 @@ if ( ((A3C_TEMP_ACTION select 0) in ["SLINGLOAD","CTRL_DET","STATIC"])) then {
 					_unit setVariable ["A3C_PLOT_TEMP",_wpData,true];
 					//[] spawn {
 					//	sleep 0.2;
-						["A3C_CTRL_DET_SELECT"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
+						["A3C_CTRL_DET_SELECT"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
 					//};
 				};
 				case ("STATIC") : {
@@ -764,7 +764,7 @@ if ( ((A3C_TEMP_ACTION select 0) in ["SLINGLOAD","CTRL_DET","STATIC"])) then {
 		} else {
 			if ( ((A3C_TEMP_ACTION select 0) in ["CTRL_DET"])) then {
 				//-- bbb
-				["A3C_CTRL_DET_SELECT"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
+				["A3C_CTRL_DET_SELECT"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
 
 			};
 		};

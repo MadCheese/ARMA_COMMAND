@@ -17,11 +17,8 @@ A3C_UI_ARSENAL_CREATELB = {
 	[] call A3C_UI_RADIAL_CloseDisplay;
 	A3C_DISABLE_RADIAL = true;
 	if (15 in A3C_UI_DOWNKEYS) then {
-		("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutRsc ["A3C_KEY_VIEWER_UI","PLAIN"];
-		((uiNamespace getVariable "A3C_KEY_VIEWER_UI") displayCtrl 11) ctrlSetText "Please release TAB";
+		//-- note: might require some new method to inform about need to release TAB since clunky keyviwer was removed
 		waitUntil {!(15 in A3C_UI_DOWNKEYS)};
-		("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutText ["","PLAIN"];
-
 	};
 
 	A3C_DISABLE_RADIAL = false;
@@ -129,37 +126,7 @@ MCSS_fnc_CBA_KEYBIND_TRANSLATION = {
 
 
 
-A3C_TOGGLE_KEYVIEWER = {
-	//with uiNameSpace do {
-		if (KEYVIEWER_VAL == 0) then {
-			("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutRsc ["A3C_KEY_VIEWER_UI","PLAIN"];
-			KEYVIEWER_VAL = 1;
-			//
-			while {KEYVIEWER_VAL == 1} do {
-				_downKeys = A3C_UI_DOWNKEYS;
-				_MODIFIERS = [];
-				_text = "";
-				if (29 in _downKeys) then {_MODIFIERS pushBack "CTRL"};
-				if (42 in _downKeys) then {_MODIFIERS pushBack "SHIFT"};
-				if (56 in _downKeys) then {_MODIFIERS pushBack "ALT"};
-				{
-					_text = _text + _x + " + ";
-				} foreach _modifiers;
-				{
-					_addendum = if (_foreachIndex == 0) then {""} else {" + "};
-					_text = _text + _addendum + keyName _x;
-				} foreach (_downKeys - [29,42,56]);
-				((uiNamespace getVariable "A3C_KEY_VIEWER_UI") displayCtrl 11) ctrlSetText _text;
-				sleep 0.1;
-			};
 
-
-		} else {
-			KEYVIEWER_VAL = 0;
-			("A3C_KEY_VIEWER_UI" call BIS_fnc_rscLayer) cutText ["","PLAIN"];
-		};
-	//};
-};
 
 
 A3C_UI_HUD_FORM_BUTTON = {
@@ -365,9 +332,9 @@ A3C_HUD_GoCode_BUTTON = {
 
 
 //-- charge is null object in "A3C_UNIT_EXPLOSIVES" variable
-A3C_UI_RADIAL_OBJECTSELECTOR_LABEL_DETONATIONTARGETS = {
-	_parent = (findDisplay 100060 displayCtrl IDC_SHARED_UI_ObjectSelector_Parent);
-	_listBox = findDisplay 100060 displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+A3C_UI_RADIAL_SelectionPromptPanel_LABEL_DETONATIONTARGETS = {
+	_parent = (findDisplay 100060 displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent);
+	_listBox = findDisplay 100060 displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 	private _hcAll = A3C_HC_getAllGroups_Player_Current;
 	_hcAll pushBackUnique (group player);
 	A3C_UI_RADIAL_Current_Remfire_Units = [];

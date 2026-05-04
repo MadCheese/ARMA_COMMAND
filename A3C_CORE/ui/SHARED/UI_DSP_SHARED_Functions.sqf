@@ -684,7 +684,7 @@ A3C_UI_Shared_blockKeyDownEvent = {
 };
 
 A3C_UI_Shared_fnc_ReleaseMenuKey = {
-	//-- unified function for all KeyUp handlers for RADIAL/ObjectSelector Key-Release
+	//-- unified function for all KeyUp handlers for RADIAL/SelectionPromptPanel Key-Release
 	params ["_display"];
 
 	private _radialDisplay = findDisplay IDD_RADIAL_MENU;
@@ -727,7 +727,7 @@ A3C_UI_Shared_fnc_ReleaseMenuKey = {
 			profileNamespace setVariable ["A3C_HUD_isOpen", false];
 		};
 	} else {
-		//-- Radial / ObjectSelector
+		//-- Radial / SelectionPromptPanel
 		if (A3C_AI_HighCommand_Action_ID != "" && { !(A3C_isHud3dTag) }) then {
 			[] call A3C_AI_SHARED_Action_CancelPositionalProcess;
 			A3C_AI_HighCommand_Action_ID = "";
@@ -750,13 +750,13 @@ A3C_UI_Shared_fnc_ReleaseMenuKey = {
 	{ inGameUISetEventHandler [_x, "false"] } forEach ["PrevAction", "NextAction"];
 };
 
-A3C_UI_Shared_ObjectSelector_Listbox_NumberControl = {
-	params ["_key", "_objectSelectorListbox"];
+A3C_UI_Shared_SelectionPromptPanel_Listbox_NumberControl = {
+	params ["_key", "_SelectionPromptPanelListbox"];
 
 	private _keyValueIndex = _key - 2;
-	if (_keyValueIndex >= 0 && {_keyValueIndex < lbSize _objectSelectorListbox}) then {
+	if (_keyValueIndex >= 0 && {_keyValueIndex < lbSize _SelectionPromptPanelListbox}) then {
 		sleep 0.1;
-		[_objectSelectorListbox, _keyValueIndex, true] call A3C_setCurSel;
+		[_SelectionPromptPanelListbox, _keyValueIndex, true] call A3C_setCurSel;
 	};
 };
 
@@ -1666,13 +1666,13 @@ A3C_UI_MAP_Overlay_ResizeTeamColorsXWH = {
 
 
 
-A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP = {
+A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP = {
 	params ["_mode"];
 	
 	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
-	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 	//if !(visibleMap) then {
 	//};
 
@@ -1685,7 +1685,7 @@ A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP = {
 
 		case ("DELETE") : {
 			// systemchat 'oioi';
-			A3C_OBJECTSELECTOR_MODE = "DELETE";
+			A3C_SelectionPromptPanel_MODE = "DELETE";
 			private _ref = A3C_SELECTED_HC_GROUPS_SETTINGS;
 			_text ctrlSetText format ["REALLY DELETE %1 GROUP%2?",count _ref, if (count _ref <= 1) then {""} else {"S"}];
 
@@ -1695,7 +1695,7 @@ A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP = {
 		};
 
 		case ("MULTIWAYPOINT") : {
-			A3C_OBJECTSELECTOR_MODE = "MULTIWAYPOINT";
+			A3C_SelectionPromptPanel_MODE = "MULTIWAYPOINT";
 			private _ref = A3C_SELECTED_UNITS select {(driver (vehicle leader _x))  in units _x};
 			_text ctrlSetText format ["GIVE WAYPOINT TO %1 GROUP%2",count _ref, if (count _ref <= 1) then {""} else {"S"}];
 
@@ -1707,7 +1707,7 @@ A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP = {
 
 				hintSilent "";
 				
-				A3C_OBJECTSELECTOR_MODE = "ARTY_0";
+				A3C_SelectionPromptPanel_MODE = "ARTY_0";
 				_text ctrlSetText "Ammo Within Range";
 
 				MCSS_REMOTE_ARTILLERY_ARRAY = [];
@@ -1747,7 +1747,7 @@ A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP = {
 				};
 		};
 		case ("A3C_CTRL_DET_SELECT") :{
-			A3C_OBJECTSELECTOR_MODE = "CTRL_DET";
+			A3C_SelectionPromptPanel_MODE = "CTRL_DET";
 			_text ctrlSetText "Select Ammo Type";
 			private _availableAmmo = [];
 			private _targetVehicle = (A3C_TEMP_ACTION select 1) select 0;
@@ -3374,7 +3374,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											if !(_shift) then {
 												A3C_isArtyAwaitingSuborder = false;
 											};
-											["ARTY"] call A3C_UI_MAP_Overlay_OPEN_OBJECTSELECTOR_MAP;
+											["ARTY"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
 											
 										} 
 									] call BIS_fnc_addStackedEventHandler;
@@ -3417,22 +3417,22 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_buttonFnc = {
 
 						//-- Note: Here we select type first, then position 
-						//--> This means, A3C_AI_SHARED_Action_StartPositionalProcess is called in A3C_ObjectSelector_LB_Change!
+						//--> This means, A3C_AI_SHARED_Action_StartPositionalProcess is called in A3C_SelectionPromptPanel_LB_Change!
 						
-						A3C_OBJECTSELECTOR_MODE = "STATIC_ASSEMBLE_HC";
+						A3C_SelectionPromptPanel_MODE = "STATIC_ASSEMBLE_HC";
 						private _staticData = [units (A3C_RD_UNITS select 0),"PLANNING"] call A3C_getSelectionBackpackStatics;
 						if (count _staticData == 1) then {
-							[0] call A3C_ObjectSelector_LB_Change;
+							[0] call A3C_SelectionPromptPanel_LB_Change;
 						} else {
 							with uiNamespace do {
 								//disableSerialization;
-								A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+								A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 							};
 
 							private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
-							private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-							private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-							private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+							private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+							private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+							private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 
 							
 							_parent ctrlShow true;
@@ -3766,46 +3766,46 @@ A3C_SHARED_StartVehicleRemote = {
     a3c_tank_speed_max = 5;
 };
 
-A3C_UI_RADIAL_OBJECTSELECTOR_START_CHARGEDIALOG = {
-	A3C_OBJECTSELECTOR_MODE = "DETONATE_SELECTED_CHARGE_SHARED";
+A3C_UI_RADIAL_SelectionPromptPanel_START_CHARGEDIALOG = {
+	A3C_SelectionPromptPanel_MODE = "DETONATE_SELECTED_CHARGE_SHARED";
 	with uiNamespace do {
 		//disableSerialization;
-		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 		// #CURRENTBUG
 
 	};
 	
 	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
-	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 
 	_parent ctrlShow true;
 	_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
 	_parent ctrlCommit 0;
 	_text ctrlSetText "Detonate Charges";
-	[] call A3C_UI_RADIAL_OBJECTSELECTOR_LABEL_DETONATIONTARGETS;
+	[] call A3C_UI_RADIAL_SelectionPromptPanel_LABEL_DETONATIONTARGETS;
 };
 
-A3C_ObjectSelector_LB_Change = {
+A3C_SelectionPromptPanel_LB_Change = {
 	params ["_lb"];
 	private ["_doubleClick","_tickTime"];
 	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
 	//_vehicle = if (count _this > 1) then {_this select 1) else {};
 	_doubleClick = false;
 	_tickTime = (time - A3C_LB_TICKTIME);
-	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 	if ((_tickTime > 0.07) && (_tickTime < 0.3)) then {
 		_doubleClick = true;
 	};
-	//if !(A3C_OBJECTSELECTOR_MODE == "DISASSEMBLE") then {_doubleClick = true;}; //~~ MAY HAVE TO CHANGE THIS!!
+	//if !(A3C_SelectionPromptPanel_MODE == "DISASSEMBLE") then {_doubleClick = true;}; //~~ MAY HAVE TO CHANGE THIS!!
 	_doubleClick = true; //~~ ??
 	A3C_LB_TICKTIME = time;
 
 	if (_doubleClick) then {
-		switch (A3C_OBJECTSELECTOR_MODE) do {
+		switch (A3C_SelectionPromptPanel_MODE) do {
 
 			case ("DELETE") : {
 				// systemchat str [_lb, A3C_SELECTED_HC_GROUPS_SETTINGS];
@@ -3826,7 +3826,7 @@ A3C_ObjectSelector_LB_Change = {
 				};
 
 				_parent ctrlShow false;
-				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent) ctrlShow false;
+				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent) ctrlShow false;
 				with uiNamespace do {
 					(findDisplay 100060) closeDisplay 0;
 				};
@@ -3914,7 +3914,7 @@ A3C_ObjectSelector_LB_Change = {
 				[A3C_UI_HUD_3D_TAG_ICON_POS,''] spawn A3C_UI_HUD_3D_TAG;
 				private _groups = +(A3C_SELECTED_HC_GROUPS_SETTINGS);
 				//systemchat str _groups;
-				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent) ctrlShow false;
+				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent) ctrlShow false;
 
 				if (_groups isEqualTo []) exitWith {};
 
@@ -3999,7 +3999,7 @@ A3C_ObjectSelector_LB_Change = {
 
 			case ("MULTIWAYPOINT") : {
 				A3C_MULTIWAYPOINT = if (_lb == 0) then {true} else {false};
-				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent) ctrlShow false;
+				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent) ctrlShow false;
 			};
 
 			case ("DETONATE_SELECTED_CHARGE_SHARED") : {
@@ -4049,7 +4049,7 @@ A3C_ObjectSelector_LB_Change = {
 
 						_unit setvariable ["A3C_UNIT_EXPLOSIVES",_var,if (isPlayer leader group _unit) then {false} else {true}];
 
-						[] call A3C_UI_RADIAL_OBJECTSELECTOR_LABEL_DETONATIONTARGETS;
+						[] call A3C_UI_RADIAL_SelectionPromptPanel_LABEL_DETONATIONTARGETS;
 					};
 				};
 
@@ -4057,7 +4057,7 @@ A3C_ObjectSelector_LB_Change = {
 			
 			case ("ARTY_0") : {
 				
-				A3C_OBJECTSELECTOR_MODE = "ARTY_1";
+				A3C_SelectionPromptPanel_MODE = "ARTY_1";
 
 				private _lbText = _listBox lbText _lb;
 				
@@ -4112,7 +4112,7 @@ A3C_ObjectSelector_LB_Change = {
 
 			case ("ARTY_1") : {
 				A3C_HC_FOCUS_ARTY_AmmoCount = call compile (_listBox lbText _lb);
-				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent) ctrlShow false;
+				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent) ctrlShow false;
 			
 
 				
@@ -4141,7 +4141,7 @@ A3C_ObjectSelector_LB_Change = {
 					};
 				};
 
-				//(findDIsplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_ObjectSelector_Parent) ctrlSHow false;
+				//(findDIsplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent) ctrlSHow false;
 				{
 					private _soldier = _x;
 					{
@@ -4233,7 +4233,7 @@ A3C_ObjectSelector_LB_Change = {
 						// //};
 						[_v, _height] remoteExec ["flyInHeight", _v];
 						_v setVariable ["A3C_FLYINHEIGHT",_height,true];
-						// systemchat format ["A3C_ObjectSelector_LB_Change: FlyinHeight :%1", _height];
+						// systemchat format ["A3C_SelectionPromptPanel_LB_Change: FlyinHeight :%1", _height];
 					};
 				} foreach (units _gp);
 				_parent ctrlShow false;
@@ -4242,7 +4242,7 @@ A3C_ObjectSelector_LB_Change = {
 				//};
 			};
 			case ("LOITER_DIR") : {
-				A3C_OBJECTSELECTOR_MODE = "LOITER_RAD";
+				A3C_SelectionPromptPanel_MODE = "LOITER_RAD";
 				_text ctrlSetText "Select Loiter Radius";
 				switch (_lb) do {
 					case (0) : {A3C_LoiterDir = "CIRCLE"};
@@ -4591,7 +4591,7 @@ A3C_ObjectSelector_LB_Change = {
 				];
 				[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] setWaypointStatements _statements;
 				
-				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent) ctrlShow false;
+				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent) ctrlShow false;
 			};
 
 			case ("HELI_LANDING_HC_TYPE") : {
@@ -4601,7 +4601,7 @@ A3C_ObjectSelector_LB_Change = {
 				switch (_landingRailType) do {
 					case ("COMBAT LANDING") : {
 						//A3C_RADIALACTION_landingRailType = "COMBATLANDING";
-						A3C_OBJECTSELECTOR_MODE = "HELI_LANDING_GOCODE";
+						A3C_SelectionPromptPanel_MODE = "HELI_LANDING_GOCODE";
 						_hideParent = false;
 						_text ctrlSetText "SELECT GO-CODE";
 

@@ -666,16 +666,16 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 							
 
 							private _a3c_dsp = 100060;	
-							A3C_OBJECTSELECTOR_MODE = "STATIC_ASSEMBLE_SQUAD";
+							A3C_SelectionPromptPanel_MODE = "STATIC_ASSEMBLE_SQUAD";
 							if (count _staticData == 1) then {
-								[0] call A3C_ObjectSelector_LB_Change;
+								[0] call A3C_SelectionPromptPanel_LB_Change;
 							} else {
 								with uiNamespace do {
-									A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_ObjectSelector";
+									A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 								};
-								_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Parent;
-								_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_Description_TXT;
-								_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_ObjectSelector_ListBox;
+								_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+								_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+								_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 								
 								_parent ctrlShow true;
 								_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];

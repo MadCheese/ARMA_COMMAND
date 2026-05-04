@@ -21,64 +21,7 @@ A3C_HUD_FormDir_Old = 0;
 //-----------------------------  U I  -  F U N C T I O N S  ------------------------------------
 //----------------------------------------------------------------------------------------------
 
-A3C_HUD_CAM_MoveCam_Time = time;
-A3C_HUD_CAM_MoveCam_Pos = [0,0,0];
-A3C_HUD_CAM_MoveCam_Dir = 0;
 
-A3C_HUD_CAM_MoveCam = {
-	private ["_input","_mousePos","_mX","_mY"];
-	_input = _this;
-	_mX = _input select 1;
-	_mY = _input select 2;
-	systemchat str A3C_HUD_CAM_MoveCam_Dir;
-	if (_mX > 0) then {
-		A3C_HUD_CAM_MoveCam_Dir = (A3C_HUD_CAM_MoveCam_Dir + 1);
-		//if (A3C_HUD_CAM_MoveCam_Dir > 170) then {A3C_HUD_CAM_MoveCam_Dir = 170};
-	} else {
-		A3C_HUD_CAM_MoveCam_Dir = (A3C_HUD_CAM_MoveCam_Dir - 1);
-		//if (A3C_HUD_CAM_MoveCam_Dir > 170) then {
-		//	if (A3C_HUD_CAM_MoveCam_Dir < 190) then {
-		//		A3C_HUD_CAM_MoveCam_Dir = 190;
-		//	};
-		//};
-	};
-	A3C_HUD_CAM_MoveCam_Dir = [A3C_HUD_CAM_MoveCam_Dir] call MCSS_fnc_CorrectDir;
-	_pos = [player,objNull,(screenToWorld[_mX,_mY])] call MCSS_fnc_posIntersect;
-	if (!isNull A3C_SNAP_OBJECT) then {
-		_prms = [ATLtoASL _pos,A3C_SNAP_OBJECT] call A3C_HUD_SNAP_FORMATION;
-		//systemchat str [_pos,_prms];
-		_pos = _prms select 0;
-	};
-	ball setposASL _pos;
-	systemchat str _pos;
-	if ( (inputAction 'lookAround') > 0) then {
-		if ((time - A3C_HUD_CAM_MoveCam_Time) > 0.1) then {
-			A3C_HUD_CAM camPrepareTarget (A3C_HUD_CAM_MoveCam_Pos getPos [50, A3C_HUD_CAM_MoveCam_Dir]);
-			A3C_HUD_CAM_MoveCam_Time = time;
-			//A3C_HUD_CAM camPrepareTarget (screentoworld [_mX,_mY]);
-			A3C_HUD_CAM camCommitPrepared 0.1;
-		};
-	};
-};
-
-A3C_HUD_CAM_Moving = false;
-
-A3C_HUD_CAM_RefocusCam = {
-
-	if ( (inputAction 'lookAround') > 0) then {
-		if !(A3C_HUD_CAM_Moving) then {
-			A3C_HUD_CAM_Moving = true;
-			_refPos = screenToWorld getMousePosition;
-			A3C_HUD_CAM_MoveCam_Dir = (vehicle player) getDir _refPos;
-			if ((time - A3C_HUD_CAM_MoveCam_Time) > 0.1) then {
-				A3C_HUD_CAM camPrepareTarget (A3C_HUD_CAM_MoveCam_Pos getPos [50, A3C_HUD_CAM_MoveCam_Dir]);
-				A3C_HUD_CAM_MoveCam_Time = time;
-				//A3C_HUD_CAM camPrepareTarget (screentoworld [_mX,_mY]);
-				A3C_HUD_CAM camCommitPrepared 0.1;
-			};
-		};
-	};
-};
 
 
 
