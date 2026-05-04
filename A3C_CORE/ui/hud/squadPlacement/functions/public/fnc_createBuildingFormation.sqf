@@ -15,51 +15,51 @@ _availablePositions = count _positionArray;
     private _unitGhost = _x;
     private _index = _forEachIndex;
 
-    if (isNull _unitGhost) then {
-        continue;
-    };
+    if (!isNull _unitGhost) then {
+        if (_index < (count _positionArray)) then {
+            private _buildingPos = _positionArray select _index;
 
-    if (_index < (count _positionArray)) then {
-        private _buildingPos = _positionArray select _index;
+            _unitGhost setPosATL _buildingPos;
+            _unitGhost setVariable [
+                "A3C_ARROW_BPOS",
+                [
+                    _buildingPos,
+                    [_building, _buildingPos] call BIS_fnc_dirTo
+                ],
+                true
+            ];
+        } else {
+            private _arrowBPos = _unitGhost getVariable ["A3C_ARROW_BPOS", [0, 0]];
 
-        _unitGhost setPosATL _buildingPos;
-        _unitGhost setVariable [
-            "A3C_ARROW_BPOS",
-            [
-                _buildingPos,
-                [_building, _buildingPos] call BIS_fnc_dirTo
-            ],
-            true
-        ];
-    } else {
-        private _arrowBPos = _unitGhost getVariable ["A3C_ARROW_BPOS", [0, 0]];
+            if !((_arrowBPos select 0) isEqualType []) then {
+                if ((_arrowBPos select 0) == 0) then {
+                    private _outsideIndex = _index - _availablePositions;
 
-        if !((_arrowBPos select 0) isEqualType []) then {
-            if ((_arrowBPos select 0) == 0) then {
-                private _outsideIndex = _index - _availablePositions;
+                    if (
+                        (_outsideIndex >= 0)
+                        && {_outsideIndex < (count _outsidePositions)}
+                        && {_index <= (_availablePositions + 8)}
+                    ) then {
+                        _unitGhost setPos (_outsidePositions select _outsideIndex);
+                    } else {
+                        _unitGhost setPos (_building getRelPos [
+                            random ((sizeOf (typeOf cursorTarget)) / 2),
+                            random 360
+                        ]);
+                    };
 
-                if (
-                    (_outsideIndex >= 0)
-                    && {_outsideIndex < (count _outsidePositions)}
-                    && {_index <= (_availablePositions + 8)}
-                ) then {
-                    _unitGhost setPos (_outsidePositions select _outsideIndex);
-                } else {
-                    _unitGhost setPos (_building getRelPos [
-                        random ((sizeOf (typeOf cursorTarget)) / 2),
-                        random 360
-                    ]);
+                    _unitGhost setVariable [
+                        "A3C_ARROW_BPOS",
+                        [
+                            1,
+                            _building getRelDir _unitGhost
+                        ],
+                        true
+                    ];
                 };
-
-                _unitGhost setVariable [
-                    "A3C_ARROW_BPOS",
-                    [
-                        1,
-                        _building getRelDir _unitGhost
-                    ],
-                    true
-                ];
             };
-        };
+        }; 
     };
+
+    
 } forEach A3C_UI_squadPlacement_unitGhosts;

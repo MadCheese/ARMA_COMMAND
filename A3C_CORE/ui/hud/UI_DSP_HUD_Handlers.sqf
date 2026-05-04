@@ -521,38 +521,4 @@ A3C_UI_HUD_onMouseZChanged = {
 	true
 };
 
-// A3C_UI_HUD_onMouseMoving = { //-- placeholder for 3d draw movement
-// 	params ["_display", "_xDeltaPos", "_yDeltaPos"];
-// 	hint str _this;
-// };
-
-
-
-
-
-
-//---------------------------------------------------------------------------------------------
-//---------- EH's FOR ADDITIONAL HUD ELEMENTS -------------------------------------------------
-//---------------------------------------------------------------------------------------------
-
-
-
-//------------------- OBJECT SELECTOR BINDS
-
-A3C_UI_HUD_SelectionPromptPanel_onKeyDown = {
-	params ["_display", "_key", "_shift", "_ctrl", "_alt"];
-	private _SelectionPromptPanelListbox = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
-	if (_key >= 2 && _key <= 10) then {
-		[_key, _SelectionPromptPanelListbox] spawn A3C_UI_Shared_SelectionPromptPanel_Listbox_NumberControl;
-	};
-};
-
-A3C_UI_HUD_SelectionPromptPanel_onKeyUp = {
-	params ["_display", "_key"];
-	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
-	if (_key == (A3C_RadialMenu_KEY_ID select 0)) then {
-		[_display] call A3C_UI_Shared_fnc_ReleaseMenuKey;
-	};
-};
-
 

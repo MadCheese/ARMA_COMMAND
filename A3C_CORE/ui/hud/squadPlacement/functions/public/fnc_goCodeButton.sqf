@@ -1,3 +1,6 @@
+#include "..\..\script_component.hpp"
+#include "..\..\dialog_defines.hpp"
+
 params ["_mode", ["_btn", 0]];
 
 private _toolTip = "";
@@ -49,12 +52,20 @@ if !(profileNamespace getVariable ["A3C_UI_squadPlacement_interactionOVERRIDE_VA
     };
 } else {
     profileNamespace setVariable ["A3C_HUD_GOCODE_VAR", "NONE"];
+
     A3C_HUD_GOCODE_ICON = "A3C_CORE\ui\pictures\icon_menu_gocode_NONE.paa";
     A3C_HUD_GOCODE_ICON_COLOR = [1, 1, 1, 0.2];
+
     _toolTip = "Conditions not available in Override-Mode";
 };
 
-(findDisplay 100050 displayCtrl 18) ctrlSetTooltip _toolTip;
+private _goCodeButton = ["goCodeButton"] call FUNC(ctrl);
+if !(isNull _goCodeButton) then {
+    _goCodeButton ctrlSetTooltip _toolTip;
+};
 
-((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 14) ctrlSetText A3C_HUD_GOCODE_ICON;
-((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 14) ctrlSetTextColor A3C_HUD_GOCODE_ICON_COLOR;
+private _goCodeImage = ["overlayGoCodeImage"] call FUNC(ctrl);
+if !(isNull _goCodeImage) then {
+    _goCodeImage ctrlSetText A3C_HUD_GOCODE_ICON;
+    _goCodeImage ctrlSetTextColor A3C_HUD_GOCODE_ICON_COLOR;
+};

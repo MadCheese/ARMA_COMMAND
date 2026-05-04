@@ -1,3 +1,5 @@
+#include "..\..\script_component.hpp"
+
 params ["_cursorPos"];
 
 if ((count A3C_UI_squadPlacement_unitGhosts) == 0) exitWith {};

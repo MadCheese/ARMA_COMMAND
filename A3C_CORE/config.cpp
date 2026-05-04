@@ -7,7 +7,6 @@
 
 #include "ui\mapOverlay\dialog.hpp"
 
-#include "ui\HUD\HUD_MENU.hpp"
 #include "ui\HUD\HUD_DYNAMIC\A3C_DSP_HUD_DYNAMIC.hpp"
 #include "ui\HUD\customFormation\UI_DSP_CustomFormation.hpp"
 
@@ -18,6 +17,9 @@
 #include "ui\hud\squadPlacement\rscTitles.hpp"
 
 #include "ui\suppression\A3C_SUPPRESSION_DRAW.hpp"
+
+#include "ui\hud\selectionPromptPanel\dialog.hpp"
+
 #include "cfgsounds.hpp"
 
 class CfgPatches

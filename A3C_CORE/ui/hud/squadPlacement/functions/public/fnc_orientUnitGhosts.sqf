@@ -1,3 +1,6 @@
+#include "..\..\script_component.hpp"
+#include "..\..\dialog_defines.hpp"
+
 private _count = count A3C_UI_squadPlacement_units;
 if (_count == 0) exitWith {};
 
@@ -99,10 +102,7 @@ if (_count == 1) then {
 };
 
 // Rotate UI icon.
-private _overlayDisplay = uiNamespace getVariable ["A3C_UI_squadPlacement_overlay", displayNull];
-if (isNull _overlayDisplay) exitWith {};
-
-private _formImage = _overlayDisplay displayCtrl 12;
+private _formImage = ["overlayFormImage"] call FUNC(ctrl);
 if (isNull _formImage) exitWith {};
 
 if !(A3C_HUD_FORM in [7, 8]) then {

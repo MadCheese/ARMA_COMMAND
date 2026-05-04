@@ -1,3 +1,6 @@
+#include "..\..\script_component.hpp"
+#include "..\..\dialog_defines.hpp"
+
 params ["_mode", "_btn"];
 
 if (_mode == 1) then {
@@ -87,4 +90,7 @@ switch (A3C_HUD_FORM) do {
     };
 };
 
-((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 12) ctrlSetText A3C_HUD_FORM_ICON;
+private _formImage = ["overlayFormImage"] call FUNC(ctrl);
+if !(isNull _formImage) then {
+    _formImage ctrlSetText A3C_HUD_FORM_ICON;
+};

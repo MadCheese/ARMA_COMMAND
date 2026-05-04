@@ -6,7 +6,7 @@
 
 if  (!isnull findDisplay IDD_RADIAL_MENU) exitWith {};
 if  (!isnull (findDisplay 100010)) exitWith {};
-if  (!isnull (finddisplay 100050)) exitWith {};
+if  (!isnull (findDisplay IDD_SQUAD_PLACEMENT_INTERACTION)) exitWith {};
 if ((count A3C_UI_squadPlacement_unitGhosts) == 0) exitWith {};
 
 
@@ -46,7 +46,7 @@ if (profileNameSpace getVariable ["A3C_HUD_LAYOUT_CORNER", false]) then {
 	//-- Set all Controls to new positions
 	{
 		private ["_ctrl","_ctrlPos"];
-		_ctrl = findDisplay 100050 displayCtrl (_x select 0); 
+		_ctrl = findDisplay IDD_SQUAD_PLACEMENT_INTERACTION displayCtrl (_x select 0); 
 		_ctrlPos = ctrlPosition _ctrl;
 		_ctrlPos set [0,(_x select 1) select 0];
 		_ctrlPos set [1,(_x select 1) select 1];
@@ -67,27 +67,27 @@ if (profileNameSpace getVariable ["A3C_HUD_LAYOUT_CORNER", false]) then {
 };
 
 if (profilenamespace getvariable ["A3C_UI_squadPlacement_interactionOVERRIDE_VAR",true]) then {
-	(findDisplay 100050 displayCtrl 10) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa";
-	(findDisplay 100050 displayCtrl 11) ctrlSetTooltip "MODE: Override Plans";
+	(findDisplay IDD_SQUAD_PLACEMENT_INTERACTION displayCtrl 10) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa";
+	(findDisplay IDD_SQUAD_PLACEMENT_INTERACTION displayCtrl 11) ctrlSetTooltip "MODE: Override Plans";
 } else {
-	(findDisplay 100050 displayCtrl 10) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_Add.paa";
-	(findDisplay 100050 displayCtrl 11) ctrlSetTooltip "MODE: Add To Plans";
+	(findDisplay IDD_SQUAD_PLACEMENT_INTERACTION displayCtrl 10) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_Add.paa";
+	(findDisplay IDD_SQUAD_PLACEMENT_INTERACTION displayCtrl 11) ctrlSetTooltip "MODE: Add To Plans";
 };
 
 if (profilenamespace getvariable ["A3C_UI_squadPlacement_interactionSHOW_VAR",true]) then {
-	(findDisplay 100050 displayCtrl 12) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_true.paa";
-	(findDisplay 100050 displayCtrl 13) ctrlSetTooltip "UI: Shown";
+	(findDisplay IDD_SQUAD_PLACEMENT_INTERACTION displayCtrl 12) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_true.paa";
+	(findDisplay IDD_SQUAD_PLACEMENT_INTERACTION displayCtrl 13) ctrlSetTooltip "UI: Shown";
 } else {
-	(findDisplay 100050 displayCtrl 12) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_false.paa";
-	(findDisplay 100050 displayCtrl 13) ctrlSetTooltip "UI: Hidden";	
+	(findDisplay IDD_SQUAD_PLACEMENT_INTERACTION displayCtrl 12) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_false.paa";
+	(findDisplay IDD_SQUAD_PLACEMENT_INTERACTION displayCtrl 13) ctrlSetTooltip "UI: Hidden";	
 };
 
 if (profilenamespace getvariable ["A3C_HUD_SPEED_VAR",-1] == -1) then {
 	A3C_HUD_SPEED_ICON = "A3C_CORE\ui\pictures\icon_menu_speed_full.paa";
-	(findDisplay 100050 displayCtrl 15) ctrlSetTooltip "PACE: FULL";
+	(findDisplay IDD_SQUAD_PLACEMENT_INTERACTION displayCtrl 15) ctrlSetTooltip "PACE: FULL";
 } else {
 	A3C_HUD_SPEED_ICON = "A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa";
-	(findDisplay 100050 displayCtrl 15) ctrlSetTooltip "PACE: LIMITED";
+	(findDisplay IDD_SQUAD_PLACEMENT_INTERACTION displayCtrl 15) ctrlSetTooltip "PACE: LIMITED";
 };
 {
 	[_x] call A3C_UI_squadPlacement_fnc_setStance;

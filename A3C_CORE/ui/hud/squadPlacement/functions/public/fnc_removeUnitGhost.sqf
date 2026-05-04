@@ -1,3 +1,5 @@
+#include "..\..\script_component.hpp"
+
 params ["_unit"];
 
 if !(_unit in A3C_UI_squadPlacement_units) exitWith {};

@@ -1,3 +1,5 @@
+#include "..\..\script_component.hpp"
+
 params ["_unit", "_bPos", "_ATLpos", "_watchDir"];
 
 if (isNull _unit) exitWith {};
@@ -32,13 +34,20 @@ private _mType = switch (_goCode) do {
     default {"mil_dot"};
 };
 
+private _currentUnitPos = switch (stance _unit) do {
+    case "PRONE": {"DOWN"};
+    case "CROUCH": {"MIDDLE"};
+    case "STAND": {"UP"};
+    default {"AUTO"};
+};
+
 private _hudStance1 = switch (A3C_HUD_STANCE_MODE_TRAVEL) do {
     case 0: {"DOWN"};
     case 1: {"MIDDLE"};
     case 2: {"UP"};
     case 3: {"AUTO"};
-    case 4: {""};
-    default {""};
+    case 4: {_currentUnitPos};
+    default {_currentUnitPos};
 };
 
 private _hudStance2 = switch (A3C_HUD_STANCE_MODE_DESTINATION) do {
@@ -46,8 +55,8 @@ private _hudStance2 = switch (A3C_HUD_STANCE_MODE_DESTINATION) do {
     case 1: {"MIDDLE"};
     case 2: {"UP"};
     case 3: {"AUTO"};
-    case 4: {""};
-    default {""};
+    case 4: {_hudStance1};
+    default {_hudStance1};
 };
 
 _unit stop false;

@@ -1,3 +1,5 @@
+#include "..\..\script_component.hpp"
+
 params ["_unitGhost", "_unit"];
 
 if (isNull _unitGhost) exitWith {};

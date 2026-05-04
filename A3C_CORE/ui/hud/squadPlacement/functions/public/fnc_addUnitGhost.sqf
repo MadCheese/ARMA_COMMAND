@@ -19,7 +19,7 @@ if !(_unit == driver (vehicle _unit)) exitWith {};
 
 A3C_UI_squadPlacement_units pushBack _unit;
 
-A3C_HUD_OBJECT_TYPE = if !(profileNamespace getVariable ["A3C_HUD_OBJECTS", false]) then {
+private _unitGhostType = if !(profileNamespace getVariable ["A3C_HUD_OBJECTS", false]) then {
     "MCSS_ASM_INDICATOR_F"
 } else {
     "C_Soldier_VR_F"
@@ -31,7 +31,7 @@ private _camVic = vehicle cameraOn;
 // It is no longer needed for call compile / object name injection.
 [_camVic] call MCSS_fnc_setVehicleVarname;
 
-private _unitGhost = A3C_HUD_OBJECT_TYPE createVehicleLocal (position _unit);
+private _unitGhost = _unitGhostType createVehicleLocal (position _unit);
 
 // Preserve the old globally addressable variable shape without call compile.
 missionNamespace setVariable [
@@ -102,11 +102,11 @@ if ((count A3C_UI_squadPlacement_units) == 1) then {
         [0] call FUNC(formButton);
     };
 
-    if (A3C_HUD_OBJECT_TYPE == "MCSS_ASM_INDICATOR_F") then {
+    if (_unitGhostType == "MCSS_ASM_INDICATOR_F") then {
         _unitGhost setObjectTextureGlobal [0, "#(argb,8,8,3)color(0,1,0,0.1)"];
     };
 } else {
-    if (A3C_HUD_OBJECT_TYPE == "MCSS_ASM_INDICATOR_F") then {
+    if (_unitGhostType == "MCSS_ASM_INDICATOR_F") then {
         _unitGhost setObjectTextureGlobal [0, "#(argb,8,8,3)color(0.9,0.8,0,0.1)"];
     };
 };

@@ -183,6 +183,8 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_UI.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_CustomFormation_init.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_CustomFormation_handlers.sqf";
 
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\selectionPromptPanel\functions\initFunctions.sqf";
+
 
 
 

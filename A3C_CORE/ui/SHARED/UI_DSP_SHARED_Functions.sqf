@@ -5,7 +5,7 @@
 #include "..\mapOverlay\dialog_defines.hpp"
 #include "..\mapOverlay\script_component.hpp"
 
-
+#include "..\hud\selectionPromptPanel\dialog_defines.hpp"
 
 
 
@@ -727,6 +727,7 @@ A3C_UI_Shared_fnc_ReleaseMenuKey = {
 			profileNamespace setVariable ["A3C_UI_squadPlacement_overlayIsOpen", false];
 		};
 	} else {
+
 		//-- Radial / SelectionPromptPanel
 		if (A3C_AI_HighCommand_Action_ID != "" && { !(A3C_isHud3dTag) }) then {
 			[] call A3C_AI_SHARED_Action_CancelPositionalProcess;

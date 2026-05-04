@@ -1,3 +1,6 @@
+#include "..\..\script_component.hpp"
+#include "..\..\dialog_defines.hpp"
+
 params ["_cursorPos", "_object"];
 
 _cursorPos = +_cursorPos;
@@ -323,7 +326,10 @@ switch (true) do {
     };
 };
 
-((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 12) ctrlSetText A3C_HUD_FORM_ICON;
+private _formImage = ["overlayFormImage"] call FUNC(ctrl);
+if !(isNull _formImage) then {
+    _formImage ctrlSetText A3C_HUD_FORM_ICON;
+};
 
 // Assign formation direction at the end so formation does not flicker.
 A3C_FORMATION_DIR = _formationDir;

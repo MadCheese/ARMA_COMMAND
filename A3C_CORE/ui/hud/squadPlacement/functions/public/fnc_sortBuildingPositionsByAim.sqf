@@ -1,3 +1,5 @@
+#include "..\..\script_component.hpp"
+
 params ["_unit", "_building", "_bPosAmount", "_aimPosASL"];
 
 private _aimPosATL = ASLToATL _aimPosASL;

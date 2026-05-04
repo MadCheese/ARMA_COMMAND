@@ -1,4 +1,5 @@
 #include "..\..\script_component.hpp"
+#include "..\..\dialog_defines.hpp"
 
 params ["_mode"];
 
@@ -52,6 +53,15 @@ switch (_check) do {
             false
         ];
     };
+    default {
+        _toolTip = "Stance: No Change";
+        _data = [
+            "A3C_CORE\ui\pictures\icon_menu_stance_NoChange.paa",
+            "",
+            [1, 1, 1, 1],
+            false
+        ];
+    };
 };
 
 if (A3C_HUD_FORM == 8) then {
@@ -65,10 +75,16 @@ if (_mode == 0) then {
     A3C_HUD_STANCE_ICON_COLOR_TRAVEL = _data select 2;
     A3C_BOOL_STANCE_ICON_TRAVEL = _data select 3;
 
-    ((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 10) ctrlSetText A3C_HUD_STANCE_ICON_TRAVEL;
-    ((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 10) ctrlSetTextColor [1, 1, 1, 1];
+    private _travelImage = ["overlayTravelImage"] call FUNC(ctrl);
+    if !(isNull _travelImage) then {
+        _travelImage ctrlSetText A3C_HUD_STANCE_ICON_TRAVEL;
+        _travelImage ctrlSetTextColor [1, 1, 1, 1];
+    };
 
-    (findDisplay 100050 displayCtrl 16) ctrlSetTooltip _toolTip;
+    private _travelButton = ["travelButton"] call FUNC(ctrl);
+    if !(isNull _travelButton) then {
+        _travelButton ctrlSetTooltip _toolTip;
+    };
 } else {
     _toolTip = "End " + _toolTip;
 
@@ -76,10 +92,16 @@ if (_mode == 0) then {
     A3C_HUD_STANCE_ICON_COLOR_DESTINATION = _data select 2;
     A3C_BOOL_STANCE_ICON_DESTINATION = _data select 3;
 
-    (findDisplay 100050 displayCtrl 17) ctrlSetTooltip _toolTip;
+    private _destinationImage = ["overlayDestinationImage"] call FUNC(ctrl);
+    if !(isNull _destinationImage) then {
+        _destinationImage ctrlSetText A3C_HUD_STANCE_ICON_DESTINATION;
+        _destinationImage ctrlSetTextColor [1, 1, 1, 1];
+    };
 
-    ((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 11) ctrlSetText A3C_HUD_STANCE_ICON_DESTINATION;
-    ((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 11) ctrlSetTextColor [1, 1, 1, 1];
+    private _destinationButton = ["destinationButton"] call FUNC(ctrl);
+    if !(isNull _destinationButton) then {
+        _destinationButton ctrlSetTooltip _toolTip;
+    };
 };
 
 {

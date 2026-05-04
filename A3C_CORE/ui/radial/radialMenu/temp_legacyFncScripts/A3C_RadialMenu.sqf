@@ -20,7 +20,7 @@ if  (!isnull (findDisplay 602)) exitWith {};
 if  (!isnull (finddisplay IDD_MAP_OVERLAY)) exitWith {};
 if  (!isnull findDisplay IDD_RADIAL_MENU) exitWith {};
 if  (!isnull (findDisplay 100010)) exitWith {};
-if  (!isnull (finddisplay 100050)) exitWith {};
+if  (!isnull (findDisplay IDD_SQUAD_PLACEMENT_INTERACTION)) exitWith {};
 
 
 

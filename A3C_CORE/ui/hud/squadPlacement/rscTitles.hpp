@@ -104,6 +104,7 @@ class RscTitles
                         y = GRIDY(32);
                         w = GRIDX(4);
                         h = GRIDY(4);
+                        text = "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa";
                     };
 
                     class A3C_UI_squadPlacement_hideImage: A3C_RscPicture
