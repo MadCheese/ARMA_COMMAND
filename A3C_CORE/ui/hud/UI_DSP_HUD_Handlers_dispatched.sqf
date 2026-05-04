@@ -177,7 +177,7 @@ A3C_UI_HUD_onKeyDown_NUM = {
 
 	switch (true) do {
 		case ((_key in [103, 104, 105, 106])): {
-			if (count A3C_HUD_UNITS == 0) then {
+			if (count A3C_UI_squadPlacement_units == 0) then {
 				A3C_HUD_FORM = 0;
 			};
 
@@ -208,11 +208,11 @@ A3C_UI_HUD_onKeyDown_NUM = {
 
 			{
 				//--#TODO: clarify if this is intentional or sloppy coding
-				if (_x in A3C_HUD_UNITS) then {
-					[_x] call A3C_HUD_REMOVE_SELECTED;
+				if (_x in A3C_UI_squadPlacement_units) then {
+					[_x] call A3C_UI_squadPlacement_fnc_removeUnitGhost;
 				};
 				if (_x in _colorTeamUnits) then {
-					[_x, _key] call A3C_HUD_ADD_SELECTED;
+					[_x, _key] call A3C_UI_squadPlacement_fnc_addUnitGhost;
 				};
 			} forEach (_gpUnits select {!isNull _x});
 		};
@@ -221,7 +221,7 @@ A3C_UI_HUD_onKeyDown_NUM = {
 			if (A3C_FORMATION_DIR > 360) then {A3C_FORMATION_DIR = A3C_FORMATION_DIR - 360};
 			if (A3C_FORMATION_DIR < 0) then {A3C_FORMATION_DIR = A3C_FORMATION_DIR + 360};
 
-			if (count A3C_HUD_UNITS == 0) then {
+			if (count A3C_UI_squadPlacement_units == 0) then {
 				A3C_NUM_DIR = 0;
 
 				for "_i" from 0 to (_unitCount - 1) do {
@@ -232,7 +232,7 @@ A3C_UI_HUD_onKeyDown_NUM = {
 						&& {alive _unit}
 						&& {!isPlayer _unit} //-- in case there's a fellow human in squad
 					) then {
-						[_unit, _i] call A3C_HUD_ADD_SELECTED;
+						[_unit, _i] call A3C_UI_squadPlacement_fnc_addUnitGhost;
 					};
 				};
 

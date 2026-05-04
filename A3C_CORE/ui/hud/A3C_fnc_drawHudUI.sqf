@@ -371,99 +371,99 @@ A3C_fnc_drawHudUI = {
 	
 	
 	
-	//if (count A3C_HUD_UNITS > 0) then {
-	if (!isNil 'A3C_HUD_L' && {!isnull A3C_HUD_L}) then {
-		if (count A3C_HUD_UnitIndicators> 0) then {
-			private _ignorObj2 = if (cursortarget in A3C_HUD_UnitIndicators) then {cursorTarget} else {A3C_HUD_UnitIndicators select 0};
-			private _intersects = false;
 
-			{
-				private _camPos = AGLToASL (positionCameraToWorld [0,0,0]);
-				private _arrowPos = getPosASL _x;
-				private _cond =  false;
-				if !(_intersects) then { //-- attempt to prevent LOS checks when condition is already fulfilled
-					_cond = (lineIntersects [_camPos, _arrowPos, vehicle player, _x]) OR 
-					{
-						terrainIntersect [getPos player, getPos chopper]
-					};
-				};
-				if (!(_intersects) && {_cond}) then {
-					_intersects = true;
-				};
-				_x disableCollisionWith (vehicle cameraOn);
-			} foreach A3C_HUD_UnitIndicators;
-			{
-				private _data = _x getvariable ['A3C_HUD_DATA', [objNull,-1] ];
-				_data params ["_arrow"];
 
-				if (!isNull _arrow) then {
-					_minSize = 0.2;
-					_furthestDistance = 300;
-					
-					_iconSize = linearConversion [ 0, _furthestDistance, player distance2D _arrow, 1, _minSize, true ];
-					_minTextSize = 0.025;
-					_textSize = linearConversion [ 0, _furthestDistance, player distance2D _arrow, 0.05, _minTextSize, true ];
-					
-					_minOpacity = 1;
-					_opacity = linearConversion [ 0, 300, (player distance2d (A3C_HUD_UnitIndicators select 0)) - 30, 0, 0.7, true ];
-					if (_opacity > 0) then {_opacity = _opacity max 0.2};
-					
-					//_objectCollision = lineIntersectsSurfaces [AGLToASL positionCameraToWorld [0,0,0],AGLToASL positionCameraToWorld [0,0,viewDistance],vehicle player,(A3C_HUD_UnitIndicators select 0),true,1,"GEOM","NONE"];	
-					
-					_atlPos = getPosATL _arrow;
-					_addHeight = 0;
-					
-					if (_intersects) then {
-						_opacity = 0.7;
-						//_addHeight = 0.2;
-					};
-					
-					//hintSilent str [_iconSize,_textSize];
-					_textPos = ((getPosATL _arrow) select [0,2]) + [((getPosATL _arrow) select 2) - 0.3];
-					
-					//-- draw Unit Number
-					drawIcon3D
-					[
-						'',
-						[1,1,1,0.6],
-						_textPos,
-						0,
-						0,
-						0,
-						str (_x getvariable 'A3C_FORMATION_INDEX'),
-						1,
-						_textSize
-					];
-					private _assignedTeam = if (player == cameraOn) then {assignedTeam _x} else {_x getVariable ["A3C_ASSIGNEDTEAM","MAIN"]};
-					_color = switch (_assignedTeam) do {
-						case ("RED") : {[A3C_UI_COLOR_RED,_opacity] call A3C_UI_fnc_setOpacity};
-						case ("GREEN") : {[[0,1,0,1],_opacity] call A3C_UI_fnc_setOpacity};
-						case ("BLUE") : {[A3C_UI_COLOR_BLUE,_opacity] call A3C_UI_fnc_setOpacity};
-						case ("YELLOW") : {[A3C_UI_COLOR_YELLOW,_opacity] call A3C_UI_fnc_setOpacity};
-						default {[1,1,1,_opacity]}
-					};
-					
-					
-					_atlPos set [2,(_atlPos select 2) + _addHeight];
-					
-					drawIcon3D
-					[
-						'\a3\ui_f\data\Map\GroupIcons\badge_simple.paa',
-						_color,
-						_atlPos,
-						_iconSize,
-						_iconSize,
-						0, //-- dir relates to screen, not to world. needs same function that FORMDIR indicator uses
-						'',
-						1,
-						0.05
-					];
+	if (count A3C_UI_squadPlacement_unitGhosts > 0) then {
+		private _ignorObj2 = if (cursortarget in A3C_UI_squadPlacement_unitGhosts) then {cursorTarget} else {A3C_UI_squadPlacement_unitGhosts select 0};
+		private _intersects = false;
+
+		{
+			private _camPos = AGLToASL (positionCameraToWorld [0,0,0]);
+			private _arrowPos = getPosASL _x;
+			private _cond =  false;
+			if !(_intersects) then { //-- attempt to prevent LOS checks when condition is already fulfilled
+				_cond = (lineIntersects [_camPos, _arrowPos, vehicle player, _x]) OR 
+				{
+					terrainIntersect [getPos player, getPos chopper]
+				};
+			};
+			if (!(_intersects) && {_cond}) then {
+				_intersects = true;
+			};
+			_x disableCollisionWith (vehicle cameraOn);
+		} foreach A3C_UI_squadPlacement_unitGhosts;
+		{
+			private _data = _x getvariable ['A3C_HUD_DATA', [objNull,-1] ];
+			_data params ["_arrow"];
+
+			if (!isNull _arrow) then {
+				_minSize = 0.2;
+				_furthestDistance = 300;
+				
+				_iconSize = linearConversion [ 0, _furthestDistance, player distance2D _arrow, 1, _minSize, true ];
+				_minTextSize = 0.025;
+				_textSize = linearConversion [ 0, _furthestDistance, player distance2D _arrow, 0.05, _minTextSize, true ];
+				
+				_minOpacity = 1;
+				_opacity = linearConversion [ 0, 300, (player distance2d (A3C_UI_squadPlacement_unitGhosts select 0)) - 30, 0, 0.7, true ];
+				if (_opacity > 0) then {_opacity = _opacity max 0.2};
+				
+				//_objectCollision = lineIntersectsSurfaces [AGLToASL positionCameraToWorld [0,0,0],AGLToASL positionCameraToWorld [0,0,viewDistance],vehicle player,(A3C_UI_squadPlacement_unitGhosts select 0),true,1,"GEOM","NONE"];	
+				
+				_atlPos = getPosATL _arrow;
+				_addHeight = 0;
+				
+				if (_intersects) then {
+					_opacity = 0.7;
+					//_addHeight = 0.2;
 				};
 				
+				//hintSilent str [_iconSize,_textSize];
+				_textPos = ((getPosATL _arrow) select [0,2]) + [((getPosATL _arrow) select 2) - 0.3];
+				
+				//-- draw Unit Number
+				drawIcon3D
+				[
+					'',
+					[1,1,1,0.6],
+					_textPos,
+					0,
+					0,
+					0,
+					str (_x getvariable 'A3C_FORMATION_INDEX'),
+					1,
+					_textSize
+				];
+				private _assignedTeam = if (player == cameraOn) then {assignedTeam _x} else {_x getVariable ["A3C_ASSIGNEDTEAM","MAIN"]};
+				_color = switch (_assignedTeam) do {
+					case ("RED") : {[A3C_UI_COLOR_RED,_opacity] call A3C_UI_fnc_setOpacity};
+					case ("GREEN") : {[[0,1,0,1],_opacity] call A3C_UI_fnc_setOpacity};
+					case ("BLUE") : {[A3C_UI_COLOR_BLUE,_opacity] call A3C_UI_fnc_setOpacity};
+					case ("YELLOW") : {[A3C_UI_COLOR_YELLOW,_opacity] call A3C_UI_fnc_setOpacity};
+					default {[1,1,1,_opacity]}
+				};
+				
+				
+				_atlPos set [2,(_atlPos select 2) + _addHeight];
+				
+				drawIcon3D
+				[
+					'\a3\ui_f\data\Map\GroupIcons\badge_simple.paa',
+					_color,
+					_atlPos,
+					_iconSize,
+					_iconSize,
+					0, //-- dir relates to screen, not to world. needs same function that FORMDIR indicator uses
+					'',
+					1,
+					0.05
+				];
+			};
+			
 
-			} foreach A3C_HUD_UNITS;
-		};
+		} foreach A3C_UI_squadPlacement_units;
 	};
+	
 	
 	
 	if (typeName A3C_UI_HUD_3D_TAG_ICON_TYPE == "STRING") then {

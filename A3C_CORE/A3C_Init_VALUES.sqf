@@ -136,7 +136,12 @@ A3C_GROUP_STANCE_Selected = "AUTO";
 A3C_DEBUG = if (!isNil 'A3C_DEBUG') then {A3C_DEBUG} else {false};
 
 
+A3C_HUD_NORMAL = [0,0,0];
 
+A3C_HUD_COLLIDER = objnull;
+A3C_HUD_Snap_DIR = 0;
+A3C_HUD_Snap = false;
+A3C_HUD_FormDir_Old = 0;
 
 A3C_IsAce3 = if (isClass(configFile/"CfgPatches"/"ace_medical")) then {true} else {false}; //-- detect if ACE3-Medical is running
 A3C_IsIFA = if (isClass(configFile/"CfgPatches"/"WW2_Assets_c_Weapons_InfantryWeapons_c")) then {true} else {false}; //-- detect if IFA is running
@@ -410,8 +415,8 @@ A3C_HUD_UnitIndicatorINDEX = 1;
 A3C_SCROLLTIME = time;
 A3C_FORMATION_DIR = [player,(screenToWorld [0.5,0.5])] call BIS_fnc_dirto;
 
-A3C_HUD_UNITS = [];
-A3C_HUD_UnitIndicators= [];
+A3C_UI_squadPlacement_units = [];
+A3C_UI_squadPlacement_unitGhosts= [];
 A3C_UI_DOWNKEYS = [];
 A3C_SPLIT_UNITS = [];
 A3C_TAKEN_WEAPONS = [];
@@ -448,14 +453,14 @@ A3C_REMFIRE_UNIT = objnull;
 // A3C_PATIENTS_ASSIGNED = [];
 A3C_ROE3_UNITS = [];
 A3C_RadialMenu_KEY_ID = [-500,false,false,false];
-A3C_HUD_MENU_KEY_ID = [-500,false,false,false];
+A3C_UI_squadPlacement_interaction_KEY_ID = [-500,false,false,false];
 
 
 
 
 A3C_MODIFIER_LOCK = false;
 A3C_MOUSEWHEEL_ACTIVE = false;
-A3C_HUD_UnitIndicators_IN_BUILDING = false;
+A3C_UI_squadPlacement_unitGhostsInBuilding = false;
 A3C_360_out = true;
 A3C_BOOL_ROE_3 = false;
 
@@ -514,15 +519,15 @@ profilenamespace setvariable ["A3C_SUP_VAL_MAGAZINE",profileNameSpace getVariabl
 profilenamespace setvariable ["A3C_SUP_VAL_PERCENTAGE",profileNameSpace getVariable ["A3C_SUP_VAL_PERCENTAGE", 25]];
 profilenamespace setvariable ["A3C_SUP_VAL_TIME",profileNameSpace getVariable ["A3C_SUP_VAL_TIME", 30]];
 
-profilenamespace setvariable ["A3C_HUD_MENUSHOW_VAR",profileNameSpace getVariable ["A3C_HUD_MENUSHOW_VAR", true]];
-profilenamespace setvariable ["A3C_HUD_MENUOVERRIDE_VAR",profileNameSpace getVariable ["A3C_HUD_MENUOVERRIDE_VAR", true]];
+profilenamespace setvariable ["A3C_UI_squadPlacement_interactionSHOW_VAR",profileNameSpace getVariable ["A3C_UI_squadPlacement_interactionSHOW_VAR", true]];
+profilenamespace setvariable ["A3C_UI_squadPlacement_interactionOVERRIDE_VAR",profileNameSpace getVariable ["A3C_UI_squadPlacement_interactionOVERRIDE_VAR", true]];
 
-A3C_HUD_GOCODE_ICON_COLOR = if (profilenamespace getvariable "A3C_HUD_MENUOVERRIDE_VAR") then {[1,1,1,0.2]} else {[1,1,1,0.7]};
+A3C_HUD_GOCODE_ICON_COLOR = if (profilenamespace getvariable "A3C_UI_squadPlacement_interactionOVERRIDE_VAR") then {[1,1,1,0.2]} else {[1,1,1,0.7]};
 
 profilenamespace setvariable ["A3C_HUD_SPEED_VAR",profileNameSpace getVariable ["A3C_HUD_SPEED_VAR", -1]];
 profilenamespace setvariable ["A3C_TABLET_IMG",profileNameSpace getVariable ["A3C_TABLET_IMG", "A3C_CORE\ui\pictures\BG_Tablet_Tough.paa"]];
 
-profileNamespace setVariable ['A3C_HUD_isOpen',false];
+profileNamespace setVariable ['A3C_UI_squadPlacement_overlayIsOpen',false];
 profilenamespace setvariable ["A3C_HUD_GOCODE_VAR","NONE"];
 
 profilenamespace setvariable ["A3C_HUD_LAYOUT_CORNER",profileNameSpace getVariable ["A3C_HUD_LAYOUT_CORNER", false]];

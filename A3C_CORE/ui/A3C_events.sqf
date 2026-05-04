@@ -284,7 +284,7 @@ A3C_FNC_CBA_KEY = {
 		// 						private _vehicle = vehicle _unit;
 		// 						private _pos = [player,objNull] call MCSS_fnc_posIntersect;
 		// 						if (!isNull A3C_SNAP_OBJECT) then {
-		// 							_prms = [ATLtoASL _pos,A3C_SNAP_OBJECT] call A3C_HUD_SNAP_FORMATION;
+		// 							_prms = [ATLtoASL _pos,A3C_SNAP_OBJECT] call A3C_UI_squadPlacement_fnc_snapFormation;
 		// 							//systemchat str [_pos,_prms];
 		// 							_pos = _prms select 0;
 		// 						};
@@ -625,20 +625,22 @@ A3C_FNC_CBA_KEY = {
 							} foreach _targetUnits;
 						};
 
-						if ((count A3C_HUD_UNITS) == 0) then {
+						if ((count A3C_UI_squadPlacement_units) == 0) then {
 							{
-								[_x,_x getvariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
+								[_x,_x getvariable "A3C_FORMATION_INDEX"] call A3C_UI_squadPlacement_fnc_addUnitGhost;
 							} foreach _targetUnits;
 						} else {
 							//- bug prevention
 							if (_unitNumber == "ALL") then {
-								terminate A3C_HUD_L;
+								if (!isNil "A3C_UI_squadPlacement_positionLoopHandle") then {
+									terminate A3C_UI_squadPlacement_positionLoopHandle;
+								};
 							};
 							//- remove units from selection
 							//_targetUnits spawn {
 								{
 									if (alive _x) then {
-										[_x] call A3C_HUD_REMOVE_SELECTED;
+										[_x] call A3C_UI_squadPlacement_fnc_removeUnitGhost;
 										//sleep 0.001;
 
 									};
@@ -655,11 +657,11 @@ A3C_FNC_CBA_KEY = {
 							A3C_HUD_FORM_ICON_SIZE = 0.8;
 						};
 						if (!isPlayer _unit) then {
-							if (_unit in A3C_HUD_UNITS) then {
-								[_unit] call A3C_HUD_REMOVE_SELECTED;
+							if (_unit in A3C_UI_squadPlacement_units) then {
+								[_unit] call A3C_UI_squadPlacement_fnc_removeUnitGhost;
 							} else {
 								if (alive _unit) then {
-									[_unit,_unitNumber] call A3C_HUD_ADD_SELECTED;
+									[_unit,_unitNumber] call A3C_UI_squadPlacement_fnc_addUnitGhost;
 								};
 							};
 						};
@@ -743,27 +745,27 @@ A3C_FNC_CBA_KEY = {
 		case ("Voice_Stance_Auto") : {
 			A3C_HUD_STANCE_MODE_TRAVEL = 3;
 			//A3C_HUD_STANCE_FINAL = "AUTO";
-			[] call A3C_HUD_SETSTANCE;
+			[] call A3C_UI_squadPlacement_fnc_setStance;
 		};
 		case ("Voice_Stance_STAND") : {
 			A3C_HUD_STANCE_MODE_TRAVEL = 2;
 			//A3C_HUD_STANCE_FINAL = "STAND";
-			[] call A3C_HUD_SETSTANCE;
+			[] call A3C_UI_squadPlacement_fnc_setStance;
 		};
 		case ("Voice_Stance_CROUCH") : {
 			A3C_HUD_STANCE_MODE_TRAVEL = 1;
 			//A3C_HUD_STANCE_FINAL = "CROUCH";
-			[] call A3C_HUD_SETSTANCE;
+			[] call A3C_UI_squadPlacement_fnc_setStance;
 		};
 		case ("Voice_Stance_PRONE") : {
 			A3C_HUD_STANCE_MODE_TRAVEL = 0;
 			//A3C_HUD_STANCE_FINAL = "PRONE";
-			[] call A3C_HUD_SETSTANCE;
+			[] call A3C_UI_squadPlacement_fnc_setStance;
 		};
 		case ("Voice_Stance_NOCHANGE") : {
 			A3C_HUD_STANCE_MODE_TRAVEL = 4;
 			//A3C_HUD_STANCE_FINAL = "";
-			[] call A3C_HUD_SETSTANCE;
+			[] call A3C_UI_squadPlacement_fnc_setStance;
 		};
 		case ("Voice_Hold") : {
 			(groupSelectedUnits player) call A3C_UNIT_HOLD;
@@ -838,9 +840,9 @@ A3C_GET_KEY_BOOL = {
 	};
 
 	if ( ([_key] + [_modifiers]) isEqualTo (profileNameSpace getVariable "A3C_ORDER_REG_KEY_ID") ) then {
-		if (count A3C_HUD_UnitIndicators> 0 ) then {
+		if (count A3C_UI_squadPlacement_unitGhosts> 0 ) then {
 			_return = true;
-			[false,false] spawn A3C_Setorder_HUD;
+			[false,false] spawn A3C_UI_squadPlacement_fnc_executeOrder;
 
 		} else {
 			if (!isNull A3C_OBJECTPLACER) then {
@@ -849,18 +851,18 @@ A3C_GET_KEY_BOOL = {
 		};
 	};
 	if ( ([_key] + [_modifiers]) isEqualTo (profileNameSpace getVariable "A3C_ORDER_FW_KEY_ID") ) then {
-		if (count A3C_HUD_UnitIndicators> 0 ) then {
+		if (count A3C_UI_squadPlacement_unitGhosts> 0 ) then {
 			_return = true;
-			[false,true] spawn A3C_Setorder_HUD;
+			[false,true] spawn A3C_UI_squadPlacement_fnc_executeOrder;
 			//systemchat 'fwd';
 		};
 
 	};
 	if ( ([_key] + [_modifiers]) isEqualTo (profileNameSpace getVariable "A3C_ORDER_BW_KEY_ID") ) then {
 
-		if (count A3C_HUD_UnitIndicators> 0 ) then {
+		if (count A3C_UI_squadPlacement_unitGhosts> 0 ) then {
 			//systemchat 'bwd';
-			[true,false] spawn A3C_Setorder_HUD;
+			[true,false] spawn A3C_UI_squadPlacement_fnc_executeOrder;
 		};
 	};
 	if (_key == 57) then {
@@ -870,194 +872,6 @@ A3C_GET_KEY_BOOL = {
 	};
 //systemchat str _key;
 	_return
-};
-
-
-//--------------------------------------------  UI-FUNCTIONS  ------------------------------------
-//------------------------------------------------------------------------------------------------
-
-A3C_Setorder_HUD = {
-	params ["_alt","_shft"];
-	private ["_arrow","_activeUnits","_movingUnits","_storeData","_dest","_runningOrder","_delay","_timeOut","_counter","_exit","_exitLoop"];
-	_arrow = 0;
-	_activeUnits = [];
-	_movingUnits = [];
-	_storeData = [];
-	_dest = [];
-	_runningOrder = "ASCEND";
-	_delay = false;
-	_timeOut = 0;
-	_counter = 0;
-	_exit = false;
-	_exitLoop = false;
-	{
-		if (isNull _x) then {A3C_HUD_UNITS = A3C_HUD_UNITS - [_x]};
-	} foreach A3C_HUD_UNITS;
-
-	if (({_x getvariable "A3C_PEEL_ACTIVE"} count A3C_HUD_UNITS) > 0) then {
-		{_x setvariable ["A3C_PEEL_ACTIVE",false,false]} foreach A3C_HUD_UNITS;
-		sleep 0.1;
-		waituntil {(({_x getvariable "A3C_PEEL_ACTIVE"} count A3C_HUD_UNITS) > 0)};
-	};
-	if (_alt || _shft) then {
-		{_x setvariable ["A3C_PEEL_ACTIVE",true,false]} foreach A3C_HUD_UNITS;
-	} else {
-		{_x setvariable ["A3C_PEEL_ACTIVE",false,false]} foreach A3C_HUD_UNITS;
-	};
-	A3C_PEEL_ACTIVE = true;
-
- 	
-	 
-	//-- take data from arrows
-	{
-		//if (_x in A3C_ROE3_UNITS) then {
-		//	//-- security for FireOnMyLead
-		//	[_x,["COMBATMODE","BLUE"]] call MCSS_fnc_orderIndividual;
-		//};
-
-		_arrow = ((_x getvariable 'A3C_HUD_DATA') select 0);
-		_storeData pushback [_x,(_arrow getvariable "A3C_ARROW_BPOS"),(getposATL _arrow),(getdir _arrow)];
-
-	} foreach A3C_HUD_UNITS;
-
-
-	
-	if (_alt) then {
-		_runningOrder = "DESCEND";
-		_delay = true;
-		_timeout = 2;
-		A3C_PEELING = true;
-	};
-	if (_shft) then {
-		_runningOrder = "ASCEND";
-		_delay = true;
-		_timeout = 2;
-		A3C_PEELING = true;
-	};
-
-	_storeData = [_storeData,[],{(_x select 0) distance (A3C_HUD_UnitIndicators select 0)},_runningOrder] call BIS_fnc_sortBy;
-	{_movingUnits pushback (_x select 0)} foreach _storeData;
-
-	
-	
-
-
-	//-- remove indicators or spawn blink 
-	if (profilenamespace getvariable ['A3C_HUD_MENUOVERRIDE_VAR',true]) then {
-		//-- hide UI 
-		terminate A3C_HUD_L; //-- terminate positioning loop
-		{deletevehicle _x} foreach A3C_HUD_UnitIndicators;
-		{inGameUISetEventHandler [_x, "false"]} foreach ["PrevAction","NextAction"];
-		A3C_HUD_UNITS = [];
-		A3C_HUD_UnitIndicators= [];
-		//['A3C_HUD_ICONS', "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
-		("A3C_HUD_MENU_UI" call BIS_fnc_rscLayer) cutText ["","PLAIN"];
-		profileNamespace setVariable ['A3C_HUD_isOpen',false];
-		{_x hideobject true} foreach A3C_HUD_UnitIndicators;
-		{_x setvariable ["A3C_HUD_DATA",[],true]} foreach A3C_HUD_UNITS;
-		
-	} else {
-		playsound 'A3C_MenuSound1';
-		{
-			_x spawn {
-				for "_i" from 1 to 3 do {
-					_this hideobject true;
-					sleep 0.1;
-					_this hideobject false;
-					sleep 0.1;
-				};
-			};
-		} foreach A3C_HUD_UnitIndicators;
-	};
-
-	
-
-	//-- this is the bit that can take time, so we execute it after data is fetched
-	if (profilenamespace getvariable ["A3C_HUD_MENUOVERRIDE_VAR",true])then {
-		{
-			if ( (count (_x getvariable "A3C_PLOT")) > 0 ) then {
-				_activeUnits pushback _x;
-				//sleep 0.1;
-			};
-			//[((_x getvariable 'A3C_HUD_DATA') select 1), "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
-		} foreach A3C_HUD_UNITS;
-
-
-		[_activeUnits,true,false] call A3C_AI_Shared_cancelUnitPlot;
-		while {({(count(_x getvariable "A3C_PLOT")) > 0} count _activeUnits) > 0} do {sleep 0.1};
-	};
-
-	// spawn moving function
-	
-	
-	
-
-	
-
-
-
-
-	//systemchat str _storeData;
-	{
-		//if ((count((_x select 0) getvariable "A3C_PLOT")) == 0) then {
-			if (_alt) then {
-				(_x select 0) disableAI "AUTOTARGET";
-				(_x select 0) dotarget objnull;
-			};
-			_x pushback A3C_HUD_FORM;
-			_x spawn A3C_HUD_MOVE;
-		//};
-		if (_timeout > 0) then {
-			sleep 0.1;
-			_dest = ((expectedDestination (_x select 0)) select 0);
-			while {true} do {
-				if !((_x select 0) getvariable "A3C_PEEL_ACTIVE") exitWith {
-					_exit = true;
-					(_x select 0) setvariable ["A3C_PEEL_ACTIVE",true,false];
-				};
-				if (_forEachIndex <= ((count _storeData) - 2)) then {
-					if (_alt) then {
-						//systemchat str [((_x select 0) distance ((_storeData select ((count _storeData)  -1)) select 2) ),( ((_storeData select ((count _storeData)  -1) ) select 0) distance ((_storeData select ((count _storeData)  -1)) select 2)  ) ];
-						if ( ((_x select 0) distance (_x select 2)) < 5) then {
-							_exitLoop = true;
-						};
-					};
-					if (_shft) then {
-						if ( ((_x select 0) distance ((_storeData select 0) select 0) ) < ( ((_storeData select (_forEachIndex + 1) ) select 0) distance ((_storeData select 0) select 0) ) ) then {
-							_exitLoop = true;
-						};
-					};
-				} else {
-					_exitLoop = true;
-				};
-				if !(alive (_x select 0)) then {_exitLoop = true};
-				if ((count((_x select 0) getvariable "A3C_PLOT")) > 0) then {_exitLoop = true};
-				//hint str (((expectedDestination (_x select 0)) select 0) distance _dest);
-				if ((((expectedDestination (_x select 0)) select 0) distance _dest) > 1) then {_exitLoop = true};
-				if (currentcommand (_x select 0) == "STOP") then {_exitLoop = true;};
-				if (_exitLoop) exitWith {
-					_exitLoop = false;
-					(_x select 0) setvariable ["A3C_PEEL_ACTIVE",false,false];
-					_movingUnits = _movingUnits - [(_x select 0)];
-					(_x select 0) disableAI "AUTOTARGET";
-				};
-				sleep 0.1;
-			};
-		};
-		if (_exit) exitWith {};
-		_counter = 1;
-		while {_counter < (_timeout / 0.1)} do {
-			if (({!(_x getvariable "A3C_PEEL_ACTIVE")} count _movingUnits) > 0) exitWith {};
-			sleep 0.1;
-			_counter = _counter +1;
-		};
-		(_x select 0) setvariable ["A3C_PEEL_ACTIVE",false,false];
-		//sleep 0.1;
-	} foreach _storeData;
-	A3C_HUD_FORM = 0;
-	A3C_HUD_FORM_ICON = "A3C_CORE\ui\pictures\icon_formSec_Line_Right.paa";
-	A3C_HUD_FORM_ICON_COLOR = [0,0,0,0.2];
-	A3C_HUD_FORM_ICON_SIZE = 0.8;
 };
 
 

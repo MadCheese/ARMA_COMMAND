@@ -406,7 +406,7 @@ A3C_Babe_fnc_detect = {
 		if !( _obstacle isKindOf "MAN" && {stance _climber in ["STAND","PRONE"]}) then {
 			//-- added A3C commands for rooftops / forced paths
 			_refPos = (((getPosASL _climber) getPos [-100,_mc_dir + 180]) select [0,2]) + [getPosASL _climber select 2];
-			_refDir = [( ([_refPos,_obstacle] call A3C_HUD_SNAP_FORMATION) select 2) + 180] call mcss_fnc_correctDir;
+			_refDir = [( ([_refPos,_obstacle] call A3C_UI_squadPlacement_fnc_snapFormation) select 2) + 180] call mcss_fnc_correctDir;
 			_climber setdir _refDir;
 			[_pos, _top, _toppos, _climber, _climbonly] call A3C_Babe_fnc_EM; //babe_em_fnc_em;
 			_climber setVariable ["A3C_EM_ACTIVE",true,true];

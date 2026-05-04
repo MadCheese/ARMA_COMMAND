@@ -4,7 +4,7 @@
 #define IDC_SQUAD_PLACEMENT_PARENT                        11111
 
 // Interaction display controls.
-// Old A3C_HUD_MENU invisible buttons.
+// Old A3C_UI_squadPlacement_interaction invisible buttons.
 #define IDC_SQUAD_PLACEMENT_WPMODE_BTN                   11
 #define IDC_SQUAD_PLACEMENT_HIDE_BTN                     13
 #define IDC_SQUAD_PLACEMENT_FORM_BTN                     14
@@ -14,7 +14,7 @@
 #define IDC_SQUAD_PLACEMENT_GOCODE_BTN                   18
 
 // Overlay title controls.
-// Old A3C_HUD_MENU_UI image controls.
+// Old A3C_UI_squadPlacement_overlay image controls.
 #define IDC_SQUAD_PLACEMENT_OVERLAY_TRAVEL_IMG           10
 #define IDC_SQUAD_PLACEMENT_OVERLAY_DESTINATION_IMG      11
 #define IDC_SQUAD_PLACEMENT_OVERLAY_FORM_IMG             12

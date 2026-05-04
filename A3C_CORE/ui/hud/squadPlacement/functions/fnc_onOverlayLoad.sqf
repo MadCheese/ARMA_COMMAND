@@ -2,10 +2,10 @@
 
 params ["_display"];
 
-profileNamespace setVariable ["A3C_HUD_isOpen", true];
+profileNamespace setVariable ["A3C_UI_squadPlacement_overlayIsOpen", true];
 
 uiNamespace setVariable [QGVAR(overlayDisplay), _display];
-uiNamespace setVariable ["A3C_HUD_MENU_UI", _display];
+uiNamespace setVariable ["A3C_UI_squadPlacement_overlay", _display];
 
 [] call FUNC(cacheGroups);
 [] call FUNC(cacheControls);

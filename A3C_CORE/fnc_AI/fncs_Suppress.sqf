@@ -1523,7 +1523,7 @@ A3C_Replace_Unit = {
 	_wpI = _unit getVariable ["A3C_CURRENTWAYPOINT_INDEX",1];
 	_A3C_FORMATION_INDEX = _unit getvariable ["A3C_FORMATION_INDEX", [_unit] call A3C_GETUNITINDEX];
 	_A3C_VVNI = _unit getvariable ["A3C_VVNI",A3C_VARNAME_INDEX];
-	_inHud = _unit in A3C_HUD_UNITS;
+	_inHud = _unit in A3C_UI_squadPlacement_units;
 	_rdIIndex = [_unit,A3C_RD_UNITS] call MCSS_fnc_GetArrayIndex;
 	_tabletIndex = [_unit,A3C_SELECTED_UNITS] call MCSS_fnc_GetArrayIndex;
 	
@@ -1575,7 +1575,7 @@ A3C_Replace_Unit = {
 	_newUnit setStamina (_fatigueAndStamina select 1);
 	_newUnit enableStamina _isStaminaEnabled;
 	if (_inHud) then {
-		A3C_HUD_UNITS pushBackUnique _newUnit;
+		A3C_UI_squadPlacement_units pushBackUnique _newUnit;
 		
 	};
 	if !(_rdIIndex == -1) then {

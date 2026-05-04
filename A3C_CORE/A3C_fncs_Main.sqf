@@ -1992,7 +1992,7 @@ A3C_UNIT_INIT = {
 					private ["_body","_unitArray"];
 					_body = _this select 0;
 					if ( (count (_body getvariable 'A3C_HUD_DATA')) > 0) then {
-						[_body] spawn A3C_HUD_REMOVE_SELECTED;
+						[_body] spawn A3C_UI_squadPlacement_fnc_removeUnitGhost;
 					};
 					private _eventhandlers = _unit getVariable ["A3C_UNIT_EHs",[]];
 					{
@@ -2175,8 +2175,8 @@ A3C_JOIN_UNIT = {
 		_soldier = _x;
 		if !(_soldier in (units group player)) then {
 			_unitArray set [_forEachIndex,objnull];
-			if (_soldier in A3C_HUD_UNITS) then { // can not work coz unit is not in _unitarray anymore
-				[_soldier] call A3C_HUD_REMOVE_SELECTED;
+			if (_soldier in A3C_UI_squadPlacement_units) then { // can not work coz unit is not in _unitarray anymore
+				[_soldier] call A3C_UI_squadPlacement_fnc_removeUnitGhost;
 			};
 		};
 	} foreach _unitArray;
@@ -2230,8 +2230,8 @@ A3C_JOIN_UNIT = {
 			_soldier = _x;
 			if !(_soldier in (units group player)) then {
 				_unitArray set [_forEachIndex,objnull];
-				if (_soldier in A3C_HUD_UNITS) then { // can not work coz unit is not in _unitarray anymore
-					[_soldier] call A3C_HUD_REMOVE_SELECTED;
+				if (_soldier in A3C_UI_squadPlacement_units) then { // can not work coz unit is not in _unitarray anymore
+					[_soldier] call A3C_UI_squadPlacement_fnc_removeUnitGhost;
 				};
 			};
 		} foreach _unitArray;

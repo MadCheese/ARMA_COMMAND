@@ -7,7 +7,7 @@
 #define MAIN_WIDTH 40
 #define MAIN_HEIGHT 40
 
-class A3C_HUD_MENU
+class A3C_UI_squadPlacement_interaction
 {
     idd = IDD_SQUAD_PLACEMENT_INTERACTION;
     movingEnable = false;

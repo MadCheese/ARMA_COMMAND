@@ -718,13 +718,13 @@ A3C_UI_Shared_fnc_ReleaseMenuKey = {
 
 	if (_isHudDisplay) then {
 		//-- HUD-Menu
-		if (profileNamespace getVariable ["A3C_HUD_MENUSHOW_VAR", true]) then {
-			if !(profileNamespace getVariable ["A3C_HUD_isOpen", false]) then {
-				[] call A3C_HUD_OPEN_MENU;
+		if (profileNamespace getVariable ["A3C_UI_squadPlacement_interactionSHOW_VAR", true]) then {
+			if !(profileNamespace getVariable ["A3C_UI_squadPlacement_overlayIsOpen", false]) then {
+				[] call A3C_UI_squadPlacement_fnc_refreshOverlay;
 			};
 		} else {
-			("A3C_HUD_MENU_UI" call BIS_fnc_rscLayer) cutText ["", "PLAIN"];
-			profileNamespace setVariable ["A3C_HUD_isOpen", false];
+			("A3C_UI_squadPlacement_overlay" call BIS_fnc_rscLayer) cutText ["", "PLAIN"];
+			profileNamespace setVariable ["A3C_UI_squadPlacement_overlayIsOpen", false];
 		};
 	} else {
 		//-- Radial / SelectionPromptPanel

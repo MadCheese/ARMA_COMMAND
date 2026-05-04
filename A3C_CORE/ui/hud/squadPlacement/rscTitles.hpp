@@ -9,13 +9,13 @@
 
 class RscTitles
 {
-    class A3C_HUD_MENU_UI
+    class A3C_UI_squadPlacement_overlay
     {
         idd = IDD_SQUAD_PLACEMENT_OVERLAY;
         duration = 1000000000000;
         fadeIn = 0;
         fadeOut = 0;
-        name = "A3C_HUD_MENU_UI";
+        name = "A3C_UI_squadPlacement_overlay";
 
         onLoad = EXPAND_AND_QUOTE(_this call FUNC(onOverlayLoad));
         onUnload = EXPAND_AND_QUOTE(_this call FUNC(onOverlayUnload));

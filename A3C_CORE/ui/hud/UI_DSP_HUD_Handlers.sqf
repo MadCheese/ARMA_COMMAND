@@ -1,4 +1,5 @@
 #include "..\mapOverlay\dialog_defines.hpp" //-- needed for mapKey
+#include "..\SHARED\shared_ui_defines.hpp"
 
 //---------------------------------------  HANDLER-FUNCTIONS  ------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -281,7 +282,7 @@ A3C_UI_HUD_onKeyDown = {
 		default {};
 	};
 
-	if (count A3C_HUD_UNITS == 0) then {
+	if (count A3C_UI_squadPlacement_units == 0) then {
 		A3C_MODIFIER_LOCK = false;
 	};
 
@@ -352,18 +353,18 @@ A3C_UI_HUD_onMouseButtonDown = {
 			if (a3c_is_HC_remote) then {
 				_this call A3C_UI_SHARED_OnMouseButtonDown_remoteVehicle;
 			} else {
-				if (count A3C_HUD_UNITS > 0) then {
-					[_alt, _shift] call A3C_Setorder_HUD;
+				if (count A3C_UI_squadPlacement_units > 0) then {
+					[_alt, _shift] call A3C_UI_squadPlacement_fnc_executeOrder;
 					_blockDefaultKey = true;
 				} else {
 					if (!isNull _curTar) then {
 						if (_curTar in units group player) then {
 							if (_alt) then {
 								_blockDefaultKey = true;
-								if (_curTar in A3C_HUD_UNITS) then {
-									[_curTar] call A3C_HUD_REMOVE_SELECTED;
+								if (_curTar in A3C_UI_squadPlacement_units) then {
+									[_curTar] call A3C_UI_squadPlacement_fnc_removeUnitGhost;
 								} else {
-									[_curTar, _curTar getVariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
+									[_curTar, _curTar getVariable "A3C_FORMATION_INDEX"] call A3C_UI_squadPlacement_fnc_addUnitGhost;
 									
 									if (count groupSelectedUnits player > 0) then {
 										{ player groupSelectUnit [_x, false] } forEach units group player;
@@ -371,7 +372,7 @@ A3C_UI_HUD_onMouseButtonDown = {
 								};
 								breakOut "main";
 							} else {
-								if (count A3C_HUD_UNITS == 0) then {
+								if (count A3C_UI_squadPlacement_units == 0) then {
 									_blockDefaultKey = true;
 
 									if (_curTar in groupSelectedUnits player) then {
@@ -392,8 +393,8 @@ A3C_UI_HUD_onMouseButtonDown = {
 							showCommandingMenu "";
 						};
 					} else {
-						if (!(_ctrl) && {count A3C_HUD_UnitIndicators > 0}) then {
-							{ [_x] call A3C_HUD_REMOVE_SELECTED } forEach +A3C_HUD_UNITS;
+						if (!(_ctrl) && {count A3C_UI_squadPlacement_unitGhosts > 0}) then {
+							{ [_x] call A3C_UI_squadPlacement_fnc_removeUnitGhost } forEach +A3C_UI_squadPlacement_units;
 						};
 					};
 				};
@@ -451,7 +452,7 @@ A3C_UI_HUD_onMouseZChanged = {
 		};
 	} foreach [A3C_SUPPRESSION_INDICATOR,A3C_SQ_REM_INDICATOR,A3C_HC_REM_INDICATOR];
 	if (_exit) exitWith {true};
-	if ((count A3C_HUD_UnitIndicators) == 0 && {isNull A3C_OBJECTPLACER}) exitWith {false};
+	if ((count A3C_UI_squadPlacement_unitGhosts) == 0 && {isNull A3C_OBJECTPLACER}) exitWith {false};
 
 	if (_ctrl) exitWith {
 		if (A3C_HUD_FORM == 7) then {
@@ -555,22 +556,3 @@ A3C_UI_HUD_SelectionPromptPanel_onKeyUp = {
 };
 
 
-//------------------- HUD MENU BINDS
-//-- reminder: HUD_Menu split into visual and dialog, by default SHIFT makes UI interactive
-
-A3C_UI_HUD_HudMenu_onKeyDown = {
-	params ["_display", "_key", "_shift", "_ctrl", "_alt"];
-	private _refKey = ((['A3C', 'A3C_KeyFnc_Hud_Order_Reg'] call CBA_fnc_getKeybind) select 5) select 0;
-	if (_refKey == _key) then {
-		[false,false] spawn A3C_Setorder_HUD;
-		_display closeDisplay 0;
-	};
-};
-
-A3C_UI_HUD_HudMenu_onKeyUp = {
-	params ["_display", "_key"];
-	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
-	if (_key == (A3C_HUD_MENU_KEY_ID select 0)) then {
-		[_display] call A3C_UI_Shared_fnc_ReleaseMenuKey;	
-	};
-};

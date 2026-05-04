@@ -5,15 +5,15 @@ params ["_control", "_button"];
 
 switch (ctrlIDC _control) do {
     case IDC_SQUAD_PLACEMENT_FORM_BTN: {
-        [1, _button] call A3C_UI_HUD_FORM_BUTTON;
+        [1, _button] call FUNC(formButton);
     };
     case IDC_SQUAD_PLACEMENT_TRAVEL_BTN: {
-        [0, _button] call A3C_HUD_STANCE_BUTTONS;
+        [0, _button] call FUNC(stanceButtons);
     };
     case IDC_SQUAD_PLACEMENT_DESTINATION_BTN: {
-        [1, _button] call A3C_HUD_STANCE_BUTTONS;
+        [1, _button] call FUNC(stanceButtons);
     };
     case IDC_SQUAD_PLACEMENT_GOCODE_BTN: {
-        [0, _button] call A3C_HUD_GOCODE_BUTTON;
+        [0, _button] call FUNC(goCodeButton);
     };
 };

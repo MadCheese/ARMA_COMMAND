@@ -118,14 +118,6 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\A3C_events.sqf";
 
 
 
-//-- HUD (findDisplay 46)
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers_dispatched.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_UI.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_CustomFormation_init.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_CustomFormation_handlers.sqf";
-
 
 
 
@@ -182,6 +174,16 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\CMDLVL_Shared\A3C_AI_Sha
 
 //-- HUD UI elements
 call compile preprocessFileLineNumbers "A3C_CORE\ui\HUD\squadPlacement\functions\initFunctions.sqf";
+
+//-- HUD (findDisplay 46)
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers_dispatched.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_UI.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_CustomFormation_init.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_CustomFormation_handlers.sqf";
+
+
 
 
 //-- Shared UI

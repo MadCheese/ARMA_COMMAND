@@ -3522,7 +3522,7 @@ A3C_SET_ORDER_WIP = {
 									_collider = ((_cl select 0) select 2);
 									if (!isNil '_collider') then {
 										if ((getnumber (configfile >> "Cfgvehicles" >> typeof _collider >> "armor")) >= 200) then {
-											_prms = [((_cl select 0) select 0),_collider] call A3C_HUD_SNAP_FORMATION;
+											_prms = [((_cl select 0) select 0),_collider] call A3C_UI_squadPlacement_fnc_snapFormation;
 											(_prms select 0) set [2,0];
 											//~~ #unused_prms set [2,[(_prms select 2) + 180] call MCSS_fnc_correctDir];
 											_snapPoses pushBack (_prms select 0); //([(_prms select 0),0.2,(_prms select 2)] call BIS_fnc_relPos);

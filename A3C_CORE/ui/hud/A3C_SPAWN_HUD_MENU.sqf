@@ -7,7 +7,7 @@
 if  (!isnull findDisplay IDD_RADIAL_MENU) exitWith {};
 if  (!isnull (findDisplay 100010)) exitWith {};
 if  (!isnull (finddisplay 100050)) exitWith {};
-if ((count A3C_HUD_UnitIndicators) == 0) exitWith {};
+if ((count A3C_UI_squadPlacement_unitGhosts) == 0) exitWith {};
 
 
 _exit = false;
@@ -31,10 +31,10 @@ _alt = _data select 4;
 
 
 
-A3C_HUD_MENU_KEY_ID = [_btn,_shift,_ctrl,_alt];
+A3C_UI_squadPlacement_interaction_KEY_ID = [_btn,_shift,_ctrl,_alt];
 
 with uiNameSpace do {
-	A3C_HUD_MENU = (finddisplay 46) createDisplay "A3C_HUD_MENU";
+	A3C_UI_squadPlacement_interaction = (finddisplay 46) createDisplay "A3C_UI_squadPlacement_interaction";
 };
 
 //if (true) exitWith {systemchat 'ay';};
@@ -66,7 +66,7 @@ if (profileNameSpace getVariable ["A3C_HUD_LAYOUT_CORNER", false]) then {
 	setMousePosition [0.5, 0.8];
 };
 
-if (profilenamespace getvariable ["A3C_HUD_MENUOVERRIDE_VAR",true]) then {
+if (profilenamespace getvariable ["A3C_UI_squadPlacement_interactionOVERRIDE_VAR",true]) then {
 	(findDisplay 100050 displayCtrl 10) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_WPWritingMode_OverWrite.paa";
 	(findDisplay 100050 displayCtrl 11) ctrlSetTooltip "MODE: Override Plans";
 } else {
@@ -74,7 +74,7 @@ if (profilenamespace getvariable ["A3C_HUD_MENUOVERRIDE_VAR",true]) then {
 	(findDisplay 100050 displayCtrl 11) ctrlSetTooltip "MODE: Add To Plans";
 };
 
-if (profilenamespace getvariable ["A3C_HUD_MENUSHOW_VAR",true]) then {
+if (profilenamespace getvariable ["A3C_UI_squadPlacement_interactionSHOW_VAR",true]) then {
 	(findDisplay 100050 displayCtrl 12) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_showUI_true.paa";
 	(findDisplay 100050 displayCtrl 13) ctrlSetTooltip "UI: Shown";
 } else {
@@ -90,21 +90,21 @@ if (profilenamespace getvariable ["A3C_HUD_SPEED_VAR",-1] == -1) then {
 	(findDisplay 100050 displayCtrl 15) ctrlSetTooltip "PACE: LIMITED";
 };
 {
-	[_x] call A3C_HUD_SETSTANCE;
+	[_x] call A3C_UI_squadPlacement_fnc_setStance;
 } foreach [0,1];
 
-if !(profilenamespace getvariable ['A3C_HUD_MENUSHOW_VAR',true]) then {
-	[] call A3C_HUD_OPEN_MENU;
+if !(profilenamespace getvariable ['A3C_UI_squadPlacement_interactionSHOW_VAR',true]) then {
+	[] call A3C_UI_squadPlacement_fnc_refreshOverlay;
 };
 
-((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 10) ctrlSetText A3C_HUD_STANCE_ICON_TRAVEL;
-((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 10) ctrlSetTextColor [1,1,1,1]; //A3C_HUD_STANCE_ICON_COLOR_TRAVEL;
-((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 11) ctrlSetText A3C_HUD_STANCE_ICON_DESTINATION;
-((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 11) ctrlSetTextColor [1,1,1,1]; // A3C_HUD_STANCE_ICON_COLOR_DESTINATION;
-((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 12) ctrlSetTextColor [1,1,1,0.7];
-//((uiNamespace getVariable "A3C_HUD_MENU_UI") displayCtrl 15) ctrlSetText "A3C_CORE\ui\pictures\BG_HUD_Menu.paa";
+((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 10) ctrlSetText A3C_HUD_STANCE_ICON_TRAVEL;
+((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 10) ctrlSetTextColor [1,1,1,1]; //A3C_HUD_STANCE_ICON_COLOR_TRAVEL;
+((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 11) ctrlSetText A3C_HUD_STANCE_ICON_DESTINATION;
+((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 11) ctrlSetTextColor [1,1,1,1]; // A3C_HUD_STANCE_ICON_COLOR_DESTINATION;
+((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 12) ctrlSetTextColor [1,1,1,0.7];
+//((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 15) ctrlSetText "A3C_CORE\ui\pictures\BG_HUD_Menu.paa";
 
 ["HUD_MENU"] call A3C_UI_Shared_GetBackgroundColor;
-[0] call A3C_UI_HUD_FORM_BUTTON;
+[0] call A3C_UI_squadPlacement_fnc_formButton;
 
 

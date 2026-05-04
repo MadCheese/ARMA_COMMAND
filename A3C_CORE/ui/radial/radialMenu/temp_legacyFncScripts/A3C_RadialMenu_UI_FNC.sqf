@@ -100,23 +100,23 @@ A3C_UI_RADIAL_TREE_MouseDown = {
 				};	
 			} else {
 				if ( ((_unitArray select _unitIndex) in A3C_RD_UNITS) && {count A3C_RD_UNITS > 1}) then {
-					_add = {_x in A3C_HUD_UNITS} count A3C_RD_UNITS == 0;
+					_add = {_x in A3C_UI_squadPlacement_units} count A3C_RD_UNITS == 0;
 					{
 						if (_add) then {
-							if !(_x in A3C_HUD_UNITS) then {
-								[_x,_x getvariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
+							if !(_x in A3C_UI_squadPlacement_units) then {
+								[_x,_x getvariable "A3C_FORMATION_INDEX"] call A3C_UI_squadPlacement_fnc_addUnitGhost;
 							};
 						} else {
-							if (_x in A3C_HUD_UNITS) then {
-								[_x] call A3C_HUD_REMOVE_SELECTED;
+							if (_x in A3C_UI_squadPlacement_units) then {
+								[_x] call A3C_UI_squadPlacement_fnc_removeUnitGhost;
 							};
 						};
 					} foreach A3C_RD_UNITS;
 				} else {
-					if !((_unitArray select _unitIndex) in A3C_HUD_UNITS) then {
-						[(_unitArray select _unitIndex),(_unitArray select _unitIndex) getvariable "A3C_FORMATION_INDEX"] call A3C_HUD_ADD_SELECTED;
+					if !((_unitArray select _unitIndex) in A3C_UI_squadPlacement_units) then {
+						[(_unitArray select _unitIndex),(_unitArray select _unitIndex) getvariable "A3C_FORMATION_INDEX"] call A3C_UI_squadPlacement_fnc_addUnitGhost;
 					} else {
-						[(_unitArray select _unitIndex)] call A3C_HUD_REMOVE_SELECTED;
+						[(_unitArray select _unitIndex)] call A3C_UI_squadPlacement_fnc_removeUnitGhost;
 					};
 				};
 			};
@@ -146,7 +146,7 @@ A3C_UI_Shared_GetBackgroundColor = {
         };
 
         case "HUD_MENU": {
-            private _hudDisplay = uiNamespace getVariable ["A3C_HUD_MENU_UI", displayNull];
+            private _hudDisplay = uiNamespace getVariable ["A3C_UI_squadPlacement_overlay", displayNull];
             if (!isNull _hudDisplay) then {
                 _hudBackground = _hudDisplay displayCtrl 15;
             };

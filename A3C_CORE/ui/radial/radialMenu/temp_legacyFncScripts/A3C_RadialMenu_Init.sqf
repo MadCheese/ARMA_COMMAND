@@ -306,7 +306,7 @@ A3C_UI_RADIAL_startGTIgrenadeLoop = {
 		};
 	} foreach A3C_RD_UNITS;
 	if (isnull _unit) exitWith {};
-	{[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS;
+	{[_x] call A3C_UI_squadPlacement_fnc_removeUnitGhost} foreach A3C_UI_squadPlacement_units;
 
 	if (isnil "A3C_GREN_MUZZLE") exitWith {
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_GRENADES_BTN) ctrlSetTooltip "currently no items available";

@@ -63,7 +63,7 @@ _modifiedHud set [6,false];
 showHud _modifiedHud;
 
 //-- Clear any HUD unit selection
-{[_x] call A3C_HUD_REMOVE_SELECTED} foreach A3C_HUD_UNITS; //-- close eventual HUD selection
+{[_x] call A3C_UI_squadPlacement_fnc_removeUnitGhost} foreach A3C_UI_squadPlacement_units; //-- close eventual HUD selection
 
 {_x setMarkerAlphaLocal 0.5} foreach A3C_HC_MARKERS;
 {_x setMarkerAlphaLocal 1} foreach A3C_MARKERS;
