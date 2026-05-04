@@ -9,6 +9,8 @@
 
 
 
+
+
 A3C_LB_Change = {
 	// systemchat "A3C_LB_Change";
 	if (A3C_CurSel) exitWith {};
@@ -1670,7 +1672,7 @@ A3C_UI_MAP_Overlay_ResizeTeamColorsXWH = {
 A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP = {
 	params ["_mode"];
 	
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
 	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
 	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
@@ -1793,7 +1795,7 @@ A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP = {
 		_parent ctrlCommit 0;
 	} else {
 		with uiNamespace do {
-			(findDisplay 100060) closeDisplay 0;
+			(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
 		};
 	};
 	
@@ -2973,7 +2975,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip =  format
 					[
 						"FIRE TANK SHELL - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 					];
 
 					_buttonFnc = {
@@ -2996,7 +2998,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip =  format
 					[
 						"FIRE GUNSHIP CANNON - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 					];
 
 					_buttonFnc = {
@@ -3019,7 +3021,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip =  format
 					[
 						"FIRE GUNSHIP GATLING - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 					];
 					_buttonFnc = {
 						[
@@ -3041,7 +3043,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip =  format
 					[
 						"FIRE GUNSHIP AUTOCANNON - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 					];
 
 					_buttonFnc = {
@@ -3065,7 +3067,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip =  format
 					[
 						"FIRE UGL GRENADE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 					];
 
 					_buttonFnc = {
@@ -3088,7 +3090,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip =  format
 					[
 						"FIRE AT-ROCKET - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 					];
 
 					_buttonFnc = {
@@ -3112,7 +3114,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip =  format
 					[
 						"FIRE STATIC ROCKET LAUNCHER - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 					];
 					_buttonFnc = {
 						[
@@ -3135,7 +3137,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip =  format
 					[
 						"FPV ATTACK - KEEP %1 PRESSED. CONFIRM TARGET WITH 'Spacebar' OR CANCEL BY RELEASING %1.",
-						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 					];
 
 					_buttonFnc = {
@@ -3158,7 +3160,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip =  format
 					[
 						"REPAIR VEHICLES - KEEP %1 PRESSED. CONFIRM LOCATION WITH 'Spacebar' OR CANCEL BY RELEASING %1. REPAIR RADIUS: 100m",
-						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 					];
 					_buttonFnc = {
 						[
@@ -3234,7 +3236,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip =  format
 					[
 						"ORDER CAS-STRIKE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 					];
 					_buttonFnc = {					
 						if (!isNull findDisplay IDD_RADIAL_MENU) then {
@@ -3259,7 +3261,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						_button_toolTip =  format
 						[
 							"RAPPEL CARGO - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1. Creates wp on destination and origin.",
-							["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+							["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 						];
 					} else {
 						_button_toolTip = "RAPPEL CARGO";
@@ -3314,7 +3316,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						_button_toolTip =  format
 						[
 							"SUPPRESSIVE FIRE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-							["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+							["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 						];
 					} else {
 						_button_toolTip = "SUPPRESSIVE FIRE - RELAY COORDINATES VIA MAPCLICK";
@@ -3331,7 +3333,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						_button_toolTip =  format
 						[
 							"FIRE ARTILLERY - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-							["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+							["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 						];
 					} else {
 						_button_toolTip = "FIRE ARTILLERY - RELAY COORDINATES VIA MAPCLICK";
@@ -3408,7 +3410,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip =  format
 					[
 						"PLACE EXPLOSIVE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 					];
 
 
@@ -3418,19 +3420,19 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_buttonFnc = {
 
 						//-- Note: Here we select type first, then position 
-						//--> This means, A3C_AI_SHARED_Action_StartPositionalProcess is called in A3C_SelectionPromptPanel_LB_Change!
+						//--> This means, A3C_AI_SHARED_Action_StartPositionalProcess is called in A3C_UI_SHARED_selectionPromptPanel_onLbChange!
 						
 						A3C_SelectionPromptPanel_MODE = "STATIC_ASSEMBLE_HC";
 						private _staticData = [units (A3C_RD_UNITS select 0),"PLANNING"] call A3C_getSelectionBackpackStatics;
 						if (count _staticData == 1) then {
-							[0] call A3C_SelectionPromptPanel_LB_Change;
+							[0] call A3C_UI_SHARED_selectionPromptPanel_onLbChange;
 						} else {
 							with uiNamespace do {
 								//disableSerialization;
 								A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 							};
 
-							private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+							private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 							private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
 							private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
 							private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
@@ -3456,7 +3458,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					[
 						"ASSEMBLE %1 - KEEP %2 PRESSED. SELECT A WEAPON, POSITION AND ROTATE IT (MOUSEWHEEL). PRESS 'SpaceBar' TO CONFIRM OR RELEASE %1 TO CANCEL ",
 						(gettext(configFile >> "CfgVehicles" >> ((A3C_STATIC_PACKS select 0) select 1) >> "displayName")),
-						["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 					];
 				};
 
@@ -3776,7 +3778,7 @@ A3C_UI_RADIAL_SelectionPromptPanel_START_CHARGEDIALOG = {
 
 	};
 	
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
 	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
 	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
@@ -3788,10 +3790,10 @@ A3C_UI_RADIAL_SelectionPromptPanel_START_CHARGEDIALOG = {
 	[] call A3C_UI_RADIAL_SelectionPromptPanel_LABEL_DETONATIONTARGETS;
 };
 
-A3C_SelectionPromptPanel_LB_Change = {
+A3C_UI_SHARED_selectionPromptPanel_onLbChange = {
 	params ["_lb"];
 	private ["_doubleClick","_tickTime"];
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 	//_vehicle = if (count _this > 1) then {_this select 1) else {};
 	_doubleClick = false;
 	_tickTime = (time - A3C_LB_TICKTIME);
@@ -3809,7 +3811,6 @@ A3C_SelectionPromptPanel_LB_Change = {
 		switch (A3C_SelectionPromptPanel_MODE) do {
 
 			case ("DELETE") : {
-				// systemchat str [_lb, A3C_SELECTED_HC_GROUPS_SETTINGS];
 				switch (_lb) do {
 					case (0) : {
 						{
@@ -3829,7 +3830,7 @@ A3C_SelectionPromptPanel_LB_Change = {
 				_parent ctrlShow false;
 				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent) ctrlShow false;
 				with uiNamespace do {
-					(findDisplay 100060) closeDisplay 0;
+					(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
 				};
 			};
 
@@ -3846,7 +3847,6 @@ A3C_SelectionPromptPanel_LB_Change = {
 							params ["_cargoGroups"];
 							private _storedSelection = +(A3C_SELECTED_UNITS); //A3C_SELECTED_HC_GROUPS_SETTINGS
 							private _storedMode = A3C_MAP_CommandMode;
-							// systemchat str _cargoGroups;
 							private _doExit = false;
 							{
 								private _gpRef = _x;
@@ -3856,7 +3856,7 @@ A3C_SelectionPromptPanel_LB_Change = {
 								private _str = format ["PLACE WAYPOINT FOR %1  %2", groupID _gpRef, A3C_SELECTED_HC_GROUPS_SETTINGS];
 								hint _str;
 								waitUntil {hintSilent _str; !visibleMap || {(waypointPosition [_gpRef, currentWaypoint _gpRef]) distance2D [0,0,0] > 0}};
-								// systemChat "PROCEED" ;
+
 								if (!visibleMap) exitWith {
 									systemchat "MAP CLOSED";
 									_doExit = true;
@@ -4113,27 +4113,18 @@ A3C_SelectionPromptPanel_LB_Change = {
 
 			case ("ARTY_1") : {
 				A3C_HC_FOCUS_ARTY_AmmoCount = call compile (_listBox lbText _lb);
-				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent) ctrlShow false;
-			
-
-				
+				(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent) ctrlShow false;			
 				with uiNamespace do {
-					(findDisplay 100060) closeDisplay 0;
+					(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
 				};
-
-
-				[A3C_HC_FOCUS_ARTY_POS,false] spawn A3C_ORDER_ARTILLERY
-
-				
-
-				
+				[A3C_HC_FOCUS_ARTY_POS,false] spawn A3C_ORDER_ARTILLERY	
 			};
 
 			case ("CTRL_DET") : {
 				private _chargeDisplayName = _listBox lbText _lb;
 				private _chargeMagName = "";
 				_parent ctrlShow false;
-				//_parent ctrlsetposition [100,100];
+
 				 (findDisplay 12 displayCtrl 51) ctrlEnable true;
 				 _parent spawn { //-- no idea why it has to be like this. some executing thing i don't grasp. After drop on targetvehicle, parent will not close otherwise.
 					 for "_i" from 1 to 10 do {
@@ -4142,7 +4133,6 @@ A3C_SelectionPromptPanel_LB_Change = {
 					};
 				};
 
-				//(findDIsplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent) ctrlSHow false;
 				{
 					private _soldier = _x;
 					{
@@ -4221,26 +4211,15 @@ A3C_SelectionPromptPanel_LB_Change = {
 				//-- #FLYINHEIGHTASL
 				private _height = parseNumber (_listBox lbtext _lb);
 				
-				// _height = if (surfaceIsWater _wpPos) then {_height} else {((ATLtoASL _wpPos) select 2) + _height};
-				//systemchat str (( _height));
 				{
 					private _v = (vehicle _x);
 					if (_x == driver _v && {_v isKindOf "AIR"}) then {
-						// //if (waypointType _wpCurr == "LOITER") then {
-						// 	//systemchat str _height;
-						// 	[_v,[_height,_height,_height]] remoteExec ["flyInHeightASL", _v];
-						// //} else {
-						// //	[_v,_height] remoteExec ["flyInHeight", _v];
-						// //};
 						[_v, _height] remoteExec ["flyInHeight", _v];
 						_v setVariable ["A3C_FLYINHEIGHT",_height,true];
-						// systemchat format ["A3C_SelectionPromptPanel_LB_Change: FlyinHeight :%1", _height];
+
 					};
 				} foreach (units _gp);
 				_parent ctrlShow false;
-				//with uiNamespace do {
-				//	(findDisplay 100060) closeDisplay 0;
-				//};
 			};
 			case ("LOITER_DIR") : {
 				A3C_SelectionPromptPanel_MODE = "LOITER_RAD";
@@ -4316,7 +4295,7 @@ A3C_SelectionPromptPanel_LB_Change = {
 
 				_parent ctrlShow false;
 				with uiNamespace do {
-					(findDisplay 100060) closeDisplay 0;
+					(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
 				};
 
 			};
@@ -4334,7 +4313,7 @@ A3C_SelectionPromptPanel_LB_Change = {
 				[position _weapon,""] spawn A3C_UI_HUD_3D_TAG;
 
 				with uiNamespace do {
-					(findDisplay 100060) closeDisplay 0;
+					(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
 				};
 
 			};
@@ -4366,7 +4345,7 @@ A3C_SelectionPromptPanel_LB_Change = {
 
 				_parent ctrlShow false;
 				with uiNamespace do {
-					(findDisplay 100060) closeDisplay 0;
+					(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
 				};
 
 			};
@@ -4464,7 +4443,7 @@ A3C_SelectionPromptPanel_LB_Change = {
 
 				_parent ctrlShow false;
 				with uiNamespace do {
-					(findDisplay 100060) closeDisplay 0;
+					(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
 				};
 
 				[_unit,_data] spawn {
@@ -4559,7 +4538,7 @@ A3C_SelectionPromptPanel_LB_Change = {
 				[A3C_UI_HUD_3D_TAG_ICON_POS,"DEMOLITION"] spawn A3C_UI_HUD_3D_TAG; //A3C_UI_HUD_3D_TAG_ICON_POS
 
 				with uiNamespace do {
-					(findDisplay 100060) closeDisplay 0;
+					(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
 				};
 			};
 			case ("PLACE_CHARGE_HC_MAP") : {
@@ -4619,14 +4598,14 @@ A3C_SelectionPromptPanel_LB_Change = {
 				};
 				if (_hideParent) then {
 					_parent ctrlShow false;
-					[_landingRailType,""] spawn A3C_RADIAL_ACTION_HC_LANDING_FNC;
+					[_landingRailType,""] spawn A3C_AI_HighCommand_Action_railedHeliLanding;
 				};
 			};
 			case ("HELI_LANDING_GOCODE") : {
 				_parent ctrlShow false;
 				//systemchat str A3C_SELECTED_HC_GROUPS_SETTINGS;
 				_condition = _listBox lbText _lb;
-				["COMBAT LANDING",_condition] spawn A3C_RADIAL_ACTION_HC_LANDING_FNC; //-- condition is goCOde type a,b,c,d
+				["COMBAT LANDING",_condition] spawn A3C_AI_HighCommand_Action_railedHeliLanding; //-- condition is goCOde type a,b,c,d
 			};
 		};
 	};

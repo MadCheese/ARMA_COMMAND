@@ -1,6 +1,7 @@
 #include "..\..\ui\radial\radialMenu\dialog_defines.hpp"
 #include "..\..\ui\mapOverlay\dialog_defines.hpp"
 #include "..\..\ui\SHARED\shared_ui_defines.hpp"
+#include "..\..\ui\hud\selectionPromptPanel\dialog_defines.hpp"
 
 
 //---------------------------------------------------------------------------------------------
@@ -77,7 +78,7 @@ A3C_AI_Squad_Action_unAssembleWeapon = {
 			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 		};
 
-		private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+		private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
 		private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
 		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
@@ -175,7 +176,7 @@ A3C_AI_Squad_Action_placeCharge = {
 			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 		};
 
-		private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+		private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
 		private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
 		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;

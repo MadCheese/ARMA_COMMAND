@@ -813,67 +813,6 @@ A3C_FNC_CBA_KEY = {
 //------------------------------------------------------------------------------------------------
 
 
-//-- determine if keyBind returns true or false (overwrite yes or no)
-A3C_GET_KEY_BOOL = {
-	private ["_key","_modifiers","_return","_array"];
-	_key = _this select 0;
-	_modifiers = _this select 1;
-	_return = false;
-	//systemchat str _key;
-
-	if (_key in [71,72,73,75,76,77,79,80,81]) then {
-		if (profileNameSpace getVariable "A3C_NUM_VAR") then {
-			_return = true;
-		};
-	};
-
-
-	//systemchat 'trigger bool';
-
-
-	//_array =
-	if !(isnil "A3C_FORM_KEY_ID") then {
-		if ( ([_key] + _modifiers) isEqualTo A3C_FORM_KEY_ID ) then {
-			_return = true;
-			//systemchat 'oi';
-		};
-	};
-
-	if ( ([_key] + [_modifiers]) isEqualTo (profileNameSpace getVariable "A3C_ORDER_REG_KEY_ID") ) then {
-		if (count A3C_UI_squadPlacement_unitGhosts> 0 ) then {
-			_return = true;
-			[false,false] spawn A3C_UI_squadPlacement_fnc_executeOrder;
-
-		} else {
-			if (!isNull A3C_OBJECTPLACER) then {
-				_return = true;
-			};
-		};
-	};
-	if ( ([_key] + [_modifiers]) isEqualTo (profileNameSpace getVariable "A3C_ORDER_FW_KEY_ID") ) then {
-		if (count A3C_UI_squadPlacement_unitGhosts> 0 ) then {
-			_return = true;
-			[false,true] spawn A3C_UI_squadPlacement_fnc_executeOrder;
-			//systemchat 'fwd';
-		};
-
-	};
-	if ( ([_key] + [_modifiers]) isEqualTo (profileNameSpace getVariable "A3C_ORDER_BW_KEY_ID") ) then {
-
-		if (count A3C_UI_squadPlacement_unitGhosts> 0 ) then {
-			//systemchat 'bwd';
-			[true,false] spawn A3C_UI_squadPlacement_fnc_executeOrder;
-		};
-	};
-	if (_key == 57) then {
-		if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "" OR {count A3C_UI_HUD_ASSIGNVEHICLE_OBJECTS > 0 OR {!isNull A3C_GTI_UNIT}}) then {
-			_return = true;
-		};
-	};
-//systemchat str _key;
-	_return
-};
-
 
 
 

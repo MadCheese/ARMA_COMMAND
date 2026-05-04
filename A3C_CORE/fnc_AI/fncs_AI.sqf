@@ -602,6 +602,45 @@ A3C_SpawnGoCode = {
 	};
 };
 
+A3C_AI_SHARED_switchUnitPos = {
+	private ["_units","_mode","_unitNames","_stmnt","_snt"];
+	_units = _this select 0;
+	_mode = _this select 1;
+	//_unitNames = "";
+	_stmnt = "";
+	_snt = "";
+	switch (_mode) do {
+		case ("AUTO") : {
+			_stmnt = "SentBehaviourSafe";
+			_snt = "A3C_RELAX";
+		};
+		case ("DOWN") : {
+			_stmnt = "SentUnitPosDown";
+			_snt = "A3C_STAYDOWN";
+		};
+		case ("MIDDLE") : {
+			_stmnt = "SentUnitPosMiddle";
+			_snt = "A3C_StayLow";
+		};
+		case ("UP") : {
+			_stmnt = "SentUnitPosUp";
+			_snt = "A3C_OYF";
+		};
+	};
+	{
+		//-- spawn unitpos to add random delay to each unit (anti robot feel)
+		[_x,_mode] spawn {
+			params ["_u","_mode"];
+			sleep (random 1.5);
+			_u setunitPos _mode;
+		};
+
+	} foreach _units;
+	player groupRadio _stmnt;
+
+};
+
+
 
 //---------------------------------------  M A I N  M O V E M E N T  F U C T I O N     ----------------------------------------------
 //-------------------------------- sends unit on a route, monitors and creates group/ui-data ----------------------------------------

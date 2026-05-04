@@ -1,6 +1,7 @@
 #include "..\..\ui\SHARED\shared_ui_defines.hpp"
 #include "..\..\ui\radial\radialMenu\dialog_defines.hpp"
 #include "..\..\ui\mapOverlay\dialog_defines.hpp"
+#include "..\..\ui\hud\selectionPromptPanel\dialog_defines.hpp"
 
 
 
@@ -41,7 +42,7 @@ A3C_AI_HighCommand_Action_mergeGroups = {
 
 A3C_AI_HighCommand_Action_heliHoverInPlace = {
 	private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 	
 	private _var = (vehicle leader _group) getVariable ["A3C_Freeze_helicopter",[false,0]];
@@ -320,7 +321,7 @@ A3C_AI_HighCommand_Action_limitSpeed = {
 	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 
 	if (_isRadial) then {
-		_a3c_dsp = 100060;
+		_a3c_dsp = IDD_SELECTION_PROMPT_PANEL;
 	};
 
 	if (_isRadial) then {
@@ -329,12 +330,12 @@ A3C_AI_HighCommand_Action_limitSpeed = {
 		with uiNamespace do {
 			//disableSerialization;
 			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
-			(findDisplay 100060 displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT) ctrlSetText "Select Max Speed";
+			(findDisplay IDD_SELECTION_PROMPT_PANEL displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT) ctrlSetText "Select Max Speed";
 		};	
 			
-		private _parent = findDisplay 100060 displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
-		private _listBox = findDisplay 100060 displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
-		private _text = findDisplay 100060 displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+		private _parent = findDisplay IDD_SELECTION_PROMPT_PANEL displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+		private _listBox = findDisplay IDD_SELECTION_PROMPT_PANEL displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
+		private _text = findDisplay IDD_SELECTION_PROMPT_PANEL displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
 
 		_parent ctrlShow true;
 		_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
@@ -446,9 +447,9 @@ A3C_AI_HighCommand_Action_vehicleSmoke = {
 A3C_AI_HighCommand_Action_flyInHeight = {
 
 	private _group = if (!isNull findDisplay IDD_RADIAL_MENU) then {A3C_RD_UNITS select 0} else {A3C_SELECTED_HC_GROUPS_SETTINGS select 0}; //~~ same same??
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 
-	if (_a3c_dsp == 100060) then {
+	if (_a3c_dsp == IDD_SELECTION_PROMPT_PANEL) then {
 		with uiNameSpace do {
 			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 		};
@@ -496,7 +497,7 @@ A3C_AI_HighCommand_Action_reArm = {
 						
 	{[_x] spawn A3C_ReArm_Auto_Evaluate} foreach (units _gp);
 	player groupradio 'SentCmdRearm';
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 
 	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		A3C_DISABLE_RADIAL = true;
@@ -508,7 +509,7 @@ A3C_AI_HighCommand_Action_reArm = {
 };
 
 A3C_AI_HighCommand_Action_groupHeal = {
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 
 	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		A3C_DISABLE_RADIAL = true;
@@ -537,7 +538,7 @@ A3C_AI_HighCommand_Action_transferOwnership = {
 	};
 
 	[[clientOwner, _group], _transferFnc] remoteExec ['bis_fnc_call', 2];
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 
 	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		A3C_DISABLE_RADIAL = true;
@@ -559,17 +560,17 @@ A3C_AI_HighCommand_Action_unAssembleWeapon = { // #TODO This fnc requires invest
 	_wpn = if (_mode == 0) then {objNull} else {_this select 1};
 
 
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 
 
 
 	//-- main display EH to disable radial until key is let go
-	if (!isNull findDisplay IDD_RADIAL_MENU && _a3c_dsp == 100060 ) then {
+	if (!isNull findDisplay IDD_RADIAL_MENU && _a3c_dsp == IDD_SELECTION_PROMPT_PANEL ) then {
 		A3C_DISABLE_RADIAL = true;
 		[] call A3C_UI_RADIAL_CloseDisplay;
 	};
 
-	if (_a3c_dsp == 100060 && { {(vehicle _x) isKindOf "staticweapon"} count units _group == 0 }) then {
+	if (_a3c_dsp == IDD_SELECTION_PROMPT_PANEL && { {(vehicle _x) isKindOf "staticweapon"} count units _group == 0 }) then {
 		with uiNamespace do {
 			//disableSerialization;
 			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
@@ -603,8 +604,8 @@ A3C_AI_HighCommand_Action_unAssembleWeapon = { // #TODO This fnc requires invest
 		
 	};
 
-	if (_a3c_dsp == 100060 && { {(vehicle _x) isKindOf "staticweapon"} count units _group == 0 }) then { //-- radial menu HC-disassemble: close menu
-		(findDisplay 100060) closeDisplay 0;
+	if (_a3c_dsp == IDD_SELECTION_PROMPT_PANEL && { {(vehicle _x) isKindOf "staticweapon"} count units _group == 0 }) then { //-- radial menu HC-disassemble: close menu
+		(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
 		A3C_DISABLE_RADIAL = false;
 	};
 
@@ -805,7 +806,7 @@ A3C_AI_HighCommand_Action_landAircraft = {
 	};
 
 
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
 	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
 	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
@@ -834,8 +835,6 @@ A3C_AI_HighCommand_Action_landAircraft = {
 	if (!isNull A3C_SNAP_OBJECT) then {
 		//-- position snapped against object
 
-		//systemchat str (typeof A3C_SNAP_OBJECT);
-
 		_placerPosZ = _placerPos select 2;
 		_snapObjectPos = (getPosASL A3C_SNAP_OBJECT);
 
@@ -857,9 +856,9 @@ A3C_AI_HighCommand_Action_landAircraft = {
 		];
 
 		if (count _ins > 0) then {
-			//helper setposASL ((_ins select 0) select 0);
+
 			_intersectPosZ = ((_ins select 0) select 0) select 2;
-			//systemchat str [_intersectPosZ,_placerPosZ];
+
 			if (abs(_intersectPosZ - _placerPosZ) < 0.1) then {
 				_requiresPlacementCorrection = false;
 				_forceDefaultLanding = false;
@@ -882,12 +881,7 @@ A3C_AI_HighCommand_Action_landAircraft = {
 
 
 				};
-
-
-				//systemchat str _LZData;
 			};
-		//} else {
-		//	systemchat "NO INS";
 		};
 	} else {
 		//-- position in the open
@@ -931,24 +925,23 @@ A3C_AI_HighCommand_Action_landAircraft = {
 		hint "THE SELECTED GROUND-LZ IS NOT SAFE - PLEASE REPEAT";
 		sleep 5;
 		hintSilent "";
-		//deletevehicle A3C_OBJECTPLACER;
 	};
 
 
 
-	if !(_requiresPlacementCorrection) then {
-		//systemchat "GOOD PLACEMENT";
-		//-- could be on roof (!isNull snap_object) but might still need security checks
-		//-- could be on ground and use same checks
-	} else {
-		//if !(_forceDefaultLanding) then {
+	// if !(_requiresPlacementCorrection) then {
+	// 	//systemchat "GOOD PLACEMENT";
+	// 	//-- could be on roof (!isNull snap_object) but might still need security checks
+	// 	//-- could be on ground and use same checks
+	// } else {
+	// 	//if !(_forceDefaultLanding) then {
 
-		//};
-		//systemchat "LZ WILL BE ADJUSTED";
-		//-- snap_object detected and definitely requires correction
-		//-- if (!isNull snap_object), use rooftop position generator
-		//-- otherwise use simple, ASL-level security
-	};
+	// 	//};
+	// 	//systemchat "LZ WILL BE ADJUSTED";
+	// 	//-- snap_object detected and definitely requires correction
+	// 	//-- if (!isNull snap_object), use rooftop position generator
+	// 	//-- otherwise use simple, ASL-level security
+	// };
 
 
 
@@ -992,7 +985,7 @@ A3C_AI_HighCommand_Action_casStrike = {
 	};
 
 
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 	
 	private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
 	private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
@@ -1123,7 +1116,7 @@ A3C_AI_HighCommand_Action_placeCharge = {
 			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 		};
 
-		private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+		private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
 		private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
 		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
@@ -1166,8 +1159,6 @@ A3C_AI_HighCommand_Action_assembleWeapon = {
 				} foreach (units _x);
 			} foreach A3C_SELECTED_UNITS;
 
-			
-			
 			while {(count (waypoints _gp)) > 1} do {
 				{
 					if (_forEachIndex > 0) then {
@@ -1198,25 +1189,6 @@ A3C_AI_HighCommand_Action_assembleWeapon = {
 				_var pushback _polygon;
 			};
 
-
-
-			// _statements = format
-			// [
-			// 	"
-
-			// 		['%1',this,%2,'%3',(currentWaypoint group this)] call A3C_HC_INSERT_ACTION_WP;
-			// 	",
-			// 	getPlayerUID player,
-			// 	[["NONE","NONE"],"ASSEMBLE WEAPON"],
-			// 	formation _gp,
-			// 	typeOf A3C_OBJECTPLACER
-			// ];
-			// _wpStm = waypointStatements _wp;
-			// _wp setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _statements];
-			// systemchat str _wpStm;
-
-
-
 			private _wpScript = format 
 			[
 				"A3C_CORE\fnc_AI\wpFncs\wpScript_AssembleWeapon.sqf ['%1',%2,%3,'%4']",
@@ -1236,7 +1208,7 @@ A3C_AI_HighCommand_Action_assembleWeapon = {
 
 			A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  _weapon >> "picture");
 			A3C_UI_HUD_3D_TAG_ICON_MOD = "ON";
-			// [screentoWorld [0.5,0.5],""] spawn A3C_UI_HUD_3D_TAG;
+
 			player commandRadio "SentAssemble";
 
 		};
@@ -1278,6 +1250,160 @@ A3C_AI_HighCommand_Action_addWaypoint = {
 		} foreach A3C_RD_UNITS;
 	};
 };
+
+
+A3C_AI_HighCommand_Action_railedHeliLanding = {
+	params ["_landingRailType","_condition"];
+	//player commandchat str (!isNull A3C_OBJECTPLACER);
+
+	_landingData = +(A3C_RADIAL_ACTION_HC_LANDINGDATA);
+	A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
+	_landingData params ["_landingPosRoot","_landingVector","_forceDefaultLanding"];
+
+	A3C_UI_HUD_3D_TAG_ICON_TYPE =  "\a3c_ui\markers\HeliPad.paa";
+	[A3C_UI_HUD_3D_TAG_ICON_POS,''] spawn A3C_UI_HUD_3D_TAG;
+	private _groups = +(A3C_SELECTED_HC_GROUPS_SETTINGS);
+
+	_distributedPositions = [_landingPosRoot,_groups,count _groups,_landingPosRoot getDir (leader (_groups select 0)),100 ] call A3C_fnc_generateWpWedgePositions;
+
+	private _occupiedLandingPoses = [_landingPosRoot]; //[A3C_UI_HUD_3D_TAG_ICON_POS];
+	//private _landingPosRoot = +(A3C_UI_HUD_3D_TAG_ICON_POS);
+	{
+		private _gp = _x;
+		private _leader = leader _gp;
+
+		_leaderVic = vehicle _leader;
+
+		private _groupForeachIndex = _forEachIndex;
+
+		if (_groupForeachIndex > 0) then {
+			_forceDefaultLanding = true; //-- make sure that only one vehicle can land precisely (obsolete checkl?)
+		};
+
+		// make specific landingpos available only for single group selections and only leadvic. multiple group selections revert to arma landing
+
+		//-- for full landings, delete all other waypoints
+		if (_landingRailType == "FULL LANDING") then {
+
+			_gp setvariable ["A3C_UNIT_POLYS",[],true];
+			//-- clear all waypoints
+			{
+				{
+					_x setVariable ["A3C_CLEARING",false,true];
+				} foreach (units _x);
+			} foreach A3C_SELECTED_UNITS;
+
+			[_gp, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+		};
+
+
+
+
+		//-- add new waypoints
+		private _leaderVic = (vehicle _leader);
+		private _landingWPos = _distributedPositions select _groupForeachIndex; //([_landingPosRoot,[0,100]] call MCSS_fnc_getSafePos)
+
+		private _isGroupOnFinalWP = currentWaypoint _gp >= count waypoints _gp;
+		private _createReturnWP = (_landingRailType in ["COMBAT LANDING","TRANSPORT UNLOAD"]) && {_isGroupOnFinalWP && {_landingWPos distance2D _leaderVic > 50}};
+		private _landOnReturn  = _createReturnWP && {!isEngineOn _leaderVic};
+
+
+
+		_wpi = currentWaypoint _gp;
+
+
+		private _wp = _gp addWaypoint [_landingWPos,0];
+
+
+		if (_createReturnWP) then {
+			private _startPos = position _leaderVic;
+			private _wp2 = _gp addWaypoint [_startPos,0];
+
+			if (_landOnReturn) then {
+				//-- land with default Arma mechanic upon return
+				private _stmts = format
+				[
+					"
+						[this,%1,'%2',[],true] spawn A3C_HC_WPACTION_LANDING_FULL;
+					",
+					_startPos,
+					getPlayerUID player
+
+				];
+				_wpStm = waypointStatements _wp2;
+				_wp2 setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _stmts];
+			};
+		};
+
+		private _statements = "";
+
+
+		if (_groupForeachIndex == 0 && {!(_forceDefaultLanding)}) then {
+			_subCondition = if (_landingRailType == "COMBAT LANDING") then {format ["A3C_GoCode_Activate_%1",((_condition splitstring "") select 8)]} else {""};
+
+			//-- assumption: waypointScript gets executed on every machine - if the script is present
+			//-- assumption 2: a function can be remo tely executed from the machine that executed the script (needs to be determined?
+			_wp setWaypointType "SCRIPTED";
+
+			_wp setWayPointScript format
+			[
+				"A3C_CORE\fnc_AI\wpFncs\wpScript_railedHeliLanding.sqf ['%1',%2,%3,'%4',%5,'%6']",
+				getPlayerUID player,
+				["ARRIVAL",""],
+				["ARRIVAL",""],
+				_landingRailType,
+				_landingData,
+				_subCondition
+			];
+		} else {
+			switch (_landingRailType) do {
+				case ("COMBAT LANDING") : {
+					_subCondition = ((_condition splitstring "") select 8);
+					//;
+					_statements = format
+					[
+						"
+							[['%1',this,[['GoCode','%2'],'COMBATLANDING'],'LINE',(currentwaypoint (group this))],A3C_HC_INSERT_ACTION_WP,nil,false] remoteExec ['bis_fnc_call',0];
+							[(group this)] call A3C_HC_FNC_CompleteWaypoint
+						",
+						getPlayerUID player,
+						_subCondition
+					];
+					A3C_GOCODES_HC pushbackUnique _subCondition;
+					publicVariable 'A3C_GOCODES_HC';
+					[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
+
+				};
+				case ("TRANSPORT UNLOAD") : {
+					_wp setWaypointType "TR UNLOAD";
+					_statements = "[(group this)] call A3C_HC_FNC_CompleteWaypoint;  ";
+				};
+
+				case ("FULL LANDING") : {
+					_statements = format
+					[
+						"
+							[this,%1,'%2',[],true] spawn A3C_HC_WPACTION_LANDING_FULL;
+							[(group this)] call A3C_HC_FNC_CompleteWaypoint;
+						",
+						_landingData select 0,
+						getPlayerUID player
+
+					];
+				};
+			};
+
+		};
+		if (_statements != "") then {
+			_wpStm = waypointStatements _wp;
+			_wp setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _statements];
+		};
+
+
+		sleep 1;
+	} foreach _groups;
+};
+
 
 
 

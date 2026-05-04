@@ -26,7 +26,7 @@ A3C_AIC_fnc_rappelActionHandler = {
 
 A3C_AIC_DRAGPOS = [];
 
-//[driver h3, leader (group driver h3), getpos h3] spawn A3C_BEHAVIOUR_HELI_RAPPEL;
+
 ////---- RAPPELL HERE
 A3C_BEHAVIOUR_HELI_RAPPEL = {
 	params ["_unit","_caller","_movePos"];
@@ -36,7 +36,7 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 	private _aircraft = vehicle _unit;
 	_dirTo = [_aircraft,_movePos] call BIS_fnc_relativedirTo;
 	_step = if (_dirTo > 180) then {-1} else {1};
-	//_hoverHeight = 25;
+
 	_nB = (nearestBuilding _movePos);
 	_inside = false;
 	_refPos = +(_movePos);
@@ -45,13 +45,11 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 	_bdg = objNull;
 	private _isHeli = _aircraft isKindOf "HELICOPTER";
 
-	//'loop done' remoteExec ["systemchat",0];
-	//systemchat str _group;
+
 
 	private _dismountData = [_aircraft,_unit] call A3C_getDismountData;
 	_dismountData params ["_rapUnits","_nonDismountAIgroups"];
-	//(str count _rapUnits) remoteExec ["systemchat",0];
-	//(str _tt)  remoteExec ["systemchat",0];
+
 
 	private _bPosRail = {
 		params ["_u","_roofPoses","_bdg"];
@@ -71,7 +69,6 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 				};
 				if !(_dest isEqualTo [0,0,0]) then {
 					[_u,_dest,_bdg] spawn A3C_RAIL_INF;
-					//[[_u, _bdg],A3C_RAIL_INF] remoteExec ["bis_fnc_spawn",_u];
 				};
 			};
 			if !(isNull objectParent _u) exitWith {};
@@ -87,7 +84,7 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 
 	if (_exit) exitWith {};
 
-	//'starting limitspeed loop' remoteExec ["systemchat",0];
+
 
 	//-- AI heli slow down
 	if (!isPlayer leader _group && {_isHeli}) then {
@@ -100,27 +97,21 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 			[_aircraft,_speed] remoteExec ["limitSpeed",_aircraft];
 			if (!alive _aircraft) exitWith {};
 			if (speed _aircraft < 10) exitWith {}; //-- security measue if heli comes to a premature halt
-			//systemchat str (_aircraft distance2D _movePos <= 150);
+
 			if (_aircraft distance2D _movePos <= 300) exitWith {};
 			sleep 1;
 		};
 	};
 	if (!alive _aircraft) exitWith {};
-	//'limitspeed loop complete' remoteExec ["systemchat",0];
-	//player commandChat str [_movePos,_refPos];
+
 	//-- determine approach type
 	[_aircraft,0] remoteExec ["limitSpeed",_aircraft];
 	private _rappelPos = ((_movePos select [0,2]) + [0]); //-- base for _rappelPos (ATL)
 	private _railPos = [];
 	private _roofPoses = [];
-	if (true) then { // {_x iskindOf "BUILDING"} count (lineIntersectsObjs [_refPos, (ATLtoASL _movePos),_aircraft, objNull, false]) > 0 //~~ testing ALWAYS using rail
-		//-- waypoint is on top of building. Guide chopper towards exact position
+	// if (true) then { 
+		//--  Guide chopper towards exact position
 
-
-		//if ({_x iskindOf "BUILDING"} count (lineIntersectsObjs [_refPos, (ATLtoASL _movePos),_aircraft, objNull, false]) > 0) then { //~~ testing ALWAYS using rail: these two can still be changed by building intersect
-		//	_hoverHeight = ((ASLtoATL ((_intS select 0) select 0)) select 2) + 30;
-		//	_bdg = ((_intS select 0) select 2);
-		//};
 
 		{
 			//systemchat str (_x select 2);
@@ -149,22 +140,9 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 		[_unit,(getposASL _aircraft)] remoteExec ["domove",_unit];   //-- ASL used for speed i assume since aircraft moves in 2d
 		[_aircraft,_hoverHeight] remoteExec ["flyInHeight",_aircraft];
 
-		//-- security: wait until speed is below 40 (limitspeed was set to 0 above)
-//		if (speed _aircraft > 40) then {
-//			while {speed _aircraft > 40} do {
-//				if (!alive _unit) exitWith {};
-//				sleep 0.1;
-//			};
-//		};
-		//'starting forceOrient' remoteExec ["systemchat",0];
-
-//		_orientVehicle = [_aircraft,_movePos] spawn A3C_FORCEORIENT;
-//		waituntil {scriptDone _orientVehicle};
-
 		_railPos = ATLtoASL _rappelPos;
 		_railPos set [2,(_railPos select 2) + 25];
-		//player sidechat str ( _railPos select 2);
-		//(str _rappelPos) remoteExec ["systemchat",0];
+
 		//-- Spawn DUDA's CHOPPER RAIL
 		if (alive _unit) then {
 			_subBehaviour = {};
@@ -183,22 +161,21 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 			waituntil {scriptDone _subBehaviour};
 
 		};
-	} else {
-		//-- waypoint is in the open. Simply wait for it to come to a halt NOT USED CURRENTLY. ABOVE BOOL IS TRUE, RAIL IS ALWAYS USED
-		while {speed _aircraft > 0} do {
-			if (!alive _unit) exitWith {};
-			if !(canMove _aircraft) exitWith {};
-			sleep 0.1;
-		};
-		//_hoverHeight = 40 min (getposATL _aircraft select 2);
-		//[_aircraft,10] remoteExec ["flyInHeight",_aircraft];
-		while {((getPosATL _aircraft) select 2) > (_hoverHeight + 5)} do {
-			sleep 3;
-		};
+	// } else {
+	// 	//-- waypoint is in the open. Simply wait for it to come to a halt NOT USED CURRENTLY. ABOVE BOOL IS TRUE, RAIL IS ALWAYS USED
+	// 	while {speed _aircraft > 0} do {
+	// 		if (!alive _unit) exitWith {};
+	// 		if !(canMove _aircraft) exitWith {};
+	// 		sleep 0.1;
+	// 	};
+
+	// 	while {((getPosATL _aircraft) select 2) > (_hoverHeight + 5)} do {
+	// 		sleep 3;
+	// 	};
 
 
-	};
-	//
+	// };
+
 	if (!alive _unit) exitWith {};
 	//-- prepare rappel
 	//'prepare rappell' remoteExec ["systemchat",0];
@@ -210,21 +187,8 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 
 
 
-	//{
-	//	if ([_x] call A3C_HELI_DISCHARGE) then {
-	//		_rapUnits pushbackUnique _x;
-	//	};
-	//} foreach (crew _aircraft);
-
-
-	//(format ["rapUnits: %1",_rapUnits]) remoteExec ["systemchat",0];
-
 	_aircraft setVariable ["A3C_PLAYER_RAPPEL",true,true];
 	//-- if a player is rappelling, freeze the chopper (maybe do it anyways)
-//	if ( {isPlayer _x} count _rapUnits > 0) then { ///////////////////////////////////////////////////////
-//		//_aircraft setVariable ["A3C_PLAYER_RAPPEL",true,true];
-//		_rapUnits pushBackUnique _caller;  ///////////////////////////////////////////////////////////// ??????? ~~THIS CAN NOT BE GOOD!!!!!!!!!!!!!! or what exactly is CALLER?
-//	}; //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	//-- FIX AIRCRAFT IN PLACE (~~ really only necessary until ADVNACED RAPPEL functions take over
 	private _standbyHandler = _aircraft spawn {
@@ -236,9 +200,9 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 			[_aircraft,_vectorDir] remoteExec ["setVectorDir",_aircraft];
 			sleep 0.01;
 		};
-		//'exited fixating script' remoteExec ["systemchat",0];
+
 	};
-	//
+
 	if (_isHeli) then {
 		sleep 3; //-- HELIS are already levelled. Still wait 3s so the rappel is not too immediate
 	} else {
@@ -257,8 +221,6 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 		waituntil {scriptDone _subBehaviour};
 	};
 
-
-	//'commence rappell' remoteExec ["systemchat",0];
 
 
 
@@ -281,38 +243,32 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 	{
 		//~~ TO DO: unify the rail between squad and HC, clean that up :S
 
-		//if(!isPlayer _x) then {
-			[_x,_inside,_bdg,_aircraft,_unit,_roofPoses,_bPosRail] spawn {
-				params ["_u","_inside","_bdg","_v","_p","_roofPoses","_bPosRail"];
-				//unassignVehicle _u;
-				waituntil {[_u, _v] call AR_Rappel_From_Heli_Action_Check};
-				//(format ["Order Exit %1",name _u]) remoteExec ["systemchat",0];
-				//_u remoteExec ["unAssignVehicle",_u];
-				[_u, _v] call AR_Rappel_From_Heli;
-				//if (isPLayer _u) then {
-				//	[_u, vehicle _u] call AR_Rappel_From_Heli_Action;
-				//} else {
-				//	[_u, vehicle _u] call AR_Rappel_From_Heli;
-					//AR_Rappel_From_Heli_Action; //-- non remote since rappel only runs on server
-				//};
-				waitUntil {!(_u in _v)};
-				//(format ["complete Exit %1",name _u]) remoteExec ["systemchat",0];
-				
+		
+		[_x,_inside,_bdg,_aircraft,_unit,_roofPoses,_bPosRail] spawn {
+			params ["_u","_inside","_bdg","_v","_p","_roofPoses","_bPosRail"];
 
-				[[_u], A3C_AIGetOut] remoteExec ['bis_fnc_call', _u];
+			waituntil {[_u, _v] call AR_Rappel_From_Heli_Action_Check};
+
+			[_u, _v] call AR_Rappel_From_Heli;
+
+			waitUntil {!(_u in _v)};
+
+			
+
+			[[_u], A3C_AIGetOut] remoteExec ['bis_fnc_call', _u];
 
 
-				//-- rooftop landing: rail AI to closest building positions to snap them into path lod
-				if (!isNil 'A3C_RAIL_INF') then { //-- exit if A3C is not running on client
-					if (_inside && !(isPlayer _u)) then {
-						[_u,_roofPoses,_bdg] spawn _bposRail;
-						sleep 2;
-					};
+			//-- rooftop landing: rail AI to closest building positions to snap them into path lod
+			if (!isNil 'A3C_RAIL_INF') then { //-- exit if A3C is not running on client
+				if (_inside && !(isPlayer _u)) then {
+					[_u,_roofPoses,_bdg] spawn _bposRail;
+					sleep 2;
 				};
 			};
-			sleep 2;
+		};
+		sleep 2;
 
-		//};
+		
 		if ((_foreachindex + 1) %4 == 0) then {
 			waituntil {{animationstate _x in ["ar_01_idle","ar_01_aim"]} count _rapUnits < 3};
 		};
@@ -347,38 +303,18 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 
 	};
 
-	//'go loop'  remoteExec ["systemchat",0];
+
 	//-- wait until units have rappelled
 	while {alive _unit} do {
 		private _rappelComplete = true;
-		//private _helpers = [];
+
 		{
 			if (alive _x && {!isTouchingGround _x}) exitWith {
 				_rappelComplete = false;
-				//if (vehicle _x == _aircraft) then {
-					//if (count (assignedVehicleRole _x) == 0) then {
-					//	private _var = _x getVariable ["A3C_RAPPEL_LOST_UNIT",0];
-					//	_var = _var + 1;
-					//	_x setVariable ["A3C_RAPPEL_LOST_UNIT",_var,true];
-					//	if (_var >= 3) then {
-					//		private _teleportPos = ((getpos _aircraft select [0,2]) + [0]);
-					//		_x remoteExec ["unassignVehicle",_x];
-					//		_x setPos _teleportPos;
-					//		[_x,_aircraft] remoteExec ["leaveVehicle",_x];
-					//		_rappelComplete = true;
-					//		"teleport" remoteExec ["systemchat",0];
-					//		_x setVariable ["A3C_RAPPEL_LOST_UNIT",0,true];
-					//	};
-					//};
-				//};
-				//_helper= 'Sign_Sphere10cm_F' createVehicleLocal [0,0,0];
-				//_helper setposASL (getposASL _x);
-				//_helper enableSimulationGlobal false;
-				//_helpers pushBack _helper;
 
 			};
 		} foreach _rapUnitsAll;
-		//(str ({_x in _aircraft} count _rapUnitsAll)) remoteExec ["systemchat",0];
+	
 		sleep 1;
 		_Rapgps = [];
 		{
@@ -386,17 +322,11 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 		} foreach _rapUnitsAll;
 		_multiples = _rapUnitsAll select {_u = _x; {_u == _x} count _rapUnitsAll > 1};
 		private _tt = [_Rapgps,_multiples,_rapUnitsAll,{ alive _x && {!isTouchingGround _x} } count _rapUnitsAll];
-		//(str _tt)  remoteExec ["systemchat",0];
-		//(str _rapUnits)  remoteExec ["hintSilent",0];
 
 		if (_rappelComplete) exitWith {};
-		
-		//if ({ (!isTouchingGround _x) OR (!alive _x) OR (((getPosATL _x) select 2) > 0.2) } count _rapUnitsAll == 0) exitWith {};    // //if ({(animationstate _x in ["ar_01_idle","ar_01_aim"]) && (  )} count _rapUnits == 0) exitWith {}; // OR (objectparent _x == _aircraft)
-		//{deletevehicle _x} foreach _helpers;
-
 
 	};
-	//'rappell complete' remoteExec ["systemchat",0];
+
 
 	_group setvariable ['A3C_RAPPELL_COMPLETED',true,true];
 	_aircraft setVariable ["A3C_PLAYER_RAPPEL",false,true];
@@ -417,27 +347,23 @@ A3C_BEHAVIOUR_HELI_RAPPEL = {
 		player groupchat "We're out";
 		sleep 2;
 		_unit groupchat _ch;
-	} else {
-		//-- set HighCommand variable to true
-		//_group setvariable ['A3C_RAPPELL_COMPLETED',true,true];
-
 	};
+
 	waituntil {scriptDone _standbyHandler};
-	//'moving on' remoteExec ["systemchat",0];
+
 	sleep 1;
 	[_aircraft,1500] remoteExec ["limitSpeed",_aircraft];
-	//'reassure movement' remoteExec ["systemchat",0];
+
 
 
 	private _nextWpPos = waypointposition [_group, currentWaypoint _group];
 
-	//{_x setpos _nextWpPos} foreach allPlayers;
+
 	if (_nextWpPos distance2D [0,0,0] > 0) then {
-		//for "_i" from 1 to 3 do {
+
 		while {alive _aircraft && speed _aircraft < 30} do {
 			[_unit,_nextWpPos] remoteExec ["doMove",_unit];
 			[_aircraft,1500] remoteExec ["limitSpeed",_aircraft];
-			//'moving vehicle' remoteExec ["systemchat",0];
 			sleep 3;
 		};
 	};

@@ -1,6 +1,6 @@
 #include "..\script_component.hpp"
 #include "..\dialog_defines.hpp"
-
+#include "..\..\..\hud\selectionPromptPanel\dialog_defines.hpp"
 
 
 
@@ -477,7 +477,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 				_buttonClicker ctrlSetTooltip format
 				[
 					"FIRE TANK SHELL - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-					["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+					["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 				];
 				_buttonFncData =
 				[
@@ -519,7 +519,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 				_buttonClicker ctrlSetTooltip format
 				[
 					"FIRE STATIC ROCKET LAUNCHER - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-					["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+					["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 				];
 			};
 			case ("ATSHOT") : {
@@ -543,7 +543,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 				_buttonClicker ctrlSetTooltip format
 				[
 					"FIRE AT-ROCKET - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-					["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+					["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 				];
 			};
 			case ("UGLSHOT") : {
@@ -568,7 +568,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 				_buttonClicker ctrlSetTooltip format
 				[
 					"FIRE UGL GRENADE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-					["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+					["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 				];
 			};
 
@@ -580,7 +580,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 				_buttonClicker ctrlSetTooltip format
 				[
 					"SUPPRESS POSITION - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-					["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+					["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 				];
 				_buttonFncData =
 				[
@@ -614,7 +614,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 				_buttonClicker ctrlSetTooltip format
 				[
 					"PLACE EXPLOSIVE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-					["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+					["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 				];
 				_buttonFncData =
 				[
@@ -645,7 +645,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 				[
 					"ASSEMBLE %1 - KEEP %2 PRESSED. SELECT A WEAPON, POSITION AND ROTATE IT (MOUSEWHEEL). PRESS 'SpaceBar' TO CONFIRM OR RELEASE %1 TO CANCEL ",
 					(gettext(configFile >> "CfgVehicles" >> ((A3C_STATIC_PACKS select 0) select 1) >> "displayName")),
-					["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION
+					["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
 				];
 				_buttonFncData =
 				[
@@ -665,10 +665,10 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 							(findDisplay _display) closeDisplay 0;
 							
 
-							private _a3c_dsp = 100060;	
+							private _a3c_dsp = IDD_SELECTION_PROMPT_PANEL;	
 							A3C_SelectionPromptPanel_MODE = "STATIC_ASSEMBLE_SQUAD";
 							if (count _staticData == 1) then {
-								[0] call A3C_SelectionPromptPanel_LB_Change;
+								[0] call A3C_UI_SHARED_selectionPromptPanel_onLbChange;
 							} else {
 								with uiNamespace do {
 									A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";

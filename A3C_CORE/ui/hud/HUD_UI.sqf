@@ -1,7 +1,6 @@
-//with uiNameSpace do {
-	KEYVIEWER_VAL = 0;
-//};
 
+
+#include "selectionPromptPanel\dialog_defines.hpp"
 
 
 
@@ -84,65 +83,12 @@ A3C_UI_ARSENAL_CREATELB = {
 
 
 
-MCSS_fnc_CBA_KEYBIND_TRANSLATION = {
-	//-- returns a readable string, ie "CTRL + SHIFT + F"
-	params ["_addonID","_keyID"];
-	_keyData = ([_addonID, _keyID] call CBA_fnc_getKeybind) select 5;
-	_keyData params ["_key","_mods"];
-	_mods params ["_shift","_ctrl","_alt"];
-	private _returnString = "";
-	private _modDetected = false;
-	{
-		if (_x) then {
-			switch (_foreachIndex) do {
-				case (0) : {
-					_returnString = "SHIFT";
-					_modDetected = true;
-				};
-				case (1) : {
-					if (_modDetected) then {
-						_returnString = _returnString + "+";
-					};
-					_returnString = _returnString + "CTRL";
-					_modDetected = true;
-				};
-				case (2) : {
-					if (_modDetected) then {
-						_returnString = _returnString + "+ ";
-					};
-					_returnString = _returnString + "ALT";
-					_modDetected = true;
-				};
-			};
-		};
-	} foreach _mods;
-	if (_modDetected) then {
-		_returnString = _returnString + "+";
-	};
-	_returnString = call compile format ["parseText '%1 %2'", _returnString, (keyName _key)];
-	//_returnString = _returnString + (keyName _key);
-	_returnString
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //-- charge is null object in "A3C_UNIT_EXPLOSIVES" variable
 A3C_UI_RADIAL_SelectionPromptPanel_LABEL_DETONATIONTARGETS = {
-	_parent = (findDisplay 100060 displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent);
-	_listBox = findDisplay 100060 displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
+	_parent = (findDisplay IDD_SELECTION_PROMPT_PANEL displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent);
+	_listBox = findDisplay IDD_SELECTION_PROMPT_PANEL displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 	private _hcAll = A3C_HC_getAllGroups_Player_Current;
 	_hcAll pushBackUnique (group player);
 	A3C_UI_RADIAL_Current_Remfire_Units = [];
@@ -161,14 +107,6 @@ A3C_UI_RADIAL_SelectionPromptPanel_LABEL_DETONATIONTARGETS = {
 
 	} foreach _hcAll;
 	
-	//if (count A3C_UI_RADIAL_Current_Remfire_Units > 4) then {
-	//	_parentPos = ctrlPosition _parent;
-	//	_parentPos set[3,(_parentPos select 3) + (( count A3C_UI_RADIAL_Current_Remfire_Units)   * (0.0440051 * safezoneH) )];
-	//	_parent ctrlSetPosition _parentPos;
-	//	_parent ctrlCommit 0;
-	//};
-
-
 
 	ctrlSetFocus _listBox;
 	
@@ -213,175 +151,6 @@ A3C_UI_RADIAL_SelectionPromptPanel_LABEL_DETONATIONTARGETS = {
 
 
 
-A3C_RADIAL_ACTION_HC_LANDING_FNC = {
-	params ["_landingRailType","_condition"];
-	//player commandchat str (!isNull A3C_OBJECTPLACER);
-
-	_landingData = +(A3C_RADIAL_ACTION_HC_LANDINGDATA);
-	A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
-	_landingData params ["_landingPosRoot","_landingVector","_forceDefaultLanding"];
-
-	A3C_UI_HUD_3D_TAG_ICON_TYPE =  "\a3c_ui\markers\HeliPad.paa";
-	[A3C_UI_HUD_3D_TAG_ICON_POS,''] spawn A3C_UI_HUD_3D_TAG;
-	private _groups = +(A3C_SELECTED_HC_GROUPS_SETTINGS);
-
-	_distributedPositions = [_landingPosRoot,_groups,count _groups,_landingPosRoot getDir (leader (_groups select 0)),100 ] call A3C_fnc_generateWpWedgePositions;
-
-	private _occupiedLandingPoses = [_landingPosRoot]; //[A3C_UI_HUD_3D_TAG_ICON_POS];
-	//private _landingPosRoot = +(A3C_UI_HUD_3D_TAG_ICON_POS);
-	{
-		private _gp = _x;
-		private _leader = leader _gp;
-
-		_leaderVic = vehicle _leader;
-
-		private _groupForeachIndex = _forEachIndex;
-
-		if (_groupForeachIndex > 0) then {
-			_forceDefaultLanding = true; //-- make sure that only one vehicle can land precisely (obsolete checkl?)
-		};
-
-		// make specific landingpos available only for single group selections and only leadvic. multiple group selections revert to arma landing
-
-		//-- for full landings, delete all other waypoints
-		if (_landingRailType == "FULL LANDING") then {
-
-			_gp setvariable ["A3C_UNIT_POLYS",[],true];
-			//-- clear all waypoints
-			{
-				{
-					_x setVariable ["A3C_CLEARING",false,true];
-				} foreach (units _x);
-			} foreach A3C_SELECTED_UNITS;
-
-			[_gp, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
-		};
-
-
-
-
-		//-- add new waypoints
-		private _leaderVic = (vehicle _leader);
-		private _landingWPos = _distributedPositions select _groupForeachIndex; //([_landingPosRoot,[0,100]] call MCSS_fnc_getSafePos)
-
-		private _isGroupOnFinalWP = currentWaypoint _gp >= count waypoints _gp;
-		private _createReturnWP = (_landingRailType in ["COMBAT LANDING","TRANSPORT UNLOAD"]) && {_isGroupOnFinalWP && {_landingWPos distance2D _leaderVic > 50}};
-		private _landOnReturn  = _createReturnWP && {!isEngineOn _leaderVic};
-
-
-
-		_wpi = currentWaypoint _gp;
-
-		//private _wp =
-		//[
-		//	_gp,
-		//	_landingWPos,
-		//  [],
-		//	'MOVE',
-		//	[0,1000,'AUTO','AUTO',-1,'NONE'],
-		//	false,
-		//	_wpi + 1
-		//] call A3C_HC_ADD_WP;
-		private _wp = _gp addWaypoint [_landingWPos,0];
-
-
-		if (_createReturnWP) then {
-			private _startPos = position _leaderVic;
-			private _wp2 = _gp addWaypoint [_startPos,0];
-			//private _wp2 =
-			//[
-			//	_gp,
-			//	_startPos,
-			//  [],
-			//	'MOVE',
-			//	[0,1000,'AUTO','AUTO',-1,'NONE'],
-			//	false,
-			//	_wpi + 2
-			//] call A3C_HC_ADD_WP;
-			if (_landOnReturn) then {
-				//-- land with default Arma mechanic upon return
-				private _stmts = format
-				[
-					"
-						[this,%1,'%2',[],true] spawn A3C_HC_WPACTION_LANDING_FULL;
-					",
-					_startPos,
-					getPlayerUID player
-
-				];
-				_wpStm = waypointStatements _wp2;
-				_wp2 setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _stmts];
-			};
-		};
-
-		private _statements = "";
-
-
-		if (_groupForeachIndex == 0 && {!(_forceDefaultLanding)}) then {
-			_subCondition = if (_landingRailType == "COMBAT LANDING") then {format ["A3C_GoCode_Activate_%1",((_condition splitstring "") select 8)]} else {""};
-
-			//-- assumption: waypointScript gets executed on every machine - if the script is present
-			//-- assumption 2: a function can be remo tely executed from the machine that executed the script (needs to be determined?
-			_wp setWaypointType "SCRIPTED";
-			//_wp setWayPointScript "A3C_CORE\fnc_AI\wpFncs\wpScript_railedHeliLanding.sqf [1,2,3]";
-			_wp setWayPointScript format
-			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_railedHeliLanding.sqf ['%1',%2,%3,'%4',%5,'%6']",
-				getPlayerUID player,
-				["ARRIVAL",""],
-				["ARRIVAL",""],
-				_landingRailType,
-				_landingData,
-				_subCondition
-			];
-		} else {
-			switch (_landingRailType) do {
-				case ("COMBAT LANDING") : {
-					_subCondition = ((_condition splitstring "") select 8);
-					//;
-					_statements = format
-					[
-						"
-							[['%1',this,[['GoCode','%2'],'COMBATLANDING'],'LINE',(currentwaypoint (group this))],A3C_HC_INSERT_ACTION_WP,nil,false] remoteExec ['bis_fnc_call',0];
-							[(group this)] call A3C_HC_FNC_CompleteWaypoint
-						",
-						getPlayerUID player,
-						_subCondition
-					];
-					A3C_GOCODES_HC pushbackUnique _subCondition;
-					publicVariable 'A3C_GOCODES_HC';
-					[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
-
-				};
-				case ("TRANSPORT UNLOAD") : {
-					_wp setWaypointType "TR UNLOAD";
-					_statements = "[(group this)] call A3C_HC_FNC_CompleteWaypoint;  ";
-				};//deleteWaypoint [group this, currentWaypoint group this];
-				case ("FULL LANDING") : {
-					//systemchat str (_landingData select 0);
-					_statements = format
-					[
-						"
-							[this,%1,'%2',[],true] spawn A3C_HC_WPACTION_LANDING_FULL;
-							[(group this)] call A3C_HC_FNC_CompleteWaypoint;
-						",
-						_landingData select 0,
-						getPlayerUID player
-
-					];
-				};
-			};
-
-		};
-		if (_statements != "") then {
-			_wpStm = waypointStatements _wp;
-			_wp setWaypointStatements [(_wpstm select 0),(_wpstm select 1) + _statements];
-		};
-
-
-		sleep 1;
-	} foreach _groups;
-};
 
 
 A3C_UI_HUD_3D_TAGGING = false;
@@ -405,18 +174,6 @@ A3C_UI_HUD_3D_TAG = {
 		_pos set [2,((boundingbox cursortarget select 1) select 2) / 2];
 	};
 
-//	A3C_UI_HUD_3D_TAG_ICON_POS = _pos;
-//	private _max = 50;
-//	private _sz = 5;
-	//if (_mode in ["HC_WP","SUPPRESSION"]) then {
-	//	_sz = 3;
-//
-//		while {A3C_UI_HUD_3D_TAG_ICON_SIZE < _sZ} do {
-//			A3C_UI_HUD_3D_TAG_ICON_SIZE = A3C_UI_HUD_3D_TAG_ICON_SIZE + 0.2;
-//			sleep 0.01;
-//		};
-//	};
-
 	//-- animate icon zoom
 	if !(_mode in ["HC_WP","SUPPRESSION"]) then {
 		_timer = time;
@@ -429,14 +186,6 @@ A3C_UI_HUD_3D_TAG = {
 			//hintSilent str A3C_UI_HUD_3D_TAG_ICON_SIZE;
 		};
 	};
-
-	//if !(_mode in ["HC_WP","SUPPRESSION"]) then {
-	//	for "_i" from 1 to _max do {
-	//		sleep 0.01;
-	//		A3C_UI_HUD_3D_TAG_ICON_SIZE = _sz - ((_sZ - 2) * (_i / _max));
-	//
-	//	};
-	//};
 	
 	//-- end flicker
 	for "_i" from 1 to 4 do {

@@ -286,7 +286,7 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ACTIONS_IMG) ctrlShow true;
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ACTIONS_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_pin.paa";
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ACTIONS_BTN) ctrlShow true;
-		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ACTIONS_BTN) ctrlSetToolTip format ["MOVE - CONFIRM WITH 'Spacebar', CANCEL BY RELEASING %1",["A3C","A3C_KeyFnc_Menu"] call MCSS_fnc_CBA_KEYBIND_TRANSLATION];
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ACTIONS_BTN) ctrlSetToolTip format ["MOVE - CONFIRM WITH 'Spacebar', CANCEL BY RELEASING %1",["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation];
 
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ROE_IMG) ctrlShow true;
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ROE_IMG) ctrlSetText "\a3\ui_f\data\GUI\Cfg\Ranks\colonel_gs.paa";
@@ -1338,7 +1338,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								params ["_btnData","_units"];
 								_btnData params ["_display","_button","_sX","_sY","_shift","_ctrl","_alt"];
 								_units = call compile _units;
-								[A3C_RD_UNITS,'AUTO'] call A3C_SWITCHSTANCE; //~~??
+								[A3C_RD_UNITS,'AUTO'] call A3C_AI_SHARED_switchUnitPos; //~~??
 							}
 						];
 						A3C_OUTER_RING_BTN_fnc_6 =
@@ -1348,7 +1348,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								params ["_btnData","_units"];
 								_btnData params ["_display","_button","_sX","_sY","_shift","_ctrl","_alt"];
 								_units = call compile _units;
-								[A3C_RD_UNITS,'UP'] call A3C_SWITCHSTANCE;
+								[A3C_RD_UNITS,'UP'] call A3C_AI_SHARED_switchUnitPos;
 							}
 						];
 						A3C_OUTER_RING_BTN_fnc_7 =
@@ -1358,7 +1358,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								params ["_btnData","_units"];
 								_btnData params ["_display","_button","_sX","_sY","_shift","_ctrl","_alt"];
 								_units = call compile _units;
-								[A3C_RD_UNITS,'MIDDLE'] call A3C_SWITCHSTANCE;
+								[A3C_RD_UNITS,'MIDDLE'] call A3C_AI_SHARED_switchUnitPos;
 							}
 						];
 						A3C_OUTER_RING_BTN_fnc_8 =
@@ -1368,7 +1368,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								params ["_btnData","_units"];
 								_btnData params ["_display","_button","_sX","_sY","_shift","_ctrl","_alt"];
 								_units = call compile _units;
-								[A3C_RD_UNITS,'DOWN'] call A3C_SWITCHSTANCE;
+								[A3C_RD_UNITS,'DOWN'] call A3C_AI_SHARED_switchUnitPos;
 							}
 						];
 

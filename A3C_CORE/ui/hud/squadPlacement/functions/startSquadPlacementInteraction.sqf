@@ -1,5 +1,5 @@
-#include "..\radial\radialMenu\dialog_defines.hpp"
-#include "..\radial\radialMenu\script_component.hpp"
+#include "..\..\..\radial\radialMenu\dialog_defines.hpp"
+#include "..\..\..\radial\radialMenu\script_component.hpp"
 
 
 

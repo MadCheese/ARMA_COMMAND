@@ -24,6 +24,7 @@ A3C_isCargoUnitEjectable = { //-- shared by player squad and HC
 	};
 	_return
 };
+
 A3C_isCargoGroupEjectable = {
 	params ["_gp","_refUnit"];
 	private ["_return"];

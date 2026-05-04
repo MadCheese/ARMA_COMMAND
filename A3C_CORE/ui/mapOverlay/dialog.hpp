@@ -2613,7 +2613,7 @@ class A3C_DSP_MapOverlay
 					w = 0.192528 * safezoneW;
 					h = 0.0990114 * safezoneH;
 					onMouseEnter = EXPAND_AND_QUOTE(ctrlSetFocus (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox));
-					onLBSelChanged = "[(_this select 1)] call A3C_SelectionPromptPanel_LB_Change";	
+					onLBSelChanged = "[(_this select 1)] call A3C_UI_SHARED_selectionPromptPanel_onLbChange";	
 				};
 			};
 		};

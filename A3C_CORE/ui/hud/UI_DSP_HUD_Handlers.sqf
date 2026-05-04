@@ -1,5 +1,6 @@
 #include "..\mapOverlay\dialog_defines.hpp" //-- needed for mapKey
 #include "..\SHARED\shared_ui_defines.hpp"
+#include "selectionPromptPanel\dialog_defines.hpp"
 
 //---------------------------------------  HANDLER-FUNCTIONS  ------------------------------------
 //------------------------------------------------------------------------------------------------
@@ -147,7 +148,7 @@ A3C_UI_HUD_onKeyDown = {
                 waitUntil {scriptDone _script};
             };
             //-- wait until SelectionPromptPanel is closed
-            waitUntil {isNull (findDisplay 100060)};
+            waitUntil {isNull (findDisplay IDD_SELECTION_PROMPT_PANEL)};
             
 			if (_oneTimeAction) then {
 				[_flickerMode] spawn A3C_AI_SHARED_Action_ConfirmPositionalProcess;	
@@ -287,7 +288,7 @@ A3C_UI_HUD_onKeyDown = {
 	};
 
 	if (isNil '_blockDefaultKey') then {
-		_blockDefaultKey = [_key, [_shift, _ctrl, _alt]] call A3C_GET_KEY_BOOL; //<< #Clarify: is there a cleaner way here?
+		_blockDefaultKey = [_key, [_shift, _ctrl, _alt]] call A3C_UI_fnc_getKeyBool; //<< #Clarify: is there a cleaner way here?
 	};
 	_blockDefaultKey
 };

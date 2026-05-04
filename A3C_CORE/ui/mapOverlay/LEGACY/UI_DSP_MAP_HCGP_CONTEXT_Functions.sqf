@@ -3,7 +3,7 @@
 #include "..\dialog_defines.hpp" 
 
 #include "..\..\SHARED\shared_ui_defines.hpp" //-- SHARED DEFINES FOR DASHBOARD
-
+#include "..\..\hud\selectionPromptPanel\dialog_defines.hpp"
 
 
 if (isDedicated) exitWith {};
@@ -368,7 +368,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 	params ["_call"];
 	private ["_vehicle","_cargoObjects"];
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 
 
 
@@ -443,7 +443,7 @@ A3C_AI_HIGHCOMMAND_fnc_mergeGroups = {
 	params ["_groupArray"];
 	if (count _groupArray == 0) exitWith {};
 	A3C_SELECTED_HC_GROUPS_SETTINGS = +(_groupArray);
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {100060};
+	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
 	
 
 	{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
@@ -451,7 +451,7 @@ A3C_AI_HIGHCOMMAND_fnc_mergeGroups = {
 	if (count _groupArray <= 1) then {
 		[_groupArray] spawn A3C_REJOIN_GROUPS;
 	} else {
-		if (_a3c_dsp == 100060) then {
+		if (_a3c_dsp == IDD_SELECTION_PROMPT_PANEL) then {
 			with uiNamespace do {
 				//disableSerialization;
 				A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
