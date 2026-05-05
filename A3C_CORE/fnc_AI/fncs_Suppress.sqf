@@ -336,14 +336,12 @@ A3C_POLY_ACTION_ON = {
 				};
 				
 				//-- alternative targetType: "SuppressTarget" || does not work with positions above ground
-				//"bg" remoteExec ["systemChat",0];
 				//_target = "B_Soldier_F" createVehicle ((_polygon select 0) select 0); //
 				_target = "A3C_Supression_Target_F" createVehicle ((_polygon select 0) select 0); //
 				_target setPos ((_polygon select 0) select 0);
 				_target enableSimulation false;
 				_unit dotarget _target;
-				//_unit lookat position _target;
-				//_unit domove position _unit;
+
 				[_unit,"SUPPRESSION",(_polygon select 0) select 1,_target] spawn A3C_SPAWN_POLY_ACTION_LOOP; //(_polygon select [0,2])			
 				_poses = (_polygon select 1);
 				_poses = [_poses,[],{_x distance2D _unit},"ASCEND"] call BIS_fnc_sortBy;
@@ -393,46 +391,6 @@ A3C_POLY_ACTION_ON = {
 };
 
 
-A3C_SUP_SETTINGS = {
-	params ["_mode","_overRide"];
-	private ["_idcSelected"];
-	//systemchat str time;
-	for "_i" from 1200 to 1203 do {
-		(findDisplay 100070 displayCtrl _i) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_checkbox_Unchecked.paa";
-	};
-	_idcSelected = switch (_mode) do {
-		case ("UNLIMITED") : {1200};
-		case ("PERCENTAGE") : {1201};
-		case ("MAGAZINE") : {1202};
-		case ("TIME") : {1203};
-	};
-	(findDisplay 100070 displayCtrl _idcSelected) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_checkbox_Checked.paa";
-	//ctrlSetFocus (findDisplay 100070 displayCtrl 2);
-	if (_overRide) then {
-		profilenamespace setvariable ["A3C_SUP_VAL_PERCENTAGE",parseNumber (ctrlText (findDisplay 100070 displayCtrl 1401))];
-		profilenamespace setvariable ["A3C_SUP_VAL_MAGAZINE",parseNumber (ctrlText (findDisplay 100070 displayCtrl 1402))];
-		profilenamespace setvariable ["A3C_SUP_VAL_TIME",parseNumber (ctrlText (findDisplay 100070 displayCtrl 1403))];
-		//if !(ctrlShown (findDisplay 100070 displayCtrl 1401)) then {systemchat 'A3C: you can now let go of the keys and enter your desired values. Confirm or cancel order with the buttons.'};
-		
-		//for "_i" from 1401 to 1403 do {
-		//	(findDisplay 100070 displayCtrl _i) ctrlShow true;
-		//};
-	};
-	_modeData = switch (_mode) do {
-		case ("UNLIMITED") : {0};
-		case ("PERCENTAGE") : {parseNumber (ctrlText (findDisplay 100070 displayCtrl 1401))};
-		case ("MAGAZINE") : {parseNumber (ctrlText (findDisplay 100070 displayCtrl 1402))};
-		case ("TIME") : {parseNumber (ctrlText (findDisplay 100070 displayCtrl 1403))};
-	};
-	(findDisplay 100070 displayCtrl 1401) ctrlSetText (str (profileNameSpace getVariable ["A3C_SUP_VAL_PERCENTAGE", 25]));
-	(findDisplay 100070 displayCtrl 1402) ctrlSetText (str (profileNameSpace getVariable ["A3C_SUP_VAL_MAGAZINE", 1]));
-	(findDisplay 100070 displayCtrl 1403) ctrlSetText (str (profileNameSpace getVariable ["A3C_SUP_VAL_TIME", 30]));
-	ctrlSetFocus (findDisplay 100070 displayCtrl 1601);
-	profilenamespace setvariable ["A3C_SUP_RESTRICTIVE",[_mode,_modeData]];
-};
-
-
-
 
 
 A3C_SPAWN_POLY_ACTION_LOOP = {
@@ -443,10 +401,7 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 	_unit = _this select 0;
 	_vehicle = vehicle _unit;
 	
-	//if ((!isNull objectParent _unit) && (_unit == gunner _vehicle) && (getDir _unit != getDir _vehicle) ) exitWith {
-	//	systemchat 'non';
-	//};
-	//"bg1" remoteExec ["systemChat",0];
+
 	if (isPlayer _unit) exitWith {};
 	_exit = false;
 	while {alive _unit} do {

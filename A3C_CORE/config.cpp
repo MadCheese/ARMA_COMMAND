@@ -7,7 +7,6 @@
 
 #include "ui\mapOverlay\dialog.hpp"
 
-#include "ui\HUD\HUD_DYNAMIC\A3C_DSP_HUD_DYNAMIC.hpp"
 #include "ui\HUD\customFormation\UI_DSP_CustomFormation.hpp"
 
 #include "ui\radial\radialMenu\dialog.hpp"
@@ -19,6 +18,8 @@
 #include "ui\hud\suppressionArea\dialog.hpp"
 
 #include "ui\hud\selectionPromptPanel\dialog.hpp"
+
+#include "ui\hud\hudDynamic\dialog.hpp"
 
 #include "cfgsounds.hpp"
 

@@ -123,7 +123,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\A3C_events.sqf";
 
 
 
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_DYNAMIC\UI_DSP_HUD_DYNAMIC_Handlers.sqf";
+
 
 //-- Map Overlay
 
@@ -187,7 +187,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\selectionPromptPanel\fun
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\suppressionArea\functions\initFunctions.sqf";
 
-
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\hudDynamic\functions\initFunctions.sqf";
 
 //-- Shared UI
 call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\functions\initFunctions.sqf";
