@@ -109,6 +109,8 @@ A3C_fnc_getBoardableVehicles = {
 };
 
 
+
+
 //---------------------------------------------------------------------------------------------
 //---------- Setters --------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------
@@ -195,6 +197,42 @@ A3C_fnc_isIRMagazine = {
 	private _ammo = getText (configfile >> "CfgMagazines" >> _mag >> "ammo");
 	private _sim = getText (configfile >> "CfgAmmo" >> _ammo >> "simulation");
 	_sim == "shotNVGMarker"
+};
+
+
+A3C_fnc_isTargetWithinTurretElevationRange = {
+	params ["_target","_vehicle"];
+	_dist = _target distance2D _vehicle;
+	_heightDif = if ((getposASL _target select 2) >= (getposASL _vehicle select 2)) then {
+		(getposASL _target select 2) - (getposASL _vehicle select 2);
+	} else {
+		(getposASL _vehicle select 2) - (getposASL _target select 2);
+	};
+	_alpha = [0,0,0] getDir [_heightDif,_dist,0]; //-- sloppy dumbsmart way to get z-angle 
+	_weaponAngle = atan (_vehicle AnimationPhase "maingun");
+	_radNeeded = rad _alpha;
+	_radWeapon = (_vehicle AnimationPhase "maingun");
+	private _reg = (_radNeeded - _radWeapon);
+	_abs = abs (_radNeeded - _radWeapon);
+	
+	_aimAdjust = _vehicle getVariable ["A3C_AIM_ADJUST",0];
+
+	_inRange = _abs < 0.05;
+
+	if !(_inRange) then {
+		if (_reg >= 0) then {
+			_aimAdjust = _aimAdjust + 0.01;
+		} else{
+			_aimAdjust = _aimAdjust - 0.01;
+		};
+		_vehicle setVariable ["A3C_AIM_ADJUST",_aimAdjust,true];
+		_aimPos = +(getPosATL _target);
+		_aimPos set [2,(_aimPos select 2) + _aimAdjust];
+		(gunner _vehicle) doWatch _aimPos;
+		player setPos _aimPos
+
+	};
+	_inRange
 };
 
 //---------- Posession predicates

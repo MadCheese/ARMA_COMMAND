@@ -185,7 +185,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_C
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\selectionPromptPanel\functions\initFunctions.sqf";
 
-
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\suppressionArea\functions\initFunctions.sqf";
 
 
 

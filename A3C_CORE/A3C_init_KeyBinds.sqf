@@ -152,49 +152,69 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		],
 		{
 			if (visibleMap) exitWith {};
-			
 			if !(player == leader group player) exitWith {};
+
 			if ((count groupSelectedUnits player) == 0) then {
 				{
 					if (!isPlayer _x) then {
-						player groupSelectUnit [_x,true];
+						player groupSelectUnit [_x, true];
 					};
-				} foreach units player - [player];
+				} forEach (units player - [player]);
 			};
-			A3C_SUP_DRAWKEY_ID = [(_this select 1),(_this select 2),(_this select 3),(_this select 4)];
-			A3C_SUPPRESSION_UNITS_SQ_TEMP = (groupSelectedUnits player);
+
+			A3C_SUP_DRAWKEY_ID = [
+				_this select 1,
+				_this select 2,
+				_this select 3,
+				_this select 4
+			];
+
+			A3C_SUPPRESSION_UNITS_SQ_TEMP = +(groupSelectedUnits player);
+
 			{
-				if (isPlayer _x) then {A3C_SUPPRESSION_UNITS_SQ_TEMP = A3C_SUPPRESSION_UNITS_SQ_TEMP - [_x]};
-			} foreach A3C_SUPPRESSION_UNITS_SQ_TEMP;
+				if (isPlayer _x) then {
+					A3C_SUPPRESSION_UNITS_SQ_TEMP = A3C_SUPPRESSION_UNITS_SQ_TEMP - [_x];
+				};
+			} forEach A3C_SUPPRESSION_UNITS_SQ_TEMP;
+
 			{
 				if (_x in A3C_SUPPRESSION_UNITS_SQ) then {
 					A3C_SUPPRESSION_UNITS_SQ_TEMP = A3C_SUPPRESSION_UNITS_SQ_TEMP - [_x];
 				};
-			} foreach A3C_SUPPRESSION_UNITS_SQ_TEMP;
-			if (count A3C_SUPPRESSION_UNITS_SQ_TEMP > 0) then {
+			} forEach A3C_SUPPRESSION_UNITS_SQ_TEMP;
+
+			if ((count A3C_SUPPRESSION_UNITS_SQ_TEMP) > 0) then {
 				[] spawn {
-					with uiNameSpace do {
-						A3C_SUPMENU = (finddisplay 46) createDisplay "A3C_SUPPRESSION_DRAW";
+					disableSerialization;
+
+					with uiNamespace do {
+						A3C_SUPMENU = (findDisplay 46) createDisplay "A3C_SUPPRESSION_DRAW";
 					};
-					_mode = (profileNameSpace getVariable ["A3C_SUP_RESTRICTIVE", ["UNLIMITED",0]]) select 0;
-					[_mode,false] call A3C_SUP_SETTINGS;
+
+					waitUntil {
+						!isNull (uiNamespace getVariable ["A3C_UI_suppressionArea_display", displayNull])
+					};
+
+					private _mode = (profileNamespace getVariable ["A3C_SUP_RESTRICTIVE", ["UNLIMITED", 0]]) select 0;
+					[_mode, false] call A3C_UI_suppressionArea_fnc_setRestrictionMode;
 				};
 			} else {
 				[] spawn {
 					hint "Selection either empty or busy suppressing";
 					sleep 5;
-					hintsilent "";
+					hintSilent "";
 				};
 			};
+
 			[] spawn {
 				sleep 0.1;
 				showCommandingMenu "";
 			};
 		},
 		{},
-		[20,[false,false,true]],
+		[20, [false, false, true]],
 		false
-	] call cba_fnc_addKeybind;
+	] call CBA_fnc_addKeybind;
 
 	//["A3C", "A3C_KeyFnc_Suppress_V2", ["Suppression Hotkey", "Key for ingame suppression actions"], {["SUPPRESSION","DOWN"] call A3C_FNC_CBA_KEY}, {["SUPPRESSION","UP"] call A3C_FNC_CBA_KEY}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
 

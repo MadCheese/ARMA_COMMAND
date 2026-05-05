@@ -16,7 +16,7 @@
 #include "ui\hud\squadPlacement\dialog.hpp"
 #include "ui\hud\squadPlacement\rscTitles.hpp"
 
-#include "ui\suppression\A3C_SUPPRESSION_DRAW.hpp"
+#include "ui\hud\suppressionArea\dialog.hpp"
 
 #include "ui\hud\selectionPromptPanel\dialog.hpp"
 

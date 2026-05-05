@@ -640,6 +640,140 @@ A3C_AI_SHARED_switchUnitPos = {
 
 };
 
+A3C_Replace_Unit = {
+	//-- purpose: completely replace a soldier that is in STOP mode
+	params ["_unit"];
+	if !(_unit == driver vehicle _unit) exitWith {};
+	
+	_unitArray = +(profileNamespace getvariable "A3C_GROUPUNITS");
+	_index = [_unit, _unitArray] call MCSS_fnc_GetArrayIndex;
+	
+	
+	_hasParent = !isNull objectParent _unit;
+	_vehicle = vehicle _unit;
+	
+	//-- retrieve unit data
+	_type = typeOf _unit;
+	_name = name _unit;
+	_dir = getDir _unit;
+	_anim = animationState _unit;
+	_face = face _unit;
+	_pos = getPosASL _unit;
+	_stance = stance _unit;
+	_face = face _unit;
+	_VVN = vehicleVarname _unit;
+	_group = group _unit;
+	_vehicle = vehicle _unit;
+	_teamColor = if (player == cameraOn) then {assignedTeam _unit} else {_unit getVariable ["A3C_ASSIGNEDTEAM","MAIN"]};;
+	_fatigueAndStamina = [getFatigue _unit, getStamina _unit];
+	_isStaminaEnabled = isStaminaEnabled _unit;
+	_destination = expectedDestination _unit;
+	_plot = _unit getVariable ["A3C_PLOT",[]];
+	_wpI = _unit getVariable ["A3C_CURRENTWAYPOINT_INDEX",1];
+	_A3C_FORMATION_INDEX = _unit getvariable ["A3C_FORMATION_INDEX", [_unit] call A3C_GETUNITINDEX];
+	_A3C_VVNI = _unit getvariable ["A3C_VVNI",A3C_VARNAME_INDEX];
+	_inHud = _unit in A3C_UI_squadPlacement_units;
+	_rdIIndex = [_unit,A3C_RD_UNITS] call MCSS_fnc_GetArrayIndex;
+	_tabletIndex = [_unit,A3C_SELECTED_UNITS] call MCSS_fnc_GetArrayIndex;
+	
+
+	
+
+	_damage = [];
+	{
+		_damage pushBack [_x,_unit getHitPointDamage _x];
+	} foreach A3C_HUMAN_HITPOINTS;
+	
+	_loadOut = getUnitLoadOut _unit;
+	_allVariables = [];
+	{
+		_allVariables pushBack [_x,_unit getVariable _x];
+	} foreach allVariables _unit;
+	
+
+	//-- delete unit, spawn logics until unit's formationIndex is reached, then spawn new unit and delete logics
+	deleteVehicle _unit;
+	_newUnit = objNull;
+	_logics = [];
+	for "_i" from 1 to (_A3C_FORMATION_INDEX -2) do {
+		_un = _unitArray select _i;
+		if !(_un in units player) then {
+			_gL = (group player) createUnit ["LOGIC", [0,0,0], [], 0, ""];
+			_logics pushbackUnique _gL;
+		};
+	};
+	call compile format ["%1 = _group  createUnit [""%3"", %4, [], 0, ""FORM""];  _newUnit =%1;", parseText _vvn,_group,_type,[0,0,0]];
+	{deletevehicle _x} foreach _logics;
+	
+	//-- reEstablish Damage
+	for "_i" from 0 to 9 do {
+		_hitPointArray = _damage select _i;
+		_newUnit setHitPointDamage [_hitPointArray select 0, _hitPointArray select 1];
+	};
+
+	if (_hasParent) then {
+		_newUnit moveInDriver _vehicle;
+	} else {
+		_newUnit setDir _dir;
+		_newUnit setPosASL _pos;
+		_newUnit switchMove _anim;
+	};
+	
+	//-- reset fatigue
+	_newUnit setFatigue (_fatigueAndStamina select 0);
+	_newUnit setStamina (_fatigueAndStamina select 1);
+	_newUnit enableStamina _isStaminaEnabled;
+	if (_inHud) then {
+		A3C_UI_squadPlacement_units pushBackUnique _newUnit;
+		
+	};
+	if !(_rdIIndex == -1) then {
+		A3C_RD_UNITS set [_rdIIndex,_newUnit];
+	};
+	if !(_tabletIndex == -1) then {
+		A3C_SELECTED_UNITS set [_tabletIndex,_newUnit];
+	};
+
+
+	
+	switch (_stance) do {
+		case ("STAND") : {_newUnit setUnitPos "UP"};
+		case ("CROUCH") : {_newUnit setUnitPos "MIDDLE"};
+		case ("PRONE") : {_newUnit setUnitPos "DOWN"};
+	};
+	[_newUnit,0] call A3C_UNIT_INIT;
+	//-- reset variables
+	{
+		_bool = if ((_x select 0) in ["A3C_unit_polys","A3C_poly_active"]) then {true} else {false};
+		_newUnit setVariable [_x select 0,_x select 1,_bool];
+	} foreach _allVariables;
+
+
+
+	
+	_unitArray set [_index,_newUnit];
+
+	_newUnit assignTeam _teamColor;
+	_newUnit setVariable ["A3C_ASSIGNEDTEAM",_teamColor];
+
+	_nameStringArray = _name splitString " ";
+	_firstName = _nameStringArray deleteAt 0;
+	_lastName = _nameStringArray joinstring " ";
+	_name = [_firstName + " " + _lastName,_firstName,_lastName];
+	
+
+	profileNamespace setvariable ["A3C_GROUPUNITS",_unitArray];
+	[_newUnit,_vvn,_name,_loadout,_face,_destination] spawn {
+		params ["_unit","_vvn","_name","_loadout","_face","_destination"];
+		_unit setVehicleVarname _VVN;
+		_unit setName _name;		
+		_unit setUnitLoadout _loadOUt;
+		_unit setFace _face;
+		_unit setDestination _destination;
+	};
+	_newUnit
+};
+
 
 
 //---------------------------------------  M A I N  M O V E M E N T  F U C T I O N     ----------------------------------------------
