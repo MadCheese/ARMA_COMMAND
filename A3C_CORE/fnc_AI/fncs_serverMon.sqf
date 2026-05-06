@@ -313,7 +313,7 @@ A3C_SERVERMON_fncActions = {
 		// } foreach _tgts;
 
 		//-- Non Player groups: Other settings
-		if (!isPLayer _leader) then {
+		if ( !isNull _leader && {!isPlayer _leader}) then {
 			private _drivers = (units _gp) select {private _oP = objectParent _x; !isNull _oP && {_x == driver vehicle _x}};
 			_comm = effectiveCommander _lv;
 			_gp enableAttack false;

@@ -8,7 +8,7 @@ class EditorData
 	toggles=33;
 	class ItemIDProvider
 	{
-		nextID=5010;
+		nextID=5011;
 	};
 	class MarkerIDProvider
 	{
@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={14360.229,45.014385,16705.068};
-		dir[]={-0.43145698,-0.67669559,0.59659702};
-		up[]={-0.39654997,0.73626292,0.54832935};
-		aside[]={0.81030428,0,0.58600938};
+		pos[]={14369.316,76.488564,16643.973};
+		dir[]={0.20494777,-0.51331651,0.83336824};
+		up[]={0.12258583,0.85819936,0.4984642};
+		aside[]={0.971066,-7.4505806e-09,-0.23881137};
 	};
 };
 binarizationWanted=0;
@@ -62,13 +62,14 @@ addons[]=
 	"A3_Characters_F_Tank",
 	"A3_Weapons_F_Items",
 	"A3_Characters_F_Mark",
-	"A3_Static_F_AT_01"
+	"A3_Static_F_AT_01",
+	"A3_Supplies_F_Exp_Ammoboxes"
 };
 class AddonsMetaData
 {
 	class List
 	{
-		items=29;
+		items=30;
 		class Item0
 		{
 			className="A3_Structures_F";
@@ -267,6 +268,13 @@ class AddonsMetaData
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
+		class Item29
+		{
+			className="A3_Supplies_F_Exp";
+			name="Arma 3 Apex - Ammoboxes and Supplies";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
 	};
 };
 dlcs[]=
@@ -326,7 +334,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=62;
+		items=63;
 		class Item0
 		{
 			dataType="Trigger";
@@ -1809,7 +1817,7 @@ class Mission
 					class PositionInfo
 					{
 						position[]={14270.606,15.502074,16661.143};
-						angles[]={0.0093286335,0.78539819,6.2818484};
+						angles[]={6.2818484,0.78539819,0.0026520467};
 					};
 					side="West";
 					flags=6;
@@ -1847,15 +1855,15 @@ class Mission
 				};
 			};
 			id=4884;
-			atlOffset=-4.3869019e-05;
+			atlOffset=-0.00014877319;
 		};
 		class Item45
 		{
 			dataType="Object";
 			class PositionInfo
 			{
-				position[]={14177.779,18.33313,16566.215};
-				angles[]={0.0093286335,0.78539819,6.2818484};
+				position[]={14353.18,17.873688,16742.914};
+				angles[]={6.2818484,0.78539819,0.0026520467};
 			};
 			side="West";
 			flags=6;
@@ -1865,7 +1873,7 @@ class Mission
 			};
 			id=4885;
 			type="B_Truck_01_transport_F";
-			atlOffset=-4.3869019e-05;
+			atlOffset=-0.00014877319;
 		};
 		class Item46
 		{
@@ -2076,8 +2084,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14364.584,16.46769,16714.283};
-						angles[]={6.2738566,3.9270291,0.055940546};
+						position[]={14364.73,16.427309,16718.814};
+						angles[]={0.041309625,5.4960947,0.043971907};
 					};
 					side="West";
 					flags=6;
@@ -2303,7 +2311,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14363.637,16.432306,16717.236};
+						position[]={14367.684,16.518137,16719.762};
+						angles[]={0,1.5707965,0};
 					};
 					side="West";
 					flags=5;
@@ -2312,14 +2321,14 @@ class Mission
 					};
 					id=4837;
 					type="B_soldier_AR_F";
-					atlOffset=1.9073486e-06;
 				};
 				class Item2
 				{
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14358.735,15.972852,16715.711};
+						position[]={14366.158,16.274664,16724.662};
+						angles[]={0,1.5707965,0};
 					};
 					side="West";
 					flags=5;
@@ -2334,7 +2343,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14359.682,16.081676,16718.553};
+						position[]={14369,16.453932,16723.717};
+						angles[]={0,1.5707965,0};
 					};
 					side="West";
 					flags=5;
@@ -2349,7 +2359,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14360.413,16.153507,16716.379};
+						position[]={14366.826,16.365278,16722.984};
+						angles[]={0,1.5707965,0};
 					};
 					side="West";
 					flags=5;
@@ -2364,7 +2375,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14361.9,16.319098,16717.543};
+						position[]={14367.99,16.475395,16721.498};
+						angles[]={0,1.5707965,0};
 					};
 					side="West";
 					flags=5;
@@ -2379,7 +2391,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14359.865,16.155914,16710.17};
+						position[]={14360.617,16.003597,16723.533};
+						angles[]={0,1.5707965,0};
 					};
 					side="West";
 					flags=5;
@@ -2395,7 +2408,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14362.924,16.179436,16722.889};
+						position[]={14373.336,16.676258,16720.475};
+						angles[]={0,1.5707965,0};
 					};
 					side="West";
 					flags=5;
@@ -2548,7 +2562,7 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14383.693,15.318751,16819.861};
+						position[]={14374.524,15.980817,16817.354};
 					};
 					side="West";
 					flags=7;
@@ -2564,7 +2578,7 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14388.693,14.919992,16814.861};
+						position[]={14379.524,15.461385,16812.354};
 					};
 					side="West";
 					flags=5;
@@ -2581,7 +2595,7 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14378.693,15.526679,16814.861};
+						position[]={14369.524,16.021439,16812.354};
 					};
 					side="West";
 					flags=5;
@@ -2591,13 +2605,14 @@ class Mission
 					};
 					id=4930;
 					type="B_Soldier_GL_F";
+					atlOffset=1.9073486e-06;
 				};
 				class Item3
 				{
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14393.693,15.691376,16809.861};
+						position[]={14384.524,15.293427,16807.354};
 					};
 					side="West";
 					flags=5;
@@ -2607,6 +2622,7 @@ class Mission
 					};
 					id=4931;
 					type="B_soldier_LAT_F";
+					atlOffset=9.5367432e-07;
 				};
 			};
 			class Attributes
@@ -3587,6 +3603,23 @@ class Mission
 			id=4997;
 			type="B_static_AT_F";
 			atlOffset=-9.5367432e-07;
+		};
+		class Item62
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={14359.88,16.470453,16715.277};
+				angles[]={6.2738476,0,0.10362019};
+			};
+			side="Empty";
+			flags=4;
+			class Attributes
+			{
+				init="[""AmmoboxInit"", [this, true]] call BIS_fnc_arsenal;";
+			};
+			id=5010;
+			type="Box_NATO_Equip_F";
 		};
 	};
 	class Connections

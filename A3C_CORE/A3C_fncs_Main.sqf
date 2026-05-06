@@ -2123,7 +2123,7 @@ A3C_UNIT_HOLD = {
 			};
 		};
 		_x setVariable ["A3C_HOLD",true,false];
-		_unitNames = _unitNames + ([_x,1] call MCSS_fnc_NAMESTRING)
+		_unitNames = _unitNames + ([_x] call MCSS_fnc_NAMESTRING)
 	} foreach _units;
 	[_coverUnits,1] spawn A3C_AI_Squad_action_FindCoverExecute;
 	player groupchat  _unitNames + " HOLD";
@@ -2140,7 +2140,7 @@ A3C_UNIT_CONTINUE = {
 	{
 		_x setVariable ["A3C_HOLD",false,false];
 		_x setVariable ["A3C_HOLD_COVER",false,false];
-		_unitNames = _unitNames + ([_x,1] call MCSS_fnc_NAMESTRING)
+		_unitNames = _unitNames + ([_x] call MCSS_fnc_NAMESTRING)
 	} foreach _units;
 	player groupchat  _unitNames + " MOVE";
 	[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_RefreshControlBar;

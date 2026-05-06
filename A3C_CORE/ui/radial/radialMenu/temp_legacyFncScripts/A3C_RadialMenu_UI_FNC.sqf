@@ -2893,7 +2893,13 @@ A3C_UI_RADIAL_LABEL_LB = {
 						_n = "";
 						{
 							if ((group _x) == (group player)) then {
-								_n = _n + ([_x,1,true,if (_foreachindex == ((count _c) - 1)) then {true} else {false}] call MCSS_fnc_NAMESTRING);
+								_n = _n + 
+								(
+									[
+										_x,
+										if (_foreachindex == ((count _c) - 1)) then {true} else {false}
+									] call MCSS_fnc_NAMESTRING
+								);
 							} else {
 								_c = _c - [_x];
 							};

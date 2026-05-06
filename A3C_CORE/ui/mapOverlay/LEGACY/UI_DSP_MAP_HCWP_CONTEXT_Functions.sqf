@@ -1,5 +1,7 @@
 #include "..\dialog_defines.hpp" //-- MAP DEFINES
-#include "..\script_component.hpp" 
+#include "..\script_component.hpp"
+#include "..\..\SHARED\shared_ui_defines.hpp"  
+
 
 if (isDedicated) exitWith {};
 
@@ -1637,7 +1639,8 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 			{
 				[_listBox, _x] call A3C_addLbEntry;
 			} foreach ["YES", "NO"];
-			[_listBox] call A3C_YN_Listbox_Keyhandlers;
+
+			// [_listBox] call A3C_YN_Listbox_Keyhandlers;
 
 			[_parent, _listBox, 2] call A3C_OBJECTSEL_RESIZE;
 

@@ -123,10 +123,6 @@ A3C_HC_getAllGroups_Player_ORGANIZED = {
 ////////////////////////  STATE GETTERS
 /////////////////////////////////////////////////////////
 
-A3C_HC_getState_isGroupIdle = {
-	params ["_group"];
-	{_x select 1 == currentWaypoint _group} count (waypoints _group) == 0
-};
 
 ////////////////////////  ACTIONS
 /////////////////////////////////////////////////////////
@@ -347,9 +343,8 @@ A3C_HighCommand_deleteAllWaypoints = {
 	} foreach _waypoints;
 	private _leaderVic = vehicle leader _group;
 	private _standByPos = _leaderVic getPos [5, getDir _leaderVic];
-	((waypoints _group) select 1) setWaypointPosition [_standByPos, 0];
+	((waypoints _group) select 0) setWaypointPosition [_standByPos, 0];
 	[leader _group, _standByPos] call A3C_DoMove;
-	// systemchat format ["All Waypoints deleted for %1", groupID _group];
 };
 
 

@@ -8,14 +8,8 @@
 //---------- 1. Non positional actions --------------------------------------------------------
 //---------------------------------------------------------------------------------------------
 
-A3C_AI_Squad_Action_clearBuilding = {
-	params ["_unitArray","_cursorString"];
-	[_unitArray,_cursorString] spawn A3C_AI_Shared_action_CLEARBUILDING;
-};
-A3C_AI_Squad_Action_Arsenal = {
-	params ["_unit"];
-	[_unit,true] spawn A3C_UI_ARSENAL_CREATELB;
-};
+
+
 
 A3C_AI_Squad_Action_Unstuck = {
 	params ["_units"];

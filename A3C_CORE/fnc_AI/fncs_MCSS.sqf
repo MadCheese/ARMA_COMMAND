@@ -538,13 +538,13 @@ MCSS_fnc_isInString = {
 
 //-- Get String with combinations of UNITINDEX and Nameparts, alternatively return name of vehicle
 MCSS_fnc_NAMESTRING = {
-	private ["_unit"];
-	_unit = _this select 0;
+	params ["_unit"];
+	private _disableComm = if (count _this > 1) then {_this select 1} else {false};
+	private _addPlayerBracket = if (count _this > 2) then {_this select 2} else {false};
 
 	if (isNil '_unit' OR {isNull _unit}) exitWith {'N/A'};
 
-	//_disableVeh = if (count _this > 2) then {_this select 2} else {false};
-	_disableComm = if (count _this > 3) then {_this select 3} else {false};
+	
 	_namearray = [(name _unit),"' "] call BIS_fnc_splitString;
 
 	
@@ -575,7 +575,10 @@ MCSS_fnc_NAMESTRING = {
 
 	
 	if (isPlayer _unit) then {
-		_return = format ["%1: %2 (Player)",_formationIndex,(name _unit)];
+		_return = format ["%1: %2",_formationIndex, (name _unit)];
+		if (_addPlayerBracket) then {
+			_return = _return + " (Player)";
+		};	
 	} else {
 		if ((count _this) == 1) then {
 

@@ -106,8 +106,19 @@ publicVariable 'RHS_ENGINE_STARTUP_OFF';
 };
 
 
-//-- Init Client Only
+//-- Generate A3C function libraries
+
+call compile preprocessFileLineNumbers "A3C_CORE\ai_highCommand\functions\initFunctions.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ai_shared\functions\initFunctions.sqf";
+
+
 if (isDedicated) exitWith {};
+
+//-- Init Client/Host Only
+
+//-- Generate client-only A3C function libraries
+call compile preprocessFileLineNumbers "A3C_CORE\ai_squad\functions\initFunctions.sqf";
+
 
 
 
@@ -192,11 +203,8 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\hudDynamic\functions\ini
 //-- Shared UI
 call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\functions\initFunctions.sqf";
 
-
-
-
-
-
+//-- Arsenal fnc library
+call compile preprocessFileLineNumbers "A3C_CORE\ui\arsenal\functions\initFunctions.sqf";
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_Player\fncs_Player.sqf";

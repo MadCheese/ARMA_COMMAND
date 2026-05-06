@@ -23,7 +23,7 @@ A3C_RadialMenu_ROE = {
 				private _unit = _x;
 				_unit setvariable ["A3C_ROE",false,true];
 				_unit enableAI "AUTOTARGET";
-				_unitNames = _unitNames + ([_unit,1] call MCSS_fnc_NAMESTRING);
+				_unitNames = _unitNames + ([_unit] call MCSS_fnc_NAMESTRING);
 			} foreach A3C_RD_UNITS;
 			player groupchat _unitNames + " Fire At Will!";
 			player groupradio "SentNoTarget"; 
@@ -32,7 +32,7 @@ A3C_RadialMenu_ROE = {
 		case (1) : { //-- target selection: Autonomous
 			{
 				private _unit = _x;
-				_unitNames = _unitNames + ([_unit,1] call MCSS_fnc_NAMESTRING);
+				_unitNames = _unitNames + ([_unit] call MCSS_fnc_NAMESTRING);
 				_unit setvariable ["A3C_ROE",true,true];
 				[_unit] spawn {
 					_unit = _this select 0;
@@ -56,7 +56,7 @@ A3C_RadialMenu_ROE = {
 					[_x,["COMBATMODE","BLUE"]] call MCSS_fnc_orderIndividual;
 				} foreach A3C_RD_UNITS;
 			} else {
-				{_unitNames = _unitNames + ([_x,1] call MCSS_fnc_NAMESTRING)} foreach A3C_RD_UNITS;
+				{_unitNames = _unitNames + ([_x] call MCSS_fnc_NAMESTRING)} foreach A3C_RD_UNITS;
 				player groupchat  _unitNames + " Hold Fire! (Fire On My Lead)";
 				player groupradio "SentHoldFireInCombat";
 				A3C_fireOnMyLeadUnits = (groupSelectedUnits player);
@@ -115,7 +115,7 @@ A3C_AI_ROE_fnc_toggleAutoCombat = {
 
             _x setVariable ["A3C_AutoCombatDisableLoop", _script, true];
 
-            _unitNames = _unitNames + ([_x, 1] call MCSS_fnc_NAMESTRING);
+            _unitNames = _unitNames + ([_x] call MCSS_fnc_NAMESTRING);
             A3C_AutoCombatDisabledUnits pushBackUnique _x;
         } forEach _units;
 
@@ -126,7 +126,7 @@ A3C_AI_ROE_fnc_toggleAutoCombat = {
                 terminate (_x getVariable ["A3C_AutoCombatDisableLoop", scriptNull]);
                 _x enableAI "AUTOCOMBAT";
 
-                _unitNames = _unitNames + ([_x, 1] call MCSS_fnc_NAMESTRING);
+                _unitNames = _unitNames + ([_x] call MCSS_fnc_NAMESTRING);
                 A3C_AutoCombatDisabledUnits = A3C_AutoCombatDisabledUnits - [_x];
             };
         } forEach _units;

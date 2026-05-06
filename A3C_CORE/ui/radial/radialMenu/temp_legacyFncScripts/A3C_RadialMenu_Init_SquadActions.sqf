@@ -306,7 +306,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 						params ["_clickData","_fncData"];
 						_fncData params ["_unitArray","_cursorString","_display"];
 						_unitArray = call compile _unitArray;
-						[_unitArray,_cursorString] call A3C_AI_Squad_Action_clearBuilding;
+						[_unitArray,_cursorString] call A3C_ai_squad_fnc_actionClearBuilding;
 					},
 					true
 
@@ -322,7 +322,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 						params ["_clickData","_fncData"];
 						_fncData params ["_unit","_display"];
 						_unit = call compile _unit;
-						[_unit] call A3C_AI_Squad_Action_Arsenal;
+						[_unit] call A3C_ai_squad_fnc_actionArsenal;
 					},
 					true
 				];
