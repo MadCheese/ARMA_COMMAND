@@ -479,7 +479,12 @@ while {true} do {
 	[_x,"ANIM"] remoteExec ["enableAI",0];
 	[_x,""] remoteExec ["switchMove",0];
 	[_x,"AUTO"] remoteExec ["setUnitPos",_x];
-	_x setVariable ["A3C_ANIM", nil, true];	
+	private _animHandler = _x getVariable ["A3C_HandlerID_AnimDone", -1];
+	if (_animHandler != -1) then {
+		_x removeEventhandler ["AnimDone", _animHandler];
+		_x setVariable ["A3C_HandlerID_AnimDone", nil, true];	
+	};
+	
 } foreach units _group;
 
 // "END LOOP FINISHED" remoteexec ["systemchat", 0];

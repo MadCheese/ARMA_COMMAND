@@ -15,14 +15,7 @@ MCSS_fnc_ShortHint = {
 };
 
 
-/*
-MCSS_fnc_ShortHint = {
-	private _str = _this;
-	_str remoteExec ["hintSilent",0];
-	sleep 2;
-	"" remoteExec ["hintSilent",0];
-};
-*/
+
 
 
 MCSS_fnc_getCargoGroups = {
@@ -113,52 +106,7 @@ MCSS_fnc_getRealBoundingBox = {
 	} foreach _corners;
 	_finalCorners = _realCorners;
 	player groupchat str _finalCorners;
-	//player setpos (_realCorners select 0);
-	//_realCorners = [_realCorners,[],{_objectASL distance2D _x},"DESCEND"] call BIS_fnc_sortBy;
-	//_finalDistance = (_realCorners select 0) distance2D _objectASL;
-	//_finalDir = _objectASL  getDir (_realCorners select 0);
-	/*
-	_finalCorners = [];
-	_testArray = _realCorners select [0,2];
-	if (_objectASL distance2D (_testArray select 0) < _objectASL distance2D (_testArray select 1)) then {
-		_dir = _objectASL getDir (_testArray select 0);
-		_finalCorners = _finalCorners +
-		[
-			_objectASL getPos [_objectASL distance2D (_testArray select 0),_dir],
-			_objectASL getPos [_objectASL distance2D (_testArray select 0),[_dir - 90] call MCSS_fnc_CorrectDir]
-		];
-	} else {
-		_dir = _objectASL getDir (_testArray select 1);
-		_finalCorners = _finalCorners +
-		[
-			_objectASL getPos [_objectASL distance2D (_testArray select 0),_dir],
-			_objectASL getPos [_objectASL distance2D (_testArray select 0),[_dir + 90] call MCSS_fnc_CorrectDir]
-		];
-	};
-
-
-	_testArray = _realCorners select [2,3];
-	if (_objectASL distance2D (_testArray select 0) < _objectASL distance2D (_testArray select 1)) then {
-		_dir = _objectASL getDir (_testArray select 0);
-		_finalCorners = _finalCorners +
-		[
-			_objectASL getPos [_objectASL distance2D (_testArray select 0),_dir],
-			_objectASL getPos [_objectASL distance2D (_testArray select 0),[_dir - 90] call MCSS_fnc_CorrectDir]
-		];
-	} else {
-		_dir = _objectASL getDir (_testArray select 1);
-		_finalCorners = _finalCorners +
-		[
-			_objectASL getPos [_objectASL distance2D (_testArray select 0),_dir],
-			_objectASL getPos [_objectASL distance2D (_testArray select 0),[_dir + 90] call MCSS_fnc_CorrectDir]
-		];
-	};
-	*/
-	//for "_i" from 0 to 3 do {
-	//	_refDir = [_finalDir + (_i * 90)] call MCSS_fnc_CorrectDir;
-	//	_refPos = _objectASL getPos [_finalDistance,_refDir];
-	//	_finalCorners set [count _finalCorners,_refPos];
-	//};
+	
 
 	{
 		_x set [2,0];
@@ -168,7 +116,7 @@ MCSS_fnc_getRealBoundingBox = {
 		ttt pushback _v;
 	} foreach _finalCorners;
 	
-	systemchat str [time - _t, _finalCorners];
+
 };
 
 
@@ -1117,22 +1065,17 @@ MCSS_fnc_orderIndividual = {
 
 	//-- security for FIRE ON MY LEAD
 	if (_command == "BEHAVIOUR") then {
-		if (_unit in A3C_ROE3_UNITS) then {
+		if (_unit in A3C_fireOnMyLeadUnits) then {
 			_unit setCombatMode "BLUE";
 		};
 	} else {
 		if (_value in ["YELLOW","RED"]) then {
 			//-- open fire: remove units from fire on my lead
-			A3C_ROE3_UNITS = A3C_ROE3_UNITS - [_unit];
+			A3C_fireOnMyLeadUnits = A3C_fireOnMyLeadUnits - [_unit];
 
-			if (count A3C_ROE3_UNITS == 0) then {
+			if (count A3C_fireOnMyLeadUnits == 0) then {
 				//-- no more units: reset FOML and remove EH
-				A3C_BOOL_ROE_3 = false;
-				A3C_ROE3_UNITS = [];
-				if (!isNil "A3C_FIRED_COMMAND") then {
-					player removeEventHandler ["fired", A3C_FIRED_COMMAND];
-					A3C_FIRED_COMMAND = nil;
-				};
+				A3C_fireOnMyLeadUnits = [];
 			};
 		};
 	};
@@ -1354,10 +1297,23 @@ MCSS_fnc_isClickPosInCTRLArea = {
 	if !(ctrlShown _ctrl) exitWith {false};
 	_boxSize = ctrlPosition _ctrl;
 	_boxSize params ["_x","_y","_w","_h"];
-	if (ctrlIDC _ctrl == IDC_MAP_DynamicCombo) then {
-		_h = _h + (2 * _h);
+
+	
+
+	// if (ctrlIDC _ctrl == IDC_MAP_DynamicCombo) then {
+	// 	_h = _h + (2 * _h);
+	// };
+	if (ctrlType _ctrl == 4) then {
+		//-- is combo: consider it unfolded
 	};
+
 	_center = [ _x + (_w / 2) , _y + (_h / 2) ];
 	_return = _clickPos inArea [_center, (_w / 2), (_h / 2), 0, true];
+
+	// if (_return) then {
+	// 	// systemchat str ((ctrlType _ctrl) isEqualTo CT_COMBO);
+	// 	systemchat str [_ctrl, ctrlType _ctrl];
+	// };
+
 	_return
 };

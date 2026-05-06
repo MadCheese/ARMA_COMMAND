@@ -80,7 +80,7 @@ A3C_AI_action_resumeDestination = {
 
 A3C_AI_action_repairAnim = {
 	params ["_unit"];
-	if ( (_unit getVariable ["A3C_ANIM", [false, -1]]) select 0) exitWith {};
+	if ( (_unit getVariable ["A3C_HandlerID_AnimDone", [false, -1]]) select 0) exitWith {};
 
 	private _anims =
 	[
@@ -95,7 +95,7 @@ A3C_AI_action_repairAnim = {
 
 	private _handler = _unit addEventHandler [ "AnimDone", {
 		params[ "_unit", "_anim" ];
-		if !( (_unit getVariable ["A3C_ANIM", [false, -1]]) select 0) exitWith {};
+		if !( (_unit getVariable ["A3C_HandlerID_AnimDone", [false, -1]]) select 0) exitWith {};
 		private _anims =
 		[
 			"Acts_carFixingWheel",
@@ -107,7 +107,7 @@ A3C_AI_action_repairAnim = {
 		[_unit,_anim] remoteExec ["switchMove",0];
 	}];
 
-	_unit setVariable ["A3C_ANIM", [true, _handler], true];	
+	_unit setVariable ["A3C_HandlerID_AnimDone", [true, _handler], true];	
 };
 
 A3C_AI_action_engineOff = {

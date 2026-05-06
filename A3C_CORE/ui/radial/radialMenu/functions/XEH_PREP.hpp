@@ -12,3 +12,9 @@ A3C_PREP(ctrlGroup);
 A3C_PREP_SUBDIR(handlers,onKeyDown);
 A3C_PREP_SUBDIR(handlers,onKeyUp);
 A3C_PREP_SUBDIR(handlers,onMouseButtonDown);
+
+//-- actions
+A3C_PREP_SUBDIR(actions,toggleAutoCombatButton);
+
+//-- UI responses
+A3C_PREP_SUBDIR(responses,refreshAutoCombatButton);

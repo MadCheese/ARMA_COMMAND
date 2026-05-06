@@ -691,7 +691,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 							"A3C_CORE\ui\pictures\icon_menu_ROE_FAW.paa",
 							"A3C_CORE\ui\pictures\icon_menu_ROE_FOT.paa",
 							"A3C_CORE\ui\pictures\icon_menu_ROE_FOML.paa",
-							if ({_x in A3C_DANGER_UNITS} count A3C_RD_UNITS == 0) then {
+							if ({_x in A3C_AutoCombatDisabledUnits} count A3C_RD_UNITS == 0) then {
 								"A3C_CORE\ui\pictures\icon_menu_autocombat_enabled.paa"
 							} else {
 								"A3C_CORE\ui\pictures\icon_menu_autocombat_disabled.paa"
@@ -702,7 +702,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 							"TARGET SELECTION: AUTONOMOUS",
 							"TARGET SELECTION: DESIGNATED ONLY",
 							"FIRE ON MY LEAD",
-							if ({_x in A3C_DANGER_UNITS} count A3C_RD_UNITS == 0) then {
+							if ({_x in A3C_AutoCombatDisabledUnits} count A3C_RD_UNITS == 0) then {
 								"DISABLE AUTOCOMBAT"
 							} else {
 								"ENABLE AUTOCOMBAT"
@@ -773,10 +773,13 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 						[
 							str (groupSelectedUnits player),
 							{
-								params ["_btnData","_units"];
-								_btnData params ["_display","_button"];
+								params ["_btnData", "_units"];
+
+								_btnData params ["_display", "_button"];
+
 								_units = call compile _units;
-								[_units] spawn A3C_TOGGLEDANGER;
+
+								[_units] spawn FUNC(toggleAutoCombatButton);
 							}
 						];
 						//-- Right Ring: Combat Modes | Behaviours Macro

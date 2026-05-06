@@ -101,7 +101,7 @@ class FSM
                          "A3C_BOOL_MOUSEMOVING = false;" \n
                          "" \n
                          "" \n
-                         "//player removeEventHandler [""killed"", A3C_KILLED_WIP];" \n
+                         "//player removeEventHandler [""killed"", A3C_HandlerID_KilledPlayer_WIP];" \n
                          "{deletemarkerLocal _x;} foreach A3C_TRACKER_MARKERS; // (A3C_TAB_MARKERS + A3C_TRACKER_MARKERS);" \n
                          "if !((getmarkercolor ""A3C_BUILDING_VIEWER"") == """") then {deletemarkerLocal ""A3C_BUILDING_VIEWER""};" \n
                          "" \n

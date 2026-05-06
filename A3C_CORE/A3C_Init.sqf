@@ -206,6 +206,12 @@ call compile preprocessFileLineNumbers "A3C_CORE\A3C_Mode_ZEUS.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\fncs_UI_main.sqf";
 
 
+//-- Player Eventhandlers
+call compile preprocessFileLineNumbers "A3C_CORE\eventhandlers\player\functions\initFunctions.sqf";
+
+
+
+
 MCSS_fnc_createMarker = compile preprocessfileLineNumbers "A3C_CORE\fnc_GEN\createMarker.sqf";
 
 [] execVM "A3C_CORE\A3C_init_Runner.sqf";

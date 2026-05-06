@@ -39,123 +39,12 @@ A3C_HUD_DIFTRIG setTriggerStatements["A3C_DIFFICULTY != difficulty", "[] spawn {
 //----------------------------------------------------------------------------------------------
 
 A3C_WAIT_THROW_P = 0;
-A3C_FIRED_EVH = {
-	params ["_unit", "_weapon", "_muzzl", "_mode", "_ammo", "_magazine", "_projectile", "_gunner"];
-	
-	if (_weapon == "THROW") exitWith {
-		
 
 
-		if (A3C_GTI_UNIT == _unit) then {
-			[player,_magazine] call A3C_Gren_Phrase;
-			(_this select 6) setVelocity BR_A3C_TACV_throwVel;
-			//_add = if (BR_A3C_TACV_throwV0 <= BR_A3C_TACV_GV0MaxS) then {BR_A3C_TACV_throwV0 * BR_A3C_TACV_fatAdd} else {BR_A3C_TACV_throwV0 * BR_A3C_TACV_fatAdd * 2};
-			//_unit setFatigue ((getFatigue _unit) + _add);
-			A3C_GTI_UNIT = objNull;
-		};
 
-		private _reloadTime = getNumber (configFile >> "CfgWeapons" >> "Throw" >> _muzzl >> "magazineReloadTime");
-		_A3C_WAIT_THROW_P = [_reloadTime,1] call BIS_fnc_cutDecimals;
-		for "_i" from 0 to _reloadTime step 0.1 do {
-			A3C_WAIT_THROW_P = if (_A3C_WAIT_THROW_P == 0) then {0} else {
-				[(_A3C_WAIT_THROW_P - _i) / _A3C_WAIT_THROW_P,1] call BIS_fnc_cutDecimals;
-			};
-			sleep 0.1;
-		};
-		A3C_WAIT_THROW_P = 0;	
-	};
-};
+//-- register player eventhandlers: static CBA group/unitswitch monitors, as well as dynamic player handlers (killed/fired/slotItemChange)
+[] call A3C_playerEventhandler_fnc_register;
 
-A3C_SlotItemChanged_HandlerFnc = {
-	params ["_unit", "_name", "_slot", "_assigned"];
-	if (_slot != 612) exitWith {}; 
-	private _notGPS = _name != "A3C_Terminal_NoUAV";
-	// systemchat str _notGPS;
-	player enableInfoPanelComponent ["left", "MinimapDisplayComponent", _notGPS];
-	player enableInfoPanelComponent ["right", "MinimapDisplayComponent", _notGPS];
-};
-
-
-A3C_KILLED_EVH = { //-- only used by player
-	_body = _this select 0;
-	_groupUnits = (profileNamespace getvariable "A3C_GROUPUNITS");
-	if ((count A3C_UI_squadPlacement_unitGhosts) > 0) then {
-		{[_x] call A3C_UI_squadPlacement_fnc_removeUnitGhost} foreach A3C_UI_squadPlacement_units ;
-	};
-
-	A3C_SELECTED_UNITS = [];
-
-	[] call A3C_Btn_fnc_Cancel;
-	{_x setvariable ["A3C_PLOT_TEMP",[],true];} foreach _groupUnits;
-
-
-	_gpShuffleUnits = [];
-	if !(_body == A3C_ZEUS_UNIT) exitWith {
-		selectplayer A3C_ZEUS_UNIT;
-	};
-	_body removeEventHandler ["KILLED", A3C_KILLED];	//-- remove EH so that it won't be stacked later
-	_body removeEventHandler ["FIRED",A3C_FIRED]; 
-	_body removeEventHandler ["SlotItemChanged", A3C_SlotItemChanged_Handler]; 
-	// if (isClass(configFile >> "CfgPatches" >> "mavik_Data")) then {
-	// 	private _id = player getVariable ["DB_playerPutID", -1];
-	// 	if (_id != -1) then { player removeEventHandler ["Put", _id] };
-	// };
-	waituntil {alive player};
-	// if (isClass(configFile >> "CfgPatches" >> "mavik_Data")) then {
-	// 	private _id = player addEventHandler ["Put", { _this call mavic_fnc_createMavicOnItemCheck }];
-	// 	player setVariable ["DB_playerPutID", _id];
-	// };
-	if !(player == _body) then {
-		if (player in _groupUnits) then {
-			//player sidechat "group respawn";
-			_groupUnits set [0,player];
-			if !(player == (leader group player)) then {
-					_gpShuffleUnits = ((units group player) - [player]);
-					{[_x] join grpnull} foreach _gpShuffleUnits;
-					{[_x] joinSilent (group player)} foreach _gpShuffleUnits;
-					_groupUnits = (units group player);
-			};
-
-			profileNamespace setvariable ["A3C_GROUPUNITS",_groupUnits];
-
-		} else {
-			//player sidechat "spawned as new unit";
-			_groupUnits set [0,player];
-			if !(player == (leader group player)) then {
-				if !(isPlayer (leader group player)) then {
-					if (isMultiPlayer) then {
-						(group player) selectLeader player;
-					};
-				};
-			};
-			profileNamespace setvariable ["A3C_GROUPUNITS",_groupUnits];
-		};
-
-		A3C_KILLED = player addEventHandler ["KILLED",{[_this select 0] spawn A3C_KILLED_EVH}];
-		A3C_FIRED = player addEventHandler ["FIRED",{_this spawn A3C_FIRED_EVH}];
-		A3C_SlotItemChanged_Handler = player addEventHandler ["SlotItemChanged",{_this spawn A3C_SlotItemChanged_HandlerFnc}];
-	} else {
-		//player sidechat "spawned as same unit";
-	};
-	//-- Detect if player is connected to Zeus module
-	A3C_ZEUS_UNIT = player;
-	{
-		if ((typeOf _x) == "ModuleCurator_F") then {
-			A3C_ZEUS_UNIT = player;
-			publicvariable "A3C_ZEUS_UNIT";
-			[player,_x] execFSM "A3C_CORE\FSM\A3C_ZEUS.fsm";
-		};
-	} foreach (synchronizedObjects player);
-	sleep 0.5;
-	if (player == (leader group player)) then {
-		[(units group player) - [player]] call A3C_GROUP_RESET;
-
-	};
-
-};
-A3C_KILLED = player addEventHandler ["KILLED",{[_this select 0] spawn A3C_KILLED_EVH}];
-A3C_FIRED = player addEventHandler ["FIRED",{_this spawn A3C_FIRED_EVH}];
-A3C_SlotItemChanged_Handler = player addEventHandler ["SlotItemChanged",{_this spawn A3C_SlotItemChanged_HandlerFnc}];
 
 if ("A3C_Terminal_NoUAV" in ((items player) + (assignedItems player))) then {
 	player enableInfoPanelComponent ["left", "MinimapDisplayComponent", false];
@@ -167,7 +56,10 @@ if ("A3C_Terminal_NoUAV" in ((items player) + (assignedItems player))) then {
 	_x setvariable ["A3C_HUD_DATA",[],true];
 	player groupSelectUnit [_x, false];
 } foreach units group player;
+
 A3C_ZEUS_UNIT = player;
+
+
 //-- Detect if player is connected to Zeus module
 {
 	if ((typeOf _x) == "ModuleCurator_F") then {

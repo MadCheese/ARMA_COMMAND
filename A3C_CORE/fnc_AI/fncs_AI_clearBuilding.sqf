@@ -748,7 +748,7 @@ A3C_AI_Shared_action_CLEARBUILDING = {
 			[_x,_building,_units] spawn {
 				params ["_unit","_building","_units","_bPosArray"];
 
-				_resetDanger = if !(_unit in A3C_DANGER_UNITS) then {true} else {false};
+				_resetDanger = if !(_unit in A3C_AutoCombatDisabledUnits) then {true} else {false};
 				
 				_pauseCounter = 0;
 				

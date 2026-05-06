@@ -8,6 +8,9 @@ Best shot right now:
 1. Pick up all icons (and/or markers)
 2. Seperate execution through right and leftclick
 */
+
+
+
 params ["_displayCtrl","_mouseButton","_sX","_sY","_shift","_ctrl","_alt"];
 private ["_mouseOverIcon","_groupControls","_isHCMark"];
 
@@ -20,10 +23,11 @@ private _exit = false;
 private _left = _mouseButton == 0; // << #TODO this sux, remove lol
 
 
-if (a3c_is_HC_remote && {!(_left)}) exitWith  {
+if (a3c_is_HC_remote && {!(_left)}) exitWith {
 	_this call A3C_UI_SHARED_OnMouseButtonDown_remoteVehicle;
 	false //-- potentially not needed. WIP stage, this entire mouseDown EH needs serious overhaul
 };
+
 
 //------------------------- EXIT CONDITIONS (MAPCLICK NOT ALLOWED)
 
@@ -36,7 +40,17 @@ if (A3C_UI_MAP_isCircleMenu) exitWith {
 };
 
 //-- contextMenues are open >> exit
-if ({ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl _x)} count [IDC_MAP_DynamicCombo,IDC_MAP_HCWP_Parent, IDC_MAP_HCGP_Parent, IDC_SHARED_UI_SelectionPromptPanel_Parent] > 0) exitWith {};
+if (
+	{
+		ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl _x)
+	} count [
+		IDC_MAP_SQWP_Combo,
+		IDC_MAP_DynamicCombo,
+		IDC_MAP_HCWP_Parent,
+		IDC_MAP_HCGP_Parent,
+		IDC_SHARED_UI_SelectionPromptPanel_Parent
+	] > 0
+) exitWith {};
 
 
 

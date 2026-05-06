@@ -1047,16 +1047,16 @@ A3C_AI_Shared_executeUnitPlot = {
 				_velo = [_unit,_wPos,300] call A3C_THROW_VEL;
 				sleep 2;
 				_unit setvariable ["A3C_GRENADE_VEL",_velo,true];
-				A3C_firedEVH = _unit addEventHandler ["fired",
+				private _handlerID = _unit addEventHandler ["fired",
 				{
-					_shooter = _this select 0;
-					_vel = _shooter getvariable "A3C_GRENADE_VEL";
+					private _shooter = _this select 0;
+					private _vel = _shooter getvariable "A3C_GRENADE_VEL";
 					if (_this select 1 == "THROW") then
 						{
 							(_this select 6) setVelocity _vel;
 
 						};
-						_shooter removeEventHandler ["fired", A3C_firedEVH];
+						_shooter removeEventHandler ["fired", _handlerID];
 				}];
 				_unit forceWeaponFire [_muzzle,_muzzle];
 
@@ -2436,7 +2436,7 @@ A3C_AI_Shared_executeUnitPlot = {
 	if (!isnull objectparent _unit && {_unit ==  driver vehicle _unit}) then {
 		_vehicle limitSpeed 1000;
 	};
-	if !(_unit in A3C_DANGER_UNITS) then {
+	if !(_unit in A3C_AutoCombatDisabledUnits) then {
 		_unit enableAI "AUTOCOMBAT";
 	};
 //	if (combatmode _unit == "BLUE") then {

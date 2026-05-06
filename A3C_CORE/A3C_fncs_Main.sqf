@@ -2039,14 +2039,6 @@ A3C_UNIT_INIT = {
 				}
 			];
 			
-			// if (isClass(configFile >> "CfgPatches" >> "mavik_Data")) then {
-			// 	private _id = player getVariable ["DB_playerPutID", -1];
-			// 	if (_id != -1) then { player removeEventHandler ["Put", _id] };
-			// 	private _id = player addEventHandler ["Put", { _this call mavic_fnc_createMavicOnItemCheck }];
-			// 	player setVariable ["DB_playerPutID", _id];
-			// };
-			
-			
 			
 			_unit setVariable
 			[
@@ -2057,7 +2049,6 @@ A3C_UNIT_INIT = {
 	};
 	
 
-	//systemchat 'adding EH';
 	
 	{
 		private ["_am","_array"];
@@ -2068,7 +2059,7 @@ A3C_UNIT_INIT = {
 			_unit addMagazine _irType;
 		};
 	} foreach (magazines _unit);
-	//systemchat 'unit init done';
+
 };
 
 if (isDedicated) exitWith {};
@@ -2285,27 +2276,7 @@ A3C_JOIN_UNIT = {
 };
 
 
-//-- PLAYER HAS SWITCHED GROUPS
-A3C_Teamswitch = {
-	A3C_PLAYERGROUP = group player;
-	profileNamespace setvariable ["A3C_GROUPUNITS",(units group player)];
-	{[_x] call A3C_UNIT_INIT} foreach (units group player);
-	{_x setvariable ["A3C_FORMATION_INDEX", [_x] call A3C_GETUNITINDEX, true]} foreach units group player;
 
-	player removeEventHandler ["KILLED",A3C_KILLED]; //-- just to be sure
-	A3C_KILLED = player addEventHandler ["killed",{[_this select 0] spawn A3C_KILLED_EVH}];
-
-	player removeEventHandler ["FIRED",A3C_FIRED]; //-- just to be sure
-	A3C_FIRED = player addEventHandler ["FIRED",{_this spawn A3C_FIRED_EVH}];
-
-
-	player removeEventHandler ["SlotItemChanged",A3C_SlotItemChanged_Handler]; //-- just to be sure
-	A3C_SlotItemChanged_Handler = player addEventHandler ["SlotItemChanged",{_this spawn A3C_SlotItemChanged_HandlerFnc}];
-
-	//if (player == leader group player) then {
-//		[(units group player) - [player]] call A3C_GROUP_RESET;
-	//};
-};
 
 KK_fnc_objectVarNames = {
 	private "_names";

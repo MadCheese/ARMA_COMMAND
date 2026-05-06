@@ -155,6 +155,7 @@ A3C_UI_MAP_TREE_LABEL = {
 
 	params ["_a3c_dsp"];
 
+	
 
 	//systemChat "LABEL";
 	A3C_UI_SHARED_TREE_HC_AT_TICK = A3C_HC_getAllGroups_Player_Current;
@@ -407,6 +408,8 @@ A3C_UI_MAP_TREE_LABEL = {
 			A3C_RADIAL_TREES_OPEN_HC
 		}
 	};
+
+
 	if (count _openTrees > 0) then {
 		[_ct_tree,_openTrees] spawn {
 			params ["_ct_tree","_openTrees"];
@@ -429,6 +432,10 @@ A3C_RADIAL_TREES_OPEN_HC = [[0]];
 
 //-- animate tree collapse
 A3C_UI_MAP_TREE_OPEN_COLLAPSE = {
+
+	//-- exit if no dialog is active
+	if ({!isNull findDisplay _x} count [IDD_MAP_OVERLAY, IDD_RADIAL_MENU] == 0) exitWith {};
+
 	params ["_ctrlData","_mode","_isInit","_animTime"]; 
 	//-- _mode == "OPEN" or "COLLAPSE"
 	//-- _isInit == true (when initializing/refreshing tree) or false when toggled by player

@@ -734,7 +734,7 @@ A3C_FNC_CBA_KEY = {
 			[group player, 0] spawn A3C_MEDICAL_START;
 		};
 		case ("Voice_AUTOCOMBAT") : {
-			[(groupSelectedUnits player)] spawn A3C_TOGGLEDANGER;
+			[(groupSelectedUnits player)] spawn A3C_AI_ROE_fnc_toggleAutoCombat;
 		};
 		case ("Voice_REFRESH") : {
 			[(units group player) - [player]] call A3C_GROUP_RESET;

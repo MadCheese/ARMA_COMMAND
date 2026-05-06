@@ -22,32 +22,26 @@ item17[] = {"",7,210,-54.707520,-10.708939,-46.707520,-2.708923,0.000000,""};
 item18[] = {"player_not_leader",4,218,-149.041473,37.885788,-85.460114,71.651260,0.000000,"player not leader" \n ""};
 item19[] = {"wait_1",2,250,-192.939819,43.577209,-164.164093,58.596939,0.000000,"wait"};
 item20[] = {"player_took_lead",4,218,-242.807556,39.239670,-207.238800,59.507080,0.000000,"player took lead" \n ""};
-item21[] = {"TeamSwitch",2,250,-401.004242,266.426819,-325.439240,298.367188,0.000000,"TeamSwitch"};
-item22[] = {"sleep_",4,218,-69.775879,270.852051,-25.232826,299.693176,0.000000,"sleep" \n ""};
-item23[] = {"wait_2",2,250,-63.221161,205.716187,-28.889923,233.908081,0.000000,"wait"};
-item24[] = {"true_",4,218,-373.715546,40.534256,-353.709534,56.941071,0.000000,"true" \n ""};
-item25[] = {"Group_Reset",2,250,-294.419403,42.898743,-257.441193,55.650543,0.000000,"Group_Reset"};
-item26[] = {"true_",4,218,-321.660492,42.739975,-301.654480,59.146790,0.000000,"true" \n ""};
-item27[] = {"Group_Switch_",4,218,-80.571899,119.554459,-10.511353,152.712738,0.000000,"Group Switch" \n ""};
-item28[] = {"",7,210,-183.723999,135.884750,-175.723984,143.884735,0.000000,""};
-item29[] = {"secondary_s_out",4,218,129.751892,-325.810516,243.588623,-282.357239,0.000000,"" \n "" \n "" \n "secondary's out" \n "" \n "" \n "" \n ""};
-item30[] = {"wait_3",2,250,259.001923,-421.435516,359.001923,-371.435516,0.000000,"wait"};
-item31[] = {"true_",4,218,93.883232,-430.361969,243.883240,-380.361969,0.000000,"true" \n ""};
-item32[] = {"",7,210,361.347412,339.915466,369.347412,347.915466,0.000000,""};
-item33[] = {"remoteControl_ON",4,218,-0.109039,42.247498,107.428741,88.001358,0.000000,"remoteControl" \n "ON" \n ""};
-item34[] = {"remoteControl_OFF",4,218,-264.623901,334.218781,-165.578552,383.369507,0.000000,"remoteControl" \n "OFF" \n ""};
-item35[] = {"wait_4",2,250,0.779541,334.348602,100.779541,384.348602,0.000000,"wait"};
-item36[] = {"assign_TeamColor",2,4346,-465.629425,332.175934,-365.629425,382.175934,0.000000,"assign" \n "TeamColor"};
-item37[] = {"",7,210,-421.977997,45.121384,-413.977966,53.121368,0.000000,""};
+item21[] = {"true_",4,218,-373.715546,40.534256,-353.709534,56.941071,0.000000,"true" \n ""};
+item22[] = {"Group_Reset",2,250,-294.419403,42.898743,-257.441193,55.650543,0.000000,"Group_Reset"};
+item23[] = {"true_",4,218,-321.660492,42.739975,-301.654480,59.146790,0.000000,"true" \n ""};
+item24[] = {"secondary_s_out",4,218,247.744019,-223.631775,361.580750,-180.178497,0.000000,"" \n "" \n "" \n "secondary's out" \n "" \n "" \n "" \n ""};
+item25[] = {"wait_2",2,250,259.001923,-421.435516,359.001923,-371.435516,0.000000,"wait"};
+item26[] = {"true_",4,218,93.883232,-430.361969,243.883240,-380.361969,0.000000,"true" \n ""};
+item27[] = {"",7,210,361.347412,339.915466,369.347412,347.915466,0.000000,""};
+item28[] = {"remoteControl_ON",4,218,-0.109039,42.247498,107.428741,88.001358,0.000000,"remoteControl" \n "ON" \n ""};
+item29[] = {"remoteControl_OFF",4,218,-264.623901,334.218781,-165.578552,383.369507,0.000000,"remoteControl" \n "OFF" \n ""};
+item30[] = {"wait_3",2,250,0.779541,334.348602,100.779541,384.348602,0.000000,"wait"};
+item31[] = {"assign_TeamColor",2,250,-465.629425,332.175934,-365.629425,382.175934,0.000000,"assign" \n "TeamColor"};
 link0[] = {0,8};
 link1[] = {2,9};
 link2[] = {2,11};
 link3[] = {4,2};
-link4[] = {5,32};
+link4[] = {5,27};
 link5[] = {6,3};
 link6[] = {7,5};
 link7[] = {7,17};
-link8[] = {7,29};
+link8[] = {7,24};
 link9[] = {8,7};
 link10[] = {9,6};
 link11[] = {10,15};
@@ -60,32 +54,24 @@ link17[] = {16,7};
 link18[] = {17,4};
 link19[] = {17,13};
 link20[] = {17,18};
-link21[] = {17,27};
-link22[] = {17,33};
-link23[] = {18,19};
-link24[] = {19,20};
-link25[] = {19,28};
-link26[] = {20,25};
-link27[] = {21,24};
-link28[] = {22,21};
-link29[] = {23,22};
-link30[] = {24,12};
-link31[] = {25,26};
-link32[] = {26,12};
-link33[] = {27,23};
-link34[] = {28,27};
-link35[] = {29,30};
-link36[] = {30,31};
-link37[] = {31,7};
-link38[] = {32,9};
-link39[] = {33,35};
-link40[] = {34,36};
-link41[] = {35,32};
-link42[] = {35,34};
-link43[] = {36,37};
-link44[] = {37,24};
-globals[] = {0.000000,0,0,0,0,640,480,1,182,6316128,1,-720.933594,431.799805,809.842651,-452.290833,1001,1096,1};
-window[] = {0,-1,-1,-1,-1,1606,338,2023,338,1,1019};
+link21[] = {17,28};
+link22[] = {18,19};
+link23[] = {19,20};
+link24[] = {20,22};
+link25[] = {21,12};
+link26[] = {22,23};
+link27[] = {23,12};
+link28[] = {24,25};
+link29[] = {25,26};
+link30[] = {26,7};
+link31[] = {27,9};
+link32[] = {28,30};
+link33[] = {29,31};
+link34[] = {30,27};
+link35[] = {30,29};
+link36[] = {31,21};
+globals[] = {0.000000,0,0,0,0,640,480,1,182,6316128,1,-496.913147,207.776855,564.559143,-207.009552,1001,1096,1};
+window[] = {0,-1,-1,-32000,-32000,1372,104,1789,104,1,1019};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -236,23 +222,12 @@ class FSM
                                         action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
                                 };
                                 /*%FSM</LINK>*/
-                                /*%FSM<LINK "Group_Switch_">*/
-                                class Group_Switch_
-                                {
-                                        itemno = 27;
-                                        priority = 0.000000;
-                                        to="wait_2";
-                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-                                        condition=/*%FSM<CONDITION""">*/"((alive player) && !(player in units A3C_PLAYERGROUP))"/*%FSM</CONDITION""">*/;
-                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
-                                };
-                                /*%FSM</LINK>*/
                                 /*%FSM<LINK "remoteControl_ON">*/
                                 class remoteControl_ON
                                 {
-                                        itemno = 33;
+                                        itemno = 28;
                                         priority = 0.000000;
-                                        to="wait_4";
+                                        to="wait_3";
                                         precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
                                         condition=/*%FSM<CONDITION""">*/"player != cameraOn"/*%FSM</CONDITION""">*/;
                                         action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
@@ -272,9 +247,9 @@ class FSM
                                 /*%FSM<LINK "secondary_s_out">*/
                                 class secondary_s_out
                                 {
-                                        itemno = 29;
+                                        itemno = 24;
                                         priority = 0.000000;
-                                        to="wait_3";
+                                        to="wait_2";
                                         precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
                                         condition=/*%FSM<CONDITION""">*/"false" \n
                                          "//false" \n
@@ -414,17 +389,6 @@ class FSM
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {
-                                /*%FSM<LINK "Group_Switch_">*/
-                                class Group_Switch_
-                                {
-                                        itemno = 27;
-                                        priority = 0.000000;
-                                        to="wait_2";
-                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-                                        condition=/*%FSM<CONDITION""">*/"((alive player) && !(player in units A3C_PLAYERGROUP))"/*%FSM</CONDITION""">*/;
-                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
-                                };
-                                /*%FSM</LINK>*/
                                 /*%FSM<LINK "player_took_lead">*/
                                 class player_took_lead
                                 {
@@ -439,21 +403,20 @@ class FSM
                         };
                 };
                 /*%FSM</STATE>*/
-                /*%FSM<STATE "TeamSwitch">*/
-                class TeamSwitch
+                /*%FSM<STATE "Group_Reset">*/
+                class Group_Reset
                 {
-                        name = "TeamSwitch";
-                        itemno = 21;
-                        init = /*%FSM<STATEINIT""">*/"_playerUnit removeEventHandler [""KILLED"",A3C_KILLED];" \n
-                         "_playerUnit removeEventHandler [""FIRED"",A3C_FIRED];" \n
-                         "[] call A3C_Teamswitch;"/*%FSM</STATEINIT""">*/;
+                        name = "Group_Reset";
+                        itemno = 22;
+                        init = /*%FSM<STATEINIT""">*/"[(units group player) - [player]] call A3C_GROUP_RESET;" \n
+                         "//systemchat ""took control"";"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {
                                 /*%FSM<LINK "true_">*/
                                 class true_
                                 {
-                                        itemno = 24;
+                                        itemno = 23;
                                         priority = 0.000000;
                                         to="HC_ACTIONS__relay";
                                         precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
@@ -468,55 +431,7 @@ class FSM
                 class wait_2
                 {
                         name = "wait_2";
-                        itemno = 23;
-                        init = /*%FSM<STATEINIT""">*/"_time = time;" \n
-                         "//systemchat ""group switch"";"/*%FSM</STATEINIT""">*/;
-                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
-                        class Links
-                        {
-                                /*%FSM<LINK "sleep_">*/
-                                class sleep_
-                                {
-                                        itemno = 22;
-                                        priority = 0.000000;
-                                        to="TeamSwitch";
-                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-                                        condition=/*%FSM<CONDITION""">*/"time > (_time + 0.3)"/*%FSM</CONDITION""">*/;
-                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
-                                };
-                                /*%FSM</LINK>*/
-                        };
-                };
-                /*%FSM</STATE>*/
-                /*%FSM<STATE "Group_Reset">*/
-                class Group_Reset
-                {
-                        name = "Group_Reset";
                         itemno = 25;
-                        init = /*%FSM<STATEINIT""">*/"[(units group player) - [player]] call A3C_GROUP_RESET;" \n
-                         "//systemchat ""took control"";"/*%FSM</STATEINIT""">*/;
-                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
-                        class Links
-                        {
-                                /*%FSM<LINK "true_">*/
-                                class true_
-                                {
-                                        itemno = 26;
-                                        priority = 0.000000;
-                                        to="HC_ACTIONS__relay";
-                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-                                        condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
-                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
-                                };
-                                /*%FSM</LINK>*/
-                        };
-                };
-                /*%FSM</STATE>*/
-                /*%FSM<STATE "wait_3">*/
-                class wait_3
-                {
-                        name = "wait_3";
-                        itemno = 30;
                         init = /*%FSM<STATEINIT""">*/"" \n
                          "_assignedTargets = [];" \n
                          "{" \n
@@ -577,7 +492,7 @@ class FSM
                                 /*%FSM<LINK "true_">*/
                                 class true_
                                 {
-                                        itemno = 31;
+                                        itemno = 26;
                                         priority = 0.000000;
                                         to="wait";
                                         precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
@@ -588,11 +503,11 @@ class FSM
                         };
                 };
                 /*%FSM</STATE>*/
-                /*%FSM<STATE "wait_4">*/
-                class wait_4
+                /*%FSM<STATE "wait_3">*/
+                class wait_3
                 {
-                        name = "wait_4";
-                        itemno = 35;
+                        name = "wait_3";
+                        itemno = 30;
                         init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
@@ -611,7 +526,7 @@ class FSM
                                 /*%FSM<LINK "remoteControl_OFF">*/
                                 class remoteControl_OFF
                                 {
-                                        itemno = 34;
+                                        itemno = 29;
                                         priority = 0.000000;
                                         to="assign_TeamColor";
                                         precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
@@ -626,7 +541,7 @@ class FSM
                 class assign_TeamColor
                 {
                         name = "assign_TeamColor";
-                        itemno = 36;
+                        itemno = 31;
                         init = /*%FSM<STATEINIT""">*/"{" \n
                          "	private _colorVar = _x getVariable [""A3C_ASSIGNEDTEAM"",""MAIN""];" \n
                          "	_x assignTeam _colorVar;" \n
@@ -639,7 +554,7 @@ class FSM
                                 /*%FSM<LINK "true_">*/
                                 class true_
                                 {
-                                        itemno = 24;
+                                        itemno = 21;
                                         priority = 0.000000;
                                         to="HC_ACTIONS__relay";
                                         precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;

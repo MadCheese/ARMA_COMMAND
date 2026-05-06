@@ -423,7 +423,7 @@ A3C_TAKEN_WEAPONS = [];
 A3C_TAKEN_MAGS = [];
 // A3C_PATIENTS = [];
 // A3C_MEDICS = []; //-- #REMINDER: variable moved to group namespace to create access for any group
-A3C_DANGER_UNITS = [];
+A3C_AutoCombatDisabledUnits = [];
 
 
 A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = []; //-- Remfire Units: Indicator based (old)
@@ -451,7 +451,7 @@ A3C_REMFIRE_UNIT = objnull;
 // A3C_MEDICS_ACTIVE = [];
 // A3C_PATIENTS_DESIGNATED = [];
 // A3C_PATIENTS_ASSIGNED = [];
-A3C_ROE3_UNITS = [];
+A3C_fireOnMyLeadUnits = [];
 A3C_RadialMenu_KEY_ID = [-500,false,false,false];
 A3C_UI_squadPlacement_interaction_KEY_ID = [-500,false,false,false];
 
@@ -462,7 +462,7 @@ A3C_MODIFIER_LOCK = false;
 A3C_MOUSEWHEEL_ACTIVE = false;
 A3C_UI_squadPlacement_unitGhostsInBuilding = false;
 A3C_360_out = true;
-A3C_BOOL_ROE_3 = false;
+
 
 
 A3C_UI_MAP_OPENING_CONTEXTMENU = false;
