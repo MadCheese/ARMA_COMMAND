@@ -110,20 +110,7 @@ A3C_AI_action_repairAnim = {
 	_unit setVariable ["A3C_HandlerID_AnimDone", [true, _handler], true];	
 };
 
-A3C_AI_action_engineOff = {
-	params ["_units"];
 
-	{
-		_unit = _x;
-		if (!isNull objectParent _unit) then {
-			if (_unit == driver vehicle _unit) then {
-				if ( vehicle _unit isKindOf "SHIP" OR  (((getPosATL vehicle _unit) select 2) < 5)   ) then {
-					[_unit,["engineOff",vehicle _unit]] remoteExec ["action",_unit];
-				};
-			};
-		};
-	} foreach _units;
-};
 
 
 A3C_AI_action_toggleIrStrobeHC = { //-- only for HC!

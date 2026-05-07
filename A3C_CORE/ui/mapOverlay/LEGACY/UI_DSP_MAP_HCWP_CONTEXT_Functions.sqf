@@ -1640,11 +1640,8 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 				[_listBox, _x] call A3C_addLbEntry;
 			} foreach ["YES", "NO"];
 
-			// [_listBox] call A3C_YN_Listbox_Keyhandlers;
-
 			[_parent, _listBox, 2] call A3C_OBJECTSEL_RESIZE;
 
-			
 		};
 	};
 
@@ -1747,7 +1744,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 				_actionTypes = _actionTypes + ["ASSEMBLE WEAPON"];
 
 			};
-			if (count ([units A3C_HC_ACTIVEGROUP] call A3C_fnc_getRemoteDetonatorUnits) > 0) then {
+			if (count ([units A3C_HC_ACTIVEGROUP] call A3C_ai_shared_fnc_getUnitsWithExplosives) > 0) then {
 				_actionTypes = _actionTypes + ["DEMOLITION"];
 			};
 			{

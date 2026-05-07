@@ -1,7 +1,7 @@
 #include "..\..\ui\radial\radialMenu\dialog_defines.hpp"
 #include "..\..\ui\mapOverlay\dialog_defines.hpp"
 #include "..\..\ui\SHARED\shared_ui_defines.hpp"
-#include "..\..\ui\hud\selectionPromptPanel\dialog_defines.hpp"
+#include "..\..\ui\SHARED\selectionPromptPanel\dialog_defines.hpp"
 
 
 //---------------------------------------------------------------------------------------------
@@ -11,32 +11,13 @@
 
 
 
-A3C_AI_Squad_Action_Unstuck = {
-	params ["_units"];
-	_units spawn A3C_AI_Shared_action_UNSTUCK;
-};
 
-A3C_AI_Squad_Action_engineOn = {
-	params ["_units"];
-	{
-		private _unit = _x;
-		if (!isNull objectParent _unit) then {
-			if (_unit == driver vehicle _unit) then {
-				if (((getPosATL vehicle _unit) select 2) < 5) then {
-					_unit action ["engineOn",vehicle _unit];
-				};
-			};
-		};
-	} foreach _units;
-};
 
-A3C_AI_Squad_Action_engineOff = {
-	params ["_units"];
-	[_units] call A3C_AI_action_engineOff;
-};
+
+
 
 A3C_AI_Squad_Action_orderDetonation = {
-	[] call A3C_UI_RADIAL_SelectionPromptPanel_START_CHARGEDIALOG;
+	[] call A3C_UI_SelectionPromptPanel_fnc_chargePromptStart;
 };
 
 
@@ -157,7 +138,7 @@ A3C_AI_Squad_Action_placeCharge = {
 		private _mags = [];
 
 		{
-			_mags append ([_x] call A3C_fnc_getRemoteDetonatableUnitMagazines);
+			_mags append ([_x] call A3C_ai_shared_fnc_getExplosiveUnitMagazines);
 		} forEach _units;
 
 		_mags = _mags arrayIntersect _mags;

@@ -22,37 +22,8 @@ A3C_fnc_getNearDetonationTargets = {
 	_nearobjects
 };
 
-A3C_fnc_getRemoteDetonatorUnits = {
-	params ["_units"];
-	{
-		private _unit = _x;
-		private _mags = magazines _unit;
-		if ({getText (configfile >> "CfgMagazines" >> _x >> "nameSound") in ["satchelcharge","mine"]} count _mags == 0) then {
-			_units = _units - [_x];
-		};
-	} foreach _units;
-	_units
-};
 
-A3C_fnc_getRemoteDetonatableUnitMagazines = {
-	params ["_unit"];
 
-	private _result = [];
-
-	{
-		private _magCfg = configFile >> "CfgMagazines" >> _x;
-
-		if (getText (_magCfg >> "nameSound") in ["satchelcharge", "mine"]) then {
-			private _ammoCfg = configFile >> "CfgAmmo" >> getText (_magCfg >> "ammo");
-
-			if (getText (_ammoCfg >> "mineTrigger") == "RemoteTrigger") then {
-				_result pushBack _x;
-			};
-		};
-	} forEach (magazines _unit arrayIntersect magazines _unit);
-
-	_result
-};
 
 A3C_fnc_getCursortargetCustom = {
 	private _vehicle = vehicle player;
@@ -1675,172 +1646,22 @@ A3C_AI_HighCommand_wpAction_plantExplosive = {
 	if (!local _group) exitWith {};
 	
 	private _attachToObject = waypointAttachedVehicle [_group, currentWaypoint _group];
-	// systemchat format ["DEBUG DETO MAIN - _attachToObject: %1", _attachToObject];
+
 	if (!alive _attachToObject OR {_attachToObject in units _group} ) then { //isNil '_attachToObject' OR {isNull _attachToObject OR {}}
 		_attachToObject = objNull;
 	};
-	private _detoUnits = [units _group] call A3C_fnc_getRemoteDetonatorUnits;
+	private _detoUnits = [units _group] call A3C_ai_shared_fnc_getUnitsWithExplosives;
 	if (typename _attachToObject == "STRING") then {
 		_attachToObject = missionNamespace getVariable _attachToObject;
 
 	};
 	if (count _detoUnits == 0) exitWith {};
-	//(str _attachToObject) remoteExec ["systemchat",0];
-	// systemchat "DEBUG DETO HC";
-	[_detoUnits select 0, waypointPosition [_group, currentWaypoint _group], [_attachToObject,_magType]] spawn A3C_AI_Squad_wpAction_plantExplosive;
+
+	[_detoUnits select 0, waypointPosition [_group, currentWaypoint _group], [_attachToObject,_magType]] spawn A3C_AI_Shared_fnc_wpActionPlantExplosive;
 };
 
 
-A3C_AI_Squad_wpAction_plantExplosive = {
-	params ["_unit","_targetPos","_orderDetails"];
-	_orderDetails params ["_targetVeh","_ammoType"];
-	// systemchat format ["DEBUG DETOINFO: %1", _orderDetails];
-	_detoInfo = if (count _orderDetails > 2) then {_orderDetails select 2} else {[]};
-	// systemchat format ["DEBUG DETOINFO: %1", _detoInfo];
-	private ["_mags","_chargeType","_cf","_ordenance","_targetPos","_var"];
 
-	
-	//-- check for charge
-
-	_mags = magazines _unit;
-	_chargeType = "";
-
-	if (_ammoType == "") then {
-		{
-			if !(getText (configfile >> "CfgMagazines" >> _x >> "nameSound") in ["satchelcharge","mine"]) then {_mags = _mags - [_x]};
-		} foreach _mags;
-		if (count _mags > 0) then {
-			_ammoType = _mags select 0;
-		};
-	};
-	if (_ammoType == "") exitWith {};
-	
-	//-- get charge position
-
-	private _targetDist = 1e39;
-	private _exit = false;
-
-	private _getAttachWorldPos = {
-		params ["_targetVeh","_vehicleLength","_h"];
-		private _attachPosMTW = [0,0,0];	
-		private _attachPosAGL = (getpos _targetVeh) getPos [_vehicleLength,(getDir _targetVeh + 180)];
-		_attachPosAGL set [2,_h];
-
-		private _ins = lineintersectsSurfaces
-		[
-			AGLtoASL _attachPosAGL,
-			(AGLtoASL (((position _targetVeh) select [0,2]) + [_h])),
-			objNull,
-			objNull,
-			true,
-			-1
-		];
-		//RED_LINES = [ [AGLtoASL _attachPosAGL, (AGLtoASL (((position _targetVeh) select [0,2]) + [_h]))] ];
-		_ins = _ins select {_x select 2 == _targetVeh};
-		if (count _ins > 0) then {
-			_attachPosAGL = ASLtoATL ((_ins select 0) select 0);
-			_attachPosAGL set [2,_h];
-			_attachPosMTW = _targetVeh worldToModel _attachPosAGL;
-			//_attachPosMTW set [2,_h];			
-		} else {
-			_attachPosAGL = position _targetVeh;
-		};
-		[_attachPosAGL,_attachPosMTW]
-	};
-
-	private _vehicleLength = 0;
-	private _h = 0;
-	private _attachMTW = [0,0,0];
-
-	//-- get attachdata or exit if vehicle left
-	if (!isNull _targetVeh && {typeName _targetVeh == "OBJECT"}) then {
-		_vehicleLength = (((boundingboxreal _targetVeh) select 1) select 1) * 2;
-		_h = ((((boundingBoxReal _targetVeh) select 1) select 2) * 0.75) min 1.3;
-		_targetDist = 50; //(sizeOf typeOf _targetVeh) * 1.3;
-		if (!isPlayer leader group _unit) then {
-			_targetDist = _targetDist * 1.3; //-- be more generous for AI led groups
-		};
-		if (_targetVeh distance _targetPos > _targetDist OR {speed _targetVeh > 0}) then { //-- the target object is no longer at the position
-			_exit = true;
-			//systemchat 'oi';
-		} else {
-			_attachData = [_targetVeh,_vehicleLength,_h] call _getAttachWorldPos;			
-			_targetPos = _attachData select 0;
-			_attachMTW = _attachData select 1;
-		};		
-	};
-	// systemchat format ["DEBUG DETO - %1, %2",_targetVeh,  _exit];
-	if (_exit) exitWith {};
-
-
-	//-- move to position
-	[_unit,_targetPos] call A3C_DOMOVE;
-	waitUntil {((expectedDestination _unit) select 0) distance2d _targetPos == 0};
-	// systemchat "DEBUG DETO - Destination Active";
-	sleep 2;
-	waitUntil {
-		_unit distance2d _targetPos < 7 &&
-		{
-			!(isPlayer (leader group _unit)) || {unitReady _unit} 
-		}
-	};
-	// systemchat "DEBUG DETO - Destination Reached";
-	//-- execute placement
-
-
-	_unit playMove "ainvpknlmstpslaywrfldnon_medic";
-	sleep 2;
-	[_unit,_ammoType] remoteExec ["removeMagazine",_unit];
-
-	_ammo = getText (configfile >> "CfgMagazines" >> _ammoType >> "ammo");
-	private _mineTrigger = getText (configfile >> "CfgAmmo" >> _ammo >> "mineTrigger");
-
-	_chargeType = _ammo;
-
-	//-- ordenance requires MP-global varname
-	A3C_VARNAME_INDEX = if (!isNil 'A3C_VARNAME_INDEX') then {A3C_VARNAME_INDEX} else {1};
-	_uid = if (!isNull player) then {getPlayerUID player} else {"111011101111"};
-	_chargeName = format ["A3C_REMOTE_CHARGE_%1_%2",_uid,A3C_VARNAME_INDEX];
-	A3C_VARNAME_INDEX = A3C_VARNAME_INDEX + 1;
-	_ordenance = call compile format
-	[
-		"
-
-			%1 = '%2' createvehicle %3;
-			publicVariable '%1';
-			%1
-		",
-		_chargeName,
-		_chargeType,
-		(_unit getPos [0.5,getDir _unit])
-	];
-
-
-	sleep 2;
-	//-- attach to vehicle
-	if ( typeName _targetVeh == "OBJECT" &&  {!isNull _targetVeh}) then {
-		// systemchat "DEBUG DETO TEST 1";
-		if (count _attachMTW isEqualTo [0,0,0]) then {
-			_ordenance setPos (position _targetVeh);
-		} else {
-			_ordenance attachTo [_targetVeh,_attachMTW];
-			_ordenance setvectorDirAndUp  [[-1,0,0],[0,-1,0]];
-		};
-	} else {
-		// systemchat format ["DEBUG DETO TEST 2 , %1, %2", _targetPos select 2, typeOf _ordenance];
-		_targetPos set [2,0]; //-- #NOTE: WHY IS IT NECESSARY? CAN BE NEGATIVE Z-VALUE
-		_ordenance setPos _targetPos; //(ASLtoATL _targetPos);
-	};
-
-
-	waituntil {animationState _unit != "ainvpknlmstpslaywrfldnon_medic"};
-
-	if (_mineTrigger == "RemoteTrigger") then {
-		//private _doBroadcast = if (isPlayer leader group _unit) then {false} else {true};
-		_unit setVariable ["A3C_UNIT_EXPLOSIVES",(_unit getvariable ["A3C_UNIT_EXPLOSIVES",[]]) + [_ordenance],true];
-	};
-
-};
 
 A3C_HC_getPhonetic = {
 	params ["_number"];

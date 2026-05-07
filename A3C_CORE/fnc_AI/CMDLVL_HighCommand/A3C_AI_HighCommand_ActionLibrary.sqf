@@ -1,7 +1,7 @@
 #include "..\..\ui\SHARED\shared_ui_defines.hpp"
 #include "..\..\ui\radial\radialMenu\dialog_defines.hpp"
 #include "..\..\ui\mapOverlay\dialog_defines.hpp"
-#include "..\..\ui\hud\selectionPromptPanel\dialog_defines.hpp"
+#include "..\..\ui\SHARED\selectionPromptPanel\dialog_defines.hpp"
 
 
 
@@ -379,8 +379,7 @@ A3C_AI_HighCommand_Action_limitSpeed = {
 };
 
 A3C_AI_HighCommand_Action_orderDetonation = {
-	[] call A3C_UI_RADIAL_SelectionPromptPanel_START_CHARGEDIALOG;
-	A3C_HC_DetoTrigger_Units = nil; //~~ this whole var stoll needed?
+	[] call A3C_UI_SelectionPromptPanel_fnc_chargePromptStart;
 };
 
 A3C_AI_HighCommand_Action_reBoardGroupToVehicle = {
@@ -678,7 +677,7 @@ A3C_AI_HighCommand_Action_lineCharge = {
 
 A3C_AI_HighCommand_Action_vehicleEngineOff = {
 	{
-		[units _x] call A3C_AI_action_engineOff;
+		[units _x] call A3C_ai_shared_fnc_actionEngineOff;
 	} foreach A3C_HC_engineOffUnits;
 };
 

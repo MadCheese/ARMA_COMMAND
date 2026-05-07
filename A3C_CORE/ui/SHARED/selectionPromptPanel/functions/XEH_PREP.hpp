@@ -11,3 +11,8 @@ A3C_PREP(onUnload);
 A3C_PREP_SUBDIR(handlers,onKeyDown);
 A3C_PREP_SUBDIR(handlers,onKeyUp);
 A3C_PREP_SUBDIR(handlers,onLBSelChanged);
+
+//-- Public functions
+A3C_PREP_SUBDIR(public,onLBSelChangedShared);
+A3C_PREP_SUBDIR(public,chargePromptStart);
+A3C_PREP_SUBDIR(public,chargePromptRefresh);

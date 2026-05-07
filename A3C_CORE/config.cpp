@@ -17,7 +17,7 @@
 
 #include "ui\hud\suppressionArea\dialog.hpp"
 
-#include "ui\hud\selectionPromptPanel\dialog.hpp"
+#include "ui\SHARED\selectionPromptPanel\dialog.hpp"
 
 #include "ui\hud\hudDynamic\dialog.hpp"
 

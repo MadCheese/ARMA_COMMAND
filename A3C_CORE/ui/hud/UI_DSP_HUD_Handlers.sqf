@@ -1,6 +1,6 @@
 #include "..\mapOverlay\dialog_defines.hpp" //-- needed for mapKey
 #include "..\SHARED\shared_ui_defines.hpp"
-#include "selectionPromptPanel\dialog_defines.hpp"
+#include "..\SHARED\selectionPromptPanel\dialog_defines.hpp"
 
 //---------------------------------------  HANDLER-FUNCTIONS  ------------------------------------
 //------------------------------------------------------------------------------------------------

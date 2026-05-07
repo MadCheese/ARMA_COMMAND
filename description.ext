@@ -27,7 +27,7 @@
 #include "A3C_CORE\ui\hud\squadPlacement\dialog.hpp"
 #include "A3C_CORE\ui\hud\squadPlacement\rscTitles.hpp"
 
-#include "A3C_CORE\ui\hud\selectionPromptPanel\dialog.hpp"
+#include "A3C_CORE\ui\SHARED\selectionPromptPanel\dialog.hpp"
 
 #include "A3C_CORE\ui\hud\hudDynamic\dialog.hpp"
 

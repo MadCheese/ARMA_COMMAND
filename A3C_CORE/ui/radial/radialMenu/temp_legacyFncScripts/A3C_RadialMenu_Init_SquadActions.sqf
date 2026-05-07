@@ -1,6 +1,6 @@
 #include "..\script_component.hpp"
 #include "..\dialog_defines.hpp"
-#include "..\..\..\hud\selectionPromptPanel\dialog_defines.hpp"
+#include "..\..\..\SHARED\selectionPromptPanel\dialog_defines.hpp"
 
 
 
@@ -185,7 +185,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 	};
 
 	//-- REMFIRE ACTION CHECK 2: Place Explosive
-	_detoUnits = [_unitArray] call A3C_fnc_getRemoteDetonatorUnits;
+	_detoUnits = [_unitArray] call A3C_ai_shared_fnc_getUnitsWithExplosives;
 	if (count _detoUnits > 0) then {
 		//if (side cursortarget == civilian OR ((side cameraOn) getfriend (side cursorTarget) < 0.6) ) then {  //~~turned out to be confusing
 			A3C_DYNAMIC_BUTTON_ACTIONS pushbackUnique "PLACE_CHARGE_SQUAD";
@@ -337,7 +337,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 						params ["_clickData","_fncData"];
 						_fncData params ["_units","_display"];
 						_units = call compile _units;
-						[_units] call A3C_AI_Squad_Action_Unstuck;
+						_units spawn A3C_ai_shared_fnc_actionUnstuck;
 					},
 					true
 				];
@@ -353,7 +353,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 						params ["_clickData","_fncData"];
 						_fncData params ["_units","_display"];
 						_units = call compile _units;
-						[_units] call A3C_AI_Squad_Action_engineOn;
+						[_units] call A3C_ai_shared_fnc_actionEngineOn;
 						BV_ACT = 0;
 						["ACTIONS",0] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 					},
@@ -371,7 +371,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 						params ["_clickData","_fncData"];
 						_fncData params ["_units","_display"];
 						_units = call compile _units;
-						[_units] call A3C_AI_Squad_Action_engineOn;	
+						[_units] call A3C_ai_shared_fnc_actionEngineOff;	
 						BV_ACT = 0;
 						["ACTIONS",0] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 					},
@@ -668,7 +668,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 							private _a3c_dsp = IDD_SELECTION_PROMPT_PANEL;	
 							A3C_SelectionPromptPanel_MODE = "STATIC_ASSEMBLE_SQUAD";
 							if (count _staticData == 1) then {
-								[0] call A3C_UI_SHARED_selectionPromptPanel_onLbChange;
+								[0] call A3C_UI_selectionPromptPanel_fnc_onLBSelChangedShared;
 							} else {
 								with uiNamespace do {
 									A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";

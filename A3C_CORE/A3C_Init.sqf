@@ -74,34 +74,72 @@ publicVariable 'RHS_ENGINE_STARTUP_OFF';
 
 
 [] spawn {
-	waituntil {!isNil 'A3C_IsA3CServer'};
+	waitUntil {!isNil "A3C_IsA3CServer"};
+
 	if (A3C_IsA3CServer) then {
 		if (isServer) then {
-			A3C_MISSION_EH = addMissionEventHandler
-			[
+			A3C_MISSION_EH = addMissionEventHandler [
 				"Ended",
 				{
-					[] call {
-						A3C_MISSIONENDED = true;
-						publicVariable 'A3C_MISSIONENDED';
-					};
+					A3C_MISSIONENDED = true;
+					publicVariable "A3C_MISSIONENDED";
 				}
 			];
-			[] execFSM "A3C_CORE\FSM\A3C_MON_SERVER.fsm";
-			//-- add custom radio channel 
-			// if (isDedicated) then {
-				A3C_CUSTOMRADIO_ID = radioChannelCreate [[0.96, 0.34, 0.13, 0.8], "A3C_RADIO", "%UNIT_NAME", []];
-				publicVariable "A3C_CUSTOMRADIO_ID";
-			// };
 
+			[] execFSM "A3C_CORE\FSM\A3C_MON_SERVER.fsm";
+
+			//-- Add custom radio channel
+			A3C_CUSTOMRADIO_ID = radioChannelCreate [
+				[0.96, 0.34, 0.13, 0.8],
+				"A3C_RADIO",
+				"%UNIT_NAME",
+				[]
+			];
+
+			publicVariable "A3C_CUSTOMRADIO_ID";
 		} else {
-			//-- A3C running on server, player connecting as client: add player to radio channel
-			A3C_CUSTOMRADIO_ID radioChannelAdd [player];
+			//-- A3C running on server, player connecting as client:
+			//-- TEMP SOLUTION - Try for max. 30 seconds to receive A3C_CUSTOMRADIO_ID, then add player.
+			private _addedToRadio = false;
+
+			for "_i" from 1 to 30 do {
+				if (!isNil "A3C_CUSTOMRADIO_ID" && {!isNull player}) exitWith {
+					A3C_CUSTOMRADIO_ID radioChannelAdd [player];
+					_addedToRadio = true;
+				};
+
+				sleep 1;
+			};
+
+			if (!_addedToRadio) then {
+				diag_log "[A3C] Failed to add player to custom radio channel: A3C_CUSTOMRADIO_ID was not available within 30 seconds.";
+			};
 		};
 	} else {
 		//-- A3C not running on server. Run on client instead.
 		[] execFSM "A3C_CORE\FSM\A3C_MON_SERVER.fsm";
-		A3C_CUSTOMRADIO_ID = radioChannelCreate [[0.96, 0.34, 0.13, 0.8], "A3C_RADIO", "%UNIT_NAME", [player]]; ///-- #WIP: assuming local only is the way to go
+
+		//-- Try for max. 30 seconds to wait for player object before creating local channel.
+		private _channelCreated = false;
+
+		for "_i" from 1 to 30 do {
+			if (!isNull player) exitWith {
+				A3C_CUSTOMRADIO_ID = radioChannelCreate [
+					[0.96, 0.34, 0.13, 0.8],
+					"A3C_RADIO",
+					"%UNIT_NAME",
+					[player]
+				];
+
+				_channelCreated = true;
+			};
+
+			sleep 1;
+		};
+
+		if (!_channelCreated) then {
+			diag_log "[A3C] Failed to create local custom radio channel: player object was not available within 30 seconds.";
+		};
 	};
 };
 
@@ -194,7 +232,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_C
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_CustomFormation_handlers.sqf";
 
 
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\selectionPromptPanel\functions\initFunctions.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\selectionPromptPanel\functions\initFunctions.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\suppressionArea\functions\initFunctions.sqf";
 
