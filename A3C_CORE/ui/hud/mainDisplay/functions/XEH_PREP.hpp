@@ -1,0 +1,3 @@
+A3C_PREP(startPositionalActionProcess);
+A3C_PREP(cancelPositionalActionProcess);
+A3C_PREP(confirmPositionalActionProcess);

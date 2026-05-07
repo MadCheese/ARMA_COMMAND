@@ -60,7 +60,7 @@ A3C_UI_HUD_onKeyDown = {
                     [] call A3C_AI_Squad_Action_suppression;
                 };
                 case ("PLACE_CHARGE_SQUAD") : {
-                    [] call A3C_AI_Squad_Action_placeCharge;
+                    [] call A3C_UI_selectionPromptPanel_fnc_chargeSelectSquad;
                 };
                 case ("STATIC_ASSEMBLE_SQUAD") : {
                     [] call A3C_AI_Squad_Action_assembleWeapon;
@@ -122,7 +122,7 @@ A3C_UI_HUD_onKeyDown = {
 					_oneTimeAction = false;
                 };
                 case ("PLACE_CHARGE_HC") : {
-                    [] call A3C_AI_HighCommand_Action_placeCharge;
+                    [] call A3C_UI_selectionPromptPanel_fnc_chargeSelectHighCommand;
 					_flickerMode = "DEMOLITION";
                 };
                 case ("STATIC_ASSEMBLE_HC") : {
@@ -151,7 +151,7 @@ A3C_UI_HUD_onKeyDown = {
             waitUntil {isNull (findDisplay IDD_SELECTION_PROMPT_PANEL)};
             
 			if (_oneTimeAction) then {
-				[_flickerMode] spawn A3C_AI_SHARED_Action_ConfirmPositionalProcess;	
+				[_flickerMode] spawn A3C_UI_mainDisplay_fnc_confirmPositionalActionProcess;	
 			} else {
 				//-- end flicker
 				private _iconType = A3C_UI_HUD_3D_TAG_ICON_TYPE;

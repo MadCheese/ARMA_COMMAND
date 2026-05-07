@@ -490,7 +490,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 							[1,0,0,1], //-- Hud-Icon-color
 							'', //-- placer class
 							'' //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					},
 					true
 
@@ -511,7 +511,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					},
 					true
 
@@ -535,7 +535,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					},
 					true
 
@@ -559,7 +559,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					},
 					true
 
@@ -601,7 +601,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					},
 					false
 				];
@@ -632,7 +632,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 							[1,1,1,0.7], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					},
 					false
 				];

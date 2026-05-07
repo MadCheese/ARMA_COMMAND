@@ -325,7 +325,7 @@ A3C_UI_RADIAL_startGTIgrenadeLoop = {
 		[1,1,1,0.7], //-- Hud-Icon-color
 		"", //-- placer class
 		"" //-- placer color-params
-	] call A3C_AI_SHARED_Action_StartPositionalProcess;
+	] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 	
 	showCommandingMenu "";
 };

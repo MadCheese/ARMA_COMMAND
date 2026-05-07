@@ -733,7 +733,7 @@ A3C_UI_Shared_fnc_ReleaseMenuKey = {
 
 		//-- Radial / SelectionPromptPanel
 		if (A3C_AI_HighCommand_Action_ID != "" && { !(A3C_isHud3dTag) }) then {
-			[] call A3C_AI_SHARED_Action_CancelPositionalProcess;
+			[] call A3C_UI_mainDisplay_fnc_cancelPositionalActionProcess;
 			A3C_AI_HighCommand_Action_ID = "";
 		};
 
@@ -2974,7 +2974,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 				//----- Remote-Fire Actions (use )
 
-				//["TANKSHOT", '\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa',[1,0,0,1], "A3C_HeliPad","(0.5,0.1,1,1)"] call A3C_AI_SHARED_Action_StartPositionalProcess;
+				//["TANKSHOT", '\a3c_ui\crosshairs\icon_crosshair_remoteTankShell.paa',[1,0,0,1], "A3C_HeliPad","(0.5,0.1,1,1)"] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 
 				case ("TANKSHOT") : {
 					_imageColorCode = if (A3C_Prevent_TANKSHOT) then {[1,1,1,0.3]} else {[1,1,1,1]};
@@ -2994,7 +2994,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					};
 				};
 
@@ -3017,7 +3017,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					};				
 				};
 
@@ -3039,7 +3039,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					};	
 				};
 
@@ -3062,7 +3062,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					};
 				};							
 				case ("UGLSHOT") : {
@@ -3086,7 +3086,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					};
 
 
@@ -3109,7 +3109,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					};
 
 
@@ -3132,7 +3132,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					};
 				};
 				
@@ -3156,7 +3156,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,0,0,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					};
 				};
 			
@@ -3178,7 +3178,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,1,1,1], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					};
 				};
 
@@ -3218,7 +3218,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 									[1,1,1,1], //-- Hud-Icon-color
 									_vehicleType, //-- placer class
 									_colorString //-- placer color-params
-								] call A3C_AI_SHARED_Action_StartPositionalProcess;
+								] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 							} else {
 								//-- specify mapclick
 							};
@@ -3255,7 +3255,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								[1,1,1,0.7], //-- Hud-Icon-color
 								"", //-- placer class
 								"" //-- placer color-params
-							] call A3C_AI_SHARED_Action_StartPositionalProcess;
+							] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 						} else {
 							//-- specify mapclick
 						};
@@ -3285,7 +3285,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								[1,1,1,0.7], //-- Hud-Icon-color
 								"A3C_HeliPad", //-- placer class
 								"" //-- placer color-params
-							] call A3C_AI_SHARED_Action_StartPositionalProcess;
+							] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 
 							
 						} else {
@@ -3360,7 +3360,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								A3C_UI_COLOR_RED, //-- Hud-Icon-color
 								"", //-- placer class
 								"" //-- placer color-params
-							] call A3C_AI_SHARED_Action_StartPositionalProcess;
+							] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 						} else {
 							[_a3c_dsp] spawn {
 								params ["_a3c_dsp"];
@@ -3412,7 +3412,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							[1,1,1,0.7], //-- Hud-Icon-color
 							"", //-- placer class
 							"" //-- placer color-params
-						] call A3C_AI_SHARED_Action_StartPositionalProcess;
+						] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 					};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_explosives_Place.paa";
 					_button_toolTip =  format
@@ -3428,7 +3428,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_buttonFnc = {
 
 						//-- Note: Here we select type first, then position 
-						//--> This means, A3C_AI_SHARED_Action_StartPositionalProcess is called in A3C_UI_selectionPromptPanel_fnc_onLBSelChangedShared!
+						//--> This means, A3C_UI_mainDisplay_fnc_startPositionalActionProcess is called in A3C_UI_selectionPromptPanel_fnc_onLBSelChangedShared!
 						
 						A3C_SelectionPromptPanel_MODE = "STATIC_ASSEMBLE_HC";
 						private _staticData = [units (A3C_RD_UNITS select 0),"PLANNING"] call A3C_getSelectionBackpackStatics;
@@ -3640,7 +3640,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 			A3C_UI_COLOR_RED, //-- Hud-Icon-color
 			"", //-- placer class
 			"" //-- placer color-params
-		] call A3C_AI_SHARED_Action_StartPositionalProcess;
+		] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 	};
 };
 
@@ -3668,7 +3668,7 @@ A3C_AI_HighCommand_ActionDistribute_boardGroupsToVehicle = {
 				[1,0,0,1], //-- Hud-Icon-color
 				"", //-- placer class
 				"" //-- placer color-params
-			] call A3C_AI_SHARED_Action_StartPositionalProcess;
+			] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 		} else {
 			if !(A3C_Boarding_ACTIVE) then {
 				A3C_BOARDING_GROUPS = +(A3C_SELECTED_HC_GROUPS_SETTINGS);

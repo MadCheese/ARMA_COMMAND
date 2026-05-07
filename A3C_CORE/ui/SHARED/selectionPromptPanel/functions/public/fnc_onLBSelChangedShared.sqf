@@ -286,7 +286,7 @@ if (_doubleClick) then {
 						if (isPlayer leader group _unit) then {false} else {true}
 					];
 
-					[] call A3C_UI_selectionPromptPanel_fnc_chargePromptRefresh;
+					[] call A3C_UI_selectionPromptPanel_fnc_chargeDetonatePromptRefresh;
 				};
 			};
 		};
@@ -546,7 +546,7 @@ if (_doubleClick) then {
 						[1,1,1,0.7], //-- Hud-Icon-color
 						_weapon, //-- placer class
 						"" //-- placer color-params
-					] call A3C_AI_SHARED_Action_StartPositionalProcess;
+					] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 
 					A3C_STATIC_PACKS = [_x];
 					A3C_OBJECTPLACER_DIR = getDir cameraOn;
@@ -608,7 +608,7 @@ if (_doubleClick) then {
 						[1,1,1,0.7], //-- Hud-Icon-color
 						_weapon, //-- placer class
 						"" //-- placer color-params
-					] call A3C_AI_SHARED_Action_StartPositionalProcess;
+					] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 				};
 			} forEach A3C_STATIC_PACKS;
 

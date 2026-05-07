@@ -379,7 +379,7 @@ A3C_AI_HighCommand_Action_limitSpeed = {
 };
 
 A3C_AI_HighCommand_Action_orderDetonation = {
-	[] call A3C_UI_SelectionPromptPanel_fnc_chargePromptStart;
+	[] call A3C_UI_SelectionPromptPanel_fnc_chargeDetonatePromptStart;
 };
 
 A3C_AI_HighCommand_Action_reBoardGroupToVehicle = {
@@ -1108,41 +1108,7 @@ A3C_AI_HighCommand_Action_artillery = {
 };
 
 
-A3C_AI_HighCommand_Action_placeCharge = {
-	if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
-		with uiNamespace do {
-			//disableSerialization;
-			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
-		};
 
-		private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
-		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
-		private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
-		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
-
-		A3C_SelectionPromptPanel_MODE = "PLACE_CHARGE_HC";
-		_parent ctrlShow true;
-		_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
-		_parent ctrlCommit 0;
-		_text ctrlSetText "Place Charge";
-
-		if (count A3C_REMFIRE_MAGTYPES > 4) then {
-			_parentPos = ctrlPosition _parent;
-			_parentPos set[3,(_parentPos select 3) + (  ((count A3C_REMFIRE_MAGTYPES) - 4)   * (0.0440051 * safezoneH) )];
-			_parent ctrlSetPosition _parentPos;
-			_parent ctrlCommit 0;
-		};
-		
-		ctrlSetFocus _listBox;
-		
-		lbClear _listBox;
-		{
-			private _lbText = (getText (configfile >> "CfgMagazines" >> _x >> "displayName"));
-			[_listBox, _lbText] call A3C_addLbEntry;
-		} foreach A3C_REMFIRE_MAGTYPES;
-		[_parent,_listBox, count A3C_REMFIRE_MAGTYPES] call A3C_OBJECTSEL_RESIZE;
-	};
-};
 
 A3C_AI_HighCommand_Action_assembleWeapon = {
 	private _gp = A3C_RD_UNITS select 0;

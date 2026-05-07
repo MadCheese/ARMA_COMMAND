@@ -158,6 +158,10 @@ if (isDedicated) exitWith {};
 call compile preprocessFileLineNumbers "A3C_CORE\ai_squad\functions\initFunctions.sqf";
 
 
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\mainDisplay\functions\initFunctions.sqf";
+
+
+
 
 
 
@@ -237,6 +241,9 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\selectionPromptPanel\
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\suppressionArea\functions\initFunctions.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\hudDynamic\functions\initFunctions.sqf";
+
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\mainDisplay\functions\initFunctions.sqf";
+
 
 //-- Shared UI
 call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\functions\initFunctions.sqf";

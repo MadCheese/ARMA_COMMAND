@@ -644,7 +644,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 						[1,1,1,0.7], //-- Hud-Icon-color
 						"", //-- placer class
 						"" //-- placer color-params
-					] call A3C_AI_SHARED_Action_StartPositionalProcess;	
+					] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;	
 				} else {
 					//-- Hide outer ring buttons/images and backgrounds
 					{

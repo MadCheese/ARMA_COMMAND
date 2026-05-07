@@ -17,7 +17,7 @@
 
 
 A3C_AI_Squad_Action_orderDetonation = {
-	[] call A3C_UI_SelectionPromptPanel_fnc_chargePromptStart;
+	[] call A3C_UI_SelectionPromptPanel_fnc_chargeDetonatePromptStart;
 };
 
 
@@ -130,56 +130,6 @@ A3C_AI_Squad_Action_suppression = {
 	};
 };
 
-A3C_AI_Squad_Action_placeCharge = {
-
-	A3C_UI_HUD_3D_TAG_reposition = false;
-	if (count A3C_UI_RADIAL_Current_Remfire_Units > 0) then {
-		private _units = +(A3C_UI_RADIAL_Current_Remfire_Units);
-		private _mags = [];
-
-		{
-			_mags append ([_x] call A3C_ai_shared_fnc_getExplosiveUnitMagazines);
-		} forEach _units;
-
-		_mags = _mags arrayIntersect _mags;
-
-		// systemchat str _mags;
-
-		private __doRefreshGroupSelected = false;
-		with uiNamespace do {
-			//disableSerialization;
-			A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
-		};
-
-		private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
-		private _parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
-		private _text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
-		private _listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
-
-		A3C_SelectionPromptPanel_MODE = "PLACE_CHARGE_SQUAD";
-		_parent ctrlShow true;
-		_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
-		_parent ctrlCommit 0;
-		_text ctrlSetText "Place Charge";
-
-		if (count _mags > 4) then {
-			_parentPos = ctrlPosition _parent;
-			_parentPos set [3, (_parentPos select 3) + (((count _mags) - 4) * (0.0440051 * safezoneH))];
-			_parent ctrlSetPosition _parentPos;
-			_parent ctrlCommit 0;
-		};
-
-
-		ctrlSetFocus _listBox;
-		
-		lbClear _listBox;
-		{
-			private _lbText = getText (configFile >> "CfgMagazines" >> _x >> "displayName");
-			[_listBox, _lbText] call A3C_addLbEntry;
-		} forEach _mags;
-		[_parent, _listBox, count _mags] call A3C_OBJECTSEL_RESIZE;
-	};
-};
 
 A3C_AI_Squad_Action_assembleWeapon = {
 	[] spawn A3C_AI_Squad_Action_assembleWeaponExecute;
