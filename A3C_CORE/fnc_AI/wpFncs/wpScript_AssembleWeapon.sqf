@@ -10,9 +10,9 @@ params
 	"_weaponClass"
 ];
 
-if ([_callerUID,_group] call A3C_HC_WPScriptBlock) exitWith {};
+if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
 
-[_group] call A3C_HC_ReInitGroupMovement;
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 private _wpIndex = currentWaypoint _group;
 private _wp = [_group,_wpIndex];
@@ -29,7 +29,7 @@ if !(_group getVariable ["A3C_ASSEMBLING",false]) then {
 		if !(_pos isEqualTo _wPos) then {
 			_pos = _wPos;
 		};
-		[_group,_pos] call A3C_HC_MoveToWaypoint;
+		[_group,_pos] call A3C_ai_shared_fnc_approachWaypointRegular;
 		sleep 5;
 	};
 };

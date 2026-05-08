@@ -181,7 +181,7 @@ if (_doubleClick) then {
 						//-- land with default Arma mechanic upon return
 						private _landingStatements = format [
 							"
-								[this,%1,'%2',[],true] spawn A3C_HC_WPACTION_LANDING_FULL;
+								[this,%1,'%2',[],true] spawn A3C_ai_highCommand_fnc_wpAction_landingFull;
 							",
 							_startPos,
 							getPlayerUID player

@@ -131,7 +131,7 @@ A3C_forceDestination = {
 			vectorUpVisual _unit,
 			[0,0,1],
 			_duration
-		] spawn A3C_AI_AIRCRAFT_LOOKAT;
+		] spawn A3C_ai_rail_fnc_vehicleOrient;
 		waituntil {scriptDone _subBehaviour};
 		//_scr1 = [_unit,_destination] spawn A3C_FORCEORIENT;
 		//waituntil {scriptDone _scr1};

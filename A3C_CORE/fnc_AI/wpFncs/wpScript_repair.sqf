@@ -5,9 +5,9 @@ params ["_group", "_pos", "_target","_callerUID","_preCondition"];
 //-- #TODO: While it works now, anims scripting is sort of messy right now. Double check everything and m,ake sure unit is not trying to move anywhere
 
 
-if ([_callerUID,_group] call A3C_HC_WPScriptBlock) exitWith {};
+if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
 
-[_group] call A3C_HC_ReInitGroupMovement;
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 
 private _wpIndex = currentWaypoint _group;
@@ -24,7 +24,7 @@ private _precision = ((getNumber (configfile >> "CfgVehicles" >> (typeOf _leader
 _t = str (floor random 9);  //~~ ??
 sleep 1;
 while {_leaderVic distance2d _pos >= _precision} do {
-	[_group,_pos] call A3C_HC_MoveToWaypoint;
+	[_group,_pos] call A3C_ai_shared_fnc_approachWaypointRegular;
 	sleep 10;
 };
 

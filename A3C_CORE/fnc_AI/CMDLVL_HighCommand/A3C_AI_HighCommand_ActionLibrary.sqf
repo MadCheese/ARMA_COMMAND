@@ -124,7 +124,7 @@ A3C_AI_HighCommand_Action_RefreshGroup = {
 		_newGroup = createGroup (side _oldGroup);
 		(units _oldGroup) joinSilent _newGroup;
 
-		[_newGroup] call A3C_HC_ReInitGroupMovement;
+		[_newGroup] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 		{
 			_x params ["_name","_val"];
 			if (!isNil '_newGroup') then {
@@ -165,7 +165,7 @@ A3C_AI_HighCommand_Action_RefreshGroup = {
 
 		private _wpPos = waypointPosition [_newGroup, currentWaypoint _newGroup];
 		if (_wpPos distance2D (vehicle leader _newGroup) > 20) then {
-			[_newGroup,_wpPos] call A3C_HC_MoveToWaypoint; 
+			[_newGroup,_wpPos] call A3C_ai_shared_fnc_approachWaypointRegular; 
 		};
 
 		{
@@ -174,7 +174,7 @@ A3C_AI_HighCommand_Action_RefreshGroup = {
 			} foreach [_x, objectParent _x];
 		} foreach (units _newGroup);
 
-		[_newGroup] call A3C_HC_ReInitGroupMovement; //-- backup brute force double right hook lol - probably not really needed.
+		[_newGroup] call A3C_ai_highCommand_fnc_reInitGroupMovement; //-- backup brute force double right hook lol - probably not really needed.
 		
 	} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
 };
@@ -1061,7 +1061,7 @@ A3C_AI_HighCommand_Action_rappel = {
 				_statements = format
 				[
 					"
-						[this,%1,'%2',[],true] spawn A3C_HC_WPACTION_LANDING_FULL;
+						[this,%1,'%2',[],true] spawn A3C_ai_highCommand_fnc_wpAction_landingFull;
 					",
 					_startPos,
 					getPlayerUID player
@@ -1289,7 +1289,7 @@ A3C_AI_HighCommand_Action_railedHeliLanding = {
 				private _stmts = format
 				[
 					"
-						[this,%1,'%2',[],true] spawn A3C_HC_WPACTION_LANDING_FULL;
+						[this,%1,'%2',[],true] spawn A3C_ai_highCommand_fnc_wpAction_landingFull;
 					",
 					_startPos,
 					getPlayerUID player
@@ -1348,7 +1348,7 @@ A3C_AI_HighCommand_Action_railedHeliLanding = {
 					_statements = format
 					[
 						"
-							[this,%1,'%2',[],true] spawn A3C_HC_WPACTION_LANDING_FULL;
+							[this,%1,'%2',[],true] spawn A3C_ai_highCommand_fnc_wpAction_landingFull;
 							[(group this)] call A3C_HC_FNC_CompleteWaypoint;
 						",
 						_landingData select 0,

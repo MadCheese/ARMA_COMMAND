@@ -24,8 +24,6 @@ if (A3C_IsAICommand && {!isDedicated}) exitWith {
 	];
 };
 
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\wpFncs\fncs_waypointScripts.sqf";
-
 call compile preprocessFileLineNumbers "A3C_CORE\data\A3C_data_bPosNoAccess.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_fncs_Debug.sqf";
@@ -148,7 +146,7 @@ publicVariable 'RHS_ENGINE_STARTUP_OFF';
 
 call compile preprocessFileLineNumbers "A3C_CORE\ai_highCommand\functions\initFunctions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ai_shared\functions\initFunctions.sqf";
-
+call compile preprocessFileLineNumbers "A3C_CORE\ai_rail\functions\initFunctions.sqf";
 
 if (isDedicated) exitWith {};
 

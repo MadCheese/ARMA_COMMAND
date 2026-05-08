@@ -400,7 +400,7 @@ A3C_Babe_fnc_detect = {
 			vectorUpVisual _climber,
 			[0,0,1],
 			0.5
-		] spawn A3C_AI_AIRCRAFT_LOOKAT;
+		] spawn A3C_ai_rail_fnc_vehicleOrient;
 		waituntil {scriptDone _sb};
 		*/
 		if !( _obstacle isKindOf "MAN" && {stance _climber in ["STAND","PRONE"]}) then {

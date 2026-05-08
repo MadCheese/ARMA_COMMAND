@@ -2,13 +2,13 @@
 
 params ["_group","_pos","_target","_callerUID","_preCondition"];
 
-if ([_callerUID,_group] call A3C_HC_WPScriptBlock) exitWith {};
+if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
 
-[_group] call A3C_HC_ReInitGroupMovement;
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 _group setVariable ["A3C_HC_groupVehicleReadyToBoard",false,true]; //-- default for when player moves wp during boarding
 private _leader =  leader _group;
-[_group,_pos] call A3C_HC_MoveToWaypoint;
+[_group,_pos] call A3C_ai_shared_fnc_approachWaypointRegular;
 sleep 2;
 private _wp = [_group,currentwaypoint _group];
 
@@ -52,7 +52,7 @@ private _precision = ((getNumber (configfile >> "CfgVehicles" >> (typeOf _leader
 //"vehicle is ready / adjusting position" remoteExec ["systemchat",0];
 
 
-[_group,((getPosASL _hostingVehicle) getPos [15,_hostingVehicle getDir _leaderVic])] call A3C_HC_MoveToWaypoint;
+[_group,((getPosASL _hostingVehicle) getPos [15,_hostingVehicle getDir _leaderVic])] call A3C_ai_shared_fnc_approachWaypointRegular;
 
 sleep 3;
 waitUntil {currentcommand _hostingDriver != "MOVE" && {isTouchingGround _hostingVehicle OR {(getPosATL _hostingVehicle) select 2 < 0.4}}};

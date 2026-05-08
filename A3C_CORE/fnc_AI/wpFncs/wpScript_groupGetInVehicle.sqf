@@ -1,16 +1,16 @@
 params ["_group","_pos","_target","_callerUID","_preCondition"];
 
-if ([_callerUID,_group] call A3C_HC_WPScriptBlock) exitWith {};
+if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
 
 
 private _leader =  leader _group;
 if (isPlayer _leader) exitWith {true};
 
-[_group] call A3C_HC_ReInitGroupMovement;
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 _group setVariable ["A3C_HC_groupVehicleReadyToBoard",false,true]; //-- default for when player moves wp during boarding
 
-[_group,_pos] call A3C_HC_MoveToWaypoint;
+[_group,_pos] call A3C_ai_shared_fnc_approachWaypointRegular;
 sleep 2;
 private _wp = [_group,currentwaypoint _group];
 

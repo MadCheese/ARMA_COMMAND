@@ -1,184 +1,265 @@
+params ["_group", "_pos", "_target", "_callerUID", "_preCondition", "_postCondition"];
 
-params ["_group","_pos","_target","_callerUID","_preCondition","_postCondition"];
+if ([_callerUID, _group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
 
-if ([_callerUID,_group] call A3C_HC_WPScriptBlock) exitWith {};
-
-[_group] call A3C_HC_ReInitGroupMovement;
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 private _leader = leader _group;
-private _leaderVic = vehicle _leader;
-private _wp = [_group,currentwaypoint _group];
+private _leaderVehicle = vehicle _leader;
+private _wp = [_group, currentWaypoint _group];
 
 //-- terminate previous execution
-private _currentActions = _group getvariable ["A3C_SCRIPTS",[]];
-{
-	_x params ["_actionID","_scr"];
-	if ("landing_full" in toLower _actionID) then {
-		terminate _scr;
-		_currentActions = _currentActions - [_x];
-	};	
-} foreach _currentActions;
+private _currentActions = _group getVariable ["A3C_SCRIPTS", []];
 
-_group setvariable ["A3C_SCRIPTS",_currentActions,true]; //-- guarantee at least the 2 sec of no script so that old one can exit
+{
+	_x params ["_actionID", "_script"];
+
+	if ("landing_full" in toLower _actionID) then {
+		terminate _script;
+		_currentActions = _currentActions - [_x];
+	};
+} forEach _currentActions;
+
+_group setVariable ["A3C_SCRIPTS", _currentActions, true]; //-- guarantee at least the 2 sec of no script so that old one can exit
+
+private _isHoverCapableAircraft =
+	_leaderVehicle isKindOf "HELICOPTER"
+	|| {_leaderVehicle isKindOf "VTOL_Base_F"}
+	|| {_leaderVehicle isKindOf "VTOL_01_base_F"}
+	|| {_leaderVehicle isKindOf "VTOL_02_base_F"};
+
+private _isConventionalPlane = !_isHoverCapableAircraft && {_leaderVehicle isKindOf "PLANE"};
+
+private _vehicleConfig = configFile >> "CfgVehicles" >> typeOf _leaderVehicle;
 
 //-- determine landing distance
-private _landingDistance = if (_leaderVic isKindOf "PLANE" && {(getNumber (configfile >> "CfgVehicles" >> typeOf _leaderVic >> "landingSpeed")) > 10}) then {
+private _landingDistance = if (
+	_isConventionalPlane &&
+	{(getNumber (_vehicleConfig >> "landingSpeed")) > 10}
+) then {
 	5000
 } else {
-	((getNumber (configfile >> "CfgVehicles" >> (typeOf _leaderVic) >> "precision")) + 50);
+	(getNumber (_vehicleConfig >> "precision")) + 50
 };
 
-private _cond = {
-	params ["_leaderVic","_landingDistance","_isPlane"];
-	private _return = if (_isPlane) then {
-		(_leaderVic distance2D _pos) > _landingDistance
-	} else {
-		!unitReady (driver _leaderVic) OR
-		{
-			(_leaderVic distance2D _pos) > (_landingDistance * 2)
-		}
+private _shouldContinueApproach = {
+	params ["_vehicle", "_destinationPos", "_landingDistance", "_isConventionalPlane"];
+
+	if (_isConventionalPlane) exitWith {
+		_vehicle distance2D _destinationPos > _landingDistance
 	};
-	_return
-};
-private _isPlane = _leaderVic isKindOf "PLANE";
-while {[_leaderVic,_landingDistance,_isPlane] call _cond} do { //&& (unitReady _leader)
-	_leaderVic = vehicle _leader; //-- has to be refreshed in case of crash
-	[_group,_pos, true] call A3C_HC_MoveToWaypoint;
-	sleep 5;
+
+	!unitReady driver _vehicle || {
+		_vehicle distance2D _destinationPos > (_landingDistance * 2)
+	}
 };
 
-private _drivers = (units _group) select {_oP = objectParent _x; !isNull _oP && {_x == driver _oP}};
-private _drivenVics = _drivers apply {vehicle _x;};
+//-- WAIT FOR ARRIVAL / APPROACH
+while {[_leaderVehicle, _pos, _landingDistance, _isConventionalPlane] call _shouldContinueApproach} do {
+	_leader = leader _group;
+	_leaderVehicle = vehicle _leader;
 
-{_x limitSpeed 5000} foreach _drivenVics; //-- reset slowdown
+	if !(alive _leaderVehicle && {canMove _leaderVehicle}) exitWith {};
+
+	private _wpPos = waypointPosition _wp;
+
+	//-- Compare waypoint movement in 2D only; preserve original Z/ATL/ASL data in _pos.
+	private _pos2D = +_pos;
+	private _wpPos2D = +_wpPos;
+
+	{
+		_x set [2, 0];
+	} forEach [_pos2D, _wpPos2D];
+
+	if !(_pos2D isEqualTo _wpPos2D) then {
+		_pos = _wpPos;
+	};
+
+	private _distance2D = _leaderVehicle distance2D _pos;
+
+	if (_isHoverCapableAircraft) then {
+		[
+			_group,
+			_pos,
+			40,     //-- final approach speed in km/h before landing action takes over
+			25,     //-- final approach altitude ATL
+			1600,   //-- slowdown starts here; higher value helps fast VTOLs bleed momentum earlier
+			350     //-- anti-overshoot damping starts here
+		] call A3C_ai_shared_fnc_approachWaypointHelicopter;
+	} else {
+		[_group, _pos] call A3C_ai_shared_fnc_approachWaypointRegular;
+	};
+
+	sleep (if (_isHoverCapableAircraft) then {
+		if (_distance2D < 500) then {0.75} else {1.25}
+	} else {
+		5
+	});
+};
+
+private _drivers = units _group select {
+	private _vehicle = objectParent _x;
+	!isNull _vehicle && {_x == driver _vehicle}
+};
+
+private _drivenVehicles = _drivers apply {
+	vehicle _x
+};
+
+{
+	_x limitSpeed 5000;
+} forEach _drivenVehicles; //-- reset slowdown
 
 //-- compose pre- and post conditions, wait for pre-condition
 private _exitCondition = {};
+
 {
-	_x params ["_condType","_condVal"];
-	_exitCondition = switch (toUpper _condType) do {
-		case ("TIMEOUT") : {
-			_timeAtCompletion = time + _condVal;
-			compile format ["time > %1",_timeAtCompletion];
+	_x params ["_conditionType", "_conditionValue"];
+
+	_exitCondition = switch (toUpper _conditionType) do {
+		case "TIMEOUT": {
+			private _timeAtCompletion = time + _conditionValue;
+			compile format ["time > %1", _timeAtCompletion]
 		};
-		case ("GOCODE") : {
-			compile format ["A3C_GoCode_Activate_%1",_condVal];
+
+		case "GOCODE": {
+			compile format ["A3C_GoCode_Activate_%1", _conditionValue]
 		};
-		case ("DAYTIME") : {
-			_str = _condVal splitString ":";
-			_checkParams = [];
+
+		case "DAYTIME": {
+			private _conditionParts = _conditionValue splitString ":";
+			private _checkParams = [];
+
 			{
-				_checkParams pushBack (parseNumber _X)
-			} foreach _str;
-			compile format ["%1 call A3C_fnc_DAYTIME_COMPLETED",_checkParams];
+				_checkParams pushBack parseNumber _x;
+			} forEach _conditionParts;
+
+			compile format ["%1 call A3C_fnc_DAYTIME_COMPLETED", _checkParams]
 		};
-		default {{true}};
+
+		default {
+			{true}
+		};
 	};
-	if (_foreachIndex == 0) then {
-		//systemchat str _exitCondition;
-		waitUntil {[] call _exitCondition}; //-- _foreachIndex == 0 is for pre-condition
-		if !((_preCondition select 0) in ["ARRIVAL",""]) then {
-			_wp setWaypointScript format 
-			[
+
+	if (_forEachIndex == 0) then {
+		waitUntil {
+			[] call _exitCondition
+		}; //-- _forEachIndex == 0 is for pre-condition
+
+		if !((_preCondition select 0) in ["ARRIVAL", ""]) then {
+			_wp setWaypointScript format [
 				"A3C_CORE\fnc_AI\wpFncs\wpScript_Landing.sqf ['%1',%2,%3]",
 				_callerUID,
-				["ARRIVAL",""],
+				["ARRIVAL", ""],
 				_postCondition
 			];
-			_wp setWaypointPosition [_pos,0];
-			systemchat 'ah';
+
+			_wp setWaypointPosition [_pos, 0];
+
 			private _statements = waypointStatements _wp;
-			_statements set [0,"true"];
+			_statements set [0, "true"];
+
 			_wp setWaypointStatements _statements;
 		};
 	};
-} foreach [_preCondition,_postCondition];
+} forEach [_preCondition, _postCondition];
 
-
-//A3C_BLACKLIST_WAYPOINT_EDIT pushbackUnique _wp;
-//publicVariable 'A3C_BLACKLIST_WAYPOINT_EDIT';
-
-
-_helicopterPilots = (units _group) select {
-	_v = objectParent _x;
-	!isNull _v && {_x == driver _v && {_v isKindOf "HELICOPTER"}}
+if !(_isHoverCapableAircraft) then {
+	sleep 2;
 };
 
+private _landingScript = [_leader, _pos, _callerUID, [], true] spawn A3C_ai_highCommand_fnc_wpAction_landingFull;
 
-sleep 2;
-private _scr = [_leader,_pos,_callerUID,[],true] spawn A3C_HC_WPACTION_LANDING_FULL;
-_currentActions pushBack ["landing_full_1",_scr];
-_group setvariable ["A3C_SCRIPTS",_currentActions,true];
+_currentActions pushBack ["landing_full_1", _landingScript];
+_group setVariable ["A3C_SCRIPTS", _currentActions, true];
 
-[_group,_wp] spawn {
-	params ["_group","_wp"];
+[_group, _wp] spawn {
+	params ["_group", "_wp"];
+
 	private _currentActions = [];
+
 	waitUntil {
 		sleep 1;
-		_currentActions = _group getvariable ["A3C_SCRIPTS",[]];
-		private _cwp = currentWaypoint _group;
-		({"landing_full" in (_x select 0)} count _currentActions == 0)  OR 
-		{
-			_cwp != (_wp select 1) OR 
-			{
-				waypointType [_group, _cwp] != "SCRIPTED" OR 
-				{
-					private _wps = waypointScript [_group, _cwp];
-					!('wpscript_landing.sqf' in (toLower _wps))
+
+		_currentActions = _group getVariable ["A3C_SCRIPTS", []];
+
+		private _currentWaypointIndex = currentWaypoint _group;
+
+		({"landing_full" in (_x select 0)} count _currentActions == 0) || {
+			_currentWaypointIndex != (_wp select 1) || {
+				waypointType [_group, _currentWaypointIndex] != "SCRIPTED" || {
+					private _waypointScript = waypointScript [_group, _currentWaypointIndex];
+					!("wpscript_landing.sqf" in toLower _waypointScript)
 				}
 			}
 		}
 	};
-	//systemchat "exit";
+
 	A3C_BLACKLIST_WAYPOINT_EDIT = A3C_BLACKLIST_WAYPOINT_EDIT - [_wp];
+
 	{
-		_x params ["_actionID","_scr"];
+		_x params ["_actionID", "_script"];
+
 		if ("landing_full" in _actionID) then {
 			_currentActions = _currentActions - [_x];
-			terminate _scr;
+			terminate _script;
 		};
-	} foreach _currentActions;
-	_group setvariable ["A3C_SCRIPTS",if (count _currentActions > 0) then {_currentActions} else {nil},true];
+	} forEach _currentActions;
+
+	_group setVariable ["A3C_SCRIPTS", if (count _currentActions > 0) then {_currentActions} else {nil}, true];
+
 	{
-		private _v = objectParent _x;
-		if (!isNull _v && {_x == driver _v && { ((getPosATL _v) select 2) > 1 && {_v isKindOf "AIR"}}}) then {
-			_v land "NONE";
-			_x setVariable ["A3C_VAR_LANDING",nil,true];
+		private _vehicle = objectParent _x;
+
+		if (!isNull _vehicle && {_x == driver _vehicle && {((getPosATL _vehicle) select 2) > 1 && {_vehicle isKindOf "AIR"}}}) then {
+			_vehicle land "NONE";
+			_x setVariable ["A3C_VAR_LANDING", nil, true];
 		};
-	} foreach (units _group);
-	_group setVariable ["A3C_ISwpLANDING",nil,true];
+	} forEach units _group;
+
+	_group setVariable ["A3C_ISwpLANDING", nil, true];
 };
-waituntil {scriptdone _scr};
-_cond = {
+
+waitUntil {
+	scriptDone _landingScript
+};
+
+private _isStillLanding = {
 	params ["_unit"];
-	private _objectParent = objectParent _unit;
-	private _return = !isNull _objectParent && 
-	{
-		_unit == driver _objectParent && 
-		{
-			!isTouchingGround _objectParent &&
-			{
-				(speed _objectParent > 0) &&
-				{
-					_objectParent isKindOf "AIR"
+
+	private _vehicle = objectParent _unit;
+
+	!isNull _vehicle && {
+		_unit == driver _vehicle && {
+			!isTouchingGround _vehicle && {
+				speed _vehicle > 0 && {
+					_vehicle isKindOf "AIR"
 				}
 			}
 		}
-	};
-	_return
+	}
 };
-waitUntil {sleep 1; {[_x] call _cond} count (units _group) == 0};
+
+waitUntil {
+	sleep 1;
+
+	{[_x] call _isStillLanding} count units _group == 0
+};
+
 sleep 15;
-_currentActions = _group getvariable ["A3C_SCRIPTS",[]];
+
+_currentActions = _group getVariable ["A3C_SCRIPTS", []];
+
 {
 	if ("landing_full" in (_x select 0)) then {
 		_currentActions = _currentActions - [_x];
 	};
-} foreach _currentActions;
-_group setvariable ["A3C_SCRIPTS",if (count _currentActions > 0) then {_currentActions} else {nil},true];
-//systemchat "END";
+} forEach _currentActions;
+
+_group setVariable ["A3C_SCRIPTS", if (count _currentActions > 0) then {_currentActions} else {nil}, true];
+
 A3C_BLACKLIST_WAYPOINT_EDIT = A3C_BLACKLIST_WAYPOINT_EDIT - [_wp];
-publicVariable 'A3C_BLACKLIST_WAYPOINT_EDIT';
+publicVariable "A3C_BLACKLIST_WAYPOINT_EDIT";
 
 true
-

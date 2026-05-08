@@ -1574,7 +1574,7 @@ A3C_AI_Shared_executeUnitPlot = {
 						waitUntil {scriptDone _spawnBehaviour};
 					};
 					case (_landingdata == "RAPPEL") : {
-						_spawnBehaviour = [_unit,(leader group _unit),_movePos] spawn A3C_BEHAVIOUR_HELI_RAPPEL;
+						_spawnBehaviour = [_unit,(leader group _unit),_movePos] spawn A3C_ai_shared_fnc_actionAircraftRappell;
 						waitUntil {scriptDone _spawnBehaviour};
 					};
 				};
@@ -1590,7 +1590,7 @@ A3C_AI_Shared_executeUnitPlot = {
 							getPosASL _vehicle,
 							ATLtoASL ((_movePos select [0,2]) + [_wpFlyInHeight]),
 							50
-						] spawn A3C_AI_RAIL_HELI;
+						] spawn A3C_ai_rail_fnc_helicopter;
 						waituntil {scriptDone _subBehaviour};
 						doStop _unit;
 					};

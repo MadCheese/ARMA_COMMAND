@@ -2158,7 +2158,7 @@ A3C_BEHAVIOUR_SQ_HELI_Sling = {
 			getPosASL _veh,
 			ATLtoASL ((_cargoLocation select [0,2]) + [_height]),
 			50
-		] spawn A3C_AI_RAIL_HELI;
+		] spawn A3C_ai_rail_fnc_helicopter;
 		waituntil {scriptDone _subBehaviour};
 		_veh spawn _heliFreeze;
 		_memPoints = getArray (configfile >> "CfgVehicles" >> typeOf _veh >> "slingCargoAttach");
@@ -2183,17 +2183,9 @@ A3C_BEHAVIOUR_SQ_HELI_Sling = {
 
 	} else {
 		//-- _cargo is _movePos here!! not the cargo itself
-
-		_subBehaviour =
-		//[
-		//	_veh,
-		//	getPosASL _veh,
-		//	ATLtoASL ((_cargo select [0,2]) + [10]),
-		//	20
-		//] spawn A3C_AI_RAIL_HELI;
-		//-- PROBLEM: above chopper rail freezes the attached vehicle unnaturally
-		//[_veh,_cargo,_height] spawn A3C_DUDA_CHOPPER_RAIL;
-		[_veh,ATLtoASL ((_cargo select [0,2]) + [_height]),false] spawn A3C_AI_RAIL_VTOL;
+		//-- Note:  freezes the attached vehicle unnaturally
+		//_subBehaviour = [_veh,_cargo,_height] spawn A3C_ai_rail_fnc_helicopterDuda; //-- leave in place as option
+		_subBehaviour = [_veh,ATLtoASL ((_cargo select [0,2]) + [_height]),false] spawn A3C_ai_rail_fnc_hoverApproach;
 		waituntil {scriptDone _subBehaviour};
 		_veh spawn _heliFreeze;
 		_veh setSlingLoad objNull;

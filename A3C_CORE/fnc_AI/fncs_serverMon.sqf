@@ -337,6 +337,7 @@ A3C_SERVERMON_fncActions = {
 			private _precision  = getNumber (configFile >> "CfgVehicles" >> typeOf _lv >> "precision") + 10;
 
 			private _isMove     = waypointType _wpCurr == "MOVE";
+			private _isUnscripted = waypointScript _wpCurr == "";
 			private _isStopped  = speed _lv < 1;
 			private _isGround   = !(_lv isKindOf "AIR");
 			private _driverOk   = !isPlayer _driver && {_driver in units _gp};
@@ -348,6 +349,7 @@ A3C_SERVERMON_fncActions = {
 			private _farFromWP  = _wpPos distance2D _lv > _precision;
 			private _shouldNudge = _driverOk
 				&& {_isMove}
+				&& {_isUnscripted}
 				&& {_isStopped}
 				&& {_isGround}
 				&& { _farFromWP || {_offExpD} };
@@ -365,6 +367,7 @@ A3C_SERVERMON_fncActions = {
 				if (
 					_driverOk
 					&& {_isMove}
+					&& {_isUnscripted}
 					&& {_isStopped}
 					&& {_wpPos distance2D _lv <= _precision}
 					&& {(waypointTimeoutCurrent _gp) == -1}
@@ -372,6 +375,7 @@ A3C_SERVERMON_fncActions = {
 					&& {count (synchronizedWaypoints _wpCurr) == 0}
 				) then {
 					_wpCurr setWaypointPosition [getPosASL _lv, -1];
+					// systemchat format ["nudging wp %1", typeOf (vehicle leader _gp)];
 				};
 			};
 

@@ -2,9 +2,9 @@
 
 params ["_group", "_pos", "_target","_callerUID","_preCondition","_postCondition","_direction","_overwatch_height","_formation"];
 
-if ([_callerUID,_group] call A3C_HC_WPScriptBlock) exitWith {};
+if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
 
-[_group] call A3C_HC_ReInitGroupMovement;
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 
 _group setFormation _formation;
@@ -67,7 +67,7 @@ while {_leaderVic distance2d _pos >= _closeTo} do { //--_precision
 			_x enableAI "MOVE";
 		} foreach [_x,_v]
 	} foreach _groupPilots;
-	[_group,_pos] call A3C_HC_MoveToWaypoint;
+	[_group,_pos] call A3C_ai_shared_fnc_approachWaypointRegular;
 	sleep 5;
 };
 

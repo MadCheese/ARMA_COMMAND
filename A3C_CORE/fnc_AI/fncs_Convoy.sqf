@@ -484,7 +484,7 @@ A3C_FNCS_CONVOY_MULTIGROUP = {
 
 					if !([_gp] call _groupStillInAnyConvoy) then {
 						_gp setVariable ["A3C_UI_Group_Status",nil,true];
-						[[_gp], A3C_HC_ReInitGroupMovement] remoteExec ["bis_fnc_call", leader _gp];
+						[[_gp], A3C_ai_highCommand_fnc_reInitGroupMovement] remoteExec ["bis_fnc_call", leader _gp];
 						[_gp] call _convoyRestoreBehaviour;
 					};
 				} forEach _checkGroups;

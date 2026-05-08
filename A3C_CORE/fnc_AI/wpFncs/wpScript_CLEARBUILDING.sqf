@@ -1,13 +1,15 @@
 params ["_group", "_pos", "_target","_callerUID","_preCondition"];
 
-if ([_callerUID,_group] call A3C_HC_WPScriptBlock) exitWith {};
+if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
 
-[_group] call A3C_HC_ReInitGroupMovement;
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 private _leader =  leader _group;
 
 if (isPlayer _leader) exitWith {true};
 
+
+//-- #TODO: check for script "A3C_SCRIPT" and wait somehow after reposition/change
 
 
 //-- wait for arrival
@@ -28,7 +30,7 @@ private _buildingSize = (sizeOf (typeOf _building)) * 1.1;
 _movePos = _building getPos [_buildingSize,_building getDir _leader];
 while {!(_leader distance2D _building < (_buildingSize * 1.5) )} do { //&& (unitReady _leader)
 	
-	[_group,_movePos] call A3C_HC_MoveToWaypoint;
+	[_group,_movePos] call A3C_ai_shared_fnc_approachWaypointRegular;
 	for "_i" from 1 to 10 do {
 		if (_leader distance2D _pos < 4 && (unitReady _leader)) exitWith {};
 		sleep 1;

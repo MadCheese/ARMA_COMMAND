@@ -468,7 +468,7 @@ A3C_HC_INSERT_ACTION_WP = {
 		_insCondition = "false && false";
 		_group setvariable ['A3C_RAPPELL_COMPLETED',false,true];
 		_WPpos set [2,25];
-		[driver _leadVic,(leader _group),_WPpos] spawn A3C_BEHAVIOUR_HELI_RAPPEL;
+		[driver _leadVic,(leader _group),_WPpos] spawn A3C_ai_shared_fnc_actionAircraftRappell;
 		//systemchat 'uouo';
 	};
 	if (_actionType in ["SUPPRESSION","AMBUSH"]) then {
@@ -967,7 +967,7 @@ A3C_HC_ADD_WP = {
 
 	if (_isFirstWP && {driver _vehicle in units _group}) then {
 		_wpI = 1;
-		[_group] call A3C_HC_ReInitGroupMovement;
+		[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 		_group setvariable ["A3C_UNIT_POLYS",[],true];
 		
 		private _jetTakeOff = false;

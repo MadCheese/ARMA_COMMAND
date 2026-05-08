@@ -1,214 +1,287 @@
+params ["_group", "_pos", "_target", "_callerUID", "_preCondition", "_postCondition"];
 
-params ["_group","_pos","_target","_callerUID","_preCondition","_postCondition"];
+if ([_callerUID, _group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
 
-if ([_callerUID,_group] call A3C_HC_WPScriptBlock) exitWith {};
-
-[_group] call A3C_HC_ReInitGroupMovement;
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 private _leader = leader _group;
-private _leaderVic = vehicle _leader;
-private _wp = [_group,currentwaypoint _group];
+private _leaderVehicle = vehicle _leader;
+private _wp = [_group, currentWaypoint _group];
 
 //-- terminate previous execution
-private _currentActions = _group getvariable ["A3C_SCRIPTS",[]];
+private _currentActions = _group getVariable ["A3C_SCRIPTS", []];
+
 {
-	_x params ["_actionID","_scr"]; //-- move this to 'A3C_HC_WPScriptBlock'???
+	_x params ["_actionID", "_script"]; //-- move this to 'A3C_ai_highCommand_fnc_isWpScriptBlocked'???
+
 	if ("landing_full" in toLower _actionID) then {
-		terminate _scr;
+		terminate _script;
 		_currentActions = _currentActions - [_x];
 	};
-	
-} foreach _currentActions;
+} forEach _currentActions;
 
-_group setvariable ["A3C_SCRIPTS",_currentActions,true]; //-- guarantee at least the 2 sec of no script so that old one can exit
+_group setVariable ["A3C_SCRIPTS", _currentActions, true]; //-- guarantee at least the 2 sec of no script so that old one can exit
 
-private _addRadius = if (_leaderVic isKindOf "AIR") then {50} else {0};
+private _isHoverCapableAircraft =
+	_leaderVehicle isKindOf "HELICOPTER"
+	|| {_leaderVehicle isKindOf "VTOL_Base_F"}
+	|| {_leaderVehicle isKindOf "VTOL_01_base_F"}
+	|| {_leaderVehicle isKindOf "VTOL_02_base_F"};
+
+private _addRadius = if (_leaderVehicle isKindOf "AIR") then {50} else {0};
+
+private _vehicleConfig = configFile >> "CfgVehicles" >> typeOf _leaderVehicle;
 
 //-- determine landing distance
-private _landingDistance = ((getNumber (configfile >> "CfgVehicles" >> (typeOf _leaderVic) >> "precision")) + _addRadius);
+private _landingDistance = (getNumber (_vehicleConfig >> "precision")) + _addRadius;
 
-private _cond = {
-	params ["_leaderVic","_landingDistance","_isPlane"];
-	private _return = if (_isPlane) then {
-		(_leaderVic distance2D _pos) > _landingDistance
-	} else {
-		!unitReady (driver _leaderVic) OR
-		{
-			(_leaderVic distance2D _pos) > (_landingDistance * 2)
-		}
+private _shouldContinueApproach = {
+	params ["_vehicle", "_landingDistance"];
+
+	!unitReady driver _vehicle || {
+		_vehicle distance2D _pos > (_landingDistance * 2)
+	}
+};
+
+while {[_leaderVehicle, _landingDistance] call _shouldContinueApproach} do {
+	_leader = leader _group;
+	_leaderVehicle = vehicle _leader; //-- has to be refreshed in case of crash
+
+	if !(alive _leaderVehicle && {canMove _leaderVehicle}) exitWith {};
+
+	private _wpPos = waypointPosition _wp;
+
+	//-- Compare waypoint movement in 2D only; preserve original Z/ATL/ASL data in _pos.
+	private _pos2D = +_pos;
+	private _wpPos2D = +_wpPos;
+
+	{
+		_x set [2, 0];
+	} forEach [_pos2D, _wpPos2D];
+
+	if !(_pos2D isEqualTo _wpPos2D) then {
+		_pos = _wpPos;
 	};
-	_return
+
+	private _distance2D = _leaderVehicle distance2D _pos;
+
+	if (_isHoverCapableAircraft) then {
+		[
+			_group,
+			_pos,
+			30,     //-- final approach speed in km/h before unload / GET IN landing logic takes over
+			25,     //-- final approach altitude ATL
+			1600,   //-- slowdown starts here; higher value helps fast VTOLs bleed momentum earlier
+			350     //-- anti-overshoot damping starts here
+		] call A3C_ai_shared_fnc_approachWaypointHelicopter;
+
+		sleep (if (_distance2D < 500) then {0.5} else {1});
+	} else {
+		[_group, _pos] call A3C_ai_shared_fnc_approachWaypointRegular;
+
+		sleep 2;
+	};
 };
 
-while {[_leaderVic,_landingDistance,false] call _cond} do { //&& (unitReady _leader)
-	_leaderVic = vehicle _leader; //-- has to be refreshed in case of crash
-	[_group,_pos, true] call A3C_HC_MoveToWaypoint;
-	sleep 2;
+private _drivers = units _group select {
+	private _vehicle = objectParent _x;
+	!isNull _vehicle && {_x == driver _vehicle}
 };
 
-private _drivers = (units _group) select {_oP = objectParent _x; !isNull _oP && {_x == driver _oP}};
-private _drivenVics = _drivers apply {vehicle _x;};
+private _drivenVehicles = _drivers apply {
+	vehicle _x
+};
 
-{_x limitSpeed 5000} foreach _drivenVics; //-- reset slowdown
+{
+	_x limitSpeed 5000;
+} forEach _drivenVehicles; //-- release slowdown after approach / before unload handling
 
 //-- compose pre- and post conditions, wait for pre-condition
 private _exitCondition = {};
+
 {
-	_x params ["_condType","_condVal"];
-	_exitCondition = switch (toUpper _condType) do {
-		case ("TIMEOUT") : {
-			_timeAtCompletion = time + _condVal;
-			compile format ["time > %1",_timeAtCompletion];
+	_x params ["_conditionType", "_conditionValue"];
+
+	_exitCondition = switch (toUpper _conditionType) do {
+		case "TIMEOUT": {
+			private _timeAtCompletion = time + _conditionValue;
+			compile format ["time > %1", _timeAtCompletion]
 		};
-		case ("GOCODE") : {
-			compile format ["A3C_GoCode_Activate_%1",_condVal];
+
+		case "GOCODE": {
+			compile format ["A3C_GoCode_Activate_%1", _conditionValue]
 		};
-		case ("DAYTIME") : {
-			_str = _condVal splitString ":";
-			_checkParams = [];
+
+		case "DAYTIME": {
+			private _conditionParts = _conditionValue splitString ":";
+			private _checkParams = [];
+
 			{
-				_checkParams pushBack (parseNumber _X)
-			} foreach _str;
-			compile format ["%1 call A3C_fnc_DAYTIME_COMPLETED",_checkParams];
+				_checkParams pushBack parseNumber _x;
+			} forEach _conditionParts;
+
+			compile format ["%1 call A3C_fnc_DAYTIME_COMPLETED", _checkParams]
 		};
-		default {{true}};
+
+		default {
+			{true}
+		};
 	};
-	if (_foreachIndex == 0) then {
-		//systemchat str _exitCondition;
-		waitUntil {[] call _exitCondition}; //-- _foreachIndex == 0 is for pre-condition
-		if !((_preCondition select 0) in ["ARRIVAL",""]) then {
-			_wp setWaypointScript format 
-			[
+
+	if (_forEachIndex == 0) then {
+		waitUntil {
+			[] call _exitCondition
+		}; //-- _forEachIndex == 0 is for pre-condition
+
+		if !((_preCondition select 0) in ["ARRIVAL", ""]) then {
+			_wp setWaypointScript format [
 				"A3C_CORE\fnc_AI\wpFncs\wpScript_Landing_Combat.sqf ['%1',%2,%3]",
 				_callerUID,
-				["ARRIVAL",""],
+				["ARRIVAL", ""],
 				_postCondition
 			];
-			_wp setWaypointPosition [_pos,0];
-			//systemchat 'ah';
+
+			_wp setWaypointPosition [_pos, 0];
+
 			private _statements = waypointStatements _wp;
-			_statements set [0,"true"];
+			_statements set [0, "true"];
+
 			_wp setWaypointStatements _statements;
 		};
 	};
-} foreach [_preCondition,_postCondition];
+} forEach [_preCondition, _postCondition];
 
+private _vehiclesMoved = [];
+private _vehiclesLanding = [];
 
-//A3C_BLACKLIST_WAYPOINT_EDIT pushbackUnique _wp;
-//publicVariable 'A3C_BLACKLIST_WAYPOINT_EDIT';
-
-
-_helicopterPilots = (units _group) select {
-	_v = objectParent _x;
-	!isNull _v && {_x == driver _v && {_v isKindOf "HELICOPTER"}}
-};
-
-
-private ["_vehsMove","_vehsLand"];
-_vehsMove = [];
-_vehsLand = [];
-waituntil {
-	private ["_countReady","_vehsGroup"];
-	_countReady = 0;
-	_vehsGroup = [];
-	private _allCrew = [];
+waitUntil {
+	private _groupVehicles = [];
 
 	{
-		private ["_veh","_d"];
-		_veh = vehicle _x;
-		_d = driver _veh;
-		if (_x == effectivecommander _x) then {
-			if (!(_veh in _vehsMove) && {!(istouchingground _veh)}) then {
-				_veh domove _pos;
-				_veh moveTo _pos;
-				_vehsMove set [count _vehsMove,_veh];
-				//systemChat format ["%1 COMBAT LAND MOVE",group _x];
-			} else {
-				if !(istouchingground _veh) then {
-				//	if (unitready _veh && !(_veh in _vehsLand)) then {
-						_veh land "GET IN";
-						_vehsLand set [count _vehsLand,_veh];
-						//systemChat format ["%1 COMBAT LAND DROP",group _x];
-				//	};
-				//} else {
-				//	_veh engineon true;
-				//	_veh flyInHeight 0;
-				//	_countReady = _countReady + 1;
+		private _vehicle = vehicle _x;
+		private _driver = driver _vehicle;
+
+		if (_x == effectiveCommander _x) then {
+			private _isHoverCapableVehicle =
+				_vehicle isKindOf "HELICOPTER"
+				|| {_vehicle isKindOf "VTOL_Base_F"}
+				|| {_vehicle isKindOf "VTOL_01_base_F"}
+				|| {_vehicle isKindOf "VTOL_02_base_F"};
+
+			if (_isHoverCapableVehicle) then {
+				if !(isTouchingGround _vehicle) then {
+					[
+						_group,
+						_pos,
+						10,     //-- final unload speed in km/h
+						4,      //-- low final altitude ATL before GET IN landing behavior takes over
+						500,    //-- short approach envelope; main approach already happened
+						150     //-- soft anti-overshoot damping near unload point
+					] call A3C_ai_shared_fnc_approachWaypointHelicopter;
+
+					_vehicle flyInHeight 0;
+
+					if !(_vehicle in _vehiclesLanding) then {
+						_vehicle land "GET IN";
+						_vehiclesLanding pushBack _vehicle;
+					};
 				} else {
-					
-					_veh flyInHeight 0; //-- is this ever executed really? it should be, but check
-					private _crewNonGroup = (crew _veh) select {
-						group _x != group _d &&
+					_vehicle flyInHeight 0;
+
+					private _crewNonGroup = crew _vehicle select {
+						group _x != group _driver &&
 						{
-							assignedVehicle _x == _veh
+							assignedVehicle _x == _vehicle
 						}
 					};
+
 					if !(_crewNonGroup isEqualTo []) then {
 						{
 							[
 								[_x],
 								{
 									params ["_unit"];
-									// unassignVehicle _unit;
-									// // moveOut _unit;
-									// doGetOut _unit;
-									[_unit] call A3C_AIGetOut;
 
+									[_unit] call A3C_AIGetOut;
 								}
-							] remoteExec ["bis_fnc_call",_x];
-						} foreach _crewNonGroup;	
+							] remoteExec ["BIS_fnc_call", _x];
+						} forEach _crewNonGroup;
+					};
+				};
+			} else {
+				if (!(_vehicle in _vehiclesMoved) && {!(isTouchingGround _vehicle)}) then {
+					_vehicle doMove _pos;
+					_vehicle moveTo _pos;
+					_vehiclesMoved pushBack _vehicle;
+				} else {
+					if !(isTouchingGround _vehicle) then {
+						_vehicle land "GET IN";
+						_vehiclesLanding pushBack _vehicle;
+					} else {
+						_vehicle flyInHeight 0; //-- is this ever executed really? it should be, but check
+
+						private _crewNonGroup = crew _vehicle select {
+							group _x != group _driver &&
+							{
+								assignedVehicle _x == _vehicle
+							}
+						};
+
+						if !(_crewNonGroup isEqualTo []) then {
+							{
+								[
+									[_x],
+									{
+										params ["_unit"];
+
+										[_unit] call A3C_AIGetOut;
+									}
+								] remoteExec ["BIS_fnc_call", _x];
+							} forEach _crewNonGroup;
+						};
 					};
 				};
 			};
-			_vehsGroup set [count _vehsGroup,_veh];
-		};
-	} foreach units _group;
 
-	_vehsMove = _vehsMove - (_vehsMove - _vehsGroup);
-	_vehsLand = _vehsLand - (_vehsLand - _vehsGroup);
+			_groupVehicles pushBack _vehicle;
+		};
+	} forEach units _group;
+
+	_vehiclesMoved = _vehiclesMoved arrayIntersect _groupVehicles;
+	_vehiclesLanding = _vehiclesLanding arrayIntersect _groupVehicles;
 
 	sleep 1;
 
-	_doExit = //-- no vehicle of the group carries any more units from another group
-	{
-		
-		private _oP = objectParent _x;
-		!isNull _oP &&
+	private _doExit = {
+		private _vehicle = objectParent _x;
+
+		!isNull _vehicle &&
 		{
-			_x == driver _op &&
+			_x == driver _vehicle &&
 			{
-				canMove _op &&
+				canMove _vehicle &&
 				{
-					{!(_x in units _group)} count (crew _op) > 0
+					{!(_x in units _group)} count crew _vehicle > 0
 				}
 			}
 		}
 	} count units _group == 0;
 
-	// hint str _doExit;
-
-	// if (_doExit) exitWith {};
-
-	
-	//count _vehsGroup == _countReady OR {[] call _exitCondition}
-	//systemchat str [time,"COMBAT LAND LOOP"];
-	// [] call _exitCondition
 	_doExit
 };
+
 if !([_group] call A3C_isGroupOnFinalWP) then {
 	{
-		private ["_veh"];
-		_veh = vehicle _x;
-		if (_x == effectivecommander _x && {_veh isKindOf "HELICOPTER"}) then {
-			_veh land "NONE";
+		private _vehicle = vehicle _x;
+
+		if (_x == effectiveCommander _x && {_vehicle isKindOf "HELICOPTER"}) then {
+			_vehicle land "NONE";
 		};
-	} foreach units _group;
+	} forEach units _group;
 };
-[_group] call A3C_HC_ReInitGroupMovement;
 
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
-//systemchat "COMBAT LAND END";
-[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0]; //-- check gocodes and assign color
+[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls", 0]; //-- check gocodes and assign color
 
 true
-

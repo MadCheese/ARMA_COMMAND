@@ -16,9 +16,7 @@
 
 
 
-A3C_AI_Squad_Action_orderDetonation = {
-	[] call A3C_UI_SelectionPromptPanel_fnc_chargeDetonatePromptStart;
-};
+
 
 
 

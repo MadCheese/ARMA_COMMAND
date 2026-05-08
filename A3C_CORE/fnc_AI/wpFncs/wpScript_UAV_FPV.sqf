@@ -15,9 +15,9 @@ _target = _this select 2;
 _callerUID = _this select 3;
 
 
-if ([_callerUID,_group] call A3C_HC_WPScriptBlock) exitWith {};
+if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
 
-[_group] call A3C_HC_ReInitGroupMovement;
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 // systemchat ("WP SCRIPT " + (str time));
 

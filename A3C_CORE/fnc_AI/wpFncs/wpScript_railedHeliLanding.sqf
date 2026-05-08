@@ -2,9 +2,9 @@
 
 params ["_group","_waypointPosition","_target","_callerUID","_preCondition","_postCondition","_landingRailType","_landingData","_goCode","_callerUID"];
 
-if ([_callerUID,_group] call A3C_HC_WPScriptBlock) exitWith {};
+if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
 
-[_group] call A3C_HC_ReInitGroupMovement;
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 _wp = [_group,currentwaypoint _group];
 //systemchat str _goCode;
@@ -20,22 +20,28 @@ if (true) exitWith {
 */
 
 
-//systemChat str _this;
 private _leader = leader _group;
-private _leaderVic = vehicle _leader;
-[_group,_waypointPosition] call A3C_HC_MoveToWaypoint;
-
+private _leaderVehicle = vehicle _leader;
 
 while {true} do {
-	if !(alive _leaderVic && {canMove _leaderVic}) exitWith {};
-	if (_leaderVic distance2D _waypointPosition < 200) exitWith {};
+	if !(alive _leaderVehicle && {canMove _leaderVehicle}) exitWith {};
+	if (_leaderVehicle distance2D _waypointPosition < 200) exitWith {};
+
+	[
+		_group,
+		_waypointPosition,
+		20,     //-- final approach speed in km/h before landing rail takes over
+		25,     //-- final approach altitude ATL
+		1600,   //-- slowdown starts here; higher value helps fast VTOLs bleed momentum earlier
+		350     //-- anti-overshoot damping starts here
+	] call A3C_ai_shared_fnc_approachWaypointHelicopter;
+
 	sleep 1;
 };
 
-if (_leaderVic getVariable ["A3C_isBeingRailed",false]) exitWith {};
-_leaderVic setVariable ["A3C_isBeingRailed",true,true];
+if (_leaderVehicle getVariable ["A3C_isBeingRailed", false]) exitWith {};
 
-
+_leaderVehicle setVariable ["A3C_isBeingRailed", true, true];
 
 //-- ALERT: EVERYTIME THE WAYPOINT IS MOVED, THE SCRIPT GETS EXECUTED!!
 

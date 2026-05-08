@@ -4,9 +4,9 @@ params ["_group","_pos","_target","_callerUID","_preCondition"];
 //_target = _this param [2,objnull,[objnull]];
 
 
-if ([_callerUID,_group] call A3C_HC_WPScriptBlock) exitWith {};
+if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
 
-[_group] call A3C_HC_ReInitGroupMovement;
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 _wp = [_group,currentwaypoint _group];
 
@@ -24,7 +24,7 @@ private _leader = leader _group;
 _loadVic = vehicle _leader;
 private _precision = ((getNumber (configfile >> "CfgVehicles" >> (typeOf _loadVic) >> "precision")) * 1.2);
 
-[_group,_pos] call A3C_HC_MoveToWaypoint;
+[_group,_pos] call A3C_ai_shared_fnc_approachWaypointRegular;
 
 
 waituntil {unitready (driver _loadVic) && {_loadVic distance2D _pos < _precision}};
