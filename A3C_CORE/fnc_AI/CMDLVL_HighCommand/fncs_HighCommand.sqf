@@ -468,7 +468,10 @@ A3C_HC_INSERT_ACTION_WP = {
 		_insCondition = "false && false";
 		_group setvariable ['A3C_RAPPELL_COMPLETED',false,true];
 		_WPpos set [2,25];
-		[driver _leadVic,(leader _group),_WPpos] spawn A3C_ai_shared_fnc_actionAircraftRappell;
+		[
+			[driver _leadVic, leader _group, _WPpos],
+			A3C_ai_shared_fnc_actionAircraftRappell
+		] remoteExec ["BIS_fnc_spawn", leader _group];
 		//systemchat 'uouo';
 	};
 	if (_actionType in ["SUPPRESSION","AMBUSH"]) then {

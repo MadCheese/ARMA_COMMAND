@@ -4,7 +4,7 @@ A3C_Babe_fnc_detect = {
 	//private _fnc_scriptNameParent = if (isNil '_fnc_scriptName') then {'BABE_EM_fnc_detect'} else {_fnc_scriptName};
 	//private _fnc_scriptName = 'BABE_EM_fnc_detect';
 	//scriptName _fnc_scriptName;
-
+	
 	//#line 1 "\babe\babe_em\func\mov\fn_detect.sqf [BABE_EM_fnc_detect]"
 	params ["_climber","_destination"];
 	private _climbonly = true;
@@ -60,7 +60,7 @@ A3C_Babe_fnc_detect = {
 
 	_dpos = [0,0,0];
 	
-
+	
 	//_cos = 0;
 	//-- drop to lower position	
 	//if (_cos > 0.8) exitWith {
@@ -406,7 +406,21 @@ A3C_Babe_fnc_detect = {
 		if !( _obstacle isKindOf "MAN" && {stance _climber in ["STAND","PRONE"]}) then {
 			//-- added A3C commands for rooftops / forced paths
 			_refPos = (((getPosASL _climber) getPos [-100,_mc_dir + 180]) select [0,2]) + [getPosASL _climber select 2];
-			_refDir = [( ([_refPos,_obstacle] call A3C_UI_squadPlacement_fnc_snapFormation) select 2) + 180] call mcss_fnc_correctDir;
+			
+			_refDir = [
+				getPosASL _climber,
+				_refPos,
+				_climber,
+				objNull,
+				true	
+			] call A3C_main_fnc_getSurfaceNormalAzimuth;
+
+			// systemchat str _refDir;
+			
+			// _refDir = 
+			// [
+			// 	( ([_refPos,_obstacle] call A3C_UI_squadPlacement_fnc_snapFormation) select 2) + 180
+			// ] call mcss_fnc_correctDir;
 			_climber setdir _refDir;
 			[_pos, _top, _toppos, _climber, _climbonly] call A3C_Babe_fnc_EM; //babe_em_fnc_em;
 			_climber setVariable ["A3C_EM_ACTIVE",true,true];
@@ -509,9 +523,9 @@ A3C_Babe_fnc_EM = {
 
 
 
-
+	
 	_over = false;
-//systemchat str _top;
+
 	if (_top) then {
 
 		switch (true) do {
@@ -666,9 +680,7 @@ A3C_babe_em_fnc_exec_em = {
 
 	params ["_pos", "_over", "_climber","_animClip"];
 	
-//diag_log (name _climber);
-//systemchat str  (name _climber);
-//playsound 'A3C_MenuSound1';
+
 	[
 		((name _climber) + "EH_em_loop"),
 		{((_condpars select 0) getVariable "babe_em_vars") select 0},

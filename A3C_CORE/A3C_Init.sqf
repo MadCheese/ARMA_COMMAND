@@ -41,8 +41,6 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_remoteFire.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_AIR_rappel.sqf";
 
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\ai_rails\ai_rails_inf.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\ai_rails\ai_rails_Heli.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_serverMon.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_vehicleRemote.sqf";
@@ -143,6 +141,8 @@ publicVariable 'RHS_ENGINE_STARTUP_OFF';
 
 
 //-- Generate A3C function libraries
+
+call compile preprocessFileLineNumbers "A3C_CORE\main\functions\initFunctions.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\ai_highCommand\functions\initFunctions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ai_shared\functions\initFunctions.sqf";

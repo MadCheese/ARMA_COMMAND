@@ -6,298 +6,18 @@
 
 
 
-
-
-//---------------------------------------------------------------------------------------------
-//---------- 1. Non positional actions --------------------------------------------------------
-//---------------------------------------------------------------------------------------------
-
-
-//---------------------------- MAP ONLY
-
-A3C_AI_HighCommand_Action_joinPlayerGroup = {
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
-	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
-	//-- UI-Reaction
-	if !(_isRadial) then {
-		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
-		(findDisplay 12 displayCtrl 51) ctrlEnable true;
-	} else {
-		//-- no actual action - just close menu
-		A3C_DISABLE_RADIAL = true;
-		[] call A3C_UI_RADIAL_CloseDisplay;
-	};
-	[A3C_SELECTED_HC_GROUPS_SETTINGS] call A3C_AI_HIGHCOMMAND_fnc_mergeGroups;
-};
-
-A3C_AI_HighCommand_Action_mergeGroups = {
-	{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
-	// (findDisplay 12 displayCtrl 51) ctrlEnable true;
-	A3C_isMergeGroupActive = true;
-	hint "Click on the group to join";
-	waituntil {!visibleMap OR {!(A3C_isMergeGroupActive)}};
-	hint "";
-	A3C_isMergeGroupActive = false;
-};
-
-A3C_AI_HighCommand_Action_heliHoverInPlace = {
-	private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
-	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
-	
-	private _var = (vehicle leader _group) getVariable ["A3C_Freeze_helicopter",[false,0]];
-
-
-	if (_var select 0) then {
-		//-- cancel action
-		if !(_isRadial) then {
-			{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
-			(findDisplay 12 displayCtrl 51) ctrlEnable true;
-		};
-		{
-			_vehicle = vehicle _x;
-			if (_x == driver _vehicle && {[_vehicle] call A3C_fnc_isAttackHelicopter}) then {
-				_vehicle setVariable ["A3C_Freeze_helicopter",[false,0],true];
-				{_vehicle enableAI _x; } foreach ["TARGET","PATH"];
-			};
-		} foreach (units _group);
-	};
-};
-
-//---------------------------- RADIAL ONLY
-
-
-
-
 //---------------------------- SHARED (MAP+RADIAL)
 
-A3C_AI_HighCommand_Action_RefreshGroup = {
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
-	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
-
-	//-- UI-Reaction
-	if (_isRadial) then {
-		//-- no actual action - just close menu
-		//-- note: we still disable radial so that player needs to let go of key
-		A3C_DISABLE_RADIAL = true;
-		[] call A3C_UI_RADIAL_CloseDisplay;
-	} else {
-		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
-		(findDisplay 12 displayCtrl 51) ctrlEnable true;
-	};
-
-	//-- AI Action
-	{
-		_oldGroup = _x;
-		_waypointData = [];
-		_groupID = groupID _oldGroup;
-		_wpIndex = 0;
-		private _allVariables = (allVariables _oldGroup) apply {[_x, _oldGroup getVariable [_x,nil]]};
-		{
-			_wp = _x;
-			if (_wp select 1 >= currentWaypoint _oldGroup ) then { //-- exclude first waypoint? && {_foreachIndex > 0}
-				_waypointData set
-				[
-					_wpIndex,
-					[
-						waypointBehaviour _wp,
-						waypointCombatMode _wp,
-						waypointCompletionRadius _wp,
-						waypointDescription _wp,
-						waypointFormation _wp,
-						waypointName _wp,
-						waypointPosition _wp,
-						waypointScript _wp,
-						waypointSpeed _wp,
-						waypointStatements _wp,
-						waypointTimeout _wp,
-						waypointType _wp,
-						waypointVisible _wp
-					]
-				];
-				_wpIndex = _wpIndex + 1;
-			};
-			
-		} foreach (waypoints _oldGroup);
 
 
-		_newGroup = createGroup (side _oldGroup);
-		(units _oldGroup) joinSilent _newGroup;
-
-		[_newGroup] call A3C_ai_highCommand_fnc_reInitGroupMovement;
-		{
-			_x params ["_name","_val"];
-			if (!isNil '_newGroup') then {
-				if (!isNil '_name') then {
-					if (!isNil '_val') then {
-						_newGroup setVariable [_name,_val,true]; //-- unfortunately there's no way to know if var was public or not :S > so we broadcast lol
-					};
-				};
-			};				
-		} foreach _allVariables;
-		deleteGroup _oldGroup;
-		_newGroup setGroupIdGlobal [_groupID];
-		
-	
-		{
-			_wpData = _x;
-			_wp = _newGroup addWaypoint [[0,0,0],0];
-			{
-				_wpValue = _x;
-				diag_log _wpValue;
-				switch _foreachIndex do {
-					case (0)  : {_wp setWaypointBehaviour _wpValue};
-					case (1)  : {_wp setWaypointCombatMode _wpValue};
-					case (2)  : {_wp setWaypointCompletionRadius _wpValue};
-					case (3)  : {_wp setWaypointDescription _wpValue};
-					case (4)  : {_wp setWaypointFormation _wpValue};
-					case (5)  : {_wp setWaypointName _wpValue};
-					case (6)  : {_wp setWaypointPosition  [_wpValue,0]};
-					case (7)  : {_wp setWaypointScript _wpValue};
-					case (8)  : {_wp setWaypointSpeed _wpValue};
-					case (9)  : {_wp setWaypointStatements _wpValue};
-					case (10) : {_wp setWaypointTimeout _wpValue};
-					case (11) : {_wp setWaypointType _wpValue};
-					case (12) : {_wp setWaypointVisible _wpValue};
-				};
-			} foreach _wpData;
-		} foreach _waypointData;
-
-		private _wpPos = waypointPosition [_newGroup, currentWaypoint _newGroup];
-		if (_wpPos distance2D (vehicle leader _newGroup) > 20) then {
-			[_newGroup,_wpPos] call A3C_ai_shared_fnc_approachWaypointRegular; 
-		};
-
-		{
-			{
-				_x enableAI "ALL";
-			} foreach [_x, objectParent _x];
-		} foreach (units _newGroup);
-
-		[_newGroup] call A3C_ai_highCommand_fnc_reInitGroupMovement; //-- backup brute force double right hook lol - probably not really needed.
-		
-	} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
-};
-
-A3C_AI_HighCommand_Action_VehicleRemote = {
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
-	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
-	if (_isRadial) then {
-		A3C_DISABLE_RADIAL = true;
-		[] call A3C_UI_RADIAL_CloseDisplay;
-	} else {
-		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
-		(findDisplay 12 displayCtrl 51) ctrlEnable true;
-	};
-	
-	[] call A3C_SHARED_StartVehicleRemote;
-};
 
 
-A3C_AI_HighCommand_Action_ConvoyHalt = {
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
-	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
-	//-- UI-Reaction
-	if (_isRadial) then {
-		A3C_DISABLE_RADIAL = true;
-		[] call A3C_UI_RADIAL_CloseDisplay;
-	} else {
-		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
-	};
-
-	hint format ["%1 convoy(s) have been ordered to halt!", count A3C_GROUP_CONVOYS];
-
-	{
-		_convoyElement = _x;
-		{
-			private _gp = _x;
-			[_gp, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
-			private _lv = vehicle leader _gp;
-			private _effCom = effectiveCommander _lv;
-			if (_effCom in (units _gp)) then {
-				private _closePos = _lv getPos [10, getDir _lv];
-				[_effCom, _closePos]  call A3C_DOMOVE;
-			};
-			(leader _gp) setBehaviour "COMBAT";
-			{
-				private _weaponsFound = false;
-				private _oP = objectParent _x;
-
-				if (!isNull _oP) then {
-					if (currentWeapon _x != "") then {_weaponsFound = true};
-				} else {
-					private _turrentWeapons = _oP weaponsTurret ((_oP) unitTurret gunner _oP);
-					if !(_turrentWeapons isEqualTo []) then {_weaponsFound = true};
-				};
-				if (_weaponsFound) exitWith {
-					(leader _gp) setBehaviourStrong "COMBAT";
-					(leader _gp) setCombatMode "RED";
-				};
-			} foreach (units _gp);
-		} foreach _convoyElement;
-		
-		
-	} foreach A3C_GROUP_CONVOYS;
-
-	[] spawn {
-		sleep 2;
-		hintSilent "";
-	};
-	
-	A3C_GROUP_CONVOYS = [];
-	A3C_SELECTED_HC_GROUPS_SETTINGS = [];
-};
 
 
-A3C_AI_HighCommand_Action_DeleteGroups = {
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
-	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
-	//-- UI-Reaction
-	if (_isRadial) then {
-		A3C_DISABLE_RADIAL = true;
-		[] call A3C_UI_RADIAL_CloseDisplay;
-	} else {
-		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
-	};
 
-	if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
-		{
-			private _gp = _x;
-			if ({isPlayer _x} count(units _gp) == 0) then {
-				[_gp] call A3C_DeleteGroup;
-			} else {
-				systemchat format ["A3C: Group %1 was not deleted. Players detected", groupID _gp];
-			};
-		} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
-	} else {
-		// if (visibleMap) then {
-			(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_Parent) ctrlShow false;
-			(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
-		// } else {
-		// 	with uiNamespace do {
-		// 		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
-		// 	};
-		// };
-		["DELETE"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
-	};
-	// A3C_SELECTED_HC_GROUPS_SETTINGS = [];
-};
 
-A3C_AI_HighCommand_Action_convoyCreate = {
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
-	private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
-	//-- UI-Reaction
-	if (_isRadial) then {
-		//-- no actual action - just close menu
-		A3C_DISABLE_RADIAL = true;
-		[] call A3C_UI_RADIAL_CloseDisplay;
-	} else {
-		{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
-		(findDisplay 12 displayCtrl 51) ctrlEnable true;
-	};
-	//-- create convoy group
-	[] spawn A3C_Map_HC_groupContext_ButtonFnc_Convoy;
-};
+
+
 
 A3C_AI_HighCommand_Action_convoyRejoin = {
 	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
@@ -312,7 +32,7 @@ A3C_AI_HighCommand_Action_convoyRejoin = {
 		(findDisplay 12 displayCtrl 51) ctrlEnable true;
 	};
 	//-- rejoin convoy
-	[] spawn A3C_Map_HC_groupContext_ButtonFnc_Convoy;
+	[] spawn A3C_ai_highCommand_fnc_actionConvoyCreate;
 };
 
 A3C_AI_HighCommand_Action_limitSpeed = {
@@ -1104,7 +824,7 @@ A3C_AI_HighCommand_Action_artillery = {
 	};
 
 	A3C_HC_FOCUS_ARTY_POS = +(A3C_UI_HUD_3D_TAG_ICON_POS);
-	["ARTY"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
+	["ARTY"] call A3C_ui_selectionPromptPanel_fnc_openSelectionPromptPanel;
 };
 
 

@@ -3,6 +3,8 @@
 
 params ["_cursorPos", "_object"];
 
+
+
 _cursorPos = +_cursorPos;
 _cursorPos set [2, 0];
 
@@ -153,6 +155,8 @@ if ((_dir1IsCovered select 1) <= (_dir2IsCovered select 1)) then {
 
 // Repeat priority check to flip formation if direction intersects with building.
 private _refPos = (getPosASL (A3C_UI_squadPlacement_unitGhosts select 0)) vectorAdd [0, 0, _objectHeight];
+
+
 
 private _intersections = lineIntersectsSurfaces [
     _refPos,

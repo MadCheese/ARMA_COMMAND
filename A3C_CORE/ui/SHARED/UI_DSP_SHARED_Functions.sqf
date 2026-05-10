@@ -1670,137 +1670,7 @@ A3C_UI_MAP_Overlay_ResizeTeamColorsXWH = {
 
 
 
-A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP = {
-	params ["_mode"];
-	
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
-	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
-	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
-	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
-	//if !(visibleMap) then {
-	//};
 
-	ctrlSetFocus _listBox;
-	
-	lbClear _listBox;
-	ctrlSetFocus _listBox;
-	private _ctrlShow = true;
-	switch (_mode) do {
-
-		case ("DELETE") : {
-			// systemchat 'oioi';
-			A3C_SelectionPromptPanel_MODE = "DELETE";
-			private _ref = A3C_SELECTED_HC_GROUPS_SETTINGS;
-			_text ctrlSetText format ["REALLY DELETE %1 GROUP%2?",count _ref, if (count _ref <= 1) then {""} else {"S"}];
-
-			{
-				[_listBox, _x] call A3C_addLbEntry;
-			} foreach ["YES","NO"];
-		};
-
-		case ("MULTIWAYPOINT") : {
-			A3C_SelectionPromptPanel_MODE = "MULTIWAYPOINT";
-			private _ref = A3C_SELECTED_UNITS select {(driver (vehicle leader _x))  in units _x};
-			_text ctrlSetText format ["GIVE WAYPOINT TO %1 GROUP%2",count _ref, if (count _ref <= 1) then {""} else {"S"}];
-
-			{
-				[_listBox, _x] call A3C_addLbEntry;
-			} foreach ["YES","NO"];
-		};
-		case ("ARTY") : {
-
-				hintSilent "";
-				
-				A3C_SelectionPromptPanel_MODE = "ARTY_0";
-				_text ctrlSetText "Ammo Within Range";
-
-				MCSS_REMOTE_ARTILLERY_ARRAY = [];
-				
-				{
-					private _units = units _x;
-					{
-						private _v = objectParent _x;
-
-						private _cond = !isNull _v && {
-							_x == gunner _v && {
-								_artyAmmo = (getArtilleryAmmo [_v]) select {A3C_HC_FOCUS_ARTY_POS inRangeOfArtillery [[_v], _x]};
-								count _artyAmmo > 0
-							}
-						};
-
-						if (_cond) then {
-							MCSS_REMOTE_ARTILLERY_ARRAY set [count MCSS_REMOTE_ARTILLERY_ARRAY,_v];
-						};
-
-					} foreach _units;
-				} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
-
-				private _shellDSPs = [true,true,A3C_HC_FOCUS_ARTY_POS] call A3C_getArtilleryAmmo;
-
-				if (_shellDSPs isEqualTo []) then {
-					_ctrlShow = false;
-					hint "SELECTED POSITION IS OUT OF RANGE FOR ALL AMMO-TYPES";
-					playsound "TacticalPing"
-				} else {
-					{
-						[_listBox, _x select 0] call A3C_addLbEntry;
-					} foreach _shellDSPs;
-
-					[_parent,_listBox, count _shellDSPs] call A3C_OBJECTSEL_RESIZE;
-					
-				};
-		};
-		case ("A3C_CTRL_DET_SELECT") :{
-			A3C_SelectionPromptPanel_MODE = "CTRL_DET";
-			_text ctrlSetText "Select Ammo Type";
-			private _availableAmmo = [];
-			private _targetVehicle = (A3C_TEMP_ACTION select 1) select 0;
-			{
-				_soldier = _x;
-				{
-					if (getText (configfile >> "CfgMagazines" >> _x >> "nameSound") in ["satchelcharge","mine"]) then {
-						private _allowAdding = false;
-						private _ammo = getText (configfile >> "CfgMagazines" >> _x >> "ammo");
-						private _mineTrigger = getText (configfile >> "CfgAmmo" >> _ammo >> "mineTrigger");
-						if (_mineTrigger == "RemoteTrigger") then {
-							_allowAdding = true;
-						} else {
-							if (isNull _targetVehicle) then {
-								_allowAdding = true;
-							};
-						};
-						if (_allowAdding) then {
-							_availableAmmo pushBackUnique _x;
-						};
-					};
-				} foreach magazines _x;
-			} foreach A3C_SELECTED_UNITS;
-			if (count _availableAmmo > 4) then {
-				_parentPos = ctrlPosition _parent;
-				_parentPos set [3,(_parentPos select 3) + (  ((count _availableAmmo) - 4)   * (0.0440051 * safezoneH) )];
-				_parent ctrlSetPosition _parentPos;
-				_parent ctrlCommit 0;
-			};
-
-			{
-				private _lbText = (getText (configfile >> "CfgMagazines" >> _x >> "displayName"));
-				[_listBox, _lbText] call A3C_addLbEntry;
-			} foreach _availableAmmo;
-
-		};
-	};
-	
-	if (_ctrlShow) then {
-		_parent ctrlShow true;
-		_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
-		_parent ctrlCommit 0;
-	} else {
-		with uiNamespace do {
-			(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
-		};
-	};
-	
-};
 
 A3C_UNITSEL_REFRESH_UI = {
 
@@ -2126,14 +1996,6 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						};
 					};
 				};
-				//if ([_leaderVic] call A3C_fnc_isAttackHelicopter ) then {
-				private _var = (_leaderVic) getVariable ["A3C_Freeze_helicopter",[false,0]];
-				if (_var select 0) then {
-					if (_a3c_dsp != IDD_RADIAL_MENU) then { //~~ TEMPORARY - MAKE THIS ACCESSIBLE VIA RADIAL AS WELL!
-						_actions pushBackUnique "HELI_OVERWATCH";
-					};		
-				};
-
 			} else {
 				//-- vehicle is on ground
 				if ((count ([_leaderVic] call MCSS_fnc_getNearCargoLoadObjects) > 0) OR (count getVehicleCargo _leaderVic > 0)) then {
@@ -2585,7 +2447,6 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		"VEHICLE",
 		"VEHICLE_REBOARD",
 		"VEHICLE-REMOTE",
-		"HELI_OVERWATCH",
 		"SUPPRESSION",
 		"SUPPRESSION_STOP",
 		"CAS-STRIKE",
@@ -2626,7 +2487,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		"HEAL",
 		"RE-ARM",
 		"JOIN GROUP",
-		//"JOINPLAYER",
+		// "JOINPLAYER", //-- not needed because we can just use mergegroups
 		"UNSTUCK",
 		"REFRESH_HC_GROUP",
 		"OWNERSHIP",
@@ -2671,14 +2532,14 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_convoyStop.paa";
 					_button_toolTip = "HALT ALL CURRENT CONVOYS";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_ConvoyHalt;
+						[] call A3C_ai_highCommand_fnc_actionConvoyHaltDispatch;
 					};
 				};
 				case ("DELETEGROUP") : {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_Menu_trash.paa";
 					_button_toolTip = "Delete Group And Vehicles";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_DeleteGroups;	
+						[] call A3C_ai_highCommand_fnc_actionDeleteGroupsDispatch;	
 					};
 				};
 				case ("VEHICLE-REMOTE") : {
@@ -2686,7 +2547,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_remote.paa";
 					_button_toolTip = "Remote Control Vehicle";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_VehicleRemote;
+						[] call A3C_ai_highCommand_fnc_actionVehicleRemoteDispatch;
 					};
 				};
 				case ("REFRESH_HC_GROUP") : {
@@ -2694,7 +2555,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_refresh.paa";
 					_button_toolTip = "Refresh Unresponsive HC-Group";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_RefreshGroup;
+						[] call A3C_ai_highCommand_fnc_actionRefreshGroupDispatch;
 					};
 				};
 				case ("CONVOY_CREATE") : {
@@ -2702,7 +2563,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_convoy_create.paa";
 					_button_toolTip = "Create Convoy-Group";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_convoyCreate;						
+						[] call A3C_ai_highCommand_fnc_actionConvoyCreateDispatch;						
 					};
 				};
 				case ("CONVOY_REJOIN") : {
@@ -2718,7 +2579,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_rejoinToPlayer.paa";
 					_button_toolTip = "Merge with player group";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_joinPlayerGroup;
+						[] call A3C_ai_highCommand_fnc_actionJoinPlayerGroupDispatch;
 					};
 				};
 				case ("JOIN GROUP") : {
@@ -2726,7 +2587,9 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_joinGroup.paa";
 					_button_toolTip = "Merge with other group";
 					_buttonFnc = {
-						[] spawn A3C_AI_HighCommand_Action_mergeGroups;
+						//-- note: no dispatch since this action is map only
+						//-- note: there's no action script because Map-onMouseButtonDown executes the 'action'.
+						[] spawn A3C_ui_mapOverlay_fnc_actionMergeGroupsUiResponse;
 					};
 				};
 				case ("SPEEDLIMIT") : {
@@ -2961,14 +2824,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						["OFF"] call A3C_AI_HighCommand_Action_weaponFlashLight;
 					};	
 				};
-				case ("HELI_OVERWATCH") : {
-					_params = [];
-					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_HELI_OVERWATCH.paa";
-					_button_toolTip = "FORCE ATTACK HELI TO HOVER IN PLACE";
-					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_heliHoverInPlace;
-					};
-				};
+
 				
 				//----------- POSITIONAL ACTIONS
 
@@ -3385,7 +3241,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											if !(_shift) then {
 												A3C_isArtyAwaitingSuborder = false;
 											};
-											["ARTY"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
+											["ARTY"] call A3C_ui_selectionPromptPanel_fnc_openSelectionPromptPanel;
 											
 										} 
 									] call BIS_fnc_addStackedEventHandler;
@@ -3755,27 +3611,6 @@ A3C_AI_HighCommand_ActionDistribute_boardGroupsToVehicle = {
 	};
 };
 
-A3C_SHARED_StartVehicleRemote = {
-
-
-    a3c_is_HC_remote = true;
-    hint "CONTROL THE VEHICLE WITH ARROW KEYS. CANCEL REMOTE WITH CTRL+RMB";
-
-    a3c_remote_tank_obj = vehicle (leader (A3C_SELECTED_HC_GROUPS_SETTINGS select 0));
-
-    [
-        [a3c_remote_tank_obj],
-        {
-            params ["_veh"];
-            _veh action ["engineOn", _veh];
-            _veh engineOn true;
-            // _veh disableBrakes true; 
-        }
-    ] remoteExec ["bis_fnc_call",a3c_remote_tank_obj];
-
-    a3c_tank_speed = 0;
-    a3c_tank_speed_max = 5;
-};
 
 
 

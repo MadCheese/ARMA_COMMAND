@@ -1472,7 +1472,7 @@ A3C_AI_Shared_executeUnitPlot = {
 						if (count (lineIntersectsObjs [_aslP, _aslRef, _unit, objnull, false]) == 0) then {
 							waituntil {speed _unit < 1};
 							if !(_lookAtPos isEqualTo []) then {
-								_rail = [_unit,_wPos,_lookAtPos] spawn A3C_forceDestination;
+								_rail = [_unit,_wPos] spawn A3C_ai_rail_fnc_infantryForceDestination;
 								waituntil {scriptDone _rail};
 								_unit dowatch _lookAtPos;
 								_unit lookat _lookAtPos;
@@ -1496,23 +1496,11 @@ A3C_AI_Shared_executeUnitPlot = {
 
 			switch (_wpAction select 0) do {
 				case ("EHM") : {
-					//systemchat '1z';
-					//_rail = [_unit, ATLtoASL _movePos] spawn A3C_forceDestination;
-					//waituntil {scriptDone _rail};
-					//sleep 0.1;
+
 					_unit setPos _movePos;
 					_unit setDir (_movePos getDir _lookAtPos);
 					_unit call A3C_Babe_fnc_detect;
 
-					//sleep 1;
-					//private _takeOff = position _unit;
-					//for "_i" from 1 to 2 do {
-					//	if (_unit distance _takeOff < 0.2) then {
-					//		_unit call A3C_Babe_fnc_detect;
-					//		//	_unit call Babe_EM_fnc_detect;
-					//		sleep 1;
-					//	};
-					//};
 					waitUntil {!(_unit getVariable ["A3C_EM_ACTIVE",false])};
 					[_unit,position _unit] call A3C_DOMOVE;
 				};

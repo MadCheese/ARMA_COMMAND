@@ -13,10 +13,13 @@ A3C_PREP_SUBDIR(handlers,onKeyUp);
 A3C_PREP_SUBDIR(handlers,onLBSelChanged);
 
 //-- Public functions
-A3C_PREP_SUBDIR(public,onLBSelChangedShared);
+
 A3C_PREP_SUBDIR(public,chargeDetonatePromptStart);
 A3C_PREP_SUBDIR(public,chargeDetonatePromptRefresh);
 A3C_PREP_SUBDIR(public,chargeSelectSquad);
 A3C_PREP_SUBDIR(public,chargeSelectHighCommand);
+A3C_PREP_SUBDIR(public,onLBSelChangedShared);
+A3C_PREP_SUBDIR(public,openSelectionPromptPanel);
+
 
 

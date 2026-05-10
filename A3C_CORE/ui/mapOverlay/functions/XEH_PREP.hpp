@@ -14,3 +14,6 @@ A3C_PREP_SUBDIR(handlers,onKeyUp);
 A3C_PREP_SUBDIR(handlers,onMouseButtonDown);
 A3C_PREP_SUBDIR(handlers,onMouseButtonUp);
 A3C_PREP_SUBDIR(handlers,onMouseMoving);
+
+//-- Public functions
+A3C_PREP_SUBDIR(responses,actionMergeGroupsUiResponse);

@@ -1,1 +1,1 @@
-// A3C_PREP(functionName);
+A3C_PREP(getSurfaceNormalAzimuth);

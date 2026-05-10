@@ -467,7 +467,7 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 				//disableSerialization;
 				A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
 			};
-			["ARTY"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
+			["ARTY"] call A3C_ui_selectionPromptPanel_fnc_openSelectionPromptPanel;
 		};
 		case ("TANKSHOT") : {
 

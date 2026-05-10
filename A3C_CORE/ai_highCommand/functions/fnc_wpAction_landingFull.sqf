@@ -2,6 +2,8 @@ if (isNil "A3C_IsA3CServer") exitWith {};
 
 params ["_leader", "_waypointPos", "_caller", "_vectorDir", "_forceDefaultLanding"];
 
+//-- #WIP Note: it seems that _forceDefaultLanding is never false, railed landing is handled through it's own wpScript??
+
 private _group = group _leader;
 private _leaderVehicle = vehicle _leader;
 private _scripts = [];
@@ -18,6 +20,14 @@ if (!local _group) exitWith {};
 if (_group getVariable ["A3C_ISwpLANDING", false]) exitWith {};
 
 _group setVariable ["A3C_ISwpLANDING", true, true];
+
+private _registerLandingScript = {
+	params ["_group", "_actionID", "_script"];
+
+	private _currentActions = _group getVariable ["A3C_SCRIPTS", []];
+	_currentActions pushBackUnique [_actionID, _script];
+	_group setVariable ["A3C_SCRIPTS", _currentActions, true];
+};
 
 private _landHelicopterControlled = {
 	params ["_pilot", "_vehicle", "_landingPos"];
@@ -60,7 +70,6 @@ private _landHelicopterControlled = {
 			150
 		] call A3C_ai_shared_fnc_approachWaypointHelicopter;
 
-		//-- Issue native landing once close enough that the helipad/LZ is relevant.
 		if (!_landCommandIssued && {_distance2D < 120}) then {
 			_vehicle land "LAND";
 			_landCommandIssued = true;
@@ -116,16 +125,17 @@ private _driverUnits = _units select {
 
 	if (_runwayLanding && {_vehicle isKindOf "PLANE"}) then {
 		private _script = [_x, _waypointPos] spawn A3C_LANDPLANE;
-		private _currentActions = _group getVariable ["A3C_SCRIPTS", []];
 
-		_currentActions pushBackUnique ["landing_full_2", _script];
-		_group setVariable ["A3C_SCRIPTS", _currentActions, true];
+		_scripts pushBack _script;
+		[_group, "landing_full_2", _script] call _registerLandingScript;
 
 		sleep 20;
 	} else {
 		if (_vehicle isKindOf "HELICOPTER") then {
 			private _script = [_x, _vehicle, _waypointPos] spawn _landHelicopterControlled;
+
 			_scripts pushBack _script;
+			[_group, "landing_full_2", _script] call _registerLandingScript;
 		} else {
 			if (_forceDefaultLanding) then {
 				private _script = [_group, _waypointPos] spawn {
@@ -171,17 +181,18 @@ private _driverUnits = _units select {
 				};
 
 				_scripts pushBack _script;
+				[_group, "landing_full_2", _script] call _registerLandingScript;
 			} else {
 				//-- rail landing is specific to radial - not used by waypointscript
 				if (_vehicle == _leaderVehicle) then {
-					[_vehicle, _waypointPos, _vectorDir] spawn {
+					private _script = [_vehicle, _waypointPos, _vectorDir] spawn {
 						params ["_vehicle", "_waypointPos", "_vectorDir"];
 
 						private _exit = false;
 
 						while {alive _vehicle} do {
 							if (_vehicle distance2D _waypointPos < 500) then {
-								[_vehicle, _waypointPos, _vectorDir] spawn A3C_RAIL_HELI_LANDING;
+								[_vehicle, _waypointPos, _vectorDir] spawn A3C_ai_rail_fnc_helicopterLanding;
 								_exit = true;
 							};
 
@@ -190,6 +201,9 @@ private _driverUnits = _units select {
 							sleep 1;
 						};
 					};
+
+					_scripts pushBack _script;
+					[_group, "landing_full_2", _script] call _registerLandingScript;
 				} else {
 					_vehicle land "LAND";
 				};
@@ -200,16 +214,11 @@ private _driverUnits = _units select {
 	};
 } forEach _driverUnits;
 
-_group setVariable ["A3C_ISwpLANDING", false, true];
-
-private _currentActions = _group getVariable ["A3C_SCRIPTS", []];
-
-{
-	_currentActions pushBackUnique ["landing_full_2", _x];
-} forEach _scripts;
-
-_group setVariable ["A3C_SCRIPTS", _currentActions, true];
-
 waitUntil {
+	sleep 1;
 	{!scriptDone _x} count _scripts == 0
 };
+
+_group setVariable ["A3C_ISwpLANDING", false, true];
+
+true

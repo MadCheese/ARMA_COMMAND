@@ -1,0 +1,2 @@
+[] call A3C_ui_shared_fnc_actionJoinPlayerGroupUiResponse;
+[A3C_SELECTED_HC_GROUPS_SETTINGS] call A3C_AI_HIGHCOMMAND_fnc_mergeGroups;

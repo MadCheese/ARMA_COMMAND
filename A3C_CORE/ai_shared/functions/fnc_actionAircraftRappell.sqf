@@ -6,13 +6,14 @@ private _aircraft = vehicle _unit;
 private _inside = false;
 
 //-- lineIntersectsSurfaces works with ASL positions; _movePos itself is kept as provided.
-private _referencePos = +_movePos;
-_referencePos = ATLToASL _referencePos;
+private _referencePos = ATLToASL +_movePos;
 _referencePos set [2, (_referencePos select 2) + 100];
+
+private _movePosGroundASL = ATLToASL ((_movePos select [0, 2]) + [0]);
 
 private _intersections = lineIntersectsSurfaces [
 	_referencePos,
-	ATLToASL ((_movePos select [0, 2]) + [0]),
+	_movePosGroundASL,
 	_aircraft,
 	objNull
 ];
@@ -21,10 +22,10 @@ private _building = objNull;
 private _isHelicopter = _aircraft isKindOf "HELICOPTER";
 
 private _dismountData = [_aircraft, _unit] call A3C_getDismountData;
-_dismountData params ["_rappellUnits", "_nonDismountAIgroups"];
+_dismountData params ["_rappellUnits"];
 
 private _buildingPositionRailCode = {
-	params ["_unit", "_roofPositions", "_building"];
+	params ["_unit", "_roofPositions"];
 
 	sleep 2;
 
@@ -40,18 +41,23 @@ private _buildingPositionRailCode = {
 			] call BIS_fnc_sortBy;
 
 			{
-				if !((_x select 1) in A3C_OCC_BPOSES) exitWith {
-					_destination = _x select 1;
+				private _roofPos = _x select 1;
+
+				if !(_roofPos in A3C_OCC_BPOSES) exitWith {
+					_destination = _roofPos;
 					A3C_OCC_BPOSES pushBackUnique _destination;
 				};
 			} forEach _roofPositions;
 
 			if (_destination isEqualTo [0, 0, 0] && {count _roofPositions > 0}) then {
-				_destination = _roofPositions select 0;
+				_destination = (_roofPositions select 0) select 1;
 			};
 
 			if !(_destination isEqualTo [0, 0, 0]) then {
-				[_unit, _destination, _building] spawn A3C_RAIL_INF;
+				[
+					[_unit, _destination],
+					A3C_ai_rail_fnc_infantryForceToBuildingPath
+				] remoteExec ["bis_fnc_spawn", _unit];
 			};
 		};
 
@@ -77,9 +83,11 @@ if (_abortRappel) exitWith {};
 //-- AI heli slow down
 if (!isPlayer leader _group && {_isHelicopter}) then {
 	while {true} do {
+		private _distanceToMovePos = _aircraft distance2D _movePos;
+
 		private _speedLimit = switch (true) do {
-			case (_aircraft distance2D _movePos < 200): {40};
-			case (_aircraft distance2D _movePos < 1000): {100};
+			case (_distanceToMovePos < 200): {40};
+			case (_distanceToMovePos < 1000): {100};
 			default {150};
 		};
 
@@ -87,7 +95,7 @@ if (!isPlayer leader _group && {_isHelicopter}) then {
 
 		if (!alive _aircraft) exitWith {};
 		if (speed _aircraft < 10) exitWith {}; //-- security measure if heli comes to a premature halt
-		if (_aircraft distance2D _movePos <= 300) exitWith {};
+		if (_distanceToMovePos <= 300) exitWith {};
 
 		sleep 1;
 	};
@@ -104,11 +112,15 @@ private _roofPositions = [];
 
 //-- Guide chopper towards exact position
 {
-	if ((_x select 2) isKindOf "BUILDING") exitWith {
-		_building = _x select 2;
+	private _hitObject = _x select 2;
+
+	if (_hitObject isKindOf "BUILDING") exitWith {
+		_building = _hitObject;
 
 		//-- Intersection hit is ASL; convert roof height back to ATL because _rappelPos is ATL.
-		_rappelPos set [2, (ASLToATL (_x select 0)) select 2];
+		private _hitPosATL = ASLToATL (_x select 0);
+		_rappelPos set [2, _hitPosATL select 2];
+
 		_inside = true;
 		_roofPositions = [_building] call MCSS_fnc_get_buildingPoses_roof;
 	};
@@ -163,9 +175,7 @@ if (!alive _unit) exitWith {};
 //-- prepare rappel
 [_aircraft, [0, 0, 0]] remoteExec ["setVelocity", _aircraft];
 
-{
-	[_aircraft, [_x, 1]] remoteExec ["animateDoor", _aircraft];
-} forEach [
+private _openDoorSources = [
 	"door_R",
 	"door_L",
 	"Door_L_source",
@@ -175,6 +185,10 @@ if (!alive _unit) exitWith {};
 	"DoorR_Back_Open",
 	"Door_1_source"
 ];
+
+{
+	[_aircraft, [_x, 1]] remoteExec ["animateDoor", _aircraft];
+} forEach _openDoorSources;
 
 _aircraft setVariable ["A3C_PLAYER_RAPPEL", true, true];
 
@@ -198,9 +212,11 @@ if (_isHelicopter) then {
 	sleep 3; //-- HELIS are already levelled. Still wait 3s so the rappel is not too immediate
 } else {
 	//-- Level non-heli hover-capable vehicles before rappelling.
+	private _aircraftPosASL = getPosASL _aircraft;
+
 	private _subBehaviour = [
 		_aircraft,
-		getPosASL _aircraft,
+		_aircraftPosASL,
 		_railPos,
 		vectorDirVisual _aircraft,
 		[getDir _aircraft] call MCSS_fnc_DegreeToVector,
@@ -218,8 +234,10 @@ private _rappellGroups = [];
 private _rappellUnitsAll = +_rappellUnits;
 
 {
-	if (group _x != group _unit) then { //-- unit is not in pilot group: remove from rapunits, add group to rapGroups
-		_rappellGroups pushBackUnique group _x;
+	private _rappelUnitGroup = group _x;
+
+	if (_rappelUnitGroup != _group) then { //-- unit is not in pilot group: remove from rapunits, add group to rapGroups
+		_rappellGroups pushBackUnique _rappelUnitGroup;
 		_rappellUnits = _rappellUnits - [_x];
 	};
 } forEach _rappellUnits;
@@ -232,18 +250,14 @@ private _rappellUnitsAll = +_rappellUnits;
 	[
 		_x,
 		_inside,
-		_building,
 		_aircraft,
-		_unit,
 		_roofPositions,
 		_buildingPositionRailCode
 	] spawn {
 		params [
 			"_unit",
 			"_inside",
-			"_building",
 			"_vehicle",
-			"_pilotUnit",
 			"_roofPositions",
 			"_buildingPositionRailCode"
 		];
@@ -258,14 +272,12 @@ private _rappellUnitsAll = +_rappellUnits;
 			!(_unit in _vehicle)
 		};
 
-		
-
 		[[_unit], A3C_AIGetOut] remoteExec ["BIS_fnc_call", _unit];
 
 		//-- rooftop landing: rail AI to closest building positions to snap them into path LOD
-		if (!isNil "A3C_RAIL_INF") then { //-- exit if A3C is not running on client
+		if (!isNil "A3C_ai_rail_fnc_infantryForceToBuildingPath") then { //-- exit if A3C is not running on client
 			if (_inside && {!(isPlayer _unit)}) then {
-				[_unit, _roofPositions, _building] spawn _buildingPositionRailCode;
+				[_unit, _roofPositions] spawn _buildingPositionRailCode;
 				sleep 2;
 			};
 		};
@@ -280,9 +292,6 @@ private _rappellUnitsAll = +_rappellUnits;
 	};
 } forEach _rappellUnits;
 
-
-
-
 //-- dismount other groups
 _rappelPos = getPosASL _aircraft;
 _rappelPos set [2, (_rappelPos select 2) - 25];
@@ -291,34 +300,33 @@ _rappelPos set [2, (_rappelPos select 2) - 25];
 
 {
 	private _rapGroup = _x;
+	private _rapGroupUnits = units _rapGroup;
 
 	{
 		[
 			_x,
-			_building,
 			_inside,
 			_roofPositions,
 			_buildingPositionRailCode
 		] spawn {
 			params [
 				"_unit",
-				"_building",
 				"_inside",
 				"_roofPositions",
 				"_buildingPositionRailCode"
 			];
 
-			if (!isNil "A3C_RAIL_INF") then { //-- exit if A3C is not running on client
+			if (!isNil "A3C_ai_rail_fnc_infantryForceToBuildingPath") then { //-- exit if A3C is not running on client
 				if (_inside && {!(isPlayer _unit)}) then {
 					waitUntil {
 						!alive _unit || {isNull objectParent _unit}
 					};
 
-					[_unit, _roofPositions, _building] spawn _buildingPositionRailCode;
+					[_unit, _roofPositions] spawn _buildingPositionRailCode;
 				};
 			};
 		};
-	} forEach units _rapGroup;
+	} forEach _rapGroupUnits;
 } forEach _rappellGroups;
 
 sleep 1;
@@ -348,9 +356,7 @@ _group setVariable ["A3C_RAPPELL_COMPLETED", true, true];
 _aircraft setVariable ["A3C_PLAYER_RAPPEL", false, true];
 
 //-- done. close doors and continue
-{
-	[_aircraft, [_x, 0]] remoteExec ["animateDoor", _aircraft];
-} forEach [
+private _closeDoorSources = [
 	"door_R",
 	"door_L",
 	"door_rear",
@@ -363,6 +369,10 @@ _aircraft setVariable ["A3C_PLAYER_RAPPEL", false, true];
 	"DoorR_Back_Open",
 	"Door_1_source"
 ];
+
+{
+	[_aircraft, [_x, 0]] remoteExec ["animateDoor", _aircraft];
+} forEach _closeDoorSources;
 
 //-- create radio message; squad level only
 private _radioReply = ["Roger that, I'm off", "Roger", "Got It", "Good luck out there", "Catch you later"] call BIS_fnc_selectRandom;
@@ -384,9 +394,15 @@ waitUntil {
 sleep 1;
 
 {
-	_x leaveVehicle _aircraft;
-	{unAssignVehicle _x} foreach (units _x);
-} foreach _rappellGroups;
+	private _rapGroup = _x;
+	private _rapGroupUnits = units _rapGroup;
+
+	_rapGroup leaveVehicle _aircraft;
+
+	{
+		unAssignVehicle _x;
+	} forEach _rapGroupUnits;
+} forEach _rappellGroups;
 
 [_aircraft, 1500] remoteExec ["limitSpeed", _aircraft];
 

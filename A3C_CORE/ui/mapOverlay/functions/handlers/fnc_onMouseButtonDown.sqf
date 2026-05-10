@@ -117,7 +117,7 @@ if (_artilleryShortcutCondition) exitWith {
 	A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS;
 	playsound "TacticalPing4";
 	A3C_HC_FOCUS_ARTY_POS = A3C_CLICKPOS_1;
-	["ARTY"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
+	["ARTY"] call A3C_ui_selectionPromptPanel_fnc_openSelectionPromptPanel;
 };
 
 
@@ -772,7 +772,7 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 			A3C_MULTIWAYPOINT = true;
 			if (count A3C_SELECTED_UNITS > 2) then {
 				A3C_MULTIWAYPOINT = false;
-				["MULTIWAYPOINT"] call A3C_UI_MAP_Overlay_OPEN_SelectionPromptPanel_MAP;
+				["MULTIWAYPOINT"] call A3C_ui_selectionPromptPanel_fnc_openSelectionPromptPanel;
 				waituntil {!ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent)};
 			};
 
