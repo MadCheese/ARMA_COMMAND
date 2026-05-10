@@ -2563,7 +2563,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_convoy_create.paa";
 					_button_toolTip = "Create Convoy-Group";
 					_buttonFnc = {
-						[] call A3C_ai_highCommand_fnc_actionConvoyCreateDispatch;						
+						[] call A3C_ai_highCommand_fnc_actionConvoyGroupManageDispatch;						
 					};
 				};
 				case ("CONVOY_REJOIN") : {
@@ -2571,7 +2571,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_convoy_reJoin.paa";
 					_button_toolTip = "Re-Establish Convoy Groups";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_convoyRejoin;
+						[] call A3C_ai_highCommand_fnc_actionConvoyRejoinDispatch;
 					};
 				};
 				case ("JOINPLAYER") : {
