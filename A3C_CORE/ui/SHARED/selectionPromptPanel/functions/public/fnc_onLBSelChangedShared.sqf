@@ -3,9 +3,9 @@
 #include "..\..\..\shared_ui_defines.hpp"
 #include "..\..\..\..\mapOverlay\dialog_defines.hpp"
 
-params ["_lb"];
+params ["_selectedIndex"];
 
-private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {
+private _displayId = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {
 	IDD_MAP_OVERLAY
 } else {
 	IDD_SELECTION_PROMPT_PANEL
@@ -14,10 +14,10 @@ private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {
 private _doubleClick = false;
 private _tickTime = time - A3C_LB_TICKTIME;
 
-private _display = findDisplay _a3c_dsp;
-private _parent = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
-private _text = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
-private _listBox = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
+private _display = findDisplay _displayId;
+private _parentCtrl = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+private _descriptionCtrl = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+private _listBoxCtrl = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 
 if ((_tickTime > 0.07) && {_tickTime < 0.3}) then {
 	_doubleClick = true;
@@ -29,15 +29,15 @@ A3C_LB_TICKTIME = time;
 if (_doubleClick) then {
 	switch (A3C_SelectionPromptPanel_MODE) do {
 		case ("DELETE") : {
-			switch (_lb) do {
+			switch (_selectedIndex) do {
 				case (0) : {
 					{
-						private _group = _x;
+						private _selectedGroup = _x;
 
-						if ({isPlayer _x} count (units _group) == 0) then {
-							[_group] call A3C_DeleteGroup;
+						if ({isPlayer _x} count (units _selectedGroup) == 0) then {
+							[_selectedGroup] call A3C_DeleteGroup;
 						} else {
-							systemChat format ["A3C: Group %1 was not deleted. Players detected", groupID _group];
+							systemChat format ["A3C: Group %1 was not deleted. Players detected", groupID _selectedGroup];
 						};
 					} forEach A3C_SELECTED_HC_GROUPS_SETTINGS;
 
@@ -45,7 +45,7 @@ if (_doubleClick) then {
 				};
 			};
 
-			_parent ctrlShow false;
+			_parentCtrl ctrlShow false;
 			_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
 
 			with uiNamespace do {
@@ -54,36 +54,36 @@ if (_doubleClick) then {
 		};
 
 		case ("CARGO_WAYPOINTS") : {
-			switch (_lb) do {
+			switch (_selectedIndex) do {
 				case (0) : {
 					//-- YES: fetch cargo groups and prompt to place waypoints
 					//-- save unit selection to reestablish later
 					private _cargoGroups = ([A3C_HC_ACTIVEGROUP] call MCSS_fnc_getCargoGroups) select {
-						private _groupRef = _x;
-						(waypointPosition [_groupRef, currentWaypoint _groupRef]) distance2D [0,0,0] == 0
+						private _cargoGroup = _x;
+						(waypointPosition [_cargoGroup, currentWaypoint _cargoGroup]) distance2D [0,0,0] == 0
 					};
 
 					[_cargoGroups] spawn {
 						params ["_cargoGroups"];
 
 						private _storedSelection = +A3C_SELECTED_UNITS;
-						private _storedMode = A3C_MAP_CommandMode;
+						private _storedCommandMode = A3C_MAP_CommandMode;
 						private _doExit = false;
 
 						{
-							private _groupRef = _x;
+							private _cargoGroup = _x;
 
 							A3C_MAP_CommandMode = "HC";
-							A3C_SELECTED_HC_GROUPS_SETTINGS = [_groupRef];
-							A3C_SELECTED_UNITS = [_groupRef];
+							A3C_SELECTED_HC_GROUPS_SETTINGS = [_cargoGroup];
+							A3C_SELECTED_UNITS = [_cargoGroup];
 
-							private _hintText = format ["PLACE WAYPOINT FOR %1  %2", groupID _groupRef, A3C_SELECTED_HC_GROUPS_SETTINGS];
+							private _hintText = format ["PLACE WAYPOINT FOR %1  %2", groupID _cargoGroup, A3C_SELECTED_HC_GROUPS_SETTINGS];
 
 							hint _hintText;
 							waitUntil {
 								hintSilent _hintText;
 								!visibleMap || {
-									(waypointPosition [_groupRef, currentWaypoint _groupRef]) distance2D [0,0,0] > 0
+									(waypointPosition [_cargoGroup, currentWaypoint _cargoGroup]) distance2D [0,0,0] > 0
 								}
 							};
 
@@ -97,7 +97,7 @@ if (_doubleClick) then {
 						if !(_doExit) then {
 							A3C_SELECTED_UNITS = _storedSelection; //-- only override if map was not closed
 							A3C_SELECTED_HC_GROUPS_SETTINGS = _storedSelection; //-- only override if map was not closed
-							A3C_MAP_CommandMode = _storedMode;
+							A3C_MAP_CommandMode = _storedCommandMode;
 
 							hint "Done!";
 							sleep 2;
@@ -107,18 +107,18 @@ if (_doubleClick) then {
 				};
 
 				case (1) : {
-					//-- NO: do nothing
+					//-- NO - do nothing, prompt is closed automatically
 				};
 			};
 
-			_parent ctrlShow false;
+			_parentCtrl ctrlShow false;
 		};
 
 		case ("SPEEDLIMIT") : {
-			private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
-			private _leaderVehicle = vehicle leader _group;
+			private _selectedGroup = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
+			private _leaderVehicle = vehicle leader _selectedGroup;
 
-			private _speed = switch (_lb) do {
+			private _speed = switch (_selectedIndex) do {
 				case (0) : {1000};
 				case (1) : {14};
 				case (2) : {11};
@@ -127,14 +127,14 @@ if (_doubleClick) then {
 
 			[_leaderVehicle, _speed] remoteExec ["limitSpeed", _leaderVehicle];
 
-			_parent ctrlShow false;
+			_parentCtrl ctrlShow false;
 		};
 
 		case ("CAS") : {
 			private _casPos = +A3C_UI_HUD_3D_TAG_ICON_POS;
-			private _lbText = _listBox lbText _lb;
+			private _selectedLbText = _listBoxCtrl lbText _selectedIndex;
 
-			private _casModeNumeric = switch (_lbText) do {
+			private _casModeNumeric = switch (_selectedLbText) do {
 				case ("GUN RUN") : {0};
 				case ("MISSILES") : {1};
 				case ("GUNS + MISSILES") : {2};
@@ -143,28 +143,28 @@ if (_doubleClick) then {
 
 			[A3C_UI_HUD_3D_TAG_ICON_POS, ""] spawn A3C_UI_HUD_3D_TAG;
 
-			private _groups = +A3C_SELECTED_HC_GROUPS_SETTINGS;
+			private _selectedGroups = +A3C_SELECTED_HC_GROUPS_SETTINGS;
 
 			_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
 
-			if (_groups isEqualTo []) exitWith {};
+			if (_selectedGroups isEqualTo []) exitWith {};
 
 			player customRadio [A3C_CUSTOMRADIO_ID, "SentARTYFireAtWithAmmo"];
 
-			private _commsOperator = leader (_groups select 0);
+			private _commsOperator = leader (_selectedGroups select 0);
 			A3C_CUSTOMRADIO_ID radioChannelAdd [_commsOperator];
 			_commsOperator customRadio [A3C_CUSTOMRADIO_ID, "SentRequestAcknowledgedSGArty"];
 
 			{
-				private _group = _x;
-				private _leaderVehicle = vehicle leader _group;
-				private _isGroupOnFinalWP = currentWaypoint _group >= count waypoints _group;
+				private _selectedGroup = _x;
+				private _leaderVehicle = vehicle leader _selectedGroup;
+				private _isGroupOnFinalWP = currentWaypoint _selectedGroup >= count waypoints _selectedGroup;
 				private _createReturnWP = _isGroupOnFinalWP && {_casPos distance2D _leaderVehicle > 50};
 				private _landOnReturn = _createReturnWP && {!isEngineOn _leaderVehicle};
-				private _wpIndex = currentWaypoint _group;
+				private _wpIndex = currentWaypoint _selectedGroup;
 
-				private _wp = [
-					_group,
+				private _casWP = [
+					_selectedGroup,
 					_casPos,
 					[],
 					"MOVE",
@@ -175,7 +175,7 @@ if (_doubleClick) then {
 
 				if (_createReturnWP) then {
 					private _startPos = position _leaderVehicle;
-					private _returnWP = _group addWaypoint [_startPos, 0];
+					private _returnWP = _selectedGroup addWaypoint [_startPos, 0];
 
 					if (_landOnReturn) then {
 						//-- land with default Arma mechanic upon return
@@ -195,7 +195,7 @@ if (_doubleClick) then {
 					};
 				};
 
-				private _statements = format [
+				private _casStatements = format [
 					"
 						[this,%1,%2,'%3'] remoteExec ['A3C_HC_distribute_CAS', this];
 					",
@@ -204,23 +204,23 @@ if (_doubleClick) then {
 					getPlayerUID player
 				];
 
-				private _wpStatements = waypointStatements _wp;
-				_wp setWaypointStatements [
-					_wpStatements select 0,
-					(_wpStatements select 1) + _statements
+				private _casWPStatements = waypointStatements _casWP;
+				_casWP setWaypointStatements [
+					_casWPStatements select 0,
+					(_casWPStatements select 1) + _casStatements
 				];
-			} forEach _groups;
+			} forEach _selectedGroups;
 		};
 
 		case ("MULTIWAYPOINT") : {
-			A3C_MULTIWAYPOINT = if (_lb == 0) then {true} else {false};
+			A3C_MULTIWAYPOINT = if (_selectedIndex == 0) then {true} else {false};
 			_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
 		};
 
 		case ("DETONATE_SELECTED_CHARGE_SHARED") : {
 			player customRadio [A3C_CUSTOMRADIO_ID, "SentCmdDetonate"];
 
-			if (_listBox lbText _lb == "DETONATE ALL CHARGES") then {
+			if (_listBoxCtrl lbText _selectedIndex == "DETONATE ALL CHARGES") then {
 				//-- detonate all charges at once
 
 				[] spawn {
@@ -254,11 +254,11 @@ if (_doubleClick) then {
 				};
 			} else {
 				//-- detonate individual charge
-				private _target = A3C_UI_RADIAL_Current_Remfire_Units select (_lb - 1);
+				private _selectedChargeTarget = A3C_UI_RADIAL_Current_Remfire_Units select (_selectedIndex - 1);
 
-				A3C_UI_RADIAL_Current_Remfire_Units = A3C_UI_RADIAL_Current_Remfire_Units - [_target];
+				A3C_UI_RADIAL_Current_Remfire_Units = A3C_UI_RADIAL_Current_Remfire_Units - [_selectedChargeTarget];
 
-				_target spawn {
+				_selectedChargeTarget spawn {
 					params ["_unit", "_charge"];
 
 					//-- AI-Unit radio response
@@ -286,7 +286,7 @@ if (_doubleClick) then {
 						if (isPlayer leader group _unit) then {false} else {true}
 					];
 
-					[] call A3C_UI_selectionPromptPanel_fnc_chargeDetonatePromptRefresh;
+					[] call A3C_UI_selectionPromptPanel_fnc_actionChargeDetonatePromptRefresh;
 				};
 			};
 		};
@@ -294,21 +294,21 @@ if (_doubleClick) then {
 		case ("ARTY_0") : {
 			A3C_SelectionPromptPanel_MODE = "ARTY_1";
 
-			private _lbText = _listBox lbText _lb;
+			private _selectedLbText = _listBoxCtrl lbText _selectedIndex;
 
 			A3C_HC_FOCUS_ARTY_AMMO_ARRAY = (getArtilleryAmmo MCSS_REMOTE_ARTILLERY_ARRAY) select {
 				private _displayName = getText (configFile >> "CfgMagazines" >> _x >> "displayName");
-				_displayName == _lbText
+				_displayName == _selectedLbText
 			};
 
-			lbClear _listBox;
+			lbClear _listBoxCtrl;
 
-			_text ctrlSetText "Select amount of shells";
-			ctrlSetFocus _listBox;
+			_descriptionCtrl ctrlSetText "Select amount of shells";
+			ctrlSetFocus _listBoxCtrl;
 
 			private _ammoAmount = 0;
 			private _shellDisplays = ([true, true, A3C_HC_FOCUS_ARTY_POS] call A3C_getArtilleryAmmo) select {
-				_x select 0 == _lbText
+				_x select 0 == _selectedLbText
 			};
 
 			if !(_shellDisplays isEqualTo []) then {
@@ -330,15 +330,15 @@ if (_doubleClick) then {
 				};
 
 				{
-					[_listBox, str _x] call A3C_addLbEntry;
+					[_listBoxCtrl, str _x] call A3C_addLbEntry;
 				} forEach _lbEntries;
 
-				[_parent, _listBox, count _lbEntries] call A3C_OBJECTSEL_RESIZE;
+				[_parentCtrl, _listBoxCtrl, count _lbEntries] call A3C_OBJECTSEL_RESIZE;
 			};
 		};
 
 		case ("ARTY_1") : {
-			A3C_HC_FOCUS_ARTY_AmmoCount = call compile (_listBox lbText _lb);
+			A3C_HC_FOCUS_ARTY_AmmoCount = call compile (_listBoxCtrl lbText _selectedIndex);
 
 			_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
 
@@ -350,14 +350,14 @@ if (_doubleClick) then {
 		};
 
 		case ("CTRL_DET") : {
-			private _chargeDisplayName = _listBox lbText _lb;
+			private _chargeDisplayName = _listBoxCtrl lbText _selectedIndex;
 			private _chargeMagName = "";
 
-			_parent ctrlShow false;
+			_parentCtrl ctrlShow false;
 
 			(findDisplay 12 displayCtrl 51) ctrlEnable true;
 
-			_parent spawn {
+			_parentCtrl spawn {
 				//-- Preserved: repeated hiding appears to work around display/update timing after dropping on target vehicle.
 				for "_i" from 1 to 10 do {
 					_this ctrlShow false;
@@ -366,18 +366,18 @@ if (_doubleClick) then {
 			};
 
 			{
-				private _soldier = _x;
+				private _selectedSoldier = _x;
 
 				{
 					if (getText (configFile >> "CfgMagazines" >> _x >> "displayName") == _chargeDisplayName) exitWith {
 						_chargeMagName = _x; //-- dirty workaround to retrieve classname from displayname. has to happen first so all units receive same data
 					};
-				} forEach magazines _soldier;
+				} forEach magazines _selectedSoldier;
 			} forEach A3C_SELECTED_UNITS;
 
 			{
-				private _soldier = _x;
-				private _plotTemp = _soldier getVariable ["A3C_PLOT_TEMP", []];
+				private _selectedSoldier = _x;
+				private _plotTemp = _selectedSoldier getVariable ["A3C_PLOT_TEMP", []];
 
 				{
 					private _mainMarkerID = format ["%1", parseText ((_x select 1) select 0)];
@@ -390,97 +390,98 @@ if (_doubleClick) then {
 					};
 				} forEach _plotTemp;
 
-				_soldier setVariable ["A3C_PLOT_TEMP", _plotTemp, true];
+				_selectedSoldier setVariable ["A3C_PLOT_TEMP", _plotTemp, true];
 			} forEach A3C_SELECTED_UNITS;
 
 			A3C_MAP_CONNECTING_ID = "";
 		};
 
 		case ("PARALOAD") : {
-			private _vehicle = vehicle leader (A3C_SELECTED_HC_GROUPS_SETTINGS select 0);
-			private _cargoObjects = [_vehicle] call MCSS_fnc_getNearCargoLoadObjects;
-			private _vehicleToLoad = _cargoObjects select _lb;
+			private _selectedVehicle = vehicle leader (A3C_SELECTED_HC_GROUPS_SETTINGS select 0);
+			private _cargoObjects = [_selectedVehicle] call MCSS_fnc_getNearCargoLoadObjects;
+			private _vehicleToLoad = _cargoObjects select _selectedIndex;
 
-			[_vehicle, _vehicleToLoad] call A3C_LoadVehicleCargo;
+			[_selectedVehicle, _vehicleToLoad] call A3C_LoadVehicleCargo;
 
-			_cargoObjects = [_vehicle] call MCSS_fnc_getNearCargoLoadObjects;
+			_cargoObjects = [_selectedVehicle] call MCSS_fnc_getNearCargoLoadObjects;
 
-			lbClear _listBox;
+			lbClear _listBoxCtrl;
 
 			if (count _cargoObjects > 0) then {
 				{
-					private _lbText = getText (configFile >> "CfgVehicles" >> typeOf _x >> "displayName");
-					[_listBox, _lbText] call A3C_addLbEntry;
+					private _lbEntryText = getText (configFile >> "CfgVehicles" >> typeOf _x >> "displayName");
+					[_listBoxCtrl, _lbEntryText] call A3C_addLbEntry;
 				} forEach _cargoObjects;
 			} else {
-				_parent ctrlShow false;
+				_parentCtrl ctrlShow false;
 			};
 		};
 
 		case ("PARALOAD_SQ") : {
-			private _vehicle = vehicle A3C_SQ_CLICKED_UNIT;
-			private _cargoObjects = [_vehicle] call MCSS_fnc_getNearCargoLoadObjects;
-			private _vehicleToLoad = _cargoObjects select _lb;
+			private _selectedVehicle = vehicle A3C_SQ_CLICKED_UNIT;
+			private _cargoObjects = [_selectedVehicle] call MCSS_fnc_getNearCargoLoadObjects;
+			private _vehicleToLoad = _cargoObjects select _selectedIndex;
 
-			[_vehicle, _vehicleToLoad] call A3C_LoadVehicleCargo;
+			[_selectedVehicle, _vehicleToLoad] call A3C_LoadVehicleCargo;
 
-			_cargoObjects = [_vehicle] call MCSS_fnc_getNearCargoLoadObjects;
+			_cargoObjects = [_selectedVehicle] call MCSS_fnc_getNearCargoLoadObjects;
 
-			lbClear _listBox;
+			lbClear _listBoxCtrl;
 
 			if (count _cargoObjects > 0) then {
 				{
-					private _lbText = getText (configFile >> "CfgVehicles" >> typeOf _x >> "displayName");
-					[_listBox, _lbText] call A3C_addLbEntry;
+					private _lbEntryText = getText (configFile >> "CfgVehicles" >> typeOf _x >> "displayName");
+					[_listBoxCtrl, _lbEntryText] call A3C_addLbEntry;
 				} forEach _cargoObjects;
 			} else {
-				_parent ctrlShow false;
+				_parentCtrl ctrlShow false;
 			};
 		};
 
 		case ("flyInHeight") : {
-			private _group = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
+			private _selectedGroup = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
 
-			private _wpCurr = [_group, currentWaypoint _group];
-			private _wpType = waypointType _wpCurr;
-			private _wpPos = if (_wpType != "") then {
-				waypointPosition _wpCurr
+			private _currentWP = [_selectedGroup, currentWaypoint _selectedGroup];
+			private _currentWPType = waypointType _currentWP;
+			private _currentWPPos = if (_currentWPType != "") then {
+				waypointPosition _currentWP
 			} else {
-				(getPosASL (vehicle leader _group) select [0, 2]) + [0]
+				(getPosASL (vehicle leader _selectedGroup) select [0, 2]) + [0]
 			}; //-- avoid [0,0,0] clash
 
 			//-- #FLYINHEIGHTASL
-			private _height = parseNumber (_listBox lbText _lb);
+			private _height = parseNumber (_listBoxCtrl lbText _selectedIndex);
 
 			{
-				private _vehicle = vehicle _x;
+				private _unitVehicle = vehicle _x;
 
-				if (_x == driver _vehicle && {_vehicle isKindOf "AIR"}) then {
-					[_vehicle, _height] remoteExec ["flyInHeight", _vehicle];
-					_vehicle setVariable ["A3C_FLYINHEIGHT", _height, true];
+				if (_x == driver _unitVehicle && {_unitVehicle isKindOf "AIR"}) then {
+					[_unitVehicle, _height] remoteExec ["flyInHeight", _unitVehicle];
+					_unitVehicle setVariable ["A3C_FLYINHEIGHT", _height, true];
 				};
-			} forEach units _group;
+			} forEach units _selectedGroup;
 
-			_parent ctrlShow false;
+			_parentCtrl ctrlShow false;
 		};
 
 		case ("LOITER_DIR") : {
 			A3C_SelectionPromptPanel_MODE = "LOITER_RAD";
 
-			_text ctrlSetText "Select Loiter Radius";
+			_descriptionCtrl ctrlSetText "Select Loiter Radius";
 
-			switch (_lb) do {
+			switch (_selectedIndex) do {
 				case (0) : {A3C_LoiterDir = "CIRCLE"};
 				case (1) : {A3C_LoiterDir = "CIRCLE_L"};
 			};
 
-			ctrlSetFocus _listBox;
-			lbClear _listBox;
+			ctrlSetFocus _listBoxCtrl;
+			lbClear _listBoxCtrl;
 
 			private _textSize = (((safezoneW / safezoneH) min 1.2) / 1.2 / 25) * 1;
 
 			{
-				private _ctrlPos = ctrlPosition _x;
+				private _ctrl = _x;
+				private _ctrlPos = ctrlPosition _ctrl;
 
 				if (_forEachIndex == 0) then {
 					_ctrlPos set [0, 0.383108 * safezoneW + safezoneX];
@@ -489,30 +490,30 @@ if (_doubleClick) then {
 
 				_ctrlPos set [3, _textSize * 6];
 
-				_x ctrlSetPosition _ctrlPos;
-				_x ctrlCommit 0;
-			} forEach [_parent, _listBox];
+				_ctrl ctrlSetPosition _ctrlPos;
+				_ctrl ctrlCommit 0;
+			} forEach [_parentCtrl, _listBoxCtrl];
 
 			{
-				[_listBox, _x] call A3C_addLbEntry;
+				[_listBoxCtrl, _x] call A3C_addLbEntry;
 			} forEach ["100", "500", "1000", "2000"];
 		};
 
 		case ("LOITER_RAD") : {
-			switch (_lb) do {
+			switch (_selectedIndex) do {
 				case (0) : {A3C_LoiterRadius = 100};
 				case (1) : {A3C_LoiterRadius = 500};
 				case (2) : {A3C_LoiterRadius = 1000};
 				case (3) : {A3C_LoiterRadius = 2000};
 			};
 
-			_parent ctrlShow false;
+			_parentCtrl ctrlShow false;
 		};
 
 		case ("SECU_REJOIN") : {
-			_parent ctrlShow false;
+			_parentCtrl ctrlShow false;
 
-			switch (_lb) do {
+			switch (_selectedIndex) do {
 				case (0) : {A3C_LoiterRadius = 100};
 				case (1) : {
 					[A3C_SELECTED_HC_GROUPS_SETTINGS] spawn A3C_REJOIN_GROUPS;
@@ -524,7 +525,7 @@ if (_doubleClick) then {
 			private _weaponToAssemble = if (count A3C_STATIC_PACKS == 1) then {
 				getText (configFile >> "CfgVehicles" >> ((A3C_STATIC_PACKS select 0) select 1) >> "displayName")
 			} else {
-				_listBox lbText _lb
+				_listBoxCtrl lbText _selectedIndex
 			};
 
 			[] call A3C_UI_RADIAL_CloseDisplay;
@@ -536,15 +537,15 @@ if (_doubleClick) then {
 			showCommandingMenu "";
 
 			{
-				private _weapon = _x select 1;
+				private _weaponClass = _x select 1;
 
-				if (getText (configFile >> "CfgVehicles" >> _weapon >> "displayName") == _weaponToAssemble) exitWith {
+				if (getText (configFile >> "CfgVehicles" >> _weaponClass >> "displayName") == _weaponToAssemble) exitWith {
 					[
 						false, //-- isBusy
 						"STATIC_ASSEMBLE_SQUAD", //-- actionID
 						"", //-- Hud-Icon-class
 						[1,1,1,0.7], //-- Hud-Icon-color
-						_weapon, //-- placer class
+						_weaponClass, //-- placer class
 						"" //-- placer color-params
 					] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 
@@ -553,7 +554,7 @@ if (_doubleClick) then {
 				};
 			} forEach A3C_STATIC_PACKS;
 
-			_parent ctrlShow false;
+			_parentCtrl ctrlShow false;
 
 			with uiNamespace do {
 				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
@@ -561,18 +562,18 @@ if (_doubleClick) then {
 		};
 
 		case ("STATIC_DISASSEMBLE_SQUAD") : {
-			private _chargeDisplayName = _listBox lbText _lb;
-			private _weapon = (A3C_UI_RADIAL_Current_Remfire_Vehicles + A3C_REMFIRE_nearEmptyStatics) select _lb;
+			private _chargeDisplayName = _listBoxCtrl lbText _selectedIndex;
+			private _selectedWeapon = (A3C_UI_RADIAL_Current_Remfire_Vehicles + A3C_REMFIRE_nearEmptyStatics) select _selectedIndex;
 
 			[
 				A3C_UI_RADIAL_Current_Remfire_Units,
-				_weapon
+				_selectedWeapon
 			] spawn A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING;
 
-			A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configFile >> "CfgVehicles" >> typeOf _weapon >> "picture");
+			A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configFile >> "CfgVehicles" >> typeOf _selectedWeapon >> "picture");
 			A3C_UI_HUD_3D_TAG_ICON_MOD = "OFF";
 
-			[position _weapon, ""] spawn A3C_UI_HUD_3D_TAG;
+			[position _selectedWeapon, ""] spawn A3C_UI_HUD_3D_TAG;
 
 			with uiNamespace do {
 				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
@@ -583,7 +584,7 @@ if (_doubleClick) then {
 			private _weaponToAssemble = if (count A3C_STATIC_PACKS == 1) then {
 				getText (configFile >> "CfgVehicles" >> ((A3C_STATIC_PACKS select 0) select 1) >> "displayName")
 			} else {
-				_listBox lbText _lb
+				_listBoxCtrl lbText _selectedIndex
 			};
 
 			[] call A3C_UI_RADIAL_CloseDisplay;
@@ -595,9 +596,9 @@ if (_doubleClick) then {
 			showCommandingMenu "";
 
 			{
-				private _weapon = _x select 1;
+				private _weaponClass = _x select 1;
 
-				if (getText (configFile >> "CfgVehicles" >> _weapon >> "displayName") == _weaponToAssemble) exitWith {
+				if (getText (configFile >> "CfgVehicles" >> _weaponClass >> "displayName") == _weaponToAssemble) exitWith {
 					A3C_STATIC_PACKS = [_x];
 					A3C_OBJECTPLACER_DIR = getDir cameraOn;
 
@@ -606,13 +607,13 @@ if (_doubleClick) then {
 						"STATIC_ASSEMBLE_HC", //-- actionID
 						"", //-- Hud-Icon-class
 						[1,1,1,0.7], //-- Hud-Icon-color
-						_weapon, //-- placer class
+						_weaponClass, //-- placer class
 						"" //-- placer color-params
 					] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 				};
 			} forEach A3C_STATIC_PACKS;
 
-			_parent ctrlShow false;
+			_parentCtrl ctrlShow false;
 
 			with uiNamespace do {
 				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
@@ -620,46 +621,46 @@ if (_doubleClick) then {
 		};
 
 		case ("STATIC_DISASSEMBLE_HC") : {
-			private _weapon = A3C_HC_NearStatics select _lb;
+			private _selectedWeapon = A3C_HC_NearStatics select _selectedIndex;
 
-			[1, _weapon] spawn A3C_AI_HighCommand_Action_unAssembleWeapon;
+			[1, _selectedWeapon] spawn A3C_ai_highCommand_fnc_actionUnAssembleWeaponDispatch;
 
-			_parent ctrlShow false;
+			_parentCtrl ctrlShow false;
 
 			player commandRadio "SentDisAssemble";
 
 			systemChat format [
 				"%1 is packing up a %2",
 				groupId (A3C_SELECTED_HC_GROUPS_SETTINGS select 0),
-				getText (configFile >> "CfgVehicles" >> typeOf _weapon >> "displayName")
+				getText (configFile >> "CfgVehicles" >> typeOf _selectedWeapon >> "displayName")
 			];
 		};
 
 		case ("PLACE_CHARGE_SQUAD") : {
-			private _chargeDisplayName = _listBox lbText _lb;
+			private _chargeDisplayName = _listBoxCtrl lbText _selectedIndex;
 			private _demoUnits = [];
 			private _magName = "";
 
 			{
-				private _soldier = _x;
+				private _selectedSoldier = _x;
 
 				{
 					private _testedMagName = _x;
 
 					if (getText (configFile >> "CfgMagazines" >> _testedMagName >> "displayName") == _chargeDisplayName) exitWith {
-						_demoUnits pushBackUnique _soldier;
+						_demoUnits pushBackUnique _selectedSoldier;
 						_magName = _testedMagName;
 					};
 				} forEach magazines _x;
 			} forEach A3C_RD_UNITS;
 
-			private _unit = _demoUnits select 0;
+			private _demoUnit = _demoUnits select 0;
 
 			player groupRadio "SentCmdPlaceCharge";
 
-			[[_unit], true, false] call A3C_AI_Shared_cancelUnitPlot;
+			[[_demoUnit], true, false] call A3C_AI_Shared_cancelUnitPlot;
 
-			private _expDestination = [_unit] call A3C_fnc_setDestination;
+			private _expDestination = [_demoUnit] call A3C_fnc_setDestination;
 
 			private _detoObject = if ({cursorTarget isKindOf _x} count ["AIR", "CAR", "TANK", "WHEELED", "ARMORED", "MOTORCYCLE"] > 0) then {
 				cursorTarget
@@ -701,7 +702,7 @@ if (_doubleClick) then {
 
 			private _mainMarker = "A3C_SQ_" + str random 10000000000;
 
-			private _data = [
+			private _plotData = [
 				[
 					[_detoPosition, _detoPosition getPos [50, 0]], //-- positions
 					[_mainMarker, "", ""], //-- markers
@@ -718,13 +719,13 @@ if (_doubleClick) then {
 				]
 			];
 
-			_parent ctrlShow false;
+			_parentCtrl ctrlShow false;
 
 			with uiNamespace do {
 				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
 			};
 
-			[_unit, _data] spawn {
+			[_demoUnit, _plotData] spawn {
 				params ["_unit", "_data"];
 
 				waitUntil {count (_unit getVariable "A3C_PLOT") == 0};
@@ -760,7 +761,7 @@ if (_doubleClick) then {
 				};
 
 				if (_doReturnToOrders) then {
-					[_unit] call A3C_AI_action_resumeDestination;
+					[_unit] call A3C_ai_squad_fnc_actionResumeDestination;
 				};
 			};
 
@@ -777,7 +778,7 @@ if (_doubleClick) then {
 
 		case ("PLACE_CHARGE_HC") : {
 			private _magName = "";
-			private _chargeDisplayName = _listBox lbText _lb;
+			private _chargeDisplayName = _listBoxCtrl lbText _selectedIndex;
 
 			{
 				private _testedMagName = _x;
@@ -788,9 +789,9 @@ if (_doubleClick) then {
 			} forEach A3C_REMFIRE_MAGTYPES;
 
 			{
-				private _group = _x;
+				private _selectedGroup = _x;
 
-				_group setVariable ["A3C_UNIT_POLYS", [], true];
+				_selectedGroup setVariable ["A3C_UNIT_POLYS", [], true];
 
 				//-- clear all waypoints
 				{
@@ -799,12 +800,12 @@ if (_doubleClick) then {
 					} forEach units _x;
 				} forEach A3C_SELECTED_UNITS;
 
-				_group = A3C_RD_UNITS select 0;
+				_selectedGroup = A3C_RD_UNITS select 0;
 
-				[_group, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+				[_selectedGroup, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
 
-				private _wp = [
-					_group,
+				private _plantExplosiveWP = [
+					_selectedGroup,
 					ASLToATL A3C_UI_HUD_3D_TAG_ICON_POS
 				] call A3C_HC_ADD_WP;
 
@@ -816,24 +817,24 @@ if (_doubleClick) then {
 
 				[_cursorObject] call MCSS_fnc_setVehicleVarname;
 
-				private _statements = format [
+				private _plantExplosiveStatements = format [
 					"
 						[[group this,'%1'], A3C_AI_HighCommand_wpAction_plantExplosive] remoteExec ['bis_fnc_call',0];
 					",
 					_magName
 				];
 
-				private _wpStatements = waypointStatements _wp;
+				private _plantExplosiveWPStatements = waypointStatements _plantExplosiveWP;
 
-				_wp waypointAttachVehicle _cursorObject;
-				_wp setWaypointStatements [
-					_wpStatements select 0,
-					(_wpStatements select 1) + _statements
+				_plantExplosiveWP waypointAttachVehicle _cursorObject;
+				_plantExplosiveWP setWaypointStatements [
+					_plantExplosiveWPStatements select 0,
+					(_plantExplosiveWPStatements select 1) + _plantExplosiveStatements
 				];
 
 				private _returnWP = [
-					_group,
-					getPos (vehicle leader _group)
+					_selectedGroup,
+					getPos (vehicle leader _selectedGroup)
 				] call A3C_HC_ADD_WP;
 			} forEach A3C_RD_UNITS;
 
@@ -855,7 +856,7 @@ if (_doubleClick) then {
 		};
 
 		case ("PLACE_CHARGE_HC_MAP") : {
-			private _chargeDisplayName = _listBox lbText _lb;
+			private _chargeDisplayName = _listBoxCtrl lbText _selectedIndex;
 			private _magName = "";
 
 			{
@@ -891,34 +892,34 @@ if (_doubleClick) then {
 
 		case ("HELI_LANDING_HC_TYPE") : {
 			private _hideParent = true;
-			private _landingRailType = _listBox lbText _lb;
+			private _landingRailType = _listBoxCtrl lbText _selectedIndex;
 
 			switch (_landingRailType) do {
 				case ("COMBAT LANDING") : {
 					A3C_SelectionPromptPanel_MODE = "HELI_LANDING_GOCODE";
 					_hideParent = false;
 
-					_text ctrlSetText "SELECT GO-CODE";
+					_descriptionCtrl ctrlSetText "SELECT GO-CODE";
 
-					ctrlSetFocus _listBox;
-					lbClear _listBox;
+					ctrlSetFocus _listBoxCtrl;
+					lbClear _listBoxCtrl;
 
 					{
-						[_listBox, _x] call A3C_addLbEntry;
+						[_listBoxCtrl, _x] call A3C_addLbEntry;
 					} forEach ["GO-CODE A", "GO-CODE B", "GO-CODE C", "GO-CODE D"];
 				};
 			};
 
 			if (_hideParent) then {
-				_parent ctrlShow false;
+				_parentCtrl ctrlShow false;
 				[_landingRailType, ""] spawn A3C_AI_HighCommand_Action_railedHeliLanding;
 			};
 		};
 
 		case ("HELI_LANDING_GOCODE") : {
-			_parent ctrlShow false;
+			_parentCtrl ctrlShow false;
 
-			private _condition = _listBox lbText _lb;
+			private _condition = _listBoxCtrl lbText _selectedIndex;
 
 			["COMBAT LANDING", _condition] spawn A3C_AI_HighCommand_Action_railedHeliLanding; //-- condition is goCode type a,b,c,d
 		};

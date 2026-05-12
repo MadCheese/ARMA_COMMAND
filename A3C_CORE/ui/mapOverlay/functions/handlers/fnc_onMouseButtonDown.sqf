@@ -62,7 +62,8 @@ private _ctls =
 	IDC_MAP_TOP_EXTRAS_BACKGROUND,
 	IDC_MAP_Order_GoCode_BG,
 	IDC_SHARED_UI_SelectionPromptPanel_Parent,
-	IDC_MAP_INPUT_BLOCKER
+	IDC_MAP_INPUT_BLOCKER,
+	IDC_MAP_HCGP_Parent
 ];
 
 //-- exit if mouseclick was within certain controls

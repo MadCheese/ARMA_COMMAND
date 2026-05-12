@@ -1260,7 +1260,7 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 					[0] call A3C_GREN_DATA;
 				};
 				case ("STATIC") : {
-					[A3C_SELECTED_UNITS,"PLANNING"] call A3C_getSelectionBackpackStatics;
+					[A3C_SELECTED_UNITS,"PLANNING"] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons;
 					private _cond1 = ({isnull objectParent _x && {backPack _x == ""}} count A3C_SELECTED_UNITS >= 2);
 					private _cond2 = (count A3C_STATIC_PACKS > 0);
 					if (_cond1 || _cond2) then {
@@ -1889,7 +1889,7 @@ A3C_getActionsArray = {
 	if ({isNull objectParent _x} count _units > 0) then {
 		{_actions pushBack _x} foreach ["GRENADE","SUPPRESSION"];
 	};
-	_staticData = [_units,"PLANNING"] call A3C_getSelectionBackpackStatics;
+	_staticData = [_units,"PLANNING"] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons;
 	if (count _staticData > 0) then {
 		_actions pushbackUnique "STATIC";
 	};

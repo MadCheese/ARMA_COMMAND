@@ -1536,6 +1536,8 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					_x ctrlShow false;
 				} forEach (["radial_outerButtonMacros"] call FUNC(ctrlGroup));
 
+				
+
 				if (count _itemCategories == 0) exitWith {};
 
 				if (BV_ITEMS == 0) then {
@@ -1571,6 +1573,8 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 
 					{
 						private _slot = _itemSlots param [_forEachIndex, []];
+
+						
 						if (_slot isEqualTo []) exitWith {};
 
 						_slot params ["_buttonID", "_buttonImgKey", "_buttonClickerKey"];
@@ -1703,6 +1707,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 
 								_fnc = {
 									params ["_btnData", "_inputParams"];
+
 									_btnData params ["_display", "_button", "_sX", "_sY", "_shift", "_ctrl", "_alt"];
 									_inputParams params ["_units", "_buttonImgKey", "_buttonClickerKey"];
 
@@ -1712,81 +1717,107 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 									if (isNull _buttonImg || {isNull _buttonClicker}) exitWith {};
 
 									_units = call compile _units;
+									_units = _units select {!isNull _x};
+
+									_units pushBackUnique player;
 
 									private _btnImage = "";
 									private _tooltip = "";
-									A3C_Prevent_attach_IR = true;
 									private _totalStandBy = 0;
 
-									_buttonImg ctrlSetTextColor [1,1,1,0.3];
+									private _anyUnitHasStrobe = {
+										count (_x getVariable ["A3C_STROBE", []]) > 0
+									} count _units > 0;
 
-									{
-										private _u = _x;
+									private _mode = if (_anyUnitHasStrobe) then {"OFF"} else {"ON"};
 
-										if ({(count (_x getVariable ["A3C_STROBE", []])) > 0} count A3C_RD_UNITS > 0) then {
-											_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_IRstrobe_OFF.paa";
-											_tooltip = "Attach IR-Strobe";
+									private _requestId = format ["%1_%2_%3", clientOwner, diag_tickTime, random 1];
 
+									A3C_Prevent_attach_IR = true;
+
+									_buttonImg ctrlSetTextColor [1, 1, 1, 0.3];
+
+									if (_mode == "OFF") then {
+										_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_IRstrobe_OFF.paa";
+										_tooltip = "Attach IR-Strobe";
+
+										{
+											private _unit = _x;
 											private _delay = random 1;
+
 											_totalStandBy = _totalStandBy max _delay;
 
-											[_x, _delay] spawn {
-												params ["_unit", "_delay"];
-												sleep _delay;
+											_unit setVariable [
+												"A3C_IR_STROBE_REQUEST",
+												["OFF", _requestId],
+												true
+											];
 
-												private _var = _unit getVariable ["A3C_STROBE", []];
-												if (count _var > 0) then {
-													_var params ["_strobeObject", "_strobeType"];
-													deleteVehicle _strobeObject;
-													_unit addMagazine _strobeType;
-												};
+											[
+												_unit,
+												"OFF",
+												"",
+												_delay,
+												_requestId
+											] spawn A3C_ai_shared_fnc_actionIrStrobeSet;
+										} forEach _units;
+									} else {
+										_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_IRstrobe_ON.paa";
+										_tooltip = "Remove IR-Strobe";
 
-												_unit setVariable ["A3C_STROBE", [], true];
-											};
-										} else {
-											_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_IRstrobe_ON.paa";
-											_tooltip = "Remove IR-Strobe";
+										{
+											private _unit = _x;
 
-											private _delay = random 1;
-											_totalStandBy = _totalStandBy max _delay;
+											if (count (_unit getVariable ["A3C_STROBE", []]) == 0) then {
+												private _magazineClass = "";
 
-											if ((count (_u getVariable ["A3C_STROBE", []])) == 0) then {
 												{
-													private _it = _x;
-													private _am = getText (configFile >> "CfgMagazines" >> _x >> "ammo");
-													private _array = "true" configClasses (configFile >> "CfgAmmo" >> _am >> "NVGMarkers");
+													private _itemClass = _x;
+													private _ammoClass = getText (configFile >> "CfgMagazines" >> _itemClass >> "ammo");
+													private _nvgMarkers = "true" configClasses (
+														configFile >> "CfgAmmo" >> _ammoClass >> "NVGMarkers"
+													);
 
-													if (count _array > 0) exitWith {
-														_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_IRstrobe_ON.paa";
-														_tooltip = "";
-
-														[_u, _it, _delay] spawn {
-															params ["_u", "_it", "_delay"];
-															sleep _delay;
-
-															_u removeMagazine _it;
-
-															private _st = "NVG_TargetC" createVehicle getPos _u;
-															_u setVariable ["A3C_STROBE", [_st, _it], true];
-
-															[_u, _st] spawn A3C_AI_action_irStrobeLoop;
-														};
+													if (count _nvgMarkers > 0) exitWith {
+														_magazineClass = _itemClass;
 													};
-												} forEach magazines _u;
+												} forEach magazines _unit;
+
+												if (_magazineClass != "") then {
+													private _delay = random 1;
+
+													_totalStandBy = _totalStandBy max _delay;
+
+													_unit setVariable [
+														"A3C_IR_STROBE_REQUEST",
+														["ON", _requestId],
+														true
+													];
+
+													[
+														_unit,
+														"ON",
+														"NVG_TargetC",
+														_delay,
+														_requestId,
+														_magazineClass,
+														true
+													] spawn A3C_ai_shared_fnc_actionIrStrobeSet;
+												};
 											};
-										};
-									} forEach _units;
+										} forEach _units;
+									};
 
 									_buttonImg ctrlSetText _btnImage;
 									_buttonClicker ctrlSetToolTip _tooltip;
 
-									sleep _totalStandBy;
+									sleep (_totalStandBy + 1);
 
 									A3C_Prevent_attach_IR = false;
 
 									if (ctrlShown _buttonImg && {"IRstrobe" in ctrlText _buttonImg}) then {
 										_buttonClicker ctrlShow true;
-										_buttonImg ctrlSetTextColor [1,1,1,0.6];
+										_buttonImg ctrlSetTextColor [1, 1, 1, 0.6];
 									};
 								};
 
@@ -1926,6 +1957,440 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 									if (isNull _buttonImg || {isNull _buttonClicker}) exitWith {};
 
 									if (ctrlShown _buttonImg && {"NVG" in ctrlText _buttonImg}) then {
+										_buttonImg ctrlSetTextColor [1,1,1,0.6];
+										_buttonClicker ctrlShow true;
+									};
+								};
+							};
+							case "FLASHLIGHT": {
+								private _flashlightImage = "A3C_CORE\ui\pictures\icon_menu_item_FlashLight_OFF.paa";
+								private _flashlightToolTip = "Turn Flashlight ON";
+
+								if ({_x getVariable ["A3C_isGunPoiterSlotOn", ""] == "FLASHLIGHT"} count A3C_RD_UNITS > 0) then {
+									_flashlightImage = "A3C_CORE\ui\pictures\icon_menu_item_FlashLight_ON.paa";
+									_flashlightToolTip = "Turn Flashlight OFF";
+								};
+
+								_buttonImg ctrlSetText _flashlightImage;
+								_buttonImg ctrlSetTextColor [1, 1, 1, 0.3];
+								_buttonImg ctrlShow true;
+
+								_buttonClicker ctrlSetToolTip _flashlightToolTip;
+								_buttonClicker ctrlShow true;
+
+								_fnc = {
+									params ["_btnData", "_inputParams"];
+
+									_btnData params ["_display", "_button", "_sX", "_sY", "_shift", "_ctrl", "_alt"];
+									_inputParams params ["_units", "_buttonImgKey", "_buttonClickerKey"];
+
+									private _buttonImg = [_buttonImgKey] call FUNC(ctrl);
+									private _buttonClicker = [_buttonClickerKey] call FUNC(ctrl);
+
+									if (isNull _buttonImg || {isNull _buttonClicker}) exitWith {};
+
+									_units = call compile _units;
+									_units = _units select {!isNull _x};
+
+									private _type = "FLASHLIGHT";
+									private _stateValue = "FLASHLIGHT";
+
+									private _mode = if ({
+										_x getVariable ["A3C_isGunPoiterSlotOn", ""] == _stateValue
+									} count _units > 0) then {
+										"OFF"
+									} else {
+										"ON"
+									};
+
+									
+
+									private _btnImage = if (_mode == "ON") then {
+										"A3C_CORE\ui\pictures\icon_menu_item_FlashLight_ON.paa"
+									} else {
+										"A3C_CORE\ui\pictures\icon_menu_item_FlashLight_OFF.paa"
+									};
+
+									private _tooltip = if (_mode == "ON") then {
+										"Turn Flashlight OFF"
+									} else {
+										"Turn Flashlight ON"
+									};
+
+									private _phrase = if (_mode == "ON") then {
+										"SentLightsOn"
+									} else {
+										"SentLightsOff"
+									};
+
+									private _requestId = format ["%1_%2_%3", clientOwner, diag_tickTime, random 1];
+									private _requestVar = format ["A3C_ATTACHMENT_REQUEST_%1", _type];
+
+									private _totalStandBy = 0;
+
+									A3C_Prevent_attach_Flashlight = true;
+
+									_buttonImg ctrlSetTextColor [1, 1, 1, 0.3];
+
+									{
+										private _unit = _x;
+										private _execute = false;
+										
+
+										if (_mode == "ON") then {
+											_execute = [_unit, _type] call A3C_ai_squad_fnc_preparePointerAttachmentMode;
+										} else {
+											_execute = (_unit getVariable ["A3C_isGunPoiterSlotOn", ""] == _stateValue);
+										};
+
+										if (_execute) then {
+											private _delay = (0.2 * _forEachIndex) + random 1;
+											_totalStandBy = _totalStandBy max _delay;
+
+											_unit setVariable [
+												_requestVar,
+												[_mode, _requestId],
+												true
+											];
+
+											[
+												_unit,
+												_type,
+												_mode,
+												_delay,
+												_requestId
+											] spawn A3C_ai_squad_fnc_actionToggleWeaponAttachment;
+										};
+									} forEach _units;
+
+									player groupRadio _phrase;
+
+									_buttonImg ctrlSetText _btnImage;
+									_buttonClicker ctrlSetToolTip _tooltip;
+
+									sleep (_totalStandBy + 1.2);
+
+									A3C_Prevent_attach_Flashlight = false;
+
+									if (ctrlShown _buttonImg && {"FlashLight" in ctrlText _buttonImg}) then {
+										_buttonClicker ctrlShow true;
+										_buttonImg ctrlSetTextColor [1, 1, 1, 0.6];
+									};
+
+									// Switch LASER icon if necessary.
+									if ({_x isIRLaserOn currentWeapon _x} count _units == 0) then {
+										{
+											if ("IRlaser" in ctrlText _x) then {
+												_x ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_IRlaser_OFF.paa";
+											};
+										} forEach (["radial_outerButtonMacros"] call FUNC(ctrlGroup));
+									};
+								};
+
+								[_buttonImgKey, _buttonClickerKey] spawn {
+									params ["_buttonImgKey", "_buttonClickerKey"];
+
+									waitUntil {!(A3C_Prevent_attach_Flashlight)};
+
+									private _buttonImg = [_buttonImgKey] call FUNC(ctrl);
+									private _buttonClicker = [_buttonClickerKey] call FUNC(ctrl);
+
+									if (isNull _buttonImg || {isNull _buttonClicker}) exitWith {};
+
+									if (ctrlShown _buttonImg && {"FlashLight" in ctrlText _buttonImg}) then {
+										_buttonImg ctrlSetTextColor [1, 1, 1, 0.6];
+										_buttonClicker ctrlShow true;
+									};
+								};
+							};
+
+							case "LASER": {
+								private _laserImage = "A3C_CORE\ui\pictures\icon_menu_item_IRlaser_OFF.paa";
+								private _laserToolTip = "Turn IR-LASER ON";
+
+								if ({_x getVariable ["A3C_isGunPoiterSlotOn", ""] == "LASER"} count A3C_RD_UNITS > 0) then {
+									_laserImage = "A3C_CORE\ui\pictures\icon_menu_item_IRlaser_ON.paa";
+									_laserToolTip = "Turn IR-LASER OFF";
+								};
+
+								_buttonImg ctrlSetText _laserImage;
+								_buttonImg ctrlSetTextColor [1, 1, 1, 0.3];
+								_buttonImg ctrlShow true;
+
+								_buttonClicker ctrlSetToolTip _laserToolTip;
+								_buttonClicker ctrlShow true;
+
+								_fnc = {
+									params ["_btnData", "_inputParams"];
+
+									_btnData params ["_display", "_button", "_sX", "_sY", "_shift", "_ctrl", "_alt"];
+									_inputParams params ["_units", "_buttonImgKey", "_buttonClickerKey"];
+
+									private _buttonImg = [_buttonImgKey] call FUNC(ctrl);
+									private _buttonClicker = [_buttonClickerKey] call FUNC(ctrl);
+
+									if (isNull _buttonImg || {isNull _buttonClicker}) exitWith {};
+
+									_units = call compile _units;
+									_units = _units select {!isNull _x};
+
+									private _type = "LASER";
+									private _stateValue = "LASER";
+
+									private _mode = if ({
+										_x getVariable ["A3C_isGunPoiterSlotOn", ""] == _stateValue
+									} count _units > 0) then {
+										"OFF"
+									} else {
+										"ON"
+									};
+									
+									private _btnImage = if (_mode == "ON") then {
+										"A3C_CORE\ui\pictures\icon_menu_item_IRlaser_ON.paa"
+									} else {
+										"A3C_CORE\ui\pictures\icon_menu_item_IRlaser_OFF.paa"
+									};
+
+									private _tooltip = if (_mode == "ON") then {
+										"Turn IR-LASER OFF"
+									} else {
+										"Turn IR-LASER ON"
+									};
+
+									private _phrase = if (_mode == "ON") then {
+										"SentPointersOn"
+									} else {
+										"SentPointersOff"
+									};
+
+									private _requestId = format ["%1_%2_%3", clientOwner, diag_tickTime, random 1];
+									private _requestVar = format ["A3C_ATTACHMENT_REQUEST_%1", _type];
+
+									private _totalStandBy = 0;
+
+									A3C_Prevent_attach_IR_Laser = true;
+
+									_buttonImg ctrlSetTextColor [1, 1, 1, 0.3];
+
+									{
+										private _unit = _x;
+										private _execute = false;
+
+										if (_mode == "ON") then {
+											_execute = [_unit, _type] call A3C_ai_squad_fnc_preparePointerAttachmentMode;
+										} else {
+											_execute = (_unit getVariable ["A3C_isGunPoiterSlotOn", ""] == _stateValue);
+										};
+
+										
+
+										if (_execute) then {
+											private _delay = (0.2 * _forEachIndex) + random 1;
+											_totalStandBy = _totalStandBy max _delay;
+
+											_unit setVariable [
+												_requestVar,
+												[_mode, _requestId],
+												true
+											];
+
+											[
+												_unit,
+												_type,
+												_mode,
+												_delay,
+												_requestId
+											] spawn A3C_ai_squad_fnc_actionToggleWeaponAttachment;
+										};
+									} forEach _units;
+
+									player groupRadio _phrase;
+
+									_buttonImg ctrlSetText _btnImage;
+									_buttonClicker ctrlSetToolTip _tooltip;
+
+									sleep (_totalStandBy + 1.2);
+
+									A3C_Prevent_attach_IR_Laser = false;
+
+									if (ctrlShown _buttonImg && {"IRlaser" in ctrlText _buttonImg}) then {
+										_buttonClicker ctrlShow true;
+										_buttonImg ctrlSetTextColor [1, 1, 1, 0.6];
+									};
+
+									// Switch FLASHLIGHT icon if necessary.
+									if ({_x isFlashlightOn currentWeapon _x} count _units == 0) then {
+										{
+											if ("FlashLight" in ctrlText _x) then {
+												_x ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_FlashLight_OFF.paa";
+											};
+										} forEach (["radial_outerButtonMacros"] call FUNC(ctrlGroup));
+									};
+								};
+
+								[_buttonImgKey, _buttonClickerKey] spawn {
+									params ["_buttonImgKey", "_buttonClickerKey"];
+
+									waitUntil {!(A3C_Prevent_attach_IR_Laser)};
+
+									private _buttonImg = [_buttonImgKey] call FUNC(ctrl);
+									private _buttonClicker = [_buttonClickerKey] call FUNC(ctrl);
+
+									if (isNull _buttonImg || {isNull _buttonClicker}) exitWith {};
+
+									if (ctrlShown _buttonImg && {"IRlaser" in ctrlText _buttonImg}) then {
+										_buttonImg ctrlSetTextColor [1, 1, 1, 0.6];
+										_buttonClicker ctrlShow true;
+									};
+								};
+							};
+
+							case "SILENCER": {
+								private _silencerImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_OFF.paa";
+								private _silencerToolTip = "Attach Suppressor";
+
+								if ({[_x, "SILENCER"] call A3C_fnc_hasWeaponItem} count (A3C_RD_UNITS - [player]) > 0) then {
+									_silencerImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_ON.paa";
+									_silencerToolTip = "Remove Suppressor";
+								};
+
+								_buttonImg ctrlSetText _silencerImage;
+								_buttonImg ctrlSetTextColor [1,1,1,0.3];
+								_buttonImg ctrlShow true;
+
+								_buttonClicker ctrlSetToolTip _silencerToolTip;
+								_buttonClicker ctrlShow true;
+
+								_fnc = {
+									params ["_btnData", "_inputParams"];
+									_btnData params ["_display", "_button", "_sX", "_sY", "_shift", "_ctrl", "_alt"];
+									_inputParams params ["_units", "_buttonImgKey", "_buttonClickerKey"];
+
+									private _buttonImg = [_buttonImgKey] call FUNC(ctrl);
+									private _buttonClicker = [_buttonClickerKey] call FUNC(ctrl);
+
+									if (isNull _buttonImg || {isNull _buttonClicker}) exitWith {};
+
+									_units = call compile _units;
+
+									private _btnImage = "";
+									private _tooltip = "";
+									private _totalStandBy = 0;
+
+									A3C_Prevent_attach_Silencer = true;
+
+									_buttonImg ctrlSetTextColor [1,1,1,0.3];
+
+									{
+										if ({[_x, "SILENCER"] call A3C_fnc_hasWeaponItem} count A3C_RD_UNITS > 0) then {
+											_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_OFF.paa";
+											_tooltip = "Attach Suppressor";
+
+											private _slotItems = [_x, "MuzzleSlot", 1, currentWeapon _x] call MCSS_fnc_getWeaponItems;
+
+											if (count _slotItems > 0) then {
+												private _delay = random 1;
+
+												_totalStandBy = _totalStandBy max _delay;
+
+												[_slotItems, _x, _delay] spawn {
+													params ["_slotItems", "_unit", "_delay"];
+
+													sleep _delay;
+
+													if ((currentWeapon _unit) == (handgunWeapon _unit)) then {
+														_unit playActionNow "gestureDismountMuzzle";
+
+														if (A3C_LaxMount) then {
+
+														};
+
+														sleep 1.2;
+
+														_unit removeHandgunItem (_slotItems select 0);
+													} else {
+														_unit playActionNow "gestureDismountMuzzle";
+
+														if (A3C_LaxMount) then {
+
+														};
+
+														sleep 1.2;
+
+														_unit removePrimaryWeaponItem (_slotItems select 0);
+													};
+
+													_unit addItem (_slotItems select 0);
+												};
+											};
+										} else {
+											private _slotItems = [_x, "MuzzleSlot", 0, currentWeapon _x] call MCSS_fnc_getWeaponItems;
+
+											if (count _slotItems > 0) then {
+												_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_ON.paa";
+												_tooltip = "Remove Suppressor";
+
+												private _delay = random 1;
+
+												_totalStandBy = _totalStandBy max _delay;
+
+												[_slotItems, _x, _delay] spawn {
+													params ["_slotItems", "_unit", "_delay"];
+
+													sleep _delay;
+
+													if ((currentWeapon _unit) == (handgunWeapon _unit)) then {
+														_unit playActionNow "gestureMountMuzzle";
+
+														if (A3C_LaxMount) then {
+
+														};
+
+														sleep 1.2;
+
+														_unit addHandgunItem (_slotItems select 0);
+													} else {
+														_unit playActionNow "gestureMountMuzzle";
+
+														if (A3C_LaxMount) then {
+
+														};
+
+														sleep 1.2;
+
+														_unit addPrimaryWeaponItem (_slotItems select 0);
+													};
+
+													_unit removeItem (_slotItems select 0);
+												};
+											};
+										};
+									} forEach _units;
+
+									_buttonImg ctrlSetText _btnImage;
+									_buttonClicker ctrlSetToolTip _tooltip;
+
+									sleep (_totalStandBy + 1.2);
+
+									A3C_Prevent_attach_Silencer = false;
+
+									if (ctrlShown _buttonImg && {"Silencer" in ctrlText _buttonImg}) then {
+										_buttonClicker ctrlShow true;
+										_buttonImg ctrlSetTextColor [1,1,1,0.6];
+									};
+								};
+
+								[_buttonImgKey, _buttonClickerKey] spawn {
+									params ["_buttonImgKey", "_buttonClickerKey"];
+
+									waitUntil {!(A3C_Prevent_attach_Silencer)};
+
+									private _buttonImg = [_buttonImgKey] call FUNC(ctrl);
+									private _buttonClicker = [_buttonClickerKey] call FUNC(ctrl);
+
+									if (isNull _buttonImg || {isNull _buttonClicker}) exitWith {};
+
+									if (ctrlShown _buttonImg && {"Silencer" in ctrlText _buttonImg}) then {
 										_buttonImg ctrlSetTextColor [1,1,1,0.6];
 										_buttonClicker ctrlShow true;
 									};

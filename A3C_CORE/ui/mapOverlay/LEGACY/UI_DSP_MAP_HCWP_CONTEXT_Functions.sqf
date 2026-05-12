@@ -1480,7 +1480,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 				];
 			};
 
-			case ("ASSEMBLE WEAPON") : { //~~ A3C_WP_ACTION_STATICWEAPON may not be defined, move to insert fnc!
+			case ("ASSEMBLE WEAPON") : { //~~ A3C_ai_shared_fnc_actionStaticWeaponExecute may not be defined, move to insert fnc!
 
 
 				_statements = "";
@@ -1740,7 +1740,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 		_actionTypes = ["FIRE SUPPORT","AMBUSH"];
 
 		if (_isCargoOrInf) then {
-			if ( (count ([units A3C_HC_ACTIVEGROUP,"PLANNING"] call A3C_getSelectionBackpackStatics) > 0) && {  {(markerType ((_x select 0) select 1)) == 'mil_dot'} count (A3C_HC_ACTIVEGROUP getVariable ["A3C_UNIT_POLYS",[]]) < 1    } ) then {
+			if ( (count ([units A3C_HC_ACTIVEGROUP,"PLANNING"] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons) > 0) && {  {(markerType ((_x select 0) select 1)) == 'mil_dot'} count (A3C_HC_ACTIVEGROUP getVariable ["A3C_UNIT_POLYS",[]]) < 1    } ) then {
 				_actionTypes = _actionTypes + ["ASSEMBLE WEAPON"];
 
 			};

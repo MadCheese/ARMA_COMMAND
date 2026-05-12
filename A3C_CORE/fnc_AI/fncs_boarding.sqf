@@ -515,44 +515,7 @@ A3C_boardSquadUnittoSeat = {
 	
 };
 
-A3C_AI_HIGHCOMMAND_fnc_reboardGroupToVehicle = {
-	params ["_groups"];
-	private _vehicleBundles = [];
-	private _hcAll = _groups select {
-		typeName _x == "GROUP" && 
-		{
-			_gp = _x;
-			!isplayer (leader _gp) && {
-				{!isNull objectParent _x && {!isNull (assignedVehicle _x)}} count (units _gp) == 0 &&
-				{
-					_v = (_gp getVariable ["A3C_AssignedGroupVehicle",objNull]);
-					!isNull _v && {alive _v}
-				}
-			}
-			
-		}
-	};
-	{
-		_gp = _x;
-		_v = (_gp getVariable ["A3C_AssignedGroupVehicle",objNull]);
-		_doAdd = true;
-		{
-			_x params ["_boardGroups","_vehicle"];
-			if (_v == _vehicle) exitWith {
-				_doAdd = false;
-				(_vehicleBundles select _foreachIndex) set [0,_boardGroups + [_gp]];
-			};
-		} foreach _vehicleBundles;
-		if (_doAdd) then {
-			_vehicleBundles pushBack [[_gp], _v];
-		};
-	} foreach _hcAll;
 
-	{
-		_x params ["_boardGroups","_selectedVehicle"];
-		[_boardGroups,_selectedVehicle] call A3C_HC_AssignVehicle;
-	} foreach _vehicleBundles;
-};
 
 
 

@@ -389,7 +389,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 				[
 					[],
 					{
-						[] call A3C_UI_SelectionPromptPanel_fnc_chargeDetonatePromptStart;
+						[] call A3C_UI_SelectionPromptPanel_fnc_actionChargeDetonatePromptStart;
 					},
 					false
 				];
@@ -657,7 +657,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 						
 						
 
-						_staticData = [_assemblingUnitSelection,"PLANNING"] call A3C_getSelectionBackpackStatics;
+						_staticData = [_assemblingUnitSelection,"PLANNING"] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons;
 						if (count _staticData > 0) then {
 
 							
@@ -744,7 +744,7 @@ A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING = {
 		sleep 1;
 	};
 
-	_selectedTastUnits = ([_assemblingUnitSelection,[],["DISASSEMBLE",_weaponToDisassemble],position _weaponToDisassemble,0,500] call A3C_STATIC_PREPARE_DISASSEMBLY) select 0;
+	_selectedTastUnits = ([_assemblingUnitSelection,[],["DISASSEMBLE",_weaponToDisassemble],position _weaponToDisassemble,0,500] call A3C_ai_shared_fnc_staticWeaponPrepareDisassembly) select 0;
 
 	if (count _selectedTastUnits == 2) then {
 		player groupRadio "SentDisAssemble";
@@ -799,7 +799,7 @@ A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING = {
 				//systemchat "loop exit";
 				if (_doReturnToOrders) then {
 					//systemchat 'fire';
-					[_unit] call A3C_AI_action_resumeDestination;
+					[_unit] call A3C_ai_squad_fnc_actionResumeDestination;
 				};
 			};
 		} foreach _selectedTastUnits;

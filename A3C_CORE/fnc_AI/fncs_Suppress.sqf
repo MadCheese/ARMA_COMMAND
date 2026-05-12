@@ -995,7 +995,7 @@ A3C_POLY_ACTION_OFF = {
 
 				_ed = _x getvariable ["A3C_DEST",(expectedDestination _x)];
 				// systemchat format ["POLY ACTION OFF: %1", _u];
-				[_u] call A3C_AI_action_resumeDestination;	
+				[_u] call A3C_ai_squad_fnc_actionResumeDestination;	
 			
 				A3C_SUPPRESSION_UNITS_SQ = A3C_SUPPRESSION_UNITS_SQ - [_u];
 				A3C_SUPPRESSION_UNITS_AI = A3C_SUPPRESSION_UNITS_AI - [_u];

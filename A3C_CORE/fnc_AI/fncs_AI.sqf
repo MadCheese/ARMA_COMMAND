@@ -1694,7 +1694,7 @@ A3C_AI_Shared_executeUnitPlot = {
 					_staticData,
 					_movePos,
 					if !(_lookAtPos isEqualTo []) then {[_movePos,_lookAtPos] call BIS_fnc_dirTo} else {0}
-				] spawn A3C_WP_ACTION_STATICWEAPON;
+				] spawn A3C_ai_shared_fnc_actionStaticWeaponExecute;
 				waitUntil {scriptDone _spawnBehaviour};
 				//systemchat "cont";
 				//-- remember: hubLeader's wp is completed.

@@ -1206,27 +1206,43 @@ MCSS_fnc_GetMuzzle = {
 	_return
 };
 
-//-- Get a unit's weaponItems of specific slot
-//[player,"MuzzleSlot",0] call MCSS_fnc_getWeaponItems;
+//-- Get a unit's weaponItems of specific slot (optimized)
 MCSS_fnc_getWeaponItems = {
-	private ["_unit","_slot","_arr","_wp"];
-	_unit = _this select 0;
-	_slot = _this select 1; // CowsSlot / "MuzzleSlot" / "PointerSlot"
-	_mode = _this select 2;
-	_wp = if (count _this > 3) then {_this select 3} else {primaryWeapon _unit};
-	_check = if (_mode == 0) then {items _unit} else {primaryweaponitems _unit};
-	_arr = [];
+	params [
+		"_unit",
+		"_slot", // CowsSlot / "MuzzleSlot" / "PointerSlot"
+		"_mode"
+	];
+
+	private _primaryWeapon = if (count _this > 3) then {
+		_this select 3
+	} else {
+		primaryWeapon _unit
+	};
+
+	private _itemsToCheck = if (_mode == 0) then {
+		items _unit
+	} else {
+		primaryWeaponItems _unit
+	};
+
+	private _weaponItems = [];
+
 	{
-		if (isclass (configfile >> "CfgWeapons" >> _wp >> "WeaponSlotsInfo" >> _slot >> "compatibleItems")) then {
-			if !( (configname (configfile >> "CfgWeapons" >> _wp >> "WeaponSlotsInfo" >> _slot >> "compatibleItems" >> _x)) == "") then {
-				_arr pushback _x;
+		if (isClass (configFile >> "CfgWeapons" >> _primaryWeapon >> "WeaponSlotsInfo" >> _slot >> "compatibleItems")) then {
+			if !((configName (configFile >> "CfgWeapons" >> _primaryWeapon >> "WeaponSlotsInfo" >> _slot >> "compatibleItems" >> _x)) == "") then {
+				_weaponItems pushBack _x;
 			};
 		};
-	} foreach _check;
+	} forEach _itemsToCheck;
+
 	{
-		if !(_x in _arr) then {_arr pushback _x};
-	} foreach (getarray (configfile >> "CfgWeapons" >> _wp >> "WeaponSlotsInfo" >> "MuzzleSlot" >> "compatibleItems"));
-	_arr
+		if !(_x in _weaponItems) then {
+			_weaponItems pushBack _x;
+		};
+	} forEach getArray (configFile >> "CfgWeapons" >> _primaryWeapon >> "WeaponSlotsInfo" >> "MuzzleSlot" >> "compatibleItems");
+
+	_weaponItems
 };
 
 MCSS_fnc_getNearSlingLoadObjects = {

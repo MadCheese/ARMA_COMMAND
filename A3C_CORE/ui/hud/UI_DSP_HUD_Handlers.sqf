@@ -60,7 +60,7 @@ A3C_UI_HUD_onKeyDown = {
                     [] call A3C_AI_Squad_Action_suppression;
                 };
                 case ("PLACE_CHARGE_SQUAD") : {
-                    [] call A3C_UI_selectionPromptPanel_fnc_chargeSelectSquad;
+                    [] call A3C_UI_selectionPromptPanel_fnc_actionChargeSelectSquad;
                 };
                 case ("STATIC_ASSEMBLE_SQUAD") : {
                     [] call A3C_AI_Squad_Action_assembleWeapon;
@@ -79,13 +79,13 @@ A3C_UI_HUD_onKeyDown = {
                     [] call A3C_AI_SHARED_Action_remoteFire_TankShot;
                 };
                 case ("VTOL_CANNON") : {
-                    _script = ["CANNON"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
+                    _script = ["CANNON"] spawn A3C_ai_highCommand_fnc_actionRemoteFireVtolDispatch;
                 };
                 case ("VTOL_GATLING") : {
-                    _script = ["GATLING"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
+                    _script = ["GATLING"] spawn A3C_ai_highCommand_fnc_actionRemoteFireVtolDispatch;
                 };
                 case ("VTOL_AUTOCANNON") : {
-                    _script = ["AUTOCANNON"] spawn A3C_AI_HighCommand_Action_remoteFire_VTOL_Weapon;
+                    _script = ["AUTOCANNON"] spawn A3C_ai_highCommand_fnc_actionRemoteFireVtolDispatch;
                 };
 
                 case ("UGLSHOT") : { // #TODO: change velocity for UGLshots to a faster speed
@@ -98,7 +98,7 @@ A3C_UI_HUD_onKeyDown = {
                     [] call A3C_AI_SHARED_Action_remoteFire_StaticRocketShot;
                 };
                 case ("UAV_FPV") : {
-                    [] call A3C_AI_HighCommand_Action_uavFPV;
+                    [] call A3C_ai_highCommand_fnc_actionUavFPV;
                 };
                 case ("REPAIR") : {
                     [] call A3C_AI_HighCommand_Action_repair;
@@ -122,11 +122,11 @@ A3C_UI_HUD_onKeyDown = {
 					_oneTimeAction = false;
                 };
                 case ("PLACE_CHARGE_HC") : {
-                    [] call A3C_UI_selectionPromptPanel_fnc_chargeSelectHighCommand;
+                    [] call A3C_UI_selectionPromptPanel_fnc_actionChargeSelectHighCommand;
 					_flickerMode = "DEMOLITION";
                 };
                 case ("STATIC_ASSEMBLE_HC") : {
-                    [] call A3C_AI_HighCommand_Action_assembleWeapon;
+                    [] call A3C_ai_highCommand_fnc_actionAssembleWeapon;
 					// _flickerMode = "";
 					_flickerMode = "DEMOLITION";
                 };

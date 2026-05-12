@@ -428,10 +428,13 @@ A3C_GROUP_RESET = {
 	_knowData = [];
 
 	{
-		if ((player knowsabout _x) > 0) then {
-			_knowData pushback [_x,(player knowsabout _x)];
+		private _target = _x select 1;
+		private _knowledge = player knowsAbout _target;
+
+		if (_knowledge > 0) then {
+			_knowData pushBack [_target, _knowledge];
 		};
-	} foreach (allmissionObjects "ALL");
+	} forEach (player targetsQuery [objNull, sideUnknown, "", [], 0]);
 
 
 
@@ -1890,6 +1893,17 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		};
 	};
 
+	private _allSelectedGroupVehicles = [];
+	{
+		private _groupVehicles = [_x] call A3C_main_fnc_getGroupVehicles;
+		{
+			if !(_x in _allSelectedGroupVehicles) then {
+				_allSelectedGroupVehicles set [count _allSelectedGroupVehicles, _x];
+			};
+		} foreach _groupVehicles;
+	} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
+
+
 	
 
 
@@ -1897,6 +1911,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 		private _gp = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
 		_leaderVic = vehicle (leader _gp);
+		
 
 		if (_a3c_dsp == IDD_RADIAL_MENU && {typeOf _leaderVic in ["B_T_VTOL_01_armed_F", "B_T_VTOL_01_armed_fixed_F"]}) then {
 			_actions PushBack "VTOL_CANNON";
@@ -1906,11 +1921,10 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			};
 			
 		};
-
-		if ( (typeOf _leaderVic) in ["B_APC_Tracked_01_CRV_F_Fixed", "B_T_APC_Tracked_01_CRV_F_Fixed"]) then {
-			if ((_leaderVic getVariable ['MCSS_MCLC_MAGCOUNT', 4]) > 0 && {!(_leaderVic getVariable['MCSS_MCLC_RELOADING', false])}) then {
-				_actions PushBack "LINE_CHARGE";
-			};
+		
+	
+		if ( {isClass (configOf (_x) >> "AnimationSources" >> "moveplow")} count _allSelectedGroupVehicles > 0 ) then {
+			
 			if ((_leaderVic animationSourcePhase 'moveplow') == 0) then {
 				_actions PushBack "PLOW_DEPLOY";
 			} else {
@@ -1918,6 +1932,18 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_actions PushBack "PLOW_RAISE";
 				};
 			};
+		};
+
+		
+		if ( 
+			{
+				private _vehicleType = typeOf _x;
+				_vehicleType in ["B_APC_Tracked_01_CRV_F_Fixed", "B_T_APC_Tracked_01_CRV_F_Fixed"]
+				&& {(_leaderVic getVariable ['MCSS_MCLC_MAGCOUNT', 4]) > 0}
+				&& {!(_leaderVic getVariable['MCSS_MCLC_RELOADING', false])}
+			} count _allSelectedGroupVehicles > 0 
+		) then {
+			_actions PushBack "LINE_CHARGE";
 		};
 		
 
@@ -2042,7 +2068,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					};
 				} foreach _testedUnits;
 				if (count units _gp > 1) then {
-					if (count ([_testedUnits,"PLANNING"] call A3C_getSelectionBackpackStatics) > 0) then {
+					if (count ([_testedUnits,"PLANNING"] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons) > 0) then {
 						_actions pushBackUnique "STATIC_ASSEMBLE_HC";
 
 					};
@@ -2121,6 +2147,16 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DASHBOARD_GROUPNAME_EDIT) ctrlSetText "Multiple Groups";
 		};
 	};
+
+
+	if (_allSelectedGroupVehicles isNotEqualTo []) then {
+		if ( {_x getVariable ["A3C_VehicleLights", 0] == 1} count _allSelectedGroupVehicles > 0) then {
+			_actions pushBackUnique "VEHICLE_LIGHTS_ON";
+		} else {
+			_actions pushBackUnique "VEHICLE_LIGHTS_OFF";
+		};
+	};
+	
 
 	_actions pushBackUnique "DELETEGROUP";
 
@@ -2595,7 +2631,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				case ("SPEEDLIMIT") : {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_groupSpeed.paa";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_limitSpeed;
+						[] call A3C_ui_selectionPromptPanel_fnc_actionLimitSpeedStartPrompt;
 						
 						
 					};
@@ -2607,7 +2643,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip = "MANAGE EXPLOSIVES";
 
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_orderDetonation;
+						[] call A3C_UI_SelectionPromptPanel_fnc_actionChargeDetonatePromptStart;
 					};
 				};
 				case ("VEHICLE") : {
@@ -2624,14 +2660,14 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_reBoard.paa";
 					_button_toolTip = "Re-Board group(s) to previous vehicle(s)";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_reBoardGroupToVehicle;
+						[] call A3C_ai_highCommand_fnc_actionReboardGroupToVehicleDispatch;
 					};				
 				};
 				case ("CHARGE_MAVIC") : {
 					_params = [];
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_changeBattery.paa";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_chargeMavic;	
+						[] call A3C_ai_highCommand_fnc_actionPlayerChargeMavicDispatch;	
 					};
 					_button_toolTip = "Change Mavic-3 Batteries";
 				};
@@ -2641,7 +2677,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip =  "FIRE COUNTER MEASURES / CONCEALMENT";
 					_imageColorCode = [1,1,1,1];
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_vehicleSmoke;
+						[] call A3C_ai_highCommand_fnc_actionVehicleSmoke;
 					};	
 				};
 				case ("PARALOAD") : {
@@ -2664,7 +2700,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				case ("FLYINGHEIGHT") : {
 					_params = []; 
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_flyInHeight;
+						[] call A3C_ui_selectionPromptPanel_fnc_actionFlyInHeightStartPrompt;
 					};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_flyInHeight.paa";
 					_button_toolTip = "Change Flying Height";
@@ -2674,7 +2710,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "\a3\ui_f\data\IGUI\Cfg\Actions\ico_OFF_ca.paa";
 					_button_toolTip =  "STOP SUPPRESSING"; 
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_suppressionStop;	
+						[] call A3C_ai_highCommand_fnc_actionSuppressionStop;	
 					};		
 				};
 				case ("RE-ARM") : {
@@ -2683,7 +2719,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_reArm.paa";
 					_button_toolTip = "RESUPPLY NEARBY";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_reArm;
+						[] call A3C_ai_highCommand_fnc_actionReArmDispatch;
 					};
 				};
 				case ("HEAL") : {
@@ -2692,7 +2728,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
 					_button_toolTip = "MEDICAL ATTENTION";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_groupHeal;
+						[] call A3C_ai_highCommand_fnc_actionGroupHealDispatch;
 					};
 				};
 				case ("OWNERSHIP") : {
@@ -2701,7 +2737,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_transferOwner.paa";
 					_button_toolTip = if (local (A3C_SELECTED_HC_GROUPS_SETTINGS select 0)) then {"TRANSFER OWNERSHIP TO SERVER"} else {"CLAIM OWNERSHIP"};
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_transferOwnership;
+						[] call A3C_ai_highCommand_actionTransferOwnershipDispatch;
 					};
 				};
 				case ("UNSTUCK") : {
@@ -2718,7 +2754,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_STATIC_Packing.paa";
 					_button_toolTip = "Pack Static Weapon";
 					_buttonFnc = {
-						[0] spawn A3C_AI_HighCommand_Action_unAssembleWeapon;
+						[0] spawn A3C_ai_highCommand_fnc_actionUnAssembleWeaponDispatch;
 					};
 				};
 				case ("PLOW_DEPLOY") : {
@@ -2726,7 +2762,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_Menu_LowerPlow.paa";
 					_button_toolTip = "Deploy Mine-Plow";
 					_buttonFnc = {
-						[0] call A3C_AI_HighCommand_Action_animatePlow;
+						[A3C_SELECTED_HC_GROUPS_SETTINGS select 0, 0] call A3C_ai_shared_fnc_actionAnimateVehiclePlow;
 					};
 				};
 				case ("PLOW_RAISE") : {
@@ -2734,7 +2770,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_Menu_RaisePlow.paa";
 					_button_toolTip = "Raise Mine-Plow";
 					_buttonFnc = {
-						[1] call A3C_AI_HighCommand_Action_animatePlow;
+						[A3C_SELECTED_HC_GROUPS_SETTINGS select 0, 1] call A3C_ai_shared_fnc_actionAnimateVehiclePlow;
 					};
 				};
 				case ("LINE_CHARGE") : {
@@ -2742,7 +2778,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_Menu_LineCharge.paa";
 					_button_toolTip = "Pack Static Weapon";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_lineCharge;
+						[A3C_SELECTED_HC_GROUPS_SETTINGS select 0] call A3C_ai_shared_fnc_actionlineCharge;
 					};
 				};
 				case ("ENGINE_OFF") : {
@@ -2750,7 +2786,9 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "\a3\ui_f\data\IGUI\Cfg\Actions\engine_off_ca.paa";
 					_button_toolTip = "Engine Off";
 					_buttonFnc = {
-						[] call A3C_AI_HighCommand_Action_vehicleEngineOff;
+						{
+							[units _x] call A3C_ai_shared_fnc_actionEngineOff;
+						} foreach A3C_HC_engineOffUnits;
 					};
 				};
 				case ("VEHICLE_LIGHTS_OFF") : { 
@@ -2758,7 +2796,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_headlight_OFF.paa";
 					_button_toolTip = "Vehicle Lights Off";
 					_buttonFnc = {
-						[0] call A3C_AI_HighCommand_Action_vehicleLights;
+						[1] call A3C_ai_highCommand_fnc_actionSwitchVehicleLights;
 					};
 				};
 				case ("VEHICLE_LIGHTS_ON") : { 
@@ -2766,7 +2804,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_headlight_ON.paa";
 					_button_toolTip = "Vehicle Lights On";
 					_buttonFnc = {
-						[1] call A3C_AI_HighCommand_Action_vehicleLights;
+						[0] call A3C_ai_highCommand_fnc_actionSwitchVehicleLights;
 					};
 				};
 				case ("IR_ON") : {
@@ -2775,7 +2813,11 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_item_IRstrobe_OFF.paa";
 					_button_toolTip = if (A3C_Prevent_attach_IR) then {"IR-strobes ON - stand by for last order instance to complete"} else {"IR-strobes ON"};
 					_buttonFnc = {
-						["ON"] call A3C_AI_HighCommand_Action_irStrobe;
+						if !(A3C_Prevent_attach_IR) then {
+							["ON"] spawn A3C_ai_highCommand_fnc_actionToggleIrStrobe;
+						} else {
+							hint "Please wait for your last order instance to reach all units";
+						};
 					};
 				};
 				case ("IR_OFF") : {
@@ -2784,7 +2826,11 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_item_IRstrobe_ON.paa";
 					_button_toolTip = if (A3C_Prevent_attach_IR) then {"IR-strobes OFF - stand by for last order instance to complete"} else {"IR-strobes OFF"};
 					_buttonFnc = {
-						["OFF"] call A3C_AI_HighCommand_Action_irStrobe;
+						if !(A3C_Prevent_attach_IR) then {
+							["OFF"] spawn A3C_ai_highCommand_fnc_actionToggleIrStrobe;
+						} else {
+							hint "Please wait for your last order instance to reach all units";
+						};
 					};			
 				};
 
@@ -2792,37 +2838,76 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_params = [];
 					_imageColorCode = if (A3C_Prevent_attach_IR_Laser) then {[1,1,1,0.3]} else {[1,1,1,1]};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_item_IRlaser_OFF.paa";
-					_button_toolTip = if (A3C_Prevent_attach_IR_Laser) then {"IR-LASERS ON - stand by for last order instance to complete"} else {"IR-LASERS ON"};
+					_button_toolTip = if (A3C_Prevent_attach_IR_Laser) then {
+						"IR-LASERS ON - stand by for last order instance to complete"
+					} else {
+						"IR-LASERS ON"
+					};
+
 					_buttonFnc = {
-						["ON"] call A3C_AI_HighCommand_Action_irPointer;	
+						if !(A3C_Prevent_attach_IR_Laser) then {
+							["LASER", "ON"] call A3C_ai_shared_fnc_actionWeaponAttachmentToggle;
+						} else {
+							hint "Please wait for your last order instance to reach all units";
+						};
 					};
 				};
+
 				case ("IR_POINTER_OFF") : {
 					_params = [];
 					_imageColorCode = if (A3C_Prevent_attach_IR_Laser) then {[1,1,1,0.3]} else {[1,1,1,1]};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_item_IRlaser_ON.paa";
-					_button_toolTip = if (A3C_Prevent_attach_IR_Laser) then {"IR-LASERS OFF - stand by for last order instance to complete"} else {"IR-LASERS OFF"};
+					_button_toolTip = if (A3C_Prevent_attach_IR_Laser) then {
+						"IR-LASERS OFF - stand by for last order instance to complete"
+					} else {
+						"IR-LASERS OFF"
+					};
+
 					_buttonFnc = {
-						["OFF"] call A3C_AI_HighCommand_Action_irPointer;	
-					};	
+						if !(A3C_Prevent_attach_IR_Laser) then {
+							["LASER", "OFF"] call A3C_ai_shared_fnc_actionWeaponAttachmentToggle;
+						} else {
+							hint "Please wait for your last order instance to reach all units";
+						};
+					};
 				};
+
 				case ("FLASHLIGHT_ON") : {
 					_params = [];
 					_imageColorCode = if (A3C_Prevent_attach_Flashlight) then {[1,1,1,0.3]} else {[1,1,1,1]};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_item_FlashLight_OFF.paa";
-					_button_toolTip = if (A3C_Prevent_attach_Flashlight) then {"FLASHLIGHT ON - stand by for last order instance to complete"} else {"FLASHLIGHT ON"};
+					_button_toolTip = if (A3C_Prevent_attach_Flashlight) then {
+						"FLASHLIGHT ON - stand by for last order instance to complete"
+					} else {
+						"FLASHLIGHT ON"
+					};
+
 					_buttonFnc = {
-						["ON"] call A3C_AI_HighCommand_Action_weaponFlashLight;
+						if !(A3C_Prevent_attach_Flashlight) then {
+							["FLASHLIGHT", "ON"] call A3C_ai_shared_fnc_actionWeaponAttachmentToggle;
+						} else {
+							hint "Please wait for your last order instance to reach all units";
+						};
 					};
 				};
+
 				case ("FLASHLIGHT_OFF") : {
 					_params = [];
 					_imageColorCode = if (A3C_Prevent_attach_Flashlight) then {[1,1,1,0.3]} else {[1,1,1,1]};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_item_FlashLight_ON.paa";
-					_button_toolTip = if (A3C_Prevent_attach_Flashlight) then {"FLASHLIGHT OFF - stand by for last order instance to complete"} else {"FLASHLIGHT OFF"};
+					_button_toolTip = if (A3C_Prevent_attach_Flashlight) then {
+						"FLASHLIGHT OFF - stand by for last order instance to complete"
+					} else {
+						"FLASHLIGHT OFF"
+					};
+
 					_buttonFnc = {
-						["OFF"] call A3C_AI_HighCommand_Action_weaponFlashLight;
-					};	
+						if !(A3C_Prevent_attach_Flashlight) then {
+							["FLASHLIGHT", "OFF"] call A3C_ai_shared_fnc_actionWeaponAttachmentToggle;
+						} else {
+							hint "Please wait for your last order instance to reach all units";
+						};
+					};
 				};
 
 				
@@ -3287,7 +3372,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 						//--> This means, A3C_UI_mainDisplay_fnc_startPositionalActionProcess is called in A3C_UI_selectionPromptPanel_fnc_onLBSelChangedShared!
 						
 						A3C_SelectionPromptPanel_MODE = "STATIC_ASSEMBLE_HC";
-						private _staticData = [units (A3C_RD_UNITS select 0),"PLANNING"] call A3C_getSelectionBackpackStatics;
+						private _staticData = [units (A3C_RD_UNITS select 0),"PLANNING"] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons;
 						if (count _staticData == 1) then {
 							[0] call A3C_UI_selectionPromptPanel_fnc_onLBSelChangedShared;
 						} else {
@@ -3513,7 +3598,7 @@ A3C_AI_HighCommand_ActionDistribute_boardGroupsToVehicle = {
 	(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_Parent) ctrlShow false;
 	(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 	if (_button == 0) then {
-		A3C_UI_MAPICONS_HC_VICS = [] call A3C_fnc_getBoardableVehicles;
+		A3C_UI_MAPICONS_HC_VICS = [A3C_SELECTED_HC_GROUPS_SETTINGS] call A3C_main_fnc_getBoardableVehicles;
 		if (_a3c_dsp == IDD_RADIAL_MENU) then {
 
 			A3C_UI_HUD_ASSIGNVEHICLE = true;

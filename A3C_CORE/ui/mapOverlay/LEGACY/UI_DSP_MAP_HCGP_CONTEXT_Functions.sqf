@@ -26,16 +26,7 @@ A3C_HC_GroupMenu_SuppressionRequested = false;
 A3C_ALLOW_HCrEFRESH = true;
 
 
-A3C_Switch_Vehicle_Lights = {
-	params ["_vehicle","_mode"];
-	{
-		private _selName = _x;
-		if ("light" in toLower _x) then {
-			// _vehicle sethitPointDamage [_selName, _mode];
-			[_vehicle, [_selName, _mode]] remoteExec ["sethitPointDamage",_vehicle];		
-		};
-	} foreach ((getAllHitPointsDamage _vehicle) select 0);
-};
+
 
 
 A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_WIPE = {

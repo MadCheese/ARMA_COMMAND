@@ -20,7 +20,7 @@ private _restoreOriginalPlayerContext = {
 	private _unitsAfterRestore = units player;
 
 	{
-		[_x] call A3C_AI_action_resumeDestination;
+		[_x] call A3C_ai_squad_fnc_actionResumeDestination;
 	} forEach _unitsAfterRestore;
 };
 
@@ -54,7 +54,7 @@ selectPlayer _unit;
 private _unitsAfterPlayerSwitch = units player;
 
 {
-	[_x] call A3C_AI_action_resumeDestination;
+	[_x] call A3C_ai_squad_fnc_actionResumeDestination;
 } forEach _unitsAfterPlayerSwitch;
 
 ["Open", true] spawn BIS_fnc_arsenal;

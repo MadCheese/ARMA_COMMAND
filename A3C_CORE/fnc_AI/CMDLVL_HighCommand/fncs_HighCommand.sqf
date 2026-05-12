@@ -517,7 +517,7 @@ A3C_HC_INSERT_ACTION_WP = {
 
 	
 	if (_actionType == "ASSEMBLE WEAPON") then {
-		[leader _group,_caller] call A3C_WPstatementsASSEMBLE;
+		[leader _group,_caller] call A3C_ai_highCommand_fnc_staticAssembleWpAction;
 	};
 	
 	_statements = switch (_actionType) do {
@@ -921,17 +921,6 @@ A3C_fnc_DAYTIME_COMPLETED = {
 
 
 //-- Add Waypoint to HC-Group
-A3C_HC_ForceGround = {
-	private ["_vehicle"];
-	_vehicle = _this;
-	while {canMove _vehicle} do {
-		if (((getPosATL _vehicle) select 2) < 1) exitWith {
-			[_vehicle,0] remoteExec ["flyInHeight",_vehicle];
-		};
-		sleep 0.5;
-	};
-};
-
 A3C_HC_ADD_WP = {
 	private ["_isHighCommand","_wp","_wpType","_wpI","_statements","_group","_posi","_return","_vehicle","_isFirstWP"];
 	private _group = _this select 0;
@@ -949,15 +938,14 @@ A3C_HC_ADD_WP = {
 
 	private _isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
 	_wp = [];
-	// _nudge = count (waypoints _group) == 0; //~~ is this ever the case?
 
 	_vehicle = vehicle (leader _group);
 	private _waypoints = waypoints _group;
 	
-	
-	private _lastWP = (_waypoints select ((count _waypoints) - 1) ) select 1; //~~ attention - this might clash with CYCLE waypoints
-	private _currentWaypointIndex = ((currentWaypoint _group) - 1);
-	private _isFirstWP = _currentWaypointIndex  == _lastWP;
+	private _currentWaypoint = currentWaypoint _group;
+	private _lastWP = (_waypoints select (((count _waypoints) - 1) max 0)) select 1; //~~ attention - this might clash with CYCLE waypoints
+	private _currentWaypointIndex = (_currentWaypoint - 1);
+	private _isFirstWP = _currentWaypoint == 1 || {_currentWaypointIndex  == _lastWP};
 
 	
 	

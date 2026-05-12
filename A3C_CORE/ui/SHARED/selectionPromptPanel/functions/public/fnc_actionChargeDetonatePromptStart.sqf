@@ -3,6 +3,8 @@
 #include "..\..\..\shared_ui_defines.hpp"
 #include "..\..\..\..\mapOverlay\dialog_defines.hpp"
 
+//-- Note: This action does not have a dispatcher. This fnc opens correct SelectionPromptPanel, SelectionPromptPanel's onLbSelChanged issues the action.
+
 A3C_SelectionPromptPanel_MODE = "DETONATE_SELECTED_CHARGE_SHARED";
 
 with uiNamespace do {
@@ -32,4 +34,4 @@ _parent ctrlCommit 0;
 
 _text ctrlSetText "Detonate Charges";
 
-[] call A3C_UI_selectionPromptPanel_fnc_chargeDetonatePromptRefresh;
+[] call A3C_UI_selectionPromptPanel_fnc_actionChargeDetonatePromptRefresh;

@@ -653,7 +653,7 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 				private _lock = getNumber (configfile >> "CfgAmmo" >> (_this select 4) >> "weaponLockSystem");
 				A3C_REMFIRE_UNITS_ACTIVE = A3C_REMFIRE_UNITS_ACTIVE - [_unit];
 				publicvariable 'A3C_REMFIRE_UNITS_ACTIVE';
-				[_unit] call A3C_AI_action_resumeDestination;
+				[_unit] call A3C_ai_squad_fnc_actionResumeDestination;
 				
 				[_unit,_missile,_lock] spawn {
 					//-- parallel: make sure unit behaviour is correct

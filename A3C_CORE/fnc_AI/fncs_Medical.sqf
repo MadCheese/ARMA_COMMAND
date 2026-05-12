@@ -296,7 +296,7 @@ A3C_MEDICAL_START = {
 
 			};
 
-			[_healer] call A3C_AI_action_resumeDestination;
+			[_healer] call A3C_ai_squad_fnc_actionResumeDestination;
 
 
 
@@ -623,49 +623,10 @@ A3C_AI_Shared_Action_Heal = {
 	_patient setunitpos _patientStance;
 
 
-
-
-	//if (!(_patient == _unit) && !(_isPlayer)) then {
-	//	if ((_expDest select 1) in ["DoNotPlanFormation","FORMATION PLANNED"]) then {
-	//		if ((group _patient) == (group player)) then {
-	//			_patient doFollow player;
-	//		};
-	//	} else {
-	//		_patient lookAt objnull;
-	//		_patient domove (_expDest select 0);
-	//		_patient moveTo (_expDest select 0);
-	//	};
-	//	_patient forcespeed -1;
-	//};
 	waituntil {!(['medic',animationState _unit] call BIS_fnc_inString) };
 	_patient forcespeed -1;
 	if (!(_patient == _unit) && !(_isPlayer)) then {
-		[_unit] call A3C_AI_action_resumeDestination;
-	};
-};
-
-A3C_AI_HIGHCOMMAND_fnc_groupHeal = {
-	params ["_group"];
-
-	
-	private _medics = [(units _group)] call A3C_FINDMEDICS;
-	_group setVariable ["A3C_MEDICS", _medics];
-	_patients = [_group] call A3C_FINDPATIENTS;
-	// systemchat str _patients;
-	_group setVariable ["A3C_MEDICS_LB", _medics];
-	_group setVariable ["A3C_PATIENTS_LB", _patients];
-	if (count _patients > 0) then {
-		if (count (_group getVariable ["A3C_MEDICS_LB", [] ]) > 0) then {
-			[[_group, 1],A3C_MEDICAL_START] remoteExec ["bis_fnc_spawn", leader _group];
-			// systemchat 'wyt';
-			// sleep 2;
-			// while {true} do {
-			// 	if ( {count _x > 0} count [group player getVariable ["A3C_PATIENTS_DESIGNATED", []],group player getVariable ["A3C_PATIENTS_ASSIGNED", []]] == 0) exitWith {
-			// 		//systemchat "loopxit";
-			// 	};
-			// 	sleep 1;
-			// };
-		};
+		[_unit] call A3C_ai_squad_fnc_actionResumeDestination;
 	};
 };
 

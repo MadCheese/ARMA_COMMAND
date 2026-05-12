@@ -91,9 +91,11 @@ private _exitCondition = {{true}};
 //-- INSERT ACTION SCRIPT here --//
 //-------------------------------//
 
+
+
 if !(_group getVariable ["A3C_ASSEMBLING",false]) then {
 	_group setVariable ["A3C_ASSEMBLING",true,true];
-	[_leader, _weaponClass] call A3C_WPstatementsASSEMBLE;	
+	[_leader, _weaponClass] call A3C_ai_highCommand_fnc_staticAssembleWpAction;	
 	waitUntil {!(_group getVariable ["A3C_ASSEMBLING",false])};
 	_group setVariable ["A3C_ASSEMBLING",true,true]; //-- reset to true for exitcondition
 } else {

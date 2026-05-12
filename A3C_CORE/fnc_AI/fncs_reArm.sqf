@@ -115,7 +115,7 @@ A3C_ReArm_Auto_OrderIssue = {
 		} forEach _crateItems;
 	};
 
-	[_unit] call A3C_AI_action_resumeDestination;
+	[_unit] call A3C_ai_squad_fnc_actionResumeDestination;
 	_unit setVariable ["A3C_REARMING", nil, true];
 };
 
@@ -185,7 +185,7 @@ A3C_ReArm_Plot_AddItem = {
 		[_unit] spawn {
 			params ["_unit"];
 			waitUntil {sleep 1; count (_unit getVariable "A3C_PLOT") == 0};
-			[_unit] call A3C_AI_action_resumeDestination;
+			[_unit] call A3C_ai_squad_fnc_actionResumeDestination;
 		};
 
 	} else {
