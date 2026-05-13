@@ -112,6 +112,11 @@ publicVariable 'RHS_ENGINE_STARTUP_OFF';
 			};
 		};
 	} else {
+
+		if (!isServer) then {
+			A3C_isHCSkillMaxed = if (!isNil 'A3C_isHCSkillMaxed') then {A3C_isHCSkillMaxed} else {profileNameSpace getVariable ["A3C_SKILL_VAR",true]};
+		};
+
 		//-- A3C not running on server. Run on client instead.
 		[] execFSM "A3C_CORE\FSM\A3C_MON_SERVER.fsm";
 
@@ -147,6 +152,8 @@ call compile preprocessFileLineNumbers "A3C_CORE\main\functions\initFunctions.sq
 call compile preprocessFileLineNumbers "A3C_CORE\ai_highCommand\functions\initFunctions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ai_shared\functions\initFunctions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ai_rail\functions\initFunctions.sqf";
+
+
 
 if (isDedicated) exitWith {};
 

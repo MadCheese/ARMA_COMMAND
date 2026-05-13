@@ -4,7 +4,7 @@ A3C_PREP(actionAircraftRappell);
 A3C_PREP(actionClearBuilding);
 A3C_PREP(actionEngineOn);
 A3C_PREP(actionEngineOff);
-A3C_PREP(actionlineCharge);
+A3C_PREP(actionLineCharge);
 
 A3C_PREP(actionIrStrobeLoop);
 A3C_PREP(actionIrStrobeSet);

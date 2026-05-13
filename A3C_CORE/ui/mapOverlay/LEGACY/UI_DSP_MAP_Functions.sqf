@@ -3090,7 +3090,7 @@ A3C_UI_MAP_fnc_disbandUnitsToHighCommand = {
 						"NONE"
 					],
 					false
-				] call A3C_HC_ADD_WP; //-- "NONE" is landingData
+				] call A3C_ai_highCommand_fnc_addWaypoint; //-- "NONE" is landingData
 			};
 			if (_forEachIndex >= ((_unit getvariable "A3C_CURRENTWAYPOINT_INDEX") - 1)) then {
 				_params =
@@ -3117,7 +3117,7 @@ A3C_UI_MAP_fnc_disbandUnitsToHighCommand = {
 					_loopDest = (_x select 0);
 				};
 				if (_isLoop) then {_params pushback true};
-				_params call A3C_HC_ADD_WP;
+				_params call A3C_ai_highCommand_fnc_addWaypoint;
 				/*
 				switch (_wpAction select 1) do {
 					case ("DROPOFF") : {
@@ -3140,13 +3140,13 @@ A3C_UI_MAP_fnc_disbandUnitsToHighCommand = {
 				([_loopPos,5,([_loopPos,_loopDest] call BIS_fnc_Dirto)] call BIS_fnc_Relpos),
 				[],
 				"CYCLE"
-			] call A3C_HC_ADD_WP;
+			] call A3C_ai_highCommand_fnc_addWaypoint;
 		};
 		[_newGroup,0] setWaypointPosition [_loopPos,0];
 	} else {
 		_newGroup setVariable ["AIC_Waypoints",[0,[]],true];
 		//{[_x,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler} foreach (missionNamespace getVariable ["AIC_Group_Controls",[]]);
-		//[_newGroup,(position (leader _newGroup))] call A3C_HC_ADD_WP;
+		//[_newGroup,(position (leader _newGroup))] call A3C_ai_highCommand_fnc_addWaypoint;
 	};
 
 	[A3C_SELECTED_UNITS,true,false] spawn A3C_AI_Shared_cancelUnitPlot;

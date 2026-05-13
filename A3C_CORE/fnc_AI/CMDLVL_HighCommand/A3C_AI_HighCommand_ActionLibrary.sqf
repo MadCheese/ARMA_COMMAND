@@ -14,197 +14,8 @@
 
 
 
-A3C_AI_HighCommand_Action_repair = {
-	private _group = A3C_RD_UNITS select 0;
-	private _wpPos = +(A3C_UI_HUD_3D_TAG_ICON_POS);
-
-	[_group, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
-	private _wp = _group addWaypoint [_wpPos,0];
-	_wp setWaypointType "SCRIPTED";
-	_wp setWaypointScript "A3C_CORE\fnc_AI\wpFncs\wpScript_repair.sqf [getPlayerUID player, ['ARRIVAL', 0]]";
-};
-
-A3C_AI_HighCommand_Action_landAircraft = {
-	A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
 
 
-	with uiNamespace do {
-
-		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
-	};
-
-
-	private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_SELECTION_PROMPT_PANEL};
-	_parent = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
-	_text = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
-	_listBox = findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
-
-	_text ctrlSetText "CHECKING LZ";
-	lbClear _listBox;
-	[_listBox, "KEEP TAB PRESSED DOWN"] call A3C_addLbEntry;
-
-
-
-
-	_parent ctrlShow true;
-
-
-	_requiresPlacementCorrection = true;
-	_placerPos = getPosASL A3C_OBJECTPLACER;
-	private _landingPosRoot = +(_placerPos);
-	private _landingVector = [getDir A3C_OBJECTPLACER] call MCSS_fnc_DegreeToVector;
-
-	_dimensions = [typeof A3C_OBJECTPLACER] call A3C_getVehicleBodyDimensions;
-	_dimensions params ["_reference_Width","_reference_Length","_reference_Height","_reference_Rotorsize"];
-
-	_forceDefaultLanding = true;
-
-	_exit = false;
-	if (!isNull A3C_SNAP_OBJECT) then {
-		//-- position snapped against object
-
-		_placerPosZ = _placerPos select 2;
-		_snapObjectPos = (getPosASL A3C_SNAP_OBJECT);
-
-		_snapObjectZ = _snapObjectPos select 2;
-		_snapObjectHeight = A3C_SNAP_OBJECT call BIS_fnc_objectHeight;
-
-		_refPosTop = (_placerPos select [0,2]) + [_snapObjectZ + _snapObjectHeight]; //-- placer-pos at boundingBox top
-
-		_ins = lineIntersectsSurfaces
-		[
-			_refPosTop,
-			[_placerPos select 0,_placerPos select 1, 0],
-			A3C_OBJECTPLACER,
-			objNull,
-			true,
-			1,
-			"GEOM",
-			"NONE"
-		];
-
-		if (count _ins > 0) then {
-
-			_intersectPosZ = ((_ins select 0) select 0) select 2;
-
-			if (abs(_intersectPosZ - _placerPosZ) < 0.1) then {
-				_requiresPlacementCorrection = false;
-				_forceDefaultLanding = false;
-
-			};
-			if (_requiresPlacementCorrection) then {
-				hint "ADJUSTING LZ";
-				_LZData = [A3C_SNAP_OBJECT,_reference_Width,_reference_Length] call A3C_getHeliRoofLZ;
-				[] spawn {
-					hint "LZ ADJUSTED";
-					sleep 5;
-					hintSilent "";
-				};
-				if (count _LZData > 0) then {
-					_landingPosRoot = _LZData select 0;
-					_landingVector = [(_LZData select 1)] call MCSS_fnc_DegreeToVector;
-					_forceDefaultLanding = false;
-
-
-
-
-				};
-			};
-		};
-	} else {
-		//-- position in the open
-		_forceDefaultLanding = false;
-		_requiresPlacementCorrection = false;
-		_dummyBox = ([A3C_OBJECTPLACER,1] call MCSS_fnc_BBOX);
-		_maxRotorHeight = 1000;
-		{
-
-			_z = (A3C_OBJECTPLACER modelToWorld (A3C_OBJECTPLACER selectionposition _x)) select 2;
-			//systemchat str [_z];
-			if (_z < _maxRotorHeight) then {
-				_maxRotorHeight = _z;
-			};
-		} foreach ([A3C_OBJECTPLACER] call MCSS_fnc_getMainRotorSelections);
-
-		_centerAtRotorHeight = getPosASL A3C_OBJECTPLACER;
-		_centerAtRotorHeight set [2,_maxRotorHeight];
-		_centerAtRotorHeight = ATLtoASL _centerAtRotorHeight;
-		{
-			_dist = A3C_OBJECTPLACER distance2d _x;
-			_dir = A3C_OBJECTPLACER getDir _x;
-			_ins = lineIntersectsSurfaces
-			[
-				_centerAtRotorHeight,
-				[_centerAtRotorHeight,_dist,_dir] call BIS_fnc_relPos,
-				A3C_OBJECTPLACER,
-				objNull,
-				true,
-				1,
-				"GEOM",
-				"NONE"
-			];
-			if (count _ins > 0) exitWith {
-				_exit = true;
-			};
-		} foreach _dummyBox;
-	};
-
-	if (_exit) exitWith {
-		hint "THE SELECTED GROUND-LZ IS NOT SAFE - PLEASE REPEAT";
-		sleep 5;
-		hintSilent "";
-	};
-
-
-
-	// if !(_requiresPlacementCorrection) then {
-	// 	//systemchat "GOOD PLACEMENT";
-	// 	//-- could be on roof (!isNull snap_object) but might still need security checks
-	// 	//-- could be on ground and use same checks
-	// } else {
-	// 	//if !(_forceDefaultLanding) then {
-
-	// 	//};
-	// 	//systemchat "LZ WILL BE ADJUSTED";
-	// 	//-- snap_object detected and definitely requires correction
-	// 	//-- if (!isNull snap_object), use rooftop position generator
-	// 	//-- otherwise use simple, ASL-level security
-	// };
-
-
-
-	if (_forceDefaultLanding) then {
-		[] spawn {
-			hint "ALERT: NO SUITABLE LZ FOUND ON OBJECT. REVERTING TO DEFAULT LANDING";
-			sleep 5;
-			hintSilent "";
-		};
-		A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
-
-	};
-
-	A3C_RADIAL_ACTION_HC_LANDINGDATA = [_landingPosRoot,_landingVector,_forceDefaultLanding];
-
-	A3C_SelectionPromptPanel_MODE = "HELI_LANDING_HC_TYPE";
-
-
-
-	_text ctrlSetText "SELECT LANDING TYPE";
-
-	{
-		_ctrlPos = ctrlPosition _x;
-		_ctrlPos set [3,(_ctrlPos select 3) + (  (3)   * (0.0440051 * safezoneH) )];
-		_x ctrlSetPosition _ctrlPos;
-		_x ctrlCommit 0;
-	} foreach [_parent,_listBox];
-
-	ctrlSetFocus _listBox;
-
-	lbClear _listBox;
-	{
-		[_listBox, _x] call A3C_addLbEntry;
-	} foreach ["COMBAT LANDING","TRANSPORT UNLOAD","FULL LANDING"];
-};
 
 A3C_AI_HighCommand_Action_casStrike = {
 	with uiNamespace do {
@@ -279,13 +90,13 @@ A3C_AI_HighCommand_Action_rappel = {
 		[
 			_gp,
 			_rappelWPos
-		] call A3C_HC_ADD_WP;
+		] call A3C_ai_highCommand_fnc_addWaypoint;
 		if (A3C_UI_HUD_3D_TAG_ICON_POS distance2D _leaderVic > 50) then {
 			_wp2 =
 			[
 				_gp,
 				_startPos
-			] call A3C_HC_ADD_WP;
+			] call A3C_ai_highCommand_fnc_addWaypoint;
 			if (_landOnReturn) then {
 				_statements = format
 				[
@@ -371,7 +182,7 @@ A3C_AI_HighCommand_Action_addWaypoint = {
 					[0,0,"AUTO","AUTO","NORMAL","CLEARBUILDING"]
 				];
 			};
-			_wpParams call A3C_HC_ADD_WP;
+			_wpParams call A3C_ai_highCommand_fnc_addWaypoint;
 		} foreach A3C_RD_UNITS;
 	};
 };

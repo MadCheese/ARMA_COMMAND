@@ -27,7 +27,7 @@ private _objectPlacerDir = getDir A3C_OBJECTPLACER;
 		private _waypoint = [
 			_group,
 			_objectPlacerPos
-		] call A3C_HC_ADD_WP;
+		] call A3C_ai_highCommand_fnc_addWaypoint;
 
 		private _unitPolys = _group getVariable ["A3C_UNIT_POLYS", []];
 

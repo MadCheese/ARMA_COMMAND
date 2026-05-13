@@ -171,7 +171,7 @@ if (_doubleClick) then {
 					[0,1000,"AUTO","AUTO",-1,"NONE"],
 					false,
 					_wpIndex + 1
-				] call A3C_HC_ADD_WP;
+				] call A3C_ai_highCommand_fnc_addWaypoint;
 
 				if (_createReturnWP) then {
 					private _startPos = position _leaderVehicle;
@@ -807,7 +807,7 @@ if (_doubleClick) then {
 				private _plantExplosiveWP = [
 					_selectedGroup,
 					ASLToATL A3C_UI_HUD_3D_TAG_ICON_POS
-				] call A3C_HC_ADD_WP;
+				] call A3C_ai_highCommand_fnc_addWaypoint;
 
 				private _cursorObject = if (!isNull cursorTarget && {{cursorTarget isKindOf _x} count ["CAR", "TANK", "SHIP", "AIR", "MOTORCYCLE"] > 0}) then {
 					cursorTarget
@@ -835,7 +835,7 @@ if (_doubleClick) then {
 				private _returnWP = [
 					_selectedGroup,
 					getPos (vehicle leader _selectedGroup)
-				] call A3C_HC_ADD_WP;
+				] call A3C_ai_highCommand_fnc_addWaypoint;
 			} forEach A3C_RD_UNITS;
 
 			player groupRadio "SentCmdPlaceCharge";

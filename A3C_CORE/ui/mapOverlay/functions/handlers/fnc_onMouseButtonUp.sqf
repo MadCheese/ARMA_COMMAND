@@ -612,7 +612,7 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 							} foreach (units _gp);
 						} foreach A3C_SELECTED_UNITS;
 						publicVariable 'A3C_BLACKLIST_WAYPOINT_EDIT';
-						[_gp, _sPos] call A3C_HC_ADD_WP;
+						[_gp, _sPos] call A3C_ai_highCommand_fnc_addWaypoint;
 					};
 					
 					

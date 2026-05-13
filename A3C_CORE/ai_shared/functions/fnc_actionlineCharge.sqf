@@ -1,4 +1,4 @@
-// A3C_ai_shared_fnc_actionlineCharge
+// A3C_ai_shared_fnc_actionLineCharge
 
 params ["_group"];
 

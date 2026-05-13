@@ -832,7 +832,7 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 						};		
 					};
 					if (_addWP) then {
-						_wpParams call A3C_HC_ADD_WP;
+						_wpParams call A3C_ai_highCommand_fnc_addWaypoint;
 					} else {
 						systemchat "A3C: Clearing this building is already planned for this group";
 					};

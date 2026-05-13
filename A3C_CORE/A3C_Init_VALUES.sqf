@@ -211,12 +211,13 @@ if (isServer) then {
 //-- exit server
 if (isDedicated) exitWith {
 	A3C_isHCSkillMaxed = if (!isNil 'A3C_isHCSkillMaxed') then {A3C_isHCSkillMaxed} else {true}; //-- can obe overRidden in Server's in server mission init.sqf
+	//-- #TODO: if a3c not running on server, this needs to still be declared!!!
 };
 
 
 
 A3C_PLAYERGROUP = group player;
-
+A3C_UNITCOUNT = ((count (units group player)) -1);
 
 
 A3C_EHM = if (isClass(configFile/"CfgPatches"/"BaBe_core")) then {true} else {false}; //-- detect if Enhanced Movement is running
@@ -227,7 +228,7 @@ A3C_LaxMount = if (isClass(configFile/"CfgPatches"/"L_MOUNT")) then {true} else 
 A3C_GREN_MUZZLE = "";
 A3C_GREN_ALLOW_UNITSWITCH = false;
 
-A3C_UNITCOUNT = ((count (units group player)) -1);
+
 
 
 A3C_Selection_MultiWaypoint = [];

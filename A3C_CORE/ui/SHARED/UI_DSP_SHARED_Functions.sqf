@@ -2010,7 +2010,6 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			private _isRotor = ((getNumber (configfile >> "CfgVehicles" >> typeOf _leaderVic >> "landingSpeed")) < 10);
 			if (((getPosATL _leaderVic) select 2) > 1 && {!(_leaderVic getVariable ["A3C_ParadropActive",false])}) then {
 				//-- vehicle is airborne
-				//_actions pushBackUnique "LANDING"; // >> landing added to multiple selections
 				if ( ({((assignedVehicleRole _x) select 0) == "cargo"} count crew _leaderVic > 0) OR {count (getVehicleCargo _leaderVic) > 0} ) then {
 					//-- vehicle has Cargo
 					_actions pushBackUnique "PARADROP";
@@ -2247,7 +2246,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		} count A3C_SELECTED_HC_GROUPS_SETTINGS > 0
 	) then {
 		if (_a3c_dsp == IDD_RADIAL_MENU) then {
-			_actions pushBackUnique "LANDING"; //-- aircraft landings: further evaluation is to be made when action is CALLED
+			_actions pushBackUnique "LANDING_PRECISION"; //-- aircraft landings: further evaluation is to be made when action is CALLED
 		};
 	};
 
@@ -2486,7 +2485,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		"SUPPRESSION",
 		"SUPPRESSION_STOP",
 		"CAS-STRIKE",
-		"LANDING",
+		"LANDING_PRECISION",
 		"PARADROP",
 		"RAPPEL",
 		"PARALOAD",
@@ -2778,7 +2777,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_Menu_LineCharge.paa";
 					_button_toolTip = "Pack Static Weapon";
 					_buttonFnc = {
-						[A3C_SELECTED_HC_GROUPS_SETTINGS select 0] call A3C_ai_shared_fnc_actionlineCharge;
+						[A3C_SELECTED_HC_GROUPS_SETTINGS select 0] call A3C_ai_shared_fnc_actionLineCharge;
 					};
 				};
 				case ("ENGINE_OFF") : {
@@ -3124,10 +3123,10 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				};
 
 
-				case ("LANDING") : {
+				case ("LANDING_PRECISION") : {
 					_params = [] ;
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
-					_button_toolTip = "LAND AIRCRAFT";
+					_button_toolTip = "LAND AIRCRAFT (PRECISION)";
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
 						private _doSpecifyLandingPos = (
@@ -3154,7 +3153,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 								[
 									false, //-- isBusy
-									"LANDING", //-- actionID
+									"LANDING_PRECISION", //-- actionID
 									'', //-- Hud-Icon-class
 									[1,1,1,1], //-- Hud-Icon-color
 									_vehicleType, //-- placer class

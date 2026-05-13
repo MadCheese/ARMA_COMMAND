@@ -21,7 +21,7 @@ A3C_FNCS_CONVOY_MULTIGROUP = {
 			private _gp = _x;
 			private _wpPos = _wpPositions select _forEachIndex;
 			private _wpParams = [_gp,_wpPos];
-			_wpParams call A3C_HC_ADD_WP;
+			_wpParams call A3C_ai_highCommand_fnc_addWaypoint;
 		} forEach _inputUnits;
 	};
 
@@ -103,7 +103,7 @@ A3C_FNCS_CONVOY_MULTIGROUP = {
 		private _gp = _x;
 		private _wpPos = _wpPositions select _forEachIndex;
 		private _wpParams = [_gp,_wpPos];
-		_wpParams call A3C_HC_ADD_WP;
+		_wpParams call A3C_ai_highCommand_fnc_addWaypoint;
 	} forEach (_convoyGroupsActive + _freeGroups);
 
 	if (_isAirOnly) exitWith {

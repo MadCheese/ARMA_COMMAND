@@ -544,7 +544,7 @@ A3C_FNCS_CONVOY_MULTIGROUP = {
 			private _wpPos = _wpPositions select _foreachIndex;
 			private _wpParams = [_gp,_wpPos];
 			
-			_wp = _wpParams call A3C_HC_ADD_WP;
+			_wp = _wpParams call A3C_ai_highCommand_fnc_addWaypoint;
 			if (_foreachIndex == 0) then {
 				_leaderWP = _wp;
 			} else {
@@ -671,7 +671,7 @@ A3C_FNCS_CONVOY_MULTIGROUP = {
 		private _gp = _x;
 		private _wpPos = _wpPositions select _foreachIndex;
 		private _wpParams = [_gp,_wpPos];
-		_wp = _wpParams call A3C_HC_ADD_WP;
+		_wp = _wpParams call A3C_ai_highCommand_fnc_addWaypoint;
 		if (_foreachIndex == 0) then {
 			_leaderWP = _wp;
 		} else {

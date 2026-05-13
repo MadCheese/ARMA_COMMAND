@@ -101,11 +101,11 @@ A3C_UI_HUD_onKeyDown = {
                     [] call A3C_ai_highCommand_fnc_actionUavFPV;
                 };
                 case ("REPAIR") : {
-                    [] call A3C_AI_HighCommand_Action_repair;
+                    [] call A3C_ai_highCommand_fnc_actionRepair;
 					_flickerMode = "";
                 };
-                case ("LANDING") : {
-                    [] call A3C_AI_HighCommand_Action_landAircraft;
+                case ("LANDING_PRECISION") : {
+                    [] call A3C_ui_selectionPromptPanel_fnc_actionLandingPrecisionStartPrompt;
                 };
                 case ("CAS-STRIKE") : {
                     [] call A3C_AI_HighCommand_Action_casStrike;

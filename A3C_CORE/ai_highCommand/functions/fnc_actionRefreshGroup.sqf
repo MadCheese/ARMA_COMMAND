@@ -1,3 +1,6 @@
+private _selectedGroups = +A3C_SELECTED_HC_GROUPS_SETTINGS;
+private _newGroups = [];
+
 {
 	private _oldGroup = _x;
 	private _waypointData = [];
@@ -103,5 +106,14 @@
 	} forEach _newGroupUnits;
 
 	[_newGroup] call A3C_ai_highCommand_fnc_reInitGroupMovement;
+	_newGroups set [count _newGroups, _newGroup];
 
-} forEach A3C_SELECTED_HC_GROUPS_SETTINGS;
+} forEach _selectedGroups;
+
+
+if (visibleMap) then {
+	A3C_SELECTED_UNITS = _newGroups;
+} else {
+	A3C_SELECTED_HC_GROUPS_SETTINGS = _newGroups;
+	A3C_RD_UNITS = _newGroups;
+};
