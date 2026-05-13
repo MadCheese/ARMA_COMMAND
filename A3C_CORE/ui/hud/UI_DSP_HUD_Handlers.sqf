@@ -105,17 +105,17 @@ A3C_UI_HUD_onKeyDown = {
 					_flickerMode = "";
                 };
                 case ("LANDING_PRECISION") : {
-                    [] call A3C_ui_selectionPromptPanel_fnc_actionLandingPrecisionStartPrompt;
+                    [] call A3C_ui_selectionPromptPanel_fnc_actionLandingPrecisionPromptStart;
                 };
                 case ("CAS-STRIKE") : {
-                    [] call A3C_AI_HighCommand_Action_casStrike;
+                    [] call A3C_ui_selectionPromptPanel_fnc_actionCasStrikePromptStart;
                 };
                 case ("RAPPEL") : {
-                    [] call A3C_AI_HighCommand_Action_rappel;
+                    [] spawn A3C_ai_highCommand_fnc_actionRappell;
 					_flickerMode = "";
                 };
                 case ("SUPPRESSION") : {
-                    [] call A3C_AI_HighCommand_Action_suppression;
+                    [] call A3C_ai_highCommand_fnc_actionSuppression;
                 };
                 case ("ARTY") : {
                     [] call A3C_AI_HighCommand_Action_artillery;

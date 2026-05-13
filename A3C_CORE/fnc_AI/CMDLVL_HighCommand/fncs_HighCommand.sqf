@@ -925,16 +925,12 @@ A3C_fnc_DAYTIME_COMPLETED = {
 A3C_HC_FNC_MoveToWayPointPosition = {
 	params ["_group","_wpi"];
 
-	// systemchat str ["MVTWPS",time];
 	private _leader = leader _group;
 	if (!isPlayer leader _group) then {
-		//_group setCurrentWaypoint [_group,(currentWaypoint _group)];
 		sleep 1.5;
 		[_leader,waypointposition [_group,_wpi]] call A3C_DOMOVE; 
 		sleep 1;
 		_leader setDestination [waypointposition [_group,_wpi],"FORMATION PLANNED",true];
-		//private _grunts = ((units _group) - [_leader]) select {!isPlayer _x && {isNull objectParent _x}};
-		//_grunts doFollow (leader _group);
 	};
 };
 
@@ -985,9 +981,9 @@ A3C_WP_STATEMENTS = {
 	_wp setwaypointType "MOVE";
 	
 	_wp setWaypointTimeout [_timeOut,_timeOut,_timeOut];
-	//systemchat str _speed;
+
 	_wpSpeed = if (typeName _speed == "SCALAR") then {if (_speed == -1) then {"NORMAL"} else {"LIMITED"};} else {"UNCHANGED"};
-	//_wpSpeed = if ((_speed isEqualTo -1) OR (_speed isEqualTo "NORMAL")) then {if (_speed isEqualTo -1) then {"NORMAL"} else {"UNCHANGED"}} else {"LIMITED"};
+
 	_statements = "";
 	_preStatements = "";
 	_preMod = "";
@@ -995,43 +991,20 @@ A3C_WP_STATEMENTS = {
 	_preWP = [];
 	private _wpScript = "";
 	
-	/* TEMPORARILY BLOCKED
-	//-- step 1: override stance2 of previous WP, unless index is 0 (no previous WP exists)
-	if (_index > 0) then {
-		_preWP = [_group,(_index - 1)];
-		_preStatements = ((waypointstatements _preWP) select 1) splitstring ";";
-		_preStatements set [1,format [" {_x setunitpos '%1'} foreach units (group this)",_stance1] ];
-		_preStatements = _preStatements joinstring ";";
-		_preWP setWaypointStatements [((waypointstatements _preWP) select 0),_preStatements];
-	};
-	
+
 	_statements = _statements + 
-		(
-			format 
-			[
-				"
-					{_x setunitpos '%1'} foreach units (group this); 
-					{_x setunitpos '%2'} foreach units (group this); 	 
-				",
-				_stance1,
-				_stance2	
-			]
-		);
-	
-	*/	
-	_statements = _statements + 
-		(
-			format 
-			[
-				"
-					if !(%2) then {[(group this)] call A3C_HC_FNC_CompleteWaypoint};
-					 
-				",
-				_stance2,
-				_isLoop	
-			]
-		);//
-		//systemchat str _statements;
+	(
+		format 
+		[
+			"
+				if !(%2) then {[(group this)] call A3C_HC_FNC_CompleteWaypoint};
+					
+			",
+			_stance2,
+			_isLoop	
+		]
+	);
+
 	
 	switch (_landingType) do {
 		case ("DROPOFF") : {
@@ -1046,7 +1019,6 @@ A3C_WP_STATEMENTS = {
 		};
 		case ("RAPPEL") : {
 			_wp setwaypointType 'MOVE';
-			//_statements = _statements + " [this,[['TIMEOUT',50],'COMBATLANDING'],'LINE',(currentwaypoint (group this))] call A3C_HC_INSERT_ACTION_WP; {(vehicle _x) land 'GET IN'; (vehicle _x) flyInHeight 0;} foreach (units this);";
 		};
 		case ("PICKUP") : {
 			_wp setwaypointType 'MOVE';
@@ -1067,22 +1039,11 @@ A3C_WP_STATEMENTS = {
 				",
 				getPlayerUID player
 			];
-			//_statements = _statements + "  thislist spawn {sleep 10; {player action ['engineOff', vehicle _x];} foreach _this;};  ";
 		};
 		case ("CLEARBUILDING") : {
-			//systemchat 'clearb1';
 
 			_wp setWaypointType "SCRIPTED";
-			_wpScript = format ["A3C_CORE\fnc_AI\wpFncs\wpScript_CLEARBUILDING.sqf ['%1',['ARRIVAL','']]",getPlayerUID player];
-			
-			//_statements = _statements + format 
-			//[
-			//	"
-			//		['%1',this,[['NONE','NONE'],'CLEARBUILDING'],'NO CHANGE',(currentwaypoint (group this))] call A3C_HC_INSERT_ACTION_WP;
-			//	",
-			//	getPlayerUID player
-			//];
-
+			_wpScript = format ["A3C_CORE\fnc_AI\wpFncs\wpScript_CLEARBUILDING.sqf ['%1',['ARRIVAL','']]",getPlayerUID player];		
 		};
 	};
 	_wp setWaypointScript _wpScript;
@@ -1206,22 +1167,7 @@ A3C_HC_REMOVE_WP_RC = {
 };
 
 
-A3C_HC_LINE = {
-	_group = A3C_HC_getAllGroups_Player_Current select (_this select 0);
-	_mode = _this select 1;	
-	_wp = (waypoints _group) select ((_this select 2) -1);
-	_return = position (leader _group);
-	if (_mode == 0) then {
-		if ((_wp select 1) == (currentWaypoint _group)) then {
-			_return = (getposworld (leader _group));
-		} else {
-			_return = waypointposition ( (waypoints _group) select ((_this select 2) - 2) );
-		};
-	} else {
-		_return = waypointposition ( (waypoints _group) select ((_this select 2) - 1) );
-	};
-	_return
-};
+
 
 //~~ is this still needed?
 A3C_HC_Refresh_WP_Markers = {
@@ -1240,33 +1186,6 @@ A3C_HC_Refresh_WP_Markers = {
 			[_group,A3C_HC_DISBANDED] call MCSS_fnc_GetArrayIndex,
 			_i
 		]; //~~ it may be better to assign a ID-variable to each HC group? make sure that this works with changing HC arrays
-	};
-	
-	//-- create new markers with accurate ID
-	//~~ HCWP ALERT
-	/*
-	for "_i" from 1 to (count _waypoints) do {
-		private ["_marker"];
-		if ((_i - 1) >= (currentWaypoint _group)) then {
-			_marker = 
-			[
-				format 
-				[
-					"A3C_HC_MARKER_%1_%2",
-					[_group,A3C_HC_DISBANDED] call MCSS_fnc_GetArrayIndex,
-					_i
-				],
-				(waypointPosition [_group,(_i - 1)]),
-				"ICON",
-				"A3C_Marker_HCWP",
-				[0.5,0.5],
-				"",
-				"ColorBlufor"
-			] call MCSS_fnc_createMarker;
-			A3C_HC_MARKERS pushback _marker;
-		};
-	};
-	*/
-	
+	};		
 };
 

@@ -29,6 +29,8 @@ A3C_PREP(actionPlayerChargeMavicDispatch);
 
 
 
+A3C_PREP(actionRappell);
+
 A3C_PREP(actionReArm);
 A3C_PREP(actionReArmDispatch);
 
@@ -45,7 +47,10 @@ A3C_PREP(actionRepair);
 
 
 
+A3C_PREP(actionSuppression);
 A3C_PREP(actionSuppressionStop);
+
+
 
 A3C_PREP(actionToggleIrStrobe);
 
@@ -76,6 +81,9 @@ A3C_PREP(isWpScriptBlocked);
 
 
 A3C_PREP(staticAssembleWpAction);
+A3C_PREP(suppressionImmediate);
+
+
 
 
 

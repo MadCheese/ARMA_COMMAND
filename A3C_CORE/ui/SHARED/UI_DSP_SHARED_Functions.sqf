@@ -3566,7 +3566,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 				_shift = _this select 3;
 				A3C_HC_GroupMenu_SuppressionRequested = false;
 				{
-					[_x,_pos] call A3C_HC_Suppression_Immediate;
+					[_x,_pos] call A3C_ai_highCommand_fnc_suppressionImmediate;
 				} foreach A3C_UI_RADIAL_Current_Remfire_Units;
 				["A3C_SUP_MAPCLICK", "onMapSingleClick"] call BIS_fnc_removeStackedEventHandler;
 			}

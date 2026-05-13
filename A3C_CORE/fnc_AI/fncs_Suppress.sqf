@@ -34,48 +34,8 @@ A3C_SUP_POLY_IND_MARK = 1;
 A3C_SUPPRESSION = false;
 
 
-//[gpT,[17193.6,16281.9,0]] call A3C_HC_Suppression_Immediate;
-A3C_HC_Suppression_Immediate = {
-	params ["_group","_pos"];
-	_indSel = (currentWaypoint _group) + 1;
-	_dirTo = (vehicle leader _group) getDir _pos;
-	_polygon = (
-		[
-			[
-				_pos,
-				format
-				[
-					"A3C_%1_MAIN_Mark_%2_%3",
-					parsetext 'SUP',
-					getPlayerUID player,
-					A3C_SUP_POLY_IND_MARK
-				],
-				_indSel
-			]
-		] + (
-			[
-				_pos,
-				_dirTo,
-				'SUPPRESSION',
-				true
-			] call A3C_SUP_CREATE_POLY
-		)
-	);
-	A3C_SUP_POLY_IND_MARK = A3C_SUP_POLY_IND_MARK + 1;
-	_var = _group getvariable ["A3C_UNIT_POLYS",[]];
-	_var = [_polygon] + _var;
-	_group setvariable ["A3C_UNIT_POLYS",_var,true];
-	[
-		[
-			getPlayerUID player,
-			leader _group,
-			[ ['GoCode','D'], 'SUPPRESSION' ],
-			'LINE',
-			_indSel
-		],
-		A3C_HC_INSERT_ACTION_WP
-	] remoteExec ['bis_fnc_call',0];
-};
+
+
 
 //-- rename to poly_markers
 A3C_SUP_CREATE_POLY = {
