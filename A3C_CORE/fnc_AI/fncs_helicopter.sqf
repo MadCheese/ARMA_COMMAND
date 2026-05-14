@@ -2130,7 +2130,7 @@ A3C_BEHAVIOUR_SQ_HELI_Sling = {
 
 	};
 
-	if (typeName _cargo == "ARRAY") then {
+	if (_cargo isEqualType []) then {
 		if (surfaceIsWater _cargo) then {
 			_cargo set [2,10];
 			//_cargo = ASLtoATL _cargo;

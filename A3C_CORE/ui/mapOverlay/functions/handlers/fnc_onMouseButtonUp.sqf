@@ -567,7 +567,7 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 						
 						{
 							//if () then {
-								[_x,_vehi] call A3C_HC_AssignVehicle;
+								[_x,_vehi] call A3C_ai_highCommand_fnc_assignGroupToVehicle;
 							//};
 						} foreach _groupsToAssign;
 						//systemchat format ["A3C: %1 is connected to %2",A3C_SELECTED_UNITS,_gp];
@@ -585,7 +585,7 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 					} foreach _groupsToAssign;
 					{
 						//if () then {
-							[_x,vehicle leader _gp] call A3C_HC_AssignVehicle;
+							[_x,vehicle leader _gp] call A3C_ai_highCommand_fnc_assignGroupToVehicle;
 						//};
 					} foreach _groupsToAssign;
 					//systemchat format ["A3C: %1 is connected to %2",A3C_SELECTED_UNITS,_gp];
@@ -780,10 +780,9 @@ if ( ((A3C_TEMP_ACTION select 0) in ["SLINGLOAD","CTRL_DET","STATIC"])) then {
 
 
 _exit = false;
-// if (typeName A3C_MovedItem_ID == "ARRAY") exitWith { // << NOTE: MouseUp means these should be reset anyways, no??
-	A3C_BOOL_MAP_MU = false;
-	// A3C_BOOL_MOUSEMOVING = false; //-- keeping this as a reminder it was initially here >> i moved it to top
-// };
+
+A3C_BOOL_MAP_MU = false;
+
 
 _hcGroup = A3C_HC_TOSWITCH select 0;
 _wpID = A3C_HC_TOSWITCH select 1;

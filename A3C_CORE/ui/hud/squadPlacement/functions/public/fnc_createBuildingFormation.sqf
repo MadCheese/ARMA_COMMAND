@@ -31,7 +31,7 @@ _availablePositions = count _positionArray;
         } else {
             private _arrowBPos = _unitGhost getVariable ["A3C_ARROW_BPOS", [0, 0]];
 
-            if !((_arrowBPos select 0) isEqualType []) then {
+            if !( (_arrowBPos select 0) isEqualType [] ) then {
                 if ((_arrowBPos select 0) == 0) then {
                     private _outsideIndex = _index - _availablePositions;
 

@@ -933,7 +933,7 @@ A3C_POLY_ACTION_OFF = {
 				_playerGroup = if (_x in (units player)) then {true} else {false};
 				_target = [((_x getvariable ["A3C_SUPPRESSION_TARGET",[objNull]]) select 0),objnull];
 				_t = if (_playerGroup) then {_u} else {group _u};
-				if (typename _target == "ARRAY" ) then {
+				if (_target isEqualType []) then {
 					_target = _target select 0;
 				};
 				if !(typename _target == "SCALAR") then {

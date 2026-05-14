@@ -213,7 +213,7 @@ A3C_UI_MAP_onMouseDrag_MapItem = {
 	_exit = false;
 
 	private _referenceUnit = objNull;
-	if (typeName _item == "ARRAY") then {
+	if (_item isEqualType []) then {
 		_referenceUnit = _item select 0;
 		_item = _item select 3;
 	};

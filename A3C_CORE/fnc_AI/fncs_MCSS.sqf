@@ -813,14 +813,14 @@ MCSS_fnc_LOS_INF = {
 MCSS_fnc_LOS_SIMPLE = {
 	_a = _this select 0;
 	_b = _this select 1;
-	_ign1 = if (typename _a == "ARRAY") then {objnull} else {_a};
+	_ign1 = if (_a isEqualType []) then {objnull} else {_a};
 	_ign2 = if (count _this > 2) then {_this select 2} else {objNull};
 	_resetASL = if (count _this > 3) then {_this select 3} else {true};
 	_return = false;
-	_aslPos1 = if (typename _a == "ARRAY") then {if (_resetASL) then {ATLtoASL _a} else {_a}} else {if ((vehicle _a) == _a) then {eyepos _a} else {[((getposASL (vehicle _a)) select 0),((getposASL (vehicle _a)) select 1),( ((getposASL (vehicle _a)) select 2) + ((((boundingboxreal (vehicle _a)) select 1) select 2) + 0.1))]};};
-	_aslPos2 = if (typename _b == "ARRAY") then {if (_resetASL) then {ATLtoASL _b} else {_b}} else {if ((vehicle _b) == _b) then {eyepos _b} else {[((getposASL (vehicle _b)) select 0),((getposASL (vehicle _b)) select 1),(((getposASL (vehicle _a)) select 2) + ((((boundingboxreal (vehicle _b)) select 1) select 2) + 0.1))]};};
-	_refob1 = if (typename _a == "ARRAY") then {objnull} else {(vehicle _a)};
-	_refob2 = if (typename _b == "ARRAY") then {objnull} else {(vehicle _b)};
+	_aslPos1 = if (_a isEqualType []) then {if (_resetASL) then {ATLtoASL _a} else {_a}} else {if ((vehicle _a) == _a) then {eyepos _a} else {[((getposASL (vehicle _a)) select 0),((getposASL (vehicle _a)) select 1),( ((getposASL (vehicle _a)) select 2) + ((((boundingboxreal (vehicle _a)) select 1) select 2) + 0.1))]};};
+	_aslPos2 = if (_b isEqualType []) then {if (_resetASL) then {ATLtoASL _b} else {_b}} else {if ((vehicle _b) == _b) then {eyepos _b} else {[((getposASL (vehicle _b)) select 0),((getposASL (vehicle _b)) select 1),(((getposASL (vehicle _a)) select 2) + ((((boundingboxreal (vehicle _b)) select 1) select 2) + 0.1))]};};
+	_refob1 = if (_a isEqualType []) then {objnull} else {(vehicle _a)};
+	_refob2 = if (_b isEqualType []) then {objnull} else {(vehicle _b)};
 	if ((lineIntersects [_aslPos1, _aslPos2,_ign1,_ign2]) || (terrainIntersectASL [_aslPos1, _aslPos2])) then {
 		_return = false;
 	} else {
@@ -956,7 +956,7 @@ MCSS_fnc_TiltTowardsPos = {
  MCSS_fnc_TerrainTilt = {
 	params ["_pos"];
 	private _y = if (count _this > 1) then {_this select 1} else {if (typeName _pos == "OBJECT") then {getDir _pos} else {0}};
-	_pos = if (typeName _pos == "ARRAY") then {_pos} else {position _pos};	
+	_pos = if (_pos isEqualType []) then {_pos} else {position _pos};	
 	private _p = [_pos, _y] call BIS_fnc_terrainGradAngle;
 	_r = 0;
 	_vDU =

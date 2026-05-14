@@ -106,9 +106,11 @@ A3C_UI_HUD_onKeyDown = {
                 };
                 case ("LANDING_PRECISION") : {
                     [] call A3C_ui_selectionPromptPanel_fnc_actionLandingPrecisionPromptStart;
+					_flickerMode = "DEMOLITION";
                 };
                 case ("CAS-STRIKE") : {
                     [] call A3C_ui_selectionPromptPanel_fnc_actionCasStrikePromptStart;
+					_flickerMode = "DEMOLITION";
                 };
                 case ("RAPPEL") : {
                     [] spawn A3C_ai_highCommand_fnc_actionRappell;
@@ -118,7 +120,7 @@ A3C_UI_HUD_onKeyDown = {
                     [] call A3C_ai_highCommand_fnc_actionSuppression;
                 };
                 case ("ARTY") : {
-                    [] call A3C_AI_HighCommand_Action_artillery;
+                    [] call A3C_ui_selectionPromptPanel_fnc_actionArtilleryPromptStart;
 					_oneTimeAction = false;
                 };
                 case ("PLACE_CHARGE_HC") : {
@@ -131,11 +133,11 @@ A3C_UI_HUD_onKeyDown = {
 					_flickerMode = "DEMOLITION";
                 };
                 case ("BoardVehicle_HC") : {
-                    [] call A3C_AI_HighCommand_Action_boardGroupToVehicle;
+                    [] call A3C_ai_highCommand_fnc_actionBoardGroupToVehicle;
                     _flickerMode = "BOARD";
                 };
 				case ("HC_Waypoint") : {
-                    [] call A3C_AI_HighCommand_Action_addWaypoint;
+                    [] call A3C_ai_highCommand_fnc_actionAddWaypoint;
 					_oneTimeAction = false;
                     // _flickerMode = "BOARD";
                 };	  

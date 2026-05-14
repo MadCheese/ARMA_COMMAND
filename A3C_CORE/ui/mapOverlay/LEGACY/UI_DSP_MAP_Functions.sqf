@@ -732,7 +732,7 @@ A3C_ADJUST_POLY = {
 	};
 
 	{
-		if !(typename _x == "ARRAY") then {
+		if !( _x isEqualType [] ) then {
 			_var = _var - [_x];
 		};
 	} foreach _var;

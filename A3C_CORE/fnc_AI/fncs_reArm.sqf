@@ -1251,7 +1251,7 @@ A3C_Rearm_LBChange_Source = {
 
 			if (count _cargo > 0) then {
 
-				if (typeName (_cargo select 0) == "ARRAY") then {
+				if ( (_cargo select 0) isEqualType [] ) then {
 					private _cargoAggregated = [];
 					{
 						_cargoAggregated pushBack [_x, (_cargo select 1) select _forEachIndex];

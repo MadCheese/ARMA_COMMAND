@@ -41,5 +41,5 @@ private _hcGroups = _groups select {
 {
 	_x params ["_boardGroups", "_selectedVehicle"];
 
-	[_boardGroups, _selectedVehicle] call A3C_HC_AssignVehicle;
+	[_boardGroups, _selectedVehicle] call A3C_ai_highCommand_fnc_assignGroupToVehicle;
 } forEach _vehicleBundles;

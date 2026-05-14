@@ -46,7 +46,7 @@ A3C_LB_Change = {
 	private _btn = 0;
 	private _gp = objnull;
 	private _targetUnits = A3C_SELECTED_UNITS;
-	if ((typeName _mode) == "ARRAY") then {
+	if (_mode isEqualType []) then {
 		_btn = _mode select 1;
 		_mode = _mode select 0;
 	};

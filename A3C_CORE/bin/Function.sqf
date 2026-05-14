@@ -1,4 +1,0 @@
-
-
-
-systemchat 'test';

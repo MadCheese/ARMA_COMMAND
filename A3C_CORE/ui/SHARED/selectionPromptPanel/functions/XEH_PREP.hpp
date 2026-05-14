@@ -15,6 +15,8 @@ A3C_PREP_SUBDIR(handlers,onLBSelChanged);
 //-- Public functions
 
 
+
+A3C_PREP_SUBDIR(public,actionArtilleryPromptStart);
 A3C_PREP_SUBDIR(public,actionCasStrikePromptStart);
 A3C_PREP_SUBDIR(public,actionChargeDetonatePromptStart);
 A3C_PREP_SUBDIR(public,actionChargeDetonatePromptRefresh);

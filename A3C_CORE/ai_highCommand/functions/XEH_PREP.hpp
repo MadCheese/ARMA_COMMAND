@@ -1,7 +1,11 @@
 
 
+A3C_PREP(actionAddWaypoint);
 
 A3C_PREP(actionAssembleWeapon);
+
+A3C_PREP(actionBoardGroupToVehicle);
+
 
 
 
@@ -18,6 +22,8 @@ A3C_PREP(actionDeleteGroupsDispatch);
 
 A3C_PREP(actionGroupHeal);
 A3C_PREP(actionGroupHealDispatch);
+
+A3C_PREP(actionHeliLandingRailed);
 
 
 
@@ -72,6 +78,9 @@ A3C_PREP(actionVehicleRemoteDispatch);
 A3C_PREP(actionVehicleSmoke);
 
 A3C_PREP(addWaypoint);
+A3C_PREP(assignGroupToVehicle);
+
+
 
 
 

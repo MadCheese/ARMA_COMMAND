@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={17740.018,87.683197,19099.063};
-		dir[]={-0.14146601,-0.48722553,0.86175251};
-		up[]={-0.078927591,0.87327528,0.48079199};
-		aside[]={0.98679936,1.1132215e-07,0.16199413};
+		pos[]={14438.001,42.649181,16747.971};
+		dir[]={-0.69946796,-0.43789572,0.56479377};
+		up[]={-0.3406955,0.8990258,0.27509865};
+		aside[]={0.62822866,0,0.77802885};
 	};
 };
 binarizationWanted=0;
@@ -68,15 +68,13 @@ addons[]=
 	"A3_Supplies_F_Exp_Ammoboxes",
 	"A3_Air_F_Heli_Heli_Transport_03",
 	"Mavic_Core",
-	"Bobcat_Fixed",
-	"A3_Characters_F_Jets",
-	"A3_Air_F_EPC_Plane_CAS_01"
+	"Bobcat_Fixed"
 };
 class AddonsMetaData
 {
 	class List
 	{
-		items=36;
+		items=34;
 		class Item0
 		{
 			className="A3_Structures_F";
@@ -308,20 +306,6 @@ class AddonsMetaData
 			className="Bobcat_Fixed";
 			name="Bobcat_Fixed";
 		};
-		class Item34
-		{
-			className="A3_Characters_F_Jets";
-			name="Arma 3 Jets - Characters and Clothing";
-			author="Bohemia Interactive";
-			url="https://www.arma3.com";
-		};
-		class Item35
-		{
-			className="A3_Air_F_EPC";
-			name="Arma 3 Win Episode - Aircraft";
-			author="Bohemia Interactive";
-			url="https://www.arma3.com";
-		};
 	};
 };
 dlcs[]=
@@ -384,7 +368,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=79;
+		items=77;
 		class Item0
 		{
 			dataType="Trigger";
@@ -4871,75 +4855,6 @@ class Mission
 			id=5091;
 			type="B_APC_Wheeled_01_cannon_F";
 			atlOffset=-0.00012016296;
-		};
-		class Item77
-		{
-			dataType="Group";
-			side="West";
-			class Entities
-			{
-				items=1;
-				class Item0
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={17015.842,11.997977,18589.59};
-						angles[]={0,3.9280078,0};
-					};
-					side="West";
-					flags=2;
-					class Attributes
-					{
-					};
-					id=5094;
-					type="B_Fighter_Pilot_F";
-					atlOffset=45.307709;
-				};
-			};
-			class Attributes
-			{
-			};
-			class CrewLinks
-			{
-				class LinkIDProvider
-				{
-					nextID=1;
-				};
-				class Links
-				{
-					items=1;
-					class Item0
-					{
-						linkID=0;
-						item0=5094;
-						item1=5093;
-						class CustomData
-						{
-							role=1;
-						};
-					};
-				};
-			};
-			id=5092;
-			atlOffset=45.307709;
-		};
-		class Item78
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={17734.891,62.919102,19183.658};
-				angles[]={0,3.9280078,0};
-			};
-			side="West";
-			flags=2;
-			class Attributes
-			{
-			};
-			id=5093;
-			type="B_Plane_CAS_01_dynamicLoadout_F";
-			atlOffset=45.307709;
 		};
 	};
 	class Connections

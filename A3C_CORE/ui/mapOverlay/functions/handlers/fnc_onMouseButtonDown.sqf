@@ -175,7 +175,7 @@ if (A3C_Boarding_ACTIVE) exitWith {
 			private _selectedVehicle = _vhIcon select 0;
 			//_boardGroup = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
 
-			[A3C_SELECTED_HC_GROUPS_SETTINGS,_selectedVehicle] call A3C_HC_AssignVehicle;
+			[A3C_SELECTED_HC_GROUPS_SETTINGS,_selectedVehicle] call A3C_ai_highCommand_fnc_assignGroupToVehicle;
 			_doReset = true;
 		} else {
 			A3C_Boarding_ACTIVE = false; //-- disable boarding interface

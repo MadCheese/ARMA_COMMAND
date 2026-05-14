@@ -912,7 +912,7 @@ if (_doubleClick) then {
 
 			if (_hideParent) then {
 				_parentCtrl ctrlShow false;
-				[_landingRailType, ""] spawn A3C_AI_HighCommand_Action_railedHeliLanding;
+				[_landingRailType, ""] spawn A3C_ai_highCommand_fnc_actionHeliLandingRailed;
 			};
 		};
 
@@ -921,7 +921,7 @@ if (_doubleClick) then {
 
 			private _condition = _listBoxCtrl lbText _selectedIndex;
 
-			["COMBAT LANDING", _condition] spawn A3C_AI_HighCommand_Action_railedHeliLanding; //-- condition is goCode type a,b,c,d
+			["COMBAT LANDING", _condition] spawn A3C_ai_highCommand_fnc_actionHeliLandingRailed; //-- condition is goCode type a,b,c,d
 		};
 	};
 };
