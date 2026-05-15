@@ -52,7 +52,7 @@ private _exitCondition = {};
 			{
 				_checkParams pushBack (parseNumber _X)
 			} foreach _str;
-			compile format ["%1 call A3C_fnc_DAYTIME_COMPLETED",_checkParams];
+			compile format ["%1 call A3C_main_fnc_isDaytimeCompleted",_checkParams];
 		};
 		default {{true}};
 	};

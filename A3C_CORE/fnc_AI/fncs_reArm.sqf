@@ -61,7 +61,7 @@ A3C_ReArm_Auto_OrderIssue = {
 
 	if (isPlayer _unit) exitWith {};
 
-	private _expDest = [_unit] call A3C_fnc_setDestination;
+	private _expDest = [_unit] call A3C_ai_shared_fnc_setDestination;
 	private _cratePos = _crate getRelPos [3, random 360];
 
 	_unit setVariable ["A3C_REARMING", true, true];
@@ -86,7 +86,7 @@ A3C_ReArm_Auto_OrderIssue = {
 	A3C_MARKER_COUNT = A3C_MARKER_COUNT + 1;
 
 	_unit setVariable ["A3C_PLOT", [_wpData], true];
-	[_unit, (_unit getVariable "A3C_PLOT")] spawn A3C_AI_Shared_executeUnitPlot;
+	[_unit, (_unit getVariable "A3C_PLOT")] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot;
 
 	waitUntil {count (_unit getVariable ["A3C_PLOT", []]) == 0};
 
@@ -177,10 +177,10 @@ A3C_ReArm_Plot_AddItem = {
 		};
 		waitUntil {count (_unit getVariable "A3C_PLOT") == 0};
 		sleep 0.5;
-		[_unit] call A3C_fnc_setDestination;
+		[_unit] call A3C_ai_shared_fnc_setDestination;
 
 		_unit setVariable ["A3C_PLOT", [_wpDataNew], true];
-		[_unit, (_unit getVariable "A3C_PLOT")] spawn A3C_AI_Shared_executeUnitPlot;
+		[_unit, (_unit getVariable "A3C_PLOT")] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot;
 
 		[_unit] spawn {
 			params ["_unit"];
@@ -284,7 +284,7 @@ A3C_ReArm_Plot_Behavior = {
 			switch (true) do {
 				case (_item == "INVENTORY"): {
 					private _p = _crate getPos [sizeOf (typeOf _crate) * 0.7, _crate getDir _unit];
-					[_unit, _p] call A3C_DOMOVE;
+					[_unit, _p] call A3C_ai_shared_fnc_doMove;
 					_unit setPos _p;
 					_unit setDir (_unit getDir _crate);
 					_unit action ["GEAR", _crate];

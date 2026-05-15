@@ -32,14 +32,14 @@ A3C_UI_SHARED_onKeyDown_remoteVehicle = {
 				if (_alt) then {
 					[a3c_remote_tank_obj,"LEFT"] remoteExec ["sendSimpleCommand",a3c_remote_tank_obj];
 				} else {
-					[[a3c_remote_tank_obj, -.5],A3C_AI_FNC_remoteSteer] remoteExec ["bis_fnc_call", a3c_remote_tank_obj];
+					[[a3c_remote_tank_obj, -.5],A3C_ai_highCommand_fnc_actionRemoteSteer] remoteExec ["bis_fnc_call", a3c_remote_tank_obj];
 				};
 			}; 
 			case (_key == 205) : { // -- RIGHT ARROW
 				if (_alt) then {
 					[a3c_remote_tank_obj,"RIGHT"] remoteExec ["sendSimpleCommand",a3c_remote_tank_obj];
 				} else {
-					[[a3c_remote_tank_obj, .5],A3C_AI_FNC_remoteSteer] remoteExec ["bis_fnc_call", a3c_remote_tank_obj];						
+					[[a3c_remote_tank_obj, .5],A3C_ai_highCommand_fnc_actionRemoteSteer] remoteExec ["bis_fnc_call", a3c_remote_tank_obj];						
 				};  
 			};
 			case (_key == 208) : { //-- DOWN ARROW

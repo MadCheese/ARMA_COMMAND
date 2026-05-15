@@ -117,7 +117,7 @@ _waypoint showWaypoint "NEVER";
 if (_waypointStatements isEqualType []) then {
 	_waypointStatements pushBack _isLoopWaypoint;
 	_waypointStatements set [0, [_group, _waypoint]];
-	_waypointStatements call A3C_WP_STATEMENTS;
+	_waypointStatements call A3C_ai_highCommand_fnc_setWaypointStatements;
 };
 
 private _currentGroupLeader = leader _group;
@@ -129,7 +129,7 @@ if (_isFirstWaypoint && {!isPlayer _currentGroupLeader}) then {
 	private _groupUnits = units _group;
 
 	if (_effectiveCommander in _groupUnits) then {
-		[_effectiveCommander, _waypointPosition] call A3C_DOMOVE;
+		[_effectiveCommander, _waypointPosition] call A3C_ai_shared_fnc_doMove;
 	};
 };
 

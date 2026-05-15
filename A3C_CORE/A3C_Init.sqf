@@ -5,14 +5,10 @@ if (is3DEN) exitWith {};
 
 //-- Server And/Or Client
 
-call compile preprocessFileLineNumbers "A3C_CORE\A3C_Init_VALUES.sqf";
+
+call compile preprocessFileLineNumbers "A3C_CORE\A3C_InitValuesCommon.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_fncs_Main.sqf";
-
-//-- AI Functions 
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_general.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_actions.sqf";
-
 
 
 
@@ -29,7 +25,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\data\A3C_data_bPosNoAccess.sqf"
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_fncs_Debug.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_MCSS.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI.sqf";
+
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_UAV_FPV.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_artillery.sqf";
@@ -44,8 +40,6 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_AIR_rappel.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_serverMon.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_vehicleRemote.sqf";
-
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\CMDLVL_HighCommand\fncs_HighCommand.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_sharedCommandingLevels.sqf";
 
@@ -157,6 +151,8 @@ call compile preprocessFileLineNumbers "A3C_CORE\ai_rail\functions\initFunctions
 
 if (isDedicated) exitWith {};
 
+call compile preprocessFileLineNumbers "A3C_CORE\A3C_InitValuesClient.sqf";
+
 //-- Init Client/Host Only
 
 //-- Generate client-only A3C function libraries
@@ -196,7 +192,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP
 call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_HCWP_CONTEXT_Functions.sqf";
 
 
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_findCover.sqf";     //-- Not HC/remote compatible yet
+
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Boarding.sqf";         //-- Not HC/remote compatible yet
 
 //-- Shared UI fncs
@@ -223,10 +219,6 @@ A3C_SPAWN_RADIAL = compile preprocessfileLineNumbers "A3C_CORE\ui\radial\radialM
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\settingsMenu\functions\initFunctions.sqf";
-
-
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\CMDLVL_Squad\A3C_AI_Squad_ActionLibrary.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\CMDLVL_Shared\A3C_AI_Shared_ActionLibrary.sqf";
 
 
 //-- HUD UI elements

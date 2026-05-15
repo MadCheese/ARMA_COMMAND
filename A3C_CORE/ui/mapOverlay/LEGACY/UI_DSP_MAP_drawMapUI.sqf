@@ -1076,7 +1076,7 @@ MAP_UI_fnc_drawMapUI = {
 
 
 				// if (_group == group player) then {
-				// 	[_group, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+				// 	[_group, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 				// };
 
 				//-- draw Group Icon

@@ -19,7 +19,7 @@ private _successfulBoardGroups = [];
 	private _assignedVehicleCrew = _selectedVehicle getVariable ["A3C_AssignedVehicleCrew", []];
 	private _boardUnits = (units _boardGroup) select {isNull objectParent _x};
 
-	private _emptyPositions = [_selectedVehicle] call A3C_HC_getFullCrew;
+	private _emptyPositions = [_selectedVehicle] call A3C_ai_highCommand_fnc_getFullCrew;
 
 	if (count _boardUnits > 0 && {count _boardUnits <= count _emptyPositions}) then {
 		{

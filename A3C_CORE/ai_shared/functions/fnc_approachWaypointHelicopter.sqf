@@ -23,10 +23,10 @@ private _currentSpeed = abs speed _leaderVehicle; //-- speed returns km/h
 private _destination = expectedDestination _effectiveCommander select 0;
 
 if (_destination distance2D _movePos > 5 || {_currentSpeed < 5}) then {
-	[_effectiveCommander, _movePos] call A3C_DOMOVE;
+	[_effectiveCommander, _movePos] call A3C_ai_shared_fnc_doMove;
 
 	if (_driver != _effectiveCommander && {!isNull _driver}) then {
-		[_driver, _movePos] call A3C_DOMOVE;
+		[_driver, _movePos] call A3C_ai_shared_fnc_doMove;
 	};
 };
 

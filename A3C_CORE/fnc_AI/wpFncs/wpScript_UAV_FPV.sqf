@@ -29,8 +29,8 @@ if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith 
 private _drone = vehicle (leader _group);
 private _movePos = position _target;
 
-[_drone] call MCSS_fnc_setVehicleVarname;
-[_target] call MCSS_fnc_setVehicleVarname;
+[_drone] call A3C_main_fnc_setVehicleVarname;
+[_target] call A3C_main_fnc_setVehicleVarname;
 
 _drone enableAI "ALL";
 _drone engineOn true;
@@ -119,7 +119,7 @@ while {[_drone, _target, _flyingHeight] call _condMove} do {
 	if (time - _tickTime >= 5) then {
 		// [_group, currentWaypoint _group] setWaypointPosition [position _target, 0];
 		_movePos = position _target;
-		[(driver _drone),_movePos] call A3C_DOMOVE;
+		[(driver _drone),_movePos] call A3C_ai_shared_fnc_doMove;
 		_tickTime = time; 
 	};
 
@@ -158,7 +158,7 @@ while {[_drone, _target, _flyingHeight] call _condMove} do {
 
 
 if (canMove _drone) then {
-	[_group, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+	[_group, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 	[_drone, _target] spawn A3C_FPV_RAIL;
 } else {
 	_drone setdamage 1;

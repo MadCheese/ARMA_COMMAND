@@ -7,11 +7,13 @@ params ["_data","_cursorObjectSelection"];
 
 
 if (isNil 'A3C_is_Initialized') exitWith {
-	hint "ARMA COMMAND IS INITIALIZING - STAND BY";
-	waituntil {!isNil 'A3C_is_Initialized'};
-	hint "ARMA COMMAND INITIALIZED";
-	sleep 3;
-	hint "";
+	[] spawn {
+		hint "ARMA COMMAND IS INITIALIZING - STAND BY";
+		waituntil {!isNil 'A3C_is_Initialized'};
+		hint "ARMA COMMAND INITIALIZED";
+		sleep 3;
+		hint "";
+	};
 };
 
 

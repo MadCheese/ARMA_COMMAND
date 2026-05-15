@@ -97,7 +97,7 @@ if (_exit) exitWith {
 
 //-- move to position
 
-[_unit, _targetPos] call A3C_DOMOVE;
+[_unit, _targetPos] call A3C_ai_shared_fnc_doMove;
 
 private _moveTimeoutAt = time + 30;
 

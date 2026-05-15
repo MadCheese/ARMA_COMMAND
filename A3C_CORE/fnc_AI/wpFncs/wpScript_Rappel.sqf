@@ -74,7 +74,7 @@ private _exitCondition = {true};
 				_checkParams pushBack parseNumber _x;
 			} forEach _conditionParts;
 
-			compile format ["%1 call A3C_fnc_DAYTIME_COMPLETED", _checkParams]
+			compile format ["%1 call A3C_main_fnc_isDaytimeCompleted", _checkParams]
 		};
 
 		default {

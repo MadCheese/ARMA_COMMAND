@@ -1135,7 +1135,7 @@ MCSS_fnc_orderIndividual = {
 			} else {
 				if (isNull objectParent _unit) then { //~~ should this not be: if _d select 0 distance _vehicle > 2 or similar?
 					if ((_d select 0) distance2D [0,0,0] > 0) then {
-						[_unit,(_d select 0)] call A3C_DOMOVE;
+						[_unit,(_d select 0)] call A3C_ai_shared_fnc_doMove;
 					};
 				};
 			};
@@ -1167,9 +1167,9 @@ MCSS_fnc_orderIndividual = {
 		if !(["form",tolower (_expD select 1)] call BIS_fnc_instring) then {
 			private _movePos = _expD select 0;
 			if (_movePos distance2D [0,0,0] > 0) then {
-				[_unit,_movePos] call A3C_DOMOVE;
+				[_unit,_movePos] call A3C_ai_shared_fnc_doMove;
 			} else {
-				[_unit,position (vehicle _unit)] call A3C_DOMOVE;
+				[_unit,position (vehicle _unit)] call A3C_ai_shared_fnc_doMove;
 			};
 		};
 

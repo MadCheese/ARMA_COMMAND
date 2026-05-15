@@ -15,5 +15,14 @@ A3C_PREP_SUBDIR(handlers,onMouseButtonDown);
 A3C_PREP_SUBDIR(handlers,onMouseButtonUp);
 A3C_PREP_SUBDIR(handlers,onMouseMoving);
 
-//-- Public functions
+//-- public functions
+A3C_PREP_SUBDIR(public,isWaypointLoop);
+
+
+//-- Response functions
 A3C_PREP_SUBDIR(responses,actionMergeGroupsUiResponse);
+A3C_PREP_SUBDIR(responses,completeWaypointUiResponse);
+
+
+
+

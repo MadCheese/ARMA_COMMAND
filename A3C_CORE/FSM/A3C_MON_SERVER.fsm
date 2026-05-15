@@ -407,21 +407,21 @@ class FSM
                          "		case (""ActionCas"") : {" \n
                          "			_actionScript = [_actionScript,""this"",str _leader] call TER_fnc_editString; ////-- convert to something we can execute " \n
                          "			call (compile _actionScript);" \n
-                         "			[_gp,_currentWpIndex,""ACTIONSCRIPT"",""'CAS_STRIKE_ACTIVE'; ""] call A3C_HC_ChangeWaypointData;" \n
+                         "			[_gp,_currentWpIndex,""ACTIONSCRIPT"",""'CAS_STRIKE_ACTIVE'; ""] call A3C_ai_highCommand_fnc_changeWaypointData;" \n
                          "		};" \n
                          "		case (""PlaneLand"") : {" \n
                          "			_actionScript = [_actionScript,""this"",str _leader] call TER_fnc_editString; //-- convert to something we can execute " \n
                          "			call (compile _actionScript);" \n
-                         "			[_gp,_currentWpIndex,""ACTIONSCRIPT"",""'FULL LANDING ACTIVE'; ""] call A3C_HC_ChangeWaypointData;" \n
+                         "			[_gp,_currentWpIndex,""ACTIONSCRIPT"",""'FULL LANDING ACTIVE'; ""] call A3C_ai_highCommand_fnc_changeWaypointData;" \n
                          "		};" \n
                          "		case (""HeliRappell"") : {" \n
                          "			_actionScript = [_actionScript,""this"",str _leader] call TER_fnc_editString; //-- convert to something we can execute " \n
                          "			call (compile _actionScript);	" \n
-                         "			[_gp,_currentWpIndex,""ACTIONSCRIPT"",""'A3C_RAPPELL_ACTIVE'; ""] call A3C_HC_ChangeWaypointData;" \n
+                         "			[_gp,_currentWpIndex,""ACTIONSCRIPT"",""'A3C_RAPPELL_ACTIVE'; ""] call A3C_ai_highCommand_fnc_changeWaypointData;" \n
                          "		};" \n
                          "	};" \n
                          "	if (_currentWpType == ""LOITER"") then {" \n
-                         "		[_currentWaypoint] call A3C_isLoiterCompleted;" \n
+                         "		[_currentWaypoint] call A3C_main_fnc_isLoiterCompleted;" \n
                          "	};" \n
                          "	if (_currentWpType != ""HOOK"") then {" \n
                          "		{" \n

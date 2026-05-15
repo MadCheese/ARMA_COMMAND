@@ -131,7 +131,7 @@ if (A3C_HC_DETONATION_BOOL) exitWith {
 		_hoverIcon = _demoIcons select 0;
 		_hoverVic = _hoverIcon select 0;
 		if ((vehicleVarName _hoverVic) == "") then {
-			_hoverVic = missionNameSpace getVariable ([_hoverVic] call MCSS_fnc_setVehicleVarname);
+			_hoverVic = missionNameSpace getVariable ([_hoverVic] call A3C_main_fnc_setVehicleVarname);
 		};
 		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] waypointAttachVehicle _hoverVic;
 	};
@@ -760,7 +760,7 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 				
 				{
 					_gp = _x;
-					[_gp, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+					[_gp, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 				} foreach A3C_SELECTED_UNITS;
 				publicVariable 'A3C_BLACKLIST_WAYPOINT_EDIT';
 				

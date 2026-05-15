@@ -47,6 +47,45 @@ hull glass track wheel engine turret gun  light (only if dark?)
 // systemchat str [_preCondition];
 
 
+
+private _fnc_repairAnim = {
+	params ["_unit"];
+
+	if ((_unit getVariable ["A3C_HandlerID_AnimDone", [false, -1]]) select 0) exitWith {};
+
+	private _anims = [
+		"Acts_carFixingWheel",
+		"inbasemoves_assemblingvehicleerc",
+		"inbasemoves_repairvehicleknl",
+		"ainvpknlmstpslaywrfldnon_medic"
+	];
+
+	private _anim = selectRandom _anims;
+
+	_unit disableAI "ANIM";
+	_unit switchMove _anim;
+
+	private _handler = _unit addEventHandler ["AnimDone", {
+		params ["_unit", "_anim"];
+
+		if !((_unit getVariable ["A3C_HandlerID_AnimDone", [false, -1]]) select 0) exitWith {};
+
+		private _anims = [
+			"Acts_carFixingWheel",
+			"inbasemoves_assemblingvehicleerc",
+			"inbasemoves_repairvehicleknl",
+			"ainvpknlmstpslaywrfldnon_medic"
+		];
+
+		private _nextAnim = selectRandom _anims;
+
+		_unit switchMove _nextAnim;
+	}];
+
+	_unit setVariable ["A3C_HandlerID_AnimDone", [true, _handler], true];
+};
+
+
 private _exitCondition = {};
 {
 	_x params ["_condType","_condVal"];
@@ -64,7 +103,7 @@ private _exitCondition = {};
 			{
 				_checkParams pushBack (parseNumber _X)
 			} foreach _str;
-			compile format ["%1 call A3C_fnc_DAYTIME_COMPLETED",_checkParams];
+			compile format ["%1 call A3C_main_fnc_isDaytimeCompleted",_checkParams];
 		};
 		default {{true}};
 	};
@@ -391,7 +430,7 @@ _group setBehaviourStrong "SAFE"; //-- set units to safe
 
 						
 						
-						[_unit] spawn A3C_AI_action_repairAnim;
+						[_unit] spawn _fnc__repairAnim;
 						_unit setDir (_unit getDir _repairPatient);
 					} else {
 						(vehicle _unit) engineOn false;

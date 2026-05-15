@@ -579,11 +579,6 @@ A3C_LANDPLANE = {
 								[_vehicle,0] remoteExec ["setFuel",_vehicle];
 								[_vehicle,[0,0,0]] remoteExec ["setVelocity",_vehicle];
 							};
-							sleep 1;
-
-							//[_unit, 0] spawn A3C_REDUCE_SPEED;
-						//} else {
-						//	_delete = true;
 						};
 
 					};
@@ -809,7 +804,7 @@ A3C_LANDPLANE = {
 
 		private _currentWaypoint = currentWaypoint (group _unit);
 		
-		//[group _unit,_currentWaypoint,"POSITION",position _vehicle] call A3C_HC_ChangeWaypointData;
+		//[group _unit,_currentWaypoint,"POSITION",position _vehicle] call A3C_ai_highCommand_fnc_changeWaypointData;
 		
 		_conditions = (waypointStatements [group _unit,_currentWaypoint]) select 0;
 
@@ -1170,7 +1165,7 @@ A3C_Paradrop_Eject = {
 	params ["_callerUID","_vehicle"];
 	private ["_exit"];
 	_exit = false;
-//	if !([_callerUID, group (driver _vehicle)] call A3C_HC_findExecutingMachine) exitWith {};
+//	if !([_callerUID, group (driver _vehicle)] call A3C_ai_highCommand_fnc_findExecutingMachine) exitWith {};
 	if (count (getVehicleCargo _vehicle) > 0) then {
 		//-- ship is dropping vehicle load
 		[_vehicle] spawn A3C_Action_ParaVehicle;
@@ -1318,7 +1313,7 @@ A3C_Action_ParaPersonnel = {
 	} foreach _list;
 
 	sleep 1;
-	//[driver _vehicle1] call A3C_Replace_Unit;
+
 	{
 		_vehicle1 animateDoor [_x,0];
 	} foreach ['door_R','door_L','door_rear','door_rear_source','Door_L_source','Door_R_source','DoorL_Front_Open','DoorR_Front_Open','DoorL_Back_Open','DoorR_Back_Open','Door_1_source'];
@@ -1846,7 +1841,7 @@ MCSS_fnc_moduleCAS = {
 		
 	if ( ((count (waypoints _gp) - 1) > (currentwaypoint _gp)) ) then { //&& !(_actionType in ["SUPPRESSION","AMBUSH","CAS-STRIKE"])
 		private _wpc = (currentWaypoint _gp);
-		[_gp, currentwaypoint _gp] call A3C_HC_REMOVE_WP_RC;
+		[_gp, currentwaypoint _gp] call A3C_ai_highCommand_fnc_removeWaypoint;
 	} else {
 		deletewaypoint [_gp,currentwaypoint _gp];
 	};
@@ -1925,7 +1920,7 @@ A3C_BEHAVIOUR_SQ_HELI_PICKANDDROP = {
 			if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitWith {_abort = true};
 		};
 		_pad = "Land_HelipadEmpty_F" createvehicle _landingpos;
-		[_unit,_landingpos] call A3C_DOMOVE;
+		[_unit,_landingpos] call A3C_ai_shared_fnc_doMove;
 		if (_landingdata == "PICKUP") then {
 			_shell = "Smokeshellgreen" createVehicle _landingpos;
 		};
@@ -1978,13 +1973,13 @@ A3C_BEHAVIOUR_SQ_HELI_PICKANDDROP = {
 						};
 					};
 				} foreach allunits - [_unit];
-				[_unit,([(position _vehicle),1000,(random 360)] call BIS_fnc_Relpos)] call A3C_DOMOVE;
+				[_unit,([(position _vehicle),1000,(random 360)] call BIS_fnc_Relpos)] call A3C_ai_shared_fnc_doMove;
 				_vehicle flyinheight 25;
 				_abort = true;
 			};
 			if ( ((position _vehicle) select 2) < 2) exitWith {
 				deletevehicle _pad;
-				[_unit,(position _vehicle)] call A3C_DOMOVE;
+				[_unit,(position _vehicle)] call A3C_ai_shared_fnc_doMove;
 				_vehicle flyinheight 2;
 				{_vehicle animateDoor [_x, 1]} foreach ['door_R','door_L','door_rear','door_rear_source','Door_L_source','Door_R_source','DoorL_Front_Open','DoorR_Front_Open','DoorL_Back_Open','DoorR_Back_Open','Door_1_source'];
 				sleep 2;
@@ -2021,7 +2016,7 @@ A3C_BEHAVIOUR_SQ_HELI_LANDFINAL = {
 		};
 
 		_pad = "Land_HelipadEmpty_F" createvehicle _landingpos;
-//		[_unit,_landingpos] call A3C_DOMOVE;
+//		[_unit,_landingpos] call A3C_ai_shared_fnc_doMove;
 		if !(_abort) then {sleep 2};
 		//_vehicle land "_pad";
 		if !(_abort) then {sleep 1};

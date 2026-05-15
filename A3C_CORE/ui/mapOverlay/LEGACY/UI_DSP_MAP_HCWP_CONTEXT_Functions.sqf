@@ -216,7 +216,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		_actionScript = _actionScript splitString ";";
 		{
 			
-			if ("A3C_HC_FNC_CompleteWaypoint" in _x) then {
+			if ("A3C_ai_highCommand_fnc_completeWaypoint" in _x) then {
 				_actionScript = _actionScript - [_x];
 			};
 		} foreach _actionScript;
@@ -1066,7 +1066,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 			_str = A3C_HC_ACTIVE_PRE_COND_VAL splitString ":";
 			format
 			[
-				"(([%1,%2,%3,%4,%5] call A3C_fnc_DAYTIME_COMPLETED) && (count ['DAYTIME'] == 1))",
+				"(([%1,%2,%3,%4,%5] call A3C_main_fnc_isDaytimeCompleted) && (count ['DAYTIME'] == 1))",
 				parseNumber (_str select 0),
 				parseNumber (_str select 1),
 				parseNumber (_str select 2),
@@ -1390,7 +1390,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 				_statements = format
 				[
 					"
-						[['%1',this,%2,'%3',(currentWaypoint group this)],A3C_HC_INSERT_ACTION_WP] remoteExec ['bis_fnc_call',0];
+						[['%1',this,%2,'%3',(currentWaypoint group this)],A3C_ai_highCommand_fnc_insertActionWaypoint] remoteExec ['bis_fnc_call',0];
 					",
 					getPlayerUID player,
 					_statementsINS,
@@ -1404,7 +1404,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 					"
 
 
-						[['%1',this,%2,'%3',(currentWaypoint group this)],A3C_HC_INSERT_ACTION_WP] remoteExec ['bis_fnc_call',0];
+						[['%1',this,%2,'%3',(currentWaypoint group this)],A3C_ai_highCommand_fnc_insertActionWaypoint] remoteExec ['bis_fnc_call',0];
 
 					",
 					getPlayerUID player,
@@ -1440,7 +1440,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 				_statements = format
 				[
 					"
-						[this,%1,'%2'] spawn A3C_HC_ACTION_ASSEMBLE_UAV;
+						[this,%1,'%2'] spawn A3C_ai_highCommand_fnc_actionAssembleUAV;
 					",
 					A3C_HC_ACTIVE_WPOS,
 					getPlayerUID player
@@ -1511,7 +1511,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 				_statements = format
 				[
 					"
-						[['%1',this,%2,'%3',(currentWaypoint group this),%5],A3C_HC_INSERT_ACTION_WP] remoteExec ['bis_fnc_call',0];
+						[['%1',this,%2,'%3',(currentWaypoint group this),%5],A3C_ai_highCommand_fnc_insertActionWaypoint] remoteExec ['bis_fnc_call',0];
 					",
 					getPlayerUID player,
 					_statementsINS,

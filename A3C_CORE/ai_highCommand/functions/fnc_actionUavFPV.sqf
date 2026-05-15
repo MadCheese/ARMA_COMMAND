@@ -5,7 +5,7 @@ private _wpPos = +(A3C_UI_HUD_3D_TAG_ICON_POS);
 
 
 //-- delete current waypoints
-[_group, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+[_group, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 
 private _cursorTarget = cursortarget; //-- #TODO: make this work regardless of cursortarget?
 

@@ -14,11 +14,11 @@ A3C_ZEUS_REMOTE = {
 	_btn = _this select 1;
 	_posX = _this select 2;
 	_posY = _this select 3;
-	_unit = objnull;
-	_curatorModule = objnull;
 	_shift = _this select 4;
 	_ctrl = _this select 5;
-	//_alt = _this select 6;
+
+	_unit = objnull;
+	_curatorModule = objnull;
 	_zeusCurrent = player;
 	if (_btn == 0) then {
 		if (_ctrl && _shift) then {

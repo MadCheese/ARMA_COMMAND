@@ -483,14 +483,14 @@ A3C_GROUP_RESET = {
 			case ("LEADER PLANNED") : {
 				if (_x == (driver (vehicle _x))) then {
 					if !(_x getvariable ["A3C_HOLD",false]) then {
-						[_x,(((_x getvariable "A3C_REFRESH_DATA") select 1) select 0)] call A3C_DOMOVE;
+						[_x,(((_x getvariable "A3C_REFRESH_DATA") select 1) select 0)] call A3C_ai_shared_fnc_doMove;
 					};
 				};
 			};
 			case ("DoNotPlan") : {
 				if (_x == (driver (vehicle _x))) then {
 					//if !(_x getvariable ["A3C_HOLD",false]) then {
-						[_x,(position (vehicle _x))] call A3C_DOMOVE;
+						[_x,(position (vehicle _x))] call A3C_ai_shared_fnc_doMove;
 					//};
 				};
 			};
@@ -498,7 +498,7 @@ A3C_GROUP_RESET = {
 				if (_x == (driver (vehicle _x))) then {
 					[(vehicle _x),"LOCKED"] remoteExec ["setvehicleLock",(vehicle _x)];
 					if !(_x getvariable ["A3C_HOLD",false]) then {
-						[_x,(((_x getvariable "A3C_REFRESH_DATA") select 1) select 0)] call A3C_DOMOVE;
+						[_x,(((_x getvariable "A3C_REFRESH_DATA") select 1) select 0)] call A3C_ai_shared_fnc_doMove;
 					};
 					_x assignasdriver (vehicle _x);
 					(vehicle _x) spawn {
@@ -521,7 +521,7 @@ A3C_GROUP_RESET = {
 				//};
 			};
 		};
-		[_u] call MCSS_fnc_setVehicleVarname;
+		[_u] call A3C_main_fnc_setVehicleVarname;
 		//_x spawn {
 		//	sleep 1;
 		//	systemchat str ((_this getvariable "A3C_REFRESH_DATA") select 4);

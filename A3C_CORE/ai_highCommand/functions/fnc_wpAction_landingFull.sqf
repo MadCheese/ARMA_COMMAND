@@ -115,7 +115,7 @@ private _driverUnits = _units select {
 			"_taxiOffPoses"
 		];
 
-		[_x, _vehicle getPos [10000, _airportIlsDir]] call A3C_DOMOVE;
+		[_x, _vehicle getPos [10000, _airportIlsDir]] call A3C_ai_shared_fnc_doMove;
 	};
 } forEach _driverUnits;
 
@@ -153,7 +153,7 @@ private _driverUnits = _units select {
 
 							if (_x == effectiveCommander _x) then {
 								if (!(_vehicle in _vehiclesMoved)) then {
-									[effectiveCommander _x, _waypointPos] call A3C_DOMOVE;
+									[effectiveCommander _x, _waypointPos] call A3C_ai_shared_fnc_doMove;
 									_vehiclesMoved pushBack _vehicle;
 								} else {
 									if !(isTouchingGround _vehicle) then {

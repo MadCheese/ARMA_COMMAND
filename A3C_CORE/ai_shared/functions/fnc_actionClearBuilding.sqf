@@ -212,7 +212,7 @@ private _originalRooms = +(_roomArrays);
 			[_x,_units select (_forEachIndex -1)] execFSM "A3C_CORE\FSM\A3C_AI_CLEAR_SPEED.fsm";
 		};
 
-		private _scr = ([_x,_wpData] spawn A3C_AI_Shared_executeUnitPlot);
+		private _scr = ([_x,_wpData] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot);
 
 		///// --------- SPAWN FOR PARALLEL UNIT BEHAVIOR
 		[_x,_building,_units] spawn {
@@ -469,7 +469,7 @@ private _originalRooms = +(_roomArrays);
 							sleep 0.1;
 
 							{
-								private _scr = ([_x,(_x getvariable "A3C_PLOT")] spawn A3C_AI_Shared_executeUnitPlot);
+								private _scr = ([_x,(_x getvariable "A3C_PLOT")] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot);
 							} foreach _team;
 						};
 					};

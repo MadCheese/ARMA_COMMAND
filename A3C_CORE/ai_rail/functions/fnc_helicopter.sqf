@@ -11,7 +11,7 @@ private _travelDuration = (((_totalDistance / _speed) * 0.001) * 60) * 60;
 private _startTime = time;
 private _initialEndTimeEstimated = time + _travelDuration;
 
-[_vehicle] call MCSS_fnc_setVehicleVarname;
+[_vehicle] call A3C_main_fnc_setVehicleVarname;
 
 {
 	_x disableAI "ALL";

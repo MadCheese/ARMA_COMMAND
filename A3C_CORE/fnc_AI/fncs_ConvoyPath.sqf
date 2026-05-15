@@ -154,7 +154,7 @@ A3C_CONVOY_fncPID = {
 			private _testUnits = [leader _leadByGroup, leader _group]; //if (_isSecondVehicle) then {[leader _leadByGroup, leader _group]} else {[leader _group]};
 
 			{
-				private _scr = [_x, _leaderDestination ] spawn A3C_calculatePath;
+				private _scr = [_x, _leaderDestination ] spawn A3C_ai_shared_fnc_calculatePath;
 				// if (leader _group in BT3) then {
 				// 	systemchat "BT3 waituntil Path";
 				// };

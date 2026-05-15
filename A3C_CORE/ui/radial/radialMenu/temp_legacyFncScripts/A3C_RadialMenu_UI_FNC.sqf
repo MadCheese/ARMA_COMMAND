@@ -1341,7 +1341,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								params ["_btnData","_units"];
 								_btnData params ["_display","_button","_sX","_sY","_shift","_ctrl","_alt"];
 								_units = call compile _units;
-								[A3C_RD_UNITS,'AUTO'] call A3C_AI_SHARED_switchUnitPos; //~~??
+								[A3C_RD_UNITS,'AUTO'] call A3C_ai_shared_fnc_setUnitPos; //~~??
 							}
 						];
 						A3C_OUTER_RING_BTN_fnc_6 =
@@ -1351,7 +1351,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								params ["_btnData","_units"];
 								_btnData params ["_display","_button","_sX","_sY","_shift","_ctrl","_alt"];
 								_units = call compile _units;
-								[A3C_RD_UNITS,'UP'] call A3C_AI_SHARED_switchUnitPos;
+								[A3C_RD_UNITS,'UP'] call A3C_ai_shared_fnc_setUnitPos;
 							}
 						];
 						A3C_OUTER_RING_BTN_fnc_7 =
@@ -1361,7 +1361,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								params ["_btnData","_units"];
 								_btnData params ["_display","_button","_sX","_sY","_shift","_ctrl","_alt"];
 								_units = call compile _units;
-								[A3C_RD_UNITS,'MIDDLE'] call A3C_AI_SHARED_switchUnitPos;
+								[A3C_RD_UNITS,'MIDDLE'] call A3C_ai_shared_fnc_setUnitPos;
 							}
 						];
 						A3C_OUTER_RING_BTN_fnc_8 =
@@ -1371,7 +1371,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								params ["_btnData","_units"];
 								_btnData params ["_display","_button","_sX","_sY","_shift","_ctrl","_alt"];
 								_units = call compile _units;
-								[A3C_RD_UNITS,'DOWN'] call A3C_AI_SHARED_switchUnitPos;
+								[A3C_RD_UNITS,'DOWN'] call A3C_ai_shared_fnc_setUnitPos;
 							}
 						];
 

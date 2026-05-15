@@ -1,0 +1,222 @@
+//---------------------------  S H A R E D  V A L U E S   A N D   A R R A Y S  ------------------------
+//------------------------------------------------------------------------------------------------------
+
+A3C_HC_getAllGroups_Player_Current = []; //-- despite the name this needs to exist everywhere at the moment
+
+
+//---------------------------------------------------------------------------------------------------------
+//--------------------  ADDON CHECKS  ---------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------
+A3C_EHM = if (isClass(configFile/"CfgPatches"/"BaBe_core")) then {true} else {false}; //-- detect if Enhanced Movement is running
+A3C_IsAce3 = if (isClass(configFile/"CfgPatches"/"ace_medical")) then {true} else {false}; //-- detect if ACE3-Medical is running
+A3C_IsIFA = if (isClass(configFile/"CfgPatches"/"WW2_Assets_c_Weapons_InfantryWeapons_c")) then {true} else {false}; //-- detect if IFA is running
+
+///////////////////////////////////////////////////////////////////////////////////
+//-- CHECK FOR SERVER SIDE ADDON PRESENCE
+
+A3C_checkserverAddon = { //-- this works but is sloppy. we need a way to return value from server.
+	if !(isServer) exitWith {};
+	params ["_inputString","_caller"];
+	private ["_isClass"];
+	_isClass = if (isClass(configFile/"CfgPatches"/_inputString)) then {true} else {false};
+	switch _inputString do {
+		case ("AR_AdvancedRappelling") : {A3C_IsRappel = _isClass; publicVariable 'A3C_IsRappel'};
+		case ("AICommand") : {A3C_IsAICommand = _isClass; publicVariable 'A3C_IsAICommand'};
+		case ("A3C_UI") : {A3C_IsA3CServer = _isClass; publicVariable 'A3C_IsA3CServer'};
+	};
+};
+publicVariable 'A3C_checkserverAddon';
+
+
+//-- check for supportet client/serverSide addons
+A3C_IsAICommand = if (isClass(configFile/"CfgPatches"/"AICommand")) then {true} else {false};
+
+
+
+
+
+
+A3C_CarrierArray =
+[
+	[[-31.6045,-22.9785,24],92.178],
+	[[-31.915,-3.06934,24],92.178],
+	[[-32.1641,16.7773,24],93.26],
+	[[-32.4199,36.4346,24],92.178],
+	[[-31.3652,55.6875,24],92.178],
+	[[-32.2373,74.7832,24],92.1777],
+	[[34.0117,121.157,24],230],
+	[[33.1025,148.224,24],230],
+
+	[[-9.61328,-23.7344,24],92.178],
+	[[-9.92969,-3.89941,24],92.178],
+	[[-10.1982,15.542,24],92.178],
+	[[-12.4434,35.6865,24],92.178],
+
+	[[33.9961,101.191,24],230]
+];
+
+A3C_HUMAN_HITPOINTS = ["HitAbdomen","HitArms","HitChest","HitDiaphragm","HitFace","HitHands","HitHead","HitLegs","HitNeck","HitPelvis"];
+
+
+
+
+A3C_UI_COLOR_RED = [0.5,0,0,1];
+A3C_UI_COLOR_BLUE = [0,0.3,0.6,1];
+A3C_UI_COLOR_YELLOW = [0.8,0.6,0,1];
+A3C_UI_COLOR_GREY = [0.29,0.29,0.29,1];
+A3C_UI_COLOR_BLACK = [0,0,0,1];
+A3C_UI_COLOR_YELLOW2 = [0.85,0.85,0,1];
+
+A3C_CONVOY_SLOWDOWN_VICS = [];
+A3C_UI_HUDICONS_HC_GROUP = [];
+
+
+
+
+
+
+A3C_THROW_MUZZLES = getArray (configFile >> "CfgWeapons" >> "THROW" >> "muzzles");
+A3C_SUPPRESSION_FORBIDDEN = ["missiles_DAGR","missiles_ASRAAM","cannon_120mm"];
+
+A3C_HangarTypes = [];
+_array = "true" configClasses (configFile >> "CfgVehicles");{
+	if (["hangar",(configname _x)] call BIS_fnc_instring) then {
+		A3C_HangarTypes pushback (configName _x);
+	};
+} foreach _array;
+
+
+
+
+
+
+A3C_GoCode_Activate_A = false;
+A3C_GoCode_Activate_B = false;
+A3C_GoCode_Activate_C = false;
+A3C_GoCode_Activate_D = false;
+
+A3C_MISSIONENDED = false;
+
+A3C_UI_HUD_ASSIGNVEHICLE = false;
+A3C_UI_HUD_ASSIGNVEHICLE_OBJECTS = [];
+
+A3C_UI_HUD_3D_TAG_reposition = false;
+A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+A3C_UI_HUD_3D_TAG_ICON_SIZE = 3;
+A3C_UI_HUD_3D_TAG_ICON_POS = [0,0,0];
+A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
+A3C_isHud3dTag = false;
+
+A3C_UI_HUD_3D_TAG_ICON_MOD = "NONE"; //-- for modifier
+
+A3C_AI_HighCommand_Action_ID = "";
+
+
+A3C_UI_MAP_BOOL_isHCWaypointPosEdit = false; //-- different from A3C_BOOL_MOVINGHC (for default Arma HC module)
+
+
+
+
+A3C_HC_ACTIVEGROUP = grpNull;
+A3C_HC_ACTIVE_WPSPEED = "UNCHANGED";
+
+//A3C_Mon_Server_EH_units = [];
+
+
+
+
+
+//if (isnil "A3C_ADJUSTSKILL") then {
+//	A3C_ADJUSTSKILL = true;
+//};
+
+
+
+A3C_HC_WP_SYNC_ROOT = [grpNull,-1];
+
+A3C_UI_MAP_SYNC_BOARDGROUP = grpNull;
+A3C_UI_MAP_SYNC_HOSTGROUP = grpNull;
+A3C_UI_MAP_SYNC_BoardWPI = -1;
+A3C_UI_MAP_SYNC_HostWPI = -1;
+
+A3C_UI_MAP_BOOL_CT_EDIT_ACTIVE = false;
+
+//A3C_HC_WP_SYNC_ARRAYS = [];
+A3C_UI_MAP_isCircleMenu = false;
+A3C_UI_MAP_CircleMenu_CTRLS = [];
+
+A3C_TARGETVEH = objnull;
+A3C_SNAP_OBJECT = objnull;
+
+A3C_GRENPHR = "A3C_FireInTheHole";
+
+A3C_SelectionPromptPanel_MODE = "DISASSEMBLE";
+A3C_HC_FOCUS_ARTY_AMMO = "";
+A3C_HC_FOCUS_ARTY_POS = [0,0,0];
+
+A3C_MAP_CONNECTING_ID = "";
+
+A3C_isArtyAwaitingSuborder = false;
+
+A3C_HC_CASMODE_VAL = 0;
+
+A3C_HC_ACTIVE_WPOS = [0,0,0];
+A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
+
+
+A3C_GROUP_STANCE_Selected = "AUTO";
+
+A3C_DEBUG = if (!isNil 'A3C_DEBUG') then {A3C_DEBUG} else {false};
+
+
+A3C_HUD_NORMAL = [0,0,0];
+
+A3C_HUD_COLLIDER = objnull;
+A3C_HUD_Snap_DIR = 0;
+A3C_HUD_Snap = false;
+A3C_HUD_FormDir_Old = 0;
+
+
+
+
+A3C_DISABLE_TRACKER = if (!isNil 'A3C_DISABLE_TRACKER') then {A3C_DISABLE_TRACKER} else {false};
+
+
+
+A3C_MON_SERVER_checkGroups = [];
+
+A3C_COVER_BLACKLIST = [];
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+if (isServer) then {
+	A3C_DETO_VIC_INDEX = 0;
+	publicVariable 'A3C_DETO_VIC_INDEX';
+
+	A3C_BLACKLIST_WAYPOINT_EDIT = [];
+	publicVariable 'A3C_BLACKLIST_WAYPOINT_EDIT';
+
+	A3C_CLIENT_IDS = [];
+	publicVariable 'A3C_CLIENT_IDS';
+
+	A3C_REMFIRE_UNITS_ACTIVE = [];
+	publicVariable 'A3C_REMFIRE_UNITS_ACTIVE';
+
+	A3C_GROUP_CONVOYS = [];
+	publicVariable 'A3C_GROUP_CONVOYS';
+
+	A3C_REMOTE_BLACKFISH_HandlerIndex = 0;
+	publicVariable "A3C_REMOTE_BLACKFISH_HandlerIndex";
+
+	A3C_TurnOutEH_Vehicles = []; //-- Server only, NOT public
+
+};
+
+
+
+//-- exit server
+if (isDedicated) exitWith {
+	A3C_isHCSkillMaxed = if (!isNil 'A3C_isHCSkillMaxed') then {A3C_isHCSkillMaxed} else {true}; //-- can obe overRidden in Server's in server mission init.sqf
+	//-- #TODO: if a3c not running on server, this needs to still be declared!!!
+};

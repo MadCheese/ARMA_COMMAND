@@ -361,7 +361,7 @@ A3C_SERVERMON_fncActions = {
 				_nudgePos set [2, 0];
 
 				private _eff = effectiveCommander _lv;
-				[_eff, _nudgePos] call A3C_DOMOVE;
+				[_eff, _nudgePos] call A3C_ai_shared_fnc_doMove;
 				
 			} else {
 				if (

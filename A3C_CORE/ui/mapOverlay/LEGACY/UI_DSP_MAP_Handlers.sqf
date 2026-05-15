@@ -349,7 +349,7 @@ A3C_UI_MAP_onMouseDrag_MapItem = {
 													if ((time - A3C_TICKTIME_MoveMark) > 1.5) then {
 														A3C_TICKTIME_MoveMark = time;
 														_soldier setdestination [_sPos,"LEADER PLANNED",true];
-														[_soldier,_sPos,true] call A3C_DoMove;
+														[_soldier,_sPos,true] call A3C_ai_shared_fnc_doMove;
 														// hint str _soldier;
 													};
 												};

@@ -402,7 +402,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 				[
 					[[],_display],
 					{
-						[] call A3C_AI_Squad_Action_suppressionStop;
+						[] call A3C_ai_squad_fnc_actionSuppressionStop;
 						BV_ACT = 0;
 						["ACTIONS",0] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
 					},
@@ -429,7 +429,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 						_fncData params ["_assemblingUnitSelection","_display"];
 						_assemblingUnitSelection = call compile _assemblingUnitSelection;
 						A3C_UI_RADIAL_Current_Remfire_Units = _assemblingUnitSelection;
-						[] call A3C_AI_Squad_Action_unAssembleWeapon;
+						[] call A3C_ai_squad_fnc_actionUnassembleWeaponDispatch;
 					},
 					false
 				];
@@ -447,7 +447,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 						_fncData params ['_target','_source','_display'];
 						_target = call compile _target;
 						_source = call compile _source;
-						[_target, _source] call A3C_AI_Squad_Action_openInventory;
+						[_target, _source] call A3C_ai_squad_fnc_actionOpenInventory;
 					},
 					false
 				];
@@ -463,7 +463,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 						params ["_clickData","_fncData"];
 						_fncData params ["_unitArray"];
 						_unitArray = call compile _unitArray;
-						[_unitArray] call A3C_AI_Squad_action_FindCover;
+						[_unitArray] call A3C_ai_squad_fnc_actionFindCover;
 					},
 					true
 				];
@@ -772,11 +772,11 @@ A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING = {
 					0 // -- radius (for circle, not completion)
 				]
 			];
-			private _expDest = [_unit] call A3C_fnc_setDestination;
+			private _expDest = [_unit] call A3C_ai_shared_fnc_setDestination;
 			_unit setvariable ["A3C_PLOT",_data,true];
 			[_unit] spawn {
 				params ["_unit"];
-				_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot);
+				_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot);
 				private _hasReached = false;
 				private _exit = false;
 				private _doReturnToOrders = true;

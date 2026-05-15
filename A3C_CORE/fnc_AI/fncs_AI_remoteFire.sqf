@@ -622,7 +622,7 @@ A3C_AI_SHARED_ORDER_REMOTE_LAUNCH = {
 				} foreach [_target,_target1];
 			};
 
-			[_unit] call A3C_fnc_setDestination;
+			[_unit] call A3C_ai_shared_fnc_setDestination;
 			_unitPos = (position vehicle _unit);
 			_unit doMove _unitPos;
 			_unit moveTo _unitPos;

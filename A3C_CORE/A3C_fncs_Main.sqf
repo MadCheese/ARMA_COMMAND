@@ -1112,7 +1112,7 @@ A3C_FORCEORIENT = {
 
 	_timer = time;
 	if (_unit isKindOf "HELICOPTER") exitWith {
-		[driver _unit,(vehicle _unit) getPos [100,(vehicle _unit) getDir _destination]] call A3C_DOMOVE;
+		[driver _unit,(vehicle _unit) getPos [100,(vehicle _unit) getDir _destination]] call A3C_ai_shared_fnc_doMove;
 		//_unit disableAI "MOVE";
 		while {canMove _unit} do {
 			_dir = (_unit getRelDir _destination);
@@ -1634,7 +1634,7 @@ A3C_UNIT_HOLD = {
 		_x setVariable ["A3C_HOLD",true,false];
 		_unitNames = _unitNames + ([_x] call MCSS_fnc_NAMESTRING)
 	} foreach _units;
-	[_coverUnits,1] spawn A3C_AI_Squad_action_FindCoverExecute;
+	[_coverUnits,1] spawn A3C_ai_squad_fnc_actionFindCover;
 	player groupchat  _unitNames + " HOLD";
 	[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_RefreshControlBar;
 };

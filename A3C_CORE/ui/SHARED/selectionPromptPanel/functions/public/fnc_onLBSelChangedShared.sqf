@@ -660,7 +660,7 @@ if (_doubleClick) then {
 
 			[[_demoUnit], true, false] call A3C_AI_Shared_cancelUnitPlot;
 
-			private _expDestination = [_demoUnit] call A3C_fnc_setDestination;
+			private _expDestination = [_demoUnit] call A3C_ai_shared_fnc_setDestination;
 
 			private _detoObject = if ({cursorTarget isKindOf _x} count ["AIR", "CAR", "TANK", "WHEELED", "ARMORED", "MOTORCYCLE"] > 0) then {
 				cursorTarget
@@ -732,7 +732,7 @@ if (_doubleClick) then {
 
 				_unit setVariable ["A3C_PLOT", _data, true];
 
-				private _scriptHandle = [_unit, _unit getVariable "A3C_PLOT"] spawn A3C_AI_Shared_executeUnitPlot;
+				private _scriptHandle = [_unit, _unit getVariable "A3C_PLOT"] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot;
 				private _hasReached = false;
 				private _exit = false;
 				private _doReturnToOrders = true;
@@ -802,7 +802,7 @@ if (_doubleClick) then {
 
 				_selectedGroup = A3C_RD_UNITS select 0;
 
-				[_selectedGroup, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+				[_selectedGroup, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 
 				private _plantExplosiveWP = [
 					_selectedGroup,
@@ -815,7 +815,7 @@ if (_doubleClick) then {
 					objNull
 				};
 
-				[_cursorObject] call MCSS_fnc_setVehicleVarname;
+				[_cursorObject] call A3C_main_fnc_setVehicleVarname;
 
 				private _plantExplosiveStatements = format [
 					"
@@ -878,7 +878,7 @@ if (_doubleClick) then {
 				_statements select 0,
 				format [
 					"
-						[(group this)] call A3C_HC_FNC_CompleteWaypoint;
+						[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint;
 						[[group this,'%1'], A3C_AI_HighCommand_wpAction_plantExplosive] remoteExec ['bis_fnc_call',0];
 					",
 					_magName

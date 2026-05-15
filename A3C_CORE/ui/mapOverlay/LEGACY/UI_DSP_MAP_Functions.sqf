@@ -637,13 +637,13 @@ A3C_UI_MAP_FNC_SYNC_LoadGroupInVehicle = {
 	_syncWps = synchronizedWaypoints _wp;
 	A3C_UI_MAP_SYNC_HOSTGROUP setVariable ["A3C_HC_SYNCWPS",_syncWps,true]; //~~ necessary?
 
-	private _precond = [((waypointStatements _wp) select 0), waypointTimeout _wp] call A3C_HC_getConditionFromStatements;
+	private _precond = [((waypointStatements _wp) select 0), waypointTimeout _wp] call A3C_ai_highCommand_fnc_getConditionFromStatements;
 	_wp setWayPointType "SCRIPTED";
 	_wp setWayPointScript format ["A3C_CORE\fnc_AI\wpFncs\wpScript_LoadGroupInVehicle.sqf ['%1',%2]",getPlayerUID player, _precond];
 	_wp setWaypointTimeout [0,0,0];
 	
 	{
-		_precond = [((waypointStatements _x) select 0), waypointTimeout _x] call A3C_HC_getConditionFromStatements;
+		_precond = [((waypointStatements _x) select 0), waypointTimeout _x] call A3C_ai_highCommand_fnc_getConditionFromStatements;
 		_x setWayPointType "SCRIPTED";
 		_x setWayPointScript format ["A3C_CORE\fnc_AI\wpFncs\wpScript_groupGetInVehicle.sqf ['%1',%2]",getPlayerUID player, _precond];
 		_x setWaypointTimeout [0,0,0];
@@ -658,12 +658,12 @@ A3C_UI_MAP_FNC_SYNC_LoadVehicleInVehicle = {
 	_syncWps = synchronizedWaypoints _wp;
 	A3C_UI_MAP_SYNC_HOSTGROUP setVariable ["A3C_HC_SYNCWPS",_syncWps,true]; //~~ necessary?
 
-	private _precond = [((waypointStatements _wp) select 0), waypointTimeout _wp] call A3C_HC_getConditionFromStatements;
+	private _precond = [((waypointStatements _wp) select 0), waypointTimeout _wp] call A3C_ai_highCommand_fnc_getConditionFromStatements;
 	_wp setWayPointType "SCRIPTED";
 	_wp setWayPointScript format ["A3C_CORE\fnc_AI\wpFncs\wpScript_LoadVehicleInVehicle.sqf ['%1',%2]",getPlayerUID player, _precond];
 	_wp setWaypointTimeout [0,0,0];
 	{
-		_precond = [((waypointStatements _x) select 0), waypointTimeout _x] call A3C_HC_getConditionFromStatements;
+		_precond = [((waypointStatements _x) select 0), waypointTimeout _x] call A3C_ai_highCommand_fnc_getConditionFromStatements;
 		_x setWayPointType "SCRIPTED";
 		_x setWayPointScript format ["A3C_CORE\fnc_AI\wpFncs\wpScript_groupGetVehicleInVehicle.sqf ['%1',%2]",getPlayerUID player, _precond];
 		_x setWaypointTimeout [0,0,0];
@@ -3065,7 +3065,7 @@ A3C_UI_MAP_fnc_disbandUnitsToHighCommand = {
 
 	[(units group player) - [player]] call A3C_GROUP_RESET;
 
-	[_newGroup, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+	[_newGroup, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 
 	if (count (_unit getvariable "A3C_PLOT") > 0) then {
 		{
@@ -3167,7 +3167,7 @@ A3C_UI_MAP_fnc_disbandUnitsToHighCommand = {
 	A3C_SELECTED_UNITS = [];
 	
 	
-	{[_x] spawn A3C_HC_ROLES;} foreach units _newGroup;
+	{[_x] spawn A3C_ai_highCommand_fnc_restoreUnitRole;} foreach units _newGroup;
 
 
 	sleep 0.2;
@@ -3665,7 +3665,7 @@ A3C_Btn_fnc_Execute = {
 			if ((count (_u getvariable ["A3C_PLOT",[]])) == 0) then {
 				_x setvariable ["A3C_PLOT",((_x getvariable "A3C_PLOT") + _data),true];
 
-				_script = [_u,(_u getvariable ['A3C_PLOT',[]])] spawn A3C_AI_Shared_executeUnitPlot;
+				_script = [_u,(_u getvariable ['A3C_PLOT',[]])] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot;
 
 			} else {
 				_u setvariable ["A3C_PLOT",((_x getvariable "A3C_PLOT") + _data),true];
@@ -4272,7 +4272,7 @@ A3C_AI_Shared_cancelUnitPlot = {
 			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_BTN) ctrlShow false;
 			(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_UNDO_IMG) ctrlSetTextColor  [1,1,1,0.2];
 
-			[_x,(position _x)] call A3C_DOMOVE;
+			[_x,(position _x)] call A3C_ai_shared_fnc_doMove;
 			[_x] spawn {
 				params ["_unit"];
 				private ["_mainMark","_subMark","_dirMark"];
@@ -4307,7 +4307,7 @@ A3C_AI_Shared_cancelUnitPlot = {
 				private ["_wpData"];
 				_wpData = _x;
 				if ( _forEachIndex ==  ((_unit getVariable "A3C_CURRENTWAYPOINT_INDEX") -1)) then {
-					if !([_data,_forEachIndex] call A3C_isWPLOOP) then {
+					if !([_data,_forEachIndex] call A3C_ui_mapOverlay_fnc_isWaypointLoop) then {
 						{deleteMarkerLocal _x} foreach (_wpData select 1);
 					};
 				};

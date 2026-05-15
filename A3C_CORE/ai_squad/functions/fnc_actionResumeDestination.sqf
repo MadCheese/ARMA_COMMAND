@@ -30,7 +30,7 @@ if (!isPlayer _unit && {count _expectedDestinationData > 0}) then {
 					if ((_expectedDestinationData select 1) in ["DoNotPlanFormation", "FORMATION PLANNED"]) then {
 						_unit doFollow player;
 					} else {
-						[_unit, _expectedPosition] call A3C_DOMOVE;
+						[_unit, _expectedPosition] call A3C_ai_shared_fnc_doMove;
 
 						if (count _expectedDestinationData > 3) then {
 							_unit lookAt (_expectedPosition getPos [100, _expectedDestinationData select 3]);
@@ -50,7 +50,7 @@ if (!isPlayer _unit && {count _expectedDestinationData > 0}) then {
 						doStop _unit;
 						sleep 0.2;
 
-						[_unit, _formationPosition] call A3C_DOMOVE;
+						[_unit, _formationPosition] call A3C_ai_shared_fnc_doMove;
 
 						if !(isMultiplayer) then {
 							_unit doFSM ["A3C_CORE\fsm\doFormation.fsm", position _unit, _unit];
@@ -73,7 +73,7 @@ if (!isPlayer _unit && {count _expectedDestinationData > 0}) then {
 			] remoteExec ["bis_fnc_call", _unit];
 		} else {
 			if (_expectedPosition distance2D [0, 0, 0] > 0) then {
-				[_unit, _expectedPosition] call A3C_DOMOVE;
+				[_unit, _expectedPosition] call A3C_ai_shared_fnc_doMove;
 
 				if (count _expectedDestinationData > 3) then {
 					[_unit, (_expectedPosition getPos [100, _expectedDestinationData select 3]) ] remoteExec ["lookAt", _unit];

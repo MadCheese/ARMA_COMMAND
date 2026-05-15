@@ -11,7 +11,7 @@
 		} forEach units _x;
 	} forEach A3C_SELECTED_UNITS;
 
-	[_group, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+	[_group, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 
 	//-- add new waypoints
 	private _leaderVehicle = vehicle leader _group;
@@ -58,7 +58,7 @@
 
 	private _rappelStatement = format [
 		"
-			[['%1',this,[['NONE','NONE'],'RAPPELL'],'LINE',(currentWaypoint group this),0],A3C_HC_INSERT_ACTION_WP] remoteExec ['bis_fnc_call',0];
+			[['%1',this,[['NONE','NONE'],'RAPPELL'],'LINE',(currentWaypoint group this),0],A3C_ai_highCommand_fnc_insertActionWaypoint] remoteExec ['bis_fnc_call',0];
 		",
 		getPlayerUID player
 	];

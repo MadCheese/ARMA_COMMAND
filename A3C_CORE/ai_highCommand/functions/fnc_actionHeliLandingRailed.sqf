@@ -49,7 +49,7 @@ private _distributedPositions = [
 			} forEach units _x;
 		} forEach A3C_SELECTED_UNITS;
 
-		[_group, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+		[_group, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 	};
 
 	//-- add new waypoints
@@ -117,8 +117,8 @@ private _distributedPositions = [
 
 				_statements = format [
 					"
-						[['%1',this,[['GoCode','%2'],'COMBATLANDING'],'LINE',(currentWaypoint (group this))],A3C_HC_INSERT_ACTION_WP,nil,false] remoteExec ['bis_fnc_call',0];
-						[(group this)] call A3C_HC_FNC_CompleteWaypoint
+						[['%1',this,[['GoCode','%2'],'COMBATLANDING'],'LINE',(currentWaypoint (group this))],A3C_ai_highCommand_fnc_insertActionWaypoint,nil,false] remoteExec ['bis_fnc_call',0];
+						[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint
 					",
 					_playerUID,
 					_subCondition
@@ -131,14 +131,14 @@ private _distributedPositions = [
 
 			case "TRANSPORT UNLOAD": {
 				_landingWaypoint setWaypointType "TR UNLOAD";
-				_statements = "[(group this)] call A3C_HC_FNC_CompleteWaypoint;  ";
+				_statements = "[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint;  ";
 			};
 
 			case "FULL LANDING": {
 				_statements = format [
 					"
 						[this,%1,'%2',[],true] spawn A3C_ai_highCommand_fnc_wpAction_landingFull;
-						[(group this)] call A3C_HC_FNC_CompleteWaypoint;
+						[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint;
 					",
 					_landingData select 0,
 					_playerUID

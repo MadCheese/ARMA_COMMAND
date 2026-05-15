@@ -29,7 +29,7 @@ private _camVic = vehicle cameraOn;
 
 // Kept for compatibility in case this function has side effects elsewhere.
 // It is no longer needed for call compile / object name injection.
-[_camVic] call MCSS_fnc_setVehicleVarname;
+[_camVic] call A3C_main_fnc_setVehicleVarname;
 
 private _unitGhost = _unitGhostType createVehicleLocal (position _unit);
 

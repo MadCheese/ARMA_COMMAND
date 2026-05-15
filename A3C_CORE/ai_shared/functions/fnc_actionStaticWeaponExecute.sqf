@@ -159,7 +159,7 @@ if (_action == "ASSEMBLE") then {
 						(getDir _createdStatic) + 180 + _assistantAngleOffset
 					];
 
-					[_assistant, _assistantPos] call A3C_DOMOVE;
+					[_assistant, _assistantPos] call A3C_ai_shared_fnc_doMove;
 					[_assistant, _weaponPos getPos [50, getDir _createdStatic]] remoteExec ["lookAt", _assistant];
 
 					//-- Some static weapons slide/tilt after creation. This tries small center-of-mass offsets until stable.

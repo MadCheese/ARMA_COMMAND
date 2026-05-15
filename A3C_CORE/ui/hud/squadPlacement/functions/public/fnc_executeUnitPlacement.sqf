@@ -89,7 +89,7 @@ if (
     private _plot = [_wpData];
     _unit setVariable ["A3C_PLOT", _plot, true];
 
-    [_unit, _unit getVariable ["A3C_PLOT", []]] spawn A3C_AI_Shared_executeUnitPlot;
+    [_unit, _unit getVariable ["A3C_PLOT", []]] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot;
 } else {
     private _plot = _unit getVariable ["A3C_PLOT", []];
     _plot pushBack _wpData;

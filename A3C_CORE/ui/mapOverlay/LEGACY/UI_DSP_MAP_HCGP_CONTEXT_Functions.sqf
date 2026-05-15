@@ -479,7 +479,7 @@ A3C_REJOIN_GROUPS = {
 				sleep 5;
 				[_this,"UNLOCKED"] remoteExec ["setvehicleLock", _this];
 			};
-			[[_x],A3C_HC_ROLES] remoteExec ["bis_fnc_spawn",_x];
+			[[_x],A3C_ai_highCommand_fnc_restoreUnitRole] remoteExec ["bis_fnc_spawn",_x];
 
 		} foreach _units;
 		_units join group player;

@@ -11,7 +11,7 @@ private _restoreOriginalPlayerContext = {
 	private _unitsBeforeRestore = units player;
 
 	{
-		[_x] call A3C_fnc_setDestination;
+		[_x] call A3C_ai_shared_fnc_setDestination;
 	} forEach _unitsBeforeRestore;
 
 	selectPlayer A3C_CurrentPlayerObject;
@@ -45,7 +45,7 @@ A3C_DISABLE_RADIAL = false;
 private _unitsBeforePlayerSwitch = units player;
 
 {
-	[_x] call A3C_fnc_setDestination;
+	[_x] call A3C_ai_shared_fnc_setDestination;
 } forEach _unitsBeforePlayerSwitch;
 
 selectPlayer _unit;

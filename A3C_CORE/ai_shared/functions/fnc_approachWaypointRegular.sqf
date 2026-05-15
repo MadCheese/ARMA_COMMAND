@@ -20,7 +20,7 @@ private _drivers = (units _group - [_leader]) select {
 	_x enableAI "ANIM";
 } forEach units _group;
 
-[_effectiveCommander, _movePos] call A3C_DOMOVE;
+[_effectiveCommander, _movePos] call A3C_ai_shared_fnc_doMove;
 
 _drivers doFollow _leader;
 

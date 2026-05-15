@@ -2,11 +2,11 @@ params ["_unit", "_dest"];
 
 if (isPlayer _unit) exitWith {};
 
-if (isNil 'MCSS_fnc_setVehicleVarname') exitWith {};
+if (isNil 'A3C_main_fnc_setVehicleVarname') exitWith {};
 
 _unit forceSpeed 0;
 
-[_unit] call MCSS_fnc_setVehicleVarname;
+[_unit] call A3C_main_fnc_setVehicleVarname;
 
 private _holdPos = position vehicle _unit;
 

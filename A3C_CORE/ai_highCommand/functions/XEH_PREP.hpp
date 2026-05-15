@@ -2,6 +2,9 @@
 
 A3C_PREP(actionAddWaypoint);
 
+
+
+A3C_PREP(actionAssembleUAV);
 A3C_PREP(actionAssembleWeapon);
 
 A3C_PREP(actionBoardGroupToVehicle);
@@ -49,6 +52,9 @@ A3C_PREP(actionRefreshGroupDispatch);
 A3C_PREP(actionRemoteFireVtol);
 A3C_PREP(actionRemoteFireVtolDispatch);
 
+A3C_PREP(actionRemoteSteer);
+
+
 A3C_PREP(actionRepair);
 
 
@@ -80,17 +86,39 @@ A3C_PREP(actionVehicleSmoke);
 A3C_PREP(addWaypoint);
 A3C_PREP(assignGroupToVehicle);
 
+A3C_PREP(changeWaypointData);
+A3C_PREP(completeWaypoint);
+
+
+
+A3C_PREP(deleteAllWaypoints);
+
+
+A3C_PREP(findExecutingMachine);
+
+A3C_PREP(getConditionFromStatements);
+A3C_PREP(getFullCrew);
 
 
 
 
-
+A3C_PREP(insertActionWaypoint);
 
 A3C_PREP(isWpScriptBlocked);
 
+A3C_PREP(onWaypointInsertedClient);
+
+A3C_PREP(removeWaypoint);
+
+A3C_PREP(restoreUnitRole);
+
+
+A3C_PREP(setWaypointStatements);
 
 A3C_PREP(staticAssembleWpAction);
 A3C_PREP(suppressionImmediate);
+A3C_PREP(syncWaypoint);
+
 
 
 

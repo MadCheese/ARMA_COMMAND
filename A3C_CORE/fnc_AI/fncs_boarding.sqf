@@ -396,7 +396,7 @@ A3C_Boarding_Hack = {
 	// [_unit, _gl] spawn {
 	// 	params ["_unit", "_gl"];
 		private _expDOrg = (position _gl) vectorAdd [0,20,0];
-		[_gl, _expDOrg] call A3C_DOMOVE;
+		[_gl, _expDOrg] call A3C_ai_shared_fnc_doMove;
 		
 		_name = name _unit;
 		_nameStringArray = _name splitString " ";
@@ -412,7 +412,7 @@ A3C_Boarding_Hack = {
 				_unit remoteExec ["unassignVehicle",0];
 				sleep 1;
 				// systemchat str (_expD select 0);
-				[_unit,(_expD select 0)] call A3C_DOMOVE; //-- << not because _expD is [0,0,0]
+				[_unit,(_expD select 0)] call A3C_ai_shared_fnc_doMove; //-- << not because _expD is [0,0,0]
 			};
 			if (!isNull (objectParent _unit)) exitWith {};
 			// hintSilent str _expD;

@@ -375,7 +375,7 @@ A3C_FNC_CBA_KEY = {
 		// 						} foreach A3C_HUD_DRAW_POSARRAY;
 		// 						//player commandChat str _tVar;
 		// 						 _unit setVariable ["A3C_PLOT",_tVar,true];
-		// 						private _script = [_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot;
+		// 						private _script = [_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot;
 		// 					} else {
 
 

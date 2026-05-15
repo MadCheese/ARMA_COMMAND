@@ -16,7 +16,7 @@ if (isTouchingGround _vehicle && {_vehicle isKindOf "AIR"}) exitWith {};
 private _startTime = time;
 private _endTimeEstimated = time + _duration;
 
-[_vehicle] call MCSS_fnc_setVehicleVarname;
+[_vehicle] call A3C_main_fnc_setVehicleVarname;
 
 {
 	_x disableAI "ALL";

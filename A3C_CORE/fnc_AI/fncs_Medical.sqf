@@ -11,29 +11,6 @@
 
 
 
-A3C_MEDICAL_itemStrings =
-[
-	//Regular
-	
-	"firstaid",
-	"fak",
-	"fielddressing",
-	"morphine",
-	
-	
-	//--ACE stuff
-	//"ACE_fieldDressing", //-- not necessary, fielddressing is already checked
-	"ace_morphine",
-	"ace_surgicalkit",
-	"ace_personalaidkit",
-	"ace_elasticbandage",
-	"ace_quikclot",
-	"ace_packingbandage",
-	"medi",
-	"medkit",
-	"medikit",
-	"biofoam"
-];
 
 
 
@@ -185,7 +162,7 @@ A3C_MEDICAL_START = {
 			};
 			private _medics_lb = (group _u) getVariable ["A3C_MEDICS_LB", [] ];
 			_medics_lb = _medics_lb - [_u];
-			_u = [_u] call A3C_Replace_Unit;
+			_u = [_u] call A3C_ai_shared_fnc_replaceUnit;
 			_medics_lb pushBackUnique _u;
 			(group _u) setVariable ["A3C_MEDICS_LB", _medics_lb ];
 			if (_pu) then {
@@ -231,7 +208,7 @@ A3C_MEDICAL_START = {
 
 
 			//_expP = if (((_expDest select 0) distance2d [0,0,0] ) == 0) then {(position _healer)} else {(_expDest select 0)};
-			[_healer] call A3C_fnc_setDestination;
+			[_healer] call A3C_ai_shared_fnc_setDestination;
 			_array = [];
 			_dir = getdir _healer;
 			_script = {};
@@ -386,7 +363,7 @@ A3C_fnc_healUnitMultiCompat = {
 	};
 };
 
-//-- requires (_unit getvariable "A3C_PLOT") and A3C_AI_Shared_executeUnitPlot
+//-- requires (_unit getvariable "A3C_PLOT") and A3C_ai_shared_fnc_actionExecuteUnitPlot
 A3C_AI_Shared_Action_Heal = {
 	private ["_unit","_patient","_scr","_expDest","_pos","_objs","_formUnits"];
 	_unit = _this select 0;
@@ -399,7 +376,7 @@ A3C_AI_Shared_Action_Heal = {
 	private _vehicleHeal = _objParentUnit == _objParentPatient;
 	if (isplayer _unit) exitWith {};
 	_isPlayer = (_patient == player);
-	_expDest = [_patient] call A3C_fnc_setDestination; //expectedDestination _patient;
+	_expDest = [_patient] call A3C_ai_shared_fnc_setDestination; //expectedDestination _patient;
 	_objs = [];
 	_patientStance = switch (stance _patient) do {
 		case ("STAND") : {"AUTO"};
@@ -413,7 +390,7 @@ A3C_AI_Shared_Action_Heal = {
 	private _patients_assigned = group _unit getVariable ["A3C_PATIENTS_ASSIGNED", []];
 	_patients_assigned pushBackUnique _patient;
 	group _unit setVariable ["A3C_PATIENTS_ASSIGNED", _patients_assigned];
-	//[_unit,position _unit] call A3C_DoMove;
+	//[_unit,position _unit] call A3C_ai_shared_fnc_doMove;
 //	_unit doMove position _unit;
 //	_unit moveTo position _unit;
 	
@@ -453,7 +430,7 @@ A3C_AI_Shared_Action_Heal = {
 	_formunits = [];
 	if !(_isPLayer) then {
 		if !(_unit == _patient) then {
-			//[_patient,_pos] call A3C_DoMove;
+			//[_patient,_pos] call A3C_ai_shared_fnc_doMove;
 		};
 	} else {
 		
@@ -503,7 +480,7 @@ A3C_AI_Shared_Action_Heal = {
 		// systemchat str [_unit, _patient, _vehicleHeal];
 		if !(_vehicleHeal) then {
 			_unit setvariable ["A3C_PLOT",_data,true];
-			_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot);
+			_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot);
 			//#WIP
 			while {!isNull _patient} do {
 				
@@ -562,7 +539,7 @@ A3C_AI_Shared_Action_Heal = {
 	} else {
 		if (_isPlayer) then {
 			//dostop _unit;
-			[_unit, position _unit] call A3C_DoMove;
+			[_unit, position _unit] call A3C_ai_shared_fnc_doMove;
 			for "_i" from 1 to 30 do {
 				if (_patient getVariable ["A3C_AbortHealing", false]) exitWith {};
 				if ((player distance2d _unit) < 5) exitWith {_skip = false};

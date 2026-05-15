@@ -6,7 +6,7 @@
 		private _leader = leader _gp;
 		private _units = units _gp;
 
-		[_gp, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+		[_gp, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 
 		private _leaderVehicle = vehicle _leader;
 		private _effectiveCommander = effectiveCommander _leaderVehicle;
@@ -14,7 +14,7 @@
 		if (_effectiveCommander in _units) then {
 			private _closePos = _leaderVehicle getPos [10, getDir _leaderVehicle];
 
-			[_effectiveCommander, _closePos] call A3C_DOMOVE;
+			[_effectiveCommander, _closePos] call A3C_ai_shared_fnc_doMove;
 		};
 
 		{

@@ -91,7 +91,7 @@ if (A3C_UI_MAP_BOOL_isHCWaypointPosEdit) then {
 				params ["_sPos"];
 				sleep 1;
 				// #HCMOVE
-				[leader A3C_HC_ACTIVEGROUP,_sPos] call A3C_DOMOVE; //~~ #MONITOR
+				[leader A3C_HC_ACTIVEGROUP,_sPos] call A3C_ai_shared_fnc_doMove; //~~ #MONITOR
 				//A3C_HC_ACTIVEGROUP move _sPos;
 
 			};
@@ -118,7 +118,7 @@ if (A3C_BOOL_DRAGLINE && {A3C_CONNECTING_MODE == "HCSYNC"}) exitWith  {
 			if (A3C_HC_WP_SYNC_ROOT select 0 != _gp) then {
 				// systemchat str (synchronizedWaypoints A3C_HC_WP_SYNC_ROOT);
 				private _updatedSyncWaypoints = (synchronizedWaypoints A3C_HC_WP_SYNC_ROOT) + [ [_gp,_wp_Index] ];
-				[[A3C_HC_WP_SYNC_ROOT, _updatedSyncWaypoints],A3C_HC_FNC_SYNC_WP] remoteExec ["bis_fnc_call",0];
+				[[A3C_HC_WP_SYNC_ROOT, _updatedSyncWaypoints],A3C_ai_highCommand_fnc_syncWaypoint] remoteExec ["bis_fnc_call",0];
 				// [] spawn {
 				// 	sleep 0.5;
 				// 	systemchat str (synchronizedWaypoints A3C_HC_WP_SYNC_ROOT);
@@ -331,7 +331,7 @@ if (A3C_BOOL_DRAGLINE && {A3C_CONNECTING_MODE == "HCSYNC"}) exitWith  {
 							_wp setWaypointStatements
 							[
 								"true",
-								"if !(false) then {[(group this)] call A3C_HC_FNC_CompleteWaypoint}; "
+								"if !(false) then {[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint}; "
 							];
 						};
 						
@@ -535,7 +535,7 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 						_data pushBack _wp;
 					} foreach A3C_MAP_DRAGPLANNING_POSITIONS;
 					_unit setvariable ["A3C_PLOT",_data,true];
-					_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot);
+					_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot);
 				};
 			} else {
 				
@@ -605,7 +605,7 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 						
 						{
 							_gp = _x;
-							[_gp, "ALL"] call A3C_HighCommand_deleteAllWaypoints;
+							[_gp, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 							{
 								_x remoteExec ["unassignVehicle",0];
 								moveOut _x;
@@ -803,11 +803,11 @@ if (!isNull _hcGroup) then {
 				_wpToEdit setWaypointType "SCRIPTED";
 				_wpToEdit setWaypointScript (format ["A3C_CORE\fnc_AI\wpFncs\wpScript_CLEARBUILDING.sqf ['%1',['ARRIVAL','']]",getPlayerUID player]);
 
-				_statementsExec = "if !(false) then {[(group this)] call A3C_HC_FNC_CompleteWaypoint};"; //format
+				_statementsExec = "if !(false) then {[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint};"; //format
 				//[
 				//	"
-				//		if !(false) then {[(group this)] call A3C_HC_FNC_CompleteWaypoint};
-				//		['%1',this,[['NONE','NONE'],'CLEARBUILDING'],'NO CHANGE',%2] call A3C_HC_INSERT_ACTION_WP;
+				//		if !(false) then {[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint};
+				//		['%1',this,[['NONE','NONE'],'CLEARBUILDING'],'NO CHANGE',%2] call A3C_ai_highCommand_fnc_insertActionWaypoint;
 				//	",
 				//	getPlayerUID player,
 				//	_wpID
@@ -828,7 +828,7 @@ if (!isNull _hcGroup) then {
 					//systemchat str _wpToEdit;
 					_wpToEdit setWaypointType "MOVE";
 					_wpToEdit setWaypointScript "";
-					_wpToEdit setWaypointStatements ["true","if !(false) then {[(group this)] call A3C_HC_FNC_CompleteWaypoint};"];
+					_wpToEdit setWaypointStatements ["true","if !(false) then {[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint};"];
 				};
 				if (_wpID == _activeWPindex) then {
 					{
@@ -848,7 +848,7 @@ if (!isNull _hcGroup) then {
 			_hoverVic = _hoverIcon select 0;
 			_actionScript = _actionScript splitString ";";
 			if ((vehicleVarName _hoverVic) == "") then {
-				_hoverVic = missionNameSpace getVariable ([_hoverVic] call MCSS_fnc_setVehicleVarname);
+				_hoverVic = missionNameSpace getVariable ([_hoverVic] call A3C_main_fnc_setVehicleVarname);
 			};
 			[_hcGroup,_wpID] waypointAttachVehicle _hoverVic;
 		} else {
@@ -888,7 +888,7 @@ if !(A3C_MovedItem_ID == "") exitWith {
 		_soldier setDestination [_wPos,"LEADER PLANNED",true];
 		if !(_soldier getvariable ["A3C_HOLD",true]) then {
 			if (_varName == "A3C_PLOT") then {
-				[_soldier,_wPos] call A3C_DoMove;
+				[_soldier,_wPos] call A3C_ai_shared_fnc_doMove;
 			};
 		};
 		A3C_MV_MARKERDATA = [];

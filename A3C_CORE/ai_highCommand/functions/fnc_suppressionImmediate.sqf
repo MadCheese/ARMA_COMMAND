@@ -43,5 +43,5 @@ _group setVariable ["A3C_UNIT_POLYS", _unitPolygons, true];
 		"LINE",
 		_waypointIndex
 	],
-	A3C_HC_INSERT_ACTION_WP
+	A3C_ai_highCommand_fnc_insertActionWaypoint
 ] remoteExec ["bis_fnc_call", 0];

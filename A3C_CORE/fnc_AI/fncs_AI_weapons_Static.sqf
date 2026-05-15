@@ -70,58 +70,7 @@ if (A3C_IsIFA) then {
 
 
 
-A3C_AI_Squad_Action_assembleWeaponExecute = {
-	{
-		private _units = _x select 0;
-		private _weapon = _x select 1;
-		if (_weapon == typeOf A3C_OBJECTPLACER) exitWith {
-			if ({ !((_x getVariable ["A3C_PLOT",[]]) isEqualTo []) } count _units > 0) then {
-				[_units,true,false] call A3C_AI_Shared_cancelUnitPlot;
-				waituntil {
-					sleep 0.1;
-					{
-						// private _abort = _x getvariable ["A3C_ABORT_Data",[false,false]];
-						private _plot = _x getVariable ["A3C_PLOT",[]];
-						!(_plot isEqualTo []) // || { {_x} count _abort > 0 }
-					} count _units == 0
-				};
-			};
-			
-			player groupRadio "SentAssemble";
-			_mainMark = "A3C_SQ_" + (str (random 10000000000));
 
-			{
-				_unit = _x;
-				waitUntil {count (_unit getvariable 'A3C_PLOT') == 0};
-				_data =
-				[
-					[
-						[screentoWorld [0.5,0.5],(screentoWorld [0.5,0.5]) getPos [50,getDir A3C_OBJECTPLACER]], //-- positions
-						[_mainMark,"",""], //-- markers
-						["STATIC",["ASSEMBLE",_weapon]], //-- wp action
-						["NONE","NONE"], //--WP Condition
-						["UP","AUTO"], //-- WP Stances
-						[[0,false]], // WP Sync Data
-						false, //-- isWPCompleted
-						0, //-- Combat Mode
-						-1, //-- WP SPeed
-						25, //-- WP Flying Height
-						-1, //-- WP Loop Value
-						0 // -- radius (for circle, not completion)
-					]
-				];
-				_unit setvariable ["A3C_PLOT",_data,true];
-				_scr = ([_unit,(_unit getvariable 'A3C_PLOT')] spawn A3C_AI_Shared_executeUnitPlot);
-			} foreach _units;
-			A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configfile >> "CfgVehicles" >>  _weapon >> "picture");
-			A3C_UI_HUD_3D_TAG_ICON_MOD = "ON";
-			private _tagPos = +(position A3C_OBJECTPLACER);
-			[_tagPos,""] spawn A3C_UI_HUD_3D_TAG;
-
-		};
-	} foreach A3C_STATIC_PACKS;
-	deleteVehicle A3C_OBJECTPLACER;
-};
 
 A3C_SOG_BASEPACKS = ["vn_o_pack_static_base_01","vn_b_pack_static_base_01"];
 

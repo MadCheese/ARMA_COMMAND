@@ -94,14 +94,14 @@ switch (true) do {
 						_wpIcon = _wpIcons select 0;
 						_gp = _wpIcon select 0;
 						_wpiC = _wpIcon select 3;
-						[_gp, _wpiC] call A3C_HC_REMOVE_WP_RC;
+						[_gp, _wpiC] call A3C_ai_highCommand_fnc_removeWaypoint;
 					};
 				} else {
 					//-- MULTIPLE WAYPOINTS SELECTED - can just delete
 					{
 						_x params ["_group", "_wpIndex"];
 						while {_x in (waypoints _group)} do {
-							_x call A3C_HC_REMOVE_WP_RC;
+							_x call A3C_ai_highCommand_fnc_removeWaypoint;
 						};
 						A3C_Selection_MultiWaypoint = A3C_Selection_MultiWaypoint - [_x];
 					} foreach A3C_Selection_MultiWaypoint;
