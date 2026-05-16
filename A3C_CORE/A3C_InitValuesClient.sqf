@@ -507,6 +507,27 @@ A3C_UI_MAP_UNITBUTTONCEIL = 16;
 
 
 
+//----------------------------- DATA: NAVIGABLE BUILDING POSITIONS
+profilenamespace setvariable ["A3C_PROFILEVAR_BUILDINGS_DEFUNCT",profileNameSpace getVariable ["A3C_PROFILEVAR_BUILDINGS_DEFUNCT", []]];
+profilenamespace setvariable ["A3C_PROFILEVAR_BUILDINGS_CLEAR",profileNameSpace getVariable ["A3C_PROFILEVAR_BUILDINGS_CLEAR", []]];
+
+
+private _data = profilenamespace getvariable ["A3C_PROFILEVAR_BUILDINGS_DEFUNCT",[]];
+{
+	_x params ["_buildingType","_pgs"];
+
+	private _execute = true;
+	{
+		if (_x select 0 == _buildingType) exitWith {
+			_execute = false;
+		};
+	} foreach _data;
+	if (_execute) then {
+		_data pushBack _x;
+	};
+} foreach A3C_DATA_bPosNoAccess;
+profilenamespace setvariable ["A3C_PROFILEVAR_BUILDINGS_DEFUNCT", _data];
+//----------------------------- 
 
 
 
@@ -515,8 +536,7 @@ A3C_UI_MAP_UNITBUTTONCEIL = 16;
 
 
 
-
-
+//-- fetch reference game-controls once they exist
 [] spawn {
 	sleep 1;
 	A3C_SHOWNHUD = shownHud; //-- shownHud select 6 is false if this fires earlier

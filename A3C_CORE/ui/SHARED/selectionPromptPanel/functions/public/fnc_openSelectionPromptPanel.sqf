@@ -92,7 +92,7 @@ switch (_mode) do {
 			} forEach _units;
 		} forEach _selectedGroups;
 
-		private _shellDSPs = [true, true, _focusPos] call A3C_getArtilleryAmmo;
+		private _shellDSPs = [true, true, _focusPos] call A3C_main_fnc_getArtilleryAmmo;
 
 		if (_shellDSPs isEqualTo []) then {
 			_ctrlShow = false;

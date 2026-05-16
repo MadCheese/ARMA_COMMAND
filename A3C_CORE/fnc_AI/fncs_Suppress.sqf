@@ -709,7 +709,7 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 					//systemchat str _target;
 					//systemchat str
 					
-					[[vehicle _unit,_target],A3C_addFiredHandler] remoteExec ["bis_fnc_call",0];
+					[[vehicle _unit,_target],A3C_ai_shared_fnc_addEventhandlerFired] remoteExec ["bis_fnc_call",0];
 					
 					//_handle = vehicle _unit addEventHandler
 					//[
@@ -750,7 +750,7 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 							sleep 2;
 						};
 						//(vehicle _unit) removeEventHandler ["Fired",_handle];
-						[[vehicle _unit],A3C_removeFiredHandler] remoteExec ["bis_fnc_call",0];
+						[[vehicle _unit],A3C_ai_shared_fnc_removeEventhandlerFired] remoteExec ["bis_fnc_call",0];
 					};
 					
 					

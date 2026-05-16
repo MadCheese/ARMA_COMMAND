@@ -296,7 +296,7 @@ private _rappellUnitsAll = +_rappellUnits;
 _rappelPos = getPosASL _aircraft;
 _rappelPos set [2, (_rappelPos select 2) - 25];
 
-[_group, _rappellGroups, _rappelPos, _inside] call A3C_AIC_fnc_rappelActionHandler;
+[_group, _rappellGroups, _rappelPos, _inside] call A3C_ai_shared_fnc_actionRappelStart;
 
 {
 	private _rapGroup = _x;

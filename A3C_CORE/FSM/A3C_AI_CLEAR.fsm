@@ -84,7 +84,7 @@ class FSM
                         init = /*%FSM<STATEINIT""">*/"_doors = [_doors,[],{_x distance _unit},""ASCEND""] call BIS_fnc_sortBy;" \n
                          "_door = _doors select 0;" \n
                          "_doors = _doors - [_door];" \n
-                         "_doorDir = [_building,_door] call A3C_DOOR_DIR;" \n
+                         "_doorDir = [_building,_door] call A3C_main_fnc_buildingGetDoorDirection;" \n
                          "_dobj = ""SuppressTarget"" createVehicleLocal [0,0,0];" \n
                          "_dobj setpos _door; _dobj setdir _doorDir;" \n
                          "_dobj enablesimulation false;" \n

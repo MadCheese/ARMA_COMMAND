@@ -19,3 +19,5 @@ A3C_PREP_SUBDIR(actions,toggleAutoCombatButton);
 //-- UI responses
 A3C_PREP_SUBDIR(responses,refreshAutoCombatButton);
 A3C_PREP_SUBDIR(responses,actionRemoteFireVtolUiResponse);
+A3C_PREP_SUBDIR(responses,structureRemoteLaunchUiResponse);
+

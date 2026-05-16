@@ -123,7 +123,7 @@ A3C_UI_MAP_onMouseDrag = {
 	A3C_DRAGPOS = _sPos;
 
 	if (A3C_BOOL_DRAGLINE) then {
-		//A3C_AIC_DRAGPOS = _sPos;
+
 		if (A3C_STATE_CHECKING_PICKUP) then {
 			//A3C_MovedItem_ID setMarkerPosLocal _sPos;
 			private ["_unit","_wpData"];
@@ -607,7 +607,6 @@ A3C_UI_MAP_onMouseButtonUp_Loop = {
 	//-- still no units: exit.
 	if ((count _units) == 0) exitWith {
 		A3C_LOOPSYNC_START = ["",[0,0,0]];
-		A3C_AIC_DRAGPOS = [];
 		A3C_DRAGPOS = [];
 	};
 
@@ -670,7 +669,6 @@ A3C_UI_MAP_onMouseButtonUp_Loop = {
 	A3C_USERACTION pushback [0,1,1];
 	A3C_USERACTION_ID = (A3C_USERACTION_ID + 1);
 	A3C_LOOPSYNC_START = ["",[0,0,0]];
-	A3C_AIC_DRAGPOS = [];
 	A3C_DRAGPOS = [];
 	A3C_CLICKPOS_1 = [0,0,0];
 	A3C_CLICKPOS_2 = [0,0,0];

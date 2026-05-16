@@ -367,7 +367,7 @@ _fnc_tilt = {
 							sleep 1;
 							//systemchat 'exacto';
 							_vehicle setVariable ["A3C_fireComplete",[_weapon,true],true];
-							[[_vehicle,_projectile,2,_missiletarget,_missiletarget],A3C_ExactoMISSILE] remoteExec ["bis_fnc_spawn",_vehicle]; //--0 did not work.
+							[[_vehicle,_projectile,2,_missiletarget,_missiletarget],A3C_ai_shared_fnc_guideProjectileMissile] remoteExec ["bis_fnc_spawn",_vehicle]; //--0 did not work.
 						//} else {
 						//	waitUntil {isNull _projectile Or {!alive _projectile}};
 						//};

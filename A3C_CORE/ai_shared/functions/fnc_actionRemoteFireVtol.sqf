@@ -123,7 +123,7 @@ if (_doFire) then {
 	publicVariable 'A3C_REMOTE_BLACKFISH_HandlerIndex';
 
 	// //-- add EH on every machine
-	[ ["ADD", _id, netID _vehicle], A3C_REMOTE_VTOL_HandlerFNC] remoteExec ["bis_fnc_call", 0];
+	[ ["ADD", _id, netID _vehicle], A3C_ai_highCommand_fnc_remoteVTOLmanageGuidanceHandler] remoteExec ["bis_fnc_call", 0];
 
 	_vehicle setvariable ["A3C_VTOL_REMOTE_HANDLE", [netID _target,  objNull, ""], true];
 
@@ -154,7 +154,7 @@ if (_doFire) then {
 	};
 	sleep 5;
 	//-- remove EH on every machine
-	[ ["REMOVE", _id, netID _vehicle], A3C_REMOTE_VTOL_HandlerFNC] remoteExec ["bis_fnc_call", 0];
+	[ ["REMOVE", _id, netID _vehicle], A3C_ai_highCommand_fnc_remoteVTOLmanageGuidanceHandler] remoteExec ["bis_fnc_call", 0];
 	
 
 

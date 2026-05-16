@@ -975,7 +975,7 @@ A3C_CREATE_BPOS_MARKERS = {
 	"A3C_BUILDING_VIEWER" setMarkerDirLocal (getDir A3C_TAB_BUILDING);
 	"A3C_BUILDING_VIEWER" setMarkerSizeLocal [(((boundingboxReal A3C_TAB_BUILDING select 1)) select 0),(((boundingboxReal A3C_TAB_BUILDING) select 1) select 1)];
 	A3C_BPMARKERS pushback "A3C_BUILDING_VIEWER";
-	_doorPositions = [A3C_TAB_BUILDING] call A3C_DOORPOSITIONS;
+	_doorPositions = [A3C_TAB_BUILDING] call A3C_main_fnc_buildingGetDoorPositions;
 	{
 		call compile format [
 			"
@@ -983,7 +983,7 @@ A3C_CREATE_BPOS_MARKERS = {
 				'A3C_BDPS_D_%1' setMarkershapeLocal 'RECTANGLE';
 				'A3C_BDPS_D_%1' setMarkerPosLocal %2;
 				'A3C_BDPS_D_%1' setMarkerTextLocal str %1;
-				'A3C_BDPS_D_%1' setMarkerDirLocal ([A3C_TAB_BUILDING,%2] call A3C_DOOR_DIR);
+				'A3C_BDPS_D_%1' setMarkerDirLocal ([A3C_TAB_BUILDING,%2] call A3C_main_fnc_buildingGetDoorDirection);
 				'A3C_BDPS_D_%1' setMarkerSizeLocal [0.5,0.1];
 				'A3C_BDPS_D_%1' setmarkerColorLocal 'ColorBlufor';
 				'A3C_BDPS_D_%1' setmarkerAlphaLocal 1;

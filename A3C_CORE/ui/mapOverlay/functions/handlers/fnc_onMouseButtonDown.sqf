@@ -106,7 +106,7 @@ private _artilleryShortcutCondition = (count A3C_SELECTED_UNITS > 0 && {
 	_ctrl && {
 		_alt && {
 			{ 
-				!([_x] call A3C_GroupHasArtilleryCapacity) &&
+				!([_x] call A3C_ai_highCommand_fnc_getArtilleryCapacity) &&
 				{
 					typeName _x != "GROUP"
 				}

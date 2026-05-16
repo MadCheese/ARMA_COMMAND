@@ -45,16 +45,16 @@ A3C_UI_HUD_onKeyDown = {
         if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
             switch (A3C_AI_Squad_Action_ID) do {
                 case ("ATSHOT") : {
-                    [A3C_REMFIRE_ATShot_Units, "ATSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+                    [A3C_REMFIRE_ATShot_Units, "ATSHOT"] spawn A3C_ai_shared_fnc_structureRemoteLaunch;
                 };
                 case ("UGLSHOT") : {
-                   [A3C_REMFIRE_UGLShot_Units, "UGLSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+                   [A3C_REMFIRE_UGLShot_Units, "UGLSHOT"] spawn A3C_ai_shared_fnc_structureRemoteLaunch;
                 };
                 case ("STATICSHOT") : {
-                    [A3C_REMFIRE_StaticShot_Units, "STATICSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+                    [A3C_REMFIRE_StaticShot_Units, "STATICSHOT"] spawn A3C_ai_shared_fnc_structureRemoteLaunch;
                 };
                 case ("TANKSHOT") : {
-                    [A3C_REMFIRE_TankShot_Units, "TANKSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+                    [A3C_REMFIRE_TankShot_Units, "TANKSHOT"] spawn A3C_ai_shared_fnc_structureRemoteLaunch;
                 };
                 case ("SUPPRESSION") : {
                     [] call A3C_ai_squad_fnc_actionSuppression;
@@ -76,7 +76,7 @@ A3C_UI_HUD_onKeyDown = {
         } else {
             switch (A3C_AI_HighCommand_Action_ID) do {
                 case ("TANKSHOT") : {
-                    [A3C_REMFIRE_TankShot_Units, "TANKSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+                    [A3C_REMFIRE_TankShot_Units, "TANKSHOT"] spawn A3C_ai_shared_fnc_structureRemoteLaunch;
                 };
                 case ("VTOL_CANNON") : {
                     _script = ["CANNON"] spawn A3C_ai_highCommand_fnc_actionRemoteFireVtolDispatch;
@@ -89,13 +89,13 @@ A3C_UI_HUD_onKeyDown = {
                 };
 
                 case ("UGLSHOT") : { // #TODO: change velocity for UGLshots to a faster speed
-                    [A3C_REMFIRE_UGLShot_Units, "UGLSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+                    [A3C_REMFIRE_UGLShot_Units, "UGLSHOT"] spawn A3C_ai_shared_fnc_structureRemoteLaunch;
                 };
                 case ("ATSHOT") : {
-                    [A3C_REMFIRE_ATShot_Units, "ATSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+                    [A3C_REMFIRE_ATShot_Units, "ATSHOT"] spawn A3C_ai_shared_fnc_structureRemoteLaunch;
                 };
                 case ("STATICSHOT") : {
-                    [A3C_REMFIRE_StaticShot_Units, "STATICSHOT"] spawn A3C_AI_SHARED_STRUCTURE_REMOTE_LAUNCH;
+                    [A3C_REMFIRE_StaticShot_Units, "STATICSHOT"] spawn A3C_ai_shared_fnc_structureRemoteLaunch;
                 };
                 case ("UAV_FPV") : {
                     [] call A3C_ai_highCommand_fnc_actionUavFPV;

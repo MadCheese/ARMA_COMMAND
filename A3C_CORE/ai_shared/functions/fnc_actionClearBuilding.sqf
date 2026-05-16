@@ -104,7 +104,7 @@ if !(isDedicated) then {
 
 //-- create buddy Teams and array of rooms
 private _buddyArrays = [_units] call _fnc_createBuddyTeams;
-private _roomArrays = [_building,_bpC,_roofSensitive] call A3C_fnc_createRooms;
+private _roomArrays = [_building,_bpC,_roofSensitive] call A3C_main_fnc_buildingCreateRooms;
 
 if ({player == leader group _x} count _units == count _units) then {
 	[_units,true,false] call A3C_AI_Shared_cancelUnitPlot; //~~ ideally: _busyUnits only! || some issue with HC units not resetting A3C_PLOT
@@ -409,7 +409,7 @@ private _originalRooms = +(_roomArrays);
 					_buddyArrays set [_teamIndex, _team];
 
 					if (!_unitAlive) then {
-						private _closestBpos = ([getposATL _unit,_building,false] call MCSS_fnc_findClosestBpos) select 0;
+						private _closestBpos = ([getposATL _unit,_building] call A3C_main_fnc_findClosestBpos) select 0;
 						private _matchingRooms = _originalRooms select {
 							_closestBpos in _x
 						};

@@ -83,6 +83,9 @@ A3C_PREP(actionVehicleRemoteDispatch);
 
 A3C_PREP(actionVehicleSmoke);
 
+
+
+A3C_PREP(addArtyToRadioChannel);
 A3C_PREP(addWaypoint);
 A3C_PREP(assignGroupToVehicle);
 
@@ -96,6 +99,7 @@ A3C_PREP(deleteAllWaypoints);
 
 A3C_PREP(findExecutingMachine);
 
+A3C_PREP(getArtilleryCapacity);
 A3C_PREP(getConditionFromStatements);
 A3C_PREP(getFullCrew);
 
@@ -107,6 +111,9 @@ A3C_PREP(insertActionWaypoint);
 A3C_PREP(isWpScriptBlocked);
 
 A3C_PREP(onWaypointInsertedClient);
+
+
+A3C_PREP(remoteVTOLmanageGuidanceHandler);
 
 A3C_PREP(removeWaypoint);
 

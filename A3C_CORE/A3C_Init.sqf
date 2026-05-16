@@ -28,14 +28,10 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_MCSS.sqf";
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_UAV_FPV.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_artillery.sqf";
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_weapons_Unit.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_weapons_Static.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_remoteFire.sqf";
-
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_AIR_rappel.sqf";
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_serverMon.sqf";
@@ -49,9 +45,9 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_sharedCommandingLev
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Helicopter.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Ship.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Suppress.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_clearBuilding.sqf";
+
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Convoy.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_gunship.sqf";
+
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_GTI.sqf";
 

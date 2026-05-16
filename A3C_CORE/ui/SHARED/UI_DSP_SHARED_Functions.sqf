@@ -2183,7 +2183,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			_actions pushBackUnique "VEHICLE_REBOARD";
 		};
 
-		if ([_x] call A3C_GroupHasArtilleryCapacity) then {
+		if ([_x] call A3C_ai_highCommand_fnc_getArtilleryCapacity) then {
 			_actions pushBackUnique "ARTY";
 		};
 
@@ -2203,7 +2203,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		};
 		_gpVehicles = _gpDrivers apply {objectParent _x};
 		{
-			if ([_x, 0] call A3C_FireCounterMeasures) exitWith {
+			if ([_x, 0] call A3C_ai_shared_fnc_fireCounterMeasures) exitWith {
 				_actions PushBack "VEHICLESMOKE";
 				_actionExit = true;
 			};
@@ -3321,7 +3321,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 											//-- test for right mouse button?
 											_shift = _this select 3;
 											A3C_HC_FOCUS_ARTY_POS = _pos;
-											//[_pos,_shift] spawn A3C_ORDER_ARTILLERY;
+
 											if !(_shift) then {
 												A3C_isArtyAwaitingSuborder = false;
 											};

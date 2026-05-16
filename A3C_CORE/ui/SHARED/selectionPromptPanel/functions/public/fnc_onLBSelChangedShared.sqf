@@ -307,7 +307,7 @@ if (_doubleClick) then {
 			ctrlSetFocus _listBoxCtrl;
 
 			private _ammoAmount = 0;
-			private _shellDisplays = ([true, true, A3C_HC_FOCUS_ARTY_POS] call A3C_getArtilleryAmmo) select {
+			private _shellDisplays = ([true, true, A3C_HC_FOCUS_ARTY_POS] call A3C_main_fnc_getArtilleryAmmo) select {
 				_x select 0 == _selectedLbText
 			};
 
@@ -346,7 +346,7 @@ if (_doubleClick) then {
 				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
 			};
 
-			[A3C_HC_FOCUS_ARTY_POS, false] spawn A3C_ORDER_ARTILLERY;
+			[A3C_HC_FOCUS_ARTY_POS, false] spawn A3C_ai_shared_fnc_actionFireArtillery;
 		};
 
 		case ("CTRL_DET") : {
