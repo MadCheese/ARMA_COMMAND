@@ -21,7 +21,7 @@ private _intersections = lineIntersectsSurfaces [
 private _building = objNull;
 private _isHelicopter = _aircraft isKindOf "HELICOPTER";
 
-private _dismountData = [_aircraft, _unit] call A3C_getDismountData;
+private _dismountData = [_aircraft, _unit] call A3C_main_fnc_getDismountData;
 _dismountData params ["_rappellUnits"];
 
 private _buildingPositionRailCode = {

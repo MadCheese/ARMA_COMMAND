@@ -456,7 +456,7 @@ if (count _sqIcons > 0) exitWith {
 	A3C_SQ_CLICKED_UNIT = _sqIcon select 0;
 	if (_left) then {
 		if (_ctrl && _shift) then {
-			_cargoObjects = ([vehicle A3C_SQ_CLICKED_UNIT] call MCSS_fnc_getNearCargoLoadObjects);
+			_cargoObjects = ([vehicle A3C_SQ_CLICKED_UNIT] call A3C_main_fnc_getNearCargoLoadObjects);
 			if ( ((getPosATL (vehicle A3C_SQ_CLICKED_UNIT)) select 2) < 1) then {
 				if ((count _cargoObjects > 0) && (A3C_SQ_CLICKED_UNIT == driver (vehicle A3C_SQ_CLICKED_UNIT))) then {
 					_parent = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
@@ -1047,7 +1047,7 @@ if ((A3C_TEMP_ACTION select 0) == 'SLINGLOAD') then {
 
 	if (count A3C_SELECTED_UNITS == 1) then {
 		if ( (vehicle (A3C_SELECTED_UNITS select 0)) isKindOf 'HELICOPTER') then {
-			if ([A3C_SELECTED_UNITS select 0,-1,"SQ"] call A3C_Sling_willBeLoaded) then {
+			if ([A3C_SELECTED_UNITS select 0,-1,"SQ"] call A3C_ai_squad_fnc_willSlingLoadAtWaypoint) then {
 			} else {
 				A3C_STATE_CHECKING_PICKUP = true;
 				A3C_PICKUP_OBJECTS = [vehicle (A3C_SELECTED_UNITS select 0),A3C_CLICKPOS_ORIG] call MCSS_fnc_getNearSlingLoadObjects;

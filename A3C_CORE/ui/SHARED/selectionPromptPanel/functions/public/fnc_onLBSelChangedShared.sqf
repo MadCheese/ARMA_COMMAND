@@ -197,7 +197,7 @@ if (_doubleClick) then {
 
 				private _casStatements = format [
 					"
-						[this,%1,%2,'%3'] remoteExec ['A3C_HC_distribute_CAS', this];
+						[this,%1,%2,'%3'] remoteExec ['A3C_ai_highCommand_fnc_CASdistribute', this];
 					",
 					A3C_UI_HUD_3D_TAG_ICON_POS,
 					_casModeNumeric,
@@ -398,12 +398,14 @@ if (_doubleClick) then {
 
 		case ("PARALOAD") : {
 			private _selectedVehicle = vehicle leader (A3C_SELECTED_HC_GROUPS_SETTINGS select 0);
-			private _cargoObjects = [_selectedVehicle] call MCSS_fnc_getNearCargoLoadObjects;
+			private _cargoObjects = [_selectedVehicle] call A3C_main_fnc_getNearCargoLoadObjects;
 			private _vehicleToLoad = _cargoObjects select _selectedIndex;
 
-			[_selectedVehicle, _vehicleToLoad] call A3C_LoadVehicleCargo;
+			[_selectedVehicle, _vehicleToLoad] call A3C_ai_shared_fnc_loadVehicleCargo;
 
-			_cargoObjects = [_selectedVehicle] call MCSS_fnc_getNearCargoLoadObjects;
+
+
+			_cargoObjects = [_selectedVehicle] call A3C_main_fnc_getNearCargoLoadObjects;
 
 			lbClear _listBoxCtrl;
 
@@ -419,12 +421,12 @@ if (_doubleClick) then {
 
 		case ("PARALOAD_SQ") : {
 			private _selectedVehicle = vehicle A3C_SQ_CLICKED_UNIT;
-			private _cargoObjects = [_selectedVehicle] call MCSS_fnc_getNearCargoLoadObjects;
+			private _cargoObjects = [_selectedVehicle] call A3C_main_fnc_getNearCargoLoadObjects;
 			private _vehicleToLoad = _cargoObjects select _selectedIndex;
 
-			[_selectedVehicle, _vehicleToLoad] call A3C_LoadVehicleCargo;
+			[_selectedVehicle, _vehicleToLoad] call A3C_ai_shared_fnc_loadVehicleCargo;
 
-			_cargoObjects = [_selectedVehicle] call MCSS_fnc_getNearCargoLoadObjects;
+			_cargoObjects = [_selectedVehicle] call A3C_main_fnc_getNearCargoLoadObjects;
 
 			lbClear _listBoxCtrl;
 

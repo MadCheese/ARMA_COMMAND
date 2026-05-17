@@ -270,7 +270,7 @@ waitUntil {
 	_doExit
 };
 
-if !([_group] call A3C_isGroupOnFinalWP) then {
+if !([_group] call A3C_main_fnc_isGroupOnFinalWP) then {
 	{
 		private _vehicle = vehicle _x;
 

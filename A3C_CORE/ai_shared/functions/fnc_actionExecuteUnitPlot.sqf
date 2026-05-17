@@ -1167,7 +1167,7 @@ while {!isNull _unit} do {
 					};
 				};
 				if (_landingdata == "DROPOFF") then {
-					if !( {[_x] call A3C_HELI_DISCHARGE} count crew _vehicle == 0) then {
+					if !( {[_x] call A3C_main_fnc_shouldEjectFromHeli} count crew _vehicle == 0) then {
 						_exit = false;
 					} else {
 						_exit = true;
@@ -1316,7 +1316,7 @@ while {!isNull _unit} do {
 
 
 	if (_wpAction select 0 == "PARADROP") then {
-		_spawnBehaviour = [getPlayerUID player,_vehicle] call A3C_Paradrop_Eject;
+		_spawnBehaviour = [getPlayerUID player,_vehicle] call A3C_ai_shared_fnc_paradropManage;
 		waitUntil {scriptDone _spawnBehaviour};
 		sleep 2;
 		[_unit ,_movePos] call A3C_ai_shared_fnc_doMove;

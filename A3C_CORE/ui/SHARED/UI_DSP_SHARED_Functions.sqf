@@ -2023,7 +2023,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				};
 			} else {
 				//-- vehicle is on ground
-				if ((count ([_leaderVic] call MCSS_fnc_getNearCargoLoadObjects) > 0) OR (count getVehicleCargo _leaderVic > 0)) then {
+				if ((count ([_leaderVic] call A3C_main_fnc_getNearCargoLoadObjects) > 0) OR (count getVehicleCargo _leaderVic > 0)) then {
 					//-- vehicle can load an object(s)
 					_actions pushBackUnique "PARALOAD";
 				};
@@ -2034,7 +2034,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				};
 			};
 			if (!(_isRotor) && {_leaderVic isKindOf "PLANE"}) then {
-				_casModes = [typeof _leaderVic] call MCSS_fnc_getCASmodes;
+				_casModes = [typeof _leaderVic] call A3C_main_fnc_getCASmodes;
 				if (count _casModes > 0 && {_a3c_dsp == IDD_RADIAL_MENU}) then {
 					_actions pushBackUnique "CAS-STRIKE";
 				};

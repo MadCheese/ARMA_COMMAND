@@ -11,8 +11,8 @@ A3C_PREP(actionLineCharge);
 
 A3C_PREP(actionIrStrobeLoop);
 A3C_PREP(actionIrStrobeSet);
-
-
+A3C_PREP(actionParadropPersonnel);
+A3C_PREP(actionParadropVehicle);
 A3C_PREP(actionRappelStart);
 A3C_PREP(actionRemoteFireVtol);
 A3C_PREP(actionStaticWeaponExecute);
@@ -49,10 +49,18 @@ A3C_PREP(guideProjectileBullet);
 A3C_PREP(guideProjectileMissile);
 A3C_PREP(guideProjectileVTOL);
 
+A3C_PREP(loadVehicleCargo);
+
+
 
 A3C_PREP(orderRemoteLaunch);
 
 
+A3C_PREP(paradropManage);
+
+
+
+A3C_PREP(planeCatapultLaunch);
 A3C_PREP(planeFindCarrierStorage);
 A3C_PREP(planeLanding);
 A3C_PREP(planeOrganizeGroupTakeOff);

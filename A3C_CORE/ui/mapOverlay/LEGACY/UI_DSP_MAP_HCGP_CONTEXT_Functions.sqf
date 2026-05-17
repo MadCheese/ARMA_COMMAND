@@ -375,11 +375,15 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 
 		_vehicle setVariable ["A3C_ParadropActive",true,true];
 		[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
-		[getPlayerUID player, _vehicle] call A3C_Paradrop_Eject;
+
+		[
+			[getPlayerUID player, _vehicle],
+			A3C_ai_shared_fnc_paradropManage
+		] remoteExec ["bis_fnc_call", _vehicle];
 
 	} else {
 		//-- vehicle is on ground
-		_cargoObjects = [_vehicle] call MCSS_fnc_getNearCargoLoadObjects;
+		_cargoObjects = [_vehicle] call A3C_main_fnc_getNearCargoLoadObjects;
 		if (count _cargoObjects > 0) then {
 
 			A3C_SelectionPromptPanel_MODE = "PARALOAD";

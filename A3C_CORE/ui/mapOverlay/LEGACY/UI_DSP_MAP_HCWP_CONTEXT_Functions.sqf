@@ -487,7 +487,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 			};
 			case (["distribute_CAS",_actionScript ] call BIS_fnc_instring) : {
 				private _pType = typeOf _leaderVic;
-				A3C_HC_CASMODES = [_pType] call MCSS_fnc_getCASmodes;
+				A3C_HC_CASMODES = [_pType] call A3C_main_fnc_getCASmodes;
 				
 				_flexLBCAS = 3;
 				if ( ({((assignedVehicleRole _x) select 0) == "cargo"} count crew (vehicle (leader _gp)) > 0) OR (count (getVehicleCargo (vehicle (leader _gp))) > 0) ) then {
@@ -1214,7 +1214,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 
 	if (A3C_HC_EDIT_ACTION in ["SLING LOAD","SLING DROP"]) then {
 
-		_slingMode = [A3C_HC_ACTIVEGROUP] call A3C_HC_getSlingMode;
+		_slingMode = [A3C_HC_ACTIVEGROUP] call A3C_ai_highCommand_fnc_getSlingMode;
 
 		if (_slingMode == "HOOK") then {
 			A3C_PICKUP_OBJECTS = [(vehicle (leader A3C_HC_ACTIVEGROUP)),A3C_HC_ACTIVE_WPOS] call MCSS_fnc_getNearSlingLoadObjects;
@@ -1499,7 +1499,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 				_statements = format
 				[
 					"
-						[this,%1,%2,'%3'] remoteExec ['A3C_HC_distribute_CAS', this];
+						[this,%1,%2,'%3'] remoteExec ['A3C_ai_highCommand_fnc_CASdistribute', this];
 					",
 					A3C_HC_ACTIVE_WPOS,
 					A3C_HC_CASMODE_VAL,
@@ -1694,7 +1694,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 				};
 				
 				if (_canSling) then {
-					_slingMode = [A3C_HC_ACTIVEGROUP] call A3C_HC_getSlingMode;
+					_slingMode = [A3C_HC_ACTIVEGROUP] call A3C_ai_highCommand_fnc_getSlingMode;
 					
 				};
 			};
@@ -1704,7 +1704,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 				_pType = typeOf _leaderVic;
 				private _isRotor = ((getNumber (configfile >> "CfgVehicles" >> typeOf _leaderVic >> "landingSpeed")) < 10);
 				if !(_isRotor) then {
-					A3C_HC_CASMODES = [_pType] call MCSS_fnc_getCASmodes;
+					A3C_HC_CASMODES = [_pType] call A3C_main_fnc_getCASmodes;
 					if (count A3C_HC_CASMODES > 0) then {
 						_landingTypes pushbackUnique "CAS-STRIKE";
 					};

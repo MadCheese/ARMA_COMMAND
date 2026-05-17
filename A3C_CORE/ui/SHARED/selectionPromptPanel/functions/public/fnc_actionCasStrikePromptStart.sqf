@@ -27,7 +27,7 @@ lbClear _listBox;
 
 {
 	private _leaderVehicle = vehicle leader _x;
-	private _casModes = [typeOf _leaderVehicle] call MCSS_fnc_getCASmodes;
+	private _casModes = [typeOf _leaderVehicle] call A3C_main_fnc_getCASmodes;
 
 	if (count _casModes > 0) exitWith {
 		{

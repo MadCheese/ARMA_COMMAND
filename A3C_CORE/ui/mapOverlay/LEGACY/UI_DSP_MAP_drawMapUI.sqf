@@ -519,7 +519,7 @@ MAP_UI_fnc_drawMapUI = {
 				
 				if (_x == _driver) then {
 					_icon = (gettext(configfile >> "CfgVehicles" >> (typeof _vehicle) >> "Icon")); //"A3C_Objects\images\icon_UnitVehicle.paa";
-					if ( (getPosATL _vehicle) select 2 < 1 &&  {count ([_vehicle] call MCSS_fnc_getNearCargoLoadObjects) > 0}  ) then {
+					if ( (getPosATL _vehicle) select 2 < 1 &&  {count ([_vehicle] call A3C_main_fnc_getNearCargoLoadObjects) > 0}  ) then {
 						_s1 = 35;
 						_s2 = 35;
 						//systemchat str "1";

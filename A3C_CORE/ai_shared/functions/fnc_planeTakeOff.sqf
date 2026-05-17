@@ -59,5 +59,5 @@ if (_airportID >= 0) then {
 
 } else { //-- _airportID < 0 == dynamic airfield
 	//-- CARRIER TAKEOFF
-	[_vehicle,A3C_CatapultLaunch] remoteExec ["bis_fnc_spawn", _vehicle];
+	[_vehicle,A3C_ai_shared_fnc_planeCatapultLaunch] remoteExec ["bis_fnc_spawn", _vehicle];
 };

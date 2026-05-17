@@ -109,7 +109,7 @@ private _aircraft = [];
 sleep 3;
 
 {
-	[_callerUID,_x] call A3C_Paradrop_Eject;
+	[_callerUID,_x] call A3C_ai_shared_fnc_paradropManage;
 } foreach _aircraft;
 
 

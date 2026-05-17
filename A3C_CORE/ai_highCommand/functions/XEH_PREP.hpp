@@ -89,6 +89,11 @@ A3C_PREP(addArtyToRadioChannel);
 A3C_PREP(addWaypoint);
 A3C_PREP(assignGroupToVehicle);
 
+A3C_PREP(CASdistribute);
+A3C_PREP(CASexecute);
+
+
+
 A3C_PREP(changeWaypointData);
 A3C_PREP(completeWaypoint);
 
@@ -102,6 +107,8 @@ A3C_PREP(findExecutingMachine);
 A3C_PREP(getArtilleryCapacity);
 A3C_PREP(getConditionFromStatements);
 A3C_PREP(getFullCrew);
+A3C_PREP(getSlingMode);
+
 
 A3C_PREP(helicopterEvasive);
 
@@ -109,6 +116,9 @@ A3C_PREP(helicopterEvasive);
 A3C_PREP(insertActionWaypoint);
 
 A3C_PREP(isWpScriptBlocked);
+
+
+A3C_PREP(moduleCAS);
 
 A3C_PREP(onWaypointInsertedClient);
 

@@ -23,6 +23,9 @@ A3C_PREP(actionUnassembleWeaponDispatch);
 
 A3C_PREP(preparePointerAttachmentMode);
 
+A3C_PREP(willSlingLoadAtWaypoint);
+
+
 
 
 
