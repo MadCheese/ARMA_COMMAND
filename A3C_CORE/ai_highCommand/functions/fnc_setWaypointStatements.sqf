@@ -29,14 +29,13 @@ private _waypointSpeed = if (_speed isEqualType 0) then {
 
 private _playerUID = getPlayerUID player;
 
-private _statements = format [
-	"
-		if !(%1) then {
-			[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint;
-		};
-	",
-	_isLoop
-];
+private _statements = if (_isLoop) then {
+	""
+} else {
+	"[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint;"
+};
+
+
 
 private _waypointScript = "";
 

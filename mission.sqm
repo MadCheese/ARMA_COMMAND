@@ -8,7 +8,7 @@ class EditorData
 	toggles=33;
 	class ItemIDProvider
 	{
-		nextID=5110;
+		nextID=5113;
 	};
 	class MarkerIDProvider
 	{
@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={14308.709,59.287727,16588.559};
-		dir[]={0.043926463,-0.54211646,0.83915949};
-		up[]={0.028338857,0.84030342,0.54137683};
-		aside[]={0.9986375,2.7022907e-08,-0.052274346};
+		pos[]={14358.906,59.287727,16578.055};
+		dir[]={-0.16087393,-0.30380461,0.93905395};
+		up[]={-0.05129892,0.95273435,0.29944226};
+		aside[]={0.98564088,0,0.16885497};
 	};
 };
 binarizationWanted=0;
@@ -68,13 +68,15 @@ addons[]=
 	"A3_Supplies_F_Exp_Ammoboxes",
 	"A3_Air_F_Heli_Heli_Transport_03",
 	"Mavic_Core",
-	"Bobcat_Fixed"
+	"Bobcat_Fixed",
+	"A3_Characters_F_Jets",
+	"A3_Air_F_EPC_Plane_CAS_01"
 };
 class AddonsMetaData
 {
 	class List
 	{
-		items=34;
+		items=36;
 		class Item0
 		{
 			className="A3_Structures_F";
@@ -306,6 +308,20 @@ class AddonsMetaData
 			className="Bobcat_Fixed";
 			name="Bobcat_Fixed";
 		};
+		class Item34
+		{
+			className="A3_Characters_F_Jets";
+			name="Arma 3 Jets - Characters and Clothing";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
+		class Item35
+		{
+			className="A3_Air_F_EPC";
+			name="Arma 3 Win Episode - Aircraft";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
 	};
 };
 dlcs[]=
@@ -368,7 +384,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=83;
+		items=85;
 		class Item0
 		{
 			dataType="Trigger";
@@ -1252,7 +1268,7 @@ class Mission
 					class PositionInfo
 					{
 						position[]={23441.824,174.04044,18076.336};
-						angles[]={-0,3.1415927,0};
+						angles[]={0,3.1415927,0};
 					};
 					side="West";
 					flags=2;
@@ -1269,7 +1285,7 @@ class Mission
 					class PositionInfo
 					{
 						position[]={23441.824,180.73001,18076.336};
-						angles[]={-0,3.1415927,0};
+						angles[]={0,3.1415927,0};
 					};
 					side="West";
 					class Attributes
@@ -1285,7 +1301,7 @@ class Mission
 					class PositionInfo
 					{
 						position[]={23441.824,180.73001,18076.336};
-						angles[]={-0,3.1415927,0};
+						angles[]={0,3.1415927,0};
 					};
 					side="West";
 					class Attributes
@@ -1301,7 +1317,7 @@ class Mission
 					class PositionInfo
 					{
 						position[]={23441.824,180.73001,18076.336};
-						angles[]={-0,3.1415927,0};
+						angles[]={0,3.1415927,0};
 					};
 					side="West";
 					class Attributes
@@ -1531,7 +1547,7 @@ class Mission
 			class PositionInfo
 			{
 				position[]={23441.824,9.8795795,18076.285};
-				angles[]={-0,3.1415927,0};
+				angles[]={0,3.1415927,0};
 			};
 			side="West";
 			flags=6;
@@ -5003,7 +5019,7 @@ class Mission
 					};
 					id=5101;
 					type="B_crew_F";
-					atlOffset=9.5367432e-07;
+					atlOffset=-2.4582329;
 				};
 				class Item1
 				{
@@ -5020,7 +5036,7 @@ class Mission
 					};
 					id=5102;
 					type="B_crew_F";
-					atlOffset=9.5367432e-07;
+					atlOffset=0.22667694;
 				};
 				class Item2
 				{
@@ -5037,7 +5053,7 @@ class Mission
 					};
 					id=5103;
 					type="B_crew_F";
-					atlOffset=9.5367432e-07;
+					atlOffset=0.22667694;
 				};
 			};
 			class Attributes
@@ -5087,7 +5103,7 @@ class Mission
 				};
 			};
 			id=5100;
-			atlOffset=9.5367432e-07;
+			atlOffset=-0.010839462;
 		};
 		class Item80
 		{
@@ -5104,7 +5120,7 @@ class Mission
 			};
 			id=5104;
 			type="B_MBT_01_cannon_F";
-			atlOffset=9.5367432e-07;
+			atlOffset=-0.010839462;
 		};
 		class Item81
 		{
@@ -5230,6 +5246,75 @@ class Mission
 			id=5109;
 			type="B_MBT_01_cannon_F";
 			atlOffset=-1.1444092e-05;
+		};
+		class Item83
+		{
+			dataType="Group";
+			side="West";
+			class Entities
+			{
+				items=1;
+				class Item0
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={14238.713,13.92282,16793.949};
+						angles[]={0,6.0214128,0};
+					};
+					side="West";
+					flags=6;
+					class Attributes
+					{
+					};
+					id=5112;
+					type="B_Fighter_Pilot_F";
+					atlOffset=1.335144e-05;
+				};
+			};
+			class Attributes
+			{
+			};
+			class CrewLinks
+			{
+				class LinkIDProvider
+				{
+					nextID=1;
+				};
+				class Links
+				{
+					items=1;
+					class Item0
+					{
+						linkID=0;
+						item0=5112;
+						item1=5111;
+						class CustomData
+						{
+							role=1;
+						};
+					};
+				};
+			};
+			id=5110;
+			atlOffset=61.936085;
+		};
+		class Item84
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={14238.665,78.235451,16794};
+				angles[]={0,6.0214128,0};
+			};
+			side="West";
+			flags=2;
+			class Attributes
+			{
+			};
+			id=5111;
+			type="B_Plane_CAS_01_dynamicLoadout_F";
+			atlOffset=61.936085;
 		};
 	};
 	class Connections

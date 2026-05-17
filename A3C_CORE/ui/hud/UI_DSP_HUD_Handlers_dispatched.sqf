@@ -30,7 +30,7 @@ A3C_UI_HUD_onKeyDown_heliGunner = {
             // && {behaviour driver _helicopter == "CARELESS"}
 
         ): {
-			_params = [_helicopter, A3C_AI_Fnc_Command_Helicopter_evasiveMove];
+			_params = [_helicopter, A3C_ai_highCommand_fnc_helicopterEvasive];
 			_code = {
 				params ["_helicopter", "_evasiveFnc"];
 

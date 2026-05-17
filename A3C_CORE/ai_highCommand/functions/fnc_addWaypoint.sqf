@@ -96,7 +96,7 @@ if (_isFirstWaypoint) then {
 
 		if (_requiresJetTakeoff) then {
 			private _currentGroupLeader = leader _group;
-			[_currentGroupLeader] spawn A3C_JET_organizeGroupTakeOff;
+			[_currentGroupLeader] spawn A3C_ai_shared_fnc_planeOrganizeGroupTakeOff;
 		};
 	};
 };

@@ -30,7 +30,7 @@ private _placerPos = getPosASL A3C_OBJECTPLACER;
 private _landingPosRoot = +_placerPos;
 private _landingVector = [getDir A3C_OBJECTPLACER] call MCSS_fnc_DegreeToVector;
 
-private _dimensions = [typeOf A3C_OBJECTPLACER] call A3C_getVehicleBodyDimensions;
+private _dimensions = [typeOf A3C_OBJECTPLACER] call A3C_main_fnc_getVehicleBodyDimensions;
 _dimensions params ["_referenceWidth", "_referenceLength", "_referenceHeight", "_referenceRotorSize"];
 
 private _forceDefaultLanding = true;
@@ -69,7 +69,7 @@ if (!isNull A3C_SNAP_OBJECT) then {
 		if (_requiresPlacementCorrection) then {
 			hint "ADJUSTING LZ";
 
-			private _lzData = [A3C_SNAP_OBJECT, _referenceWidth, _referenceLength] call A3C_getHeliRoofLZ;
+			private _lzData = [A3C_SNAP_OBJECT, _referenceWidth, _referenceLength] call A3C_ai_shared_fnc_getHeliRoofLZ;
 
 			[] spawn {
 				hint "LZ ADJUSTED";

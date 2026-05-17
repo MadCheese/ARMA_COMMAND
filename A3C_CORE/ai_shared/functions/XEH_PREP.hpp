@@ -40,6 +40,8 @@ A3C_PREP(fireCounterMeasures);
 A3C_PREP(getDetonatableCharges);
 A3C_PREP(getUnitsWithExplosives);
 A3C_PREP(getExplosiveUnitMagazines);
+A3C_PREP(getHeliRoofLZ);
+
 A3C_PREP(getSelectionPackedStaticWeapons);
 
 
@@ -49,6 +51,13 @@ A3C_PREP(guideProjectileVTOL);
 
 
 A3C_PREP(orderRemoteLaunch);
+
+
+A3C_PREP(planeFindCarrierStorage);
+A3C_PREP(planeLanding);
+A3C_PREP(planeOrganizeGroupTakeOff);
+A3C_PREP(planeTakeOff);
+A3C_PREP(planeDynamicLandingOnHandleDamage);
 
 A3C_PREP(preparePointerAttachmentMode);
 

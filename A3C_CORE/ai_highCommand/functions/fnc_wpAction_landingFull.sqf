@@ -124,7 +124,7 @@ private _driverUnits = _units select {
 	private _runwayLanding = (getNumber (configFile >> "CfgVehicles" >> typeOf _vehicle >> "landingSpeed")) > 10;
 
 	if (_runwayLanding && {_vehicle isKindOf "PLANE"}) then {
-		private _script = [_x, _waypointPos] spawn A3C_LANDPLANE;
+		private _script = [_x, _waypointPos] spawn A3C_ai_shared_fnc_planeLanding;
 
 		_scripts pushBack _script;
 		[_group, "landing_full_2", _script] call _registerLandingScript;

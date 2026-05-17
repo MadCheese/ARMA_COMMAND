@@ -103,7 +103,7 @@ A3C_PREP(getArtilleryCapacity);
 A3C_PREP(getConditionFromStatements);
 A3C_PREP(getFullCrew);
 
-
+A3C_PREP(helicopterEvasive);
 
 
 A3C_PREP(insertActionWaypoint);

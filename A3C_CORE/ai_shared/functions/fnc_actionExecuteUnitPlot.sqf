@@ -201,7 +201,7 @@ while {!isNull _unit} do {
 				//_vehicle setfuel 1;
 				{_vehicle animateDoor [_x, 0]} foreach ['door_R','door_L','door_rear','door_rear_source','Door_L_source','Door_R_source','DoorL_Front_Open','DoorR_Front_Open','DoorL_Back_Open','DoorR_Back_Open','Door_1_source'];
 				if ((getNumber (configfile >> "CfgVehicles" >> typeOf _vehicle >> "landingSpeed")) > 10) then {
-					[_unit] spawn A3C_JET_TAKEOFF;
+					[_unit] spawn A3C_ai_shared_fnc_planeTakeOff;
 				};
 			};
 		};
