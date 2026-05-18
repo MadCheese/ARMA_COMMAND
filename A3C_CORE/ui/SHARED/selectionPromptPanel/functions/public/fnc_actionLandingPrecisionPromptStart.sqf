@@ -127,19 +127,20 @@ if (!isNull A3C_SNAP_OBJECT) then {
 };
 
 if (_hasUnsafeRotorIntersection) exitWith {
-	hint "THE SELECTED GROUND-LZ IS NOT SAFE - PLEASE REPEAT";
-	sleep 5;
-	hintSilent "";
+	[] spawn {
+		hint "THE SELECTED GROUND-LZ IS NOT SAFE - PLEASE REPEAT";
+		sleep 5;
+		hintSilent "";
+	};	
 };
 
 if (_forceDefaultLanding) then {
+	A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
 	[] spawn {
 		hint "ALERT: NO SUITABLE LZ FOUND ON OBJECT. REVERTING TO DEFAULT LANDING";
 		sleep 5;
 		hintSilent "";
-	};
-
-	A3C_RADIAL_ACTION_HC_LANDINGDATA = [];
+	};	
 };
 
 A3C_RADIAL_ACTION_HC_LANDINGDATA = [_landingPosRoot, _landingVector, _forceDefaultLanding];

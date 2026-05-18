@@ -864,7 +864,7 @@ MAP_UI_fnc_drawMapUI = {
 											A3C_UI_MAPICONS_HC_CONES pushBack [_wp,_coneDir,_polyPoses];
 										//};
 									};
-									case (["CAS-STRIKE",_scr] call BIS_fnc_instring OR ["bute_CAS",_scr] call BIS_fnc_instring) : {
+									case (["CAS-STRIKE",_scr] call BIS_fnc_instring OR ["CASdistribute",_scr] call BIS_fnc_instring) : {
 										_sz = 20;
 										_color = [1,1,1,_opacity];
 										_wpIcon = "A3C_UI\Markers\A3C_MARKER_CAS.paa";

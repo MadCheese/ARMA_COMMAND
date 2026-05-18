@@ -159,7 +159,7 @@ while {[_drone, _target, _flyingHeight] call _condMove} do {
 
 if (canMove _drone) then {
 	[_group, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
-	[_drone, _target] spawn A3C_FPV_RAIL;
+	[_drone, _target] spawn A3C_ai_rail_fnc_FPV;
 } else {
 	_drone setdamage 1;
 };

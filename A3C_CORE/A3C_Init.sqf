@@ -3,7 +3,12 @@ if (is3DEN) exitWith {};
 
 //--- A3C init
 
-//-- Server And/Or Client
+//-- 1. Server only
+if (isServer) then {
+	call compile preprocessFileLineNumbers "A3C_CORE\server\functions\initFunctions.sqf";
+};
+
+//-- 2. Server And/Or Client
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_InitValuesCommon.sqf";
@@ -26,23 +31,12 @@ call compile preprocessFileLineNumbers "A3C_CORE\A3C_fncs_Debug.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_MCSS.sqf";
 
-
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_UAV_FPV.sqf";
-
-
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_weapons_Unit.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_weapons_Static.sqf";
-
-
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_serverMon.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_vehicleRemote.sqf";
-
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_sharedCommandingLevels.sqf";
 
 
 
 
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Helicopter.sqf";
+
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Ship.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Suppress.sqf";
 
@@ -147,14 +141,13 @@ call compile preprocessFileLineNumbers "A3C_CORE\ai_rail\functions\initFunctions
 
 if (isDedicated) exitWith {};
 
+//-- 3. Init Client/Host Only
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_InitValuesClient.sqf";
 
-//-- Init Client/Host Only
 
-//-- Generate client-only A3C function libraries
+
+//-- Generate client-only function libraries
 call compile preprocessFileLineNumbers "A3C_CORE\ai_squad\functions\initFunctions.sqf";
-
-
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\mainDisplay\functions\initFunctions.sqf";
 
 
@@ -197,7 +190,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_Handler
 call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_TREE_Functions.sqf";
 
 
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_AI_ROE.sqf";
+
 
 if (A3C_EHM) then {
 	call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_EHM.sqf";

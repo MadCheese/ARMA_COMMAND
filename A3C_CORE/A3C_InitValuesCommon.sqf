@@ -190,33 +190,61 @@ A3C_COVER_BLACKLIST = [];
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-if (isServer) then {
-	A3C_DETO_VIC_INDEX = 0;
-	publicVariable 'A3C_DETO_VIC_INDEX';
 
-	A3C_BLACKLIST_WAYPOINT_EDIT = [];
-	publicVariable 'A3C_BLACKLIST_WAYPOINT_EDIT';
 
-	A3C_CLIENT_IDS = [];
-	publicVariable 'A3C_CLIENT_IDS';
-
-	A3C_REMFIRE_UNITS_ACTIVE = [];
-	publicVariable 'A3C_REMFIRE_UNITS_ACTIVE';
-
-	A3C_GROUP_CONVOYS = [];
-	publicVariable 'A3C_GROUP_CONVOYS';
-
-	A3C_REMOTE_BLACKFISH_HandlerIndex = 0;
-	publicVariable "A3C_REMOTE_BLACKFISH_HandlerIndex";
-
-	A3C_TurnOutEH_Vehicles = []; //-- Server only, NOT public
-
+//-- IFA is running: Create arrays with [_weaponType,[_part1, _part2]] for each vehicle with "LIB_dissasembleTo" data
+//-- this is because there is no "LIB_asembleTo" config entries
+A3C_IFA_StaticPartPairs = [];
+if (A3C_IsIFA) then {
+	_cfgArray = "true" configClasses (configfile >> "CfgVehicles");
+	{
+		_assembleInfo = getArray (configfile >> "CfgVehicles" >> configName _x >> "assembleInfo" >> "LIB_dissasembleTo");
+		if (count _assembleInfo > 0) then {
+			A3C_IFA_StaticPartPairs pushBack [configName _x,_assembleInfo];
+		};
+	} foreach _cfgArray;
 };
 
 
 
-//-- exit server
-if (isDedicated) exitWith {
+
+
+A3C_SOG_BASEPACKS = ["vn_o_pack_static_base_01","vn_b_pack_static_base_01"];
+
+
+A3C_STATIC_PACKS = [];
+
+
+//-- Server only
+
+if (!isServer) exitWith {};
+
+if (isDedicated) then {
 	A3C_isHCSkillMaxed = if (!isNil 'A3C_isHCSkillMaxed') then {A3C_isHCSkillMaxed} else {true}; //-- can obe overRidden in Server's in server mission init.sqf
 	//-- #TODO: if a3c not running on server, this needs to still be declared!!!
 };
+
+A3C_DETO_VIC_INDEX = 0;
+publicVariable 'A3C_DETO_VIC_INDEX';
+
+A3C_BLACKLIST_WAYPOINT_EDIT = [];
+publicVariable 'A3C_BLACKLIST_WAYPOINT_EDIT';
+
+A3C_CLIENT_IDS = [];
+publicVariable 'A3C_CLIENT_IDS';
+
+A3C_REMFIRE_UNITS_ACTIVE = [];
+publicVariable 'A3C_REMFIRE_UNITS_ACTIVE';
+
+A3C_GROUP_CONVOYS = [];
+publicVariable 'A3C_GROUP_CONVOYS';
+
+A3C_REMOTE_BLACKFISH_HandlerIndex = 0;
+publicVariable "A3C_REMOTE_BLACKFISH_HandlerIndex";
+
+A3C_TurnOutEH_Vehicles = []; //-- Server only, NOT public
+
+KNOWSABOUT_ARRAY = [];
+
+
+

@@ -32,12 +32,12 @@ A3C_UI_MAP_TREE_ADD_ITEM = {
 				_weapon = if ((secondaryweapon _unit) isKindOf ["Launcher", configFile >> "CfgWeapons"]) then {secondaryWEapon _unit} else {primaryWeapon _unit};
 				_CT_TREE tvSetPicture [_ct_indexArray, getText (configFile >> "CfgWeapons" >> _weapon >> "picture")];
 				switch (true) do {
-					case ({[_x] call TAG_fnc_baseWeapon == "Medikit"} count (items _unit) > 0) : {
+					case ({[_x] call A3C_main_fnc_getBaseWeapon == "Medikit"} count (items _unit) > 0) : {
 						_CT_TREE tvSetPictureRight [_ct_indexArray, "A3C_CORE\ui\pictures\icon_menu_Medical.paa"];
 						//_CT_TREE tvSetPictureRightColor [_ct_indexArray, [A3C_UI_COLOR_RED,0.7] call A3C_UI_fnc_setOpacity];
 						_CT_TREE tvSetPictureRightColor [_ct_indexArray, [1,1,1,0.7]];						
 					};
-					case ({[_x] call TAG_fnc_baseWeapon == "ToolKit"} count (items _unit) > 0) : {
+					case ({[_x] call A3C_main_fnc_getBaseWeapon == "ToolKit"} count (items _unit) > 0) : {
 						_CT_TREE tvSetPictureRight [_ct_indexArray, "A3C_CORE\ui\pictures\icon_menu_action_repair_noBG.paa"];
 						_CT_TREE tvSetPictureRightColor [_ct_indexArray, [1,1,1,0.7]];					
 					};

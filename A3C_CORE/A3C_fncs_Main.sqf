@@ -232,7 +232,7 @@ A3C_fnc_canRepair = {
 	params ["_unit"];
 	private _return = false;
 	if (isNull objectParent _unit && {vehicle _unit isKindOf "MAN"}) then {
-		if ( {[_x] call TAG_fnc_baseWeapon == "ToolKit"}  count items _unit > 0) then {
+		if ( {[_x] call A3C_main_fnc_getBaseWeapon == "ToolKit"}  count items _unit > 0) then {
 			_return = true;
 		};
 	} else {

@@ -2111,7 +2111,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 								{
 									(typeOf _x) != "A3C_Supression_Target_F" &&
 									{
-										[units _gp,_x,true] call A3C_HC_canSelectionPickUpStatic
+										[units _gp,_x,true] call A3C_ai_highCommand_fnc_canSelectionPickUpStatic
 									}
 								}
 							};
@@ -2357,15 +2357,15 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				};
 				if ((!isNull findDisplay IDD_RADIAL_MENU) && {_x == (gunner vehicle _x)}) then {
 					if (isNull objectParent _x) then {
-						if ([_x] call A3C_HasAT) then {
+						if ([_x] call A3C_main_fnc_unitHasAT) then {
 							A3C_REMFIRE_ATShot_Units pushBackUnique _x;
 						};
-						if ([_x] call A3C_HasGL) then {
+						if ([_x] call A3C_main_fnc_unitHasUGL) then {
 							A3C_REMFIRE_UGLShot_Units pushBackUnique _x;
 						};
 
 					} else {
-						if ([vehicle _x] call A3C_isStaticMissileLauncher) then {
+						if ([vehicle _x] call A3C_main_fnc_isStaticMissileLauncher) then {
 							A3C_REMFIRE_StaticShot_Units pushbackUnique _x;
 						} else {
 							if ((count (getArtilleryAmmo [vehicle _x])) == 0 && {vehicle _x isKindOf "LAND"}) then { //-- exclude artillery and aircraft

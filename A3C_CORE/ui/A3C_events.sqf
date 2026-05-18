@@ -522,10 +522,10 @@ A3C_FNC_CBA_KEY = {
 									_targetUnits = [_x] + _targetUnits;
 								};
 							};
-							if ([_x] call A3C_HasGL) then {
+							if ([_x] call A3C_main_fnc_unitHasUGL) then {
 								_targetUnits pushBackUnique _x;
 							};
-							if ([_x] call A3C_HasAT) then {
+							if ([_x] call A3C_main_fnc_unitHasAT) then {
 								_targetUnits pushBackUnique _x;
 							};
 							if ((vehicle _x isKindOf "TANK") && {_x == (gunner vehicle _x)}) then {
@@ -734,7 +734,7 @@ A3C_FNC_CBA_KEY = {
 			[group player, 0] spawn A3C_MEDICAL_START;
 		};
 		case ("Voice_AUTOCOMBAT") : {
-			[(groupSelectedUnits player)] spawn A3C_AI_ROE_fnc_toggleAutoCombat;
+			[(groupSelectedUnits player)] spawn A3C_ai_squad_fnc_toggleAutoCombat;
 		};
 		case ("Voice_REFRESH") : {
 			[(units group player) - [player]] call A3C_GROUP_RESET;

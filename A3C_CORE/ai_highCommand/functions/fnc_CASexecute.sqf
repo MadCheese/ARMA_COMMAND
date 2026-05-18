@@ -2,7 +2,7 @@
 
 params ["_plane","_CASpos","_type","_caller"];
 
-systemchat format ["A3C_ai_highCommand_fnc_CASexecute %1", _this];
+
 
 if !(_plane isKindOf "PLANE") exitWith {};
 if (_plane distance2D _CASpos < 1000) exitWith {};

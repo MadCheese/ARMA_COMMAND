@@ -379,7 +379,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		
 		//copyToClipboard str (_actionScript);
 	};
-	//if ({[_x,_actionScript] call BIS_fnc_instring} count ["SUPPRESSION","AMBUSH","LAND","PARADROP","distribute_CAS","RAPPELL","ASSEMBLE","SLING LOAD","SLING DROP","TRANSPORT UNLOAD","PlantExplosive_HC","ASSEMBLE_UAV","REPAIR","HELI_OVERWATCH"] > 0) then {
+
 		private ["_commandLines"];
 
 		switch (true) do {
@@ -485,7 +485,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 			case (["PARADROP",_actionScript ] call BIS_fnc_instring) : {
 				A3C_HC_EDIT_ACTION = "PARADROP";
 			};
-			case (["distribute_CAS",_actionScript ] call BIS_fnc_instring) : {
+			case (["CASdistribute",_actionScript ] call BIS_fnc_instring) : {
 				private _pType = typeOf _leaderVic;
 				A3C_HC_CASMODES = [_pType] call A3C_main_fnc_getCASmodes;
 				
@@ -637,7 +637,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 					};
 				};
 			};
-			if !(["distribute_CAS",_actionscript] call BIS_fnc_instring) then {
+			if !(["CASdistribute",_actionscript] call BIS_fnc_instring) then {
 				{
 					if ([_x,_cL] call BIS_fnc_instring) then {
 						//A3C_HC_ACTIVE_POST_COND_VAL = _x;
@@ -647,12 +647,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 				} foreach ["COLUMN","STAG COLUMN","WEDGE","ECH LEFT","ECH RIGHT","VEE","LINE","FILE","DIAMOND","NO CHANGE"];
 			};
 		} foreach _commandLines;
-	//} else {
-		//-- No Action
 
-	//};
-	//-- default HC WP-FormationDirection
-	//systemchat _form;
 	{
 		if (_x == _form) exitWith {
 			_lbV5 = _forEachIndex;
@@ -1233,7 +1228,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 
 		_activeWaypointPosition = waypointPosition [_group,A3C_HC_ACTIVE_IND];
 		
-		if ([_group,A3C_HC_ACTIVE_IND,_activeWaypointPosition] call A3C_CAS_PreventAction ) then {
+		if ([_group, A3C_HC_ACTIVE_IND, _activeWaypointPosition] call A3C_ai_highCommand_fnc_CASpreventAction ) then {
 			A3C_HC_EDIT_ACTION = "MOVE";
 			_statements = "";
 			systemchat format ["A3C: Approach is not long enough for %1's CAS strike! Waypoint reverted to NO ACTION", groupID _group];
@@ -1306,7 +1301,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 			if (["ASSEMBLE",_x] call BIS_fnc_instring) then {
 				_funcsCurr = _funcsCurr - [_x];
 			};
-			if (["distribute_CAS",_x] call BIS_fnc_instring) then {
+			if (["CASdistribute",_x] call BIS_fnc_instring) then {
 				_funcsCurr = _funcsCurr - [_x];
 			};
 			if (["SLING LOAD",_x] call BIS_fnc_instring) then {

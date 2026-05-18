@@ -48,7 +48,9 @@ if (
 		IDC_MAP_DynamicCombo,
 		IDC_MAP_HCWP_Parent,
 		IDC_MAP_HCGP_Parent,
-		IDC_SHARED_UI_SelectionPromptPanel_Parent
+		IDC_SHARED_UI_SelectionPromptPanel_Parent,
+		IDC_MAP_UFSB_Subselection_01_BG,
+		IDC_MAP_UFSB_Subselection_02_BG
 	] > 0
 ) exitWith {};
 
@@ -1004,7 +1006,7 @@ private _packMode = "";
 
 if ((A3C_TEMP_ACTION select 0) == 'STATIC') then {
 
-	_packMode = [A3C_SELECTED_UNITS] call A3C_SMART_getWeaponAssemblyMode;
+	_packMode = [A3C_SELECTED_UNITS] call A3C_ai_shared_fnc_getWeaponAssemblyMode;
 	if (_packMode in ["ASSEMBLE","DUAL"]) then {
 		_packMode = "ASSEMBLE";
 		_text = (getText (configfile >> "CfgVehicles" >> ((A3C_STATIC_PACKS select 0) select 1) >> "displayName"));

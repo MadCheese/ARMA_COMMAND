@@ -789,7 +789,7 @@ while {!isNull _unit} do {
 				waitUntil {speed _vehicle < 50};
 				_spawnBehaviour = {};
 				if (_slingMode == 0) then {
-					_spawnBehaviour = [_slingMode,_vehicle,_wpAction select 1] spawn A3C_BEHAVIOUR_SQ_HELI_Sling;
+					_spawnBehaviour = [_slingMode,_vehicle,_wpAction select 1] spawn A3C_ai_squad_fnc_actionHeliSling;
 					waitUntil {scriptDone _spawnBehaviour};
 				} else {
 					_slingCargo = getSlingLoad _vehicle;
@@ -801,7 +801,7 @@ while {!isNull _unit} do {
 
 						_slingPos = +(_movePos);
 						_slingPos set [2,_cargoHeight];
-						_spawnBehaviour = [_slingMode,_vehicle, ATLtoASL _slingPos] spawn A3C_BEHAVIOUR_SQ_HELI_Sling;
+						_spawnBehaviour = [_slingMode,_vehicle, ATLtoASL _slingPos] spawn A3C_ai_squad_fnc_actionHeliSling;
 						waitUntil {scriptDone _spawnBehaviour};
 						_unit doMove (position _vehicle); _unit moveTo (position _vehicle);
 						_unit moveTo _movePos;
@@ -820,11 +820,11 @@ while {!isNull _unit} do {
 			_unit setvariable ["A3C_CREWCOUNT",(count crew _vehicle),true];
 			switch (true) do {
 				case (_landingdata in ["PICKUP","DROPOFF"]) : {
-					_spawnBehaviour = [_unit,(leader group _unit),_movePos,_landingData,_landingdata] spawn A3C_BEHAVIOUR_SQ_HELI_PICKANDDROP; //~~ WTF
+					_spawnBehaviour = [_unit,(leader group _unit),_movePos,_landingData,_landingdata] spawn A3C_ai_squad_fnc_actionHeliPickupAndDrop; 
 					waitUntil {scriptDone _spawnBehaviour};
 				};
 				case (_landingdata == "LANDFINAL") : {
-					_spawnBehaviour = [_unit,(leader group _unit),_movePos] spawn A3C_BEHAVIOUR_SQ_HELI_LANDFINAL;
+					_spawnBehaviour = [_unit,(leader group _unit),_movePos] spawn A3C_ai_squad_fnc_actionHeliLandFinal;
 					waitUntil {scriptDone _spawnBehaviour};
 				};
 				case (_landingdata == "RAPPEL") : {

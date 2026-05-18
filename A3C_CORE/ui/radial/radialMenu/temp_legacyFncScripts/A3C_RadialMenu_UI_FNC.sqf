@@ -757,17 +757,17 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 						A3C_OUTER_RING_BTN_fnc_1 =
 						[
 							[],
-							{[0] spawn A3C_RadialMenu_ROE;}
+							{[0] spawn A3C_ai_squad_fnc_setROE;}
 						];
 						A3C_OUTER_RING_BTN_fnc_2 =
 						[
 							[],
-							{[1] spawn A3C_RadialMenu_ROE;} 
+							{[1] spawn A3C_ai_squad_fnc_setROE;} 
 						];
 						A3C_OUTER_RING_BTN_fnc_3 =
 						[
 							[],
-							{[2] spawn A3C_RadialMenu_ROE;}
+							{[2] spawn A3C_ai_squad_fnc_setROE;}
 						];
 						A3C_OUTER_RING_BTN_fnc_4 =
 						[
@@ -2947,7 +2947,7 @@ A3C_UI_RADIAL_LABEL_LB = {
 			};
 
 			{
-				private _isMedic =   ({[_x] call TAG_fnc_baseWeapon == "Medikit"} count (items _x) > 0);
+				private _isMedic =   ({[_x] call A3C_main_fnc_getBaseWeapon == "Medikit"} count (items _x) > 0);
 				_img = if (_isMedic) then {
 					"A3C_CORE\ui\pictures\icon_menu_Medical.paa"
 				} else {

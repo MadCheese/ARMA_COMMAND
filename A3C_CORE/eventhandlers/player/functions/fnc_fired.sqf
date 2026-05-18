@@ -28,5 +28,5 @@ if (_weapon isEqualTo "THROW") exitWith {
 
 if (A3C_fireOnMyLeadUnits isNotEqualTo []) then {
 	player groupRadio "SentFireNoTarget";
-	[] call A3C_AI_ROE_releaseFOML;
+	[] call A3C_ai_squad_fnc_releaseFOML;
 };

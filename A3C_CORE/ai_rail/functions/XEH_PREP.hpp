@@ -1,3 +1,6 @@
+
+
+A3C_PREP(FPV);
 A3C_PREP(helicopter);
 A3C_PREP(helicopterLanding);
 A3C_PREP(hoverApproach);

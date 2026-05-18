@@ -30,10 +30,10 @@ private _refPos = [0, 0, 0];
 
 if (_weaponGroup == "FIND") then {
     _weaponGroup = switch (true) do {
-        case ([_unit] call A3C_HasGL): {
+        case ([_unit] call A3C_main_fnc_unitHasUGL): {
             "UGLSHOT"
         };
-        case ([_unit] call A3C_HasAT): {
+        case ([_unit] call A3C_main_fnc_unitHasAT): {
             "ATSHOT"
         };
         case ((_vehicle isKindOf "TANK") && { _unit == gunner _vehicle }): {
@@ -42,7 +42,7 @@ if (_weaponGroup == "FIND") then {
         case ((count (getArtilleryAmmo [_vehicle])) > 0): {
             "ARTY"
         };
-        case ([_vehicle] call A3C_isStaticMissileLauncher): {
+        case ([_vehicle] call A3C_main_fnc_isStaticMissileLauncher): {
             "STATICSHOT"
         };
         default {

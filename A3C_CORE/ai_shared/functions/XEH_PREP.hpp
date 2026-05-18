@@ -43,6 +43,8 @@ A3C_PREP(getExplosiveUnitMagazines);
 A3C_PREP(getHeliRoofLZ);
 
 A3C_PREP(getSelectionPackedStaticWeapons);
+A3C_PREP(getWeaponAssemblyMode);
+
 
 
 A3C_PREP(guideProjectileBullet);

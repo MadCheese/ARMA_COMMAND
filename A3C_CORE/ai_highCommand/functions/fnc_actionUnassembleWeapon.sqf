@@ -12,7 +12,7 @@ if (isNull _wpn) then {
 
 if (isNull _wpn) exitWith {};
 
-if !([_groupUnits, _wpn, true] call A3C_HC_canSelectionPickUpStatic) exitWith {};
+if !([_groupUnits, _wpn, true] call A3C_ai_highCommand_fnc_canSelectionPickUpStatic) exitWith {};
 
 private _weaponPos = position _wpn;
 private _weaponDir = getDir _wpn;

@@ -92,7 +92,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 	_canAssemble = false;
 	_canDisassemble = false;
 	_packUnits = _unitArray; //if (count _unitArray >  1) then {_unitArray} else {units player - [player]};
-	_packMode = [_packUnits] call A3C_SMART_getWeaponAssemblyMode;
+	_packMode = [_packUnits] call A3C_ai_shared_fnc_getWeaponAssemblyMode;
 
 	if (_packMode == "DUAL") then {
 		_canAssemble = true;
@@ -158,7 +158,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 							_otherUnits = _otherUnits - [_x];
 						};
 					} foreach _otherUnits;
-					if !([_otherUnits,_weapon,false] call A3C_HC_canSelectionPickUpStatic) then {
+					if !([_otherUnits,_weapon,false] call A3C_ai_highCommand_fnc_canSelectionPickUpStatic) then {
 						//-- weapon can not be disassembled because nobody is there to help
 						_cond = false;
 					};
@@ -202,15 +202,15 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 	{
 		if (_x == gunner vehicle _x) then {
 			if (isNull objectParent _x) then {
-				if ([_x] call A3C_HasGL) then {
+				if ([_x] call A3C_main_fnc_unitHasUGL) then {
 					A3C_REMFIRE_UGLShot_Units pushBackUnique _x;
 				};
-				if ([_x] call A3C_HasAT) then {
+				if ([_x] call A3C_main_fnc_unitHasAT) then {
 					A3C_REMFIRE_ATShot_Units pushBackUnique _x;
 				};
 			} else {
 				//if (vehicle _x isKindOf "STATICWEAPON") then {
-				if (_x == gunner vehicle _x && {[vehicle _x] call A3C_isStaticMissileLauncher}) then {
+				if (_x == gunner vehicle _x && {[vehicle _x] call A3C_main_fnc_isStaticMissileLauncher}) then {
 					A3C_REMFIRE_StaticShot_Units pushBackUnique _x;
 				} else {
 					if (vehicle _x isKindOf "TANK") then { //(count (getArtilleryAmmo [vehicle _unit])) > 0

@@ -30,7 +30,7 @@ A3C_FINDMEDICS = {
 	
 	{
 		_u = _x;
-		private _isMedic =   ({[_x] call TAG_fnc_baseWeapon == "Medikit"} count (items _u) > 0);
+		private _isMedic =   ({[_x] call A3C_main_fnc_getBaseWeapon == "Medikit"} count (items _u) > 0);
 		//systemchat str _isMedic;
 		//(getNumber ( configFile >> "CfgVehicles" >> typeOf _x >> "attendant" ) isEqualTo 1);
 		//if !(_x in A3C_MEDICS) then {

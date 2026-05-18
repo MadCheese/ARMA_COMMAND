@@ -1,299 +1,320 @@
 // A3C_ai_highCommand_fnc_moduleCAS
 
-	//-- Adaptation of BIS_fnc_moduleCAS
+//-- Adaptation of BIS_fnc_moduleCAS
 
-	private _fnc_scriptNameParent = if (isNil '_fnc_scriptName') then {'BIS_fnc_moduleCAS'} else {_fnc_scriptName};
-	private _fnc_scriptName = 'A3C_ai_highCommand_fnc_moduleCAS';
-	scriptName _fnc_scriptName;
+private _fnc_scriptNameParent = if (isNil "_fnc_scriptName") then {"BIS_fnc_moduleCAS"} else {_fnc_scriptName};
+private _fnc_scriptName = "A3C_ai_highCommand_fnc_moduleCAS";
+scriptName _fnc_scriptName;
 
-	private _logic = _this select 0;
-	private _units = _this select 1;
-	private _activated = _this select 2;
-	private _plane  = _this select 3;
-	private _caller = _this select 4;
+private _logic = _this select 0;
+private _units = _this select 1;
+private _activated = _this select 2;
+private _plane  = _this select 3;
+private _caller = _this select 4;
 
-	private _pilot = driver _plane;
-	private _gp = group _pilot;
+private _pilot = driver _plane;
+private _gp = group _pilot;
 
+if (_activated) then {
+	if (_logic call BIS_fnc_isCuratorEditable) then {
+		waitUntil {!isNil {_logic getVariable "vehicle"} || isNull _logic};
+	};
 
-	//if (!isserver && {local _x} count (objectcurators _logic) == 0) exitWith {};
+	if (isNull _logic) exitWith {};
 
-	if (_activated) then {
-		if (_logic call bis_fnc_isCuratorEditable) then {
-			waituntil {!isnil {_logic getvariable "vehicle"} || isnull _logic};
+	if ({local _x} count (objectCurators _logic) > 0) then {
+		_logic hideObject false;
+		_logic setPos position _logic;
+	};
+
+	private _cfgVehicles = configFile >> "CfgVehicles";
+	private _cfgWeapons = configFile >> "CfgWeapons";
+
+	private _planeClass = _logic getVariable ["vehicle","B_Plane_CAS_01_F"];
+	private _planeCfg = _cfgVehicles >> _planeClass;
+
+	if !(_planeClass == (typeOf _plane)) exitWith {
+		["Planetypes do not match",nil] call BIS_fnc_error;
+		false
+	};
+
+	_pilot doMove (getPos _logic);
+	_pilot moveTo (getPos _logic);
+
+	waitUntil {
+		private _r = _plane getRelDir _logic;
+
+		if (_r > 180) then {
+			_r = 360 - _r;
 		};
 
-		if (isnull _logic) exitWith {};
+		_r < 20
+	};
 
+	private _dirVar = _fnc_scriptName + typeOf _logic;
+	_logic setDir (missionNamespace getVariable [_dirVar,direction _logic]);
 
-		if ({local _x} count (objectcurators _logic) > 0) then {
-			_logic hideobject false;
-			_logic setpos position _logic;
-		};
+	private _weaponTypesID = _logic getVariable ["type",getNumber (_cfgVehicles >> typeOf _logic >> "moduleCAStype")];
 
-		//if !(isserver) exitWith {};
+	private _weaponTypes = switch _weaponTypesID do {
+		case 0: {["machinegun"]};
+		case 1: {["missilelauncher"]};
+		case 2: {["machinegun","missilelauncher"]};
+		case 3: {["bomblauncher"]};
+		default {[]};
+	};
 
-		_planeClass = _logic getvariable ["vehicle","B_Plane_CAS_01_F"];
-		_planeCfg = configfile >> "cfgvehicles" >> _planeClass;
+	private _weapons = [];
 
-		if !(_planeClass == (typeOf _plane)) exitWith {
-			["Planetypes do not match",nil] call bis_fnc_error;
-			false
-		};
+	{
+		private _weapon = _x;
 
-		_pilot doMove (getPos _logic);
-		_pilot moveTo (getPos _logic);
+		if (toLower ((_weapon call BIS_fnc_itemType) select 1) in _weaponTypes) then {
+			private _modes = getArray (_cfgWeapons >> _weapon >> "modes");
 
-		waitUntil
-		{
-			_r = _plane getRelDir _logic;
-			if (_r > 180) then {
-				_r = 360 - _r;
-			};
-			_r < 20
-		};
+			if (count _modes > 0) then {
+				private _mode = _modes select 0;
 
-		//if !(isclass _planeCfg) exitWith {["Vehicle class '%1' not found",_planeClass] call bis_fnc_error; false};
-
-
-		_dirVar = _fnc_scriptname + typeof _logic;
-		_logic setdir (missionnamespace getvariable [_dirVar,direction _logic]);
-
-
-		_weaponTypesID = _logic getvariable ["type",getnumber (configfile >> "cfgvehicles" >> typeof _logic >> "moduleCAStype")];
-		_weaponTypes = switch _weaponTypesID do {
-			case 0: {["machinegun"]};
-			case 1: {["missilelauncher"]};
-			case 2: {["machinegun","missilelauncher"]};
-			case 3: {["bomblauncher"]};
-			default {[]};
-		};
-		_weapons = [];
-		{
-			if (tolower ((_x call bis_fnc_itemType) select 1) in _weaponTypes) then {
-				_modes = getarray (configfile >> "cfgweapons" >> _x >> "modes");
-				if (count _modes > 0) then {
-					_mode = _modes select 0;
-					if (_mode == "this") then {
-						_mode = _x;
-					};
-					_weapons set [count _weapons,[_x,_mode]];
+				if (_mode == "this") then {
+					_mode = _weapon;
 				};
+
+				_weapons set [count _weapons,[_weapon,_mode]];
 			};
-		} foreach (_planeClass call bis_fnc_weaponsEntityType);
-		if (count _weapons == 0) exitWith {
-			["No weapon of types %2 wound on '%1'",_planeClass,_weaponTypes] call bis_fnc_error;
-			false
 		};
+	} forEach (_planeClass call BIS_fnc_weaponsEntityType);
 
-		_posATL = getposatl _logic;
-		_pos = +_posATL;
-		_pos set [2,(_pos select 2) + getterrainheightasl _pos];
-		_dir = direction _logic;
+	if (count _weapons == 0) exitWith {
+		["No weapon of types %2 wound on '%1'",_planeClass,_weaponTypes] call BIS_fnc_error;
+		false
+	};
 
-		_dis = 3000;
-		_alt = 1000;
-		_pitch = atan (_alt / _dis);
-		_speed = 400 / 3.6;
-		_duration = ([0,0] distance [_dis,_alt]) / _speed;
+	private _posATL = getPosATL _logic;
+	private _pos = +_posATL;
+	_pos set [2,(_pos select 2) + getTerrainHeightASL _pos];
 
-		_planeAltitude = (getposATL _plane) select 2;
+	private _dir = direction _logic;
 
-		[(_pilot)] remoteExec ["setBehaviourStrong",(_pilot)];
-		private _isLeader = _pilot == leader group (_pilot);
-		if (_isLeader) then {
-			[
-		 		[_gp,_pos,_caller],
-		 		{
-					params ["_gp","_pos","_caller"];
-					if (getPlayerUID player == _caller) then {
-						systemChat format ["This is %1-1, CAS at %2 is imminent",parseText (groupID _gp), mapGridPosition _pos];
-					};
-				}
-			] remoteExec ["bis_fnc_call",0];
-		};
+	private _dis = 3000;
+	private _alt = 1000;
+	private _pitch = atan (_alt / _dis);
+	private _speed = 400 / 3.6;
+	private _duration = ([0,0] distance [_dis,_alt]) / _speed;
 
-		{[_plane,_x] remoteExec ["disableAI",_plane]} foreach ["move","target","autotarget"];
-		//{_plane disableAI _x} foreach ["move","target","autotarget"];
-		[_plane,"blue"] remoteExec ["setCombatMode",_plane];
+	private _planeAltitude = (getPosATL _plane) select 2;
 
-		_planePos = getposATL _plane;
+	[_pilot] remoteExec ["setBehaviourStrong",_pilot];
 
-		_planeSide = (getnumber (_planeCfg >> "side")) call bis_fnc_sideType;
+	private _isLeader = _pilot == leader group _pilot;
 
-		
-		_vectorDir = [_planePos,_pos] call bis_fnc_vectorFromXtoY;
-		_velocity = [_vectorDir,_speed] call bis_fnc_vectorMultiply;
-		_plane setvectordir _vectorDir;
-		[_plane,-90 + atan (_dis / _alt),0] call bis_fnc_setpitchbank;
-		_vectorUp = vectorup _plane;
-
-
-		_currentWeapons = weapons _plane;
-		{
-			if !(tolower ((_x call bis_fnc_itemType) select 1) in (_weaponTypes + ["countermeasureslauncher"])) then {
-				[_plane,_x] remoteExec ["removeWeapon",_plane];
-				//_plane removeweapon _x;
-			};
-		} foreach _currentWeapons;
-
-		//-- if I understand correctly, Fired EH only has to be added on the executing machine
-		_ehFired = _plane addeventhandler
+	if (_isLeader) then {
 		[
-			"fired",
+			[_gp,_pos,_caller],
 			{
-				_this spawn {
-					_plane = _this select 0;
-					_plane removeeventhandler ["fired",_plane getvariable ["ehFired",-1]];
-					[_plane,["fired",_plane getvariable ["ehFired",-1]]] remoteExec ["removeEventhandler",_plane];
-					_projectile = _this select 6;
-					waituntil {isnull _projectile};
-					[[0.005,4,[_plane getvariable ["logic",objnull],200]],"bis_fnc_shakeCuratorCamera"] call bis_fnc_mp;
+				params ["_gp","_pos","_caller"];
+
+				if (getPlayerUID player == _caller) then {
+					systemChat format ["This is %1-1, CAS at %2 is imminent",parseText (groupID _gp), mapGridPosition _pos];
 				};
 			}
-		];
-		_plane setvariable ["ehFired",_ehFired];
-		_plane setvariable ["logic",_logic];
+		] remoteExec ["BIS_fnc_call",0];
+	};
 
+	{
+		[_plane,_x] remoteExec ["disableAI",_plane];
+	} forEach ["move","target","autotarget"];
 
+	[_plane,"blue"] remoteExec ["setCombatMode",_plane];
 
-		_fire = [] spawn {waituntil {false}};
-		_fireNull = true;
-		_time = time;
-		_offset = if ({_x == "missilelauncher"} count _weaponTypes > 0) then {20} else {0};
-		waituntil {
-			_fireProgress = _plane getvariable ["fireProgress",0];
-			if ((getposatl _logic distance _posATL > 0 || direction _logic != _dir) && _fireProgress == 0) then {
-				_posATL = getposatl _logic;
-				_pos = +_posATL;
-				_pos set [2,(_pos select 2) + getterrainheightasl _pos];
-				_dir = direction _logic;
-				missionnamespace setvariable [_dirVar,_dir];
+	private _planePos = getPosATL _plane;
+	private _planeSide = (getNumber (_planeCfg >> "side")) call BIS_fnc_sideType;
 
-				_planePos = [_pos,_dis,_dir + 180] call bis_fnc_relpos;
-				_planePos set [2,(_pos select 2) + _alt];
-				_vectorDir = [_planePos,_pos] call bis_fnc_vectorFromXtoY;
-				_velocity = [_vectorDir,_speed] call bis_fnc_vectorMultiply;
-		
-				[_plane,_vectorDir] remoteExec ["setVectorDir",_plane];
+	private _vectorDir = [_planePos,_pos] call BIS_fnc_vectorFromXtoY;
+	private _velocity = [_vectorDir,_speed] call BIS_fnc_vectorMultiply;
 
-				_vectorUp = vectorup _plane;
-	
-				[_pilot, ([_pos,_dis,_dir] call bis_fnc_relpos)] remoteExec ["doMove", _pilot];
-				[_pilot,([_pos,_dis,_dir] call bis_fnc_relpos)] remoteExec ["moveTo", _pilot];
+	_plane setVectorDir _vectorDir;
+	[_plane,-90 + atan (_dis / _alt),0] call BIS_fnc_setPitchBank;
+
+	private _vectorUp = vectorUp _plane;
+
+	private _currentWeapons = weapons _plane;
+
+	{
+		private _weapon = _x;
+
+		if !(toLower ((_weapon call BIS_fnc_itemType) select 1) in (_weaponTypes + ["countermeasureslauncher"])) then {
+			[_plane,_weapon] remoteExec ["removeWeapon",_plane];
+		};
+	} forEach _currentWeapons;
+
+	//-- if I understand correctly, Fired EH only has to be added on the executing machine
+	private _ehFired = _plane addEventHandler [
+		"Fired",
+		{
+			_this spawn {
+				private _plane = _this select 0;
+
+				_plane removeEventHandler ["Fired",_plane getVariable ["ehFired",-1]];
+				[_plane,["Fired",_plane getVariable ["ehFired",-1]]] remoteExec ["removeEventHandler",_plane];
+
+				private _projectile = _this select 6;
+
+				waitUntil {isNull _projectile};
+
+				[[0.005,4,[_plane getVariable ["logic",objNull],200]],"BIS_fnc_shakeCuratorCamera"] call bis_fnc_mp;
+			};
+		}
+	];
+
+	_plane setVariable ["ehFired",_ehFired];
+	_plane setVariable ["logic",_logic];
+
+	private _fire = [] spawn {waitUntil {false}};
+	private _fireNull = true;
+	private _time = time;
+	private _offset = if ({_x == "missilelauncher"} count _weaponTypes > 0) then {20} else {0};
+
+	waitUntil {
+		private _fireProgress = _plane getVariable ["fireProgress",0];
+
+		if ((getPosATL _logic distance _posATL > 0 || direction _logic != _dir) && _fireProgress == 0) then {
+			_posATL = getPosATL _logic;
+			_pos = +_posATL;
+			_pos set [2,(_pos select 2) + getTerrainHeightASL _pos];
+
+			_dir = direction _logic;
+			missionNamespace setVariable [_dirVar,_dir];
+
+			_planePos = [_pos,_dis,_dir + 180] call BIS_fnc_relPos;
+			_planePos set [2,(_pos select 2) + _alt];
+
+			_vectorDir = [_planePos,_pos] call BIS_fnc_vectorFromXtoY;
+			_velocity = [_vectorDir,_speed] call BIS_fnc_vectorMultiply;
+
+			[_plane,_vectorDir] remoteExec ["setVectorDir",_plane];
+
+			_vectorUp = vectorUp _plane;
+
+			private _movePos = [_pos,_dis,_dir] call BIS_fnc_relPos;
+
+			[_pilot,_movePos] remoteExec ["doMove", _pilot];
+			[_pilot,_movePos] remoteExec ["moveTo", _pilot];
+		};
+
+		[
+			_plane,
+			[
+				_planePos,
+				[_pos select 0,_pos select 1,(_pos select 2) + _offset + _fireProgress * 12],
+				_velocity,
+				_velocity,
+				_vectorDir,
+				_vectorDir,
+				_vectorUp,
+				_vectorUp,
+				(time - _time) / _duration
+			]
+		] remoteExec ["setVelocityTransformation",_plane];
+
+		[_plane,velocity _plane] remoteExec ["setVelocity",_plane];
+
+		if ((getPosASL _plane) distance _pos < 1000 && _fireNull) then {
+			private _target = ((position _logic nearEntities ["LaserTarget",250])) param [0,objNull];
+
+			if (isNull _target) then {
+				_target = createVehicle ["LaserTargetC",position _logic,[],0,"NONE"];
 			};
 
-			[
-				_plane,
-				[
-					_planePos, [_pos select 0,_pos select 1,(_pos select 2) + _offset + _fireProgress * 12],
-					_velocity, _velocity,
-					_vectorDir,_vectorDir,
-					_vectorUp, _vectorUp,
-					(time - _time) / _duration
-				]
+			[_plane,laserTarget _target] remoteExec ["reveal",_plane];
+			[_plane,laserTarget _target] remoteExec ["doWatch",_plane];
+			[_plane,laserTarget _target] remoteExec ["doTarget",_plane];
 
-			]
-			remoteExec ["setVelocityTransformation",_plane];
+			_fireNull = false;
 
-			[_plane,velocity _plane] remoteExec ["setvelocity",_plane];
+			terminate _fire;
 
+			_fire = [_plane,_weapons,_target,_weaponTypesID] spawn {
+				private _plane = _this select 0;
+				private _planeDriver = driver _plane;
+				private _weapons = _this select 1;
+				private _target = _this select 2;
+				private _weaponTypesID = _this select 3;
+				private _duration = 3;
+				private _time = time + _duration;
 
-			if ((getposasl _plane) distance _pos < 1000 && _fireNull) then {
-				_target = ((position _logic nearEntities ["LaserTarget",250])) param [0,objnull];
-				if (isnull _target) then {
-					_target = createvehicle ["LaserTargetC",position _logic,[],0,"none"];
-				};
-				[_plane,lasertarget _target] remoteExec ["reveal",_plane];
-
-				[_plane,lasertarget _target] remoteExec ["doWatch",_plane];
-		
-				[_plane,lasertarget _target] remoteExec ["doTarget",_plane];
-		
-
-				_fireNull = false;
-				terminate _fire;
-				_fire = [_plane,_weapons,_target,_weaponTypesID] spawn {
-				_plane = _this select 0;
-				_planeDriver = driver _plane;
-				_weapons = _this select 1;
-				_target = _this select 2;
-				_weaponTypesID = _this select 3;
-				_duration = 3;
-				_time = time + _duration;
-				waituntil
-				{
+				waitUntil {
 					{
 						[_planeDriver,[_target,(_x select 0)]] remoteExec ["fireAtTarget",_planeDriver];
-				
-					} foreach _weapons;
-					_plane setvariable ["fireProgress",(1 - ((_time - time) / _duration)) max 0 min 1];
+					} forEach _weapons;
+
+					_plane setVariable ["fireProgress",(1 - ((_time - time) / _duration)) max 0 min 1];
+
 					sleep 0.1;
-					time > _time || _weaponTypesID == 3 || isnull _plane
+
+					time > _time || _weaponTypesID == 3 || isNull _plane
 				};
+
 				sleep 1;
 			};
 		};
 
 		sleep 0.01;
-		scriptdone _fire || isnull _logic || isnull _plane
+
+		scriptDone _fire || isNull _logic || isNull _plane
 	};
 
-	[_plane,velocity _plane] remoteExec ["setvelocity",_plane];
-
+	[_plane,velocity _plane] remoteExec ["setVelocity",_plane];
 	[_plane,_alt] remoteExec ["flyInHeight",_plane];
-	
 
+	_gp setVariable ["CAS_COMPLETED",true,true];
 
+	{
+		[_plane,_x] remoteExec ["enableAI",_plane];
+	} forEach ["move","target","autotarget"];
 
-	_gp setvariable ['CAS_COMPLETED',true,true];
-	{[_plane,_x] remoteExec ["enableAI",_plane]} foreach ["move","target","autotarget"];
-	
 	[_plane,"YELLOW"] remoteExec ["setCombatMode",_plane]; //~~ gfetch combatmode before and reset here
-
-
-
-
 
 	if ({_x == "bomblauncher"} count _weaponTypes == 0) then {
 		for "_i" from 0 to 1 do {
 			[driver _plane,["CMFlareLauncher","Burst"]] remoteExec ["forceWeaponFire",driver _plane];
-			driver _plane forceweaponfire ["CMFlareLauncher","Burst"];
+			driver _plane forceWeaponFire ["CMFlareLauncher","Burst"];
+
 			_time = time + 1.1;
-			waituntil {time > _time || isnull _logic || isnull _plane};
+
+			waitUntil {time > _time || isNull _logic || isNull _plane};
 		};
 	};
+
 	sleep 2;
+
 	if (_isLeader) then {
-	 	[
-	 		[_gp,_pos,_caller],
-	 		{
+		[
+			[_gp,_pos,_caller],
+			{
 				params ["_gp","_pos","_caller"];
+
 				if (getPlayerUID player == _caller) then {
 					systemChat format ["This is %1-1, CAS at %2 is complete",parseText (groupID _gp), mapGridPosition _pos];
 				};
 			}
-		] remoteExec ["bis_fnc_call",0];
+		] remoteExec ["BIS_fnc_call",0];
 	};
+
 	sleep 2;
 
-		
-	if ( ((count (waypoints _gp) - 1) > (currentwaypoint _gp)) ) then { //&& !(_actionType in ["SUPPRESSION","AMBUSH","CAS-STRIKE"])
-		private _wpc = (currentWaypoint _gp);
-		[_gp, currentwaypoint _gp] call A3C_ai_highCommand_fnc_removeWaypoint;
+	if (((count (waypoints _gp) - 1) > (currentWaypoint _gp))) then {
+		private _wpc = currentWaypoint _gp;
+		[_gp,currentWaypoint _gp] call A3C_ai_highCommand_fnc_removeWaypoint;
 	} else {
-		deletewaypoint [_gp,currentwaypoint _gp];
+		deleteWaypoint [_gp,currentWaypoint _gp];
 	};
 
-
 	sleep 18;
-	if !(isnull _logic) then {
+
+	if !(isNull _logic) then {
 		sleep 1;
-		deletevehicle _logic;
-
-
+		deleteVehicle _logic;
 	};
 
 	[_plane,_planeAltitude] remoteExec ["flyInHeight",_plane];
-
 };

@@ -89,8 +89,12 @@ A3C_PREP(addArtyToRadioChannel);
 A3C_PREP(addWaypoint);
 A3C_PREP(assignGroupToVehicle);
 
+A3C_PREP(canSelectionPickUpStatic);
+
+
 A3C_PREP(CASdistribute);
 A3C_PREP(CASexecute);
+A3C_PREP(CASpreventAction);
 
 
 
@@ -103,6 +107,9 @@ A3C_PREP(deleteAllWaypoints);
 
 
 A3C_PREP(findExecutingMachine);
+
+A3C_PREP(FPVonEachFrame);
+
 
 A3C_PREP(getArtilleryCapacity);
 A3C_PREP(getConditionFromStatements);

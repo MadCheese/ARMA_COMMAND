@@ -309,7 +309,7 @@ if (_action == "ASSEMBLE") then {
 					if (!_turretAssigned) then {
 						if (_ifaTurretIsRifle) then {
 							if (primaryWeapon _unit != "") then {
-								private _oldPrimaryWeapon = [primaryWeapon _unit] call TAG_fnc_baseWeapon;
+								private _oldPrimaryWeapon = [primaryWeapon _unit] call A3C_main_fnc_getBaseWeapon;
 								private _oldPrimaryMagazines = [currentMagazine _unit];
 								private _oldPrimaryItems = primaryWeaponItems _unit;
 								private _oldPrimaryMagazineTypes = getArray (
@@ -338,7 +338,7 @@ if (_action == "ASSEMBLE") then {
 
 							_turretAssigned = true;
 						} else {
-							if ([_unit] call A3C_STATIC_isSecondaryAllowed) then {
+							if ([_unit] call A3C_main_fnc_canUnitCarryIFAstatic) then {
 								_turretAssigned = true;
 							};
 						};
@@ -369,9 +369,9 @@ if (_action == "ASSEMBLE") then {
 					private _unit = _x;
 
 					if !(_forEachIndex == 0 && {count _disassemblyUnits > 1}) then {
-						if ([_unit] call A3C_STATIC_isSecondaryAllowed) exitWith {
+						if ([_unit] call A3C_main_fnc_canUnitCarryIFAstatic) exitWith {
 							if (secondaryWeapon _unit != "") then {
-								private _oldSecondaryWeapon = [secondaryWeapon _unit] call TAG_fnc_baseWeapon;
+								private _oldSecondaryWeapon = [secondaryWeapon _unit] call A3C_main_fnc_getBaseWeapon;
 								private _oldSecondaryMagazines = secondaryWeaponMagazine _unit;
 								private _oldSecondaryItems = secondaryWeaponItems _unit;
 								private _oldSecondaryMagazineTypes = getArray (

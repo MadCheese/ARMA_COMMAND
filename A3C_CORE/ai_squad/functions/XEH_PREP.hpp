@@ -21,7 +21,21 @@ A3C_PREP(actionToggleWeaponAttachment);
 A3C_PREP(actionUnassembleWeaponDispatch);
 
 
+A3C_PREP(actionHeliLandFinal);
+A3C_PREP(actionHeliPickupAndDrop);
+A3C_PREP(actionHeliSling);
+
+
+
 A3C_PREP(preparePointerAttachmentMode);
+
+
+A3C_PREP(releaseFOML);
+A3C_PREP(setROE);
+
+A3C_PREP(toggleAutoCombat);
+
+
 
 A3C_PREP(willSlingLoadAtWaypoint);
 
