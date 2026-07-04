@@ -100,6 +100,8 @@ A3C_PREP(CASpreventAction);
 
 A3C_PREP(changeWaypointData);
 A3C_PREP(completeWaypoint);
+A3C_PREP(convoyMultigroup);
+
 
 
 
@@ -114,6 +116,8 @@ A3C_PREP(FPVonEachFrame);
 A3C_PREP(getArtilleryCapacity);
 A3C_PREP(getConditionFromStatements);
 A3C_PREP(getFullCrew);
+A3C_PREP(getHeliWaypointSleep);
+
 A3C_PREP(getSlingMode);
 
 
@@ -122,6 +126,8 @@ A3C_PREP(helicopterEvasive);
 
 A3C_PREP(insertActionWaypoint);
 
+
+A3C_PREP(isGroupBoarding);
 A3C_PREP(isWpScriptBlocked);
 
 
@@ -150,3 +156,5 @@ A3C_PREP(syncWaypoint);
 
 A3C_PREP(reInitGroupMovement);
 A3C_PREP(wpAction_landingFull);
+A3C_PREP(wpActionLandingTick);
+

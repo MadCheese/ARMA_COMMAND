@@ -876,7 +876,7 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 					//private _drivers = [];
 					//systemchat str _refArray;
 					// true; //{currentWaypoint _x >= count waypoints _x} count A3C_SELECTED_UNITS > 0;
-					[_refArray,_clickPos] spawn A3C_FNCS_CONVOY_MULTIGROUP;
+					[_refArray,_clickPos] spawn A3C_ai_highCommand_fnc_convoyMultigroup;
 					
 				};
 

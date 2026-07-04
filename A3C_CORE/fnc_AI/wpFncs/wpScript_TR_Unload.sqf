@@ -22,11 +22,7 @@ private _currentActions = _group getVariable ["A3C_SCRIPTS", []];
 
 _group setVariable ["A3C_SCRIPTS", _currentActions, true]; //-- guarantee at least the 2 sec of no script so that old one can exit
 
-private _isHoverCapableAircraft =
-	_leaderVehicle isKindOf "HELICOPTER"
-	|| {_leaderVehicle isKindOf "VTOL_Base_F"}
-	|| {_leaderVehicle isKindOf "VTOL_01_base_F"}
-	|| {_leaderVehicle isKindOf "VTOL_02_base_F"};
+private _isHoverCapableAircraft = [_leaderVehicle] call A3C_main_fnc_canHoverAircraft;
 
 private _addRadius = if (_leaderVehicle isKindOf "AIR") then {50} else {0};
 
@@ -151,130 +147,182 @@ private _exitCondition = {};
 	};
 } forEach [_preCondition, _postCondition];
 
-private _vehiclesMoved = [];
 private _vehiclesLanding = [];
 
-waitUntil {
-	private _groupVehicles = [];
+//-- Cache the TR unload vehicle kind per vehicle.
+//-- This keeps the expensive/semantic checks to one classification per vehicle object.
+private _fnc_getTRUnloadVehicleKind = {
+	params ["_vehicle"];
+
+	private _vehicleKind = _vehicle getVariable ["A3C_TR_UNLOAD_KIND", ""];
+
+	if (_vehicleKind isNotEqualTo "") exitWith {
+		_vehicleKind
+	};
+
+	_vehicleKind = if ([_vehicle] call A3C_main_fnc_canHoverAircraft) then {
+		"HOVER"
+	} else {
+		if (_vehicle isKindOf "Air") then {
+			"IGNORE"
+		} else {
+			"GROUND"
+		};
+	};
+
+	_vehicle setVariable ["A3C_TR_UNLOAD_KIND", _vehicleKind, false];
+
+	_vehicleKind
+};
+
+// private _fnc_unloadNonGroupCrew = {
+// 	params ["_vehicle", "_groupUnits"];
+
+// 	private _crewNonGroup = crew _vehicle select {
+// 		!(_x in _groupUnits) &&
+// 		{
+// 			assignedVehicle _x == _vehicle
+// 		}
+// 	};
+
+// 	if (_crewNonGroup isNotEqualTo []) then {
+// 		{
+// 			[
+// 				[_x],
+// 				{
+// 					params ["_unit"];
+
+// 					[_unit] call A3C_AIGetOut;
+// 				}
+// 			] remoteExec ["BIS_fnc_call", _x];
+// 		} forEach _crewNonGroup;
+// 	};
+// };
+
+private _fnc_unloadNonGroupCrew = {
+	params ["_vehicle"];
+
+	private _driver = driver _vehicle;
+
+	_groupUnits = units group _driver;
+	private _crewNonGroup = (crew _vehicle) select {
+		!(_x in _groupUnits)
+	};
+
+	private _cargoGroups = [];
+
+
 
 	{
-		private _vehicle = vehicle _x;
-		private _driver = driver _vehicle;
+		private _unitGroup = group _x;
+		if !(_unitGroup in _cargoGroups) then {
+			_cargoGroups set [count _cargoGroups, _unitGroup];
+		};
+	} foreach _crewNonGroup;
 
-		if (_x == effectiveCommander _x) then {
-			private _isHoverCapableVehicle =
-				_vehicle isKindOf "HELICOPTER"
-				|| {_vehicle isKindOf "VTOL_Base_F"}
-				|| {_vehicle isKindOf "VTOL_01_base_F"}
-				|| {_vehicle isKindOf "VTOL_02_base_F"};
+	
 
-			if (_isHoverCapableVehicle) then {
-				if !(isTouchingGround _vehicle) then {
-					[
-						_group,
-						_pos,
-						10,     //-- final unload speed in km/h
-						4,      //-- low final altitude ATL before GET IN landing behavior takes over
-						500,    //-- short approach envelope; main approach already happened
-						150     //-- soft anti-overshoot damping near unload point
-					] call A3C_ai_shared_fnc_approachWaypointHelicopter;
+	[_vehicle, _driver, _crewNonGroup] spawn {
+		params ["_vehicle", "_driver","_crewNonGroup"];
+		waitUntil {
+			// _vehicle flyInHeight 0;
+			// _vehicle setVelocity [0,0,-0.5]; //-- OVERRIDE HELI COMPULSION TO LIFT OFF
+			_vehicle land "GET IN";
+			_vehicle flyinHeight 0;
 
-					_vehicle flyInHeight 0;
+			{
+				_x in _crewNonGroup && {alive _x}
+			} count (crew _vehicle) == 0
+		};
+	};
 
-					if !(_vehicle in _vehiclesLanding) then {
-						_vehicle land "GET IN";
-						_vehiclesLanding pushBack _vehicle;
-					};
-				} else {
-					_vehicle flyInHeight 0;
+	{
+		[_x, _vehicle] remoteExec ["leaveVehicle", leader _x];
+	} foreach _cargoGroups;
 
-					private _crewNonGroup = crew _vehicle select {
-						group _x != group _driver &&
-						{
-							assignedVehicle _x == _vehicle
-						}
-					};
+	// _vehicle land "GET IN";
+	// _vehicle flyinHeight 0;
+};
 
-					if !(_crewNonGroup isEqualTo []) then {
-						{
-							[
-								[_x],
-								{
-									params ["_unit"];
 
-									[_unit] call A3C_AIGetOut;
-								}
-							] remoteExec ["BIS_fnc_call", _x];
-						} forEach _crewNonGroup;
-					};
-				};
-			} else {
-				if (!(_vehicle in _vehiclesMoved) && {!(isTouchingGround _vehicle)}) then {
-					_vehicle doMove _pos;
-					_vehicle moveTo _pos;
-					_vehiclesMoved pushBack _vehicle;
-				} else {
-					if !(isTouchingGround _vehicle) then {
-						_vehicle land "GET IN";
-						_vehiclesLanding pushBack _vehicle;
-					} else {
-						_vehicle flyInHeight 0; //-- is this ever executed really? it should be, but check
 
-						private _crewNonGroup = crew _vehicle select {
-							group _x != group _driver &&
-							{
-								assignedVehicle _x == _vehicle
-							}
+waitUntil {
+	private _groupUnits = units _group;
+	private _processedVehicles = [];
+	private _actionableVehicles = [];
+
+	{
+		private _vehicle = objectParent _x;
+
+		if (!isNull _vehicle && {!(_vehicle in _processedVehicles)}) then {
+			_processedVehicles pushBack _vehicle;
+
+			private _driver = driver _vehicle;
+
+			if (!isNull _driver && {_driver in _groupUnits}) then {
+				private _vehicleKind = [_vehicle] call _fnc_getTRUnloadVehicleKind;
+
+				switch (_vehicleKind) do {
+					case "HOVER": {
+						if !(isTouchingGround _vehicle) then {
+							if !(_vehicle in _vehiclesLanding) then {
+								_vehicle land "GET IN";
+								// _vehicle flyInHeight 0;
+								_vehiclesLanding pushBack _vehicle;
+							};
+						} else {
+							[_vehicle] call _fnc_unloadNonGroupCrew;
+							_vehicle flyInHeight 0;
 						};
 
-						if !(_crewNonGroup isEqualTo []) then {
-							{
-								[
-									[_x],
-									{
-										params ["_unit"];
+						_actionableVehicles pushBack _vehicle;
+					};
 
-										[_unit] call A3C_AIGetOut;
-									}
-								] remoteExec ["BIS_fnc_call", _x];
-							} forEach _crewNonGroup;
-						};
+					case "GROUND": {
+						//-- Ground vehicles unload in place once the approach phase has completed.
+						//-- Do not issue final moveTo/doMove commands here; that causes convoy clumping.
+						[_vehicle] call _fnc_unloadNonGroupCrew;
+
+						_actionableVehicles pushBack _vehicle;
+					};
+
+					default {
+						//-- Non-hover aircraft and other ignored vehicles receive no TR unload actions.
 					};
 				};
 			};
-
-			_groupVehicles pushBack _vehicle;
 		};
-	} forEach units _group;
+	} forEach _groupUnits;
 
-	_vehiclesMoved = _vehiclesMoved arrayIntersect _groupVehicles;
-	_vehiclesLanding = _vehiclesLanding arrayIntersect _groupVehicles;
+	_vehiclesLanding = _vehiclesLanding arrayIntersect _actionableVehicles;
 
 	sleep 1;
 
-	private _doExit = {
-		private _vehicle = objectParent _x;
+	// systemchat str [_actionableVehicles, _vehiclesLanding];
 
-		!isNull _vehicle &&
+	//-- Refresh group units after sleep so recently unloaded units do not keep blocking exit.
+	_groupUnits = units _group;
+
+	private _doExit = {
+		canMove _x &&
 		{
-			_x == driver _vehicle &&
 			{
-				canMove _vehicle &&
-				{
-					{!(_x in units _group)} count crew _vehicle > 0
-				}
-			}
+				!(_x in _groupUnits)
+			} count (crew _x) > 0
 		}
-	} count units _group == 0;
+	} count _actionableVehicles == 0;
+
+
 
 	_doExit
 };
+
 
 if !([_group] call A3C_main_fnc_isGroupOnFinalWP) then {
 	{
 		private _vehicle = vehicle _x;
 
-		if (_x == effectiveCommander _x && {_vehicle isKindOf "HELICOPTER"}) then {
+		if (_x == effectiveCommander _vehicle && {_vehicle isKindOf "HELICOPTER"}) then {
 			_vehicle land "NONE";
 		};
 	} forEach units _group;

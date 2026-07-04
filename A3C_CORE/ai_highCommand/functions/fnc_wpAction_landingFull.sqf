@@ -47,28 +47,28 @@ private _landHelicopterControlled = {
 
 		private _distance2D = _vehicle distance2D _landingPosATL;
 
-		private _finalAltitude = switch (true) do {
-			case (_distance2D > 150): {20};
-			case (_distance2D > 75): {12};
-			case (_distance2D > 35): {7};
-			default {4};
-		};
+		// private _finalAltitude = switch (true) do {
+		// 	case (_distance2D > 150): {20};
+		// 	case (_distance2D > 75): {12};
+		// 	case (_distance2D > 35): {7};
+		// 	default {4};
+		// };
 
-		private _finalSpeed = switch (true) do {
-			case (_distance2D > 150): {35};
-			case (_distance2D > 75): {25};
-			case (_distance2D > 35): {15};
-			default {8};
-		};
+		// private _finalSpeed = switch (true) do {
+		// 	case (_distance2D > 150): {35};
+		// 	case (_distance2D > 75): {25};
+		// 	case (_distance2D > 35): {15};
+		// 	default {8};
+		// };
 
-		[
-			_group,
-			_landingPosATL,
-			_finalSpeed,
-			_finalAltitude,
-			500,
-			150
-		] call A3C_ai_shared_fnc_approachWaypointHelicopter;
+		// [
+		// 	_group,
+		// 	_landingPosATL,
+		// 	_finalSpeed,
+		// 	_finalAltitude,
+		// 	500,
+		// 	150
+		// ] call A3C_ai_shared_fnc_approachWaypointHelicopter;
 
 		if (!_landCommandIssued && {_distance2D < 120}) then {
 			_vehicle land "LAND";
@@ -131,7 +131,8 @@ private _driverUnits = _units select {
 
 		sleep 20;
 	} else {
-		if (_vehicle isKindOf "HELICOPTER") then {
+		
+		if ([_vehicle] call A3C_main_fnc_canHoverAircraft) then {
 			private _script = [_x, _vehicle, _waypointPos] spawn _landHelicopterControlled;
 
 			_scripts pushBack _script;
@@ -151,7 +152,7 @@ private _driverUnits = _units select {
 						{
 							private _vehicle = vehicle _x;
 
-							if (_x == effectiveCommander _x) then {
+							if (_x == effectiveCommander _vehicle) then {
 								if (!(_vehicle in _vehiclesMoved)) then {
 									[effectiveCommander _x, _waypointPos] call A3C_ai_shared_fnc_doMove;
 									_vehiclesMoved pushBack _vehicle;

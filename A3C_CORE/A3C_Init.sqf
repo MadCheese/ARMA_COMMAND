@@ -40,9 +40,6 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_sharedCommandingLev
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Ship.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Suppress.sqf";
 
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Convoy.sqf";
-
-
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_GTI.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Medical.sqf";          //-- mixed GLOBAL / CLient
@@ -188,14 +185,6 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Boarding.sqf";     
 call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_Functions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_Handlers_dispatched.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_TREE_Functions.sqf";
-
-
-
-
-if (A3C_EHM) then {
-	call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_EHM.sqf";
-};
-
 
 //-- Radial Dialog
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\radialMenu\functions\initFunctions.sqf";

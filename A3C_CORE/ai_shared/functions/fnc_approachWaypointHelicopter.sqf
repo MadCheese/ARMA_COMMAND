@@ -1,3 +1,5 @@
+// A3C_ai_shared_fnc_approachWaypointHelicopter
+
 params [
 	"_group",
 	"_movePos",
@@ -10,30 +12,49 @@ params [
 private _leader = leader _group;
 private _leaderVehicle = vehicle _leader;
 
-if (!alive _leaderVehicle) exitWith {};
+if (!alive _leaderVehicle) exitWith {
+	// (format ["%1: Leader vehicle not alive",groupID _group]) remoteExec ["systemchat", 0];
+};
 
 private _effectiveCommander = effectiveCommander _leaderVehicle;
 private _driver = driver _leaderVehicle;
 
-if !(_effectiveCommander in units _group) exitWith {};
+
+
+private _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
+
+
+
+// if !(_effectiveCommander in units _group) exitWith {};
+
+private _movementControllers = [_effectiveCommander];
+
+if (_driver != _effectiveCommander && {!isNull _driver && {_driver in units _group}}) then {
+	_movementControllers pushBackUnique _driver;
+};
 
 private _distance2D = _leaderVehicle distance2D _movePos;
 private _currentSpeed = abs speed _leaderVehicle; //-- speed returns km/h
 
 private _destination = expectedDestination _effectiveCommander select 0;
 
-if (_destination distance2D _movePos > 5 || {_currentSpeed < 5}) then {
-	[_effectiveCommander, _movePos] call A3C_ai_shared_fnc_doMove;
+// (format ["%1: destination: %2",groupID _group, _movePos]) remoteExec ["systemchat", 0];
 
-	if (_driver != _effectiveCommander && {!isNull _driver}) then {
-		[_driver, _movePos] call A3C_ai_shared_fnc_doMove;
-	};
+if (_destination distance2D _movePos > 5 || {_currentSpeed < 5}) then {
+	{
+		[_x, _movePos] call A3C_ai_shared_fnc_doMove;
+		// (format ["%1: doMove issued for %2 - destination: %3",groupID _group, _x, _movePos]) remoteExec ["systemchat", 0];
+	} forEach _movementControllers;
 };
 
 {
-	_x enableAI "MOVE";
-	_x enableAI "PATH";
-	_x enableAI "ANIM";
+	private _vehicle = vehicle _x;
+	{
+		_x enableAI "MOVE";
+		_x enableAI "PATH";
+		_x enableAI "ANIM";
+	} foreach [_x, _vehicle];
+	_vehicle land "NONE";
 } forEach units _group;
 
 /*
@@ -46,9 +67,24 @@ if (_destination distance2D _movePos > 5 || {_currentSpeed < 5}) then {
 if (_finalAltitude >= 0) then {
 	private _currentAltitude = (getPosATL _leaderVehicle) select 2;
 
+	if (_currentAltitude < 5) then {
+		_currentAltitude = _leaderVehicle getVariable ["A3C_FLYINHEIGHT", 75]
+	};
+
 	private _desiredAltitude = if (_distance2D > _approachRadius) then {
 		_currentAltitude
 	} else {
+
+		// private _testArray = [
+		// 	_approachRadius,
+		// 	75,
+		// 	_distance2D,
+		// 	_currentAltitude,
+		// 	_finalAltitude,
+		// 	true
+		// ];
+		// (str _testArray) remoteExec ["hint", 0];
+
 		linearConversion [
 			_approachRadius,
 			75,
@@ -59,7 +95,11 @@ if (_finalAltitude >= 0) then {
 		]
 	};
 
-	_leaderVehicle flyInHeight _desiredAltitude;
+	// (format ["%1: _desiredAltitude %2",groupID _group, _desiredAltitude]) remoteExec ["systemchat", 0];
+	
+	{
+		_x flyInHeight _desiredAltitude;
+	} foreach _groupVehicles;
 };
 
 private _cruiseSpeed = getNumber (configFile >> "CfgVehicles" >> typeOf _leaderVehicle >> "maxSpeed");
@@ -140,14 +180,23 @@ if (_distance2D < _hardBrakeRadius && {_currentSpeed > (_desiredSpeed + 15)}) th
 		];
 
 		[_leaderVehicle, _newVelocity] remoteExec ["setVelocity", _leaderVehicle];
+		// (format ["%1: newVelocity %2",groupID _group, _newVelocity]) remoteExec ["systemchat", 0];
 	};
 };
 
-private _pilots = (units _group) select {
+private _pilotsToRejoin = (units _group) select {
 	_x == driver vehicle _x
+	&& {!(_x in _movementControllers)}
+	&& {_x != _leader}
 };
 
-_pilots doFollow _leader;
+
+
+if (_pilotsToRejoin isNotEqualTo []) then {
+	// (format ["%1: pilotsToRejoin %2",groupID _group, _pilotsToRejoin]) remoteExec ["systemchat", 0];
+	_pilotsToRejoin doFollow _leader;
+};
+
+// (format ["%1: desiredSpeed %2",groupID _group, _desiredSpeed]) remoteExec ["systemchat", 0];
 
 _desiredSpeed
-

@@ -35,6 +35,18 @@ private _shouldContinueApproach = {
 	}
 };
 
+
+
+private _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
+
+
+//-- default enabling all vehicles
+{
+	_x flyInHeight (_x getVariable ["A3C_FLYINHEIGHT", 75]);
+	_x limitSpeed 5000;
+} foreach _groupVehicles;
+
+
 while {[_leaderVehicle, _pos, _landingDistance] call _shouldContinueApproach} do {
 	_leader = leader _group;
 	_leaderVehicle = vehicle _leader; //-- has to be refreshed in case of crash
@@ -66,21 +78,15 @@ while {[_leaderVehicle, _pos, _landingDistance] call _shouldContinueApproach} do
 		350     //-- anti-overshoot damping starts here
 	] call A3C_ai_shared_fnc_approachWaypointHelicopter;
 
-	sleep (if (_distance2D < 500) then {0.5} else {1});
+	sleep ([_leaderVehicle, _distance2D] call A3C_ai_highCommand_fnc_getHeliWaypointSleep);
 };
 
-private _drivers = units _group select {
-	private _vehicle = objectParent _x;
-	!isNull _vehicle && {_x == driver _vehicle}
-};
-
-private _drivenVehicles = _drivers apply {
-	vehicle _x
-};
+//-- refresh _groupVehicles
+_groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
 	_x limitSpeed 5000;
-} forEach _drivenVehicles; //-- release slowdown after approach / before combat landing handling
+} forEach _groupVehicles; //-- release slowdown after approach / before combat landing handling
 
 //-- compose pre- and post conditions, wait for pre-condition
 private _exitCondition = {};
@@ -137,56 +143,39 @@ private _exitCondition = {};
 	};
 } forEach [_preCondition, _postCondition];
 
+
+
+//-- Problems with landing: we would want to:
+//-- 1: Create helipads to land on
+//-- 2: Add touchdown eventhandlers 
+//-- BUT: these would need to be managed as they will remain as residue if waypoint is reset. 
+//-- result: we currently still raw-dog landings with rudimental 'ground gluing' and no helipads for assisted landing
 private _vehiclesLanding = [];
 
 waitUntil {
-	private _groupVehicles = [];
 
-	{
-		private _vehicle = vehicle _x;
+	_vehiclesLanding = [_group, _vehiclesLanding] call A3C_ai_highCommand_fnc_wpActionLandingTick;
 
-		if (_x == effectiveCommander _x) then {
-			if !(isTouchingGround _vehicle) then {
-				[
-					_group,
-					_pos,
-					30,     //-- final combat landing speed in km/h
-					20,     //-- low final altitude ATL before GET IN landing behavior takes over
-					500,    //-- short approach envelope; main approach already happened
-					150     //-- soft anti-overshoot damping near landing point
-				] call A3C_ai_shared_fnc_approachWaypointHelicopter;
-
-				if !(_vehicle in _vehiclesLanding) then {
-					_vehicle land "GET IN";
-					_vehiclesLanding pushBack _vehicle;
-				};
-			} else {
-				_vehicle flyInHeight 0;
-			};
-
-			_groupVehicles pushBack _vehicle;
-		};
-	} forEach units _group;
-
-	_vehiclesLanding = _vehiclesLanding arrayIntersect _groupVehicles;
-
-	sleep 1;
+	sleep 0.1;
 
 	[] call _exitCondition
 };
 
-if !([_group] call A3C_main_fnc_isGroupOnFinalWP) then {
-	{
-		private _vehicle = vehicle _x;
+private _isFinalWP = [_group] call A3C_main_fnc_isGroupOnFinalWP;
 
-		if (_x == effectiveCommander _x && {_vehicle isKindOf "HELICOPTER"}) then {
-			_vehicle land "NONE";
-		};
-	} forEach units _group;
+//-- refresh _groupVehicles
+_groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
+
+if !(_isFinalWP) then {
+	{
+		_x land "NONE";
+	} forEach _groupVehicles;
 };
 
 [_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 [] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls", 0]; //-- check gocodes and assign color
+
+
 
 true

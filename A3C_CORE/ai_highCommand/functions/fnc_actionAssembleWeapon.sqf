@@ -1,3 +1,5 @@
+// A3C_ai_highCommand_fnc_actionAssembleWeapon
+
 private _group = A3C_RD_UNITS select 0;
 private _objectPlacerType = typeOf A3C_OBJECTPLACER;
 private _objectPlacerPos = position A3C_OBJECTPLACER;
@@ -28,6 +30,8 @@ private _objectPlacerDir = getDir A3C_OBJECTPLACER;
 			_group,
 			_objectPlacerPos
 		] call A3C_ai_highCommand_fnc_addWaypoint;
+
+		// systemchat str [_group, _objectPlacerPos, _waypoint];
 
 		private _unitPolys = _group getVariable ["A3C_UNIT_POLYS", []];
 
@@ -63,7 +67,7 @@ private _objectPlacerDir = getDir A3C_OBJECTPLACER;
 			["NONE", "NONE"],
 			_objectPlacerType
 		];
-
+		
 		_waypoint setWaypointType "SCRIPTED";
 		_waypoint setWaypointScript _waypointScript;
 

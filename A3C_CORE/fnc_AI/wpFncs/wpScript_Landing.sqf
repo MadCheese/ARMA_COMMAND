@@ -22,11 +22,7 @@ private _currentActions = _group getVariable ["A3C_SCRIPTS", []];
 
 _group setVariable ["A3C_SCRIPTS", _currentActions, true]; //-- guarantee at least the 2 sec of no script so that old one can exit
 
-private _isHoverCapableAircraft =
-	_leaderVehicle isKindOf "HELICOPTER"
-	|| {_leaderVehicle isKindOf "VTOL_Base_F"}
-	|| {_leaderVehicle isKindOf "VTOL_01_base_F"}
-	|| {_leaderVehicle isKindOf "VTOL_02_base_F"};
+private _isHoverCapableAircraft = [_leaderVehicle] call A3C_main_fnc_canHoverAircraft;
 
 private _isConventionalPlane = !_isHoverCapableAircraft && {_leaderVehicle isKindOf "PLANE"};
 
@@ -53,6 +49,18 @@ private _shouldContinueApproach = {
 		_vehicle distance2D _destinationPos > (_landingDistance * 2)
 	}
 };
+
+
+private _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
+
+
+
+
+//-- default enabling all vehicles
+{
+	_x flyInHeight (_x getVariable ["A3C_FLYINHEIGHT", 75]);
+	_x limitSpeed 5000;
+} foreach _groupVehicles;
 
 //-- WAIT FOR ARRIVAL / APPROACH
 while {[_leaderVehicle, _pos, _landingDistance, _isConventionalPlane] call _shouldContinueApproach} do {
@@ -91,24 +99,20 @@ while {[_leaderVehicle, _pos, _landingDistance, _isConventionalPlane] call _shou
 	};
 
 	sleep (if (_isHoverCapableAircraft) then {
-		if (_distance2D < 500) then {0.75} else {1.25}
+		[_leaderVehicle, _distance2D] call A3C_ai_highCommand_fnc_getHeliWaypointSleep
 	} else {
 		5
 	});
 };
 
-private _drivers = units _group select {
-	private _vehicle = objectParent _x;
-	!isNull _vehicle && {_x == driver _vehicle}
-};
+//-- Refresh _groupVehicles
+_groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
-private _drivenVehicles = _drivers apply {
-	vehicle _x
-};
+
 
 {
 	_x limitSpeed 5000;
-} forEach _drivenVehicles; //-- reset slowdown
+} forEach _groupVehicles; //-- reset slowdown
 
 //-- compose pre- and post conditions, wait for pre-condition
 private _exitCondition = {};
@@ -168,6 +172,8 @@ private _exitCondition = {};
 if !(_isHoverCapableAircraft) then {
 	sleep 2;
 };
+
+// systemchat "START LANDING";
 
 private _landingScript = [_leader, _pos, _callerUID, [], true] spawn A3C_ai_highCommand_fnc_wpAction_landingFull;
 
@@ -257,6 +263,9 @@ _currentActions = _group getVariable ["A3C_SCRIPTS", []];
 	};
 } forEach _currentActions;
 
+
+//-- #CURRENTBUG: this might be the issue but not sure. something can keep vehicles unresponsive after landing waypoint.
+//-- likely set var to nil anyways?? if vehicle is unresponsive, have server remote-chatlog the variable of the group
 _group setVariable ["A3C_SCRIPTS", if (count _currentActions > 0) then {_currentActions} else {nil}, true];
 
 A3C_BLACKLIST_WAYPOINT_EDIT = A3C_BLACKLIST_WAYPOINT_EDIT - [_wp];

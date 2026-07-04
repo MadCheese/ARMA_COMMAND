@@ -2,7 +2,12 @@
 
 params ["_unit"];
 
+if (isNull _unit) exitWith { [] };
+
 private _expectedDestination = expectedDestination _unit;
+
+if (isNil '_expectedDestination') exitWith { [] };
+
 _expectedDestination params ["_destinationPos", "_destinationType"];
 
 private _direction = -1;

@@ -7,6 +7,8 @@
 
 params ["_unit", "_destination"];
 
+
+
 if (_destination distance2D [0,0,0] < 0.1) exitWith {}; // -- invalid position, would make unit go to [0,0,0]
 
 private _group = group _unit;
@@ -24,6 +26,23 @@ if (_commanderNotInDriverGroup) then {
 };
 
 if (!isPlayer _leader) exitWith {
+
+	private _groupDrivers = (units _group) select {
+		private _vehicle = objectParent _x;
+		!isNull _vehicle
+		&& {_x == driver _vehicle}
+		&& {!isPlayer _x}
+	};
+	private _groupVehicles = _groupDrivers apply {objectParent _x};
+	{
+		[_x, true] remoteExec ["engineOn", _x];
+		if (_x isKindOf "HELICOPTER") then {
+			private _altitude = _x getVariable ["A3C_FLYINHEIGHT", 75];
+			_x land "NONE";
+			[_x, _altitude] remoteExec ["flyInHeight", _x];
+		};
+	} foreach _groupVehicles;
+
 	// -- group is AI-commanded. Remotely execute movement command where the effective commander is local.
 	[
 		[_group, _effectiveCommander, _destination],

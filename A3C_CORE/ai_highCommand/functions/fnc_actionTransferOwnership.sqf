@@ -19,3 +19,6 @@ private _transferFnc = {
 };
 
 [[clientOwner, _group], _transferFnc] remoteExec ["BIS_fnc_call", 2];
+
+
+

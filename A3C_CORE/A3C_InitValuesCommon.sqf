@@ -215,13 +215,63 @@ A3C_SOG_BASEPACKS = ["vn_o_pack_static_base_01","vn_b_pack_static_base_01"];
 A3C_STATIC_PACKS = [];
 
 
+
+
+
+
+
+///////// TEMP DEBUG STUFF GETIN 
+
+// A3C_ai_highCommand_fnc_actionLandingGetIn = {
+// 	params ["_group", "_vehiclesLanding"];
+// 	private _groupVehicles = [];
+
+// 	{
+// 		private _vehicle = vehicle _x;
+
+// 		if (_x == effectiveCommander _vehicle) then {
+// 			if !(isTouchingGround _vehicle) then {
+// 				[
+// 					_group,
+// 					_pos,
+// 					30,     //-- final combat landing speed in km/h
+// 					20,     //-- low final altitude ATL before GET IN landing behavior takes over
+// 					500,    //-- short approach envelope; main approach already happened
+// 					150     //-- soft anti-overshoot damping near landing point
+// 				] call A3C_ai_shared_fnc_approachWaypointHelicopter;
+
+// 				if !(_vehicle in _vehiclesLanding) then {
+// 					(format ["%1 (%2) added to _vehiclesLanding [%3]", typeOf _vehicle, groupID _group, round time]) remoteExec ["systemchat", 0];
+// 					_vehicle land "GET IN";
+// 					_vehiclesLanding pushBack _vehicle;
+// 				};
+// 			} else {
+// 				(format ["%1 (%2) is glued to ground [%3]", typeOf _vehicle, groupID _group, round time]) remoteExec ["systemchat", 0];
+// 				_vehicle flyInHeight 0;
+// 			};
+
+// 			_groupVehicles pushBack _vehicle;
+// 		};
+// 	} forEach units _group;
+// 	[_groupVehicles, _vehiclesLanding]
+// };
+
+
+
+/////////////////
+
+
 //-- Server only
 
 if (!isServer) exitWith {};
 
+
+
 if (isDedicated) then {
 	A3C_isHCSkillMaxed = if (!isNil 'A3C_isHCSkillMaxed') then {A3C_isHCSkillMaxed} else {true}; //-- can obe overRidden in Server's in server mission init.sqf
 	//-- #TODO: if a3c not running on server, this needs to still be declared!!!
+
+	A3C_DEDI_allowLocalitySwitch = true;
 };
 
 A3C_DETO_VIC_INDEX = 0;

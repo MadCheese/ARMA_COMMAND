@@ -1,3 +1,6 @@
+// A3C_ai_highCommand_fnc_reInitGroupMovement
+
+
 params ["_group"];
 
 {
@@ -13,6 +16,7 @@ params ["_group"];
 
 		private _flyInHeight = _vehicle getVariable ["A3C_FLYINHEIGHT", 75];
 		_vehicle flyInHeight _flyInHeight;
+		_vehicle land "NONE";
 
 		{
 			_vehicle enableAI _x;

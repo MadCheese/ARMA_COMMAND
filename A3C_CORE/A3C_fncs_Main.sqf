@@ -1303,7 +1303,7 @@ A3C_AIGetOut = {
 		dogetout _unit;
 		[_unit] orderGetin false;
 	};
-	_v //-- return vehicle, used in highCommand.sqfd
+	_v //-- return vehicle, used in highCommand.sqf
 };
 
 //-- REVERT AND DELETE ALL DATA FOR EXISTING ORDERS  // purpose vs below??

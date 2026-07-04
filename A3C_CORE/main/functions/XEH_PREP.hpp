@@ -5,6 +5,8 @@ A3C_PREP(buildingFindRoomDoors);
 A3C_PREP(buildingGetDoorDirection);
 A3C_PREP(buildingGetDoorPositions);
 
+
+A3C_PREP(canHoverAircraft);
 A3C_PREP(canUnitCarryIFAstatic);
 
 
@@ -19,7 +21,10 @@ A3C_PREP(getCASmodes);
 
 A3C_PREP(getDismountData);
 
-A3C_PREP(getGroupVehicles);
+
+
+A3C_PREP(getGroupDrivers);
+A3C_PREP(getGroupDrivenVehicles);
 A3C_PREP(getNearCargoLoadObjects);
 A3C_PREP(getSurfaceNormalAzimuth);
 A3C_PREP(getTankAmmoHE);

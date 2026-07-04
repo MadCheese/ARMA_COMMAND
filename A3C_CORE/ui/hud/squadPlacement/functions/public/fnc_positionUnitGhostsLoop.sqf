@@ -36,7 +36,7 @@ while {(count A3C_UI_squadPlacement_unitGhosts) > 0} do {
         _objectCollision = lineIntersectsSurfaces [
             AGLToASL positionCameraToWorld [0, 0, 0],
             AGLToASL positionCameraToWorld [0, 0, viewDistance],
-            vehicle player,
+            vehicle cameraOn,
             objNull,
             true,
             -1,

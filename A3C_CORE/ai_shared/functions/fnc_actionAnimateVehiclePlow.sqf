@@ -1,6 +1,6 @@
 params ["_group", "_mode"];
 
-private _groupVehicles = [_group] call A3C_main_fnc_getGroupVehicles;
+private _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
 private _phase = [1, 0] select (_mode != 0);
 
 {

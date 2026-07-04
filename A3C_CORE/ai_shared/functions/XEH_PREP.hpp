@@ -31,6 +31,19 @@ A3C_PREP(calculatePath);
 
 A3C_PREP(doMove);
 
+
+A3C_PREP(ehmAction);
+A3C_PREP(ehmDetect);
+A3C_PREP(ehmExec);
+A3C_PREP(execDrop);
+A3C_PREP(ehmFinish);
+A3C_PREP(ehmFinishDrop);
+
+
+
+
+
+
 A3C_PREP(fireCounterMeasures);
 
 

@@ -9,7 +9,6 @@ private _localGroups = _groups select {
 private _targetTypes = ["MAN", "CAR", "TANK", "AIR", "SHIP", "STATICWEAPON"];
 
 private _allTargets = [];
-private _targetIndexes = createHashMap;
 
 {
 	private _group = _x;
@@ -29,15 +28,16 @@ private _targetIndexes = createHashMap;
 		private _knowsAbout = _leader knowsAbout _target;
 
 		if (_knowsAbout > 0) then { //-- exclude unknown targets
-			private _targetIndex = _targetIndexes getOrDefault [_target, -1];
+			private _targetIndex = _allTargets findIf {
+				(_x select 0) isEqualTo _target
+			};
 
 			if (_targetIndex == -1) then {
-				_targetIndexes set [_target, count _allTargets];
 				_allTargets pushBack [_target, _knowsAbout];
 			} else {
 				private _knownTargetEntry = _allTargets select _targetIndex;
 
-				if (_knowsAbout > _knownTargetEntry select 1) then {
+				if (_knowsAbout > (_knownTargetEntry select 1)) then {
 					_allTargets set [_targetIndex, [_target, _knowsAbout]];
 				};
 			};

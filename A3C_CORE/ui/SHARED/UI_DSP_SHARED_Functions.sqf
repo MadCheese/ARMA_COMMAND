@@ -1895,7 +1895,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 	private _allSelectedGroupVehicles = [];
 	{
-		private _groupVehicles = [_x] call A3C_main_fnc_getGroupVehicles;
+		private _groupVehicles = [_x] call A3C_main_fnc_getGroupDrivenVehicles;
 		{
 			if !(_x in _allSelectedGroupVehicles) then {
 				_allSelectedGroupVehicles set [count _allSelectedGroupVehicles, _x];
@@ -1998,7 +1998,11 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 
 		//-- add FPV drone to 3D Menu   /// unitIsUAV _leaderVic
-		if ( ( (typeOf _leaderVic) in ["B_Crocus_AT", "B_Crocus_AP"]) && {_a3c_dsp == IDD_RADIAL_MENU}) then {
+
+		if (
+			"ArmaFPV_Data" in (configSourceAddonList (configFile >> "CfgVehicles" >> typeOf _leaderVic))
+			&& {_a3c_dsp == IDD_RADIAL_MENU}
+		) then {
 			if !("uav_fpv" in (toLower (waypointScript [_gp, currentwaypoint _gp]))) then {
 				_actions pushBackUnique "UAV_FPV";
 			};
@@ -2148,7 +2152,13 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 	};
 
 
-	if (_allSelectedGroupVehicles isNotEqualTo []) then {
+	if (
+		_allSelectedGroupVehicles isNotEqualTo []
+		&& {sunOrMoon < 1}
+		&& {
+			{_x isKindOf "AIR"} count _allSelectedGroupVehicles == 0
+		}
+	) then {
 		if ( {_x getVariable ["A3C_VehicleLights", 0] == 1} count _allSelectedGroupVehicles > 0) then {
 			_actions pushBackUnique "VEHICLE_LIGHTS_ON";
 		} else {
@@ -2522,10 +2532,10 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		"HEAL",
 		"RE-ARM",
 		"JOIN GROUP",
-		// "JOINPLAYER", //-- not needed because we can just use mergegroups
+		// "JOINPLAYER", //-- keeping this, but not needed because we can just use mergegroups
 		"UNSTUCK",
 		"REFRESH_HC_GROUP",
-		"OWNERSHIP",
+		"OWNERSHIP", //-- #NOTE: keeping this, but for now the bug that required this action seems fixed
 		"DELETEGROUP"	
 	];
 
@@ -2736,7 +2746,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_transferOwner.paa";
 					_button_toolTip = if (local (A3C_SELECTED_HC_GROUPS_SETTINGS select 0)) then {"TRANSFER OWNERSHIP TO SERVER"} else {"CLAIM OWNERSHIP"};
 					_buttonFnc = {
-						[] call A3C_ai_highCommand_actionTransferOwnershipDispatch;
+						[] call A3C_ai_highCommand_fnc_actionTransferOwnershipDispatch;
 					};
 				};
 				case ("UNSTUCK") : {

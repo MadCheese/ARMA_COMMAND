@@ -520,7 +520,7 @@ A3C_CONVOY_fncPID = {
 
 
 
-A3C_FNCS_CONVOY_MULTIGROUP = {
+A3C_ai_highCommand_fnc_convoyMultigroup = {
 	params ["_inputUnits","_refPos"];
 
 	private _wpPositions =  [_refPos,_inputUnits,count _inputUnits, (_refPos getDir (leader (_inputUnits select 0))) + 180,20 ] call A3C_fnc_generateWpWedgePositions;

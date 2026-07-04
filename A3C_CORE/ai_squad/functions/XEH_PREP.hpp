@@ -25,6 +25,9 @@ A3C_PREP(actionHeliLandFinal);
 A3C_PREP(actionHeliPickupAndDrop);
 A3C_PREP(actionHeliSling);
 
+A3C_PREP(boardingAssignVehicleSeatMacro);
+
+
 
 
 A3C_PREP(preparePointerAttachmentMode);

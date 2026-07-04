@@ -1212,7 +1212,7 @@ MAP_UI_fnc_drawMapUI = {
 
 				//-- are units boarding
 
-				if ([_group] call A3C_isGroupBoarding) then {
+				if ([_group] call A3C_ai_highCommand_fnc_isGroupBoarding) then {
 					(_this select 0) drawIcon
 					[
 						"\a3\ui_f\data\IGUI\RscIngameUI\RscUnitInfo\role_cargo_ca.paa",

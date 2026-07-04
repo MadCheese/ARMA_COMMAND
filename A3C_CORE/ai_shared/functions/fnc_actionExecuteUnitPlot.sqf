@@ -772,7 +772,7 @@ while {!isNull _unit} do {
 			case ("EHM") : {
 				_unit setPos _movePos;
 				_unit setDir (_movePos getDir _lookAtPos);
-				_unit call A3C_Babe_fnc_detect;
+				_unit call A3C_ai_shared_fnc_ehmDetect;
 
 				waitUntil {!(_unit getVariable ["A3C_EM_ACTIVE",false])};
 				[_unit,position _unit] call A3C_ai_shared_fnc_doMove;
@@ -1049,7 +1049,7 @@ while {!isNull _unit} do {
 						sleep 0.2;
 						_vehicle flyInHeight 1;
 						_vehicle limitSpeed 0;
-						_spawnBehaviour = [_vehicle,"all",0,_pickUpUnits] spawn A3C_AssignVehicleSeatMacro;
+						_spawnBehaviour = [_vehicle,"all",0,_pickUpUnits] spawn A3C_ai_squad_fnc_boardingAssignVehicleSeatMacro ;
 						waituntil {scriptDone _spawnBehaviour};
 
 						while {({(_x in _pickUpUnits)} count A3C_BOARD_UNITS_ACTIVE > 0) OR ({(assignedvehicle _x == _vehicle) && !(_x in _vehicle) && (alive _x)} count units group player > 0) } do {
@@ -1060,7 +1060,7 @@ while {!isNull _unit} do {
 						};
 					};
 					if !(_vehicle isKindOf "AIR") then {
-						_spawnBehaviour = [_vehicle,"all",0,_pickUpUnits] spawn A3C_AssignVehicleSeatMacro;
+						_spawnBehaviour = [_vehicle,"all",0,_pickUpUnits] spawn A3C_ai_squad_fnc_boardingAssignVehicleSeatMacro ;
 						waituntil {scriptDone _spawnBehaviour};
 					};
 				};

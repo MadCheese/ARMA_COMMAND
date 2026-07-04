@@ -25,10 +25,16 @@ params [
 	["_waypointIndex", -1]
 ];
 
+
+
 private _groupLeader = leader _group;
+
+
 private _leaderVehicle = vehicle _groupLeader;
 private _existingWaypoints = waypoints _group;
 private _isFirstWaypoint = currentWaypoint _group > selectMax (_existingWaypoints apply {_x # 1});
+
+private _groupUnits = units _group;
 
 if (A3C_Debug) then {
 	if (!isNil "_isFirstWaypoint") then {
@@ -39,12 +45,11 @@ if (A3C_Debug) then {
 	};
 };
 
-if (_isFirstWaypoint) then {
-	private _groupUnits = units _group;
-
-	if ({canMove vehicle _x && {_x getVariable ["A3C_VAR_LANDING", false]}} count _groupUnits > 0) exitWith {
-		systemChat format ["A3C: Waypoint can not be given until %1 has landed all of it's aircraft", groupID _group];
-	};
+if (
+	_isFirstWaypoint
+	&& {{canMove vehicle _x && {_x getVariable ["A3C_VAR_LANDING", false]}} count _groupUnits > 0}
+) exitWith {
+	systemChat format ["A3C: Waypoint can not be given until %1 has landed all of it's aircraft", groupID _group];
 };
 
 if (_isFirstWaypoint) then {
@@ -53,16 +58,26 @@ if (_isFirstWaypoint) then {
 	if (driver _leaderVehicle in _groupUnits) then {
 		_waypointIndex = 1;
 
-		[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
+		[
+			[_group],
+			A3C_ai_highCommand_fnc_reInitGroupMovement
+		] remoteExec ["bis_fnc_call", leader _group];
+
 		_group setVariable ["A3C_UNIT_POLYS", [], true];
 
 		private _requiresJetTakeoff = false;
 
 		{
 			private _unit = _x;
-			private _unitVehicle = vehicle _unit;
+			private _unitVehicle = objectParent _unit;
 
-			if (_unit == driver _unitVehicle) then {
+			if (
+				!isNull _unitVehicle
+				&& {_unit == driver _unitVehicle}
+			) then {
+	
+				[_unitVehicle, true] remoteExec ["engineOn", _unitVehicle];
+
 				if (_unitVehicle isKindOf "PLANE") then {
 					if (isTouchingGround _unitVehicle) then {
 						_requiresJetTakeoff = true;
@@ -87,16 +102,26 @@ if (_isFirstWaypoint) then {
 
 					if (_shouldStartNearShore) then {
 						if (abs speed _unitVehicle < 2) then {
-							[_unitVehicle] call A3C_SHIP_startBoat;
+							[
+								[_unitVehicle],
+								A3C_SHIP_startBoat
+							] remoteExec ["bis_fnc_call", _unitVehicle];
 						};
 					};
+				};
+
+				if (_unitVehicle isKindOf "HELICOPTER") then {
+					[_unitVehicle, "NONE"] remoteExec ["land", _unitVehicle];
 				};
 			};
 		} forEach _groupUnits;
 
 		if (_requiresJetTakeoff) then {
 			private _currentGroupLeader = leader _group;
-			[_currentGroupLeader] spawn A3C_ai_shared_fnc_planeOrganizeGroupTakeOff;
+			[
+				[_currentGroupLeader],
+				A3C_ai_shared_fnc_planeOrganizeGroupTakeOff
+			] remoteExec ["bis_fnc_spawn", _currentGroupLeader];
 		};
 	};
 };
@@ -123,14 +148,24 @@ if (_waypointStatements isEqualType []) then {
 private _currentGroupLeader = leader _group;
 
 if (_isFirstWaypoint && {!isPlayer _currentGroupLeader}) then {
-	_group move _waypointPosition;
 
-	private _effectiveCommander = effectiveCommander vehicle _currentGroupLeader;
-	private _groupUnits = units _group;
+	[
+		[
+			_group,
+			_currentGroupLeader,
+			_waypointPosition
+		],
+		{
+			params ["_group", "_currentGroupLeader", "_waypointPosition"];
+			_group move _waypointPosition;
+			private _effectiveCommander = effectiveCommander (vehicle _currentGroupLeader);
+			private _groupUnits = units _group;
 
-	if (_effectiveCommander in _groupUnits) then {
-		[_effectiveCommander, _waypointPosition] call A3C_ai_shared_fnc_doMove;
-	};
+			if (_effectiveCommander in _groupUnits) then {
+				[_effectiveCommander, _waypointPosition] call A3C_ai_shared_fnc_doMove;
+			};
+		}
+	] remoteExec ["bis_fnc_call", _currentGroupLeader];	
 };
 
 //-- SHIPS: dynamically set swimInDepth for each waypoint. Has no effect on non-submersible vehicles

@@ -105,12 +105,13 @@ A3C_UI_Radial_SQ_ROE_MAIN = {
     // Loop through rows and buttons
     for "_i" from 0 to (_rows - 1) do {
         _yPos = _verticalOffset + (_i * _buttonDim); // Adjust Y position for centering
+		private _image = if (_i == 0) then {"A3C_CORE\ui\pictures\icon_menu_behaviour.paa"} else {"A3C_CORE\ui\pictures\icon_menu_combatMode.paa"};
 
         for "_t" from 0 to (_buttonsPerRow - 1) do {
             _xPos = _horizontalOffset + (_t * (_buttonDim + _horizontalSpacing)); // Adjust X position
 
             private _ctrlImg = (findDisplay 100100) ctrlCreate ["RscPicture", -1, _controlsGroup];
-            _ctrlImg ctrlSetText "A3C_CORE\ui\pictures\icon_menu_ROE_OPT.paa";
+            _ctrlImg ctrlSetText _image; //"A3C_CORE\ui\pictures\icon_menu_ROE_OPT.paa";
             _ctrlImg ctrlSetTextColor (_colorPalettes select _t);
             _ctrlImg ctrlSetPosition [_xPos, _yPos, _buttonDim, _buttonDim];
             _ctrlImg ctrlCommit 0;

@@ -3,6 +3,9 @@
 //-- ServerMon FSM Functions (to make editing easier. FSM editor scripting is not guhd): 
 
 //-- Server handles EH-complexities for disabling Turnout
+
+// (format ["Running ServerLoop %1", round time]) remoteExec ["systemchat", 0];
+
 [] call A3C_server_fnc_handleDisableTurnout;
 
 private _gunnerSwitchFnc = {
@@ -63,10 +66,20 @@ sleep (0.5 * count _allClients); //-- give timeout to receive update from client
 	private _driver = driver _leaderVehicle; //-- leader vehicle driver
 	private _groupUnits = units _group;
 
+	//-- AI-Only groups should always be managed by server if running on dedicated.
+	//-- Excluded: UAV's - ALL Uav's until we figure out why CROCUS-FPV drones have their group deleted
+	//-- NOTE: We could detect CROCUS objects but that's vulnerable if other addon-UAV's have the same issue
+	
 	if (
 		isDedicated
+		&& {A3C_DEDI_allowLocalitySwitch}
 		&& {!local _group}
-		&& {{isPlayer _x} count _groupUnits == 0}
+		&& {
+			{
+				isPlayer _x
+				|| {unitIsUAV (vehicle _x)}
+			} count _groupUnits == 0
+		}
 	) then {
 		_group setGroupOwner 2;
 	};

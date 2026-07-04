@@ -306,12 +306,12 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 
 
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ITEMS_IMG) ctrlShow true;
-		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ITEMS_IMG) ctrlSetText "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\attack_ca.paa";
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ITEMS_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_behaviour.paa";
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ITEMS_BTN) ctrlShow true;
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ITEMS_BTN) ctrlSetToolTip "HC BEHAVIOUR";
 
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_VEHICLES_IMG) ctrlShow true;
-		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_VEHICLES_IMG) ctrlSetText "\a3\ui_f\data\Map\Markers\Military\dot_ca.paa";
+		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_VEHICLES_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_combatMode.paa"; //"\a3\ui_f\data\Map\Markers\Military\dot_ca.paa";
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_VEHICLES_BTN) ctrlShow true;
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_VEHICLES_BTN) ctrlSetToolTip "HC COMBAT-MODE";
 
@@ -2441,7 +2441,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					_x ctrlSetToolTip "";
 				} forEach _outerButtons;
 				
-				_img = "\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\attack_ca.paa";
+				_img = "A3C_CORE\ui\pictures\icon_menu_behaviour.paa";
 				_color = [1,1,1,0]; //momo
 
 				//-- BOTTOM RING: show all controls (images + buttons)
@@ -2695,7 +2695,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					_x ctrlSetToolTip "";
 				} forEach _outerButtons;
 
-				_img = "\a3\ui_f\data\Map\Markers\Military\dot_ca.paa";
+				_img = "A3C_CORE\ui\pictures\icon_menu_combatMode.paa"; //"\a3\ui_f\data\Map\Markers\Military\dot_ca.paa";
 				_color = [1,1,1,0];
 
 				//-- RIGHT/BOTTOM RING: show ROE controls
@@ -3341,7 +3341,7 @@ A3C_UI_RADIAL_LABEL_LB = {
 							compile format
 							[
 								"
-									[A3C_TARGETVEH,'%1',_this select 1,%2] spawn A3C_AssignVehicleSeatMacro;
+									[A3C_TARGETVEH,'%1',_this select 1,%2] spawn A3C_ai_squad_fnc_boardingAssignVehicleSeatMacro ;
 								",
 								if (_i == 0) then {'all'} else {'cargoFFV'},
 								_units

@@ -502,7 +502,7 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 			_vehi spawn {
 				sleep 1;
 				_boardingUnits = (A3C_SELECTED_UNITS) select {isNull objectParent _x};
-				[_this,'all',0,_boardingUnits] spawn A3C_AssignVehicleSeatMacro;				
+				[_this,'all',0,_boardingUnits] spawn A3C_ai_squad_fnc_boardingAssignVehicleSeatMacro ;				
 			};
 		} else {
 			if (count A3C_SELECTED_UNITS == 1) then {

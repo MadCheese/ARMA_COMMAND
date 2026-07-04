@@ -115,7 +115,7 @@ private _frameFunction = {
 	// private _enhancedMovementAvailable = (
 	// 	!isNil "A3C_EHM" &&
 	// 	{A3C_EHM} &&
-	// 	{!isNil "A3C_Babe_fnc_detect"}
+	// 	{!isNil "A3C_ai_shared_fnc_ehmDetect"}
 	// );
 
 	private _enhancedMovementAvailable = false;
@@ -127,7 +127,7 @@ private _frameFunction = {
 		} else {
 			if (
 				_unit distance2D _destination > 1.5 &&
-				{[_unit, _destination] call A3C_Babe_fnc_detect}
+				{[_unit, _destination] call A3C_ai_shared_fnc_ehmDetect}
 			) then {
 				{
 					_unit enableAI _x;

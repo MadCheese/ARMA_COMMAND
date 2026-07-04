@@ -7,6 +7,4 @@ private _groupDrivers = (units _group) select {
 	&& {_x == driver _vehicle}
 };
 
-private _groupVehicles = _groupDrivers apply {objectParent _x};
-
-_groupVehicles
+_groupDrivers

@@ -2,7 +2,7 @@
 
 params ["_group"];
 
-private _groupVehicles = ([_group] call A3C_main_fnc_getGroupVehicles) select {
+private _groupVehicles = ([_group] call A3C_main_fnc_getGroupDrivenVehicles) select {
 	private _vehicleType = typeOf _x;
 	_vehicleType in ["B_APC_Tracked_01_CRV_F_Fixed", "B_T_APC_Tracked_01_CRV_F_Fixed"]
 	&& {(_x getVariable ['MCSS_MCLC_MAGCOUNT', 4]) > 0}

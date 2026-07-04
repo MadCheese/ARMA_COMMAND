@@ -1,3 +1,6 @@
+// A3C_ui_squadPlacement_fnc_createFormation
+
+
 #include "..\..\script_component.hpp"
 
 params ["_cursorPos"];

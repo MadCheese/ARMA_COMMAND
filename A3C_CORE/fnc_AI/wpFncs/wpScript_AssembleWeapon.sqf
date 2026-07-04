@@ -12,6 +12,8 @@ params
 
 if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
 
+
+
 [_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 private _wpIndex = currentWaypoint _group;
@@ -33,6 +35,8 @@ if !(_group getVariable ["A3C_ASSEMBLING",false]) then {
 		sleep 5;
 	};
 };
+
+
 
 //-- CONDITIONS: Step 1
 private _exitCondition = {{true}};
