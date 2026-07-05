@@ -22,6 +22,9 @@ private _driver = driver _leaderVehicle;
 
 
 private _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
+private _groupHelicopters = _groupVehicles select {
+	_x isKindOf "HELICOPTER"
+};
 
 
 
@@ -75,16 +78,6 @@ if (_finalAltitude >= 0) then {
 		_currentAltitude
 	} else {
 
-		// private _testArray = [
-		// 	_approachRadius,
-		// 	75,
-		// 	_distance2D,
-		// 	_currentAltitude,
-		// 	_finalAltitude,
-		// 	true
-		// ];
-		// (str _testArray) remoteExec ["hint", 0];
-
 		linearConversion [
 			_approachRadius,
 			75,
@@ -94,12 +87,10 @@ if (_finalAltitude >= 0) then {
 			true
 		]
 	};
-
-	// (format ["%1: _desiredAltitude %2",groupID _group, _desiredAltitude]) remoteExec ["systemchat", 0];
 	
 	{
 		_x flyInHeight _desiredAltitude;
-	} foreach _groupVehicles;
+	} foreach _groupHelicopters;
 };
 
 private _cruiseSpeed = getNumber (configFile >> "CfgVehicles" >> typeOf _leaderVehicle >> "maxSpeed");
@@ -131,7 +122,9 @@ private _desiredSpeed = switch (true) do {
 	};
 };
 
-_leaderVehicle limitSpeed _desiredSpeed;
+{
+	_x limitSpeed _desiredSpeed;
+} forEach _groupHelicopters;
 
 /*
 	Anti-overshoot damping.

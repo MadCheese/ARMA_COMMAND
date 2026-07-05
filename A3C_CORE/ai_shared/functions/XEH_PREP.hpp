@@ -53,7 +53,9 @@ A3C_PREP(fireCounterMeasures);
 A3C_PREP(getDetonatableCharges);
 A3C_PREP(getUnitsWithExplosives);
 A3C_PREP(getExplosiveUnitMagazines);
+A3C_PREP(getHeliGroupLandingSlots);
 A3C_PREP(getHeliRoofLZ);
+
 
 A3C_PREP(getSelectionPackedStaticWeapons);
 A3C_PREP(getWeaponAssemblyMode);

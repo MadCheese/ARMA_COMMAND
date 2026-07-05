@@ -148,6 +148,30 @@ private _exitCondition = {};
 } forEach [_preCondition, _postCondition];
 
 private _vehiclesLanding = [];
+private _vehiclesUnloading = [];
+
+private _landingSpacing = _group getVariable ["A3C_HELI_LANDING_SPACING", 30];
+
+private _heliLandingSlots = [
+	_group,
+	_pos,
+	_landingSpacing,
+	_leaderVehicle
+] call A3C_ai_shared_fnc_getHeliGroupLandingSlots;
+
+private _fnc_getHeliLandingPosition = {
+	params ["_vehicle", "_landingSlots", "_fallbackPos"];
+
+	private _slot = _landingSlots select {
+		(_x select 0) == _vehicle
+	};
+
+	if (_slot isEqualTo []) exitWith {
+		+_fallbackPos
+	};
+
+	+((_slot select 0) select 1)
+};
 
 //-- Cache the TR unload vehicle kind per vehicle.
 //-- This keeps the expensive/semantic checks to one classification per vehicle object.
@@ -160,7 +184,7 @@ private _fnc_getTRUnloadVehicleKind = {
 		_vehicleKind
 	};
 
-	_vehicleKind = if ([_vehicle] call A3C_main_fnc_canHoverAircraft) then {
+	_vehicleKind = if (_vehicle isKindOf "HELICOPTER") then {
 		"HOVER"
 	} else {
 		if (_vehicle isKindOf "Air") then {
@@ -175,43 +199,30 @@ private _fnc_getTRUnloadVehicleKind = {
 	_vehicleKind
 };
 
-// private _fnc_unloadNonGroupCrew = {
-// 	params ["_vehicle", "_groupUnits"];
-
-// 	private _crewNonGroup = crew _vehicle select {
-// 		!(_x in _groupUnits) &&
-// 		{
-// 			assignedVehicle _x == _vehicle
-// 		}
-// 	};
-
-// 	if (_crewNonGroup isNotEqualTo []) then {
-// 		{
-// 			[
-// 				[_x],
-// 				{
-// 					params ["_unit"];
-
-// 					[_unit] call A3C_AIGetOut;
-// 				}
-// 			] remoteExec ["BIS_fnc_call", _x];
-// 		} forEach _crewNonGroup;
-// 	};
-// };
-
-private _fnc_unloadNonGroupCrew = {
+private _fnc_getNonGroupCrew = {
 	params ["_vehicle"];
 
 	private _driver = driver _vehicle;
 
-	_groupUnits = units group _driver;
-	private _crewNonGroup = (crew _vehicle) select {
-		!(_x in _groupUnits)
+	if (isNull _driver) exitWith {
+		[]
 	};
 
+	private _groupUnits = units group _driver;
+
+	(crew _vehicle) select {
+		!(_x in _groupUnits)
+	}
+};
+
+private _fnc_unloadNonGroupCrew = {
+	params ["_vehicle", ["_landingPos", []]];
+
+	private _crewNonGroup = [_vehicle] call _fnc_getNonGroupCrew;
+
+	if (_crewNonGroup isEqualTo []) exitWith {};
+
 	private _cargoGroups = [];
-
-
 
 	{
 		private _unitGroup = group _x;
@@ -220,19 +231,18 @@ private _fnc_unloadNonGroupCrew = {
 		};
 	} foreach _crewNonGroup;
 
-	
+	if (_vehicle isKindOf "HELICOPTER" && {_landingPos isNotEqualTo []}) then {
+		[_vehicle, _landingPos, _crewNonGroup] spawn {
+			params ["_vehicle", "_landingPos", "_crewNonGroup"];
 
-	[_vehicle, _driver, _crewNonGroup] spawn {
-		params ["_vehicle", "_driver","_crewNonGroup"];
-		waitUntil {
-			// _vehicle flyInHeight 0;
-			// _vehicle setVelocity [0,0,-0.5]; //-- OVERRIDE HELI COMPULSION TO LIFT OFF
-			_vehicle land "GET IN";
-			_vehicle flyinHeight 0;
+			waitUntil {
+				_vehicle landAt [_landingPos, "Get Out", 99999];
+				_vehicle flyinHeight 0;
 
-			{
-				_x in _crewNonGroup && {alive _x}
-			} count (crew _vehicle) == 0
+				{
+					_x in _crewNonGroup && {alive _x}
+				} count (crew _vehicle) == 0
+			};
 		};
 	};
 
@@ -240,11 +250,7 @@ private _fnc_unloadNonGroupCrew = {
 		[_x, _vehicle] remoteExec ["leaveVehicle", leader _x];
 	} foreach _cargoGroups;
 
-	// _vehicle land "GET IN";
-	// _vehicle flyinHeight 0;
 };
-
-
 
 waitUntil {
 	private _groupUnits = units _group;
@@ -261,29 +267,47 @@ waitUntil {
 
 			if (!isNull _driver && {_driver in _groupUnits}) then {
 				private _vehicleKind = [_vehicle] call _fnc_getTRUnloadVehicleKind;
+				private _crewNonGroup = [_vehicle] call _fnc_getNonGroupCrew;
 
 				switch (_vehicleKind) do {
 					case "HOVER": {
-						if !(isTouchingGround _vehicle) then {
+						if (_crewNonGroup isNotEqualTo []) then {
+							private _landingPos = [
+								_vehicle,
+								_heliLandingSlots,
+								_pos
+							] call _fnc_getHeliLandingPosition;
+
 							if !(_vehicle in _vehiclesLanding) then {
-								_vehicle land "GET IN";
-								// _vehicle flyInHeight 0;
+								_vehicle landAt [_landingPos, "Get Out", 99999];
 								_vehiclesLanding pushBack _vehicle;
 							};
-						} else {
-							[_vehicle] call _fnc_unloadNonGroupCrew;
-							_vehicle flyInHeight 0;
-						};
 
-						_actionableVehicles pushBack _vehicle;
+							if (isTouchingGround _vehicle) then {
+								if !(_vehicle in _vehiclesUnloading) then {
+									[_vehicle, _landingPos] call _fnc_unloadNonGroupCrew;
+									_vehiclesUnloading pushBack _vehicle;
+								};
+
+								_vehicle landAt [_landingPos, "Get Out", 99999];
+								_vehicle flyInHeight 0;
+							};
+
+							_actionableVehicles pushBack _vehicle;
+						};
 					};
 
 					case "GROUND": {
 						//-- Ground vehicles unload in place once the approach phase has completed.
 						//-- Do not issue final moveTo/doMove commands here; that causes convoy clumping.
-						[_vehicle] call _fnc_unloadNonGroupCrew;
+						if (_crewNonGroup isNotEqualTo []) then {
+							if !(_vehicle in _vehiclesUnloading) then {
+								[_vehicle] call _fnc_unloadNonGroupCrew;
+								_vehiclesUnloading pushBack _vehicle;
+							};
 
-						_actionableVehicles pushBack _vehicle;
+							_actionableVehicles pushBack _vehicle;
+						};
 					};
 
 					default {
@@ -295,6 +319,7 @@ waitUntil {
 	} forEach _groupUnits;
 
 	_vehiclesLanding = _vehiclesLanding arrayIntersect _actionableVehicles;
+	_vehiclesUnloading = _vehiclesUnloading arrayIntersect _actionableVehicles;
 
 	sleep 1;
 
