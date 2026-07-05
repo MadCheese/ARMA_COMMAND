@@ -1,5 +1,7 @@
 // A3C_ai_highCommand_fnc_wpActionLandingTick
 
+//-- currently unused
+
 params ["_group", "_vehiclesLanding"];
 
 private _groupVehicles = [];

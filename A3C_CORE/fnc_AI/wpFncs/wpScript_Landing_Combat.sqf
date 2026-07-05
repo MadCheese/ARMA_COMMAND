@@ -43,7 +43,7 @@ private _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
 //-- default enabling all vehicles
 {
 	_x flyInHeight (_x getVariable ["A3C_FLYINHEIGHT", 75]);
-	_x limitSpeed 5000;
+	_x limitSpeed 9999;
 } foreach _groupVehicles;
 
 
@@ -85,7 +85,7 @@ while {[_leaderVehicle, _pos, _landingDistance] call _shouldContinueApproach} do
 _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
-	_x limitSpeed 5000;
+	_x limitSpeed 9999;
 } forEach _groupVehicles; //-- release slowdown after approach / before combat landing handling
 
 //-- compose pre- and post conditions, wait for pre-condition
@@ -143,21 +143,58 @@ private _exitCondition = {};
 	};
 } forEach [_preCondition, _postCondition];
 
-
-
-//-- Problems with landing: we would want to:
-//-- 1: Create helipads to land on
-//-- 2: Add touchdown eventhandlers 
-//-- BUT: these would need to be managed as they will remain as residue if waypoint is reset. 
-//-- result: we currently still raw-dog landings with rudimental 'ground gluing' and no helipads for assisted landing
 private _vehiclesLanding = [];
 
+private _landingSpacing = _group getVariable ["A3C_HELI_LANDING_SPACING", 30];
+
+private _heliLandingSlots = [
+	_group,
+	_pos,
+	_landingSpacing,
+	_leaderVehicle
+] call A3C_ai_shared_fnc_getHeliGroupLandingSlots;
+
+private _fnc_getHeliLandingPosition = {
+	params ["_vehicle", "_landingSlots", "_fallbackPos"];
+
+	private _slot = _landingSlots select {
+		(_x select 0) == _vehicle
+	};
+
+	if (_slot isEqualTo []) exitWith {
+		+_fallbackPos
+	};
+
+	+((_slot select 0) select 1)
+};
+
+private _groupHelicopters = ([_group] call A3C_main_fnc_getGroupDrivenVehicles) select {
+	_x isKindOf "HELICOPTER"
+};
+
+{
+	private _vehicle = _x;
+
+	private _landingPos = [
+		_vehicle,
+		_heliLandingSlots,
+		_pos
+	] call _fnc_getHeliLandingPosition;
+
+	_vehicle landAt [_landingPos, "Get Out", 99999];
+
+	if !(_vehicle in _vehiclesLanding) then {
+		_vehiclesLanding pushBack _vehicle;
+	};
+} forEach _groupHelicopters;
+
+_vehiclesLanding = _vehiclesLanding arrayIntersect _groupHelicopters;
+
+
+
 waitUntil {
-
-	_vehiclesLanding = [_group, _vehiclesLanding] call A3C_ai_highCommand_fnc_wpActionLandingTick;
-
+	
 	sleep 0.1;
-
 	[] call _exitCondition
 };
 
@@ -165,6 +202,10 @@ private _isFinalWP = [_group] call A3C_main_fnc_isGroupOnFinalWP;
 
 //-- refresh _groupVehicles
 _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
+
+{
+	_x limitSpeed 9999;
+} forEach _groupVehicles; //-- release slowdown after combat landing handling
 
 if !(_isFinalWP) then {
 	{

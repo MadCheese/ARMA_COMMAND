@@ -111,7 +111,7 @@ _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
 
 {
-	_x limitSpeed 5000;
+	_x limitSpeed 9999;
 } forEach _groupVehicles; //-- reset slowdown
 
 //-- compose pre- and post conditions, wait for pre-condition
@@ -175,7 +175,62 @@ if !(_isHoverCapableAircraft) then {
 
 // systemchat "START LANDING";
 
-private _landingScript = [_leader, _pos, _callerUID, [], true] spawn A3C_ai_highCommand_fnc_wpAction_landingFull;
+private _landingScript = if (_isHoverCapableAircraft) then {
+	[_group, +_pos, _leaderVehicle] spawn {
+		params ["_group", "_pos", "_leaderVehicle"];
+
+		private _landingSpacing = _group getVariable ["A3C_HELI_LANDING_SPACING", 30];
+
+		private _heliLandingSlots = [
+			_group,
+			_pos,
+			_landingSpacing,
+			_leaderVehicle
+		] call A3C_ai_shared_fnc_getHeliGroupLandingSlots;
+
+		private _fnc_getHeliLandingPosition = {
+			params ["_vehicle", "_landingSlots", "_fallbackPos"];
+
+			private _slot = _landingSlots select {
+				(_x select 0) == _vehicle
+			};
+
+			if (_slot isEqualTo []) exitWith {
+				+_fallbackPos
+			};
+
+			+((_slot select 0) select 1)
+		};
+
+		private _groupHelicopters = _heliLandingSlots apply {
+			_x select 0
+		};
+
+		{
+			private _vehicle = _x;
+
+			private _landingPos = [
+				_vehicle,
+				_heliLandingSlots,
+				_pos
+			] call _fnc_getHeliLandingPosition;
+
+			_vehicle landAt [_landingPos, "Land", 99999];
+		} forEach _groupHelicopters;
+
+		waitUntil {
+			sleep 1;
+
+			{
+				alive _x &&
+				{canMove _x} &&
+				{!isTouchingGround _x}
+			} count _groupHelicopters == 0
+		};
+	};
+} else {
+	[_leader, _pos, _callerUID, [], true] spawn A3C_ai_highCommand_fnc_wpAction_landingFull
+};
 
 _currentActions pushBack ["landing_full_1", _landingScript];
 _group setVariable ["A3C_SCRIPTS", _currentActions, true];
@@ -254,6 +309,12 @@ waitUntil {
 };
 
 sleep 15;
+
+_groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
+
+{
+	_x limitSpeed 9999;
+} forEach _groupVehicles;
 
 _currentActions = _group getVariable ["A3C_SCRIPTS", []];
 

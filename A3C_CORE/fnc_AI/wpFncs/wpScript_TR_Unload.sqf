@@ -79,17 +79,10 @@ while {[_leaderVehicle, _landingDistance] call _shouldContinueApproach} do {
 	};
 };
 
-private _drivers = units _group select {
-	private _vehicle = objectParent _x;
-	!isNull _vehicle && {_x == driver _vehicle}
-};
-
-private _drivenVehicles = _drivers apply {
-	vehicle _x
-};
+private _drivenVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
-	_x limitSpeed 5000;
+	_x limitSpeed 9999;
 } forEach _drivenVehicles; //-- release slowdown after approach / before unload handling
 
 //-- compose pre- and post conditions, wait for pre-condition
@@ -231,21 +224,6 @@ private _fnc_unloadNonGroupCrew = {
 		};
 	} foreach _crewNonGroup;
 
-	if (_vehicle isKindOf "HELICOPTER" && {_landingPos isNotEqualTo []}) then {
-		[_vehicle, _landingPos, _crewNonGroup] spawn {
-			params ["_vehicle", "_landingPos", "_crewNonGroup"];
-
-			waitUntil {
-				_vehicle landAt [_landingPos, "Get Out", 99999];
-				_vehicle flyinHeight 0;
-
-				{
-					_x in _crewNonGroup && {alive _x}
-				} count (crew _vehicle) == 0
-			};
-		};
-	};
-
 	{
 		[_x, _vehicle] remoteExec ["leaveVehicle", leader _x];
 	} foreach _cargoGroups;
@@ -289,7 +267,6 @@ waitUntil {
 									_vehiclesUnloading pushBack _vehicle;
 								};
 
-								_vehicle landAt [_landingPos, "Get Out", 99999];
 								_vehicle flyInHeight 0;
 							};
 
@@ -341,6 +318,12 @@ waitUntil {
 
 	_doExit
 };
+
+private _drivenVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
+
+{
+	_x limitSpeed 9999;
+} forEach _drivenVehicles;
 
 
 if !([_group] call A3C_main_fnc_isGroupOnFinalWP) then {
