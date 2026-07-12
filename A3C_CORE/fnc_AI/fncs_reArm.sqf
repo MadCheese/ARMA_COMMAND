@@ -258,7 +258,7 @@ A3C_ReArm_Plot_Behavior = {
 		if (_containerIndex == -1) exitWith {};
 
 		private _containerItems = _containerContentMap select _containerIndex;
-		private _itemIndex = [_item, _containerItems] call MCSS_fnc_GetArrayIndex;
+		private _itemIndex = [_item, _containerItems] call MCSS_fnc_getArrayIndex;
 
 		if (_itemIndex != -1) then {
 			_containerItems deleteAt _itemIndex;
@@ -618,7 +618,7 @@ A3C_ReArm_Plot_Behavior = {
 				_magContainer removeMagazineGlobal _mag;
 			} else {
 				private _containerMags = magazineCargo _magContainer;
-				private _arrayIndex = [_mag, _containerMags] call MCSS_fnc_GetArrayIndex;
+				private _arrayIndex = [_mag, _containerMags] call MCSS_fnc_getArrayIndex;
 
 				if (_arrayIndex != -1) then {
 					_containerMags deleteAt _arrayIndex;

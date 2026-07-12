@@ -10,7 +10,7 @@ _cursorPos set [2, 0];
 
 private _objectHeight = (_object call BIS_fnc_objectHeight) * 0.3;
 private _normalDirAZM = [0, 0] getDir (A3C_HUD_NORMAL select [0, 2]);
-private _watchOverDir = [_normalDirAZM + 180] call MCSS_fnc_CorrectDir;
+private _watchOverDir = [_normalDirAZM + 180] call MCSS_fnc_correctDir;
 
 if ((A3C_HUD_FORM == 7) || {visibleMap}) exitWith {
     _cursorPos = [
@@ -29,8 +29,8 @@ if ((A3C_HUD_FORM == 7) || {visibleMap}) exitWith {
 _cursorPos = [_cursorPos, 1, _normalDirAZM] call BIS_fnc_relPos;
 
 private _objectDir = getDir _object;
-private _directionOption1 = [_normalDirAZM + 90] call MCSS_fnc_CorrectDir;
-private _directionOption2 = [_directionOption1 + 180] call MCSS_fnc_CorrectDir;
+private _directionOption1 = [_normalDirAZM + 90] call MCSS_fnc_correctDir;
+private _directionOption2 = [_directionOption1 + 180] call MCSS_fnc_correctDir;
 
 private _endUnitSpacingCount = count A3C_UI_squadPlacement_unitGhosts;
 _endUnitSpacingCount = switch (true) do {
@@ -49,8 +49,8 @@ _endUnitSpacingCount = switch (true) do {
 };
 
 if (A3C_DEBUG) then {
-    RED_LINES = [];
-    GREEN_LINES = [];
+    MCSS_RED_LINES = [];
+    MCSS_GREEN_LINES = [];
 };
 
 private _formationDir = 0;
@@ -95,9 +95,9 @@ private _coverFnc = {
 
         if (A3C_DEBUG) then {
             if (_mode != 0) then {
-                GREEN_LINES pushBack [_refPos1, _refPos2];
+                MCSS_GREEN_LINES pushBack [_refPos1, _refPos2];
             } else {
-                RED_LINES pushBack [_refPos1, _refPos2];
+                MCSS_RED_LINES pushBack [_refPos1, _refPos2];
             };
         };
 
@@ -179,7 +179,7 @@ _intersections = _intersections select {
 };
 
 if ((count _intersections) > 0) then {
-    _formationDir = [_formationDir + 180] call MCSS_fnc_CorrectDir;
+    _formationDir = [_formationDir + 180] call MCSS_fnc_correctDir;
 };
 
 // Step 2: adjust main formation direction and formation variation relative to snap data.
@@ -187,8 +187,8 @@ private _adjustFormLine = 0;
 private _adjustFormL = 3;
 private _adjustFormStag = 5;
 
-private _relDir = [round (_normalDirAZM - _objectDir)] call MCSS_fnc_CorrectDir;
-private _relFormDir = [round (_formationDir - _objectDir)] call MCSS_fnc_CorrectDir;
+private _relDir = [round (_normalDirAZM - _objectDir)] call MCSS_fnc_correctDir;
+private _relFormDir = [round (_formationDir - _objectDir)] call MCSS_fnc_correctDir;
 
 switch (true) do {
     case (_relDir < 90): {
@@ -276,7 +276,7 @@ if (A3C_HUD_FORM in [3, 4]) then {
     // Subtract 2 because this scans ahead of formation and excludes leader.
     _endUnitSpacingCount = _endUnitSpacingCount - 2;
 
-    private _testDir = [_formationDir + 180] call MCSS_fnc_CorrectDir;
+    private _testDir = [_formationDir + 180] call MCSS_fnc_correctDir;
 
     _refPos = (getPosASL (A3C_UI_squadPlacement_unitGhosts select 0)) vectorAdd [0, 0, _objectHeight];
 

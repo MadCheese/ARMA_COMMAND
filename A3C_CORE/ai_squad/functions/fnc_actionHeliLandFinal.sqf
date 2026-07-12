@@ -35,7 +35,7 @@ if (_vehicle isKindOf "PLANE") then {
 		private _cargoUnit = _x;
 
 		if ([_cargoUnit] call A3C_main_fnc_shouldEjectFromHeli) then {
-			[_cargoUnit] spawn MCSS_fnc_GetOut;
+			[_cargoUnit] spawn A3C_ai_shared_fnc_getOut;
 		};
 
 		if ((group _cargoUnit != group _playerUnit) && {_cargoUnit == leader group _cargoUnit}) then {

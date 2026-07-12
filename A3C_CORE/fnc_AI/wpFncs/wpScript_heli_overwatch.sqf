@@ -11,7 +11,7 @@ _group setFormation _formation;
 
 private _wpIndex = currentWaypoint _group;
 
-// private _waypointPositions =  [_pos,units _group,count units _group, (_pos getDir (leader _group)) + 180,100 ] call A3C_fnc_generateWpWedgePositions;
+// private _waypointPositions =  [_pos,units _group,count units _group, (_pos getDir (leader _group)) + 180,100 ] call A3C_main_fnc_generateWpWedgePositions;
 
 private _assignedIndex = 0;
 
@@ -19,7 +19,7 @@ private _assignedIndex = 0;
 private _leader = leader _group;
 private _leaderVic = vehicle _leader;
 private _precision = (getNumber (configfile >> "CfgVehicles" >> (typeOf _leaderVic) >> "precision")) * 1.3;
-private _groupPilots = (units _group) select {private _v = vehicle _x; _x == driver _v && {[_v] call A3C_fnc_isAttackHelicopter}};
+private _groupPilots = (units _group) select {private _v = vehicle _x; _x == driver _v && {[_v] call A3C_main_fnc_isAttackHelicopter}};
 
 if (count _groupPilots == 0) exitWith {true};
 
@@ -583,7 +583,7 @@ _fnc_tilt = {
 							_initVectorDir = vectorDir _vehicle;
 							_initVectorUp = vectorUp _vehicle;
 
-							_tilt = [_vehicle,position _activeTarget] call MCSS_fnc_TiltTowardsPos;
+							_tilt = [_vehicle,position _activeTarget] call MCSS_fnc_tiltObjectTowardsPosition;
 							_tilt params ["_newVectorDir","_newVectorUp"];
 							_vehicle selectWeapon _weapon;
 

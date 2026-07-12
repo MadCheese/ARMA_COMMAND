@@ -55,6 +55,8 @@ A3C_PREP(getUnitsWithExplosives);
 A3C_PREP(getExplosiveUnitMagazines);
 A3C_PREP(getHeliGroupLandingSlots);
 A3C_PREP(getHeliRoofLZ);
+A3C_PREP(getOut);
+
 
 
 A3C_PREP(getSelectionPackedStaticWeapons);
@@ -66,10 +68,15 @@ A3C_PREP(guideProjectileBullet);
 A3C_PREP(guideProjectileMissile);
 A3C_PREP(guideProjectileVTOL);
 
+
+
+
+
 A3C_PREP(loadVehicleCargo);
 
 
 
+A3C_PREP(orderbhvCbmIndividual);
 A3C_PREP(orderRemoteLaunch);
 
 
@@ -90,6 +97,10 @@ A3C_PREP(preparePointerAttachmentMode);
 A3C_PREP(reduceSpeed);
 A3C_PREP(removeEventhandlerFired);
 A3C_PREP(replaceUnit);
+A3C_PREP(resetUnit);
+
+A3C_PREP(rotateVehicleTowardsPos);
+
 
 
 
@@ -99,11 +110,19 @@ A3C_PREP(replaceUnit);
 A3C_PREP(selectStaticWeaponDisassemblyUnits);
 
 A3C_PREP(setDestination);
+A3C_PREP(setFormation);
+
 A3C_PREP(setUnitPos);
 A3C_PREP(staticWeaponPrepareDisassembly);
 A3C_PREP(structureRemoteLaunch);
 
 
+A3C_PREP(unitGetOut);
+
+A3C_PREP(unitRouteIsBrokenFrom);
+A3C_PREP(unitRouteIsUnitStopped);
+A3C_PREP(unitRouteIsWpAborted);
+A3C_PREP(unitRouteIsWpComplete);
 
 A3C_PREP(wpActionPlantExplosive);
 

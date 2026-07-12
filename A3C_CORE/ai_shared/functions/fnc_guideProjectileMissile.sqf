@@ -62,7 +62,7 @@ while { alive _newProjectile } do {
         _velocity = _dir vectorMultiply (_missileSpeed / _distance);
 
         if (!_isInf) then {
-            private _tilt = [_newProjectile, position _target] call MCSS_fnc_TiltTowardsPos;
+            private _tilt = [_newProjectile, position _target] call MCSS_fnc_tiltObjectTowardsPosition;
             _tilt params ["_vDir", "_vUp"];
 
             _newProjectile setVectorDirAndUp [_vDir, _vUp];

@@ -2,7 +2,7 @@
 
 params ["_plane","_carrier"];
 
-private _planeBbox = [_plane,0] call MCSS_fnc_BBOX;
+private _planeBbox = [_plane,0] call MCSS_fnc_getBoundingBox;
 private _planeWidth = (_planeBbox select 0) distance2D (_planeBbox select 1);
 
 private _storageData = [];
@@ -47,7 +47,7 @@ private _storageData = [];
 
 		_storageData = [
 			_carrierSurfacePosASL,
-			[(getDir _carrier) + _carrierStorageDirOffset] call MCSS_fnc_CorrectDir
+			[(getDir _carrier) + _carrierStorageDirOffset] call MCSS_fnc_correctDir
 		];
 	};
 } forEach A3C_CarrierArray;

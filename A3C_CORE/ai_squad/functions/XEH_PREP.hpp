@@ -28,6 +28,9 @@ A3C_PREP(actionHeliSling);
 A3C_PREP(boardingAssignVehicleSeatMacro);
 
 
+A3C_PREP(initializeUnit);
+A3C_PREP(joinUnitToPlayerGroup);
+
 
 
 A3C_PREP(preparePointerAttachmentMode);
@@ -39,6 +42,8 @@ A3C_PREP(setROE);
 A3C_PREP(toggleAutoCombat);
 
 
+A3C_PREP(unitRouteContinue);
+A3C_PREP(unitRouteHold);
 
 A3C_PREP(willSlingLoadAtWaypoint);
 

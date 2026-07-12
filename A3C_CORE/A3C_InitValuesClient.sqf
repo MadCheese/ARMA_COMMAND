@@ -179,7 +179,10 @@ A3C_MV_MARKERDATA= [];
 
 A3C_TRACKED_ENEMYGROUP = objnull;
 A3C_TAB_BUILDING = objNull;
+
 A3C_LB_DEST = objnull;
+A3C_LB_TICKTIME = time;
+A3C_LB_MODE = -1;
 
 A3C_SUPPRESSION_INDICATOR = objNull;
 A3C_SQ_REM_INDICATOR = objNull;
@@ -402,7 +405,7 @@ BV_MEDICAL = 0;
 BV_CBMODE = 0;
 
 
-A3C_LB_MODE = -1;
+
 
 BV_LB1 = 6;
 BV_LB2 = 7;
@@ -430,12 +433,6 @@ A3C_Prevent_attach_NVG = false;
 A3C_Prevent_SwitchWeapon = false;
 
 A3C_SNAP_MAP_BOOL = false;
-
-
-//-- DEBUG
-RED_LINES = [];
-GREEN_LINES = [];
-BLUE_LINES = [];
 
 
 A3C_GOCODES_HC = [];

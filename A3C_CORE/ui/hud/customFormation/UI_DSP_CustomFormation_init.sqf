@@ -15,7 +15,7 @@ A3C_UI_CustomFormation_fnc_getDirRange = {
 	if (_dirCoef2 >=180) then {
 		_dirCoef2 = 360 - _dirCoef2;
 	};
-	_return = ([_dirCoef1,_dirCoef2] call MCSS_fnc_FindDifference) < 20;
+	_return = (abs (_dirCoef1 - _dirCoef2)) < 20;
 	_return
 };
 
@@ -420,7 +420,7 @@ with uiNamespace do {
 		// systemchat str [_posX,_posY, A3C_UI_CustomFormation_GridUnit];
 		_dist = ([_posX,_posY] distance [0.5,0.5]) / A3C_UI_CustomFormation_GridUnit;
 		_dist = _dist * 5;
-		_dir = (360 - ( [_posX,_posY] getDir [0.5,0.5]) );// [360 - ( [_posX,_posY] getDir [0.5,0.5])] call MCSS_fnc_CorrectDir;	
+		_dir = (360 - ( [_posX,_posY] getDir [0.5,0.5]) );// [360 - ( [_posX,_posY] getDir [0.5,0.5])] call MCSS_fnc_correctDir;	
 		_return = [_dist,_dir];
 		//player sidechat str _return;
 		_return
@@ -460,7 +460,7 @@ A3C_UI_CustomFormation_fnc_drawDot = {
 				//systemchat str (_relPos distance (A3C_UI_CustomFormation_Poses select ((count A3C_UI_CustomFormation_Poses) -1)));
 				//_dir = () select 1;
 
-				//A3C_UI_CustomFormation_tickDir = [360 - ( [_gridX,_gridY] getDir [0.5,0.5])] call MCSS_fnc_CorrectDir;
+				//A3C_UI_CustomFormation_tickDir = [360 - ( [_gridX,_gridY] getDir [0.5,0.5])] call MCSS_fnc_correctDir;
 			};
 			//systemchat str A3C_UI_CustomFormation_lineLength;
 			//_dot ctrlSetPosition [_gridX ,_gridY  ,1 * (safezoneH / safeZoneW),1 * safezoneH];

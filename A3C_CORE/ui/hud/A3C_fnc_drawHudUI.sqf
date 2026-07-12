@@ -6,7 +6,7 @@ A3C_fnc_drawHudUI = {
 	_posArray = +(A3C_HUD_DRAW_POSARRAY);
 
 	
-	private _hcAllGroups = A3C_HC_getAllGroups_Player_Current; // [group player] + 
+	private _hcAllGroups = A3C_HC_allGroupsClient_Current; // [group player] + 
 	//{
 	//	//[_x,["lightOff", vehicle _x]] remoteExec ["action",_x]
 	//	_x action ["lightOff", vehicle _x];
@@ -23,9 +23,9 @@ A3C_fnc_drawHudUI = {
 		} foreach _array;
 	} foreach
 	[
-		[RED_LINES,[1,0,0,1]],
-		[GREEN_LINES,[0,1,0,1]],
-		[BLUE_LINES,[0,0,1,1]]
+		[MCSS_RED_LINES,[1,0,0,1]],
+		[MCSS_GREEN_LINES,[0,1,0,1]],
+		[MCSS_BLUE_LINES,[0,0,1,1]]
 	];
 	
 	
@@ -138,7 +138,7 @@ A3C_fnc_drawHudUI = {
 				_leadVic = (vehicle _leader);
 				
 				if (isNull driver _leadVic OR {driver _leadVic in (units _gp)}) then {
-					_iconType = [_gp] call A3C_HC_getIconType;
+					_iconType = [_gp] call A3C_main_fnc_getGroupIconType;
 					_iconPos = _leadVic modelToWorldVisual [0,0,0];
 					_iconPos set [2,(((boundingboxreal _leadVic) select 1) select 2) + 0.5 + (_iconPos select 2)];
 					
@@ -234,7 +234,7 @@ A3C_fnc_drawHudUI = {
 			_iconPosPL set [2,(((boundingboxreal _leadVicPL) select 1) select 2) + 0.5 + (_iconPosPL select 2)];
 			drawIcon3D
 			[
-				[group player] call A3C_HC_getIconType,
+				[group player] call A3C_main_fnc_getGroupIconType,
 				[A3C_UI_COLOR_BLUE,0.3] call A3C_UI_fnc_setOpacity,
 				_iconPosPL, //_iconPos,
 				1, //_iconSize,
@@ -348,7 +348,7 @@ A3C_fnc_drawHudUI = {
 
 	//-- draw custom cursorTarget if player is in a vehicle
 	if (count _hcAllGroups > 0 && {!isNull objectparent player} ) then { //&&  {player == driver vehicle player}
-		_cursorTarget = [] call A3C_fnc_getCursortargetCustom;
+		_cursorTarget = [] call MCSS_fnc_getCursortargetCustom;
 		if (!isNull _cursorTarget && { A3C_CURRENT_COMMAND_LEVEL == 'HIGHCOMMAND' && {group driver _cursorTarget in _hcAllGroups && {(_cursorTarget canVehicleCargo (vehicle player)) select 0}}}) then {
 			_iconPos = _cursorTarget modelToWorldVisual [0,0,0];
 			drawIcon3D
@@ -490,7 +490,7 @@ A3C_fnc_drawHudUI = {
 					if ({_x in toLower A3C_UI_HUD_3D_TAG_ICON_TYPE} count ["movepos","building"] > 0) then {
 						private _eligibleForBuildingSearch = (count A3C_RD_UNITS == 1) && {{!isNull objectParent _x && {(assignedVehicleRole _x) select 0 != "cargo"}} count (units (A3C_RD_UNITS select 0)) == 0};
 						
-						if (_eligibleForBuildingSearch && {cursorTarget isKindOf "HOUSE" && {([cursortarget] call MCSS_fnc_countBPos) > 0}}) then {
+						if (_eligibleForBuildingSearch && {cursorTarget isKindOf "HOUSE" && {([cursortarget] call MCSS_fnc_getLastBuildingPosIndex) > 0}}) then {
 							A3C_UI_HUD_3D_TAG_ICON_TYPE = "a3c_ui\markers\building.paa";
 							A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
 						} else {

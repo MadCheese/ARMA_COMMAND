@@ -2,7 +2,7 @@
 
 params ["_inputUnits","_refPos"];
 
-private _wpPositions = [_refPos,_inputUnits,count _inputUnits, (_refPos getDir (leader (_inputUnits select 0))) + 180,20 ] call A3C_fnc_generateWpWedgePositions;
+private _wpPositions = [_refPos,_inputUnits,count _inputUnits, (_refPos getDir (leader (_inputUnits select 0))) + 180,20 ] call A3C_main_fnc_generateWpWedgePositions;
 //systemchat str (_inputUnits);
 
 private _lastUnit = grpNull;
@@ -78,7 +78,7 @@ _convoyGroupsActive =
 	_convoyGroupsActive,
 	[],
 	{
-		[_x,_convoyArraySorted] call MCSS_fnc_GetArrayIndex
+		[_x,_convoyArraySorted] call MCSS_fnc_getArrayIndex
 	},
 	"ASCEND"
 ] call BIS_fnc_sortBy;
@@ -134,8 +134,12 @@ if (_doConvoyBehaviour) then {
 		+(A3C_GROUP_CONVOYS select _convoyArrayIndex)
 	};
 
+	
+
 	[_freeGroups,_lastUnit,_managedGroups] spawn {
 		params ["_freeGroups","_lastUnit","_managedGroups"];
+
+		
 		private _addingToConvoy = !isNull _lastUnit;
 
 		private _convoyGetDesiredBehaviour = {
@@ -144,7 +148,7 @@ if (_doConvoyBehaviour) then {
 			private _leaderVehicle = vehicle leader _group;
 			if (isNull _leaderVehicle) exitWith {"SAFE"};
 
-			if (!([_leaderVehicle] call A3C_fnc_isArmedVehicle)) exitWith {"CARELESS"};
+			if (!([_leaderVehicle] call A3C_main_fnc_isArmedVehicle)) exitWith {"CARELESS"};
 			"SAFE"
 		};
 
@@ -152,6 +156,7 @@ if (_doConvoyBehaviour) then {
 			params ["_group"];
 
 			private _desiredBehaviour = [_group] call _convoyGetDesiredBehaviour;
+			
 			private _leader = leader _group;
 			private _isManaged = _group getVariable ["A3C_Convoy_BehaviourManaged", false];
 
@@ -163,13 +168,19 @@ if (_doConvoyBehaviour) then {
 				};
 			};
 
+			
+
 			_group setVariable ["A3C_Convoy_BehaviourManaged", true, true];
 			_group setVariable ["A3C_Convoy_ForcedBehaviour", _desiredBehaviour, true];
+
+			
 
 			{
 				[_x,"AUTOCOMBAT"] remoteExec ["disableAI", _x];
 				[_x,_desiredBehaviour] remoteExec ["setBehaviourStrong", _x];
 			} forEach (units _group);
+
+
 		};
 
 		
@@ -179,6 +190,8 @@ if (_doConvoyBehaviour) then {
 		{
 			[_x] call _convoyApplyBehaviour;
 		} forEach _managedGroups;
+		
+		
 
 		private _pidFnc = {
 			params ["_group","_allVehicles","_leaders","_vehicleCountAhead","_isLastVehicle"];
@@ -253,8 +266,10 @@ if (_doConvoyBehaviour) then {
 				} forEach (units _group);
 				_return
 			};
-
+			
 			while {[_group] call _aliveFnc} do {
+
+				
 
 				if (isNull _leadByGroup) exitWith {};
 
@@ -491,6 +506,8 @@ if (_doConvoyBehaviour) then {
 			} forEach _checkGroups;
 		};
 
+		
+		
 		private _convoyLeader = objNull;
 		private _allVehicleCount = 0;
 

@@ -11,7 +11,7 @@ for "_i" from 1 to _buildingPosCount do { //-- SKIP 0 BECAUSE IT'S ENTRY POINT
 	private _buildingPos = ATLtoASL (_building buildingPos _i);
 	_buildingPos set [2, (_buildingPos select 2) + 0.2]; //-- 1.5
 
-	if (_roofSensitive || { [ASLtoATL _buildingPos, _building] call A3C_fnc_INSIDE }) then {
+	if (_roofSensitive || { [ASLtoATL _buildingPos, _building] call A3C_main_fnc_isPositionInsideBuilding }) then {
 		_buildingPosArray pushBackUnique [_i, _buildingPos];
 	};
 };
@@ -51,7 +51,7 @@ private _defunctBuildingData = profileNamespace getVariable ["A3C_PROFILEVAR_BUI
 
 			private _refHeight = _refPos select 2;
 
-			if (([_buildingPosHeight, _refHeight] call MCSS_fnc_FindDifference) < 1) then {
+			if ((abs (_buildingPosHeight - _refHeight)) < 1) then {
 				private _intersectsObjs = lineIntersectsObjs [_buildingPosASL, _refPos, objNull, objNull, false];
 
 				if !(_building in _intersectsObjs) then {

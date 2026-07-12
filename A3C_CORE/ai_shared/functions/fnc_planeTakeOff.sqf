@@ -11,7 +11,7 @@ if !(isTouchingGround _vehicle) exitWith {};
 
 [_vehicle,1] remoteExec ["setVehicleAmmo", _vehicle];
 
-private _airportData = [getPosATL _vehicle] call MCSS_fnc_getNearestAirportData;
+private _airportData = [getPosATL _vehicle] call A3C_main_fnc_getNearestAirportData;
 _airportData params ["_airportID","_airportName","_airportTaxiIn","_airportTaxiOff","_airportIlsDir","_taxiInPoses","_taxiOffPoses"];
 
 private _planeDir = if (count _taxiInPoses > 1) then {(_taxiInPoses select 0) getDir _airportTaxiIn} else {0};

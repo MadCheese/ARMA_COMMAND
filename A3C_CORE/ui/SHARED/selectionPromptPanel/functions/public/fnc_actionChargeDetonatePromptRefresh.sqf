@@ -69,6 +69,6 @@ if (_charges isNotEqualTo []) then {
 	} forEach _charges;
 };
 
-[_parent, _listBox, _count] call A3C_OBJECTSEL_RESIZE;
+[_parent, _listBox, _count] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
 
 ctrlSetFocus _listBox;

@@ -187,7 +187,7 @@ while {!isNull _unit} do {
 		if !(_vehicle == _unit) then {
 			_vehicle limitspeed 1000;
 		};
-		[_unit] call A3C_RESET;
+		[_unit] call A3C_ai_shared_fnc_resetUnit;
 	};
 
 	if (isNull _unit) exitWith {};
@@ -240,7 +240,7 @@ while {!isNull _unit} do {
 	//-- Throw Grenade
 	if ((_wpAction select 0) == "GRENADE") then {
 		_muzzle = (_wpAction select 1);
-		if (_muzzle in (magazines _unit)) then {_muzzle = ([_muzzle] call MCSS_fnc_GetMuzzle) } else {_muzzle = ""};
+		if (_muzzle in (magazines _unit)) then {_muzzle = ([_muzzle] call MCSS_fnc_getThrowMuzzleForMagazine) } else {_muzzle = ""};
 		if !(_muzzle == "") then {
 			[_unit,position _vehicle ] call A3C_ai_shared_fnc_doMove;
 			_unit lookat _wPos;
@@ -309,7 +309,7 @@ while {!isNull _unit} do {
 		_vehicle enableAI "move";
 	};
 
-	if ([_movePos, (nearestBuilding _movePos)] call A3C_fnc_INSIDE) then {_inBuilding = true} else {_inBuilding = false};
+	if ([_movePos, (nearestBuilding _movePos)] call A3C_main_fnc_isPositionInsideBuilding) then {_inBuilding = true} else {_inBuilding = false};
 
 	if (_unit == driver _vehicle) then {
 		if (!(_unit getvariable ["A3C_HOLD",false])) then {
@@ -364,7 +364,7 @@ while {!isNull _unit} do {
 					_wpData = (_data select _cycle);
 					_wpData params ["_wpPositions","_wpMarkers","_wpAction","_wpCondition","_wpStances","_wpSyncData","_wpCompleted","_wpCombatMode","_wpSpeed","_wpFlyInHeight","_wpLoopValue","_wpRadius"];
 					_movePos  = _wpPositions select 0;
-					if ([_unit,_movePos,_data,_cycle,0] call A3C_ExitRoute_isBrokenFrom) exitWith {
+					if ([_unit,_movePos,_data,_cycle,0] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom) exitWith {
 						_abort = true;
 					};
 					[_unit,_movePos ] call A3C_ai_shared_fnc_doMove;
@@ -428,7 +428,7 @@ while {!isNull _unit} do {
 			
 			if (isPlayer leader group _unit) then {
 				while {alive _unit} do {
-					if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {
+					if ([_unit] call A3C_ai_shared_fnc_unitRouteIsWpAborted) exitWith {
 						_abort = true;
 					};
 					if ( (toLower((expectedDestination _unit ) select 1)) in ["leader planned","vehicle planned"]) exitWith {};
@@ -515,7 +515,7 @@ while {!isNull _unit} do {
 
 			//-- NON NEGOTIOABLE EXIT CONDITIONS
 			//-- check if wp is completed (first because STOPPED and BREAK are subordinate and share conditions).
-			if ([_unit,_movePos,_variDist,_inBuilding,_wpRadius,_wpTimeoutValue] call A3C_ExitRoute_isWpCompleted) exitWith {
+			if ([_unit,_movePos,_variDist,_inBuilding,_wpRadius,_wpTimeoutValue] call A3C_ai_shared_fnc_unitRouteIsWpComplete) exitWith {
 				_doExit = true;
 				_unit setunitpos _unitPosDest;
 				if (_inBuilding) then {
@@ -530,14 +530,14 @@ while {!isNull _unit} do {
 			};
 
 
-			if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {_abort = true};
+			if ([_unit] call A3C_ai_shared_fnc_unitRouteIsWpAborted) exitWith {_abort = true};
 			
 
 
 
 			if !(A3C_BOOL_MOVINGMARKER) then {
 				//-- exit stop
-				if ([_unit,_movePos,0] call A3C_ExitRoute_isUnitStopped) then {
+				if ([_unit,_movePos,0] call A3C_ai_shared_fnc_unitRouteIsUnitStopped) then {
 					_abort = true;
 				};
 			};
@@ -613,7 +613,7 @@ while {!isNull _unit} do {
 				};
 
 				if (!(A3C_BOOL_MOVINGMARKER) && !(_wpAction select 0 == "REARM")) then { //~~ Temp Fix!!
-					if ([_unit,_origdest,_data,_cycle,0] call A3C_ExitRoute_isBrokenFrom) then { //(false) then { // 
+					if ([_unit,_origdest,_data,_cycle,0] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom) then { //(false) then { // 
 						_abort = true;					
 					};
 				};
@@ -648,7 +648,7 @@ while {!isNull _unit} do {
 			if (_wpCombatMode == 1) then {
 				{_unit disableAI _x} foreach ["TARGET","AUTOTARGET","FSM","AUTOCOMBAT"]; //"THREAT_PATH","PATHPLAN",
 				if !(combatmode _unit == "BLUE") then {
-					[_unit,["COMBATMODE","BLUE"]] call MCSS_fnc_orderIndividual;
+					[_unit,["COMBATMODE","BLUE"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 				};
 			};
 
@@ -761,7 +761,7 @@ while {!isNull _unit} do {
 			if ( ((_wpCondition select 0) != "NONE") OR ((_cycle + 1) == count (_unit getVariable ["A3C_PLOT",[]])) ) then {
 				if !(_lookAtPos isEqualTo []) then {
 					waituntil {unitReady _unit && speed _vehicle == 0};
-					_spawnBehaviour = [_vehicle,_lookAtPos] spawn A3C_FORCEORIENT;
+					_spawnBehaviour = [_vehicle,_lookAtPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
 					waitUntil {scriptDone _spawnBehaviour};
 				};
 			};
@@ -893,7 +893,7 @@ while {!isNull _unit} do {
 			if ((_wpAction select 0) in ["GRENADE","SUPPRESSION"]) exitWith {};
 
 
-			if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {
+			if ([_unit] call A3C_ai_shared_fnc_unitRouteIsWpAborted) exitWith {
 				_abort = true;
 			};
 			if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) exitWith {
@@ -901,12 +901,12 @@ while {!isNull _unit} do {
 			};
 			if !(A3C_BOOL_MOVINGMARKER) then {
 				//-- exit stop
-				if ([_unit,_movePos,1] call A3C_ExitRoute_isUnitStopped) then {
+				if ([_unit,_movePos,1] call A3C_ai_shared_fnc_unitRouteIsUnitStopped) then {
 					_abort = true;
 				};
 			};
 			if !((_wpAction select 0) == "STATIC") then { // << TEMP SOLUTION!
-				if ([_unit,_origdest,_data,_cycle,1] call A3C_ExitRoute_isBrokenFrom) then {
+				if ([_unit,_origdest,_data,_cycle,1] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom) then {
 					_abort = true;
 				};
 			};
@@ -975,15 +975,15 @@ while {!isNull _unit} do {
 		while {true} do {
 
 			//~~ Authors note: WRITE ALL THESE _ABORT CHECKS INTO A FUNC!!!!!
-			if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {_abort = true};
+			if ([_unit] call A3C_ai_shared_fnc_unitRouteIsWpAborted) exitWith {_abort = true};
 			if !(A3C_BOOL_MOVINGMARKER) then {
 				//-- exit stop
-				if ([_unit,_movePos,1] call A3C_ExitRoute_isUnitStopped) then {
+				if ([_unit,_movePos,1] call A3C_ai_shared_fnc_unitRouteIsUnitStopped) then {
 					_abort = true;
 				};
 			};
 			if !((_wpAction select 0) == "SUPPRESSION") then {
-				if ([_unit,_origdest,_data,_cycle,1] call A3C_ExitRoute_isBrokenFrom) then {
+				if ([_unit,_origdest,_data,_cycle,1] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom) then {
 					_abort = true;
 				};
 			};
@@ -1097,7 +1097,7 @@ while {!isNull _unit} do {
 		_vehicle limitSpeed 0;
 		{
 			if ((assignedVehicleRole _x) select 0 == "CARGO") then {
-				[_x] spawn MCSS_fnc_GetOut;
+				[_x] spawn A3C_ai_shared_fnc_getOut;
 				[_x ,position (vehicle _x)] call A3C_ai_shared_fnc_doMove;
 				sleep 0.2;
 
@@ -1111,7 +1111,7 @@ while {!isNull _unit} do {
 			{
 				if !(_x in [driver _vehicle,gunner _vehicle, commander _vehicle]) then {
 					_ex = false;
-					[_x] spawn MCSS_fnc_GetOut;
+					[_x] spawn A3C_ai_shared_fnc_getOut;
 					sleep 0.1;
 				};
 			} foreach (crew _vehicle);
@@ -1232,13 +1232,13 @@ while {!isNull _unit} do {
 		_counter = 0;
 		if (_wpTimeoutValue > 0) then {_threshold = (_wpTimeoutValue / 0.1)};
 		while {_counter < _threshold} do {
-			if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {_abort = true};
+			if ([_unit] call A3C_ai_shared_fnc_unitRouteIsWpAborted) exitWith {_abort = true};
 			_vehicle = vehicle _unit; //-- refresh
 			if !(A3C_BOOL_MOVINGMARKER) then {
 				//-- exit stop
 				if ((_wpAction select 0) in ["SUPPRESSION"]) then {
 				} else {
-					if ([_unit,_movePos,1] call A3C_ExitRoute_isUnitStopped) then {
+					if ([_unit,_movePos,1] call A3C_ai_shared_fnc_unitRouteIsUnitStopped) then {
 						_abort = true;
 					};
 				};
@@ -1247,7 +1247,7 @@ while {!isNull _unit} do {
 				if (((expectedDestination _unit) select 1) in ["DoNotPlanFormation", "FORMATION PLANNED"]) then {_abort = true};
 			} else {
 				//systemchat 'brokenfrom6';
-				if ([_unit,_origdest,_data,_cycle,1] call A3C_ExitRoute_isBrokenFrom) then {
+				if ([_unit,_origdest,_data,_cycle,1] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom) then {
 					_abort = true;
 					{
 						[_x ,position (vehicle _x)] call A3C_ai_shared_fnc_doMove;
@@ -1292,14 +1292,14 @@ while {!isNull _unit} do {
 		_goCode = (_wpCondition select 1);
 		if !(_goCode == "NONE") then {
 			while {!(_goCode == "NONE")} do {
-				if ([_unit] call A3C_ExitRoute_isWpAborted) exitWith {_abort = true};
+				if ([_unit] call A3C_ai_shared_fnc_unitRouteIsWpAborted) exitWith {_abort = true};
 				if !(A3C_BOOL_MOVINGMARKER) then {
 					//-- exit stop
-					if ([_unit,_movePos,1] call A3C_ExitRoute_isUnitStopped) then {
+					if ([_unit,_movePos,1] call A3C_ai_shared_fnc_unitRouteIsUnitStopped) then {
 						_abort = true;
 					};
 				};
-				if ([_unit,_origdest,_data,_cycle,1] call A3C_ExitRoute_isBrokenFrom) then {
+				if ([_unit,_origdest,_data,_cycle,1] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom) then {
 					_abort = true;
 				};
 				if (_abort) exitWith {};

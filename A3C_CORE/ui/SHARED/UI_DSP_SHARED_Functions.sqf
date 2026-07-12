@@ -301,7 +301,7 @@ A3C_LB_Change = {
 					case 4 : {"STEALTH"};
 				};
 				{
-					[_x,["BEHAVIOUR",_mode]] call MCSS_fnc_orderIndividual;
+					[_x,["BEHAVIOUR",_mode]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 				} foreach A3C_RD_UNITS;
 			
 		};
@@ -315,7 +315,7 @@ A3C_LB_Change = {
 					case 4 : {"RED"};
 				};
 				{
-					[_x,["COMBATMODE",_mode]] call MCSS_fnc_orderIndividual;
+					[_x,["COMBATMODE",_mode]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 				} foreach A3C_RD_UNITS;
 			
 		};
@@ -394,7 +394,7 @@ A3C_GROUP_RESET = {
 				};
 			};
 		} foreach (units _x);
-	} foreach ([(group player)] + A3C_HC_getAllGroups_Player_Current);
+	} foreach ([(group player)] + A3C_HC_allGroupsClient_Current);
 	{
 		if (isTouchingGround _x) then {
 			_x setPosASL (getPosASL _x);
@@ -421,7 +421,7 @@ A3C_GROUP_RESET = {
 
 	_groupInitial = group player;
 	_gpID = groupID _groupInitial;
-	private _groupVarnames = _groupInitial call KK_fnc_objectVarNames;
+	private _groupVarnames = _groupInitial call MCSS_fnc_getObjectVarnames;
 	//systemchat str _groupVarnames;
 
 	//-- store all things that we know about as this will be reset when unjoining units
@@ -534,21 +534,21 @@ A3C_GROUP_RESET = {
 	} foreach _units;
 	{
 		//if (isNull (_x getVariable [")) then {
-			[_x] call A3C_UNIT_INIT;
+			[_x] call A3C_ai_squad_fnc_initializeUnit;
 		//};
 		if (profileNameSpace getVariable "A3C_SKILL_VAR") then {_x setskill 1};
 	} foreach (units group player);
 	profileNamespace setvariable ["A3C_GROUPUNITS",(units group player)];
 	
 
-	{_x setvariable ["A3C_FORMATION_INDEX", [_x] call A3C_GETUNITINDEX, true];} foreach (units group player);
+	{_x setvariable ["A3C_FORMATION_INDEX", [_x] call A3C_main_fnc_getUnitIndex, true];} foreach (units group player);
 	
 	if (_stayLeader) then {(group player) selectLeader player};
 
 
 	
 	if (A3C_MAP_CommandMode == "HC") then {
-		if ((count A3C_HC_getAllGroups_Player_Current ) > 0) then {
+		if ((count A3C_HC_allGroupsClient_Current ) > 0) then {
 		} else {
 			A3C_MAP_CommandMode = "INF";
 			["INF"] call A3C_UI_MAP_UFSB_ApplyMode;
@@ -619,7 +619,7 @@ A3C_GROUP_RESET = {
 				};
 			};
 		} foreach (units _x);
-	} foreach ([group player] +  A3C_HC_getAllGroups_Player_Current);
+	} foreach ([group player] +  A3C_HC_allGroupsClient_Current);
 	if (player == driver vehicle player) then {
 		[] spawn {
 			sleep 1;
@@ -1342,7 +1342,7 @@ A3C_UI_SHARED_createDashBoard = {
 			_healingCapableIcon ctrlCommit 0;
 			_supportButtons = 1;
 		};
-		if ({[_x] call A3C_fnc_canRepair} count units _group > 0) then {
+		if ({[_x] call A3C_main_fnc_canRepair} count units _group > 0) then {
 			if (_supportButtons == 1) then {
 				//_supportButtonBasePos set [0,0.134387 * safezoneW];
 				_supportButtonBasePos set [1,(3.09064e-006 * safezoneH) + (0.0340016 * safezoneH)];
@@ -1517,7 +1517,7 @@ A3C_UI_Shared_fnc_toggleGocodeCtrls = {
 					};
 				} foreach [_wpCond,_actionScript];
 			} foreach _wpts;
-		} foreach A3C_HC_getAllGroups_Player_Current;
+		} foreach A3C_HC_allGroupsClient_Current;
 		[_cond1,_cond2]
 	};
 
@@ -2063,7 +2063,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				//-- radial menu only
 				_testedUnits = units _gp;
 				{
-					if ([_x] call A3C_fnc_canRepair) then {
+					if ([_x] call A3C_main_fnc_canRepair) then {
 						_actions pushBackUnique "REPAIR";
 					};
 					if (!isNull objectParent _x) then {
@@ -2274,7 +2274,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			{
 				_HCunits pushbackUnique _x;
 			} foreach units _x;
-		} foreach A3C_HC_getAllGroups_Player_Current;
+		} foreach A3C_HC_allGroupsClient_Current;
 		{
 
 			if ((count (_x getvariable ["A3C_UNIT_EXPLOSIVES",[]])) > 0) then {
@@ -2348,8 +2348,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 			//-- following is not included in above loop as it has to effect the ENTIRE group.
 			{
 				_u = _x;
-				_hasPointer = [_u,"LASER"] call A3C_fnc_hasWeaponItem;
-				_hasFlashLight = [_u,"FLASHLIGHT"] call A3C_fnc_hasWeaponItem;
+				_hasPointer = [_u,"LASER"] call A3C_main_fnc_hasWeaponItem;
+				_hasFlashLight = [_u,"FLASHLIGHT"] call A3C_main_fnc_hasWeaponItem;
 
 				if (_hasPointer) then {
 					if ({_x isIRLaserOn (currentWeapon _x)} count units (group _u) > 0) then {
@@ -3638,7 +3638,7 @@ A3C_AI_HighCommand_ActionDistribute_boardGroupsToVehicle = {
 			private _vehicles = [];
 			// _group setVariable ["a3c_assignedgroupvehicle",nil];
 			{
-				_v = [_x] call A3C_AIGetOut; //-- in this case, we do not use remoteExec as we already know we are on the unit's machine. Instead, we return the vehicle
+				_v = [_x] call A3C_ai_shared_fnc_unitGetOut; //-- in this case, we do not use remoteExec as we already know we are on the unit's machine. Instead, we return the vehicle
 				if (!isNull _v) then {
 					_vehicles pushBackUnique _v;
 				};

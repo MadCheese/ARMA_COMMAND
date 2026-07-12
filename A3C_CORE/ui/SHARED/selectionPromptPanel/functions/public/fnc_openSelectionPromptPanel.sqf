@@ -109,7 +109,7 @@ switch (_mode) do {
 
 			private _shellCount = count _shellDSPs;
 
-			[_parent, _listBox, _shellCount] call A3C_OBJECTSEL_RESIZE;
+			[_parent, _listBox, _shellCount] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
 		};
 	};
 

@@ -69,13 +69,13 @@ private _ctls =
 ];
 
 //-- exit if mouseclick was within certain controls
-if ({[[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea} count _ctls > 0) exitWith {};
+if ({[[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl _x] call MCSS_fnc_isClickPosInCtrlArea} count _ctls > 0) exitWith {};
 
 
 
 //-- ENEMY-TARGET Combo is open - ALWAYS disables mapclick, hides Combo if it's not clicked on directly
 if (ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo)) exitWith {
-	if !([[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo] call MCSS_fnc_isClickPosInCTRLArea) then {
+	if !([[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo] call MCSS_fnc_isClickPosInCtrlArea) then {
 		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo) ctrlShow false;
 	};
 };
@@ -327,7 +327,7 @@ if (_gpIconsCount > 0) exitWith {
 		private _selectionIndex = -1;
 		
 		{
-			// private _iconIndex = [_x,_gpIcons] call MCSS_fnc_GetArrayIndex;
+			// private _iconIndex = [_x,_gpIcons] call MCSS_fnc_getArrayIndex;
 			if (_x select 0 == A3C_SELECTED_UNITS select 0) exitWith {
 				_selectionIndex = _foreachIndex;
 			};
@@ -614,7 +614,7 @@ if (count _mapPolygonEdges > 0 && {_left}) exitWith {
 		if (_parentPoly == _polyRefID) exitWith {
 
 			_poses = _x select 1;
-			private _ind = [_edgePosition,_poses] call MCSS_fnc_GetArrayINdex;
+			private _ind = [_edgePosition,_poses] call MCSS_fnc_getArrayIndex;
 			A3C_MovedItem_ID = [_parentPoly,_ind];
 			A3C_BOOL_MAP_MU = true;
 			A3C_BOOL_MOUSEMOVING = true;
@@ -678,7 +678,7 @@ if (_exit) exitWith {};
 
 
 //-- mapclick is within overlay area >> exit
-if ([[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_INPUT_BLOCKER] call MCSS_fnc_isClickPosInCTRLArea) exitWith {};
+if ([[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_INPUT_BLOCKER] call MCSS_fnc_isClickPosInCtrlArea) exitWith {};
 
 
 
@@ -819,11 +819,11 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 								_ref = _ref - [_x];
 							};
 						} foreach _ref;
-						if ({[waypointPosition _x,_nearestB] call A3C_fnc_INSIDE} count _ref > 0) then {
+						if ({[waypointPosition _x,_nearestB] call A3C_main_fnc_isPositionInsideBuilding} count _ref > 0) then {
 							_addWP = false;
 						};
 
-						if ([_clickPos,_nearestB] call A3C_fnc_INSIDE) then {
+						if ([_clickPos,_nearestB] call A3C_main_fnc_isPositionInsideBuilding) then {
 							_wpParams set [1,_nearestB buildingPos 0];
 							_wpParams set [2,[]];
 							_wpParams = _wpParams +
@@ -900,8 +900,8 @@ A3C_TAB_BUILDING = (nearestBuilding A3C_CLICKPOS_1);
 
 if (A3C_MAP_CommandMode == "INF") then {
 	if !(A3C_FORMMODE_TEMP == 5) then {
-		if ([A3C_CLICKPOS_1,A3C_TAB_BUILDING] call A3C_fnc_INSIDE) then {
-			if ((count A3C_SELECTED_UNITS) > ([A3C_TAB_BUILDING] call MCSS_fnc_countBPos)) then {
+		if ([A3C_CLICKPOS_1,A3C_TAB_BUILDING] call A3C_main_fnc_isPositionInsideBuilding) then {
+			if ((count A3C_SELECTED_UNITS) > ([A3C_TAB_BUILDING] call MCSS_fnc_getLastBuildingPosIndex)) then {
 				if (A3C_TAB_BUILDING_BOOL) then {
 					[] call A3C_DELETE_BPOS_MARKERS;
 					A3C_TAB_BUILDING_BOOL = false;
@@ -978,7 +978,7 @@ if ((A3C_TEMP_ACTION select 0) == 'CTRL_DET') then {
 	if (count A3C_SELECTED_UNITS == 1) then {
 		if (isNull objectParent (A3C_SELECTED_UNITS select 0)) then {
 			A3C_STATE_CHECKING_PICKUP = true;
-			A3C_PICKUP_OBJECTS = [A3C_SELECTED_UNITS select 0,A3C_CLICKPOS_ORIG,250,true] call A3C_fnc_getNearDetonationTargets;
+			A3C_PICKUP_OBJECTS = [A3C_SELECTED_UNITS select 0,A3C_CLICKPOS_ORIG,250,true] call A3C_main_fnc_getNearDetonationTargets;
 			{
 				if !(typeName _x == "OBJECT") then {
 					A3C_PICKUP_OBJECTS = A3C_PICKUP_OBJECTS - [_x];

@@ -53,6 +53,6 @@ lbClear _listBox;
 	[_listBox, _lbText] call A3C_addLbEntry;
 } forEach _magTypes;
 
-[_parent, _listBox, _magCount] call A3C_OBJECTSEL_RESIZE;
+[_parent, _listBox, _magCount] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
 
 ctrlSetFocus _listBox;

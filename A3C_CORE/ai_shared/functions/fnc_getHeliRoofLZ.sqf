@@ -14,7 +14,7 @@ _highestZ_ASL = 0;
 	};
 } foreach ([_building] call BIS_fnc_buildingPositions);
 
-_bboxATL = [_building,0] call MCSS_fnc_BBOX;
+_bboxATL = [_building,0] call MCSS_fnc_getBoundingBox;
 _bboxASL = [];
 {
 	_x set [2, _highestZ_ATL];
@@ -189,7 +189,7 @@ if (_largestRectangle select 1 > 0) exitWith {
 		"NONE"
 	];
 	_LZ set [2,((_surfaceIntersect select 0) select 0) select 2];
-	systemchat str _largestRectangle;
+	// systemchat str _largestRectangle;
 	[_LZ,_bDir + 90];
 };
 //-- still no suitable LZ area found: return empty array

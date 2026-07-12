@@ -24,7 +24,7 @@ private _ctls = [
 ];
 
 
-if ({[[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl _x] call MCSS_fnc_isClickPosInCTRLArea} count _ctls > 0) then {
+if ({[[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl _x] call MCSS_fnc_isClickPosInCtrlArea} count _ctls > 0) then {
 	(findDisplay 12 displayCtrl 51) ctrlEnable false;
 } else {
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;

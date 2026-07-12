@@ -3,7 +3,7 @@ if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
 	{
 		private _gp = _x;
 		if ({isPlayer _x} count(units _gp) == 0) then {
-			[_gp] call A3C_DeleteGroup;
+			[_gp] call A3C_main_fnc_deleteGroup;
 		} else {
 			systemchat format ["A3C: Group %1 was not deleted. Players detected", groupID _gp];
 		};

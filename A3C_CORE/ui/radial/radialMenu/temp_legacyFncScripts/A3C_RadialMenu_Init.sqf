@@ -121,7 +121,7 @@ A3C_UI_Radial_SQ_ROE_MAIN = {
             private _tooltip = if (_i == 0) then {_behaviourTooltips select _t} else {_combatModeTooltips select _t};
             private _mode = if (_i == 0) then {"BEHAVIOUR"} else {"COMBATMODE"};
             private _value = if (_i == 0) then {_behaviours select _t} else {_combatModes select _t};
-            private _buttonAction = format ["['%1', '%2'] call A3C_BHV_CBM_MACRO;", _mode, _value];
+            private _buttonAction = format ["['%1', '%2'] call A3C_main_fnc_orderIndividualMacro;", _mode, _value];
             _ctrlBtn ctrlSetTooltip _tooltip;
             _ctrlBtn buttonSetAction _buttonAction;
             _ctrlBtn ctrlCommit 0;

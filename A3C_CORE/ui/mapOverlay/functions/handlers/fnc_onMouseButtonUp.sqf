@@ -368,7 +368,7 @@ if (A3C_MapSel_Field_Active) then {
 			//};
 			
 		};
-	} foreach A3C_HC_getAllGroups_Player_Current;
+	} foreach A3C_HC_allGroupsClient_Current;
 
 	private _infantryOnly = true;
 	{
@@ -699,7 +699,7 @@ if ( ((A3C_TEMP_ACTION select 0) in ["SLINGLOAD","CTRL_DET","STATIC"])) then {
 					_attachPos = _sPos;
 					if ( _veh distance2d _sPos < 20) then {
 
-						_attachPos = ([_veh,1] call MCSS_fnc_BBOX) select 1;
+						_attachPos = ([_veh,1] call MCSS_fnc_getBoundingBox) select 1;
 						_attachPos set [2,1];
 
 						_attachPos = (lineintersectsSurfaces [AGLtoASL _attachPos,(((position _veh) select [0,2]) + [1])]); //,objnull, objnull, true, 1, "GEOM", "FIRE"
@@ -797,7 +797,7 @@ if (!isNull _hcGroup) then {
 		private _wpToEdit = [_hcGroup,_wpID];  //~~ BUG HERE!?
 		if (waypointType _wpToEdit in ["MOVE","HOLD","SCRIPTED"]) then {
 			
-			if ([_releasePos, _build] call A3C_fnc_INSIDE) then {
+			if ([_releasePos, _build] call A3C_main_fnc_isPositionInsideBuilding) then {
 
 				_wpToEdit setWaypointPosition [(_build buildingPos 0),0];
 				_wpToEdit setWaypointType "SCRIPTED";

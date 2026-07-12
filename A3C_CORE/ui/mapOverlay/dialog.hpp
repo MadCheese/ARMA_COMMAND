@@ -646,7 +646,7 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_HOLD_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_HOLD_BTN; //8001;
-			action = "A3C_SELECTED_UNITS call A3C_UNIT_HOLD";
+			action = "A3C_SELECTED_UNITS call A3C_ai_squad_fnc_unitRouteHold";
 
 			x = 0.626015 * safezoneW + safezoneX;
 			y = 0.94007 * safezoneH + safezoneY;
@@ -665,7 +665,7 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_CONTINUE_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_CONTINUE_BTN; //8003;
-			action = "A3C_SELECTED_UNITS call A3C_UNIT_CONTINUE";
+			action = "A3C_SELECTED_UNITS call A3C_ai_squad_fnc_unitRouteContinue";
 
 			x = 0.654655 * safezoneW + safezoneX;
 			y = 0.94007 * safezoneH + safezoneY;

@@ -250,7 +250,7 @@ A3C_UI_MAP_onMouseDrag_MapItem = {
 					_x setVariable ["A3C_UNIT_POLYS",_va,true];
 				};
 			};
-		} foreach (A3C_HC_getAllGroups_Player_Current + (units player - [player]));
+		} foreach (A3C_HC_allGroupsClient_Current + (units player - [player]));
 	};
 
 
@@ -307,12 +307,12 @@ A3C_UI_MAP_onMouseDrag_MapItem = {
 								objNull,
 								objNull
 							];
-							_ins = _ins select { ([_x] call MCSS_fnc_countBPos) > 0};
+							_ins = _ins select { ([_x] call MCSS_fnc_getLastBuildingPosIndex) > 0};
 							_nB = if (count _ins > 0) then {_ins select 0} else {objNull};
 
-							if (!isNull _nB) then { //}([_sPos, _nB] call A3C_fnc_INSIDE) then {
+							if (!isNull _nB) then { //}([_sPos, _nB] call A3C_main_fnc_isPositionInsideBuilding) then {
 								_bPoses = [];
-								for "_i" from 0 to ([_nB] call MCSS_fnc_countBPos) do {
+								for "_i" from 0 to ([_nB] call MCSS_fnc_getLastBuildingPosIndex) do {
 									_bPoses pushback (_nb buildingPos _i);
 								};
 								_bPoses = [_bPoses,[],{_x distance2d _sPos},"ASCEND"] call BIS_fnc_sortBy;

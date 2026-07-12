@@ -1,5 +1,5 @@
 
-private _groups = +A3C_HC_getAllGroups_Player_Current;
+private _groups = +A3C_HC_allGroupsClient_Current;
 _groups pushBackUnique (group player);
 
 private _charges = [];

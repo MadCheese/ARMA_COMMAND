@@ -43,9 +43,9 @@ private _buildingPositionRailCode = {
 			{
 				private _roofPos = _x select 1;
 
-				if !(_roofPos in A3C_OCC_BPOSES) exitWith {
+				if !(_roofPos in A3C_OCCUPIED_BPOSES) exitWith {
 					_destination = _roofPos;
-					A3C_OCC_BPOSES pushBackUnique _destination;
+					A3C_OCCUPIED_BPOSES pushBackUnique _destination;
 				};
 			} forEach _roofPositions;
 
@@ -122,7 +122,7 @@ private _roofPositions = [];
 		_rappelPos set [2, _hitPosATL select 2];
 
 		_inside = true;
-		_roofPositions = [_building] call MCSS_fnc_get_buildingPoses_roof;
+		_roofPositions = [_building] call MCSS_fnc_getBuildingRoofPositions;
 	};
 } forEach _intersections;
 
@@ -219,7 +219,7 @@ if (_isHelicopter) then {
 		_aircraftPosASL,
 		_railPos,
 		vectorDirVisual _aircraft,
-		[getDir _aircraft] call MCSS_fnc_DegreeToVector,
+		[getDir _aircraft] call MCSS_fnc_degreeToVector,
 		vectorUpVisual _aircraft,
 		[0, 0, 1],
 		3 //-- duration
@@ -272,7 +272,7 @@ private _rappellUnitsAll = +_rappellUnits;
 			!(_unit in _vehicle)
 		};
 
-		[[_unit], A3C_AIGetOut] remoteExec ["BIS_fnc_call", _unit];
+		[[_unit], A3C_ai_shared_fnc_unitGetOut] remoteExec ["BIS_fnc_call", _unit];
 
 		//-- rooftop landing: rail AI to closest building positions to snap them into path LOD
 		if (!isNil "A3C_ai_rail_fnc_infantryForceToBuildingPath") then { //-- exit if A3C is not running on client

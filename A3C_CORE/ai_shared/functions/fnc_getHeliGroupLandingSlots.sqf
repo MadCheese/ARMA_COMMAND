@@ -5,8 +5,13 @@ params [
 	"_centerPos",
 	["_spacing", 30],
 	["_referenceVehicle", objNull],
-	["_referenceDir", -1]
+	["_referenceDir", -1],
+	["_safeSearchRadius", -1]
 ];
+
+if (_safeSearchRadius < 0) then {
+	_safeSearchRadius = _group getVariable ["A3C_HELI_LANDING_SAFE_RADIUS", 25];
+};
 
 private _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
@@ -78,6 +83,26 @@ private _fnc_getFallbackSlotPos = {
 	_slotPos
 };
 
+private _fnc_getSafeSlotPos = {
+	params ["_slotPos", "_centerPos", "_safeSearchRadius"];
+
+	private _safeSlotPos = +_slotPos;
+
+	if (_safeSearchRadius > 0 && {!(isNil "MCSS_fnc_getSafePos")}) then {
+		private _foundPos = [_slotPos, _safeSearchRadius] call MCSS_fnc_getSafePos;
+
+		if (_foundPos isNotEqualTo []) then {
+			_safeSlotPos = +_foundPos;
+		};
+	};
+
+	if ((count _centerPos) > 2) then {
+		_safeSlotPos set [2, _centerPos select 2];
+	};
+
+	_safeSlotPos
+};
+
 private _landingSlots = [];
 
 {
@@ -127,6 +152,12 @@ private _landingSlots = [];
 	if ((count _centerPos) > 2) then {
 		_slotPos set [2, _centerPos select 2];
 	};
+
+	_slotPos = [
+		_slotPos,
+		_centerPos,
+		_safeSearchRadius
+	] call _fnc_getSafeSlotPos;
 
 	_landingSlots pushBack [_vehicle, _slotPos];
 } forEach _helicopters;

@@ -34,6 +34,10 @@ A3C_PREP_SUBDIR(public,actionUnassembleWeaponPromptStart);
 A3C_PREP_SUBDIR(public,onLBSelChangedShared);
 A3C_PREP_SUBDIR(public,openSelectionPromptPanel);
 
+
+
+A3C_PREP_SUBDIR(public,resizeBox);
+
 A3C_PREP_SUBDIR(public,squadActionUnassembleWeaponStartPrompt);
 
 

@@ -26,9 +26,9 @@ A3C_UI_MAP_TREE_ADD_ITEM = {
 			
 			_dataParam params ["_unit"];
 			if (!isNull _unit ) then { //&& {alive _unit}
-				_CT_TREE tvAdd [[_mainTreeIndex], if (!isNull _unit && {alive _unit}) then {[_unit] call MCSS_fnc_NAMESTRING} else {"N/A"}];
+				_CT_TREE tvAdd [[_mainTreeIndex], if (!isNull _unit && {alive _unit}) then {[_unit] call MCSS_fnc_getUnitNameString} else {"N/A"}];
 				_ct_indexArray = [_mainTreeIndex,_parentIndex];
-				//_CT_TREE tvAdd [[_i], [_unit] call MCSS_fnc_NAMESTRING];
+				//_CT_TREE tvAdd [[_i], [_unit] call MCSS_fnc_getUnitNameString];
 				_weapon = if ((secondaryweapon _unit) isKindOf ["Launcher", configFile >> "CfgWeapons"]) then {secondaryWEapon _unit} else {primaryWeapon _unit};
 				_CT_TREE tvSetPicture [_ct_indexArray, getText (configFile >> "CfgWeapons" >> _weapon >> "picture")];
 				switch (true) do {
@@ -47,7 +47,7 @@ A3C_UI_MAP_TREE_ADD_ITEM = {
 				_CT_TREE tvSetValue 
 				[
 					_ct_indexArray,
-					[_unit,_unitArray] call MCSS_fnc_GetArrayIndex
+					[_unit,_unitArray] call MCSS_fnc_getArrayIndex
 				];
 
 				_CT_TREE tvSetColor
@@ -69,7 +69,7 @@ A3C_UI_MAP_TREE_ADD_ITEM = {
 				_CT_TREE tvSetValue 
 				[
 					[0,_parentIndex],
-					[_driver,_unitArray] call MCSS_fnc_GetArrayIndex
+					[_driver,_unitArray] call MCSS_fnc_getArrayIndex
 				];
 			};
 
@@ -79,7 +79,7 @@ A3C_UI_MAP_TREE_ADD_ITEM = {
 				[],
 				{
 					//-- idea: 'crew' command always returns units in [driver,(gunner,commander/copilot),FFV] > so we sort by crew-array index
-					_val = [_x,crew vehicle _x] call MCSS_fnc_GetArrayIndex;
+					_val = [_x,crew vehicle _x] call MCSS_fnc_getArrayIndex;
 					_val
 				},
 				"ASCEND"
@@ -92,7 +92,7 @@ A3C_UI_MAP_TREE_ADD_ITEM = {
 			_dataParam params ["_unit"];
 			_v = vehicle _unit;
 				
-			_CT_TREE tvAdd [[_mainTreeIndex,_parentIndex],if (!isNull _unit && {alive _unit}) then {[_unit] call MCSS_fnc_NAMESTRING} else {"N/A"}];
+			_CT_TREE tvAdd [[_mainTreeIndex,_parentIndex],if (!isNull _unit && {alive _unit}) then {[_unit] call MCSS_fnc_getUnitNameString} else {"N/A"}];
 			private _ct_indexArray = [_mainTreeIndex,_parentIndex, (_CT_TREE tvCount [_mainTreeIndex,_parentIndex]) -1]; //_foreachIndex
 
 			_unit setVariable ["A3C_TREESEL_INDEX",[_ct_indexArray]];
@@ -121,7 +121,7 @@ A3C_UI_MAP_TREE_ADD_ITEM = {
 			_CT_TREE tvSetValue 
 			[
 				_ct_indexArray,
-				[_unit,_unitArray] call MCSS_fnc_GetArrayIndex
+				[_unit,_unitArray] call MCSS_fnc_getArrayIndex
 			];
 		};
 		case ("HC_CLASS") : {
@@ -142,7 +142,7 @@ A3C_UI_MAP_TREE_ADD_ITEM = {
 			_CT_TREE tvSetValue 
 			[
 				_cargoGroup_ct_indexArray,
-				[_cargoGroup,A3C_UI_SHARED_TREE_HC_AT_TICK] call MCSS_fnc_GetArrayIndex
+				[_cargoGroup,A3C_UI_SHARED_TREE_HC_AT_TICK] call MCSS_fnc_getArrayIndex
 			];
 			_cargoGroup setVariable ["A3C_TREESEL_INDEX",[_cargoGroup_ct_indexArray]];
 		};
@@ -158,7 +158,7 @@ A3C_UI_MAP_TREE_LABEL = {
 	
 
 	//systemChat "LABEL";
-	A3C_UI_SHARED_TREE_HC_AT_TICK = A3C_HC_getAllGroups_Player_Current;
+	A3C_UI_SHARED_TREE_HC_AT_TICK = A3C_HC_allGroupsClient_Current;
 	private _modes = if (_a3c_dsp == IDD_RADIAL_MENU) then {if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {["SQUAD"]} else {["HIGHCOMMAND"]}} else {["SQUAD","HIGHCOMMAND"]};
 	if (count A3C_UI_SHARED_TREE_HC_AT_TICK < 2 && {"HIGHCOMMAND" in _modes}) then {
 		_modes = _modes - ["HIGHCOMMAND"];
@@ -382,7 +382,7 @@ A3C_UI_MAP_TREE_LABEL = {
 					_CT_TREE tvSetValue 
 					[
 						_ct_indexArray,
-						[_gp,A3C_UI_SHARED_TREE_HC_AT_TICK] call MCSS_fnc_GetArrayIndex
+						[_gp,A3C_UI_SHARED_TREE_HC_AT_TICK] call MCSS_fnc_getArrayIndex
 					];
 					_gp setVariable ["A3C_TREESEL_INDEX",[_ct_indexArray]];
 					{
@@ -1213,7 +1213,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 				};
 				case ("HIGHCOMMAND") : {
 					//-- _reInforcementsWIP: groups that have no button yet
-					private _reInforcementsWIP = (A3C_HC_getAllGroups_Player_Current ) select {_treeButtonVar = _x getVariable ["A3C_TREESEL_INDEX",[]]; count _treeButtonVar == 0}; //- _refArray
+					private _reInforcementsWIP = (A3C_HC_allGroupsClient_Current ) select {_treeButtonVar = _x getVariable ["A3C_TREESEL_INDEX",[]]; count _treeButtonVar == 0}; //- _refArray
 					
 					
 					{
@@ -1335,7 +1335,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 								_CT_TREE tvSetValue 
 								[
 									_ct_indexArray,
-									[_x,A3C_UI_SHARED_TREE_HC_AT_TICK] call MCSS_fnc_GetArrayIndex
+									[_x,A3C_UI_SHARED_TREE_HC_AT_TICK] call MCSS_fnc_getArrayIndex
 								];
 								_x setVariable ["A3C_TREESEL_INDEX",[_ct_indexArray]];
 								//systemchat str [_ct_indexArray]; //hcupd

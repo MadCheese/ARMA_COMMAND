@@ -99,7 +99,7 @@ _unitCombo ctrlCommit 0;
 private _arsenalUnits = units player;
 
 {
-	[_unitCombo, [_x, true, false] call MCSS_fnc_NAMESTRING] call A3C_addLbEntry;
+	[_unitCombo, [_x, true, false] call MCSS_fnc_getUnitNameString] call A3C_addLbEntry;
 
 	if (_x == _unit) then {
 		[_unitCombo, _forEachIndex] call A3C_setCurSel;

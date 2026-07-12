@@ -49,7 +49,7 @@ if (_exit) exitWith {};
 
 
 
-_hcAll = A3C_HC_getAllGroups_Player_Current;
+_hcAll = A3C_HC_allGroupsClient_Current;
 
 _cursortarget = cursortarget;
 
@@ -200,7 +200,7 @@ if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then { //-- this has to happen b
 		};
 	};
 	if (count A3C_RD_UNITS > 0) then {
-		 _ind = [A3C_RD_UNITS select 0,_referenceArray] call MCSS_fnc_GetArrayIndex;
+		 _ind = [A3C_RD_UNITS select 0,_referenceArray] call MCSS_fnc_getArrayIndex;
 		A3C_BUTTONPAGE_TABLET = (ceil ((_ind + 1) / 18)) - 1;
 	};
 };
@@ -222,7 +222,7 @@ if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then { //-- this has to happen after i
 						//if (_gunner in units player) then {
 							A3C_RD_UNITS = [_gunner];
 
-							_ind = [_gunner,_referenceArray] call MCSS_fnc_GetArrayIndex;
+							_ind = [_gunner,_referenceArray] call MCSS_fnc_getArrayIndex;
 							A3C_BUTTONPAGE_TABLET = (ceil ((_ind + 1) / 18)) - 1;
 
 							{

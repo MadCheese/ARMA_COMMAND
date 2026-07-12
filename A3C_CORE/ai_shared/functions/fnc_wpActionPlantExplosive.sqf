@@ -1,3 +1,5 @@
+//A3C_AI_Shared_fnc_wpActionPlantExplosive
+
 params ["_unit", "_targetPos", "_orderDetails"];
 _orderDetails params ["_targetVeh", "_ammoType"];
 
@@ -30,7 +32,7 @@ private _getVehicleChargeAttachData = {
 
 	private _vehiclePosAGL = position _targetVeh;
 	private _vehicleDir = getDir _targetVeh;
-	private _attachDir = [_vehicleDir + 180] call MCSS_fnc_CorrectDir;
+	private _attachDir = [_vehicleDir + 180] call MCSS_fnc_correctDir;
 
 	private _attachPosATL = _vehiclePosAGL getPos [_vehicleLength, _attachDir];
 	_attachPosATL set [2, _attachHeight];
@@ -97,6 +99,9 @@ if (_exit) exitWith {
 
 //-- move to position
 
+private _hasTargetVehicle = _targetVeh isEqualType objNull && {!isNull _targetVeh};
+private _plantDistance = if (_hasTargetVehicle) then {6} else {4};
+
 [_unit, _targetPos] call A3C_ai_shared_fnc_doMove;
 
 private _moveTimeoutAt = time + 30;
@@ -107,6 +112,10 @@ waitUntil {
 	!alive _unit ||
 	{_unit distance2D _targetPos < 2.5} ||
 	{
+		_hasTargetVehicle &&
+		{_unit distance2D _targetPos <= _plantDistance}
+	} ||
+	{
 		unitReady _unit &&
 		{_unit distance2D _targetPos < 5}
 	} ||
@@ -115,7 +124,17 @@ waitUntil {
 
 if (!alive _unit) exitWith {};
 
-if (_unit distance2D _targetPos > 4) exitWith {};
+if (_unit distance2D _targetPos > _plantDistance) exitWith {
+	if (A3C_DEBUG) then {
+		systemChat format [
+			"plant explosive aborted: too far | dist %1 | limit %2 | targetVeh %3 | targetPos %4",
+			_unit distance2D _targetPos,
+			_plantDistance,
+			_targetVeh,
+			_targetPos
+		];
+	};
+};
 
 //-- ordnance requires MP-global var name
 
@@ -169,7 +188,7 @@ A3C_VARNAME_INDEX = A3C_VARNAME_INDEX + 1;
 		_unit removeMagazine _ammoType;
 
 		private _hasTargetVehicle = _targetVeh isEqualType objNull && {!isNull _targetVeh};
-		private _spawnDir = [getDir _unit] call MCSS_fnc_CorrectDir;
+		private _spawnDir = [getDir _unit] call MCSS_fnc_correctDir;
 		private _spawnPos = _unit getPos [0.5, _spawnDir];
 
 		if (!_hasTargetVehicle) then {

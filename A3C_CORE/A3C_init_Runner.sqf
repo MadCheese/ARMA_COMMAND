@@ -27,7 +27,7 @@ A3C_UNITCOUNTER = (count (units group player));
 //-- create local trigger to detect changes in difficulty / change Mapdata opacity
 A3C_HUD_DIFTRIG=createTrigger["EmptyDetector",[0,0,0],false]; A3C_HUD_DIFTRIG setTriggerArea [0,0,0,false];
 A3C_HUD_DIFTRIG setTriggerActivation["Any","PRESENT",true];
-A3C_HUD_DIFTRIG setTriggerStatements["A3C_DIFFICULTY != difficulty", "[] spawn {sleep 0.03; [] call A3C_RESETDIFFICULTY}", ""];
+A3C_HUD_DIFTRIG setTriggerStatements["A3C_DIFFICULTY != difficulty", "[] spawn {sleep 0.03; [] call A3C_main_fnc_resetDifficulty}", ""];
 
 [] spawn {
 	sleep 10;
@@ -82,8 +82,8 @@ if (profileNameSpace getVariable "A3C_AUTOMEDIC") then {
 
 sleep 2;
 //systemchat 'now';
-{[_x] call A3C_UNIT_INIT} foreach (units group player);
-{_x setvariable ["A3C_FORMATION_INDEX", [_x] call A3C_GETUNITINDEX, true]} foreach units group player;
+{[_x] call A3C_ai_squad_fnc_initializeUnit} foreach (units group player);
+{_x setvariable ["A3C_FORMATION_INDEX", [_x] call A3C_main_fnc_getUnitIndex, true]} foreach units group player;
 
 profileNamespace setvariable ["A3C_GROUPUNITS",(units group player)];
 player setvariable ["A3C_FORMATION_INDEX", 1, true];
@@ -126,11 +126,11 @@ A3C_is_Initialized = true;
 
 // 	//-- In game loop - once per second
 	// while {!isNull player && {!isNull (findDisplay 46)}} do {
-	// 	A3C_HC_getAllGroups_Player_Current = [] call A3C_HC_getAllGroups_Player;
+	// 	A3C_HC_allGroupsClient_Current = [] call A3C_main_fnc_getAllGroupsClient;
 	// 	sleep 1;
 	// };
 
-// 	[] call A3C_fnc_leaveServer;
+// 	[] call A3C_main_fnc_leaveServer;
 	
 // };
 
@@ -143,7 +143,7 @@ A3C_is_Initialized = true;
 	while {!isNull player && {!isNull (findDisplay 46)}} do {
 		
 		//-- fetch all HC groups once per second so it does not fire on each frame in draw handler
-		A3C_HC_getAllGroups_Player_Current = [] call A3C_HC_getAllGroups_Player;
+		A3C_HC_allGroupsClient_Current = [] call A3C_main_fnc_getAllGroupsClient;
 
 		//-- clean up completed wp's from A3C_Selection_MultiWaypoint
 		if !(A3C_Selection_MultiWaypoint isEqualTo []) then {
@@ -235,7 +235,7 @@ A3C_is_Initialized = true;
 		waituntil {!alive player};
 		//diag_log "ENDED 2";
 
-		[] call A3C_fnc_leaveServer;
+		[] call A3C_main_fnc_leaveServer;
 	};
 
 };

@@ -31,7 +31,7 @@ A3C_AssignVehicleSeat = {
 			};
 			
 
-			[[_unit], A3C_AIGetOut] remoteExec ['bis_fnc_call', _unit];
+			[[_unit], A3C_ai_shared_fnc_unitGetOut] remoteExec ['bis_fnc_call', _unit];
 
 			if (A3C_RADIALMODE == "VEHS" && {A3C_TARGETVEH == _vehicle}) then {
 				_buttonImg ctrlSetTextColor [1,1,1,1];

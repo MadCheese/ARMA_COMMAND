@@ -22,7 +22,7 @@ _refVehicle setPosASL (ATLtoASL [100,100,1000]);
 
 private _vehicleHeight = _refVehicle call BIS_fnc_objectHeight;
 
-private _refBbox = [_refVehicle,0] call MCSS_fnc_BBOX;
+private _refBbox = [_refVehicle,0] call MCSS_fnc_getBoundingBox;
 {
 	_x set [2,1000];
 } forEach _refBbox;

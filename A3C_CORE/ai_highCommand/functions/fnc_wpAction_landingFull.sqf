@@ -13,7 +13,7 @@ if (isPlayer driver _leaderVehicle) exitWith {};
 _vectorDir = if (!isNil "_vectorDir") then {
 	_vectorDir
 } else {
-	[_leaderVehicle getDir _waypointPos] call MCSS_fnc_DegreeToVector
+	[_leaderVehicle getDir _waypointPos] call MCSS_fnc_degreeToVector
 };
 
 if (!local _group) exitWith {};
@@ -103,7 +103,7 @@ private _driverUnits = _units select {
 	private _runwayLanding = (getNumber (configFile >> "CfgVehicles" >> typeOf _vehicle >> "landingSpeed")) > 10;
 
 	if (_vehicle isKindOf "PLANE" && {_runwayLanding}) then {
-		private _airportData = [_waypointPos] call MCSS_fnc_getNearestAirportData;
+		private _airportData = [_waypointPos] call A3C_main_fnc_getNearestAirportData;
 
 		_airportData params [
 			"_airportID",

@@ -703,7 +703,7 @@ A3C_Adjust_Poly_Edge = {
 				_u setVariable ["A3C_UNIT_POLYS",_va,true];
 			};
 		} foreach _va;
-	} foreach (A3C_HC_getAllGroups_Player_Current + (units player - [player]));
+	} foreach (A3C_HC_allGroupsClient_Current + (units player - [player]));
 };
 
 A3C_ADJUST_POLY = {
@@ -860,7 +860,7 @@ A3C_GetTrackerMarkSize = {
 	_valX = 0.5;
 	_valY = 0.5;
 	_return = [];
-	if (_group in A3C_HC_getAllGroups_Player_Current) then {
+	if (_group in A3C_HC_allGroupsClient_Current) then {
 		_valX = 1.5;
 		_valY = 1;
 	} else {
@@ -996,7 +996,7 @@ A3C_CREATE_BPOS_MARKERS = {
 			_x
 		];
 	} foreach _doorPositions;
-	_count = ([A3C_TAB_BUILDING] call MCSS_fnc_countBPos);
+	_count = ([A3C_TAB_BUILDING] call MCSS_fnc_getLastBuildingPosIndex);
 };
 
 A3C_ICONCOLORSIZE = {
@@ -1396,7 +1396,7 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 
 	if (count A3C_SELECTED_UNITS > 0) then {
 		private _refItem = A3C_SELECTED_UNITS select 0;
-		private _refArray = if (_mode != "HC") then {profileNamespace getvariable "A3C_GROUPUNITS"} else {A3C_HC_getAllGroups_Player_Current};
+		private _refArray = if (_mode != "HC") then {profileNamespace getvariable "A3C_GROUPUNITS"} else {A3C_HC_allGroupsClient_Current};
 		private _refDif = if (_mode != "HC") then {-1} else {0}; //-- on squad level, buttons exclude the player. Therefore, 1 needs to be substracted from refr
 		private _refIndex = [_refItem, _refArray] call MCSS_fnc_getArrayIndex;
 		A3C_BUTTONPAGE_TABLET = (floor ( (_refIndex + _refDif) / 16)) max 0;
@@ -1471,103 +1471,6 @@ A3C_UI_MAP_FNC_createEnemyForceTracker = {
 };
 
 
-A3C_HC_getIconType = {
-	params ["_gp"];
-
-	private _kindFnc = {
-		params ["_gp","_kind"];
-		private _return = false;
-		{
-			private _v = objectParent _x;
-			if (!isNull _v && {_x == driver _v && {_v isKindOf _kind}}) exitWith {
-				_return = true;
-			};
-		} foreach (units _gp);
-		_return
-	};
-	private _leader = (leader _gp);
-	private _leaderVic = vehicle _leader;
-	private _root = "\a3\ui_f\data\GUI\Cfg\Hints\icon_text\";	
-	private _iconType = "";
-	private _units = (units _gp) select {_v = (objectParent _x); !isNull _v && {_x == driver _v} };
-
-	if (isPlayer _leader && {{["A3C_Terminal", _x] call BIS_fnc_instring} count assignedItems _leader > 0}) then {
-		_iconType = "b_hq_ca.paa"
-	} else {
-		_iconType = switch (true) do {
-			case ([_gp,"PLANE"] call _kindFnc) : {"b_plane_ca.paa"};
-			case ([_gp,"HELICOPTER"] call _kindFnc) : {"b_air_ca.paa"};
-			case ([_gp,"TANK"] call _kindFnc) : {
-				if ((getArtilleryAmmo [_leaderVic]) isEqualTo []) then {
-					//if ({isNull (objectParent _x)} count units _gp == 0) then {
-						"b_armor_ca.paa"	
-					//} else {
-					//	"b_mech_inf_ca.paa"
-					//};	
-				} else {
-					"b_artillery_ca.paa"
-				};
-			};
-			case ([_gp,"wheeled_apc_f"] call _kindFnc) : {"b_mech_inf_ca.paa"};
-			case ([_gp,"CAR"] call _kindFnc) : {
-				//systemchat str (units _gp);
-				switch (true) do {
-					//case ({[_x] call A3C_fnc_canRepair} count _units > 0) : {
-					//	_root = "\a3c_ui\markers\";
-					//};
-					case (count (getArtilleryAmmo [_leaderVic]) > 0) : {
-						"b_artillery_ca.paa"
-					};
-					case ({getNumber (configFile >> "CfgVehicles" >> typeof (objectParent _x) >> "transportRepair" ) > 1000} count _units > 0) : {
-						_root = "\a3c_ui\markers\";
-						"icon_map_b_rePair_ca.paa"
-
-					};
-					case ({getNumber (configFile >> "CfgVehicles" >> typeof (objectParent _x) >> "transportAmmo" ) > 1000} count _units > 0) : {
-						_root = "\a3c_ui\markers\";
-						"icon_map_b_reArm_ca.paa"
-
-					};
-					case ({getNumber (configFile >> "CfgVehicles" >> typeof (objectParent _x) >> "transportFuel" ) > 1000} count _units > 0) : {
-						_root = "\a3c_ui\markers\";
-						"icon_map_b_reFuel_ca.paa"
-					};
-
-					case ({getNumber (configFile >> "CfgVehicles" >> typeof (objectParent _x) >> "attendant" )  == 1} count _units > 0) : {
-						_root = "\a3c_ui\markers\";
-						"icon_map_b_medical_ca"
-					};
-
-					case ({count ((weapons (vehicle _x)) select {!("horn" in toLower _x)}) > 0} count _units == 0) : {
-						_root = "\a3c_ui\markers\";
-						"icon_map_b_transport_ca.paa"
-					};
-
-					
-					
-					default {"b_motor_inf_ca.paa"};
-				};
-				
-			};
-			default {
-				if ({_x == gunner vehicle _x && {count (getArtilleryAmmo [vehicle _x]) > 0}} count (units _gp) == 0) then {
-					"b_inf_ca.paa"
-				} else {
-					"b_artillery_ca.paa"				
-				};
-				
-			};
-		};
-		if ({_x in _iconType} count ["air","plane"] > 0) then {
-			if (_leaderVic in allunitsuav) then {
-				_iconType = "b_UAV_ca.paa";
-			};
-		};
-	};
-	
-	_iconType = _root + _iconType;
-	_iconType
-};
 
 
 
@@ -1620,7 +1523,7 @@ A3C_SWITCHPAGE_TABLET = {
 	_mode = _this select 0;
 	_amount = _this select 1;
 	private _a3c_dsp = IDD_MAP_OVERLAY;
-	private _hcAll = A3C_HC_getAllGroups_Player_Current;
+	private _hcAll = A3C_HC_allGroupsClient_Current;
 	if (!isNull findDisplay IDD_RADIAL_MENU) then {
 		_a3c_dsp = IDD_RADIAL_MENU;
 	};
@@ -2775,7 +2678,7 @@ A3C_BUTTON_wpFiringMode = {
 
 		//systemchat 'firingmode1';;
 
-		private _index = 	[A3C_TEMP_ACTION select 0,_actions] call MCSS_fnc_GetArrayIndex,
+		private _index = 	[A3C_TEMP_ACTION select 0,_actions] call MCSS_fnc_getArrayIndex,
 		if (_mode == 0) then {
 			if (_index == ((count _actions) - 1) ) then {
 				_index = 0;
@@ -3039,8 +2942,8 @@ A3C_UI_MAP_fnc_disbandUnitsToHighCommand = {
 		if (["A3C-",groupID _x] call BIS_fnc_instring) then {
 			_disbandedPhonetics pushBackUnique _x;
 		};
-	} foreach A3C_HC_getAllGroups_Player_Current;
-	_newGroup setGroupIDGlobal [ format ["A3C-%1",[(count _disbandedPhonetics + 1) max 1] call A3C_HC_getPhonetic] ];
+	} foreach A3C_HC_allGroupsClient_Current;
+	_newGroup setGroupIDGlobal [ format ["A3C-%1",[(count _disbandedPhonetics + 1) max 1] call A3C_main_fnc_numberToPhonetic] ];
 	_unit = (A3C_SELECTED_UNITS select 0);
 	_loopPos = position _unit;
 	{
@@ -3452,7 +3355,7 @@ A3C_SET_ORDER_WIP = {
 				case (5) : {_spread = (360 / (count A3C_SELECTED_UNITS)); _dist = (A3C_CLICKPOS_1 distance2D A3C_CLICKPOS_2);};
 			};
 
-			_formdir = [_formdir] call MCSS_fnc_CorrectDir;
+			_formdir = [_formdir] call MCSS_fnc_correctDir;
 
 			if (A3C_FORMMODE_TEMP == 4) then {
 				if (A3C_SPLIT_UNITS isEqualTo A3C_Selected_Units) then {
@@ -3503,7 +3406,7 @@ A3C_SET_ORDER_WIP = {
 					//-- any formation but "split" and "circle" >> modify positions
 					if (A3C_TAB_BUILDING_BOOL) then {
 						//-- clickpos within building: assign building positions
-						A3C_CLICKPOS_1 = A3C_TAB_BUILDING buildingPos ([_x,A3C_SELECTED_UNITS] call MCSS_fnc_GetArrayIndex);
+						A3C_CLICKPOS_1 = A3C_TAB_BUILDING buildingPos ([_x,A3C_SELECTED_UNITS] call MCSS_fnc_getArrayIndex);
 					} else {
 						//-- clickpos outdoors:
 						A3C_CLICKPOS_1 = ([A3C_CLICKPOS_1,A3C_DIAG_SPACING,_formDir] call BIS_fnc_Relpos);
@@ -3837,7 +3740,7 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 
 			if ( (markertype A3C_MARKERTOSWITCH) == "A3C_Marker_BUILDING") then {
 				A3C_TAB_BUILDING = (nearestBuilding (getmarkerpos A3C_MARKERTOSWITCH));
-				for "_i" from 0 to ([A3C_TAB_BUILDING] call MCSS_fnc_countBPos) do {
+				for "_i" from 0 to ([A3C_TAB_BUILDING] call MCSS_fnc_getLastBuildingPosIndex) do {
 					[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, format ["BPos %1",_i]] call A3C_addLbEntry;
 				};
 			};

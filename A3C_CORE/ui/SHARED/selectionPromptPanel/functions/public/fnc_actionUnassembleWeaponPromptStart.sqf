@@ -36,7 +36,7 @@ A3C_SelectionPromptPanel_MODE = "STATIC_DISASSEMBLE_HC";
 lbClear _listBox;
 
 _parent ctrlShow true;
-[_parent, _listBox, count _nearStatics] call A3C_OBJECTSEL_RESIZE;
+[_parent, _listBox, count _nearStatics] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
 
 _text ctrlSetText "Select Static Weapon";
 

@@ -180,7 +180,7 @@ A3C_UI_HUD_onKeyDown = {
 
 	if (inputAction "revealTarget" > 0) then {
 		// reveal target
-		[cameraOn, screenToWorld [0.5, 0.5]] call MCSS_fnc_RevealCursorPos;
+		[cameraOn, screenToWorld [0.5, 0.5]] call A3C_main_fnc_revealCursorPos;
 	};
 
 	private _blockDefaultKey = nil;
@@ -476,7 +476,7 @@ A3C_UI_HUD_onMouseZChanged = {
 		true
 	};
 
-	A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_CorrectDir;
+	A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_correctDir;
 
 	_factor = 1;
 
@@ -516,11 +516,11 @@ A3C_UI_HUD_onMouseZChanged = {
 		};
 	};
 
-	A3C_HUD_Snap_DIR = [A3C_HUD_Snap_DIR] call MCSS_fnc_CorrectDir;
+	A3C_HUD_Snap_DIR = [A3C_HUD_Snap_DIR] call MCSS_fnc_correctDir;
 	if !(A3C_HUD_Snap) then {A3C_FORMATION_DIR = A3C_FORMATION_DIR + _factor;};
 
 	A3C_SCROLLTIME = time;
-	A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_CorrectDir;
+	A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_correctDir;
 	true
 };
 

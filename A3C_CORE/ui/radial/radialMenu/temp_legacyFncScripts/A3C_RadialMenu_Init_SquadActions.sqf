@@ -83,7 +83,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 	//-- action check 3: clear building
 	if (!isNull cursorTarget) then {
 		if (cursorTarget Iskindof "HOUSE") then {
-			if (([cursortarget] call MCSS_fnc_countBPos) > 0) then {
+			if (([cursortarget] call MCSS_fnc_getLastBuildingPosIndex) > 0) then {
 				A3C_DYNAMIC_BUTTON_ACTIONS pushbackUnique "CLEAR_BUILDING";
 			};
 		};
@@ -177,7 +177,7 @@ A3C_UI_RADIAL_SQUAD_DISTRIBUTE_MENU_ACTIONS = {
 		{
 			_units pushbackUnique _x;
 		} foreach units _x;
-	} foreach A3C_HC_getAllGroups_Player_Current;
+	} foreach A3C_HC_allGroupsClient_Current;
 
 	if (({(count (_x getvariable ["A3C_UNIT_EXPLOSIVES",[]])) > 0} count _units) > 0) then {
 		A3C_DYNAMIC_BUTTON_ACTIONS pushbackUnique "ORDER_DETO";
@@ -739,7 +739,7 @@ A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING = {
 		{
 			// unassignVehicle _x;
 			// doGetOut _x;
-			[[_x], A3C_AIGetOut] remoteExec ['bis_fnc_call', _x];
+			[[_x], A3C_ai_shared_fnc_unitGetOut] remoteExec ['bis_fnc_call', _x];
 		} foreach (crew _weaponToDisassemble);
 		sleep 1;
 	};

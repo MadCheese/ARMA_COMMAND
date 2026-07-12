@@ -18,10 +18,10 @@ private _currentWaypoint = currentWaypoint _group;
 
 _unit setVariable ["A3C_VAR_LANDING",true,true];
 
-private _airportData = [_inputPosition] call MCSS_fnc_getNearestAirportData;
+private _airportData = [_inputPosition] call A3C_main_fnc_getNearestAirportData;
 _airportData params ["_airportID","_airportName","_airportTaxiIn","_airportTaxiOff","_airportIlsDir","_taxiInPoses","_taxiOffPoses"];
 
-private _airportAreas = _airportData call MCSS_fnc_getAirFieldRunwayAreas;
+private _airportAreas = _airportData call A3C_main_fnc_getAirFieldRunwayAreas;
 _airportAreas params ["_mainAirfieldArea","_prohibitedAreas"];
 
 _mainAirfieldArea params ["_areaCenter","_areaSizeX","_areaSizeY","_areaDir","_areaIsRectangle"];

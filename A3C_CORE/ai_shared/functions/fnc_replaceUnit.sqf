@@ -10,7 +10,7 @@ params ["_unit"];
 if !(_unit == driver vehicle _unit) exitWith {};
 
 private _unitArray = +(profileNamespace getVariable "A3C_GROUPUNITS");
-private _unitIndex = [_unit, _unitArray] call MCSS_fnc_GetArrayIndex;
+private _unitIndex = [_unit, _unitArray] call MCSS_fnc_getArrayIndex;
 
 private _vehicle = vehicle _unit;
 private _hasParent = !isNull objectParent _unit;
@@ -39,12 +39,12 @@ private _isStaminaEnabled = isStaminaEnabled _unit;
 private _destination = expectedDestination _unit;
 private _plot = _unit getVariable ["A3C_PLOT", []];
 private _currentWaypointIndex = _unit getVariable ["A3C_CURRENTWAYPOINT_INDEX", 1];
-private _formationIndex = _unit getVariable ["A3C_FORMATION_INDEX", [_unit] call A3C_GETUNITINDEX];
+private _formationIndex = _unit getVariable ["A3C_FORMATION_INDEX", [_unit] call A3C_main_fnc_getUnitIndex];
 private _vehicleVarNameIndex = _unit getVariable ["A3C_VVNI", A3C_VARNAME_INDEX];
 
 private _inHud = _unit in A3C_UI_squadPlacement_units;
-private _rdIndex = [_unit, A3C_RD_UNITS] call MCSS_fnc_GetArrayIndex;
-private _tabletIndex = [_unit, A3C_SELECTED_UNITS] call MCSS_fnc_GetArrayIndex;
+private _rdIndex = [_unit, A3C_RD_UNITS] call MCSS_fnc_getArrayIndex;
+private _tabletIndex = [_unit, A3C_SELECTED_UNITS] call MCSS_fnc_getArrayIndex;
 
 private _damage = [];
 
@@ -139,7 +139,7 @@ switch (_stance) do {
 	};
 };
 
-[_newUnit, 0] call A3C_UNIT_INIT;
+[_newUnit, 0] call A3C_ai_squad_fnc_initializeUnit;
 
 // -- reset variables
 {

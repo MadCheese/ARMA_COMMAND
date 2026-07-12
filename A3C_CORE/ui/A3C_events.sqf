@@ -64,7 +64,7 @@ A3C_FNC_UAV_KEY = {
 
 			_isAvailable && {
 				private _uavSideNumber = getNumber (configFile >> "CfgVehicles" >> typeOf _x >> "side");
-				private _uavSide = [_uavSideNumber] call A3C_fnc_getSideName;
+				private _uavSide = [_uavSideNumber] call MCSS_fnc_getSideName;
 				private _isFriendly = _playerSide == _uavSide;
 				_isFriendly
 			}
@@ -282,7 +282,7 @@ A3C_FNC_CBA_KEY = {
 		// 					if (A3C_HUD_DRAW_BOOL) then {
 		// 						private _unit = (groupSelectedUnits player) select 0;
 		// 						private _vehicle = vehicle _unit;
-		// 						private _pos = [player,objNull] call MCSS_fnc_posIntersect;
+		// 						private _pos = [player,objNull] call MCSS_fnc_getViewRayIntersectPos;
 		// 						if (!isNull A3C_SNAP_OBJECT) then {
 		// 							_prms = [ATLtoASL _pos,A3C_SNAP_OBJECT] call A3C_UI_squadPlacement_fnc_snapFormation;
 		// 							//systemchat str [_pos,_prms];
@@ -318,7 +318,7 @@ A3C_FNC_CBA_KEY = {
 		// 					if  (_this select 1 == 1) exitWith {};
 		// 					if ((count groupSelectedUnits player) == 1) then {
 		// 						A3C_HUD_DRAW_BOOL = true;
-		// 						_pos = [player,objNull] call MCSS_fnc_posIntersect;
+		// 						_pos = [player,objNull] call MCSS_fnc_getViewRayIntersectPos;
 		// 						_pos set [2,0];
 		// 						A3C_HUD_DRAW_POSARRAY = [_pos];
 		// 					};
@@ -695,7 +695,7 @@ A3C_FNC_CBA_KEY = {
 
 		case ("COMMAND_LEVEL") : {
 			// systemchat str time;
-			if (count A3C_HC_getAllGroups_Player_Current > 0 OR {[player] call A3C_isUnconscious}) then {
+			if (count A3C_HC_allGroupsClient_Current > 0 OR {[player] call A3C_isUnconscious}) then {
 				{player groupSelectUnit [_x,false]} foreach (units player - [player]);
 				showCommandingMenu "";
 				A3C_RD_UNITS = [];
@@ -768,10 +768,10 @@ A3C_FNC_CBA_KEY = {
 			[] call A3C_UI_squadPlacement_fnc_setStance;
 		};
 		case ("Voice_Hold") : {
-			(groupSelectedUnits player) call A3C_UNIT_HOLD;
+			(groupSelectedUnits player) call A3C_ai_squad_fnc_unitRouteHold;
 		};
 		case ("Voice_Cont") : {
-			(groupSelectedUnits player) call A3C_UNIT_CONTINUE;
+			(groupSelectedUnits player) call A3C_ai_squad_fnc_unitRouteContinue;
 		};
 		case ("Voice_Unload") : {
 			systemchat format ["%1:'GET OUT!'",name player];
@@ -793,7 +793,7 @@ A3C_FNC_CBA_KEY = {
 								// //_x leaveVehicle _vehicle;
 								// unassignVehicle _x;
 								// doGetOut _x;
-								[[_x], A3C_AIGetOut] remoteExec ['bis_fnc_call', _x];
+								[[_x], A3C_ai_shared_fnc_unitGetOut] remoteExec ['bis_fnc_call', _x];
 							};
 						};
 					} foreach (crew _vehicle);

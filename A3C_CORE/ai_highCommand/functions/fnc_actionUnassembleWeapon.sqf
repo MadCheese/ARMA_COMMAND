@@ -18,7 +18,7 @@ private _weaponPos = position _wpn;
 private _weaponDir = getDir _wpn;
 
 {
-	[[_x], A3C_AIGetOut] remoteExec ["bis_fnc_call", _x];
+	[[_x], A3C_ai_shared_fnc_unitGetOut] remoteExec ["bis_fnc_call", _x];
 } forEach crew _wpn;
 
 sleep 3;

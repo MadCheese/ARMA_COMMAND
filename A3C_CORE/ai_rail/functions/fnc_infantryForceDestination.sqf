@@ -89,7 +89,7 @@ if (_doRotate) then {
 		_unitPosASL,
 		_unitPosASL,
 		vectorDirVisual _unit,
-		[_unit getDir _destination] call MCSS_fnc_DegreeToVector,
+		[_unit getDir _destination] call MCSS_fnc_degreeToVector,
 		vectorUpVisual _unit,
 		[0, 0, 1],
 		_rotationDuration
@@ -168,7 +168,7 @@ private _frameFunction = {
 		};
 
 		private _currentDirectionToDestination = _unit getDir _destination;
-		private _directionVector = [_currentDirectionToDestination] call MCSS_fnc_DegreeToVector;
+		private _directionVector = [_currentDirectionToDestination] call MCSS_fnc_degreeToVector;
 
 		_unit setVectorDir _directionVector;
 		_unit lookAt (_destination getPos [100, _currentDirectionToDestination]);

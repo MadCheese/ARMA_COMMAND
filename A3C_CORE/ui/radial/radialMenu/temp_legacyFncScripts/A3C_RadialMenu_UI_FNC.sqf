@@ -534,7 +534,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								{
 									private _mb = (_this select 0) select 1;
 
-									['%2'] spawn A3C_Shared_setFormation;
+									['%2'] spawn A3C_ai_shared_fnc_setFormation;
 
 									if (_mb == 1) then {
 										(group player) setFormDir (getDir (vehicle player));
@@ -1487,11 +1487,11 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					_itemCategories pushBack "SWITCHWEAPON";
 				};
 
-				if ( (   {count (_x getvariable ["A3C_STROBE",[]]) > 0 } count _grunts > 0)   OR {{{_item = _x; [_item] call A3C_fnc_isIRMagazine } count (magazines _x) > 0} count _grunts > 0}) then {
+				if ( (   {count (_x getvariable ["A3C_STROBE",[]]) > 0 } count _grunts > 0)   OR {{{_item = _x; [_item] call A3C_main_fnc_isIRMagazine } count (magazines _x) > 0} count _grunts > 0}) then {
 					_itemCategories pushBack "IR_STROBE";
 				};
 
-				if ({{_item = _x; [_item] call A3C_fnc_isNVGoggles } count (assigneditems _x + items _x) > 0} count _grunts > 0) then {
+				if ({{_item = _x; [_item] call A3C_main_fnc_isNVGoggles } count (assigneditems _x + items _x) > 0} count _grunts > 0) then {
 					_itemCategories pushBack "NVG";
 				};
 				private _sunData = [] call BIS_fnc_sunriseSunsetTime;
@@ -1517,7 +1517,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 						};
 					};
 
-					if (_add && {{[_x,_itemString] call A3C_fnc_hasWeaponItem} count _grunts > 0}) then {
+					if (_add && {{[_x,_itemString] call A3C_main_fnc_hasWeaponItem} count _grunts > 0}) then {
 						_itemCategories pushBack _itemString;
 					};
 
@@ -1842,7 +1842,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								private _nvgImage = "A3C_CORE\ui\pictures\icon_menu_item_NVG_OFF.paa";
 								private _nvgToolTip = "Turn NVG ON";
 
-								if ({{private _item = _x; [_item] call A3C_fnc_isNVGoggles} count assignedItems _x > 0} count A3C_RD_UNITS > 0) then {
+								if ({{private _item = _x; [_item] call A3C_main_fnc_isNVGoggles} count assignedItems _x > 0} count A3C_RD_UNITS > 0) then {
 									_nvgImage = "A3C_CORE\ui\pictures\icon_menu_item_NVG_ON.paa";
 									_nvgToolTip = "Turn NVG OFF";
 								};
@@ -1874,11 +1874,11 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 									_buttonImg ctrlSetTextColor [1,1,1,0.3];
 
 									{
-										if ({{private _item = _x; [_item] call A3C_fnc_isNVGoggles} count assignedItems _x > 0} count A3C_RD_UNITS > 0) then {
+										if ({{private _item = _x; [_item] call A3C_main_fnc_isNVGoggles} count assignedItems _x > 0} count A3C_RD_UNITS > 0) then {
 											private _nvgs = "";
 
 											{
-												if ([_x] call A3C_fnc_isNVGoggles) exitWith {
+												if ([_x] call A3C_main_fnc_isNVGoggles) exitWith {
 													_nvgs = _x;
 												};
 											} forEach assignedItems _x;
@@ -1908,7 +1908,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 											private _nvgs = "";
 
 											{
-												if ([_x] call A3C_fnc_isNVGoggles) exitWith {
+												if ([_x] call A3C_main_fnc_isNVGoggles) exitWith {
 													_nvgs = _x;
 												};
 											} forEach items _x;
@@ -2249,7 +2249,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								private _silencerImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_OFF.paa";
 								private _silencerToolTip = "Attach Suppressor";
 
-								if ({[_x, "SILENCER"] call A3C_fnc_hasWeaponItem} count (A3C_RD_UNITS - [player]) > 0) then {
+								if ({[_x, "SILENCER"] call A3C_main_fnc_hasWeaponItem} count (A3C_RD_UNITS - [player]) > 0) then {
 									_silencerImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_ON.paa";
 									_silencerToolTip = "Remove Suppressor";
 								};
@@ -2282,7 +2282,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 									_buttonImg ctrlSetTextColor [1,1,1,0.3];
 
 									{
-										if ({[_x, "SILENCER"] call A3C_fnc_hasWeaponItem} count A3C_RD_UNITS > 0) then {
+										if ({[_x, "SILENCER"] call A3C_main_fnc_hasWeaponItem} count A3C_RD_UNITS > 0) then {
 											_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_OFF.paa";
 											_tooltip = "Attach Suppressor";
 
@@ -2539,7 +2539,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					// RCLICK
 					{
 						if (!isPlayer _x) then {
-							[_x] spawn MCSS_fnc_GetOut;
+							[_x] spawn A3C_ai_shared_fnc_getOut;
 							
 							A3C_BOARD_UNITS pushbackUnique _x;
 						};
@@ -2955,7 +2955,7 @@ A3C_UI_RADIAL_LABEL_LB = {
 				};
 				[
 					[
-						(format ["%1 (%2)",([_x] call MCSS_fnc_NAMESTRING),if (_x == player) then {""} else {getText (configfile >> "CfgVehicles" >> (typeOf _x) >> "displayName")}]),
+						(format ["%1 (%2)",([_x] call MCSS_fnc_getUnitNameString),if (_x == player) then {""} else {getText (configfile >> "CfgVehicles" >> (typeOf _x) >> "displayName")}]),
 						(typeOf _x),
 						_x,
 						(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX),
@@ -2996,7 +2996,7 @@ A3C_UI_RADIAL_LABEL_LB = {
 				};
 				[
 					[
-						(format ["%1 (%2)",([_x] call MCSS_fnc_NAMESTRING),getText (configfile >> "CfgVehicles" >> (typeOf _x) >> "displayName")]),
+						(format ["%1 (%2)",([_x] call MCSS_fnc_getUnitNameString),getText (configfile >> "CfgVehicles" >> (typeOf _x) >> "displayName")]),
 						(typeOf _x),
 						_x,
 						(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_BOX),
@@ -3363,7 +3363,7 @@ A3C_UI_RADIAL_LABEL_LB = {
 									[
 										_x,
 										if (_foreachindex == ((count _c) - 1)) then {true} else {false}
-									] call MCSS_fnc_NAMESTRING
+									] call MCSS_fnc_getUnitNameString
 								);
 							} else {
 								_c = _c - [_x];
@@ -3610,7 +3610,7 @@ A3C_UI_RADIAL_FINDVEHS = {
 		sleep 0.1;
 		
 		if (cursortarget in A3C_VEHSAV) then {
-			[findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX, [cursorTarget,A3C_VEHSAV] call MCSS_fnc_GetArrayIndex, true] call A3C_setCurSel;
+			[findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX, [cursorTarget,A3C_VEHSAV] call MCSS_fnc_getArrayIndex, true] call A3C_setCurSel;
 		} else {
 			{
 				[_x, 0] call A3C_setCurSel;
@@ -3770,7 +3770,7 @@ A3C_UI_RADIAL_INV_LB_CREATE = {
 		_box ctrlCommit 0;
 	} foreach [[_box1,1001],[_box2,1020]];
 	{
-		[_box2, [_x] call MCSS_fnc_NAMESTRING] call A3C_addLbEntry;
+		[_box2, [_x] call MCSS_fnc_getUnitNameString] call A3C_addLbEntry;
 	} foreach A3C_UI_INV_TARGETS;
 	{
 
@@ -3780,7 +3780,7 @@ A3C_UI_RADIAL_INV_LB_CREATE = {
 				[_box1, "Ground"] call A3C_addLbEntry;
 			};
 			case (_x in units player) : {
-				[_box1, [_x] call MCSS_fnc_NAMESTRING] call A3C_addLbEntry;
+				[_box1, [_x] call MCSS_fnc_getUnitNameString] call A3C_addLbEntry;
 			};
 			default {
 				private _lbText = gettext(configFile >> "CfgVehicles" >> typeof _x >> "displayName");

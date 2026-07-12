@@ -35,7 +35,7 @@ if (_doubleClick) then {
 						private _selectedGroup = _x;
 
 						if ({isPlayer _x} count (units _selectedGroup) == 0) then {
-							[_selectedGroup] call A3C_DeleteGroup;
+							[_selectedGroup] call A3C_main_fnc_deleteGroup;
 						} else {
 							systemChat format ["A3C: Group %1 was not deleted. Players detected", groupID _selectedGroup];
 						};
@@ -333,7 +333,7 @@ if (_doubleClick) then {
 					[_listBoxCtrl, str _x] call A3C_addLbEntry;
 				} forEach _lbEntries;
 
-				[_parentCtrl, _listBoxCtrl, count _lbEntries] call A3C_OBJECTSEL_RESIZE;
+				[_parentCtrl, _listBoxCtrl, count _lbEntries] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
 			};
 		};
 
@@ -821,7 +821,7 @@ if (_doubleClick) then {
 
 				private _plantExplosiveStatements = format [
 					"
-						[[group this,'%1'], A3C_AI_HighCommand_wpAction_plantExplosive] remoteExec ['bis_fnc_call',0];
+						[[group this,'%1'], A3C_AI_HighCommand_fnc_wpAction_plantExplosive] remoteExec ['bis_fnc_call',0];
 					",
 					_magName
 				];
@@ -881,7 +881,7 @@ if (_doubleClick) then {
 				format [
 					"
 						[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint;
-						[[group this,'%1'], A3C_AI_HighCommand_wpAction_plantExplosive] remoteExec ['bis_fnc_call',0];
+						[[group this,'%1'], A3C_AI_HighCommand_fnc_wpAction_plantExplosive] remoteExec ['bis_fnc_call',0];
 					",
 					_magName
 				]

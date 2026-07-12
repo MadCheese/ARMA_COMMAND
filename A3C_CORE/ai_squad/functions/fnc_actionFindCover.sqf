@@ -281,7 +281,7 @@ private _checkedObjects = [];
 
 				// If no bbox data exists, create it.
 				if (count _bBox2d == 0) then {
-					_bBox2d = [_coverObject, 1] call MCSS_fnc_BBOX;
+					_bBox2d = [_coverObject, 1] call MCSS_fnc_getBoundingBox;
 
 					private _refPos2 = (getPosASL _coverObject) vectorAdd [0, 0, 0.4];
 
@@ -327,7 +327,7 @@ private _checkedObjects = [];
 						private _condition = (
 							({_targetPos distance _x < _dispersion} count _positionsAssigned) == 0
 						) && {
-							(({[_targetPos, _x, _coverObject] call MCSS_fnc_LOS_Cover} count _enemies) == 0)
+							(({[_targetPos, _x, _coverObject] call MCSS_fnc_lineOfSightCover} count _enemies) == 0)
 						};
 
 						if (_condition) exitWith {

@@ -5,7 +5,7 @@ private _count = count A3C_UI_squadPlacement_units;
 if (_count == 0) exitWith {};
 
 private _altAmount = _count - 1;
-private _watchDir = [A3C_FORMATION_DIR + 180] call MCSS_fnc_CorrectDir;
+private _watchDir = [A3C_FORMATION_DIR + 180] call MCSS_fnc_correctDir;
 
 private _setUnitGhostDir = {
     params ["_index", "_dir"];
@@ -115,7 +115,7 @@ if !(A3C_HUD_FORM in [7, 8]) then {
             _playerDir = _playerDir - 90;
         };
 
-        private _relDir = [A3C_FORMATION_DIR + 180 - _playerDir] call MCSS_fnc_CorrectDir;
+        private _relDir = [A3C_FORMATION_DIR + 180 - _playerDir] call MCSS_fnc_correctDir;
         _formImage ctrlSetAngle [_relDir, 0.5, 0.5];
     };
 } else {

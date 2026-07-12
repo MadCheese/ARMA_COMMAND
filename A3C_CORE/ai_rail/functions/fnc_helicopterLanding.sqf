@@ -52,7 +52,7 @@ private _railPosHeight = _railPos select 2;
 _finalEndDir = if (!isNil "_finalEndDir") then {
 	_finalEndDir
 } else {
-	[_vehicle getDir _railPos] call MCSS_fnc_DegreeToVector
+	[_vehicle getDir _railPos] call MCSS_fnc_degreeToVector
 };
 
 private _pad = "Land_HelipadEmpty_F" createVehicle _landingPos;
@@ -62,7 +62,7 @@ private _pad = "Land_HelipadEmpty_F" createVehicle _landingPos;
 
 	private _speed = _x select 1; //-- speed for rail step
 	private _endDir = if (_forEachIndex == 0) then {
-		[_vehicle getDir _railPos] call MCSS_fnc_DegreeToVector
+		[_vehicle getDir _railPos] call MCSS_fnc_degreeToVector
 	} else {
 		_finalEndDir
 	}; //-- rail step vectorDir

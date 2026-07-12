@@ -405,17 +405,17 @@ class FSM
                          "	};" \n
                          "	switch _actionType do {" \n
                          "		case (""ActionCas"") : {" \n
-                         "			_actionScript = [_actionScript,""this"",str _leader] call TER_fnc_editString; ////-- convert to something we can execute " \n
+                         "			_actionScript = [_actionScript,""this"",str _leader] call A3C_main_fnc_editString; ////-- convert to something we can execute " \n
                          "			call (compile _actionScript);" \n
                          "			[_gp,_currentWpIndex,""ACTIONSCRIPT"",""'CAS_STRIKE_ACTIVE'; ""] call A3C_ai_highCommand_fnc_changeWaypointData;" \n
                          "		};" \n
                          "		case (""PlaneLand"") : {" \n
-                         "			_actionScript = [_actionScript,""this"",str _leader] call TER_fnc_editString; //-- convert to something we can execute " \n
+                         "			_actionScript = [_actionScript,""this"",str _leader] call A3C_main_fnc_editString; //-- convert to something we can execute " \n
                          "			call (compile _actionScript);" \n
                          "			[_gp,_currentWpIndex,""ACTIONSCRIPT"",""'FULL LANDING ACTIVE'; ""] call A3C_ai_highCommand_fnc_changeWaypointData;" \n
                          "		};" \n
                          "		case (""HeliRappell"") : {" \n
-                         "			_actionScript = [_actionScript,""this"",str _leader] call TER_fnc_editString; //-- convert to something we can execute " \n
+                         "			_actionScript = [_actionScript,""this"",str _leader] call A3C_main_fnc_editString; //-- convert to something we can execute " \n
                          "			call (compile _actionScript);	" \n
                          "			[_gp,_currentWpIndex,""ACTIONSCRIPT"",""'A3C_RAPPELL_ACTIVE'; ""] call A3C_ai_highCommand_fnc_changeWaypointData;" \n
                          "		};" \n

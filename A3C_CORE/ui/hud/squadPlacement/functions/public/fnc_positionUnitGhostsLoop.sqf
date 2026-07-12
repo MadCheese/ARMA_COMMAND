@@ -51,7 +51,7 @@ while {(count A3C_UI_squadPlacement_unitGhosts) > 0} do {
 
         if ((count _objectCollision) > 0) then {
             if !(isNull cursorTarget) then {
-                if (([cursorTarget] call MCSS_fnc_countBPos) > 0) then {
+                if (([cursorTarget] call MCSS_fnc_getLastBuildingPosIndex) > 0) then {
                     _aimPos = (_objectCollision select 0) select 0;
                     _aimingHeight = if !(isNil "_aimPos") then {
                         (ASLToATL _aimPos) select 2
@@ -74,7 +74,7 @@ while {(count A3C_UI_squadPlacement_unitGhosts) > 0} do {
         if (_useCursorPos) then {
             A3C_UI_squadPlacement_unitGhostsInBuilding = false;
 
-            (A3C_UI_squadPlacement_unitGhosts select 0) setDir ([A3C_FORMATION_DIR + 180] call MCSS_fnc_CorrectDir);
+            (A3C_UI_squadPlacement_unitGhosts select 0) setDir ([A3C_FORMATION_DIR + 180] call MCSS_fnc_correctDir);
 
             {
                 _x setVariable ["A3C_ARROW_BPOS", [0, 0], true];
@@ -139,7 +139,7 @@ while {(count A3C_UI_squadPlacement_unitGhosts) > 0} do {
                                         ];
                                     };
 
-                                    if (([cursorTarget] call MCSS_fnc_countBPos) > 0) then {
+                                    if (([cursorTarget] call MCSS_fnc_getLastBuildingPosIndex) > 0) then {
                                         private _collisionPos = (_objectCollision select 0) select 0;
                                         _aimingHeight = (ASLToATL _collisionPos) select 2;
 
@@ -166,7 +166,7 @@ while {(count A3C_UI_squadPlacement_unitGhosts) > 0} do {
                                 if !(isNull cursorTarget) then {
                                     if !(isNull A3C_HUD_COLLIDER) then {
                                         if (cursorTarget == A3C_HUD_COLLIDER) then {
-                                            if (([cursorTarget] call MCSS_fnc_countBPos) > 0) then {
+                                            if (([cursorTarget] call MCSS_fnc_getLastBuildingPosIndex) > 0) then {
                                                 private _collisionPos = (_objectCollision select 0) select 0;
                                                 _aimingHeight = (ASLToATL _collisionPos) select 2;
 

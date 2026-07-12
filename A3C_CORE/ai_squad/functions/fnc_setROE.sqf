@@ -12,7 +12,7 @@ private _roeUnits = A3C_RD_UNITS;
 private _unitNames = "";
 
 {
-	_unitNames = _unitNames + ([_x] call MCSS_fnc_NAMESTRING);
+	_unitNames = _unitNames + ([_x] call MCSS_fnc_getUnitNameString);
 } forEach _roeUnits;
 
 switch (_mode) do {
@@ -62,7 +62,7 @@ switch (_mode) do {
 					A3C_fireOnMyLeadUnits pushBack _unit;
 				};
 
-				[_unit,["COMBATMODE","BLUE"]] call MCSS_fnc_orderIndividual;
+				[_unit,["COMBATMODE","BLUE"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 			} forEach _roeUnits;
 		} else {
 			player groupChat (_unitNames + " Hold Fire! (Fire On My Lead)");
@@ -73,7 +73,7 @@ switch (_mode) do {
 			};
 
 			{
-				[_x,["COMBATMODE","BLUE"]] call MCSS_fnc_orderIndividual;
+				[_x,["COMBATMODE","BLUE"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 			} forEach A3C_fireOnMyLeadUnits;
 		};
 	};

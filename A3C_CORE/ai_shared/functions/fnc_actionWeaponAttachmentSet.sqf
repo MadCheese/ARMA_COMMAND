@@ -50,7 +50,7 @@ if (_useSquadGestureFlow) then {
 
 if (_mode == "ON") then {
 	if (_useSquadGestureFlow) then {
-		[_unit, ["BEHAVIOUR", "COMBAT"]] call MCSS_fnc_orderIndividual;
+		[_unit, ["BEHAVIOUR", "COMBAT"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 	} else {
 		_unit setBehaviourStrong "COMBAT";
 	};
@@ -69,7 +69,7 @@ if (_mode == "ON") then {
 	_unit setVariable ["A3C_isGunPoiterSlotOn", _type, true];
 } else {
 	if (_useSquadGestureFlow) then {
-		[_unit, ["BEHAVIOUR", "AWARE"]] call MCSS_fnc_orderIndividual;
+		[_unit, ["BEHAVIOUR", "AWARE"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 	} else {
 		_unit setBehaviourStrong "AWARE";
 	};

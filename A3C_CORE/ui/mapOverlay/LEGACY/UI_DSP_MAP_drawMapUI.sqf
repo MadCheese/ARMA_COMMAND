@@ -36,7 +36,7 @@ MAP_UI_fnc_drawMapUI = {
 	_plotMain = [];
 	_isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
 	
-	_allGroupsHC = A3C_HC_getAllGroups_Player_Current;
+	_allGroupsHC = A3C_HC_allGroupsClient_Current;
 	if !(group player in _allGroupsHC) then {
 		_allGroupsHC = [group player] + _allGroupsHC; //-- add player group (player does not carry tablet item, but we need to show it in UI
 	};
@@ -108,7 +108,7 @@ MAP_UI_fnc_drawMapUI = {
 	
 	//-- Attach Explosiive: Vehicle Pickup Icons
 	if (A3C_HC_DETONATION_BOOL) then {
-		_demolition_snapObjects = [leader A3C_HC_ACTIVEGROUP,waypointPosition [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND],50,true] call A3C_fnc_getNearDetonationTargets;
+		_demolition_snapObjects = [leader A3C_HC_ACTIVEGROUP,waypointPosition [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND],50,true] call A3C_main_fnc_getNearDetonationTargets;
 		if !(_demolition_snapObjects isEqualTo []) then {
 			{
 				[
@@ -701,7 +701,7 @@ MAP_UI_fnc_drawMapUI = {
 				_crewGroups pushBackUnique (group _x);
 			} foreach (crew _leaderVic);
 		};
-		_shiftFactor = [_group,_crewGroups] call MCSS_fnc_GetArrayIndex;
+		_shiftFactor = [_group,_crewGroups] call MCSS_fnc_getArrayIndex;
 		if (_shiftFactor == -1) then {_shiftFactor = 0};
 		private _gpIconPos = (vehicle (leader _x)) getPos [2 * _shiftFactor, (getDir (vehicle (leader _x))) + 180];
 		
@@ -875,7 +875,7 @@ MAP_UI_fnc_drawMapUI = {
 							switch (true) do {
 								case ("repair" in _scr) : {
 									//-- circle
-									_entities = (_wPos nearEntities [["Car","Motorcycle","Tank","AIR"], 100]) select {[side _leader, _x,"VISUAL"] call A3C_fnc_isVehicleDamaged};
+									_entities = (_wPos nearEntities [["Car","Motorcycle","Tank","AIR"], 100]) select {[side _leader, _x,"VISUAL"] call A3C_main_fnc_isVehicleDamaged};
 									_circleColor = switch (true) do {
 										case (count _entities > 3) : {A3C_UI_COLOR_RED};
 										case (count _entities > 2) : {[0.99,0.36,0.12,1]};
@@ -1081,7 +1081,7 @@ MAP_UI_fnc_drawMapUI = {
 
 				//-- draw Group Icon
 		
-				_iconType = [_group] call A3C_HC_getIconType;
+				_iconType = [_group] call A3C_main_fnc_getGroupIconType;
 				_iconColorArray set [3,_opacity];
 
 				_sz = (2* 10^(abs log _ctrlMapScale)); // min _szMax;
@@ -1413,7 +1413,7 @@ MAP_UI_fnc_drawMapUI = {
 						_size = [25,45];
 						_wpnIcon = _this select 0 drawIcon
 						[
-							[_gp] call A3C_HC_getIconType,
+							[_gp] call A3C_main_fnc_getGroupIconType,
 							(_x select 3), //-- color
 							(_x select 1), //-- position
 							25,
@@ -1694,7 +1694,7 @@ MAP_UI_fnc_drawMapUI = {
 	};
 
 	if (A3C_TAB_BUILDING_BOOL) then {
-		for "_i" from 0 to ([A3C_TAB_BUILDING] call MCSS_fnc_countBPos) do {
+		for "_i" from 0 to ([A3C_TAB_BUILDING] call MCSS_fnc_getLastBuildingPosIndex) do {
 			_bPos = (A3C_TAB_BUILDING buildingPos _i);
 			_sz = ([_bPos] call A3C_ICONCOLORSIZE);
 			(_this select 0) drawIcon

@@ -12,7 +12,7 @@ if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith 
 
 private _wpIndex = currentWaypoint _group;
 
-//private _waypointPositions =  [_pos,units _group,count units _group, (_pos getDir (leader _group)) + 180,100 ] call A3C_fnc_generateWpWedgePositions;
+//private _waypointPositions =  [_pos,units _group,count units _group, (_pos getDir (leader _group)) + 180,100 ] call A3C_main_fnc_generateWpWedgePositions;
 
 private _assignedIndex = 0;
 
@@ -125,7 +125,7 @@ private _exitCondition = {};
 	};
 } foreach [_preCondition];
 
-_repairUnits = units _group select {[_x] call A3C_fnc_canRepair};
+_repairUnits = units _group select {[_x] call A3C_main_fnc_canRepair};
 
 // (format ["_repairUnits: %1", _repairUnits]) remoteexec ["systemchat", 0];
 
@@ -206,8 +206,8 @@ _group setBehaviourStrong "SAFE"; //-- set units to safe
 
 		while {alive _unit} do {
 			//systemchat str _unit;
-			if !([_unit] call A3C_fnc_canRepair) exitWith {};
-			_entities = (_pos nearEntities [["Car","Motorcycle","Tank","AIR"], 100]) select {[side _unit, _x] call A3C_fnc_isVehicleDamaged};
+			if !([_unit] call A3C_main_fnc_canRepair) exitWith {};
+			_entities = (_pos nearEntities [["Car","Motorcycle","Tank","AIR"], 100]) select {[side _unit, _x] call A3C_main_fnc_isVehicleDamaged};
 			// (format ["Need treatment: %1 ", _entities]) remoteexec ["systemchat", 0];
 			if (_entities isEqualTo []) exitWith {};
 			private _quit = false;
@@ -345,7 +345,7 @@ _group setBehaviourStrong "SAFE"; //-- set units to safe
 			//-- create roadCone area
 			{
 				_vic = _x;
-				_boxPositions = ([_x,0] call MCSS_fnc_BBOX);
+				_boxPositions = ([_x,0] call MCSS_fnc_getBoundingBox);
 				{
 					_obj = "RoadCone_L_F" createVehicle _x;
 					_obj setPos _x;

@@ -13,7 +13,7 @@ if (isServer) then {
 
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_InitValuesCommon.sqf";
 
-call compile preprocessFileLineNumbers "A3C_CORE\A3C_fncs_Main.sqf";
+call compile preprocessFileLineNumbers "A3C_CORE\MCSS\initFunctions.sqf";
 
 
 
@@ -28,8 +28,6 @@ if (A3C_IsAICommand && {!isDedicated}) exitWith {
 call compile preprocessFileLineNumbers "A3C_CORE\data\A3C_data_bPosNoAccess.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_fncs_Debug.sqf";
-
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_MCSS.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_sharedCommandingLevels.sqf";
 

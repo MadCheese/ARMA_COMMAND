@@ -12,8 +12,8 @@ if (
 ) exitWith {}; // Only tracked vehicles can rotate while stationary.
 
 private _currentVelocity = velocity _vehicle;
-private _newDir = [getDir _vehicle + _angleDiff] call MCSS_fnc_CorrectDir;
-private _terrainVectors = [getPos _vehicle, _newDir] call MCSS_fnc_TerrainTilt;
+private _newDir = [getDir _vehicle + _angleDiff] call MCSS_fnc_correctDir;
+private _terrainVectors = [getPos _vehicle, _newDir] call MCSS_fnc_getTerrainTilt;
 
 // Calculate new velocity components after rotation.
 private _angleCos = cos _angleDiff;

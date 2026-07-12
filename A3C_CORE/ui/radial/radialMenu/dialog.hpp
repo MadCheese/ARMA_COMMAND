@@ -754,7 +754,7 @@ class A3C_DSP_RadialMenu
 				class RADIAL_EXTENSIONLEFT_HOLD_BTN: A3C_RscButton_Invisible
 				{
 					idc = IDC_RADIAL_EXTENSIONLEFT_HOLD_BTN; //8098;
-					onMouseButtonDown = "A3C_RD_UNITS call A3C_UNIT_HOLD;";
+					onMouseButtonDown = "A3C_RD_UNITS call A3C_ai_squad_fnc_unitRouteHold;";
 					x = 6.5 * GUI_GRID_W + GUI_GRID_X;
 					y = 0.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 1 * GUI_GRID_W;
@@ -773,7 +773,7 @@ class A3C_DSP_RadialMenu
 				class RADIAL_EXTENSIONLEFT_CONTINUE_BTN: A3C_RscButton_Invisible
 				{
 					idc = IDC_RADIAL_EXTENSIONLEFT_CONTINUE_BTN; //9000;
-					onMouseButtonDown = "A3C_RD_UNITS call A3C_UNIT_CONTINUE;";
+					onMouseButtonDown = "A3C_RD_UNITS call A3C_ai_squad_fnc_unitRouteContinue;";
 					x = 8.5 * GUI_GRID_W + GUI_GRID_X;
 					y = 0.5 * GUI_GRID_H + GUI_GRID_Y;
 					w = 1 * GUI_GRID_W;

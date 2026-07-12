@@ -1,7 +1,7 @@
 //---------------------------  S H A R E D  V A L U E S   A N D   A R R A Y S  ------------------------
 //------------------------------------------------------------------------------------------------------
 
-A3C_HC_getAllGroups_Player_Current = []; //-- despite the name this needs to exist everywhere at the moment
+A3C_HC_allGroupsClient_Current = []; //-- despite the name this needs to exist everywhere at the moment
 
 
 //---------------------------------------------------------------------------------------------------------
@@ -70,9 +70,11 @@ A3C_UI_COLOR_YELLOW2 = [0.85,0.85,0,1];
 A3C_CONVOY_SLOWDOWN_VICS = [];
 A3C_UI_HUDICONS_HC_GROUP = [];
 
+A3C_VARNAME_INDEX_HC = 0;
 
 
 
+A3C_OCCUPIED_BPOSES = [];
 
 
 A3C_THROW_MUZZLES = getArray (configFile >> "CfgWeapons" >> "THROW" >> "muzzles");

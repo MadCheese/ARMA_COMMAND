@@ -6,9 +6,9 @@ if (typeName _building == "STRING" && {_building == "cursortarget"}) then {
 	_building = cursortarget;
 };
 
-private _bpc = ([_building] call MCSS_fnc_countBPos);
+private _bpc = ([_building] call MCSS_fnc_getLastBuildingPosIndex);
 private _targets = [(side (_units select 0)),(sizeOf (typeOf _building)),"ENEMY",(position _building),["MAN"]] call MCSS_fnc_NearEntities;
-private _outerBuildingPositions = [_building,0] call MCSS_fnc_BBOX;
+private _outerBuildingPositions = [_building,0] call MCSS_fnc_getBoundingBox;
 
 {
 	if (_x getVariable ["A3C_CLEARING",false]) then {
@@ -170,7 +170,7 @@ private _originalRooms = +(_roomArrays);
 		private _roomBpos = (_x select 0) select 0;
 		private _roomZ = (_building buildingPos _roomBpos) select 2;
 
-		([_roomZ,_leaderZ] call MCSS_fnc_FindDifference) < 1
+		(abs (_roomZ - _leaderZ)) < 1
 	};
 
 	if (count _sameFloorRooms > 0) then {
@@ -238,7 +238,7 @@ private _originalRooms = +(_roomArrays);
 
 				_targets = _targets select {
 					private _targetZ = (getPosATL _x) select 2;
-					private _sameHeight = ([_unitZ,_targetZ] call MCSS_fnc_FindDifference) <= 1.5;
+					private _sameHeight = (abs (_unitZ - _targetZ)) <= 1.5;
 					_sameHeight
 				};
 
@@ -344,7 +344,7 @@ private _originalRooms = +(_roomArrays);
 	private _fnc_breakFromOrders = {
 		params ["_unit","_building"];
 
-		private _bbox = [_building,0] call MCSS_fnc_BBOX;
+		private _bbox = [_building,0] call MCSS_fnc_getBoundingBox;
 		private _area = [((_bbox select 0) distance2d (_bbox select 1)) / 2,((_bbox select 1) distance2d (_bbox select 2)) / 2];
 		private _expDest = (expectedDestination _unit) select 0;
 		private _result = _expDest inArea [position _building, _area select 0, _area select 1, getDir _building, false];
@@ -442,8 +442,7 @@ private _originalRooms = +(_roomArrays);
 
 						private _sameFloorRooms = _roomArrays1 select {
 							private _roomZ = (_building buildingPos ((_x select 0) select 0)) select 2;
-
-							([_roomZ,_leaderZ] call MCSS_fnc_FindDifference) < 1
+							(abs (_roomZ - _leaderZ)) < 1
 						};
 
 						if (count _sameFloorRooms > 0) then {

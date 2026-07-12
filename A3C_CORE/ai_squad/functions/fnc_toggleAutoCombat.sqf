@@ -16,7 +16,7 @@ if (_eligibleUnits isEqualTo []) exitWith {["NONE", ""]};
 private _unitNames = "";
 
 {
-	_unitNames = _unitNames + ([_x] call MCSS_fnc_NAMESTRING);
+	_unitNames = _unitNames + ([_x] call MCSS_fnc_getUnitNameString);
 } forEach _eligibleUnits;
 
 private _hasAnyDisabledUnit = {

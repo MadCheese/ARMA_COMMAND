@@ -28,7 +28,7 @@ _parent ctrlShow true;
 private _requiresPlacementCorrection = true;
 private _placerPos = getPosASL A3C_OBJECTPLACER;
 private _landingPosRoot = +_placerPos;
-private _landingVector = [getDir A3C_OBJECTPLACER] call MCSS_fnc_DegreeToVector;
+private _landingVector = [getDir A3C_OBJECTPLACER] call MCSS_fnc_degreeToVector;
 
 private _dimensions = [typeOf A3C_OBJECTPLACER] call A3C_main_fnc_getVehicleBodyDimensions;
 _dimensions params ["_referenceWidth", "_referenceLength", "_referenceHeight", "_referenceRotorSize"];
@@ -79,7 +79,7 @@ if (!isNull A3C_SNAP_OBJECT) then {
 
 			if (count _lzData > 0) then {
 				_landingPosRoot = _lzData select 0;
-				_landingVector = [_lzData select 1] call MCSS_fnc_DegreeToVector;
+				_landingVector = [_lzData select 1] call MCSS_fnc_degreeToVector;
 				_forceDefaultLanding = false;
 			};
 		};
@@ -90,7 +90,7 @@ if (!isNull A3C_SNAP_OBJECT) then {
 	_forceDefaultLanding = false;
 	_requiresPlacementCorrection = false;
 
-	private _dummyBox = [A3C_OBJECTPLACER, 1] call MCSS_fnc_BBOX;
+	private _dummyBox = [A3C_OBJECTPLACER, 1] call MCSS_fnc_getBoundingBox;
 	private _maxRotorHeight = 1000;
 
 	{

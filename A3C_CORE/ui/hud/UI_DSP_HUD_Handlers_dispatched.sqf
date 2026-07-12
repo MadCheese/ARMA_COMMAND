@@ -244,7 +244,7 @@ A3C_UI_HUD_onKeyDown_NUM = {
 				};
 			};
 
-			A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_CorrectDir;
+			A3C_FORMATION_DIR = [A3C_FORMATION_DIR] call MCSS_fnc_correctDir;
 			A3C_HUD_FORM_ICON_COLOR = [0, 0, 0, 0.2];
 			A3C_HUD_FORM_ICON_SIZE = 0.8;
 			switch (_key) do {

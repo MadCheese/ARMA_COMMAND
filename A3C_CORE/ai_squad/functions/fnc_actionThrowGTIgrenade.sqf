@@ -37,7 +37,7 @@ BR_A3C_TEMP_gfeh = A3C_GTI_UNIT addEventHandler [
 	}
 ];
 
-private _muzzle = [A3C_GREN_MUZZLE] call MCSS_fnc_GetMuzzle;
+private _muzzle = [A3C_GREN_MUZZLE] call MCSS_fnc_getThrowMuzzleForMagazine;
 
 A3C_GTI_UNIT forceSpeed 0;
 

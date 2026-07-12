@@ -1239,7 +1239,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 		_vehi = vehicle leader _group;
 		private _runwayLanding = ((getNumber (configfile >> "CfgVehicles" >> typeOf _vehi >> "landingSpeed")) > 10);
 		if (_vehi isKindOf "PLANE" && {_runwayLanding}) then {
-			private _airportData = [A3C_HC_ACTIVE_WPOS] call MCSS_fnc_getNearestAirportData;
+			private _airportData = [A3C_HC_ACTIVE_WPOS] call A3C_main_fnc_getNearestAirportData;
 			_airportData params ["_airportID","_airportName","_airportTaxiIn","_airportTaxiOff","_airportIlsDir","_taxiInPoses","_taxiOffPoses"];
 			A3C_HC_ACTIVE_WPOS = if (_airportID > -1) then {_airportTaxiIn} else {position _airportName}; //-- on dynamic airfields, 'airportName' is the actual object
 			//systemchat str _airportData;
@@ -1635,7 +1635,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 				[_listBox, _x] call A3C_addLbEntry;
 			} foreach ["YES", "NO"];
 
-			[_parent, _listBox, 2] call A3C_OBJECTSEL_RESIZE;
+			[_parent, _listBox, 2] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
 
 		};
 	};
@@ -1684,7 +1684,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 			
 			
 			if (_leaderVic isKindOf "HELICOPTER") then {
-				if ([_leaderVic] call A3C_fnc_isAttackHelicopter ) then { //-- unit with toolKit is required
+				if ([_leaderVic] call A3C_main_fnc_isAttackHelicopter ) then { //-- unit with toolKit is required
 					_landingTypes pushBackUnique "HELI OVERWATCH";
 				};
 				
@@ -1762,7 +1762,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 			};
 		};
 
-		if ({[_x] call A3C_fnc_canRepair} count (units A3C_HC_ACTIVEGROUP) > 0) then { //-- unit with toolKit is required
+		if ({[_x] call A3C_main_fnc_canRepair} count (units A3C_HC_ACTIVEGROUP) > 0) then { //-- unit with toolKit is required
 			_actionTypes pushBackUnique "REPAIR";
 		};
 	};
@@ -2362,7 +2362,7 @@ A3C_LB_HC = {
 							[_listBox, _lbText] call A3C_addLbEntry;
 						} foreach A3C_REMFIRE_MAGTYPES;
 
-						[_parent,_listBox, count A3C_REMFIRE_MAGTYPES] call A3C_OBJECTSEL_RESIZE;
+						[_parent,_listBox, count A3C_REMFIRE_MAGTYPES] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
 					};
 					case ("CAS-STRIKE") : {
 						A3C_HC_EDIT_ACTION = "CAS-STRIKE";

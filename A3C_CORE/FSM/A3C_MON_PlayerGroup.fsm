@@ -119,7 +119,7 @@ class FSM
                         name = "run_cleanup_";
                         itemno = 2;
                         init = /*%FSM<STATEINIT""">*/"//[(units group player) - [player]] call A3C_GROUP_RESET;" \n
-                         "[] call A3C_JOIN_UNIT;" \n
+                         "[] call A3C_ai_squad_fnc_joinUnitToPlayerGroup;" \n
                          "_time = time;" \n
                          "//systemchat ""array changed"";" \n
                          ""/*%FSM</STATEINIT""">*/;
@@ -283,7 +283,7 @@ class FSM
                          "	if (_kn > 1.5) then {" \n
                          "		{" \n
                          "				_x reveal [_t,_kn];" \n
-                         "		} foreach A3C_HC_getAllGroups_Player_Current;" \n
+                         "		} foreach A3C_HC_allGroupsClient_Current;" \n
                          "	};" \n
                          "} foreach _tgts;" \n
                          "" \n
@@ -343,7 +343,7 @@ class FSM
                          "				//	};			" \n
                          "				//} foreach (units _gp);" \n
                          "				_kn = _kn * 0.4;" \n
-                         "				if ([_t,vehicle (leader _gp)] call MCSS_fnc_LOS_SIMPLE) then {" \n
+                         "				if ([_t,vehicle (leader _gp)] call MCSS_fnc_lineOfSightSimple) then {" \n
                          "					player reveal [_t,_kn];" \n
                          "				};" \n
                          "			} else {" \n
@@ -362,7 +362,7 @@ class FSM
                          "		//	];" \n
                          "		////};" \n
                          "	} foreach _tgts;" \n
-                         "} foreach A3C_HC_getAllGroups_Player_Current;"/*%FSM</STATEINIT""">*/;
+                         "} foreach A3C_HC_allGroupsClient_Current;"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {
@@ -485,7 +485,7 @@ class FSM
                          "			};" \n
                          "		};" \n
                          "	} foreach (units _gp);" \n
-                         "} foreach (A3C_HC_getAllGroups_Player_Current + [group player]);"/*%FSM</STATEINIT""">*/;
+                         "} foreach (A3C_HC_allGroupsClient_Current + [group player]);"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {

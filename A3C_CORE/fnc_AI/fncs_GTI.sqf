@@ -445,7 +445,7 @@ A3C_GREN_DATA = {
 					A3C_GREN_MUZZLE = A3C_AI_GREN_ARRAY select 0;
 				} else {
 					//-- if current Muzzle is not the last in Gren Array, script selects next entry
-					_newMuzzle = A3C_AI_GREN_ARRAY select (([A3C_GREN_MUZZLE,A3C_AI_GREN_ARRAY] call MCSS_fnc_GetArrayIndex) + 1);
+					_newMuzzle = A3C_AI_GREN_ARRAY select (([A3C_GREN_MUZZLE,A3C_AI_GREN_ARRAY] call MCSS_fnc_getArrayIndex) + 1);
 					A3C_GREN_MUZZLE = _newMuzzle;
 				};
 			} else {
@@ -460,7 +460,7 @@ A3C_GREN_DATA = {
 			if (A3C_GREN_MUZZLE ==  (A3C_AI_GREN_ARRAY select ((count A3C_AI_GREN_ARRAY) -1) )) then {
 				A3C_GREN_MUZZLE = A3C_AI_GREN_ARRAY select 0;
 			} else {
-				A3C_GREN_MUZZLE = A3C_AI_GREN_ARRAY select (([A3C_GREN_MUZZLE,A3C_AI_GREN_ARRAY] call MCSS_fnc_GetArrayIndex) + 1);
+				A3C_GREN_MUZZLE = A3C_AI_GREN_ARRAY select (([A3C_GREN_MUZZLE,A3C_AI_GREN_ARRAY] call MCSS_fnc_getArrayIndex) + 1);
 			};
 		};
 	};

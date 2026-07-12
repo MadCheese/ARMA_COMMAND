@@ -21,13 +21,13 @@ if (count _ins > 0) then {
 };
 
 if ({
-    ctrlShown _x && {[[_sX, _sY], _x] call MCSS_fnc_isClickPosInCTRLArea}
+    ctrlShown _x && {[[_sX, _sY], _x] call MCSS_fnc_isClickPosInCtrlArea}
 } count (["radial_clickBlockAreas"] call FUNC(ctrlGroup)) > 0) exitWith {};
 
 private _unitDetected = false;
 
 if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
-    private _hcAll = A3C_HC_getAllGroups_Player_Current;
+    private _hcAll = A3C_HC_allGroupsClient_Current;
     private _group = grpNull;
     private _refGroup = group driver _clickedVehicle;
 

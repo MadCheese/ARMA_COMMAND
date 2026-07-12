@@ -345,7 +345,7 @@ A3C_POLY_ACTION_ON = {
 					_root
 				];
 				if (_unit in (units player)) then {
-					[_unit,["COMBATMODE","YELLOW"]] call MCSS_fnc_orderIndividual;
+					[_unit,["COMBATMODE","YELLOW"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 				} else {
 					_unit setCombatMode "YELLOW";
 				};
@@ -358,8 +358,8 @@ A3C_POLY_ACTION_ON = {
 			{
 				_unit = _x;
 				if (_unit in (units player)) then {
-					[_unit,["COMBATMODE","BLUE"]] call MCSS_fnc_orderIndividual;
-					[_unit,["BEHAVIOUR","SAFE"]] call MCSS_fnc_orderIndividual;
+					[_unit,["COMBATMODE","BLUE"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
+					[_unit,["BEHAVIOUR","SAFE"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 				} else {
 					_unit setCombatMode "BLUE";
 					_unit setBehaviour "SAFE";
@@ -600,7 +600,7 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 						if (_pos inPolygon _pgD) then {
 								
 							_pos set [2,(_pos select 2) + 0.7];
-							if ([vehicle _unit,_pos,_target,false] call MCSS_fnc_LOS_SIMPLE) then {
+							if ([vehicle _unit,_pos,_target,false] call MCSS_fnc_lineOfSightSimple) then {
 								_dir = [_pos,_unit] call BIS_fnc_dirTo;
 								_pos = [_pos,5,_dir] call BIS_fnc_relPos;
 								//player sidechat "found a position easy";		
@@ -612,13 +612,13 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 								};
 							} else {
 								
-								//_lSF = (terrainIntersectASL [([_unit] call MCSS_fnc_Switch_Eyepos),_pos]);
+								//_lSF = (terrainIntersectASL [([_unit] call MCSS_fnc_getViewPosASL),_pos]);
 								//if !(_lSF) then {
 								//	_exit = true;
 								//	[_target,_pos] remoteExec ["setPosASL",_target];	
 								//};
 								
-								_lSF = (lineintersectsSurfaces [([_unit] call MCSS_fnc_Switch_Eyepos),_pos,vehicle _unit,objnull]);
+								_lSF = (lineintersectsSurfaces [([_unit] call MCSS_fnc_getViewPosASL),_pos,vehicle _unit,objnull]);
 								if (count _lSF > 0) then {
 									
 									_pos = (_lSF select 0) select 0;
@@ -667,10 +667,10 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 								//	} else {
 								//		_dirToOrient = _dirToOrient - 90; //_relDir;
 								//	};
-								//	_dirToOrient = [_dirToOrient] call MCSS_fnc_CorrectDir;
+								//	_dirToOrient = [_dirToOrient] call MCSS_fnc_correctDir;
 								//	_orientPos = _vehicle getPos [100,_dirToOrient];
 								//};
-								_scr1 = [_vehicle,_orientPos] spawn A3C_FORCEORIENT;
+								_scr1 = [_vehicle,_orientPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
 								waituntil {scriptDone _scr1 or !canMove _vehicle OR ({_polyID == ((_x select 0) select 2)} count A3C_ALL_POLYS == 0)}; 
 								//
 								if ({_polyID == ((_x select 0) select 2)} count A3C_ALL_POLYS == 0) then {_exitMain = true};
@@ -732,9 +732,9 @@ A3C_SPAWN_POLY_ACTION_LOOP = {
 									//[_unit,_target] remoteExec ["doTarget",_unit];
 									//[_unit,_target] call _targetFnc; 
 									//hintsilent "1";
-									if ((_vehicle isKindOf "HELICOPTER") OR [position _target, _unit,10] call MCSS_fnc_LOS_Vehicle) then {
+									if ((_vehicle isKindOf "HELICOPTER") OR [position _target, _unit,10] call MCSS_fnc_lineOfSightVehicle) then {
 										//hintsilent "2";
-										//[_target, vehicle _unit] call A3C_fnc_isTargetWithinTurretElevationRange;
+										//[_target, vehicle _unit] call A3C_main_fnc_isTargetWithinTurretElevationRange;
 										_magType = currentMagazine (vehicle _unit);
 										_currentAmmo = getText (configfile >> "CfgMagazines" >> _magType >> "ammo");
 										_lock = getNumber (configfile >> "CfgAmmo" >> _currentAmmo >> "weaponLockSystem");
@@ -1017,7 +1017,7 @@ A3C_SUP_REMOVE_POLY = {
 			};
 		};
 		
-	} foreach ( (_units - [_unit]) ); //A3C_HC_getAllGroups_Player_Current + 
+	} foreach ( (_units - [_unit]) ); //A3C_HC_allGroupsClient_Current + 
 	
 	if (_delPoly) then {
 		{

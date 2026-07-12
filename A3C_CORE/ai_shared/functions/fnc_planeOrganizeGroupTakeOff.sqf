@@ -4,7 +4,7 @@ params ["_leader"];
 
 private _leaderVehicle = vehicle _leader;
 
-private _airportData = [getPosATL _leaderVehicle] call MCSS_fnc_getNearestAirportData;
+private _airportData = [getPosATL _leaderVehicle] call A3C_main_fnc_getNearestAirportData;
 _airportData params ["_airportID","_airportName","_airportTaxiIn","_airportTaxiOff","_airportIlsDir","_taxiInPoses","_taxiOffPoses"];
 
 private _maxConcurrentTakeoffs = if (_airportID > -1) then {1} else {2};

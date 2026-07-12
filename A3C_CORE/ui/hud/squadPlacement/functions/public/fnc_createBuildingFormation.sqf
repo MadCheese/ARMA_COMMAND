@@ -5,8 +5,8 @@ params ["_building", "_aimPos"];
 if (isNull _building) exitWith {};
 if ((count A3C_UI_squadPlacement_unitGhosts) == 0) exitWith {};
 
-private _outsidePositions = [_building, 1] call MCSS_fnc_BBOX;
-private _availablePositions = [_building] call MCSS_fnc_countBPos;
+private _outsidePositions = [_building, 1] call MCSS_fnc_getBoundingBox;
+private _availablePositions = [_building] call MCSS_fnc_getLastBuildingPosIndex;
 private _positionArray = [player, _building, _availablePositions, _aimPos] call FUNC(sortBuildingPositionsByAim);
 
 _availablePositions = count _positionArray;

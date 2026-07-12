@@ -25,7 +25,7 @@ private _distributedPositions = [
 	count _groups,
 	_landingPosRoot getDir leader (_groups select 0),
 	100
-] call A3C_fnc_generateWpWedgePositions;
+] call A3C_main_fnc_generateWpWedgePositions;
 
 {
 	private _group = _x;

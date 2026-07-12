@@ -585,7 +585,7 @@ A3C_Map_HC_groupContext_ButtonFnc_Confirm = {
 				{
 					_s = _x;
 					if (_s == driver vehicle _x) then {
-						[_s,["BEHAVIOUR","CARELESS"]] call MCSS_fnc_orderIndividual;
+						[_s,["BEHAVIOUR","CARELESS"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 					};
 				} foreach (units _x);
 			} else {

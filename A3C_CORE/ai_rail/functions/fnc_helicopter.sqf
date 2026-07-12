@@ -3,7 +3,7 @@
 params ["_vehicle", "_startPos", "_endPos", "_speed", "_endDir"];
 
 if (isNil "_endDir") then {
-	_endDir = [_vehicle getDir _endPos] call MCSS_fnc_DegreeToVector;
+	_endDir = [_vehicle getDir _endPos] call MCSS_fnc_degreeToVector;
 };
 
 private _totalDistance = _startPos distance _endPos;

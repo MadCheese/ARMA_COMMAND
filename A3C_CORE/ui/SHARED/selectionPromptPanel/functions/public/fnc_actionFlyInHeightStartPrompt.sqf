@@ -52,7 +52,7 @@ if ((vehicle leader _group) isKindOf "PLANE") then {
 	_heightArray = A3C_FlyinHeightArrayJet;
 };
 
-[_parent, _listBox, count _heightArray] call A3C_OBJECTSEL_RESIZE;
+[_parent, _listBox, count _heightArray] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
 
 {
 	[_listBox, _x] call A3C_addLbEntry;

@@ -203,7 +203,7 @@ switch (_weaponGroup) do {
             while { alive _unit } do {
                 _unit doWatch _target;
 
-                if ([position _target, vehicle _unit, 10] call MCSS_fnc_LOS_Vehicle) exitWith {};
+                if ([position _target, vehicle _unit, 10] call MCSS_fnc_lineOfSightVehicle) exitWith {};
 
                 sleep 1;
             };
@@ -268,7 +268,7 @@ switch (_weaponGroup) do {
                 sleep 3;
             };
 
-            if ([getPosATL _tankTarget, _unit] call MCSS_fnc_LOS_Vehicle) exitWith {
+            if ([getPosATL _tankTarget, _unit] call MCSS_fnc_lineOfSightVehicle) exitWith {
                 sleep 3;
             };
 
@@ -573,7 +573,7 @@ switch (_weaponGroup) do {
 
                 if !(alive _unit) exitWith {};
 
-                if ([_unit, _target] call MCSS_fnc_LOF) exitWith {
+                if ([_unit, _target] call MCSS_fnc_lineOfFire) exitWith {
                     _unit setVariable ["A3C_PAUSE_PLAN", true, true];
 
                     _unit setDir (_unit getDir getPosASL _target);
@@ -616,7 +616,7 @@ switch (_weaponGroup) do {
 
                         sleep 1;
 
-                        [_shooter, ["BEHAVIOUR", _behaviour]] call MCSS_fnc_orderIndividual;
+                        [_shooter, ["BEHAVIOUR", _behaviour]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
                     };
 
                     [_unit, _handlerFunc, objNull, objNull, _snapObjectStored] call _addEHFunc;
@@ -625,7 +625,7 @@ switch (_weaponGroup) do {
                         count (_unit getVariable ["A3C_REMOTE_HANDLE", []]) > 0
                     };
 
-                    [_unit, ["BEHAVIOUR", "COMBAT"]] call MCSS_fnc_orderIndividual;
+                    [_unit, ["BEHAVIOUR", "COMBAT"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 
                     sleep 1;
 

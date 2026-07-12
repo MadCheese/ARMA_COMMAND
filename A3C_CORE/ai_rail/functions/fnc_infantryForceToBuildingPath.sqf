@@ -52,5 +52,5 @@ _unit forceSpeed -1;
 
 _dest spawn {
 	sleep 15;
-	A3C_OCC_BPOSES = A3C_OCC_BPOSES - [_this];
+	A3C_OCCUPIED_BPOSES = A3C_OCCUPIED_BPOSES - [_this];
 };

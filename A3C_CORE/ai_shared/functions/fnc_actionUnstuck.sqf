@@ -20,8 +20,8 @@
 private _fnc_angleDiff = {
 	params ["_dirA", "_dirB"];
 
-	_dirA = [_dirA] call MCSS_fnc_CorrectDir;
-	_dirB = [_dirB] call MCSS_fnc_CorrectDir;
+	_dirA = [_dirA] call MCSS_fnc_correctDir;
+	_dirB = [_dirB] call MCSS_fnc_correctDir;
 
 	private _diff = abs (_dirA - _dirB);
 
@@ -37,8 +37,8 @@ private _fnc_selectRoadDirClosestToVehicleDir = {
 
 	//-- A road segment has two valid travel directions.
 	//-- Choose the one closest to how the vehicle was already facing.
-	private _roadDirA = [_roadAxisDir] call MCSS_fnc_CorrectDir;
-	private _roadDirB = [_roadAxisDir + 180] call MCSS_fnc_CorrectDir;
+	private _roadDirA = [_roadAxisDir] call MCSS_fnc_correctDir;
+	private _roadDirB = [_roadAxisDir + 180] call MCSS_fnc_correctDir;
 
 	if (
 		[_vehicleDir, _roadDirB] call _fnc_angleDiff
@@ -375,7 +375,7 @@ _vehicles =
 		//-- Prevent abusing unstuck in MP as a defensive measure.
 		//-- Kept late on purpose: nearby enemy players block teleporting, but do not block AI recovery above.
 		if (isMultiplayer) then {
-			private _enemies = [_driver, "ARRAY"] call MCSS_fnc_NearEnemies;
+			private _enemies = [_driver, "ARRAY"] call MCSS_fnc_nearEnemies;
 
 			if ({isPlayer _x} count _enemies > 0) then {
 				_allowUnstuck = false;

@@ -3,7 +3,7 @@
 A3C_CONVOY_fncPID = {
 	params ["_group","_allVehicles","_leaders","_vehicleCountAhead","_isLastVehicle"];
 
-	
+	hint '1111111';
 
 
 	//-- TO DO: EXIT IF GROUPLEADER IS ON FOOT
@@ -523,7 +523,7 @@ A3C_CONVOY_fncPID = {
 A3C_ai_highCommand_fnc_convoyMultigroup = {
 	params ["_inputUnits","_refPos"];
 
-	private _wpPositions =  [_refPos,_inputUnits,count _inputUnits, (_refPos getDir (leader (_inputUnits select 0))) + 180,20 ] call A3C_fnc_generateWpWedgePositions;
+	private _wpPositions =  [_refPos,_inputUnits,count _inputUnits, (_refPos getDir (leader (_inputUnits select 0))) + 180,20 ] call A3C_main_fnc_generateWpWedgePositions;
 
 
 	private _lastUnit = grpNull; 
@@ -594,7 +594,7 @@ A3C_ai_highCommand_fnc_convoyMultigroup = {
 		_convoyGoupsActive,
 		[],
 		{
-			[_x,_convoyArraySorted] call MCSS_fnc_GetArrayIndex
+			[_x,_convoyArraySorted] call MCSS_fnc_getArrayIndex
 		},
 		"ASCEND"
 	] call BIS_fnc_sortBy;

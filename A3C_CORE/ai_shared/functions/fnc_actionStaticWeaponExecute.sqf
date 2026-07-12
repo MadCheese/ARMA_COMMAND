@@ -25,7 +25,7 @@ if (_action == "ASSEMBLE") then {
 	private _requestedStaticClass = _staticData select 1;
 
 	{
-		[[_x], A3C_AIGetOut] remoteExec ["bis_fnc_call", _x];
+		[[_x], A3C_ai_shared_fnc_unitGetOut] remoteExec ["bis_fnc_call", _x];
 	} forEach _units;
 
 	[_units, "EXECUTING"] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons;
@@ -123,7 +123,7 @@ if (_action == "ASSEMBLE") then {
 
 					_weaponPos set [2, 0];
 
-					private _terrainVectors = [_weaponPos, _weaponDir] call MCSS_fnc_TerrainTilt;
+					private _terrainVectors = [_weaponPos, _weaponDir] call MCSS_fnc_getTerrainTilt;
 					private _createdStatic = _staticClassToCreate createVehicle _weaponPos;
 
 					[_createdStatic, ATLToASL _weaponPos] remoteExec ["setPosASL", _createdStatic];

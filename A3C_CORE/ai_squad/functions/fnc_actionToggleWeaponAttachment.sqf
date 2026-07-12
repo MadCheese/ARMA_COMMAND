@@ -41,7 +41,7 @@ if (_postGestureMode != _mode || {_postGestureRequestId != _requestId}) exitWith
 if (!alive _unit) exitWith {};
 
 if (_mode == "ON") then {
-	[_unit, ["BEHAVIOUR", "COMBAT"]] call MCSS_fnc_orderIndividual;
+	[_unit, ["BEHAVIOUR", "COMBAT"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 
 	switch (_type) do {
 		case "LASER": {
@@ -56,7 +56,7 @@ if (_mode == "ON") then {
 	_unit setUnitPos (["Middle", "UP"] call BIS_fnc_selectRandom);
 	_unit setVariable ["A3C_isGunPoiterSlotOn", _type, true];
 } else {
-	[_unit, ["BEHAVIOUR", "AWARE"]] call MCSS_fnc_orderIndividual;
+	[_unit, ["BEHAVIOUR", "AWARE"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 
 	switch (_type) do {
 		case "LASER": {

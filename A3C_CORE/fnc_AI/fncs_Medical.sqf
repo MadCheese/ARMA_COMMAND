@@ -415,7 +415,7 @@ A3C_AI_Shared_Action_Heal = {
 
 				if (count _objs > 0) then {
 					_objs = [_objs,[],{_x distance player},"ASCEND"] call BIS_fnc_sortBy;
-					_bb = [_objs select 0] call MCSS_fnc_BBOX;
+					_bb = [_objs select 0] call MCSS_fnc_getBoundingBox;
 					_bb = [_bb,[],{_x distance player},"ASCEND"] call BIS_fnc_sortBy;
 					if (_isPlayer) then {
 						A3C_Mpos = (_bb select 0);

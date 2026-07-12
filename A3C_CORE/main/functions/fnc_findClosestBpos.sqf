@@ -17,7 +17,7 @@ if (_refPos isEqualType objNull) then {
 private _closestBposATL = _building buildingPos 0;
 private _closestBposID = 0;
 private _distance = _refPos distance _closestBposATL;
-private _buildingPosCount = [_building] call MCSS_fnc_countBPos;
+private _buildingPosCount = [_building] call MCSS_fnc_getLastBuildingPosIndex;
 
 for "_i" from 0 to _buildingPosCount do {
 	private _checkPos = _building buildingPos _i;

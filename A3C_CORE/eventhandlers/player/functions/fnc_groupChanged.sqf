@@ -19,9 +19,9 @@ A3C_PLAYERGROUP = _newGroup;
 profileNamespace setVariable ["A3C_GROUPUNITS", _groupUnits];
 
 {
-	[_x] call A3C_UNIT_INIT;
+	[_x] call A3C_ai_squad_fnc_initializeUnit;
 } forEach _groupUnits;
 
 {
-	_x setVariable ["A3C_FORMATION_INDEX", [_x] call A3C_GETUNITINDEX, true];
+	_x setVariable ["A3C_FORMATION_INDEX", [_x] call A3C_main_fnc_getUnitIndex, true];
 } forEach _groupUnits;
