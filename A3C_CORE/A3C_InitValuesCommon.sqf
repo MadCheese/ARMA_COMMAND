@@ -217,6 +217,17 @@ A3C_SOG_BASEPACKS = ["vn_o_pack_static_base_01","vn_b_pack_static_base_01"];
 A3C_STATIC_PACKS = [];
 
 
+//-- gtiGrenade variables
+
+BR_A3C_TACV_GV0MaxS = 19;		//standing
+BR_A3C_TACV_fatEff	= 0.4;	//max - fatEff*max when fat = 1
+BR_A3C_TACV_GV0MaxP = 0.75;		//prone
+BR_A3C_TACV_GV0MaxC = 0.9;		//crouch
+A3C_DISABLE_RADIAL = false;
+BR_A3C_TACV_throwTheta = 45;
+BR_A3C_TACV_throwTheta_Add = 0;
+
+
 
 
 
@@ -297,6 +308,12 @@ publicVariable "A3C_REMOTE_BLACKFISH_HandlerIndex";
 A3C_TurnOutEH_Vehicles = []; //-- Server only, NOT public
 
 KNOWSABOUT_ARRAY = [];
+
+A3C_SUPPRESSION_UNITS_AI = []; //-- array for suppressing AI controlled units. CHANGES ARE BROADCASTED
+publicVariable 'A3C_SUPPRESSION_UNITS_AI';
+
+RHS_ENGINE_STARTUP_OFF = true;
+publicVariable 'RHS_ENGINE_STARTUP_OFF';
 
 
 

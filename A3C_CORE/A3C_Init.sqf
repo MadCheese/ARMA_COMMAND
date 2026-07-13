@@ -36,16 +36,9 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_sharedCommandingLev
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Ship.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Suppress.sqf";
-
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_GTI.sqf";
-
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Medical.sqf";          //-- mixed GLOBAL / CLient
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_reArm.sqf";            //-- mixed GLOBAL / CLient
 
 
-RHS_ENGINE_STARTUP_OFF = true;
-publicVariable 'RHS_ENGINE_STARTUP_OFF';
 
 
 [] spawn {
@@ -127,7 +120,6 @@ publicVariable 'RHS_ENGINE_STARTUP_OFF';
 //-- Generate A3C function libraries
 
 call compile preprocessFileLineNumbers "A3C_CORE\main\functions\initFunctions.sqf";
-
 call compile preprocessFileLineNumbers "A3C_CORE\ai_highCommand\functions\initFunctions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ai_shared\functions\initFunctions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ai_rail\functions\initFunctions.sqf";
@@ -152,7 +144,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\mainDisplay\functions\in
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\UI_createSafeEventHandler.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_init_keyBinds.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\A3C_events.sqf";
+
 
 
 
@@ -223,9 +215,6 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\functions\initFunctio
 
 //-- Arsenal fnc library
 call compile preprocessFileLineNumbers "A3C_CORE\ui\arsenal\functions\initFunctions.sqf";
-
-
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_Player\fncs_Player.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_Mode_ZEUS.sqf";
 

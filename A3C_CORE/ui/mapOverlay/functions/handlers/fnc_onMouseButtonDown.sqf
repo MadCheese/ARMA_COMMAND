@@ -581,7 +581,7 @@ if (count _mapPolygons > 0 && {_left}) exitWith {
 			private _polyRefID = (_x select 0) select 1;
 			if (_polyID == _polyRefID) exitWith {
 				//systemchat str _polyRefID;
-				A3C_CUR_EDIT_POLY = ([(_x select 0) select 0,0,"",false] call A3C_SUP_CREATE_POLY) select 0; //~~ poly: what is going on here: since create_poly does not create markers, it is used to find // 0 is replacing (markerDir A3C_MovedItem_ID)
+				A3C_CUR_EDIT_POLY = ([(_x select 0) select 0,0,"",false] call A3C_ai_shared_fnc_polygonAreaCreate) select 0; //~~ poly: what is going on here: since create_poly does not create markers, it is used to find // 0 is replacing (markerDir A3C_MovedItem_ID)
 				A3C_MMCode = if (_ctrl) then {
 					{[_this,A3C_MovedItem_ID,"WP",true,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
 				} else {

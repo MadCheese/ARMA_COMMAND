@@ -1133,7 +1133,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 			_polygon = [];
 			if !(A3C_HC_EDIT_ACTION == "ASSEMBLE WEAPON") then {
 				//-- action is NOT assembling weapon. create VISIBLE polygon
-				_polygon = ([[_tPos,format ["A3C_%1_MAIN_Mark_%2_%3",parsetext _prefix,getPlayerUID player,A3C_SUP_POLY_IND_MARK],_indSel]] + ([_tPos,_dirTo,A3C_HC_EDIT_ACTION,true] call A3C_SUP_CREATE_POLY));
+				_polygon = ([[_tPos,format ["A3C_%1_MAIN_Mark_%2_%3",parsetext _prefix,getPlayerUID player,A3C_SUP_POLY_IND_MARK],_indSel]] + ([_tPos,_dirTo,A3C_HC_EDIT_ACTION,true] call A3C_ai_shared_fnc_polygonAreaCreate));
 			} else {
 				//-- action IS assembling weapon. create INVISIBLE polygon
 				//player setpos _tpos;
@@ -1171,7 +1171,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 				{
 					private ["_soldier"];
 					_soldier = _x;
-					[_soldier,_poly] call A3C_SUP_REMOVE_POLY;
+					[_soldier,_poly] call A3C_ai_shared_fnc_polygonAreaRemove;
 				} foreach (units _group);
 				_var = _var - [_x];
 			};

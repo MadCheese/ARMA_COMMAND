@@ -1257,7 +1257,7 @@ A3C_UI_MAP_UFSB_ApplyMode = {
 			//-- adjust action button
 			switch (A3C_TEMP_ACTION select 0) do {
 				case ("GRENADE") : {
-					[0] call A3C_GREN_DATA;
+					[0] call A3C_ai_shared_fnc_gtiGrenade_setGrenadeData;
 				};
 				case ("STATIC") : {
 					[A3C_SELECTED_UNITS,"PLANNING"] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons;
@@ -2016,7 +2016,7 @@ A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP = {
 			_shiftFactorX = (( floor((count _actionArray) / 3 )) max 0) * -1;
 
 			if ("GRENADE" in _actionArray) then {
-				[0,false] call A3C_GREN_DATA;
+				[0,false] call A3C_ai_shared_fnc_gtiGrenade_setGrenadeData;
 
 				if !(A3C_GREN_MUZZLE == "") then {
 					_buttonImages pushBackUnique (gettext (configfile >> "CfgMagazines" >> A3C_GREN_MUZZLE >> "picture"));
@@ -2078,7 +2078,7 @@ A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP = {
 		};
 
 		case ("SQ_ACTION_GRENADE") : {
-			[0,false] call A3C_GREN_DATA;
+			[0,false] call A3C_ai_shared_fnc_gtiGrenade_setGrenadeData;
 			_buttonImages = [];
 			{
 				_img = (gettext (configfile >> "CfgMagazines" >> _x >> "picture"));
@@ -2705,7 +2705,7 @@ A3C_BUTTON_wpFiringMode = {
 			case ("GRENADE") : {
 				//-- switches GREN ON
 				A3C_TEMP_ACTION = ["GRENADE",A3C_GREN_MUZZLE];
-				[0] call A3C_GREN_DATA;
+				[0] call A3C_ai_shared_fnc_gtiGrenade_setGrenadeData;
 			};
 			case ("SUPPRESSION") : {
 				//-- switches to SUPRESSION
@@ -2741,7 +2741,7 @@ A3C_BUTTON_wpFiringMode = {
 		};
 	//} else {
 	//	if ((A3C_TEMP_ACTION select 0) == "GRENADE") then {
-	//		[1] call A3C_GREN_DATA;
+	//		[1] call A3C_ai_shared_fnc_gtiGrenade_setGrenadeData;
 	//	};
 
 	//};
@@ -3166,7 +3166,7 @@ A3C_UNDO = {
 				private ["_p"];
 				_p = _x;
 				if ((_waypoint select 1) == ((_p select 0) select 1) ) then {
-					[_u,_p] call A3C_SUP_REMOVE_POLY;
+					[_u,_p] call A3C_ai_shared_fnc_polygonAreaRemove;
 					_var = _var - [_p];
 				}; //~~ exitWith??
 			} foreach _var;

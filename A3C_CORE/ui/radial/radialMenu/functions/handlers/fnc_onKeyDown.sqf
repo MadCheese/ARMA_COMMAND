@@ -17,7 +17,7 @@ if (_key in A3C_UI_DOWNKEYS) exitWith {};
 
 // Safety: clear A3C_UI_DOWNKEYS - not used in radial.
 if ([_key, _mods] isEqualTo ((["A3C", "A3C_KeyFnc_Switch_CommandLevel"] call CBA_fnc_getKeybind) select 5)) exitWith {
-    ["COMMAND_LEVEL", "DOWN"] call A3C_FNC_CBA_KEY;
+    ["COMMAND_LEVEL", "DOWN"] call A3C_UI_mainDisplay_fnc_cbaKeyManager;
     false
 };
 

@@ -32,16 +32,26 @@ A3C_PREP(getCASmodes);
 A3C_PREP(getDismountData);
 
 
+A3C_PREP(getFlatContainerItems);
+
 
 A3C_PREP(getGroupDrivers);
 A3C_PREP(getGroupDrivenVehicles);
 A3C_PREP(getGroupIconType);
 A3C_PREP(getGroupOperatedVehicles);
 
+A3C_PREP(getItemContainer);
+
 
 A3C_PREP(getNearCargoLoadObjects);
 A3C_PREP(getNearDetonationTargets);
 A3C_PREP(getNearestAirportData);
+
+
+A3C_PREP(getReArmModes);
+A3C_PREP(getRearmSourceQuality);
+A3C_PREP(getRearmSources);
+
 
 
 A3C_PREP(getSurfaceNormalAzimuth);
@@ -59,6 +69,8 @@ A3C_PREP(isDaytimeCompleted);
 A3C_PREP(isEmptySquareOnSurfaceLevel);
 A3C_PREP(isGroupOnFinalWP);
 A3C_PREP(isIRMagazine);
+A3C_PREP(isItemAssignable);
+
 A3C_PREP(isLoiterCompleted);
 A3C_PREP(isNVGoggles);
 A3C_PREP(isPositionInsideBuilding);
@@ -81,6 +93,16 @@ A3C_PREP(numberToPhonetic);
 
 
 A3C_PREP(orderIndividualMacro);
+
+A3C_PREP(playerConnectToUAV);
+A3C_PREP(playerTakeUAVControl);
+
+
+
+
+
+
+
 
 
 A3C_PREP(resetDifficulty);

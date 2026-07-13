@@ -69,7 +69,7 @@ A3C_SUP_MAIN_POLY = [[_center, ""]] + (
         "SUPPRESSION",
         true,
         A3C_SUPPRESSION_UNITS_SQ_TEMP
-    ] call A3C_SUP_CREATE_POLY
+    ] call A3C_ai_shared_fnc_polygonAreaCreate
 );
 
 // Blink effect to visualize the accepted order.
@@ -93,4 +93,4 @@ for "_i" from 1 to 2 do {
     A3C_SUP_MAIN_POLY,
     "SUPPRESSION",
     true
-] spawn A3C_POLY_ACTION_ON;
+] spawn A3C_ai_shared_fnc_polygonAreaActionOn;

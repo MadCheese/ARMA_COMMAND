@@ -53,7 +53,7 @@ private _objectPlacerDir = getDir A3C_OBJECTPLACER;
 
 			private _polygon = (
 				[[_polyTargetPos, _polygonMarkerName, currentWaypoint _group]] +
-				([_polyTargetPos, _objectPlacerDir, "ASSEMBLE WEAPON", true] call A3C_SUP_CREATE_POLY)
+				([_polyTargetPos, _objectPlacerDir, "ASSEMBLE WEAPON", true] call A3C_ai_shared_fnc_polygonAreaCreate)
 			);
 
 			A3C_SUP_POLY_IND_MARK = A3C_SUP_POLY_IND_MARK + 1;

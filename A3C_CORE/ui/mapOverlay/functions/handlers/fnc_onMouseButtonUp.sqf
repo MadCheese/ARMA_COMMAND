@@ -958,7 +958,7 @@ if ((A3C_TEMP_ACTION select 0) == "SUPPRESSION") then { //~~this can also be pre
 	_root = [_u,0,_countIn] call A3C_FIND_SMOKELESS_WP;
 	_dirTo = [_root,A3C_CLICKPOS_ORIG] call BIS_fnc_dirTo; //~~ get last smokeless WP of A3C_SELECTED_UNITS select 0
 
-	_polygon = ([[A3C_CLICKPOS_ORIG,A3C_TEMP_WP_ID_MAIN]] + ([A3C_CLICKPOS_ORIG,_dirTo,"SUPPRESSION",true] call A3C_SUP_CREATE_POLY));
+	_polygon = ([[A3C_CLICKPOS_ORIG,A3C_TEMP_WP_ID_MAIN]] + ([A3C_CLICKPOS_ORIG,_dirTo,"SUPPRESSION",true] call A3C_ai_shared_fnc_polygonAreaCreate));
 
 	A3C_SUP_POLY_IND_MARK = A3C_SUP_POLY_IND_MARK + 1;
 	{

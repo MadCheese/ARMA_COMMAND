@@ -26,7 +26,7 @@ private _polygon = [
 	_dirToTarget,
 	"SUPPRESSION",
 	true
-] call A3C_SUP_CREATE_POLY);
+] call A3C_ai_shared_fnc_polygonAreaCreate);
 
 A3C_SUP_POLY_IND_MARK = A3C_SUP_POLY_IND_MARK + 1;
 

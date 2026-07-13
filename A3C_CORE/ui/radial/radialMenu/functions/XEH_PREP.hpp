@@ -16,8 +16,19 @@ A3C_PREP_SUBDIR(handlers,onMouseButtonDown);
 //-- actions
 A3C_PREP_SUBDIR(actions,toggleAutoCombatButton);
 
+//-- public
+
+A3C_PREP_SUBDIR(public,reArm_lbChangeSource);
+A3C_PREP_SUBDIR(public,reArm_lbChangeSourceContent);
+A3C_PREP_SUBDIR(public,reArm_openUi);
+A3C_PREP_SUBDIR(public,reArm_updateUi);
+
+
 //-- UI responses
 A3C_PREP_SUBDIR(responses,refreshAutoCombatButton);
 A3C_PREP_SUBDIR(responses,actionRemoteFireVtolUiResponse);
 A3C_PREP_SUBDIR(responses,structureRemoteLaunchUiResponse);
+
+
+
 

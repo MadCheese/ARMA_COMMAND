@@ -131,10 +131,10 @@ A3C_UI_FNC_ADD_KEYBINDS =
 			"Hold down this key to access Planning controls on map"
 		],
 		{
-			["MAP","DOWN",_this] call A3C_FNC_CBA_KEY
+			["MAP","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager
 		},
 		{
-			// ["MAP","UP",_this] call A3C_FNC_CBA_KEY
+			// ["MAP","UP",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager
 		},
 		[
 			46,
@@ -216,68 +216,68 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		false
 	] call CBA_fnc_addKeybind;
 
-	//["A3C", "A3C_KeyFnc_Suppress_V2", ["Suppression Hotkey", "Key for ingame suppression actions"], {["SUPPRESSION","DOWN"] call A3C_FNC_CBA_KEY}, {["SUPPRESSION","UP"] call A3C_FNC_CBA_KEY}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	//["A3C", "A3C_KeyFnc_Suppress_V2", ["Suppression Hotkey", "Key for ingame suppression actions"], {["SUPPRESSION","DOWN"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {["SUPPRESSION","UP"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
 
 
 
-	["A3C", "A3C_KeyFnc_Lock", ["Lock Formation", "Locks the indicator objects in position while maintaining other options"], {["LOCK","DOWN"] call A3C_FNC_CBA_KEY}, {}, [38,[false,false,false]],false ] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Grenade_Player", ["GetTactical Grenade", "Gives enhanced throwing-options"], {["GREN_P","DOWN"] call A3C_FNC_CBA_KEY}, {["GREN_P","UP"] call A3C_FNC_CBA_KEY}, [35,[false,false,false]],false ] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Lock", ["Lock Formation", "Locks the indicator objects in position while maintaining other options"], {["LOCK","DOWN"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [38,[false,false,false]],false ] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Grenade_Player", ["GetTactical Grenade", "Gives enhanced throwing-options"], {["GREN_P","DOWN"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {["GREN_P","UP"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, [35,[false,false,false]],false ] call cba_fnc_addKeybind;
 
 
 
-	["A3C", "A3C_KeyFnc_Formation_Menu_2", ["Custom Formation Menu", "Custom Formation HUD"], {["FORM","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [33,[true,false,false]],true] call cba_fnc_addKeybind; //["FORM","UP"] call A3C_FNC_CBA_KEY
-	["A3C", "A3C_KeyFnc_ZEUS_Remote", ["A3C-ZEUS Exit", "Exit A3C-Zeus Remote"], {["ZEUS","DOWN"] call A3C_FNC_CBA_KEY}, {}, [21,[true,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Formation_Menu_2", ["Custom Formation Menu", "Custom Formation HUD"], {["FORM","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [33,[true,false,false]],true] call cba_fnc_addKeybind; //["FORM","UP"] call A3C_UI_mainDisplay_fnc_cbaKeyManager
+	["A3C", "A3C_KeyFnc_ZEUS_Remote", ["A3C-ZEUS Exit", "Exit A3C-Zeus Remote"], {["ZEUS","DOWN"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [21,[true,false,false]],false] call cba_fnc_addKeybind;
 
-	["A3C", "A3C_KeyFnc_Hud_TeamSel_ALL", ["Hud Select: All Units", "Select/Deselect All Units in HUD-mode"], {["HUD","DOWN","ALL"] call A3C_FNC_CBA_KEY}, {}, [5,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_TeamSel_Red", ["Hud Select: Team Red", "Select/Deselect Team Red in HUD mode"], {["HUD","DOWN","RED"] call A3C_FNC_CBA_KEY}, {}, [6,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_TeamSel_Green", ["Hud Select: Team Green", "Select/Deselect Team Green in HUD mode"], {["HUD","DOWN","GREEN"] call A3C_FNC_CBA_KEY}, {}, [7,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_TeamSel_Blue", ["Hud Select: Team Blue", "Select/Deselect Team Blue in HUD mode"], {["HUD","DOWN","BLUE"] call A3C_FNC_CBA_KEY}, {}, [8,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_TeamSel_Yellow", ["Hud Select: Team Yellow", "Select/Deselect Team Yellow in HUD mode"], {["HUD","DOWN","YELLOW"] call A3C_FNC_CBA_KEY}, {}, [9,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_TeamSel_White", ["Hud Select: Team White", "Select/Deselect Team White in HUD mode"], {["HUD","DOWN","MAIN"] call A3C_FNC_CBA_KEY}, {}, [10,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_TeamSel_ALL", ["Hud Select: All Units", "Select/Deselect All Units in HUD-mode"], {["HUD","DOWN","ALL"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [5,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_TeamSel_Red", ["Hud Select: Team Red", "Select/Deselect Team Red in HUD mode"], {["HUD","DOWN","RED"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [6,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_TeamSel_Green", ["Hud Select: Team Green", "Select/Deselect Team Green in HUD mode"], {["HUD","DOWN","GREEN"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [7,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_TeamSel_Blue", ["Hud Select: Team Blue", "Select/Deselect Team Blue in HUD mode"], {["HUD","DOWN","BLUE"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [8,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_TeamSel_Yellow", ["Hud Select: Team Yellow", "Select/Deselect Team Yellow in HUD mode"], {["HUD","DOWN","YELLOW"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [9,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_TeamSel_White", ["Hud Select: Team White", "Select/Deselect Team White in HUD mode"], {["HUD","DOWN","MAIN"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [10,[false,false,false]],false] call cba_fnc_addKeybind;
 
-	["A3C", "A3C_KeyFnc_Hud_Unit_02", ["Hud Select: Unit 02", "Select/Deselect Unit 02 in HUD-mode"], {["HUD","DOWN",02] call A3C_FNC_CBA_KEY}, {}, [60,[false,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_03", ["Hud Select: Unit 03", "Select/Deselect Unit 03 in HUD-mode"], {["HUD","DOWN",03] call A3C_FNC_CBA_KEY}, {}, [61,[false,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_04", ["Hud Select: Unit 04", "Select/Deselect Unit 04 in HUD-mode"], {["HUD","DOWN",04] call A3C_FNC_CBA_KEY}, {}, [62,[false,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_05", ["Hud Select: Unit 05", "Select/Deselect Unit 05 in HUD-mode"], {["HUD","DOWN",05] call A3C_FNC_CBA_KEY}, {}, [63,[false,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_06", ["Hud Select: Unit 06", "Select/Deselect Unit 06 in HUD-mode"], {["HUD","DOWN",06] call A3C_FNC_CBA_KEY}, {}, [64,[false,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_07", ["Hud Select: Unit 07", "Select/Deselect Unit 07 in HUD-mode"], {["HUD","DOWN",07] call A3C_FNC_CBA_KEY}, {}, [65,[false,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_08", ["Hud Select: Unit 08", "Select/Deselect Unit 08 in HUD-mode"], {["HUD","DOWN",08] call A3C_FNC_CBA_KEY}, {}, [66,[false,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_09", ["Hud Select: Unit 09", "Select/Deselect Unit 09 in HUD-mode"], {["HUD","DOWN",09] call A3C_FNC_CBA_KEY}, {}, [67,[false,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_10", ["Hud Select: Unit 10", "Select/Deselect Unit 10 in HUD-mode"], {["HUD","DOWN",10] call A3C_FNC_CBA_KEY}, {}, [68,[false,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_11", ["Hud Select: Unit 11", "Select/Deselect Unit 11 in HUD-mode"], {["HUD","DOWN",11] call A3C_FNC_CBA_KEY}, {}, [59,[true,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_12", ["Hud Select: Unit 12", "Select/Deselect Unit 12 in HUD-mode"], {["HUD","DOWN",12] call A3C_FNC_CBA_KEY}, {}, [60,[true,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_13", ["Hud Select: Unit 13", "Select/Deselect Unit 13 in HUD-mode"], {["HUD","DOWN",13] call A3C_FNC_CBA_KEY}, {}, [61,[true,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_14", ["Hud Select: Unit 14", "Select/Deselect Unit 14 in HUD-mode"], {["HUD","DOWN",14] call A3C_FNC_CBA_KEY}, {}, [62,[true,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_15", ["Hud Select: Unit 15", "Select/Deselect Unit 15 in HUD-mode"], {["HUD","DOWN",15] call A3C_FNC_CBA_KEY}, {}, [63,[true,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_16", ["Hud Select: Unit 16", "Select/Deselect Unit 16 in HUD-mode"], {["HUD","DOWN",16] call A3C_FNC_CBA_KEY}, {}, [64,[true,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_17", ["Hud Select: Unit 17", "Select/Deselect Unit 17 in HUD-mode"], {["HUD","DOWN",17] call A3C_FNC_CBA_KEY}, {}, [65,[true,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_18", ["Hud Select: Unit 18", "Select/Deselect Unit 18 in HUD-mode"], {["HUD","DOWN",18] call A3C_FNC_CBA_KEY}, {}, [66,[true,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_19", ["Hud Select: Unit 19", "Select/Deselect Unit 19 in HUD-mode"], {["HUD","DOWN",19] call A3C_FNC_CBA_KEY}, {}, [67,[true,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Unit_20", ["Hud Select: Unit 20", "Select/Deselect Unit 20 in HUD-mode"], {["HUD","DOWN",20] call A3C_FNC_CBA_KEY}, {}, [68,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_02", ["Hud Select: Unit 02", "Select/Deselect Unit 02 in HUD-mode"], {["HUD","DOWN",02] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [60,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_03", ["Hud Select: Unit 03", "Select/Deselect Unit 03 in HUD-mode"], {["HUD","DOWN",03] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [61,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_04", ["Hud Select: Unit 04", "Select/Deselect Unit 04 in HUD-mode"], {["HUD","DOWN",04] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [62,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_05", ["Hud Select: Unit 05", "Select/Deselect Unit 05 in HUD-mode"], {["HUD","DOWN",05] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [63,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_06", ["Hud Select: Unit 06", "Select/Deselect Unit 06 in HUD-mode"], {["HUD","DOWN",06] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [64,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_07", ["Hud Select: Unit 07", "Select/Deselect Unit 07 in HUD-mode"], {["HUD","DOWN",07] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [65,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_08", ["Hud Select: Unit 08", "Select/Deselect Unit 08 in HUD-mode"], {["HUD","DOWN",08] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [66,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_09", ["Hud Select: Unit 09", "Select/Deselect Unit 09 in HUD-mode"], {["HUD","DOWN",09] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [67,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_10", ["Hud Select: Unit 10", "Select/Deselect Unit 10 in HUD-mode"], {["HUD","DOWN",10] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [68,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_11", ["Hud Select: Unit 11", "Select/Deselect Unit 11 in HUD-mode"], {["HUD","DOWN",11] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [59,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_12", ["Hud Select: Unit 12", "Select/Deselect Unit 12 in HUD-mode"], {["HUD","DOWN",12] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [60,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_13", ["Hud Select: Unit 13", "Select/Deselect Unit 13 in HUD-mode"], {["HUD","DOWN",13] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [61,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_14", ["Hud Select: Unit 14", "Select/Deselect Unit 14 in HUD-mode"], {["HUD","DOWN",14] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [62,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_15", ["Hud Select: Unit 15", "Select/Deselect Unit 15 in HUD-mode"], {["HUD","DOWN",15] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [63,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_16", ["Hud Select: Unit 16", "Select/Deselect Unit 16 in HUD-mode"], {["HUD","DOWN",16] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [64,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_17", ["Hud Select: Unit 17", "Select/Deselect Unit 17 in HUD-mode"], {["HUD","DOWN",17] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [65,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_18", ["Hud Select: Unit 18", "Select/Deselect Unit 18 in HUD-mode"], {["HUD","DOWN",18] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [66,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_19", ["Hud Select: Unit 19", "Select/Deselect Unit 19 in HUD-mode"], {["HUD","DOWN",19] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [67,[true,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Unit_20", ["Hud Select: Unit 20", "Select/Deselect Unit 20 in HUD-mode"], {["HUD","DOWN",20] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [68,[true,true,false]],false] call cba_fnc_addKeybind;
 
-	["A3C", "A3C_KeyFnc_Hud_Order_Reg", ["Send To Hud Indicators: Regular"], {["ORDER_REG","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [57,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Order_FW", ["Send To Hud Indicators: FW Peel"], {["ORDER_FW","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [57,[false,true,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Hud_Order_BW", ["Send To Hud Indicators: BW Peel"], {["ORDER_BW","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [57,[false,false,true]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Order_Reg", ["Send To Hud Indicators: Regular"], {["ORDER_REG","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [57,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Order_FW", ["Send To Hud Indicators: FW Peel"], {["ORDER_FW","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [57,[false,true,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Hud_Order_BW", ["Send To Hud Indicators: BW Peel"], {["ORDER_BW","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [57,[false,false,true]],false] call cba_fnc_addKeybind;
 
 	//TEST
-	//["A3C", "A3C_KeyFnc_HUD_DRAW_OPTION", ["Action Key for HUD-DrawPath (Requires selected units)", "Enables(Down) / Disables(Up) Path-Drawing via HUD"], {["HUD_DRAW","DOWN"] call A3C_FNC_CBA_KEY}, {["HUD_DRAW","UP"] call A3C_FNC_CBA_KEY}, [29,[false,true,false]],false ] call cba_fnc_addKeybind;
+	//["A3C", "A3C_KeyFnc_HUD_DRAW_OPTION", ["Action Key for HUD-DrawPath (Requires selected units)", "Enables(Down) / Disables(Up) Path-Drawing via HUD"], {["HUD_DRAW","DOWN"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {["HUD_DRAW","UP"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, [29,[false,true,false]],false ] call cba_fnc_addKeybind;
 
 
 	//-- Additional Keybinds for usage with Voice Activation
-	["A3C", "A3C_KeyFnc_Voice_GoCode_A", ["Activate GoCode A via key (VA)"], {["GoCode_A","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Voice_GoCode_B", ["Activate GoCode B via key (VA)"], {["GoCode_B","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Voice_GoCode_C", ["Activate GoCode C via key (VA)"], {["GoCode_C","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Voice_GoCode_D", ["Activate GoCode D via key (VA)"], {["GoCode_D","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_GoCode_A", ["Activate GoCode A via key (VA)"], {["GoCode_A","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_GoCode_B", ["Activate GoCode B via key (VA)"], {["GoCode_B","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_GoCode_C", ["Activate GoCode C via key (VA)"], {["GoCode_C","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_GoCode_D", ["Activate GoCode D via key (VA)"], {["GoCode_D","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
 
 
-	["A3C", "A3C_KeyFnc_Switch_CommandLevel", ["Switch between SQUAD and PLATOON Level"], {["COMMAND_LEVEL","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [57,[false,true,false]],true] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Switch_CommandLevel", ["Switch between SQUAD and PLATOON Level"], {["COMMAND_LEVEL","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [57,[false,true,false]],true] call cba_fnc_addKeybind;
 
 
-	["A3C", "A3C_KeyFnc_Voice_MedicAll", ["Squad Patch Up via key (VA)"], {["Voice_Medic_All","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_MedicAll", ["Squad Patch Up via key (VA)"], {["Voice_Medic_All","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
 
-	["A3C", "A3C_KeyFnc_Voice_AD", ["Toggle AUTOCOMBAT for selected units via key (VA)"], {["Voice_AUTOCOMBAT","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_AD", ["Toggle AUTOCOMBAT for selected units via key (VA)"], {["Voice_AUTOCOMBAT","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
 
-	["A3C", "A3C_KeyFnc_Voice_Refresh", ["Refresh Squad via key (VA)"], {["Voice_REFRESH","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_Refresh", ["Refresh Squad via key (VA)"], {["Voice_REFRESH","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
 	[
 		"A3C",
 		"A3C_KeyFnc_Voice_Regroup",
@@ -300,23 +300,23 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		false
 	] call cba_fnc_addKeybind;
 
-	["A3C", "A3C_KeyFnc_Voice_LookDir", ["Reset looking direction for selected units via key (VA)"], {["Voice_LookDir","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_LookDir", ["Reset looking direction for selected units via key (VA)"], {["Voice_LookDir","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
 
-	["A3C", "A3C_KeyFnc_Voice_HudStance_Auto", ["Set Hud-Stance to AUTO via key (VA)"], {["Voice_Stance_Auto","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Voice_HudStance_STAND", ["Set Hud-Stance to STAND via key (VA)"], {["Voice_Stance_STAND","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Voice_HudStance_CROUCH", ["Set Hud-Stance to CROUCH via key (VA)"], {["Voice_Stance_CROUCH","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Voice_HudStance_PRONE", ["Set Hud-Stance to PRONE via key (VA)"], {["Voice_Stance_PRONE","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Voice_HudStance_NOCHANGE", ["Set Hud-Stance to NO CHANGE via key (VA)"], {["Voice_Stance_NOCHANGE","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_HudStance_Auto", ["Set Hud-Stance to AUTO via key (VA)"], {["Voice_Stance_Auto","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_HudStance_STAND", ["Set Hud-Stance to STAND via key (VA)"], {["Voice_Stance_STAND","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_HudStance_CROUCH", ["Set Hud-Stance to CROUCH via key (VA)"], {["Voice_Stance_CROUCH","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_HudStance_PRONE", ["Set Hud-Stance to PRONE via key (VA)"], {["Voice_Stance_PRONE","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_HudStance_NOCHANGE", ["Set Hud-Stance to NO CHANGE via key (VA)"], {["Voice_Stance_NOCHANGE","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
 
-	["A3C", "A3C_KeyFnc_Voice_HOLD", ["Order selected units to STANDBY (VA)"], {["Voice_Hold","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Voice_CONT", ["Order selected units to CONTINUE after HOLD (VA)"], {["Voice_Cont","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
-	["A3C", "A3C_KeyFnc_Voice_UNLOADD", ["Unload other groups from your vehicle (VA)"], {["Voice_Unload","DOWN",_this] call A3C_FNC_CBA_KEY}, {}, [-1,[false,false,false]],true] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_HOLD", ["Order selected units to STANDBY (VA)"], {["Voice_Hold","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_CONT", ["Order selected units to CONTINUE after HOLD (VA)"], {["Voice_Cont","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Voice_UNLOADD", ["Unload other groups from your vehicle (VA)"], {["Voice_Unload","DOWN",_this] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {}, [-1,[false,false,false]],true] call cba_fnc_addKeybind;
 
 	[
 		"A3C",
 		"A3C_KeyFnc_UavMacro",
 		["UAV SCREEN TOGGLE"],
-		{["DOWN",_this] call A3C_FNC_UAV_KEY},
+		{["DOWN",_this] call A3C_UI_mainDisplay_fnc_uavManagerKeyHandler},
 		{},
 		[183,[false,false,false]],
 		false,
@@ -327,7 +327,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"A3C",
 		"A3C_KeyFnc_UavMacro_1",
 		["CONNECT TO NEXT UNCONNECTED UAV (if available)"],
-		{["DOWN",_this] call A3C_FNC_UAV_KEY},
+		{["DOWN",_this] call A3C_UI_mainDisplay_fnc_uavManagerKeyHandler},
 		{},
 		[183,[false,true,false]],
 		false,

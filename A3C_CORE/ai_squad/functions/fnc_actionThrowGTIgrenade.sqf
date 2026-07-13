@@ -20,7 +20,7 @@ BR_A3C_TEMP_gfeh = A3C_GTI_UNIT addEventHandler [
 		};
 
 		if ((side _unit) == WEST) then {
-			[_unit] call A3C_Gren_Phrase;
+			[_unit] call A3C_ai_shared_fnc_gtiGrenade_callout;
 		};
 
 		_unit removeEventHandler ["Fired", BR_A3C_TEMP_gfeh];

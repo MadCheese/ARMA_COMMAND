@@ -4,7 +4,7 @@ params ["_unit", "_weapon", "_muzzl", "_mode", "_ammo", "_magazine", "_projectil
 
 if (_weapon isEqualTo "THROW") exitWith {
 	if (A3C_GTI_UNIT isEqualTo _unit) then {
-		[player, _magazine] call A3C_Gren_Phrase;
+		[player, _magazine] call A3C_ai_shared_fnc_gtiGrenade_callout;
 		_projectile setVelocity BR_A3C_TACV_throwVel;
 		A3C_GTI_UNIT = objNull;
 	};

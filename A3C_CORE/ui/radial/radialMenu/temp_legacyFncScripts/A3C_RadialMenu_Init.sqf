@@ -315,7 +315,7 @@ A3C_UI_RADIAL_startGTIgrenadeLoop = {
 	BR_A3C_TACV_throwTheta = 45;
 	BR_A3C_TACV_throwTheta_Add = 0;
 	A3C_GREN_ALLOW_UNITSWITCH = if (count A3C_RD_UNITS == 1) then {false} else {true};
-	BR_A3C_TACV_oefId = ["BR_A3C_TACV_oefId", "onEachFrame", "BR_A3C_OEFControl"] call BIS_fnc_addStackedEventHandler;
+	BR_A3C_TACV_oefId = ["BR_A3C_TACV_oefId", "onEachFrame", "A3C_ai_shared_fnc_gtiGrenade_onEachFrameTick"] call BIS_fnc_addStackedEventHandler;
 
 	[] call A3C_UI_RADIAL_CloseDisplay;
 

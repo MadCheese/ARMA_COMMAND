@@ -136,6 +136,8 @@ A3C_PREP(moduleCAS);
 A3C_PREP(onWaypointInsertedClient);
 
 
+A3C_PREP(reArmRequest);
+
 A3C_PREP(remoteVTOLmanageGuidanceHandler);
 
 A3C_PREP(removeWaypoint);

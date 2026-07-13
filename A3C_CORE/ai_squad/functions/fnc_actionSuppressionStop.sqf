@@ -6,4 +6,4 @@ A3C_UI_RADIAL_Current_Remfire_Units = A3C_RD_UNITS select {
 
 if (A3C_UI_RADIAL_Current_Remfire_Units isEqualTo []) exitWith {};
 
-[A3C_UI_RADIAL_Current_Remfire_Units, "SUPPRESSION"] call A3C_POLY_ACTION_OFF;
+[A3C_UI_RADIAL_Current_Remfire_Units, "SUPPRESSION"] call A3C_ai_shared_fnc_polygonAreaActionOff;

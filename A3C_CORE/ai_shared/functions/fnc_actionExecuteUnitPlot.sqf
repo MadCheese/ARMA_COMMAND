@@ -147,7 +147,7 @@ while {!isNull _unit} do {
 
 
 	if (_unit in A3C_SUPPRESSION_UNITS_SQ) then {
-		[[_unit],"SUPPRESSION"] call A3C_POLY_ACTION_OFF;
+		[[_unit],"SUPPRESSION"] call A3C_ai_shared_fnc_polygonAreaActionOff;
 	};
 
 	//-- Check if abort data was given via dialog
@@ -247,7 +247,7 @@ while {!isNull _unit} do {
 			if ((_wPos distance2D (getPosASL _unit)) > 70) then {
 				_wPos = _unit getPos [70,_unit getDir _wPos];
 			};
-			_velo = [_unit,_wPos,300] call A3C_THROW_VEL;
+			_velo = [_unit,_wPos,300] call A3C_ai_shared_fnc_gtiGrenade_getLaunchVelocity;
 			sleep 2;
 			_unit setvariable ["A3C_GRENADE_VEL",_velo,true];
 			private _handlerID = _unit addEventHandler ["fired",
@@ -264,7 +264,7 @@ while {!isNull _unit} do {
 			_unit forceWeaponFire [_muzzle,_muzzle];
 
 			if ((side _unit) == WEST) then {
-				[_unit] call A3C_Gren_Phrase;
+				[_unit] call A3C_ai_shared_fnc_gtiGrenade_callout;
 			};
 			sleep 1;
 		};
@@ -278,7 +278,7 @@ while {!isNull _unit} do {
 		if (!isnull gunner _vehicle) then {
 			sleep 1;
 			A3C_SUPPRESSION_UNITS_SQ pushback _unit;
-			[[gunner _vehicle],(_unit getVariable "A3C_UNIT_POLYS") select 0,'SUPPRESSION',false] spawn A3C_POLY_ACTION_ON;
+			[[gunner _vehicle],(_unit getVariable "A3C_UNIT_POLYS") select 0,'SUPPRESSION',false] spawn A3C_ai_shared_fnc_polygonAreaActionOn;
 		};
 
 	};
@@ -778,7 +778,7 @@ while {!isNull _unit} do {
 				[_unit,position _unit] call A3C_ai_shared_fnc_doMove;
 			};
 			case ("REARM") : {
-				_spawnBehaviour = [_unit,(_wpAction select 1)] spawn A3C_ReArm_Plot_Behavior;
+				_spawnBehaviour = [_unit,(_wpAction select 1)] spawn A3C_ai_shared_fnc_reArm_plotBehaviour;
 				waitUntil {scriptDone _spawnBehaviour};
 				[_unit,_movePos] call A3C_ai_shared_fnc_doMove;
 				sleep 2;

@@ -69,6 +69,16 @@ A3C_PREP(guideProjectileMissile);
 A3C_PREP(guideProjectileVTOL);
 
 
+A3C_PREP(gtiGrenade_callout);
+A3C_PREP(gtiGrenade_getLaunchVelocity);
+A3C_PREP(gtiGrenade_getRelativePos);
+A3C_PREP(gtiGrenade_onEachFrameTick);
+A3C_PREP(gtiGrenade_setGrenadeData);
+A3C_PREP(gtiGrenade_throwPlayer);
+
+
+
+
 
 
 
@@ -91,7 +101,27 @@ A3C_PREP(planeOrganizeGroupTakeOff);
 A3C_PREP(planeTakeOff);
 A3C_PREP(planeDynamicLandingOnHandleDamage);
 
+
+A3C_PREP(polygonAreaActionLoop);
+A3C_PREP(polygonAreaActionOff);
+A3C_PREP(polygonAreaActionOn);
+A3C_PREP(polygonAreaCreate);
+A3C_PREP(polygonAreaRemove);
+
+
+
 A3C_PREP(preparePointerAttachmentMode);
+
+
+
+A3C_PREP(reArm_autoEvaluated);
+A3C_PREP(reArm_autoIssueOrder);
+A3C_PREP(reArm_plotAddItem);
+A3C_PREP(reArm_plotBehaviour);
+A3C_PREP(reArm_takeWeapon);
+
+
+
 
 
 A3C_PREP(reduceSpeed);

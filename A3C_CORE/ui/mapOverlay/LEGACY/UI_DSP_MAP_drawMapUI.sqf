@@ -1536,7 +1536,7 @@ MAP_UI_fnc_drawMapUI = {
 					//systemchat str [_mark,_act];
 					if !(_u in (A3C_SUPPRESSION_UNITS_SQ + A3C_SUPPRESSION_UNITS_AI)) then {
 						//~~ ATTENTION: CURRENTLY this is executed because the given poly ID does not match with _mark, because it is still a marker. //STILL TRUE??
-						[_u,_poly] call A3C_SUP_REMOVE_POLY;
+						[_u,_poly] call A3C_ai_shared_fnc_polygonAreaRemove;
 						//systemchat "kill";
 						_var = _var - [_poly];
 						_add = false;

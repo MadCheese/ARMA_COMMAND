@@ -526,10 +526,37 @@ private _data = profilenamespace getvariable ["A3C_PROFILEVAR_BUILDINGS_DEFUNCT"
 profilenamespace setvariable ["A3C_PROFILEVAR_BUILDINGS_DEFUNCT", _data];
 //----------------------------- 
 
+//-----------------------------  SUPPRESSION AND OTHER POLYGON VARIABLES
+A3C_SUP_BOOL_MD = false;
+
+A3C_SUP_DRAW_TOGGLE = false;
+A3C_DRAW_ORDER_RELEASE = true;
+
+A3C_SUP_CLICKPOS = [];
+A3C_SUP_MOUSEPOS = [];
+A3C_SUP_PosArray = [];
+
+
+A3C_SUP_MAIN_POLY = []; //~~ is this still needed?
+
+A3C_ALL_POLYS = [];
+
+A3C_SUPPRESSION_UNITS_SQ = []; //-- array for suppressing player controlled units. LOCAL TO CLIENT, CHANGES NOT BROADCASTED
+
+A3C_SUPPRESSION_UNITS_SQ_TEMP = [];
 
 
 
+A3C_SUP_POLYMARKS = [];
+A3C_POLYEDGE_MARKERS = [];
+A3C_SUP_POLY_IND = 1;
+A3C_SUP_POLY_IND_MARK = 1;
 
+
+A3C_SUPPRESSION = false; //-- might be unused >> confirm
+
+A3C_HUD_DRAW_BOOL = false;
+A3C_HUD_DRAW_POSARRAY = [];
 
 
 

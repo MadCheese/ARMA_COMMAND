@@ -584,7 +584,7 @@ switch (_weaponGroup) do {
                         _refPos = [_refPos, 15, _dir] call BIS_fnc_RelPos;
                     };
 
-                    _velo = [_unit, _refPos, 300, 1] call A3C_THROW_VEL;
+                    _velo = [_unit, _refPos, 300, 1] call A3C_ai_shared_fnc_gtiGrenade_getLaunchVelocity;
                     _unit setVariable ["A3C_GRENADE_VEL", _velo, true];
 
                     private _handlerFunc = {

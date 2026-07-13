@@ -286,10 +286,10 @@ A3C_LB_Change = {
 			};
 		};
 		case (10) : {
-			[_lb] call A3C_Rearm_LBChange_Source;
+			[_lb] call A3C_ui_radialMenu_fnc_reArm_lbChangeSource;
 		};
 		case (11) : {
-			[_lb, _doubleClick] call A3C_Rearm_LBChange_SourceContent;
+			[_lb, _doubleClick] call A3C_ui_radialMenu_fnc_reArm_lbChangeSourceContent;
 		};
 		case (12) : {
 			
@@ -1717,7 +1717,7 @@ A3C_UNITSEL_REFRESH_UI = {
 			};
 			if (A3C_LBR_1 == "REARM") then {
 				A3C_ReArm_options = [];
-				[] call A3C_ReArm_OpenUI;
+				[] call A3C_ui_radialMenu_fnc_reArm_openUi;
 			};
 			
 
@@ -1971,7 +1971,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		};
 
 
-		if (_isInfOnly && {[_gp] call A3C_Rearm_Req_HC}) then {
+		if (_isInfOnly && {[_gp] call A3C_ai_highCommand_fnc_reArmRequest}) then {
 			_actions PushBack "RE-ARM";
 		};
 		
@@ -3548,7 +3548,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 
 	//-- stop current suppression order before ordering a new one:
 	if (count _currentlySuppressingUnits > 0) then {
-		[_currentlySuppressingUnits,"SUPPRESSION"] call A3C_POLY_ACTION_OFF;
+		[_currentlySuppressingUnits,"SUPPRESSION"] call A3C_ai_shared_fnc_polygonAreaActionOff;
 	};
 
 	waituntil {{_x in A3C_SUPPRESSION_UNITS_AI} count _currentlySuppressingUnits == 0};

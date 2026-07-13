@@ -268,7 +268,7 @@ A3C_UI_RADIAL_LABEL_INNER_RING = {
 
 
 
-		[0] call A3C_GREN_DATA;
+		[0] call A3C_ai_shared_fnc_gtiGrenade_setGrenadeData;
 		[] call A3C_UI_RADIAL_populateOuterRing_Grenades;
 
 		(findDisplay IDD_RADIAL_MENU displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
@@ -576,7 +576,7 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 					BV_MEDICAL = 0;
 					BV_CBMODE = 0;
 
-					[0] call A3C_GREN_DATA;
+					[0] call A3C_ai_shared_fnc_gtiGrenade_setGrenadeData;
 					
 
 					//-- RIGHT EXTENSION: hide all controls
@@ -1078,10 +1078,10 @@ A3C_UI_RADIAL_BTN_FNC_RING_INNER = { //-- the inner ring functions. must assign 
 								A3C_LBR_1 = "REARM";
 								if (_button == 0) then {
 									A3C_ReArm_options = [];
-									[] call A3C_ReArm_OpenUI;
+									[] call A3C_ui_radialMenu_fnc_reArm_openUi;
 
 								} else {
-									{[_x] spawn A3C_ReArm_Auto_Evaluate} foreach _units;
+									{[_x] spawn A3C_ai_shared_fnc_reArm_autoEvaluated} foreach _units;
 									player groupradio "SentCmdRearm";	
 								};
 							}
@@ -3412,7 +3412,7 @@ A3C_UI_RADIAL_BTN_REINIT = {
 
 	(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_INNERRING_ITEMS_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_item_rifle.paa";
 
-	[0] call A3C_GREN_DATA;
+	[0] call A3C_ai_shared_fnc_gtiGrenade_setGrenadeData;
 	{
 		{
 			if (_x call BIS_fnc_IsThrowable) then {

@@ -170,13 +170,13 @@ if (_actionType == "ASSEMBLE WEAPON") then {
 private _statements = switch (_actionType) do {
 	case "SUPPRESSION": {
 		{
-			[_this, "SUPPRESSION"] call A3C_POLY_ACTION_OFF;
+			[_this, "SUPPRESSION"] call A3C_ai_shared_fnc_polygonAreaActionOff;
 		}
 	};
 
 	case "AMBUSH": {
 		{
-			[_this, "AMBUSH"] call A3C_POLY_ACTION_OFF;
+			[_this, "AMBUSH"] call A3C_ai_shared_fnc_polygonAreaActionOff;
 		}
 	};
 
@@ -335,7 +335,7 @@ if (_actionType in ["SUPPRESSION", "AMBUSH"]) then {
 
 		sleep 0.2;
 
-		[units _group, ["A3C_HC_POLY", 0], _actionType, false, _wpI + 1] spawn A3C_POLY_ACTION_ON;
+		[units _group, ["A3C_HC_POLY", 0], _actionType, false, _wpI + 1] spawn A3C_ai_shared_fnc_polygonAreaActionOn;
 	};
 };
 
