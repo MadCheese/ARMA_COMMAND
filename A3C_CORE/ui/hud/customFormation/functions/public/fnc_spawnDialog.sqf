@@ -70,11 +70,9 @@ private _gridUnit = _displayHeight / 12;
 // Authoritative grid-unit state is stored in missionNamespace.
 A3C_UI_CustomFormation_GridUnit = _gridUnit;
 
-// - all non-player group units selected;
-// - purple line color;
-// - purple ALL button active;
-// - all individual-team buttons inactive.
-["ALL"] call FUNC(selectTeam);
+private _initialTeam = [] call FUNC(configureTeamButtons);
+
+[_initialTeam] call FUNC(selectTeam);
 
 [] call FUNC(labelListbox);
 

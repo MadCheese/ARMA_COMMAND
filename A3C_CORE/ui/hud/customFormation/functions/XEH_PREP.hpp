@@ -1,6 +1,7 @@
 // Internal dialog functions.
 A3C_PREP(cacheGroups);
 A3C_PREP(cacheControls);
+A3C_PREP(configureTeamButtons);
 A3C_PREP(ctrl);
 A3C_PREP(groupCtrl);
 A3C_PREP(refresh);
