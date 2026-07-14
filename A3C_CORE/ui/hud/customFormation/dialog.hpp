@@ -1,6 +1,25 @@
 #include "script_component.hpp"
 #include "dialog_defines.hpp"
 
+class A3C_CustomFormation_Line: A3C_RscText
+{
+    idc = -1;
+    type = 0;
+    style = 176;
+
+    text = "";
+
+    colorText[] = {1,1,1,0.8};
+    colorBackground[] = {0,0,0,0};
+
+    shadow = 0;
+
+    x = 0;
+    y = 0;
+    w = 0;
+    h = 0;
+};
+
 class HUD_Formation_Menu
 {
     idd = IDD_CUSTOM_FORMATION;

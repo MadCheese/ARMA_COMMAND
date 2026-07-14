@@ -4,6 +4,11 @@
 
 params ["_team"];
 
+uiNamespace setVariable [
+    "A3C_UI_CustomFormation_selectedTeam",
+    _team
+];
+
 private _teamData = [
     ["RED",    "teamRed",    [1, 0, 0, 1],             [1, 0, 0, 0.2],             "#(argb,8,8,3)color(1,0,0,1)"],
     ["GREEN",  "teamGreen",  [0, 1, 0, 1],             [0, 1, 0, 0.2],             "#(argb,8,8,3)color(0,1,0,1)"],

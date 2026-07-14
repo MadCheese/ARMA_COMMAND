@@ -2,27 +2,33 @@
 
 // A3C_UI_customFormation_fnc_formationTick
 //
-// Executes one complete custom-formation update for one unit.
+// Advances one unit through one custom-formation update.
 //
-// This function contains sleeps and must execute in scheduled context.
+// The first invocation may only establish custom-formation control.
+// It returns false in that case. The manager will call it again.
 //
-// Parameters:
-//     0: Unit
-//     1: Activation session ID
-//     2: Force update
-//        false: preserve normal command-state restrictions
-//        true:  take control and issue one movement update regardless
-//               of whether the player is moving
+// Returns:
+//     true  - custom destination was issued.
+//     false - destination was not issued yet, or the operation is invalid.
+//
+// This function contains sleep and must run in scheduled context.
 
 params [
     ["_unit", objNull, [objNull]],
-    ["_sessionId", -1, [0]],
-    ["_forceUpdate", false, [false]]
+    ["_sessionId", -1, [0]]
 ];
 
-if (isNull _unit) exitWith {};
-if !(alive _unit) exitWith {};
-if (isPlayer _unit) exitWith {};
+if (isNull _unit) exitWith {
+    false
+};
+
+if !(alive _unit) exitWith {
+    false
+};
+
+if (isPlayer _unit) exitWith {
+    false
+};
 
 private _isCurrentSession = {
     A3C_UI_CustomFormation_BOOL_formationActive
@@ -36,17 +42,88 @@ private _isCurrentSession = {
     }
 };
 
-if !(call _isCurrentSession) exitWith {};
+if !(call _isCurrentSession) exitWith {
+    false
+};
 
 private _formationData = _unit getVariable [
     "A3C_FORM",
     []
 ];
 
-if ((count _formationData) < 2) exitWith {};
+if !(
+    [_formationData] call FUNC(isValidFormationData)
+) exitWith {
+    false
+};
 
-private _formationDistance = _formationData select 0;
-private _relativeDirection = _formationData select 1;
+private _isFormationMember = _unit getVariable [
+    "A3C_FORM_MEMBER",
+    false
+];
+
+/*
+    Stage 1: remove the unit from vanilla formation control and start
+    the custom movement controller.
+
+    Deliberately do not issue the custom destination during this same
+    invocation. The manager will call this function again.
+*/
+if !(_isFormationMember) exitWith {
+    doStop _unit;
+
+    sleep 0.2;
+
+    if !(call _isCurrentSession) exitWith {
+        false
+    };
+
+    if !(alive _unit) exitWith {
+        false
+    };
+
+    _unit setVariable [
+        "A3C_FORM_MEMBER",
+        true,
+        false
+    ];
+
+    if (isMultiplayer) then {
+        /*
+            Preserve the legacy multiplayer takeover step.
+        */
+        _unit moveTo position _unit;
+    } else {
+        _unit doFSM [
+            "A3C_CORE\fsm\doFormation.fsm",
+            position _unit,
+            _unit
+        ];
+    };
+
+    false
+};
+
+/*
+    In singleplayer, wait until the custom FSM has actually established
+    SCRIPTED control. Returning false keeps the manager's update request
+    alive, so it will retry on the next manager cycle.
+*/
+if (
+    !isMultiplayer
+    && {
+        (currentCommand _unit)
+        isNotEqualTo
+        "SCRIPTED"
+    }
+) exitWith {
+    false
+};
+
+_formationData params [
+    "_formationDistance",
+    "_relativeDirection"
+];
 
 private _formationDirection =
     (getDir player)
@@ -74,95 +151,25 @@ if (
 _distance =
     _unit distance _formationPosition;
 
-private _isFormationMember = _unit getVariable [
-    "A3C_FORM_MEMBER",
+/*
+    Record the destination before issuing it.
+
+    The manager uses this information to distinguish this scripted
+    destination from a later position order issued by the player.
+*/
+_unit setVariable [
+    "A3C_FORM_LAST_INTERNAL_DESTINATION",
+    +_formationPosition,
     false
 ];
 
-if !(_isFormationMember) then {
-    private _destinationType =
-        expectedDestination _unit select 1;
-
-    private _canTakeControl =
-        _forceUpdate
-        || {
-            [
-                "form",
-                _destinationType
-            ] call BIS_fnc_inString
-        };
-
-    if (_canTakeControl) then {
-        doStop _unit;
-        sleep 0.2;
-
-        if (
-            (call _isCurrentSession)
-            && {alive _unit}
-        ) then {
-            _unit setVariable [
-                "A3C_FORM_MEMBER",
-                true,
-                false
-            ];
-
-            if (isMultiplayer) then {
-                _unit moveTo position _unit;
-            } else {
-                _unit doFSM [
-                    "A3C_CORE\fsm\doFormation.fsm",
-                    position _unit,
-                    _unit
-                ];
-
-                /*
-                    During the forced activation update, briefly allow the
-                    FSM command state to become SCRIPTED before issuing the
-                    initial custom position.
-                */
-                if (_forceUpdate) then {
-                    private _timeout = time + 1;
-
-                    waitUntil {
-                        sleep 0.01;
-
-                        !(call _isCurrentSession)
-                        || {!alive _unit}
-                        || {
-                            (currentCommand _unit)
-                            isEqualTo
-                            "SCRIPTED"
-                        }
-                        || {time >= _timeout}
-                    };
-                };
-            };
-        };
-    };
-};
-
-if !(call _isCurrentSession) exitWith {};
-if !(alive _unit) exitWith {};
-
-_isFormationMember = _unit getVariable [
-    "A3C_FORM_MEMBER",
+_unit setVariable [
+    "A3C_FORM_INTERNAL_ORDER_UNTIL",
+    diag_tickTime + 0.75,
     false
 ];
 
-if (
-    _isFormationMember
-    && {
-        _forceUpdate
-        || {
-            (currentCommand _unit)
-            isEqualTo
-            "SCRIPTED"
-        }
-        || {isMultiplayer}
-    }
-) then {
-    _unit moveTo _formationPosition;
-};
+_unit moveTo _formationPosition;
 
 if (
     (_distance < 7)
@@ -179,3 +186,5 @@ if (
         _unit forceSpeed 2;
     };
 };
+
+true

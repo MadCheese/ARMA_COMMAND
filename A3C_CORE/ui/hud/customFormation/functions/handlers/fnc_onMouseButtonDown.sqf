@@ -1,6 +1,11 @@
 #include "..\..\script_component.hpp"
 
-params ["_control", "_button", "_posX", "_posY"];
+params [
+    "_control",
+    "_button",
+    "_posX",
+    "_posY"
+];
 
 if (_button isEqualTo 1) exitWith {};
 
@@ -10,7 +15,12 @@ private _gridUnit = missionNamespace getVariable [
 ];
 
 if (_gridUnit <= 0) exitWith {};
-if (_posX > (0.5 + (6 * _gridUnit))) exitWith {};
+
+if (
+    _posX
+    >
+    (0.5 + (6 * _gridUnit))
+) exitWith {};
 
 private _selectedUnits = uiNamespace getVariable [
     "A3C_UI_CustomFormation_selectedUnits",
@@ -18,6 +28,22 @@ private _selectedUnits = uiNamespace getVariable [
 ];
 
 if (_selectedUnits isEqualTo []) exitWith {};
+
+private _selectedTeam = uiNamespace getVariable [
+    "A3C_UI_CustomFormation_selectedTeam",
+    ""
+];
+
+if !(
+    _selectedTeam in [
+        "RED",
+        "GREEN",
+        "BLUE",
+        "YELLOW",
+        "MAIN",
+        "ALL"
+    ]
+) exitWith {};
 
 A3C_UI_CustomFormation_BOOL_DRAW = true;
 A3C_UI_CustomFormation_BOOL_isMouseUp = true;
@@ -38,65 +64,80 @@ uiNamespace setVariable [
 ];
 
 uiNamespace setVariable [
+    "A3C_UI_CustomFormation_RelativePoints",
+    []
+];
+
+uiNamespace setVariable [
     "A3C_UI_CustomFormation_saveLB",
     0
 ];
 
 [] call FUNC(labelListbox);
 
-private _lineColor = uiNamespace getVariable [
-    "A3C_C_FORM_LineColor",
-    ""
-];
+private _collectionByTeam =
+    createHashMapFromArray [
+        [
+            "RED",
+            "A3C_UI_CustomFormation_Dots_RED"
+        ],
+        [
+            "GREEN",
+            "A3C_UI_CustomFormation_Dots_GREEN"
+        ],
+        [
+            "BLUE",
+            "A3C_UI_CustomFormation_Dots_BLUE"
+        ],
+        [
+            "YELLOW",
+            "A3C_UI_CustomFormation_Dots_YELLOW"
+        ],
+        [
+            "MAIN",
+            "A3C_UI_CustomFormation_Dots_MAIN"
+        ],
+        [
+            "ALL",
+            "A3C_UI_CustomFormation_Dots_ALL"
+        ]
+    ];
 
-private _allLineColor =
-    "#(argb,8,8,3)color(0.53,0.29,0.69,1)";
+private _dotCollectionNames = [];
 
-private _dotCollectionNames = if (
-    _lineColor isEqualTo _allLineColor
-) then {
-    // A purple formation applies to every unit and therefore replaces
-    // every existing team-specific formation visualization.
-    [
+if (_selectedTeam isEqualTo "ALL") then {
+    /*
+        A new ALL stroke visually replaces every currently displayed
+        team-specific stroke.
+    */
+    _dotCollectionNames = [
         "A3C_UI_CustomFormation_Dots_RED",
         "A3C_UI_CustomFormation_Dots_GREEN",
         "A3C_UI_CustomFormation_Dots_BLUE",
         "A3C_UI_CustomFormation_Dots_YELLOW",
         "A3C_UI_CustomFormation_Dots_MAIN",
         "A3C_UI_CustomFormation_Dots_ALL"
-    ]
+    ];
 } else {
-    private _dotCollectionName = switch (_lineColor) do {
-        case "#(argb,8,8,3)color(1,0,0,1)": {
-            "A3C_UI_CustomFormation_Dots_RED"
-        };
-
-        case "#(argb,8,8,3)color(0,1,0,1)": {
-            "A3C_UI_CustomFormation_Dots_GREEN"
-        };
-
-        case "#(argb,8,8,3)color(0,0,1,1)": {
-            "A3C_UI_CustomFormation_Dots_BLUE"
-        };
-
-        case "#(argb,8,8,3)color(1,1,0,1)": {
-            "A3C_UI_CustomFormation_Dots_YELLOW"
-        };
-
-        case "#(argb,8,8,3)color(1,1,1,1)": {
-            "A3C_UI_CustomFormation_Dots_MAIN"
-        };
-
-        default {
+    private _teamCollection =
+        _collectionByTeam getOrDefault [
+            _selectedTeam,
             ""
-        };
+        ];
+
+    if !(_teamCollection isEqualTo "") then {
+        _dotCollectionNames pushBack
+            _teamCollection;
     };
 
-    if (_dotCollectionName isEqualTo "") then {
-        []
-    } else {
-        [_dotCollectionName]
-    }
+    /*
+        A successful team-specific stroke invalidates an ALL stroke.
+
+        Hide the ALL controls while drawing. Persistent ALL geometry is not
+        deleted yet, so an invalid stroke can restore it.
+    */
+    _dotCollectionNames pushBackUnique
+        "A3C_UI_CustomFormation_Dots_ALL";
 };
 
 {
@@ -106,7 +147,9 @@ private _dotCollectionNames = if (
     ];
 
     {
-        ctrlDelete _x;
+        if !(isNull _x) then {
+            ctrlDelete _x;
+        };
     } forEach _dots;
 
     uiNamespace setVariable [

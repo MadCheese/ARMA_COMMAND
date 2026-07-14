@@ -34,6 +34,21 @@ uiNamespace setVariable [
     nil
 ];
 
+uiNamespace setVariable [
+    "A3C_UI_CustomFormation_RelativePoints",
+    []
+];
+
+uiNamespace setVariable [
+    "A3C_UI_CustomFormation_Poses",
+    []
+];
+
+uiNamespace setVariable [
+    "A3C_UI_CustomFormation_Dots",
+    []
+];
+
 A3C_UI_CustomFormation_SaveOverlayIsOpen = false;
 A3C_UI_CustomFormation_BOOL_DRAW = false;
 A3C_UI_CustomFormation_BOOL_isMouseUp = false;
