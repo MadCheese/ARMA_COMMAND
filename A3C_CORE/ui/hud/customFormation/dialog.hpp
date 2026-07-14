@@ -20,6 +20,72 @@ class A3C_CustomFormation_Line: A3C_RscText
     h = 0;
 };
 
+class A3C_CustomFormation_CheckBox
+{
+    idc = -1;
+    type = 77;
+    style = 0;
+
+    deletable = 0;
+    checked = 0;
+
+    x = 0;
+    y = 0;
+    w = 0.025 * safezoneW;
+    h = 0.04 * safezoneH;
+
+    color[] = {1,1,1,0.8};
+    colorFocused[] = {1,1,1,1};
+    colorHover[] = {1,1,1,1};
+    colorPressed[] = {1,1,1,1};
+    colorDisabled[] = {1,1,1,0.25};
+
+    colorBackground[] = {0,0,0,0};
+    colorBackgroundFocused[] = {0,0,0,0};
+    colorBackgroundHover[] = {0,0,0,0};
+    colorBackgroundPressed[] = {0,0,0,0};
+    colorBackgroundDisabled[] = {0,0,0,0};
+
+    textureChecked =
+        "A3C_CORE\ui\pictures\icon_menu_checkBox_checked.paa";
+
+    textureUnchecked =
+        "A3C_CORE\ui\pictures\icon_menu_checkBox_unchecked.paa";
+
+    textureFocusedChecked =
+        "A3C_CORE\ui\pictures\icon_menu_checkBox_checked.paa";
+
+    textureFocusedUnchecked =
+        "A3C_CORE\ui\pictures\icon_menu_checkBox_unchecked.paa";
+
+    textureHoverChecked =
+        "A3C_CORE\ui\pictures\icon_menu_checkBox_checked.paa";
+
+    textureHoverUnchecked =
+        "A3C_CORE\ui\pictures\icon_menu_checkBox_unchecked.paa";
+
+    texturePressedChecked =
+        "A3C_CORE\ui\pictures\icon_menu_checkBox_checked.paa";
+
+    texturePressedUnchecked =
+        "A3C_CORE\ui\pictures\icon_menu_checkBox_unchecked.paa";
+
+    textureDisabledChecked =
+        "A3C_CORE\ui\pictures\icon_menu_checkBox_checked.paa";
+
+    textureDisabledUnchecked =
+        "A3C_CORE\ui\pictures\icon_menu_checkBox_unchecked.paa";
+
+    tooltipColorText[] = {1,1,1,1};
+    tooltipColorBox[] = {1,1,1,1};
+    tooltipColorShade[] = {0,0,0,0.8};
+
+    soundEnter[] = {"",0.1,1};
+    soundPush[] = {"",0.1,1};
+    soundClick[] = {"",0.1,1};
+    soundEscape[] = {"",0.1,1};
+};
+
 class HUD_Formation_Menu
 {
     idd = IDD_CUSTOM_FORMATION;
@@ -202,10 +268,37 @@ class HUD_Formation_Menu
 
             x = 0.883773 * safezoneW + safezoneX;
             y = 0.709033 * safezoneH + safezoneY;
-            w = 0.0973751 * safezoneW;
+            w = 0.069 * safezoneW;
             h = 0.044007 * safezoneH;
 
             onMouseButtonDown = EXPAND_AND_QUOTE(_this call FUNC(onSaveMouseButtonDown));
+        };
+
+        class ManageSavedImage: A3C_RscPicture
+        {
+            idc = IDC_CUSTOM_FORMATION_MANAGE_IMAGE;
+            text = "A3C_CORE\ui\pictures\icon_menu_Trash.paa";
+
+            x = 0.956773 * safezoneW + safezoneX;
+            y = 0.709033 * safezoneH + safezoneY;
+            w = 0.0243751 * safezoneW;
+            h = 0.044007 * safezoneH;
+
+            colorText[] = {1,1,1,1};
+        };
+
+        class ManageSavedButton: A3C_RscButton_Invisible
+        {
+            idc = IDC_CUSTOM_FORMATION_MANAGE_BUTTON;
+            text = "";
+            tooltip = "Manage saved formations";
+
+            x = 0.956773 * safezoneW + safezoneX;
+            y = 0.709033 * safezoneH + safezoneY;
+            w = 0.0243751 * safezoneW;
+            h = 0.044007 * safezoneH;
+
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onButtonClick));
         };
 
         class SavedFormationsListbox: A3C_LISTBOX
@@ -219,6 +312,212 @@ class HUD_Formation_Menu
             h = 0.176028 * safezoneH;
 
             onLBSelChanged = EXPAND_AND_QUOTE(_this call FUNC(onListboxSelectionChanged));
+        };
+    };
+};
+
+class HUD_Formation_Manage
+{
+    idd = IDD_CUSTOM_FORMATION_MANAGE;
+    movingEnable = 0;
+
+    onLoad = EXPAND_AND_QUOTE(_this call FUNC(manageOnLoad));
+    onUnload = EXPAND_AND_QUOTE(_this call FUNC(manageOnUnload));
+
+    class ControlsBackground
+    {
+        class ModalShade: A3C_RscPicture
+        {
+            idc = -1;
+            text = "#(argb,8,8,3)color(0,0,0,0.65)";
+
+            x = safezoneX;
+            y = safezoneY;
+            w = safezoneW;
+            h = safezoneH;
+        };
+
+        class PanelBackground: A3C_RscPicture
+        {
+            idc = -1;
+            text = "#(argb,8,8,3)color(0.05,0.05,0.05,0.98)";
+
+            x = 0.25 * safezoneW + safezoneX;
+            y = 0.15 * safezoneH + safezoneY;
+            w = 0.5 * safezoneW;
+            h = 0.7 * safezoneH;
+        };
+
+        class HeaderBackground: A3C_RscPicture
+        {
+            idc = -1;
+            text = "#(argb,8,8,3)color(0.14,0.14,0.14,1)";
+
+            x = 0.25 * safezoneW + safezoneX;
+            y = 0.15 * safezoneH + safezoneY;
+            w = 0.5 * safezoneW;
+            h = 0.055 * safezoneH;
+        };
+
+        class ToolbarBackground: A3C_RscPicture
+        {
+            idc = -1;
+            text = "#(argb,8,8,3)color(0.09,0.09,0.09,1)";
+
+            x = 0.25 * safezoneW + safezoneX;
+            y = 0.205 * safezoneH + safezoneY;
+            w = 0.5 * safezoneW;
+            h = 0.055 * safezoneH;
+        };
+    };
+
+    class Controls
+    {
+        class HeaderTitle: A3C_RscText
+        {
+            idc = -1;
+            text = "MANAGE SAVED FORMATIONS";
+
+            x = 0.27 * safezoneW + safezoneX;
+            y = 0.15 * safezoneH + safezoneY;
+            w = 0.42 * safezoneW;
+            h = 0.055 * safezoneH;
+
+            colorText[] = {1,1,1,1};
+        };
+
+        class CloseButton: A3C_RscButton
+        {
+            idc = IDC_CUSTOM_FORMATION_MANAGE_CLOSE_BUTTON;
+            text = "X";
+            tooltip = "Close";
+
+            x = 0.715 * safezoneW + safezoneX;
+            y = 0.158 * safezoneH + safezoneY;
+            w = 0.025 * safezoneW;
+            h = 0.039 * safezoneH;
+
+            colorBackground[] = {0.65,0.05,0.05,1};
+            colorBackgroundActive[] = {0.9,0.05,0.05,1};
+
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onManageButtonClick));
+        };
+
+        class SelectAllCheckBox: A3C_CustomFormation_CheckBox
+        {
+            idc = IDC_CUSTOM_FORMATION_MANAGE_SELECT_ALL;
+            tooltip = "Select or clear all formations";
+
+            x = 0.27 * safezoneW + safezoneX;
+            y = 0.216 * safezoneH + safezoneY;
+            w = 0.022 * safezoneW;
+            h = 0.033 * safezoneH;
+
+            onCheckedChanged = EXPAND_AND_QUOTE(_this call FUNC(onManageCheckedChanged));
+        };
+
+        class SelectedCount: A3C_RscText
+        {
+            idc = IDC_CUSTOM_FORMATION_MANAGE_SELECTED_COUNT;
+            text = "0 selected";
+
+            x = 0.3 * safezoneW + safezoneX;
+            y = 0.205 * safezoneH + safezoneY;
+            w = 0.3 * safezoneW;
+            h = 0.055 * safezoneH;
+        };
+
+        class TrashImage: A3C_RscPicture
+        {
+            idc = IDC_CUSTOM_FORMATION_MANAGE_TRASH_IMAGE;
+            text = "A3C_CORE\ui\pictures\icon_menu_Trash.paa";
+
+            x = 0.705 * safezoneW + safezoneX;
+            y = 0.215 * safezoneH + safezoneY;
+            w = 0.025 * safezoneW;
+            h = 0.035 * safezoneH;
+        };
+
+        class TrashButton: A3C_RscButton_Invisible
+        {
+            idc = IDC_CUSTOM_FORMATION_MANAGE_TRASH_BUTTON;
+            text = "";
+            tooltip = "Delete selected formations";
+
+            x = 0.705 * safezoneW + safezoneX;
+            y = 0.215 * safezoneH + safezoneY;
+            w = 0.025 * safezoneW;
+            h = 0.035 * safezoneH;
+
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onManageButtonClick));
+        };
+
+        class RowsGroup: A3C_RscControlsGroup
+        {
+            idc = IDC_CUSTOM_FORMATION_MANAGE_ROWS_GROUP;
+
+            x = 0.27 * safezoneW + safezoneX;
+            y = 0.275 * safezoneH + safezoneY;
+            w = 0.46 * safezoneW;
+            h = 0.55 * safezoneH;
+
+            class Controls
+            {
+            };
+        };
+
+        class EmptyText: A3C_RscText
+        {
+            idc = IDC_CUSTOM_FORMATION_MANAGE_EMPTY_TEXT;
+            text = "NO SAVED FORMATIONS";
+
+            x = 0.27 * safezoneW + safezoneX;
+            y = 0.49 * safezoneH + safezoneY;
+            w = 0.46 * safezoneW;
+            h = 0.05 * safezoneH;
+
+            style = 2;
+            colorText[] = {1,1,1,0.6};
+        };
+
+        class ConfirmText: A3C_RscText
+        {
+            idc = IDC_CUSTOM_FORMATION_MANAGE_CONFIRM_TEXT;
+            text = "";
+
+            x = 0.27 * safezoneW + safezoneX;
+            y = 0.205 * safezoneH + safezoneY;
+            w = 0.285 * safezoneW;
+            h = 0.055 * safezoneH;
+        };
+
+        class ConfirmCancelButton: A3C_RscButton
+        {
+            idc = IDC_CUSTOM_FORMATION_MANAGE_CONFIRM_CANCEL;
+            text = "CANCEL";
+
+            x = 0.56 * safezoneW + safezoneX;
+            y = 0.212 * safezoneH + safezoneY;
+            w = 0.075 * safezoneW;
+            h = 0.041 * safezoneH;
+
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onManageButtonClick));
+        };
+
+        class ConfirmDeleteButton: A3C_RscButton
+        {
+            idc = IDC_CUSTOM_FORMATION_MANAGE_CONFIRM_DELETE;
+            text = "DELETE";
+
+            x = 0.64 * safezoneW + safezoneX;
+            y = 0.212 * safezoneH + safezoneY;
+            w = 0.09 * safezoneW;
+            h = 0.041 * safezoneH;
+
+            colorBackground[] = {0.65,0.05,0.05,1};
+            colorBackgroundActive[] = {0.9,0.05,0.05,1};
+
+            onButtonClick = EXPAND_AND_QUOTE(_this call FUNC(onManageButtonClick));
         };
     };
 };

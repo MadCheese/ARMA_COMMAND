@@ -3,6 +3,8 @@
 
 // A3C_UI_customFormation_fnc_saveButton
 
+disableSerialization;
+
 params ["_button"];
 
 if (
@@ -17,339 +19,262 @@ private _saveEdit = uiNamespace getVariable [
     controlNull
 ];
 
-if (_button isEqualTo 0) then {
-    if !A3C_UI_CustomFormation_SaveOverlayIsOpen then {
-        private _display = uiNamespace getVariable [
-            QGVAR(display),
-            displayNull
-        ];
+if !(_button isEqualTo 0) exitWith {
+    if !(isNull _saveEdit) then {
+        ctrlDelete _saveEdit;
+    };
 
-        if (isNull _display) exitWith {};
+    uiNamespace setVariable [
+        "A3C_C_FORM_SaveBox",
+        controlNull
+    ];
 
-        A3C_UI_CustomFormation_SaveOverlayIsOpen = true;
+    A3C_UI_CustomFormation_SaveOverlayIsOpen = false;
 
-        _saveEdit = _display ctrlCreate [
-            "RscEdit",
-            IDC_CUSTOM_FORMATION_DYNAMIC_SAVE_NAME_EDIT
-        ];
+    [] call FUNC(labelListbox);
+};
 
-        _saveEdit ctrlSetPosition [
-            0.660383 * safezoneW + safezoneX,
-            0.709033 * safezoneH + safezoneY,
-            0.217662 * safezoneW,
-            0.044007 * safezoneH
-        ];
+if !A3C_UI_CustomFormation_SaveOverlayIsOpen then {
+    private _display = uiNamespace getVariable [
+        QGVAR(display),
+        displayNull
+    ];
 
-        _saveEdit ctrlCommit 0;
+    if (isNull _display) exitWith {};
 
-        uiNamespace setVariable [
-            "A3C_C_FORM_SaveBox",
-            _saveEdit
-        ];
-    } else {
-        private _nameString =
-            str parseText ctrlText _saveEdit;
+    A3C_UI_CustomFormation_SaveOverlayIsOpen = true;
 
-        if !(_nameString isEqualTo "") then {
-            /*
-                Remove stale runtime exact-stroke records before serializing
-                the current formation.
-            */
-            [] call FUNC(restoreFormationVisuals);
+    _saveEdit = _display ctrlCreate [
+        "RscEdit",
+        IDC_CUSTOM_FORMATION_DYNAMIC_SAVE_NAME_EDIT
+    ];
 
-            private _allUnits =
-                units group player - [player];
+    _saveEdit ctrlSetPosition [
+        0.660383 * safezoneW + safezoneX,
+        0.709033 * safezoneH + safezoneY,
+        0.217662 * safezoneW,
+        0.044007 * safezoneH
+    ];
 
-            private _currentTeamData =
-                [] call FUNC(getCurrentTeamData);
+    _saveEdit ctrlCommit 0;
 
-            if (_currentTeamData isEqualTo []) exitWith {
-                systemChat "A3C: No Subordinate Units Detected";
+    uiNamespace setVariable [
+        "A3C_C_FORM_SaveBox",
+        _saveEdit
+    ];
+} else {
+    private _nameString =
+        str parseText ctrlText _saveEdit;
 
-                A3C_UI_CustomFormation_SaveOverlayIsOpen = false;
-            };
+    if !(_nameString isEqualTo "") then {
+        /*
+            Remove stale runtime exact-stroke records before serializing
+            the current formation.
+        */
+        [] call FUNC(restoreFormationVisuals);
 
-            private _teamSignature =
-                _currentTeamData apply {
-                    [
-                        _x select 0,
-                        count (_x select 1)
-                    ]
-                };
+        private _allUnits =
+            units group player - [player];
 
-            /*
-                Retain a whole-group snapshot at index 1 for inspection and
-                potential migration, although the version-3 loader uses the
-                team-oriented records.
-            */
-            private _formationData =
-                _allUnits apply {
-                    +(
-                        _x getVariable [
-                            "A3C_FORM",
-                            []
-                        ]
-                    )
-                };
+        private _currentTeamData =
+            [] call FUNC(getCurrentTeamData);
 
-            private _runtimeVisualData =
-                missionNamespace getVariable [
-                    "A3C_UI_CustomFormation_VisualData",
-                    createHashMap
-                ];
+        if (_currentTeamData isEqualTo []) exitWith {
+            systemChat "A3C: No Subordinate Units Detected";
 
-            if !(
-                _runtimeVisualData
-                isEqualType
-                createHashMap
-            ) then {
-                _runtimeVisualData =
-                    createHashMap;
-            };
-
-            private _savedRecords = [];
-
-            private _allRuntimeRecord =
-                _runtimeVisualData getOrDefault [
-                    "ALL",
-                    []
-                ];
-
-            private _allStrokePoints = [];
-
-            if (
-                (_allRuntimeRecord isEqualType [])
-                && {
-                    (count _allRuntimeRecord) >= 4
-                }
-                && {
-                    (_allRuntimeRecord param [0, 0])
-                    isEqualTo
-                    2
-                }
-            ) then {
-                _allStrokePoints =
-                    (
-                        _allRuntimeRecord param [
-                            2,
-                            []
-                        ]
-                    )
-                    apply {
-                        +_x
-                    };
-            };
-
-            if !(_allStrokePoints isEqualTo []) then {
-                /*
-                    A valid ALL stroke is the complete saved template.
-                */
-                _savedRecords pushBack [
-                    "ALL",
-                    count _allUnits,
-                    _allStrokePoints,
-                    _formationData apply {
-                        +_x
-                    }
-                ];
-            } else {
-                /*
-                    Save one independent record for every participating
-                    fireteam.
-                */
-                {
-                    _x params [
-                        "_team",
-                        "_teamUnits"
-                    ];
-
-                    private _slotPoints =
-                        _teamUnits apply {
-                            +(
-                                _x getVariable [
-                                    "A3C_FORM",
-                                    []
-                                ]
-                            )
-                        };
-
-                    private _strokePoints = [];
-
-                    private _runtimeRecord =
-                        _runtimeVisualData getOrDefault [
-                            _team,
-                            []
-                        ];
-
-                    if (
-                        (_runtimeRecord isEqualType [])
-                        && {
-                            (count _runtimeRecord) >= 4
-                        }
-                        && {
-                            (_runtimeRecord param [0, 0])
-                            isEqualTo
-                            2
-                        }
-                    ) then {
-                        _strokePoints =
-                            (
-                                _runtimeRecord param [
-                                    2,
-                                    []
-                                ]
-                            )
-                            apply {
-                                +_x
-                            };
-                    };
-
-                    _savedRecords pushBack [
-                        _team,
-                        count _teamUnits,
-                        _strokePoints,
-                        _slotPoints
-                    ];
-                } forEach _currentTeamData;
-            };
-
-            private _profileData =
-                profileNamespace getVariable [
-                    "A3C_C_FORMATIONS_SAVED",
-                    []
-                ];
-
-            /*
-                Save format version 3:
-                    [
-                        name,
-                        whole-group snapshot,
-                        3,
-                        team signature,
-                        team or ALL records
-                    ]
-            */
-            _profileData pushBack [
-                _nameString,
-                _formationData,
-                3,
-                _teamSignature,
-                _savedRecords
-            ];
-
-            profileNamespace setVariable [
-                "A3C_C_FORMATIONS_SAVED",
-                _profileData
-            ];
-
-            if (
-                !(isNull _saveEdit)
-                && {ctrlShown _saveEdit}
-            ) then {
+            if !(isNull _saveEdit) then {
                 ctrlDelete _saveEdit;
             };
 
-            /*
-                Request selection by real profile index. labelListbox will
-                translate it to the corresponding filtered listbox row.
-            */
             uiNamespace setVariable [
-                "A3C_UI_CustomFormation_RequestedSaveProfileIndex",
-                (count _profileData) - 1
+                "A3C_C_FORM_SaveBox",
+                controlNull
             ];
 
-            uiNamespace setVariable [
-                "A3C_UI_CustomFormation_saveLB",
-                0
-            ];
-
-            [] call FUNC(labelListbox);
-        } else {
-            systemChat "A3C: No Name Detected";
+            A3C_UI_CustomFormation_SaveOverlayIsOpen = false;
         };
 
-        A3C_UI_CustomFormation_SaveOverlayIsOpen = false;
-    };
-} else {
-    private _previousClickTime =
-        missionNamespace getVariable [
-            "A3C_LB_TICKTIME",
-            0
-        ];
+        private _teamSignature =
+            _currentTeamData apply {
+                [
+                    _x select 0,
+                    count (_x select 1)
+                ]
+            };
 
-    private _clickInterval =
-        time - _previousClickTime;
-
-    if (
-        (_clickInterval > 0.07)
-        && {_clickInterval < 0.3}
-    ) then {
-        private _listbox = [
-            "savedFormations"
-        ] call FUNC(ctrl);
-
-        if !(isNull _listbox) then {
-            private _selectedRow =
-                lbCurSel _listbox;
-
-            if (_selectedRow > 0) then {
-                private _visibleSaveIndices =
-                    uiNamespace getVariable [
-                        "A3C_UI_CustomFormation_VisibleSaveIndices",
+        /*
+            Retain a whole-group snapshot at index 1 for inspection and
+            possible future migration. The version-3 loader uses the
+            team-oriented records.
+        */
+        private _formationData =
+            _allUnits apply {
+                +(
+                    _x getVariable [
+                        "A3C_FORM",
                         []
-                    ];
+                    ]
+                )
+            };
 
-                private _mappingIndex =
-                    _selectedRow - 1;
+        private _runtimeVisualData =
+            missionNamespace getVariable [
+                "A3C_UI_CustomFormation_VisualData",
+                createHashMap
+            ];
 
-                private _profileIndex =
-                    _visibleSaveIndices param [
-                        _mappingIndex,
-                        -1
-                    ];
+        if !(
+            _runtimeVisualData
+            isEqualType
+            createHashMap
+        ) then {
+            _runtimeVisualData =
+                createHashMap;
+        };
 
-                private _profileData =
-                    profileNamespace getVariable [
-                        "A3C_C_FORMATIONS_SAVED",
+        private _savedRecords = [];
+
+        private _allRuntimeRecord =
+            _runtimeVisualData getOrDefault [
+                "ALL",
+                []
+            ];
+
+        private _allStrokePoints = [];
+
+        if (
+            (_allRuntimeRecord isEqualType [])
+            && {
+                (count _allRuntimeRecord) >= 4
+            }
+            && {
+                (_allRuntimeRecord param [0, 0])
+                isEqualTo
+                2
+            }
+        ) then {
+            _allStrokePoints =
+                (
+                    _allRuntimeRecord param [
+                        2,
+                        []
+                    ]
+                )
+                apply {
+                    +_x
+                };
+        };
+
+        if !(_allStrokePoints isEqualTo []) then {
+            _savedRecords pushBack [
+                "ALL",
+                count _allUnits,
+                _allStrokePoints,
+                _formationData apply {
+                    +_x
+                }
+            ];
+        } else {
+            {
+                _x params [
+                    "_team",
+                    "_teamUnits"
+                ];
+
+                private _slotPoints =
+                    _teamUnits apply {
+                        +(
+                            _x getVariable [
+                                "A3C_FORM",
+                                []
+                            ]
+                        )
+                    };
+
+                private _strokePoints = [];
+
+                private _runtimeRecord =
+                    _runtimeVisualData getOrDefault [
+                        _team,
                         []
                     ];
 
                 if (
-                    (_profileIndex >= 0)
+                    (_runtimeRecord isEqualType [])
                     && {
-                        _profileIndex
-                        <
-                        count _profileData
+                        (count _runtimeRecord) >= 4
+                    }
+                    && {
+                        (_runtimeRecord param [0, 0])
+                        isEqualTo
+                        2
                     }
                 ) then {
-                    _profileData deleteAt
-                        _profileIndex;
-
-                    profileNamespace setVariable [
-                        "A3C_C_FORMATIONS_SAVED",
-                        _profileData
-                    ];
+                    _strokePoints =
+                        (
+                            _runtimeRecord param [
+                                2,
+                                []
+                            ]
+                        )
+                        apply {
+                            +_x
+                        };
                 };
-            };
+
+                _savedRecords pushBack [
+                    _team,
+                    count _teamUnits,
+                    _strokePoints,
+                    _slotPoints
+                ];
+            } forEach _currentTeamData;
         };
+
+        private _profileData =
+            profileNamespace getVariable [
+                "A3C_C_FORMATIONS_SAVED",
+                []
+            ];
+
+        _profileData pushBack [
+            _nameString,
+            _formationData,
+            3,
+            _teamSignature,
+            _savedRecords
+        ];
+
+        profileNamespace setVariable [
+            "A3C_C_FORMATIONS_SAVED",
+            _profileData
+        ];
+
+        saveProfileNamespace;
+
+        if !(isNull _saveEdit) then {
+            ctrlDelete _saveEdit;
+        };
+
+        uiNamespace setVariable [
+            "A3C_C_FORM_SaveBox",
+            controlNull
+        ];
+
+        uiNamespace setVariable [
+            "A3C_UI_CustomFormation_RequestedSaveProfileIndex",
+            (count _profileData) - 1
+        ];
 
         uiNamespace setVariable [
             "A3C_UI_CustomFormation_saveLB",
             0
         ];
+
+        [] call FUNC(labelListbox);
+    } else {
+        systemChat "A3C: No Name Detected";
     };
-
-    A3C_LB_TICKTIME =
-        time;
-
-    if (
-        !(isNull _saveEdit)
-        && {ctrlShown _saveEdit}
-    ) then {
-        ctrlDelete _saveEdit;
-    };
-
-    [] call FUNC(labelListbox);
 
     A3C_UI_CustomFormation_SaveOverlayIsOpen = false;
 };

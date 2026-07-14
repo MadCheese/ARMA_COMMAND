@@ -1,13 +1,10 @@
 #include "..\script_component.hpp"
 
-private _saveEdit = uiNamespace getVariable [
-    "A3C_C_FORM_SaveBox",
-    controlNull
-];
-
-if !(isNull _saveEdit) then {
-    ctrlDelete _saveEdit;
-};
+// A3C_UI_customFormation_fnc_onUnload
+//
+// The display owns the dynamically created save-name edit control. The
+// engine destroys that control as part of display teardown, so it must not
+// be explicitly deleted inside this display's onUnload event handler.
 
 uiNamespace setVariable [
     "A3C_C_FORM_SaveBox",

@@ -1,7 +1,13 @@
 #include "..\..\script_component.hpp"
 #include "..\..\dialog_defines.hpp"
 
-params ["_control"];
+// A3C_UI_customFormation_fnc_onButtonClick
+
+params [
+    ["_control", controlNull, [controlNull]]
+];
+
+if (isNull _control) exitWith {};
 
 switch (ctrlIDC _control) do {
     case IDC_CUSTOM_FORMATION_TEAM_RED: {
@@ -33,6 +39,19 @@ switch (ctrlIDC _control) do {
     };
 
     case IDC_CUSTOM_FORMATION_CLEAR_BUTTON: {
-        [] call FUNC(clearFormation);
+        /*
+            clearFormation deletes visualization controls. Execute it
+            outside this button's UI event handler.
+        */
+        [] spawn FUNC(clearFormation);
+    };
+
+    case IDC_CUSTOM_FORMATION_MANAGE_BUTTON: {
+        /*
+            openSavedFormationManager may delete the dynamically created
+            save-name edit control. Execute it outside this button's UI
+            event handler.
+        */
+        [] spawn FUNC(openSavedFormationManager);
     };
 };

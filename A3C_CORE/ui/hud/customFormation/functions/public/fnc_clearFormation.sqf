@@ -2,6 +2,7 @@
 
 // A3C_UI_customFormation_fnc_clearFormation
 
+disableSerialization;
 /*
     Invalidate the active manager and any formationTick that may currently
     be sleeping.
