@@ -1,5 +1,5 @@
-#include "..\script_component.hpp"
-#include "..\dialog_defines.hpp"
+#include "..\..\script_component.hpp"
+#include "..\..\dialog_defines.hpp"
 
 // A3C_UI_customFormation_fnc_manageOnLoad
 

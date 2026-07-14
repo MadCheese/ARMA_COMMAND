@@ -1,4 +1,4 @@
-#include "..\script_component.hpp"
+#include "..\..\script_component.hpp"
 
 // A3C_UI_customFormation_fnc_getSavedFormationCompatibility
 //
