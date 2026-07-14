@@ -7,7 +7,7 @@
 
 #include "ui\mapOverlay\dialog.hpp"
 
-#include "ui\HUD\customFormation\UI_DSP_CustomFormation.hpp"
+#include "ui\hud\customFormation\dialog.hpp"
 
 #include "ui\radial\radialMenu\dialog.hpp"
 #include "ui\radial\settingsMenu\dialog.hpp"

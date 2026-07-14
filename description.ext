@@ -22,7 +22,7 @@
 #include "A3C_CORE\ui\hud\suppressionArea\dialog.hpp"
 
 
-#include "A3C_CORE\ui\HUD\customFormation\UI_DSP_CustomFormation.hpp"
+#include "A3C_CORE\ui\hud\customFormation\dialog.hpp"
 
 #include "A3C_CORE\ui\hud\squadPlacement\dialog.hpp"
 #include "A3C_CORE\ui\hud\squadPlacement\rscTitles.hpp"

@@ -558,6 +558,29 @@ A3C_SUPPRESSION = false; //-- might be unused >> confirm
 A3C_HUD_DRAW_BOOL = false;
 A3C_HUD_DRAW_POSARRAY = [];
 
+//-- Custom formation
+A3C_UI_CustomFormation_SaveOverlayIsOpen = false;
+
+A3C_UI_CustomFormation_BOOL_DRAW = false;
+A3C_UI_CustomFormation_BOOL_isMouseUp = false;
+A3C_UI_CustomFormation_BOOL_ALLOW = false;
+A3C_UI_CustomFormation_BOOL_formationActive = false;
+
+A3C_UI_CustomFormation_GridUnit =
+    ((abs safeZoneY) + (safeZoneY + safeZoneH)) / 12;
+
+profileNamespace setVariable [
+    "A3C_C_FORMATIONS_SAVED",
+    profileNamespace getVariable [
+        "A3C_C_FORMATIONS_SAVED",
+        []
+    ]
+];
+
+uiNamespace setVariable [
+    "A3C_UI_CustomFormation_saveLB",
+    0
+];
 
 
 //-- fetch reference game-controls once they exist

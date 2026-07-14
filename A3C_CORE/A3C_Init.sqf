@@ -197,8 +197,6 @@ A3C_SPAWN_HUD_MENU = compile preprocessfileLineNumbers "A3C_CORE\ui\HUD\squadPla
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers_dispatched.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_UI.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_CustomFormation_init.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\UI_DSP_CustomFormation_handlers.sqf";
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\selectionPromptPanel\functions\initFunctions.sqf";
@@ -208,6 +206,9 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\suppressionArea\function
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\hudDynamic\functions\initFunctions.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\mainDisplay\functions\initFunctions.sqf";
+
+//-- Custom formation
+call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\customFormation\functions\initFunctions.sqf";
 
 
 //-- Shared UI

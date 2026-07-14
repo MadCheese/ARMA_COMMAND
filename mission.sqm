@@ -2925,7 +2925,7 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14352.66,15.601813,16733.445};
+						position[]={14354.646,15.611483,16732.91};
 					};
 					side="West";
 					flags=5;

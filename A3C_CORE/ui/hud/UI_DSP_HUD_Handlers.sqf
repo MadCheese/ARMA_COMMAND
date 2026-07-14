@@ -253,7 +253,7 @@ A3C_UI_HUD_onKeyDown = {
 			!isNil "A3C_FORM_KEY_ID"
 			&& {[_key, _shift, _ctrl, _alt] isEqualTo A3C_FORM_KEY_ID}
 		) : {
-			[] call A3C_UI_CustomFormation_FNC_spawnDialog;
+			[] call A3C_ui_customFormation_fnc_spawnDialog;
 		};
 		//-- #NOTE: Commented this out until I understand what F1-F5 were supposed to do with teamcolors
 		//-- F1-F5 are unit selectors by default...
