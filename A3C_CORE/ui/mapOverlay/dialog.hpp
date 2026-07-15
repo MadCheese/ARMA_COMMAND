@@ -414,7 +414,7 @@ class A3C_DSP_MapOverlay
 		{
 			idc = IDC_MAP_UFSB_STANCE_TRAVEL_BTN; //7045;
 			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_STANCE_TRAVEL_IMG,IDC_MAP_UFSB_STANCE_TRAVEL_BTN)],'SQ_STANCE_1',1,true)] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
-			onMouseZChanged = "[_this select 1] call A3C_UI_MAP_UFSB_OnStanceTravel";
+			onMouseZChanged = "[_this select 1] call A3C_ui_mapOverlay_fnc_UFSB_onStanceTravelButton";
 
 			x = 0.24797 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
@@ -454,7 +454,7 @@ class A3C_DSP_MapOverlay
 		{
 			idc = IDC_MAP_UFSB_STANCE_ARRIVAL_BTN; //7047;
 			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_STANCE_ARRIVAL_IMG,IDC_MAP_UFSB_STANCE_ARRIVAL_BTN)],'SQ_STANCE_2',1,true)] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
-			onMouseZChanged = "[_this select 1] call A3C_UI_MAP_UFSB_OnStanceArrival;";
+			onMouseZChanged = "[_this select 1] call A3C_ui_mapOverlay_fnc_UFSB_onStanceArrivalButton;";
 
 			x = 0.339617 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
@@ -714,7 +714,7 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_Exit: A3C_ShortcutButton
 		{
 			idc = IDC_MAP_UFSB_Exit; //7020;
-			action = "[] call A3C_UI_MAP_UFSB_onExitClick";
+			action = "[] call A3C_ui_mapOverlay_fnc_UFSB_onExitButton";
 			text = "EXIT";
 			x = 0.517184 * safezoneW + safezoneX;
 			y = 2;

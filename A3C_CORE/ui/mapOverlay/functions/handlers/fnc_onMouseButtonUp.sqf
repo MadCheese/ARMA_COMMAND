@@ -224,12 +224,12 @@ if (A3C_BOOL_DRAGLINE && {A3C_CONNECTING_MODE == "HCSYNC"}) exitWith  {
 							};
 							case ("GET IN") : {
 								_btnImg ctrlSetText "A3C_CORE\ui\pictures\icon_menu_vehicleboard.paa";
-								_btnFnc = {[] call A3C_UI_MAP_FNC_SYNC_LoadGroupInVehicle;};
+								_btnFnc = {[] call A3C_ui_mapOverlay_fnc_sync_loadGroupInVehicle;};
 							};
 
 							case ("VEHICLE GET IN") : {
 								_btnImg ctrlSetText "\a3\ui_f\data\IGUI\Cfg\Cursors\getIn_ca.paa";
-								_btnFnc = {[] call A3C_UI_MAP_FNC_SYNC_LoadVehicleInVehicle;};
+								_btnFnc = {[] call A3C_ui_mapOverlay_fnc_sync_loadVehicleInVehicle;};
 							};
 						};
 
@@ -237,7 +237,7 @@ if (A3C_BOOL_DRAGLINE && {A3C_CONNECTING_MODE == "HCSYNC"}) exitWith  {
 						[
 							"
 
-								[%1] call A3C_UI_MAP_FNC_CloseSyncCircleMenu;
+								[%1] call A3C_ui_mapOverlay_fnc_closeSyncCircleMenu;
 								[] spawn %2;
 
 							",
@@ -467,7 +467,7 @@ if (A3C_MapSel_Field_Active) then {
 		A3C_MAP_CommandMode = _pageMode;
 		//-- toggle or collapse wpsettings bar
 		_foldMode = if (count A3C_SELECTED_UNITS > 0 && {_pageMode != "HC"}) then {"OPEN"} else {"COLLAPSE"};
-		[_foldMode,0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
+		[_foldMode,0.1] call A3C_ui_mapOverlay_fnc_UFSB_onToggleBar;
 		[_pageMode] call A3C_UI_MAP_UFSB_ApplyMode;
 	} else {
 		//-- no units in selection field: Check for waypoints
@@ -878,7 +878,7 @@ if (A3C_MAP_CommandMode == "HC") exitWith {
 
 
 //-- exit: No Drag Marker selected
-if !(A3C_MovedItem_ID == "") exitWith {
+if (typeName A3C_MovedItem_ID == "STRING" && {!(A3C_MovedItem_ID == "")}) exitWith {
 	A3C_BOOL_MAP_MU = false;
 	A3C_BOOL_MOUSEMOVING = false;
 	A3C_MovedItem_ID = "";

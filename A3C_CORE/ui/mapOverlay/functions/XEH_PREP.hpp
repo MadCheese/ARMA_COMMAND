@@ -14,9 +14,24 @@ A3C_PREP_SUBDIR(handlers,onKeyUp);
 A3C_PREP_SUBDIR(handlers,onMouseButtonDown);
 A3C_PREP_SUBDIR(handlers,onMouseButtonUp);
 A3C_PREP_SUBDIR(handlers,onMouseMoving);
+A3C_PREP_SUBDIR(handlers,UFSB_onExitButton);
+A3C_PREP_SUBDIR(handlers,UFSB_onStanceArrivalButton);
+A3C_PREP_SUBDIR(handlers,UFSB_onStanceTravelButton);
+A3C_PREP_SUBDIR(handlers,UFSB_onToggleBar);
 
 //-- public functions
+A3C_PREP_SUBDIR(public,adjustPolygonEdge);
+A3C_PREP_SUBDIR(public,adjustPolygonMain);
+A3C_PREP_SUBDIR(public,closeMapOverlay);
+A3C_PREP_SUBDIR(public,closeSyncCircleMenu);
+A3C_PREP_SUBDIR(public,drawIconVehicleMacro);
+A3C_PREP_SUBDIR(public,drawPolygonFrame);
+A3C_PREP_SUBDIR(public,drawThiccLine);
 A3C_PREP_SUBDIR(public,isWaypointLoop);
+A3C_PREP_SUBDIR(public,resetMapClick);
+A3C_PREP_SUBDIR(public,sync_loadGroupInVehicle);
+A3C_PREP_SUBDIR(public,sync_loadVehicleInVehicle);
+
 
 
 //-- Response functions

@@ -235,15 +235,15 @@ A3C_UI_MAP_onMouseDrag_MapItem = {
 				_sPos = (_map1 posscreentoworld [_sx,_sy]);
 				if !(_ctrl) then {
 					if (_alt) then {
-						[_x,_item,_sPos,2] call A3C_ADJUST_POLY;
+						[_x,_item,_sPos,2] call A3C_ui_mapOverlay_fnc_adjustPolygonMain;
 					} else {
-						[_x,_item,_sPos,0] call A3C_ADJUST_POLY;
+						[_x,_item,_sPos,0] call A3C_ui_mapOverlay_fnc_adjustPolygonMain;
 					};
 				} else {
 
 					{
 						if (((_x select 0) select 1) == A3C_MovedItem_ID) exitWith {
-							[_u,A3C_MovedItem_ID,_sPos,1] call A3C_ADJUST_POLY;
+							[_u,A3C_MovedItem_ID,_sPos,1] call A3C_ui_mapOverlay_fnc_adjustPolygonMain;
 						};
 
 					} foreach _va;
@@ -294,7 +294,7 @@ A3C_UI_MAP_onMouseDrag_MapItem = {
 						if !(_ctrl) then {
 							if !(_alt) then {
 								if ({((_x select 0) select 1) == _item} count A3C_ALL_POLYS > 0) then {
-									[_soldier,_item,_sPos,0] call A3C_ADJUST_POLY;
+									[_soldier,_item,_sPos,0] call A3C_ui_mapOverlay_fnc_adjustPolygonMain;
 								};
 							};
 
@@ -330,7 +330,7 @@ A3C_UI_MAP_onMouseDrag_MapItem = {
 								if ({((_x select 0) select 1) == _item} count A3C_ALL_POLYS > 0) then {
 									{
 										if (((_x select 0) select 1) == A3C_MovedItem_ID) exitWith {
-											[_soldier,_item,_sPos,1] call A3C_ADJUST_POLY;
+											[_soldier,_item,_sPos,1] call A3C_ui_mapOverlay_fnc_adjustPolygonMain;
 										};
 									} foreach _var;
 								};

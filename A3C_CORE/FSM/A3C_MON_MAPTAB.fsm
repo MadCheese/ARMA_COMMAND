@@ -170,7 +170,7 @@ class FSM
                 {
                         name = "close_overlay";
                         itemno = 6;
-                        init = /*%FSM<STATEINIT""">*/"[_dspID] call A3C_UI_MAP_FNC_CloseMapOverlay;" \n
+                        init = /*%FSM<STATEINIT""">*/"[_dspID] call A3C_ui_mapOverlay_fnc_closeMapOverlay;" \n
                          "//systemchat 'fsm hide';"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links

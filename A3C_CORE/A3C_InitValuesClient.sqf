@@ -1,4 +1,4 @@
-
+#include "ui\mapOverlay\dialog_defines.hpp"
 
 A3C_CurrentPlayerObject = player;
 A3C_UNITCOUNTER =  (count (units group player));
@@ -507,6 +507,44 @@ A3C_UI_RADIAL_CTRLS_SHOWN_ACTIVATED = false;
 A3C_UI_SHARED_createDashBoard_ExtraControls = [];
 A3C_ACTIVE_BUTTONUNIT = objnull;
 
+//----------------------------- MAP OVERLAY (#TODO: move other map overlay data here too)
+//-- Hardcoded GROUPMENU ACTIONBUTTONS array (HCGP Context)
+A3C_ui_mapOverlay_GROUPMENU_ACTIONBUTTONS =
+[
+	[IDC_MAP_HCGP_ActionMacro_0_BG,IDC_MAP_HCGP_ActionMacro_0_IMG,IDC_MAP_HCGP_ActionMacro_0_BTN], //-- row 1
+	[IDC_MAP_HCGP_ActionMacro_1_BG,IDC_MAP_HCGP_ActionMacro_1_IMG,IDC_MAP_HCGP_ActionMacro_1_BTN],
+	[IDC_MAP_HCGP_ActionMacro_2_BG,IDC_MAP_HCGP_ActionMacro_2_IMG,IDC_MAP_HCGP_ActionMacro_2_BTN],
+	[IDC_MAP_HCGP_ActionMacro_3_BG,IDC_MAP_HCGP_ActionMacro_3_IMG,IDC_MAP_HCGP_ActionMacro_3_BTN],
+	[IDC_MAP_HCGP_ActionMacro_4_BG,IDC_MAP_HCGP_ActionMacro_4_IMG,IDC_MAP_HCGP_ActionMacro_4_BTN],
+
+	[IDC_MAP_HCGP_ActionMacro_5_BG,IDC_MAP_HCGP_ActionMacro_5_IMG,IDC_MAP_HCGP_ActionMacro_5_BTN], //- row 2
+	[IDC_MAP_HCGP_ActionMacro_6_BG,IDC_MAP_HCGP_ActionMacro_6_IMG,IDC_MAP_HCGP_ActionMacro_6_BTN],
+	[IDC_MAP_HCGP_ActionMacro_7_BG,IDC_MAP_HCGP_ActionMacro_7_IMG,IDC_MAP_HCGP_ActionMacro_7_BTN],
+	[IDC_MAP_HCGP_ActionMacro_8_BG,IDC_MAP_HCGP_ActionMacro_8_IMG,IDC_MAP_HCGP_ActionMacro_8_BTN],
+	[IDC_MAP_HCGP_ActionMacro_9_BG,IDC_MAP_HCGP_ActionMacro_9_IMG,IDC_MAP_HCGP_ActionMacro_9_BTN]
+];
+
+A3C_UI_MAP_UFSQB_SettingsButtonPairs =  
+[
+	[IDC_MAP_UFSB_STANCE_TRAVEL_IMG, IDC_MAP_UFSB_STANCE_TRAVEL_BTN], //-- Stance Travel
+	[IDC_MAP_UFSB_WP_SPEED_IMG, IDC_MAP_UFSB_WP_SPEED_BTN], //-- Travel Speed
+	[IDC_MAP_UFSB_STANCE_ARRIVAL_IMG, IDC_MAP_UFSB_STANCE_ARRIVAL_BTN], //-- Stance Arrival
+	[IDC_MAP_UFSB_COMBATMODE_IMG, IDC_MAP_UFSB_COMBATMODE_BTN], //-- Waypoint-Combatmode
+	[IDC_MAP_UFSB_WPACTION_IMG, IDC_MAP_UFSB_WPACTION_BTN], //-- Squad Waypoint Actions
+	[IDC_MAP_UFSB_WPFORMATION_IMG, IDC_MAP_UFSB_WPFORMATION_BTN], //-- Waypoint Formation
+	[IDC_MAP_UFSB_SPACING], //-- Spacing Input
+	[IDC_MAP_UFSB_WPCONDITION_IMG, IDC_MAP_UFSB_WPCONDITION_BTN],  //-- Waypoint Completion Condition
+	[IDC_MAP_UFSB_UNDO_IMG, IDC_MAP_UFSB_UNDO_BTN], //-- Undo
+	[IDC_MAP_UFSB_CANCEL_IMG, IDC_MAP_UFSB_CANCEL_BTN], //-- Cancel Data
+	[IDC_MAP_UFSB_HOLD_IMG, IDC_MAP_UFSB_HOLD_BTN], //-- Hold Button
+	[IDC_MAP_UFSB_CONTINUE_IMG, IDC_MAP_UFSB_CONTINUE_BTN] //-- Continue Button	
+];
+reverse A3C_UI_MAP_UFSQB_SettingsButtonPairs; //-- reverse to start animation from last button
+
+
+A3C_CUR_EDIT_POLY = [];
+
+//----------------------------- 
 
 
 

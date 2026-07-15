@@ -1746,12 +1746,12 @@ A3C_UNITSEL_REFRESH_UI = {
 				private _infModeTo = if (vehicle (A3C_SELECTED_UNITS select 0) isKindOf "AIR") then {"AIR"} else {"INF"};
 				[_infModeTo] call A3C_UI_MAP_UFSB_RefreshControlBar;
 			};
-			[_mode,0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
+			[_mode,0.1] call A3C_ui_mapOverlay_fnc_UFSB_onToggleBar;
 
 			
 		} else {
 			//-- map/tablet - high command
-			["COLLAPSE",0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
+			["COLLAPSE",0.1] call A3C_ui_mapOverlay_fnc_UFSB_onToggleBar;
 		};
 
 	};
@@ -1814,7 +1814,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 		};
 
 		case "MAP": {
-			A3C_UI_MAP_GROUPMENU_ACTIONBUTTONS
+			A3C_ui_mapOverlay_GROUPMENU_ACTIONBUTTONS
 			// missionNamespace getVariable ["A3C_UI_MAP_BTN_DATA_GROUPMENU_ACTIONS", []] // placeholder until map dialog is refactored
 		};
 

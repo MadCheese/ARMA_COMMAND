@@ -35,7 +35,7 @@ if (isNull findDisplay IDD_MAP_OVERLAY) exitWith {};
 if (A3C_UI_MAP_BOOL_CT_EDIT_ACTIVE) exitWith {};
 if (A3C_UI_MAP_isCircleMenu) exitWith {
 	if !(_left) then {
-		[IDD_MAP_OVERLAY,-1] call A3C_UI_MAP_FNC_CloseSyncCircleMenu;
+		[IDD_MAP_OVERLAY,-1] call A3C_ui_mapOverlay_fnc_closeSyncCircleMenu;
 	};
 };
 
@@ -399,7 +399,7 @@ if (_gpIconsCount > 0) exitWith {
 			//playsound 'A3C_MenuSound1';
 			if (A3C_UI_MAP_Overlay_VAR_isUnFolded) then {
 				//systemchat 'ay';
-				["COLLAPSE",0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
+				["COLLAPSE",0.1] call A3C_ui_mapOverlay_fnc_UFSB_onToggleBar;
 			};
 
 
@@ -528,7 +528,7 @@ if (count _sqIcons > 0) exitWith {
 				
 				//-- toggle or collapse wpsettings bar
 				_foldMode = if (count A3C_SELECTED_UNITS > 0) then {"OPEN"} else {"COLLAPSE"};
-				[_foldMode,0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
+				[_foldMode,0.1] call A3C_ui_mapOverlay_fnc_UFSB_onToggleBar;
 				//A3C_SELECTED_UNITS = [A3C_SQ_CLICKED_UNIT];
 				if (vehicle A3C_SQ_CLICKED_UNIT isKindOf "AIR") then {
 					A3C_MAP_CommandMode = "AIR";
@@ -621,7 +621,7 @@ if (count _mapPolygonEdges > 0 && {_left}) exitWith {
 			A3C_BOOL_MOVINGMARKER = true;
 			A3C_DRAGPOS = [_sx, _sy];
 			A3C_MMCode = {
-				_this call A3C_Adjust_Poly_Edge;
+				_this call A3C_ui_mapOverlay_fnc_adjustPolygonEdge;
 			};
 		};
 	} foreach A3C_ALL_POLYS;
@@ -704,7 +704,7 @@ if !(_left) exitWith {
 		if (_ctrl) then {
 			A3C_SELECTED_UNITS = [];
 			A3C_SELECTED_HC_GROUPS_SETTINGS = [];
-			["COLLAPSE",0.1] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
+			["COLLAPSE",0.1] call A3C_ui_mapOverlay_fnc_UFSB_onToggleBar;
 			[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_ApplyMode;
 		};
 	};

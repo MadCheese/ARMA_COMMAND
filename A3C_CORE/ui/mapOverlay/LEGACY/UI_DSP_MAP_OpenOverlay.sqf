@@ -178,7 +178,7 @@ if (_display == IDD_MAP_OVERLAY && {!visibleMap}) exitWith {(findDisplay _displa
 sleep 0.1;
 
 //-- overlay step 2: closed sidebar (waypoint settings)
-["COLLAPSE",0] call A3C_UI_MAP_Overlay_TOGGLE_FoldSquadControls;
+["COLLAPSE",0] call A3C_ui_mapOverlay_fnc_UFSB_onToggleBar;
 
 //-- overlay step 3: adjust upper-tree buttons
 sleep 0.1;
@@ -192,7 +192,7 @@ if (A3C_SELECTED_UNITS isEqualTo []) then {
 
 
 
-[0] call A3C_UI_MAP_FNC_ResetMapClick;
+[0] call A3C_ui_mapOverlay_fnc_resetMapClick;
 
 
 
