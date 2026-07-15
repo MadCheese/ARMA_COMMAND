@@ -13,4 +13,4 @@ A3C_SELECTED_UNITS = [];
 
 openMap false;
 
-[1] call A3C_Btn_fnc_Cancel;
+[1] call A3C_ui_mapOverlay_fnc_UFSB_onCancelButton;

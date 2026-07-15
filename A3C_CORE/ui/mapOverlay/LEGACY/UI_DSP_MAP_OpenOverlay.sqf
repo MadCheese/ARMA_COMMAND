@@ -187,7 +187,7 @@ sleep 0.1;
 //-- overlay step 4: edit button settings (in the background)
 
 if (A3C_SELECTED_UNITS isEqualTo []) then {
-	["INF"] call A3C_UI_MAP_UFSB_ApplyMode;
+	["INF"] call A3C_ui_mapOverlay_fnc_UFSB_applyPageMode;
 };
 
 
@@ -199,7 +199,7 @@ if (A3C_SELECTED_UNITS isEqualTo []) then {
 
 
 //-- create enemy force tracker
-[] spawn A3C_UI_MAP_FNC_createEnemyForceTracker;
+[] spawn A3C_ui_mapOverlay_fnc_createEnemyForceTracker;
 
 //-- disable Action-Menu2
 {inGameUISetEventHandler [_x, "true"]} foreach ["PrevAction","NextAction"];

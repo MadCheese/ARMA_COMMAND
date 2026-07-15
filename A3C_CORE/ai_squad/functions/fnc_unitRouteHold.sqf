@@ -28,4 +28,4 @@ if !(_coverUnits isEqualTo []) then {
 
 player groupChat (_unitNames + " HOLD");
 
-[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_RefreshControlBar;
+[A3C_MAP_CommandMode] call A3C_ui_mapOverlay_fnc_UFSB_refreshControlBar;

@@ -196,7 +196,7 @@ if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
 		A3C_MAP_CommandMode = "HC";
 		A3C_SELECTED_UNITS = [_newGroup];
 
-		["HC"] call A3C_UI_MAP_UFSB_ApplyMode; //-- refresh table if open
+		["HC"] call A3C_ui_mapOverlay_fnc_UFSB_applyPageMode; //-- refresh table if open
 
 		A3C_SELECTED_HC_GROUPS_SETTINGS = [];
 

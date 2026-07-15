@@ -14,24 +14,49 @@ A3C_PREP_SUBDIR(handlers,onKeyUp);
 A3C_PREP_SUBDIR(handlers,onMouseButtonDown);
 A3C_PREP_SUBDIR(handlers,onMouseButtonUp);
 A3C_PREP_SUBDIR(handlers,onMouseMoving);
+A3C_PREP_SUBDIR(handlers,onToggleEnemyTracker);
+A3C_PREP_SUBDIR(handlers,UFSB_onActionMouseZ);
+A3C_PREP_SUBDIR(handlers,UFSB_onCancelButton);
+A3C_PREP_SUBDIR(handlers,UFSB_onCombatModeButton);
+A3C_PREP_SUBDIR(handlers,UFSB_onConditionButton);
+A3C_PREP_SUBDIR(handlers,UFSB_onDisbandHcButton);
 A3C_PREP_SUBDIR(handlers,UFSB_onExitButton);
+A3C_PREP_SUBDIR(handlers,UFSB_onFormationButton);
 A3C_PREP_SUBDIR(handlers,UFSB_onStanceArrivalButton);
 A3C_PREP_SUBDIR(handlers,UFSB_onStanceTravelButton);
+A3C_PREP_SUBDIR(handlers,UFSB_onSubselectionButton);
+A3C_PREP_SUBDIR(handlers,UFSB_onTeamColorButton);
 A3C_PREP_SUBDIR(handlers,UFSB_onToggleBar);
+A3C_PREP_SUBDIR(handlers,UFSB_onUndoButton);
+A3C_PREP_SUBDIR(handlers,UFSB_onWaypointSpeedButton);
 
 //-- public functions
 A3C_PREP_SUBDIR(public,adjustPolygonEdge);
 A3C_PREP_SUBDIR(public,adjustPolygonMain);
 A3C_PREP_SUBDIR(public,closeMapOverlay);
 A3C_PREP_SUBDIR(public,closeSyncCircleMenu);
+A3C_PREP_SUBDIR(public,createEnemyForceTracker);
 A3C_PREP_SUBDIR(public,drawIconVehicleMacro);
 A3C_PREP_SUBDIR(public,drawPolygonFrame);
 A3C_PREP_SUBDIR(public,drawThiccLine);
+A3C_PREP_SUBDIR(public,findCtrlSafePos);
+A3C_PREP_SUBDIR(public,getIconData);
+A3C_PREP_SUBDIR(public,isCursorOverControl);
 A3C_PREP_SUBDIR(public,isWaypointLoop);
 A3C_PREP_SUBDIR(public,resetMapClick);
+A3C_PREP_SUBDIR(public,SQWP_goCodeSwitch);
+A3C_PREP_SUBDIR(public,SQWP_heliActionSwitch);
+A3C_PREP_SUBDIR(public,squad_cancelArrowDrag);
+A3C_PREP_SUBDIR(public,squad_createBposMarkers);
+A3C_PREP_SUBDIR(public,squad_deleteBposMarkers);
+A3C_PREP_SUBDIR(public,squad_findLastWaypointWithoutPolygon);
+A3C_PREP_SUBDIR(public,squad_getActionsArray);
 A3C_PREP_SUBDIR(public,sync_loadGroupInVehicle);
 A3C_PREP_SUBDIR(public,sync_loadVehicleInVehicle);
-
+A3C_PREP_SUBDIR(public,UFSB_applyPageMode);
+A3C_PREP_SUBDIR(public,UFSB_refreshControlBar);
+A3C_PREP_SUBDIR(public,UFSB_spawnTimeoutCtBox);
+A3C_PREP_SUBDIR(public,UFSB_toggleSubselectionPopup);
 
 
 //-- Response functions

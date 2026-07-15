@@ -27,6 +27,8 @@ A3C_PREP(actionHeliSling);
 
 A3C_PREP(boardingAssignVehicleSeatMacro);
 
+A3C_PREP(getProminentUnitBhvCbm);
+
 
 A3C_PREP(initializeUnit);
 A3C_PREP(joinUnitToPlayerGroup);

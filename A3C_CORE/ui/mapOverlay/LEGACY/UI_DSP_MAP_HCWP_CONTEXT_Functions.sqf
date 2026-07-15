@@ -954,7 +954,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_ui_shared_fnc_addLbEntry;
 	} foreach _lbArray4;
 
-	_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCWP_Parent,_ctrlPosWPM] call A3C_UI_MAP_fnc_findCtrlSafePos;
+	_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCWP_Parent,_ctrlPosWPM] call A3C_ui_mapOverlay_fnc_findCtrlSafePos;
 	_wpMenuCtrlsGroup ctrlSetPosition _ctrlPosWPM;
 	_wpMenuCtrlsGroup ctrlCommit 0;
 	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _lbV4] call A3C_ui_shared_fnc_lbSetCurSel;
@@ -2575,7 +2575,7 @@ A3C_LB_HC = {
 			params ["_a3c_dsp","_ctrlPosWPM"];
 			sleep 0.1;
 			_ctrlPosWPM = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent);
-			_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCWP_Parent,_ctrlPosWPM] call A3C_UI_MAP_fnc_findCtrlSafePos;
+			_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCWP_Parent,_ctrlPosWPM] call A3C_ui_mapOverlay_fnc_findCtrlSafePos;
 			(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent) ctrlSetPosition _ctrlPosWPM;
 			(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent) ctrlCommit 0;
 		};

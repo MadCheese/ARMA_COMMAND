@@ -44,17 +44,6 @@ private _skillData = _unit getVariable ["A3C_SKILLDATA", []];
 	"spotTime"
 ];
 
-// Delete plot markers.
-{
-	private _plotEntry = _x;
-
-	if ((count _plotEntry) > 1) then {
-		{
-			[_x, _unit, "A3C_PLOT"] call A3C_DELETE_MARKER;
-		} forEach (_plotEntry select 1);
-	};
-} forEach _plotData;
-
 // Clear plot data.
 _unit setVariable ["A3C_PLOT", [], true];
 _unit setVariable ["A3C_PLOT_TEMP", [], true];

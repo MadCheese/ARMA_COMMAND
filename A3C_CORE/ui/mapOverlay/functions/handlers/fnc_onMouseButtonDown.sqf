@@ -424,7 +424,7 @@ if (_gpIconsCount > 0) exitWith {
 			//if (_ctrl) then {
 				//(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCGP_Parent) ctrlShow true;
 				// if ({private _ld = leader _x; isPlayer _ld} count A3C_SELECTED_UNITS == 0) then {
-					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCGP_Parent) ctrlSetPosition ([IDD_MAP_OVERLAY,IDC_MAP_HCGP_Parent,[_sx, _sy]] call A3C_UI_MAP_fnc_findCtrlSafePos);
+					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCGP_Parent) ctrlSetPosition ([IDD_MAP_OVERLAY,IDC_MAP_HCGP_Parent,[_sx, _sy]] call A3C_ui_mapOverlay_fnc_findCtrlSafePos);
 					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCGP_Parent) ctrlCommit 0;
 				// } else {
 					// hint "A3C: "; //-- not needed, should already be executed in actions
@@ -532,10 +532,10 @@ if (count _sqIcons > 0) exitWith {
 				//A3C_SELECTED_UNITS = [A3C_SQ_CLICKED_UNIT];
 				if (vehicle A3C_SQ_CLICKED_UNIT isKindOf "AIR") then {
 					A3C_MAP_CommandMode = "AIR";
-					["AIR"] call A3C_UI_MAP_UFSB_ApplyMode;
+					["AIR"] call A3C_ui_mapOverlay_fnc_UFSB_applyPageMode;
 				} else {
 					A3C_MAP_CommandMode = "INF";
-					["INF"] call A3C_UI_MAP_UFSB_ApplyMode;
+					["INF"] call A3C_ui_mapOverlay_fnc_UFSB_applyPageMode;
 				};
 			};
 		};			
@@ -686,7 +686,7 @@ if ([[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_INPUT_BLOCKER] ca
 
 if (visibleMap) then {
 	if !(isnull (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_SQWP_Parent)) then {
-		if ([IDD_MAP_OVERLAY] call A3C_InMapControls) then {
+		if ([IDD_MAP_OVERLAY] call A3C_ui_mapOverlay_fnc_isCursorOverControl) then {
 			_exit = true;
 		};
 	};
@@ -705,7 +705,7 @@ if !(_left) exitWith {
 			A3C_SELECTED_UNITS = [];
 			A3C_SELECTED_HC_GROUPS_SETTINGS = [];
 			["COLLAPSE",0.1] call A3C_ui_mapOverlay_fnc_UFSB_onToggleBar;
-			[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_ApplyMode;
+			[A3C_MAP_CommandMode] call A3C_ui_mapOverlay_fnc_UFSB_applyPageMode;
 		};
 	};
 };
@@ -738,7 +738,7 @@ if (_exit) exitWith {};
 
 A3C_MovedItem_ID = "";
 if (A3C_TAB_BUILDING_BOOL) then {
-	[] call A3C_DELETE_BPOS_MARKERS;
+	[] call A3C_ui_mapOverlay_fnc_squad_deleteBposMarkers;
 	A3C_TAB_BUILDING_BOOL = false;
 };
 
@@ -903,7 +903,7 @@ if (A3C_MAP_CommandMode == "INF") then {
 		if ([A3C_CLICKPOS_1,A3C_TAB_BUILDING] call A3C_main_fnc_isPositionInsideBuilding) then {
 			if ((count A3C_SELECTED_UNITS) > ([A3C_TAB_BUILDING] call MCSS_fnc_getLastBuildingPosIndex)) then {
 				if (A3C_TAB_BUILDING_BOOL) then {
-					[] call A3C_DELETE_BPOS_MARKERS;
+					[] call A3C_ui_mapOverlay_fnc_squad_deleteBposMarkers;
 					A3C_TAB_BUILDING_BOOL = false;
 				};
 				player groupchat "selection surpasses building capacity";
@@ -913,7 +913,7 @@ if (A3C_MAP_CommandMode == "INF") then {
 				A3C_CLICKPOS_1 = A3C_TAB_BUILDING buildingPos 0;
 				A3C_CLICKPOS_ORIG = A3C_TAB_BUILDING buildingPos 0;
 				A3C_TAB_BUILDING_BOOL = true;
-				[] call A3C_CREATE_BPOS_MARKERS;
+				[] call A3C_ui_mapOverlay_fnc_squad_createBposMarkers;
 			};
 		} else {
 			A3C_TAB_BUILDING = objnull;
@@ -1093,6 +1093,6 @@ if (  ((A3C_TEMP_ACTION select 0) in ['SLINGLOAD','CTRL_DET']) OR (_packMode == 
 
 
 
-A3C_UNDO_MODE = 0;
+A3C_ui_mapOverlay_fnc_UFSB_onUndoButton_MODE = 0;
 [0] call A3C_SET_ORDER_WIP;
 

@@ -12,7 +12,7 @@ if (A3C_UI_squadPlacement_unitGhosts isNotEqualTo []) then {
 
 A3C_SELECTED_UNITS = [];
 
-[] call A3C_Btn_fnc_Cancel;
+[] call A3C_ui_mapOverlay_fnc_UFSB_onCancelButton;
 
 {
 	_x setVariable ["A3C_PLOT_TEMP", []];

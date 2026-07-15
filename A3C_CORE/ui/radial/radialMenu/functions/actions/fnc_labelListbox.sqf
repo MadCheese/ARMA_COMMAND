@@ -154,7 +154,7 @@ switch (_mode) do {
 		[findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_BOX, _pSel, true] call A3C_ui_shared_fnc_lbSetCurSel;	
 	};
 	case ("CBMODE") : {
-		//-- #unclear / Note: This whole block may be unused because replaced by new subdialog??
+		//-- Legacy CBMODE/BEHAVIOR Listbox method
 		_orderText = "Unit States";
 		_lbText1 = "Behaviour";
 		_lbText2 = "Combat Mode";
@@ -206,14 +206,14 @@ switch (_mode) do {
 		} forEach ["Never Fire","Hold fire, defend only","Hold fire, engage at will","Fire At Will","Fire at will, engage at will"];
 
 
-		private _lbBehaviour = switch ([A3C_RD_UNITS,"BEHAVIOUR"] call A3C_FIND_PROMINENT_UnitMode) do {
+		private _lbBehaviour = switch ([A3C_RD_UNITS,"BEHAVIOUR"] call A3C_ai_squad_fnc_getProminentUnitBhvCbm) do {
 			case ("CARELESS") : {0};
 			case ("SAFE") : {1};
 			case ("AWARE") : {2};
 			case ("COMBAT") : {3};
 			case ("STEALTH") : {4};
 		};
-		private _lbCBMode = switch ([A3C_RD_UNITS,"COMBATMODE"] call A3C_FIND_PROMINENT_UnitMode) do {
+		private _lbCBMode = switch ([A3C_RD_UNITS,"COMBATMODE"] call A3C_ai_squad_fnc_getProminentUnitBhvCbm) do {
 			case ("BLUE") : {0};
 			case ("GREEN") : {1};
 			case ("WHITE") : {2};

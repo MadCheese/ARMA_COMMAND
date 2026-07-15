@@ -157,12 +157,6 @@ while {!isNull _unit} do {
 	if (_abortdata select 1) then {
 		//-- Player skipped current waypoint:
 		_unit setvariable ["A3C_ABORT_Data",[false,false],true];
-		if !([_data,_cycle] call A3C_ui_mapOverlay_fnc_isWaypointLoop) then {
-			{
-				[_x,_unit,"A3C_PLOT_TEMP"] call A3C_DELETE_MARKER; //~~ sure it's supposed to be TEMP??
-			} foreach (((_unit getvariable "A3C_PLOT") select (_cycle - 1)) select 1);
-
-		};
 		_abort = false;
 		if (_unit getvariable "A3C_BOOL_WP_DELETED") then {
 

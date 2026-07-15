@@ -66,7 +66,8 @@ A3C_LB_Change = {
 		
 	switch (_mode) do {
 		case (0) : {
-			[_lb] call A3C_SWITCHMARKER;
+			[_lb] call A3C_ui_mapOverlay_fnc_SQWP_heliActionSwitch;
+			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Parent) ctrlShow false;
 		};
 		case (1) : {
 			{(findDisplay _a3c_dsp displayCtrl _x) ctrlShow false} foreach [IDC_MAP_DynamicCombo,IDC_MAP_SQWP_Parent];
@@ -139,7 +140,7 @@ A3C_LB_Change = {
 		};
 		case (2) :{
 			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Parent) ctrlShow false;
-			_lb call A3C_GoCode_Switch;
+			_lb call A3C_ui_mapOverlay_fnc_SQWP_goCodeSwitch;
 		};
 		case (3) : {
 			_units = [_dest];
@@ -551,7 +552,7 @@ A3C_GROUP_RESET = {
 		if ((count A3C_HC_allGroupsClient_Current ) > 0) then {
 		} else {
 			A3C_MAP_CommandMode = "INF";
-			["INF"] call A3C_UI_MAP_UFSB_ApplyMode;
+			["INF"] call A3C_ui_mapOverlay_fnc_UFSB_applyPageMode;
 		};
 	};
 
@@ -1744,7 +1745,7 @@ A3C_UNITSEL_REFRESH_UI = {
 				_mode = "OPEN";
 				// private _vehicle = if ()
 				private _infModeTo = if (vehicle (A3C_SELECTED_UNITS select 0) isKindOf "AIR") then {"AIR"} else {"INF"};
-				[_infModeTo] call A3C_UI_MAP_UFSB_RefreshControlBar;
+				[_infModeTo] call A3C_ui_mapOverlay_fnc_UFSB_refreshControlBar;
 			};
 			[_mode,0.1] call A3C_ui_mapOverlay_fnc_UFSB_onToggleBar;
 
@@ -3511,7 +3512,7 @@ A3C_HC_GroupMenu_fnc_SUPPRESSION = {
 
 		if (_a3c_dsp == IDD_MAP_OVERLAY) then {
 			if (_group in _refUnits) then { //~~ ?? what does this do ecxactly? making sure that group menu switches the button pages?
-				["HC"] call A3C_UI_MAP_UFSB_ApplyMode;
+				["HC"] call A3C_ui_mapOverlay_fnc_UFSB_applyPageMode;
 			};
 		};
 

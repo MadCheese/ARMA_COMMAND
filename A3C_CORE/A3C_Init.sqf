@@ -162,7 +162,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\functions\initFun
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_Functions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_Handlers.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_Handlers_dispatched.sqf";
+
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_HCGP_CONTEXT_Functions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_HCWP_CONTEXT_Functions.sqf";

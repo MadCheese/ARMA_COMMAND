@@ -166,7 +166,7 @@ A3C_LoiterDir = "CIRCLE";
 A3C_LoiterRadius = 500;
 
 
-A3C_UNDO_MODE = 0; // 0 means undo WP, 1 means undo SYNC
+A3C_ui_mapOverlay_fnc_UFSB_onUndoButton_MODE = 0; // 0 means undo WP, 1 means undo SYNC
 //-- A3C_USERACTION: Array to contain data input information used in Undo function. passed as [_inputIndex,_InputType,_syncWPindex]
 //-- _inputType: 0 == Waypoint Entry , 1 == Sync Entry
 
@@ -543,6 +543,47 @@ reverse A3C_UI_MAP_UFSQB_SettingsButtonPairs; //-- reverse to start animation fr
 
 
 A3C_CUR_EDIT_POLY = [];
+A3C_TRACKER_GROUPS = [];
+A3C_GROUND_ACTIONS = ["NONE","GRENADE","SUPPRESSION"];
+A3C_GROUND_ACTIONS_INDEX = 0;
+
+A3C_Map_HC_groupContext_Behaviour = "";
+A3C_Map_HC_groupContext_CMode = "";
+A3C_Map_HC_groupContext_Form = "";
+A3C_Map_HC_groupContext_Color = "";
+
+A3C_SELECTED_HC_GROUPS_SETTINGS = [];
+A3C_CONVOYGROUPS = [];
+
+A3C_HC_NearStatics = [];
+
+
+
+A3C_HC_GroupMenu_SuppressionRequested = false;
+
+A3C_ALLOW_HCrEFRESH = true;
+
+A3C_HC_engineOffUnits = [];
+
+
+
+
+
+A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_WIPE = {
+	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_0 = [[],{}];
+	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_1 = [[],{}];
+	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_2 = [[],{}];
+	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_3 = [[],{}];
+	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_4 = [[],{}];
+
+	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_5 = [[],{}];
+	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_6 = [[],{}];
+	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_7 = [[],{}];
+	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_8 = [[],{}];
+	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_9 = [[],{}];
+};
+
+[] call A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_WIPE;
 
 //----------------------------- 
 

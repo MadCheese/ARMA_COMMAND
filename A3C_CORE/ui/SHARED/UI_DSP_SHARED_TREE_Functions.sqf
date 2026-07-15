@@ -840,7 +840,7 @@ A3C_TREE_TVCHANGE = {
 			A3C_SELECTED_HC_GROUPS_SETTINGS = [];
 			_control tvSetCurSel [-1];
 			_control tvSetCurSel _tvSelTo;
-			[_infModeTo] call A3C_UI_MAP_UFSB_ApplyMode;
+			[_infModeTo] call A3C_ui_mapOverlay_fnc_UFSB_applyPageMode;
 		};
 	} else {
 		_refArray = A3C_UI_SHARED_TREE_HC_AT_TICK; //-- copy the current HC array so we can address groups even if the hc-structure has changed while planning

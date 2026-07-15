@@ -49,12 +49,12 @@ class A3C_DSP_MapOverlay
 
 		//---------- UNFOLDABLE SQUAD CONTROL BACKGROUND ----------------------------------------------
 		
-		//-- DESPITE SEEMINGLY A3C_MAP_DelLoopObs NOT EVER FIRING, THIS DOES PREVENT NEW SQ WAYPOINTS WHEN USING UFSB Controls
+		//-- DESPITE SEEMINGLY A3C_ui_mapOverlay_fnc_squad_cancelArrowDrag NOT EVER FIRING, THIS DOES PREVENT NEW SQ WAYPOINTS WHEN USING UFSB Controls
 		//-- to do: remove this entirely, have a check within mouseButtonDown and exit if hovering over set of boxes
 		class MAP_INPUT_BLOCKER: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_INPUT_BLOCKER; //11;
-			onMouseEnter = "[] call A3C_MAP_DelLoopObs; ";
+			onMouseEnter = "[] call A3C_ui_mapOverlay_fnc_squad_cancelArrowDrag; ";
 			x = 0.21933 * safezoneW + safezoneX;
 			y = 100 * safezoneH + safezoneY;
 			w = 0.555611 * safezoneW;
@@ -193,7 +193,7 @@ class A3C_DSP_MapOverlay
 		class MAP_TCBOX_RED_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_SHARED_UI_TCBOX_RED_BTN; //1001;
-			onMouseButtonDown = "['Red',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
+			onMouseButtonDown = "['Red',(_this select 4)] call A3C_ui_mapOverlay_fnc_UFSB_onTeamColorButton";
 
 			x = 0.24797 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
@@ -212,7 +212,7 @@ class A3C_DSP_MapOverlay
 		class MAP_TCBOX_GREEN_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_SHARED_UI_TCBOX_GREEN_BTN; //1003;
-			onMouseButtonDown = "['GREEN',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
+			onMouseButtonDown = "['GREEN',(_this select 4)] call A3C_ui_mapOverlay_fnc_UFSB_onTeamColorButton";
 			x = 0.33198 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
 			w = 0.0782815 * safezoneW;
@@ -230,7 +230,7 @@ class A3C_DSP_MapOverlay
 		class MAP_TCBOX_BLUE_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_SHARED_UI_TCBOX_BLUE_BTN; //1005;
-			onMouseButtonDown = "['Blue',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
+			onMouseButtonDown = "['Blue',(_this select 4)] call A3C_ui_mapOverlay_fnc_UFSB_onTeamColorButton";
 
 			x = 0.41599 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
@@ -249,7 +249,7 @@ class A3C_DSP_MapOverlay
 		class MAP_TCBOX_YELLOW_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_SHARED_UI_TCBOX_YELLOW_BTN; //1007;
-			onMouseButtonDown = "['YELLOW',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
+			onMouseButtonDown = "['YELLOW',(_this select 4)] call A3C_ui_mapOverlay_fnc_UFSB_onTeamColorButton";
 
 			x = 0.5 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
@@ -268,7 +268,7 @@ class A3C_DSP_MapOverlay
 		class MAP_TCBOX_WHITE_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_SHARED_UI_TCBOX_WHITE_BTN; //1009;
-			onMouseButtonDown = "['MAIN',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
+			onMouseButtonDown = "['MAIN',(_this select 4)] call A3C_ui_mapOverlay_fnc_UFSB_onTeamColorButton";
 
 			x = 0.58401 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
@@ -288,7 +288,7 @@ class A3C_DSP_MapOverlay
 		class MAP_TCBOX_PURPLE_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_SHARED_UI_TCBOX_PURPLE_BTN; //1011;
-			onMouseButtonDown = "['PURPLE',(_this select 4)] call A3C_BTN_FNC_TEAMCOLOR";
+			onMouseButtonDown = "['PURPLE',(_this select 4)] call A3C_ui_mapOverlay_fnc_UFSB_onTeamColorButton";
 
 			x = 0.66802 * safezoneW + safezoneX;
 			y = 0.85733 * safezoneH + safezoneY;
@@ -368,7 +368,7 @@ class A3C_DSP_MapOverlay
 		class MAP_TOP_DISBAND_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_TOP_DISBAND_BTN; //7076;
-			action = "[] spawn A3C_UI_MAP_fnc_disbandUnitsToHighCommand";
+			action = "[] spawn A3C_ui_mapOverlay_fnc_UFSB_onDisbandHcButton";
 			
 			x = 0.729118 * safezoneW + safezoneX;
 			y = 0.94007 * safezoneH + safezoneY;
@@ -389,7 +389,7 @@ class A3C_DSP_MapOverlay
 		class MAP_TOP_TOGGLETRACKER_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_TOP_TOGGLETRACKER_BTN; //7096;
-			action = "[] call A3C_UI_MAP_TOGGLE_TRACKER;";
+			action = "[] call A3C_ui_mapOverlay_fnc_onToggleEnemyTracker;";
 
 			x = 0.746302 * safezoneW + safezoneX;
 			y = 0.94007 * safezoneH + safezoneY;
@@ -413,7 +413,7 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_STANCE_TRAVEL_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_STANCE_TRAVEL_BTN; //7045;
-			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_STANCE_TRAVEL_IMG,IDC_MAP_UFSB_STANCE_TRAVEL_BTN)],'SQ_STANCE_1',1,true)] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
+			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_STANCE_TRAVEL_IMG,IDC_MAP_UFSB_STANCE_TRAVEL_BTN)],'SQ_STANCE_1',1,true)] call A3C_ui_mapOverlay_fnc_UFSB_toggleSubselectionPopup);
 			onMouseZChanged = "[_this select 1] call A3C_ui_mapOverlay_fnc_UFSB_onStanceTravelButton";
 
 			x = 0.24797 * safezoneW + safezoneX;
@@ -433,8 +433,8 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_WP_SPEED_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_WP_SPEED_BTN; //7049;
-			onMouseButtonDown = "[] call A3C_SPEED_BTN";
-			onMouseZChanged = "[] call A3C_SPEED_BTN";
+			onMouseButtonDown = "[] call A3C_ui_mapOverlay_fnc_UFSB_onWaypointSpeedButton";
+			onMouseZChanged = "[] call A3C_ui_mapOverlay_fnc_UFSB_onWaypointSpeedButton";
 
 			x = 0.293794 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
@@ -453,7 +453,7 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_STANCE_ARRIVAL_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_STANCE_ARRIVAL_BTN; //7047;
-			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_STANCE_ARRIVAL_IMG,IDC_MAP_UFSB_STANCE_ARRIVAL_BTN)],'SQ_STANCE_2',1,true)] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
+			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_STANCE_ARRIVAL_IMG,IDC_MAP_UFSB_STANCE_ARRIVAL_BTN)],'SQ_STANCE_2',1,true)] call A3C_ui_mapOverlay_fnc_UFSB_toggleSubselectionPopup);
 			onMouseZChanged = "[_this select 1] call A3C_ui_mapOverlay_fnc_UFSB_onStanceArrivalButton;";
 
 			x = 0.339617 * safezoneW + safezoneX;
@@ -474,8 +474,8 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_COMBATMODE_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_COMBATMODE_BTN; //7063;
-			onMouseButtonDown = "[] call A3C_BUTTON_CMODE";
-			onMouseZChanged = "[] call A3C_BUTTON_CMODE";
+			onMouseButtonDown = "[] call A3C_ui_mapOverlay_fnc_UFSB_onCombatModeButton";
+			onMouseZChanged = "[] call A3C_ui_mapOverlay_fnc_UFSB_onCombatModeButton";
 
 			x = 0.385441 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
@@ -495,8 +495,8 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_WPACTION_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_WPACTION_BTN; //7065;
-			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_WPACTION_IMG,IDC_MAP_UFSB_WPACTION_BTN)],'SQ_ACTION',1,true)] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
-			onMouseZChanged = "[(_this select 1),false,true] spawn A3C_BUTTON_wpFiringMode;";
+			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_WPACTION_IMG,IDC_MAP_UFSB_WPACTION_BTN)],'SQ_ACTION',1,true)] call A3C_ui_mapOverlay_fnc_UFSB_toggleSubselectionPopup);
+			onMouseZChanged = "[(_this select 1),false,true] spawn A3C_ui_mapOverlay_fnc_UFSB_onActionMouseZ;";
 
 			x = 0.431265 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
@@ -516,8 +516,8 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_WPFORMATION_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_WPFORMATION_BTN; //7051;
-			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_WPFORMATION_IMG,IDC_MAP_UFSB_WPFORMATION_BTN)],'SQ_FORMATION',1,true)] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
-			onMouseZChanged = "[_this select 1] call A3C_BUTTON_FORMMODE";
+			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_WPFORMATION_IMG,IDC_MAP_UFSB_WPFORMATION_BTN)],'SQ_FORMATION',1,true)] call A3C_ui_mapOverlay_fnc_UFSB_toggleSubselectionPopup);
+			onMouseZChanged = "[_this select 1] call A3C_ui_mapOverlay_fnc_UFSB_onFormationButton";
 
 			x = 0.477088 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
@@ -560,8 +560,8 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_WPCONDITION_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_WPCONDITION_BTN; //7007;
-			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_WPCONDITION_IMG,IDC_MAP_UFSB_WPCONDITION_BTN)],'SQ_CONDITION',1,true)] call A3C_UI_MAP_UFSB_TOGGLE_SUBSELECTION_POPUP);
-			onMouseZChanged = "[_this select 1] call A3C_BTN_FNC_COND";
+			onMouseButtonDown = EXPAND_AND_QUOTE([ARR_4([ARR_2(IDC_MAP_UFSB_WPCONDITION_IMG,IDC_MAP_UFSB_WPCONDITION_BTN)],'SQ_CONDITION',1,true)] call A3C_ui_mapOverlay_fnc_UFSB_toggleSubselectionPopup);
+			onMouseZChanged = "[_this select 1] call A3C_ui_mapOverlay_fnc_UFSB_onConditionButton";
 
 			x = 0.545824 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;
@@ -604,7 +604,7 @@ class A3C_DSP_MapOverlay
 		class MAP_UFSB_UNDO_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_UFSB_UNDO_BTN; //7041;
-			action = "[] call A3C_UNDO";
+			action = "[] call A3C_ui_mapOverlay_fnc_UFSB_onUndoButton";
 			toolTip = "Undo";
 			x = 0.620287 * safezoneW + safezoneX;
 			y = 0.818596 * safezoneH + safezoneY;

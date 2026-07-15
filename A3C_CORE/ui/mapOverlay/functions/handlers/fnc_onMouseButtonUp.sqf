@@ -468,7 +468,7 @@ if (A3C_MapSel_Field_Active) then {
 		//-- toggle or collapse wpsettings bar
 		_foldMode = if (count A3C_SELECTED_UNITS > 0 && {_pageMode != "HC"}) then {"OPEN"} else {"COLLAPSE"};
 		[_foldMode,0.1] call A3C_ui_mapOverlay_fnc_UFSB_onToggleBar;
-		[_pageMode] call A3C_UI_MAP_UFSB_ApplyMode;
+		[_pageMode] call A3C_ui_mapOverlay_fnc_UFSB_applyPageMode;
 	} else {
 		//-- no units in selection field: Check for waypoints
 		
@@ -633,7 +633,7 @@ A3C_MAP_DRAGPLANNING_ACTIVE = false;
 
 
 if (A3C_TAB_BUILDING_BOOL) then {
-	[] call A3C_DELETE_BPOS_MARKERS;
+	[] call A3C_ui_mapOverlay_fnc_squad_deleteBposMarkers;
 	//A3C_TAB_BUILDING = objnull;
 	[] spawn {
 		sleep 0.1;
@@ -687,7 +687,7 @@ if ( ((A3C_TEMP_ACTION select 0) in ["SLINGLOAD","CTRL_DET","STATIC"])) then {
 					} else {
 						[] spawn {
 							sleep 0.2;
-							[] call A3C_UNDO;
+							[] call A3C_ui_mapOverlay_fnc_UFSB_onUndoButton;
 							systemchat "A3C: No Cargo Selected";
 						};
 					};
@@ -752,7 +752,7 @@ if ( ((A3C_TEMP_ACTION select 0) in ["SLINGLOAD","CTRL_DET","STATIC"])) then {
 					} else {
 						[] spawn {
 							sleep 0.2;
-							[] call A3C_UNDO;
+							[] call A3C_ui_mapOverlay_fnc_UFSB_onUndoButton;
 							systemchat "A3C: No Static Weapon Selected";
 						};
 					};
@@ -944,7 +944,7 @@ if !((A3C_TEMP_ACTION select 0) in ["SUPPRESSION"]) then {  //"GRENADE",
 if ((A3C_TEMP_ACTION select 0) in ["SUPPRESSION","GRENADE"]) then {
 	if ((A3C_TEMP_CONDITION select 0) in ["TIMEOUT","GOCODE"]) then {
 		A3C_TEMP_CONDITION = ["GOCODE","D"]; //~~ THIS CAN BE PRETTIER. DON"T PURPOSELY SET VALUE TO BE OVERRIDEN BY FUNC
-		[0] call A3C_BTN_FNC_COND;
+		[0] call A3C_ui_mapOverlay_fnc_UFSB_onConditionButton;
 	};
 };
 
@@ -955,7 +955,7 @@ if ((A3C_TEMP_ACTION select 0) == "SUPPRESSION") then { //~~this can also be pre
 	private ["_polygon","_dirTo","_countInd","_root","_u"];
 	_u = A3C_SELECTED_UNITS select 0;
 	_countIn = (count (_u getvariable "A3C_PLOT_TEMP")  ) -1;
-	_root = [_u,0,_countIn] call A3C_FIND_SMOKELESS_WP;
+	_root = [_u,0,_countIn] call A3C_ui_mapOverlay_fnc_squad_findLastWaypointWithoutPolygon;
 	_dirTo = [_root,A3C_CLICKPOS_ORIG] call BIS_fnc_dirTo; //~~ get last smokeless WP of A3C_SELECTED_UNITS select 0
 
 	_polygon = ([[A3C_CLICKPOS_ORIG,A3C_TEMP_WP_ID_MAIN]] + ([A3C_CLICKPOS_ORIG,_dirTo,"SUPPRESSION",true] call A3C_ai_shared_fnc_polygonAreaCreate));

@@ -51,4 +51,4 @@ profileNamespace setVariable ["A3C_GROUPUNITS", _unitArray];
 	[_x] call A3C_ai_squad_fnc_initializeUnit;
 } forEach _initArray;
 
-[A3C_MAP_CommandMode] call A3C_UI_MAP_UFSB_ApplyMode;
+[A3C_MAP_CommandMode] call A3C_ui_mapOverlay_fnc_UFSB_applyPageMode;

@@ -239,7 +239,7 @@ MAP_UI_fnc_drawMapUI = {
 								_root = (getPosASL _unit);
 							} else {
 								//-- followup wp. find last smokeless wp.
-								_root = [_unit,1,(_index)] call A3C_FIND_SMOKELESS_WP;
+								_root = [_unit,1,(_index)] call A3C_ui_mapOverlay_fnc_squad_findLastWaypointWithoutPolygon;
 								//systemchat "oi";
 							};
 						} else {
@@ -256,7 +256,7 @@ MAP_UI_fnc_drawMapUI = {
 								//systemchat "uh1";
 							} else {
 
-								_root = [_unit,0,(_copyIndex)] call A3C_FIND_SMOKELESS_WP;
+								_root = [_unit,0,(_copyIndex)] call A3C_ui_mapOverlay_fnc_squad_findLastWaypointWithoutPolygon;
 								//systemchat "heyyy";
 								if ((_root distance2d (position _unit)) < 1) then {
 									_tVar = 1;
@@ -264,7 +264,7 @@ MAP_UI_fnc_drawMapUI = {
 								};
 							};
 						};
-						_root = [_unit,_tVar,(_copyIndex)] call A3C_FIND_SMOKELESS_WP;
+						_root = [_unit,_tVar,(_copyIndex)] call A3C_ui_mapOverlay_fnc_squad_findLastWaypointWithoutPolygon;
 
 					};
 					if ( _wpFiringMode >= 2) then {
@@ -1696,7 +1696,7 @@ MAP_UI_fnc_drawMapUI = {
 	if (A3C_TAB_BUILDING_BOOL) then {
 		for "_i" from 0 to ([A3C_TAB_BUILDING] call MCSS_fnc_getLastBuildingPosIndex) do {
 			_bPos = (A3C_TAB_BUILDING buildingPos _i);
-			_sz = ([_bPos] call A3C_ICONCOLORSIZE);
+			_sz = ([_bPos] call A3C_ui_mapOverlay_fnc_getIconData);
 			(_this select 0) drawIcon
 			[
 				'\a3\ui_f\data\map\GroupIcons\icon_selected.paa',
