@@ -229,13 +229,13 @@ A3C_MEDICAL_START = {
 					sleep 0.1;
 					if (group _healer == group player) then {
 						//-- update UI PRE HEAL
-						[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
+						[] call A3C_ui_radialMenu_fnc_refreshMedical;
 					};
 					
 					waituntil {scriptDone _script};
 					if (group _healer == group player) then {
 						//-- update UI POST HEAL
-						[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
+						[] call A3C_ui_radialMenu_fnc_refreshMedical;
 					};
 
 					if (currentcommand _healer == "STOP" && {!( ((expectedDestination _healer ) select 1) == "LEADER PLANNED")}) exitWith {
@@ -262,13 +262,13 @@ A3C_MEDICAL_START = {
 				sleep 0.1;
 				if (group _healer == group player) then {
 					//-- update UI PRE HEAL
-					[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
+					[] call A3C_ui_radialMenu_fnc_refreshMedical;
 				};
 				waituntil {scriptDone _script};
 				//-- update UI POST HEAL
 				if (group _healer == group player) then {
 					//-- update UI POST HEAL
-					[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
+					[] call A3C_ui_radialMenu_fnc_refreshMedical;
 				};
 
 			};
@@ -292,7 +292,7 @@ A3C_MEDICAL_START = {
 				if (ctrlShown (findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_GO_BTN)) then {
 					[] spawn {
 						sleep 0.5;
-						[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
+						[] call A3C_ui_radialMenu_fnc_refreshMedical;
 					};
 				};
 
@@ -630,7 +630,7 @@ A3C_HEAL_AUTOLOOP = {
 		if (count _patients > 0) then {
 			if (count ((group player) getVariable ["A3C_MEDICS_LB", [] ]) > 0) then {
 				[group player, 1] spawn A3C_MEDICAL_START;
-				//[] call A3C_UI_RADIAL_UPDATE_MEDICAL;  //-- no need since you will not see UI
+				//[] call A3C_ui_radialMenu_fnc_refreshMedical;  //-- no need since you will not see UI
 				sleep 2;
 				while {true} do {
 					if ( {count _x > 0} count [group player getVariable ["A3C_PATIENTS_DESIGNATED", []],group player getVariable ["A3C_PATIENTS_ASSIGNED", []]] == 0) exitWith {

@@ -16,6 +16,8 @@ A3C_PREP(actionParadropVehicle);
 A3C_PREP(actionRappelStart);
 A3C_PREP(actionRemoteFireVtol);
 A3C_PREP(actionStaticWeaponExecute);
+A3C_PREP(actionStaticWeaponPack);
+
 A3C_PREP(actionSwitchVehicleLights);
 
 A3C_PREP(actionUnstuck);

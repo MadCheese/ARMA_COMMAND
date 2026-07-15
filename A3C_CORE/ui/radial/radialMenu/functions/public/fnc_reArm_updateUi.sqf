@@ -23,6 +23,6 @@ if (ctrlShown _sourcesListBox && { A3C_LBR_1 == "REARM" }) then {
 		_selectedContentIndex >= 0 &&
 		{ _selectedContentIndex < lbSize _contentListBox }
 	) then {
-		[_contentListBox, _selectedContentIndex] call A3C_setCurSel;
+		[_contentListBox, _selectedContentIndex] call A3C_ui_shared_fnc_lbSetCurSel;
 	};
 };

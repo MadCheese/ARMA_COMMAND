@@ -45,5 +45,5 @@ _text ctrlSetText "Select Static Weapon";
 		configFile >> "CfgVehicles" >> typeOf vehicle _x >> "displayName"
 	);
 
-	[_listBox, _lbText] call A3C_addLbEntry;
+	[_listBox, _lbText] call A3C_ui_shared_fnc_addLbEntry;
 } forEach _nearStatics;

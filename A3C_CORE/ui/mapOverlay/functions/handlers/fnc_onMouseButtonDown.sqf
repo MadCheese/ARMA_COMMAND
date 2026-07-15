@@ -475,7 +475,7 @@ if (count _sqIcons > 0) exitWith {
 
 					{
 						private _lbText = format ["%1 (%2m)",(getText (configfile >> "CfgVehicles" >> typeof _x >> "displayName")),round( (vehicle A3C_SQ_CLICKED_UNIT) distance _x)];
-						[_listBox, _lbText] call A3C_addLbEntry;
+						[_listBox, _lbText] call A3C_ui_shared_fnc_addLbEntry;
 					} foreach _cargoObjects;
 					
 					_exit = true;
@@ -555,10 +555,10 @@ if ( !(_left) && (count _trIcons > 0)) exitWith {
 		ctrlsetfocus (finddisplay IDD_MAP_OVERLAY displayctrl IDC_MAP_DynamicCombo);
 		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo) ctrlSetPosition [_sx, _sy];
 		(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo) ctrlCommit 0;
-		[findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo, "Ignore"] call A3C_addLbEntry;
-		[findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo, "Attack"] call A3C_addLbEntry;
+		[findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo, "Ignore"] call A3C_ui_shared_fnc_addLbEntry;
+		[findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo, "Attack"] call A3C_ui_shared_fnc_addLbEntry;
 
-		[findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo, 0] call A3C_setCurSel;
+		[findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo, 0] call A3C_ui_shared_fnc_lbSetCurSel;
 		
 	};
 };

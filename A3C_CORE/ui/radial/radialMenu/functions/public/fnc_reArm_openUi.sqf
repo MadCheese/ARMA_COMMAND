@@ -127,7 +127,7 @@ A3C_ReArm_Options = _normalSources + _specialSources;
 			_sourcesListBox,
 			_icon
 		]
-	] call A3C_UI_RADIAL_LB_ADD;
+	] call A3C_ui_radialMenu_fnc_lbAdd;
 } forEach A3C_ReArm_Options;
 
-[_sourcesListBox, 0, true] call A3C_setCurSel;
+[_sourcesListBox, 0, true] call A3C_ui_shared_fnc_lbSetCurSel;

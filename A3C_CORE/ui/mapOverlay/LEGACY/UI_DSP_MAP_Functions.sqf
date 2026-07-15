@@ -3692,26 +3692,26 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 		(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Parent) ctrlSetPosition [_sx, _sy];
 		(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Parent) ctrlCommit 0;
 
-		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "NONE"] call A3C_addLbEntry;
-		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "PICKUP"] call A3C_addLbEntry;
-		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "DROPOFF"] call A3C_addLbEntry;
-		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "LANDFINAL"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "NONE"] call A3C_ui_shared_fnc_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "PICKUP"] call A3C_ui_shared_fnc_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "DROPOFF"] call A3C_ui_shared_fnc_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "LANDFINAL"] call A3C_ui_shared_fnc_addLbEntry;
 		if (A3C_IsRappel) then {
-			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "RAPPEL"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "RAPPEL"] call A3C_ui_shared_fnc_addLbEntry;
 		};
-		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "PARADROP"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "PARADROP"] call A3C_ui_shared_fnc_addLbEntry;
 
 		
 
 		_paraSel = if (A3C_IsRappel) then {5} else {4};
 		
 		switch (markertype A3C_MARKERTOSWITCH) do {
-			case ('A3C_Marker_WAYPOINT') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 0] call A3C_setCurSel;};
-			case ('A3C_Marker_PICKUP_AIR') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 1] call A3C_setCurSel;};
-			case ('A3C_Marker_DROPOFF_AIR') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 2] call A3C_setCurSel;};
-			case ('A3C_Marker_LANDING') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 3] call A3C_setCurSel;};
-			case ('A3C_Marker_RAPPEL') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 4] call A3C_setCurSel;};
-			case ('A3C_Marker_Paradrop') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, _paraSel] call A3C_setCurSel;};
+			case ('A3C_Marker_WAYPOINT') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 0] call A3C_ui_shared_fnc_lbSetCurSel;};
+			case ('A3C_Marker_PICKUP_AIR') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 1] call A3C_ui_shared_fnc_lbSetCurSel;};
+			case ('A3C_Marker_DROPOFF_AIR') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 2] call A3C_ui_shared_fnc_lbSetCurSel;};
+			case ('A3C_Marker_LANDING') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 3] call A3C_ui_shared_fnc_lbSetCurSel;};
+			case ('A3C_Marker_RAPPEL') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 4] call A3C_ui_shared_fnc_lbSetCurSel;};
+			case ('A3C_Marker_Paradrop') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, _paraSel] call A3C_ui_shared_fnc_lbSetCurSel;};
 
 		};
 		
@@ -3732,35 +3732,35 @@ A3C_UI_MAP_FNC_SQContext_OpenMenu = {
 			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Parent) ctrlSetPosition [_sx, _sy];
 			(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Parent) ctrlCommit 0;
 
-			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "NONE"] call A3C_addLbEntry;
-			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "A"] call A3C_addLbEntry;
-			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "B"] call A3C_addLbEntry;
-			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "C"] call A3C_addLbEntry;
-			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "D"] call A3C_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "NONE"] call A3C_ui_shared_fnc_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "A"] call A3C_ui_shared_fnc_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "B"] call A3C_ui_shared_fnc_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "C"] call A3C_ui_shared_fnc_addLbEntry;
+			[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, "D"] call A3C_ui_shared_fnc_addLbEntry;
 
 			if ( (markertype A3C_MARKERTOSWITCH) == "A3C_Marker_BUILDING") then {
 				A3C_TAB_BUILDING = (nearestBuilding (getmarkerpos A3C_MARKERTOSWITCH));
 				for "_i" from 0 to ([A3C_TAB_BUILDING] call MCSS_fnc_getLastBuildingPosIndex) do {
-					[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, format ["BPos %1",_i]] call A3C_addLbEntry;
+					[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, format ["BPos %1",_i]] call A3C_ui_shared_fnc_addLbEntry;
 				};
 			};
 			
 			switch (_markertype) do { //~~ #BUG - markertype always, "", will ALWAYS use default :S
-				case ('A3C_Marker_GoCode_A') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 1] call A3C_setCurSel;};
-				case ('A3C_Marker_GoCode_B') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 2] call A3C_setCurSel;};
-				case ('A3C_Marker_GoCode_C') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 3] call A3C_setCurSel;};
-				case ('A3C_Marker_GoCode_D') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 4] call A3C_setCurSel;};
-				default {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 0] call A3C_setCurSel;};
+				case ('A3C_Marker_GoCode_A') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 1] call A3C_ui_shared_fnc_lbSetCurSel;};
+				case ('A3C_Marker_GoCode_B') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 2] call A3C_ui_shared_fnc_lbSetCurSel;};
+				case ('A3C_Marker_GoCode_C') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 3] call A3C_ui_shared_fnc_lbSetCurSel;};
+				case ('A3C_Marker_GoCode_D') : {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 4] call A3C_ui_shared_fnc_lbSetCurSel;};
+				default {[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 0] call A3C_ui_shared_fnc_lbSetCurSel;};
 			};
 			
 		};
 	};
 	lbClear (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent);
 	if ((count _units) == 1) then {
-		[findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent, "NONE"] call A3C_addLbEntry;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent, "NONE"] call A3C_ui_shared_fnc_addLbEntry;
 		_data =  (_units select 0) getvariable A3C_CHECKVAR;
 		_wpInd = ( ((_units select 0) getvariable "A3C_CURRENTWAYPOINT_INDEX") - 1 );
-		[findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent, 1] call A3C_setCurSel;
+		[findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Parent, 1] call A3C_ui_shared_fnc_lbSetCurSel;
 	};
 };
 
@@ -3944,14 +3944,14 @@ A3C_CONTEXTBUTTON = {
 									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 									[A3C_MARKERTOSWITCH,"A3C_Marker_PICKUP_AIR","DEFAULT"] call MCSS_fnc_SwitchMarker;
 
-									[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 1] call A3C_setCurSel;
+									[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 1] call A3C_ui_shared_fnc_lbSetCurSel;
 								};
 								case ("PICKUP") : {
 									(_x select 2) set [1,"DROPOFF"];
 									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_getOut.paa";
 									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 									[A3C_MARKERTOSWITCH,"A3C_Marker_DROPOFF_AIR","DEFAULT"] call MCSS_fnc_SwitchMarker;
-									[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 2] call A3C_setCurSel;
+									[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 2] call A3C_ui_shared_fnc_lbSetCurSel;
 								};
 
 								case ("DROPOFF") : {
@@ -3960,13 +3960,13 @@ A3C_CONTEXTBUTTON = {
 										(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_Rappel.paa";
 										(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 										[A3C_MARKERTOSWITCH,"A3C_Marker_Rappel","DEFAULT"] call MCSS_fnc_SwitchMarker;
-										[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 4] call A3C_setCurSel;
+										[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 4] call A3C_ui_shared_fnc_lbSetCurSel;
 									} else {
 										(_x select 2) set [1,"LANDFINAL"];
 										(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
 										(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 										[A3C_MARKERTOSWITCH,"A3C_Marker_LANDING","DEFAULT"] call MCSS_fnc_SwitchMarker;
-										[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 3] call A3C_setCurSel;
+										[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 3] call A3C_ui_shared_fnc_lbSetCurSel;
 									};
 
 								};
@@ -3975,14 +3975,14 @@ A3C_CONTEXTBUTTON = {
 									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "A3C_CORE\ui\pictures\icon_menu_action_landing.paa";
 									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor [1,1,1,1];
 									[A3C_MARKERTOSWITCH,"A3C_Marker_LANDING","DEFAULT"] call MCSS_fnc_SwitchMarker;
-									[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 3] call A3C_setCurSel;
+									[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 3] call A3C_ui_shared_fnc_lbSetCurSel;
 								};
 								case ("LANDFINAL") : {
 									(_x select 2) set [1,"NONE"];
 									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlsettext "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
 									(findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Stance_Arrival_IMG) ctrlSetTextColor ([A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_fnc_setOpacity);
 									[A3C_MARKERTOSWITCH,"A3C_Marker_WAYPOINT","DEFAULT"] call MCSS_fnc_SwitchMarker;
-									[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 0] call A3C_setCurSel;
+									[findDisplay _a3c_dsp displayCtrl IDC_MAP_SQWP_Combo, 0] call A3C_ui_shared_fnc_lbSetCurSel;
 								};
 							};
 						};

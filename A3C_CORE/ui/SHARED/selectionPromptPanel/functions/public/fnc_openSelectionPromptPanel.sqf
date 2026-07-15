@@ -31,8 +31,8 @@ switch (_mode) do {
 
 		_text ctrlSetText format ["REALLY DELETE %1 GROUP%2?", _count, _suffix];
 
-		[_listBox, "YES"] call A3C_addLbEntry;
-		[_listBox, "NO"] call A3C_addLbEntry;
+		[_listBox, "YES"] call A3C_ui_shared_fnc_addLbEntry;
+		[_listBox, "NO"] call A3C_ui_shared_fnc_addLbEntry;
 	};
 
 	case "MULTIWAYPOINT": {
@@ -53,8 +53,8 @@ switch (_mode) do {
 
 		_text ctrlSetText format ["GIVE WAYPOINT TO %1 GROUP%2", _count, _suffix];
 
-		[_listBox, "YES"] call A3C_addLbEntry;
-		[_listBox, "NO"] call A3C_addLbEntry;
+		[_listBox, "YES"] call A3C_ui_shared_fnc_addLbEntry;
+		[_listBox, "NO"] call A3C_ui_shared_fnc_addLbEntry;
 	};
 
 	case "ARTY": {
@@ -104,7 +104,7 @@ switch (_mode) do {
 				private _shellData = _x;
 				private _shellName = _shellData select 0;
 
-				[_listBox, _shellName] call A3C_addLbEntry;
+				[_listBox, _shellName] call A3C_ui_shared_fnc_addLbEntry;
 			} forEach _shellDSPs;
 
 			private _shellCount = count _shellDSPs;
@@ -162,7 +162,7 @@ switch (_mode) do {
 			private _magazine = _x;
 			private _displayName = getText (_cfgMagazines >> _magazine >> "displayName");
 
-			[_listBox, _displayName] call A3C_addLbEntry;
+			[_listBox, _displayName] call A3C_ui_shared_fnc_addLbEntry;
 		} forEach _availableAmmo;
 	};
 };

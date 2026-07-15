@@ -31,7 +31,7 @@ if (_doFade) then {
 
 A3C_CurrentPlayerObject = player;
 
-[] call A3C_UI_RADIAL_CloseDisplay;
+[] call A3C_ui_radialMenu_fnc_closeDisplay;
 
 A3C_DISABLE_RADIAL = true;
 
@@ -99,10 +99,10 @@ _unitCombo ctrlCommit 0;
 private _arsenalUnits = units player;
 
 {
-	[_unitCombo, [_x, true, false] call MCSS_fnc_getUnitNameString] call A3C_addLbEntry;
+	[_unitCombo, [_x, true, false] call MCSS_fnc_getUnitNameString] call A3C_ui_shared_fnc_addLbEntry;
 
 	if (_x == _unit) then {
-		[_unitCombo, _forEachIndex] call A3C_setCurSel;
+		[_unitCombo, _forEachIndex] call A3C_ui_shared_fnc_lbSetCurSel;
 	};
 } forEach _arsenalUnits;
 

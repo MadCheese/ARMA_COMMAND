@@ -37,7 +37,7 @@ if (
 				_contentListBox,
 				""
 			]
-		] call A3C_UI_RADIAL_LB_ADD;
+		] call A3C_ui_radialMenu_fnc_lbAdd;
 	};
 
 	for "_cargoTypeIndex" from 0 to 3 do {
@@ -169,10 +169,10 @@ if (
 						_contentListBox,
 						_icon
 					]
-				] call A3C_UI_RADIAL_LB_ADD;
+				] call A3C_ui_radialMenu_fnc_lbAdd;
 			} forEach _aggregatedCargo;
 		};
 	};
 
-	[_contentListBox, 0] call A3C_setCurSel;
+	[_contentListBox, 0] call A3C_ui_shared_fnc_lbSetCurSel;
 };

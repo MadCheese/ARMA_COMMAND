@@ -179,11 +179,8 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_TREE_Fu
 //-- Radial Dialog
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\radialMenu\functions\initFunctions.sqf";
 
-//-- Radial Legacy Functions (to be updated)
-call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\radialMenu\temp_legacyFncScripts\A3C_RadialMenu_UI_FNC.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\radialMenu\temp_legacyFncScripts\A3C_RadialMenu_Init_SquadActions.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\radialMenu\temp_legacyFncScripts\A3C_RadialMenu_Init.sqf";
-A3C_SPAWN_RADIAL = compile preprocessfileLineNumbers "A3C_CORE\ui\radial\radialMenu\temp_legacyFncScripts\A3C_RadialMenu.sqf";
+
+
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\settingsMenu\functions\initFunctions.sqf";
@@ -229,6 +226,10 @@ call compile preprocessFileLineNumbers "A3C_CORE\eventhandlers\player\functions\
 
 
 MCSS_fnc_createMarker = compile preprocessfileLineNumbers "A3C_CORE\fnc_GEN\createMarker.sqf";
+
+
+[] call A3C_ui_radialMenu_fnc_resetDynamicButtons; //-- relict from radial init - #Unclear why is this needed on init?
+
 
 [] execVM "A3C_CORE\A3C_init_Runner.sqf";
 //A3C_loaded = true;

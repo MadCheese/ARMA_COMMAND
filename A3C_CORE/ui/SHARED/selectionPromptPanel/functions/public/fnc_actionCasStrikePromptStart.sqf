@@ -46,7 +46,7 @@ lbClear _listBox;
 				};
 			};
 
-			[_listBox, _casModeName] call A3C_addLbEntry;
+			[_listBox, _casModeName] call A3C_ui_shared_fnc_addLbEntry;
 		} forEach _casModes;
 	};
 } forEach A3C_RD_UNITS;

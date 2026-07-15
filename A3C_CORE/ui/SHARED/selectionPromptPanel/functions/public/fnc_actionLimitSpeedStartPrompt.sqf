@@ -20,7 +20,7 @@ if (_isRadial) then {
 	_displayId = IDD_SELECTION_PROMPT_PANEL;
 
 	A3C_DISABLE_RADIAL = true;
-	[] call A3C_UI_RADIAL_CloseDisplay;
+	[] call A3C_ui_radialMenu_fnc_closeDisplay;
 
 	with uiNamespace do {
 		A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
@@ -78,5 +78,5 @@ private _listHeightIncrease = (count _speedOptions) * (0.0440051 * safezoneH);
 lbClear _listBox;
 
 {
-	[_listBox, _x] call A3C_addLbEntry;
+	[_listBox, _x] call A3C_ui_shared_fnc_addLbEntry;
 } forEach _speedOptions;

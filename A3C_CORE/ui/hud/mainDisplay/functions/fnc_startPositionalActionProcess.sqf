@@ -15,7 +15,7 @@ if (_isBusy) exitWith {
 
 //-- UI reaction
 A3C_DISABLE_RADIAL = true;
-[] call A3C_UI_RADIAL_CloseDisplay;
+[] call A3C_ui_radialMenu_fnc_closeDisplay;
 
 {
 	player groupSelectUnit [_x, false];

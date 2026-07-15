@@ -7,7 +7,7 @@ private _isRadial = _a3c_dsp == IDD_RADIAL_MENU;
 //-- UI-Reaction
 if (_isRadial) then {
 	A3C_DISABLE_RADIAL = true;
-	[] call A3C_UI_RADIAL_CloseDisplay;
+	[] call A3C_ui_radialMenu_fnc_closeDisplay;
 	//-- if +1 groups in selection, we first need to open the selectionPromptPanel and prompt for confirmation
 	if (count A3C_SELECTED_HC_GROUPS_SETTINGS > 1) then {
 		with uiNamespace do {

@@ -21,7 +21,7 @@ if (isNull _listbox) exitWith {};
 
 lbClear _listbox;
 
-[_listbox, "CUSTOM"] call A3C_addLbEntry;
+[_listbox, "CUSTOM"] call A3C_ui_shared_fnc_addLbEntry;
 
 private _savedFormations =
     profileNamespace getVariable [
@@ -59,7 +59,7 @@ private _blockedCount = 0;
                 "UNNAMED"
             ];
 
-        [_listbox, _savedName] call A3C_addLbEntry;
+        [_listbox, _savedName] call A3C_ui_shared_fnc_addLbEntry;
 
         _visibleSaveIndices pushBack
             _forEachIndex;
@@ -148,4 +148,4 @@ uiNamespace setVariable [
 [
     _listbox,
     _selectedIndex
-] call A3C_setCurSel;
+] call A3C_ui_shared_fnc_lbSetCurSel;

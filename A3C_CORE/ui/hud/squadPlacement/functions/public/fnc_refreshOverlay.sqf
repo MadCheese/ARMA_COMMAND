@@ -122,5 +122,5 @@ if (profileNamespace getVariable ["A3C_HUD_LAYOUT_CORNER", false]) then {
     };
 };
 
-["HUD_MENU"] call A3C_UI_Shared_GetBackgroundColor;
+["HUD_MENU"] call A3C_ui_shared_fnc_getBackgroundColor;
 [1] call FUNC(goCodeButton);

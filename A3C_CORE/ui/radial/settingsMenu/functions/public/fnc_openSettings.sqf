@@ -1,6 +1,6 @@
 #include "..\..\dialog_defines.hpp"
 
-[] call A3C_UI_RADIAL_CloseDisplay;
+[] call A3C_ui_radialMenu_fnc_closeDisplay;
 A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [(A3C_RadialMenu_KEY_ID select 0)];
 
 with uiNamespace do {

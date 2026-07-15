@@ -65,5 +65,5 @@ lbClear _listBox;
 		format ["%1 (Empty)", _displayName]
 	};
 
-	[_listBox, _entryText] call A3C_addLbEntry;
+	[_listBox, _entryText] call A3C_ui_shared_fnc_addLbEntry;
 } forEach (A3C_UI_RADIAL_Current_Remfire_Vehicles + A3C_REMFIRE_nearEmptyStatics);

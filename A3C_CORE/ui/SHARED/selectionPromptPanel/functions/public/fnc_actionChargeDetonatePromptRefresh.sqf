@@ -26,7 +26,7 @@ lbClear _listBox;
 private _count = 0;
 
 if (_charges isNotEqualTo []) then {
-	[_listBox, "DETONATE ALL CHARGES"] call A3C_addLbEntry;
+	[_listBox, "DETONATE ALL CHARGES"] call A3C_ui_shared_fnc_addLbEntry;
 	_count = 1;
 
 	private _playerGroup = group player;
@@ -63,7 +63,7 @@ if (_charges isNotEqualTo []) then {
 			_mapGridString
 		];
 
-		[_listBox, _lbText] call A3C_addLbEntry;
+		[_listBox, _lbText] call A3C_ui_shared_fnc_addLbEntry;
 
 		_count = _count + 1;
 	} forEach _charges;

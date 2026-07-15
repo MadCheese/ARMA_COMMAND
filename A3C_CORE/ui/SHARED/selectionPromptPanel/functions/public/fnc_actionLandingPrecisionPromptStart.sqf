@@ -21,7 +21,7 @@ private _listBox = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListB
 
 _descriptionCtrl ctrlSetText "CHECKING LZ";
 lbClear _listBox;
-[_listBox, "KEEP TAB PRESSED DOWN"] call A3C_addLbEntry;
+[_listBox, "KEEP TAB PRESSED DOWN"] call A3C_ui_shared_fnc_addLbEntry;
 
 _parent ctrlShow true;
 
@@ -162,5 +162,5 @@ ctrlSetFocus _listBox;
 lbClear _listBox;
 
 {
-	[_listBox, _x] call A3C_addLbEntry;
+	[_listBox, _x] call A3C_ui_shared_fnc_addLbEntry;
 } forEach ["COMBAT LANDING", "TRANSPORT UNLOAD", "FULL LANDING"];

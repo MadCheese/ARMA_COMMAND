@@ -253,7 +253,7 @@ A3C_LB_Change = {
 						
 					} foreach ["A3C_PATIENTS_ASSIGNED", "A3C_PATIENTS_DESIGNATED"]; //"A3C_PATIENTS_LB", 
 					systemchat format ["HEALING CANCELLED FOR %1", name _patient];
-					[] call A3C_UI_RADIAL_UPDATE_MEDICAL;
+					[] call A3C_ui_radialMenu_fnc_refreshMedical;
 					
 					
 
@@ -271,7 +271,7 @@ A3C_LB_Change = {
 					//systemchat '11';
 					A3C_TARGETVEH = A3C_VEHSAV select _lb;
 					
-					["VEHICLES",1] call A3C_UI_RADIAL_LABEL_LB;
+					["VEHICLES",1] call A3C_ui_radialMenu_fnc_labelListbox;
 					
 					
 				
@@ -706,7 +706,7 @@ A3C_UI_Shared_fnc_ReleaseMenuKey = {
 
 	//-- close input display
 	if (_isRadialDisplay) then {
-		[] call A3C_UI_RADIAL_CloseDisplay;
+		[] call A3C_ui_radialMenu_fnc_closeDisplay;
 	} else {
 		if (!_isMainDisplay) then {
 			_display closeDisplay 0;
@@ -763,7 +763,7 @@ A3C_UI_Shared_SelectionPromptPanel_Listbox_NumberControl = {
 	private _keyValueIndex = _key - 2;
 	if (_keyValueIndex >= 0 && {_keyValueIndex < lbSize _SelectionPromptPanelListbox}) then {
 		sleep 0.1;
-		[_SelectionPromptPanelListbox, _keyValueIndex, true] call A3C_setCurSel;
+		[_SelectionPromptPanelListbox, _keyValueIndex, true] call A3C_ui_shared_fnc_lbSetCurSel;
 	};
 };
 
@@ -1706,14 +1706,14 @@ A3C_UNITSEL_REFRESH_UI = {
 
 			if ("act" in tolower A3C_RADIALMODE) then {	
 				BV_ACT = 0;
-				["ACTIONS",-1] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
+				["ACTIONS",-1] call A3C_ui_radialMenu_fnc_buttonActionInnerRing;
 			};
 
 
 
 			//-- Medical controls opened: reset Listbox entries and medical data  uuu
 			if (BV_MEDICAL == 1) then {
-				["MEDICAL"] call A3C_UI_RADIAL_LABEL_LB;
+				["MEDICAL"] call A3C_ui_radialMenu_fnc_labelListbox;
 			};
 			if (A3C_LBR_1 == "REARM") then {
 				A3C_ReArm_options = [];
@@ -1722,13 +1722,13 @@ A3C_UNITSEL_REFRESH_UI = {
 			
 
 			if (A3C_RADIALMODE == "VEHS") then {
-				[A3C_RD_UNITS] call A3C_UI_RADIAL_FINDVEHS;
+				[A3C_RD_UNITS] call A3C_ui_radialMenu_fnc_squad_findVehicles;
 			};
-			[] call A3C_UI_RADIAL_BTN_REINIT;	
+			[] call A3C_ui_radialMenu_fnc_buttonReInit;	
 		} else {
 			//-- radial highCommand
 			if ("act" in tolower A3C_RADIALMODE) then {
-				["ROE",-1,false,true] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
+				["ROE",-1,false,true] call A3C_ui_radialMenu_fnc_buttonActionInnerRing;
 				//A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_RD_UNITS;
 			};
 			//if (count A3C_RD_UNITS == 1) then {
@@ -3406,7 +3406,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 							lbClear _listBox;
 							{
 								private _lbText = (getText (configfile >> "CfgVehicles" >> _x select 1 >> "displayName"));
-								[_listBox, _lbText] call A3C_addLbEntry;
+								[_listBox, _lbText] call A3C_ui_shared_fnc_addLbEntry;
 							} foreach _staticData;
 							
 						};	

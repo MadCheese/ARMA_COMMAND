@@ -10,7 +10,7 @@ if (_isRadial) then {
 	//-- no actual action - just close menu
 	//-- note: we still disable radial so that player needs to let go of key
 	A3C_DISABLE_RADIAL = true;
-	[] call A3C_UI_RADIAL_CloseDisplay;
+	[] call A3C_ui_radialMenu_fnc_closeDisplay;
 } else {
 	{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;

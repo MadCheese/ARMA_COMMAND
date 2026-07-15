@@ -117,9 +117,9 @@ A3C_UI_FNC_ADD_KEYBINDS =
 
 
 	
-	["A3C", "A3C_KeyFnc_Menu", ["Open 3D Menu", "Open A3C Radial-Menu (Regular Selection)"], {[_this,false] call A3C_SPAWN_RADIAL}, {}, [15,[false,false,false]],true] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Menu", ["Open 3D Menu", "Open A3C Radial-Menu (Regular Selection)"], {[_this,false] call A3C_ui_radialMenu_fnc_spawnRadialMenu}, {}, [15,[false,false,false]],true] call cba_fnc_addKeybind;
 	//
-	["A3C", "A3C_KeyFnc_Menu_cursor", ["Open 3D Menu (CursorObject)", "Open A3C Radial-Menu (CursorObject Selection)"], {[_this,true] call A3C_SPAWN_RADIAL}, {}, [15,[false,true,false]],true] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_Menu_cursor", ["Open 3D Menu (CursorObject)", "Open A3C Radial-Menu (CursorObject Selection)"], {[_this,true] call A3C_ui_radialMenu_fnc_spawnRadialMenu}, {}, [15,[false,true,false]],true] call cba_fnc_addKeybind;
 
 	["A3C", "A3C_KeyFnc_HUD_MENU", ["Open HUD MENU controls", "Get access to your HUD MODE settings via mouse while key is pressed."], {[_this] call A3C_SPAWN_HUD_MENU}, {}, [42,[true,false,false]],true] call cba_fnc_addKeybind;
 
@@ -288,7 +288,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 			{
 				_x commandFollow player;
 			} foreach _units;
-			//["REFRESH",1,false] call A3C_UI_RADIAL_BTN_FNC_RING_INNER;
+			//["REFRESH",1,false] call A3C_ui_radialMenu_fnc_buttonActionInnerRing;
 			//[] spawn {
 			//	sleep 0.1;
 				{player groupSelectUnit [_x,false]} foreach (units player);

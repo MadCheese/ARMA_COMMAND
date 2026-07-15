@@ -330,7 +330,7 @@ if (_doubleClick) then {
 				};
 
 				{
-					[_listBoxCtrl, str _x] call A3C_addLbEntry;
+					[_listBoxCtrl, str _x] call A3C_ui_shared_fnc_addLbEntry;
 				} forEach _lbEntries;
 
 				[_parentCtrl, _listBoxCtrl, count _lbEntries] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
@@ -412,7 +412,7 @@ if (_doubleClick) then {
 			if (count _cargoObjects > 0) then {
 				{
 					private _lbEntryText = getText (configFile >> "CfgVehicles" >> typeOf _x >> "displayName");
-					[_listBoxCtrl, _lbEntryText] call A3C_addLbEntry;
+					[_listBoxCtrl, _lbEntryText] call A3C_ui_shared_fnc_addLbEntry;
 				} forEach _cargoObjects;
 			} else {
 				_parentCtrl ctrlShow false;
@@ -433,7 +433,7 @@ if (_doubleClick) then {
 			if (count _cargoObjects > 0) then {
 				{
 					private _lbEntryText = getText (configFile >> "CfgVehicles" >> typeOf _x >> "displayName");
-					[_listBoxCtrl, _lbEntryText] call A3C_addLbEntry;
+					[_listBoxCtrl, _lbEntryText] call A3C_ui_shared_fnc_addLbEntry;
 				} forEach _cargoObjects;
 			} else {
 				_parentCtrl ctrlShow false;
@@ -497,7 +497,7 @@ if (_doubleClick) then {
 			} forEach [_parentCtrl, _listBoxCtrl];
 
 			{
-				[_listBoxCtrl, _x] call A3C_addLbEntry;
+				[_listBoxCtrl, _x] call A3C_ui_shared_fnc_addLbEntry;
 			} forEach ["100", "500", "1000", "2000"];
 		};
 
@@ -530,7 +530,7 @@ if (_doubleClick) then {
 				_listBoxCtrl lbText _selectedIndex
 			};
 
-			[] call A3C_UI_RADIAL_CloseDisplay;
+			[] call A3C_ui_radialMenu_fnc_closeDisplay;
 
 			{
 				player groupSelectUnit [_x, false];
@@ -570,7 +570,7 @@ if (_doubleClick) then {
 			[
 				A3C_UI_RADIAL_Current_Remfire_Units,
 				_selectedWeapon
-			] spawn A3C_UI_RADIAL_ACTIONS_EXECUTE_STATIC_PACKING;
+			] spawn A3C_ai_shared_fnc_actionStaticWeaponPack;
 
 			A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configFile >> "CfgVehicles" >> typeOf _selectedWeapon >> "picture");
 			A3C_UI_HUD_3D_TAG_ICON_MOD = "OFF";
@@ -589,7 +589,7 @@ if (_doubleClick) then {
 				_listBoxCtrl lbText _selectedIndex
 			};
 
-			[] call A3C_UI_RADIAL_CloseDisplay;
+			[] call A3C_ui_radialMenu_fnc_closeDisplay;
 
 			{
 				player groupSelectUnit [_x, false];
@@ -907,7 +907,7 @@ if (_doubleClick) then {
 					lbClear _listBoxCtrl;
 
 					{
-						[_listBoxCtrl, _x] call A3C_addLbEntry;
+						[_listBoxCtrl, _x] call A3C_ui_shared_fnc_addLbEntry;
 					} forEach ["GO-CODE A", "GO-CODE B", "GO-CODE C", "GO-CODE D"];
 				};
 			};

@@ -393,7 +393,7 @@ switch (_function) do {
 			showHUD _shownHud;
 
 			if (!isNull findDisplay IDD_RADIAL_MENU) then {
-				[A3C_CURRENT_COMMAND_LEVEL] call A3C_UI_RADIAL_LABEL_INNER_RING;
+				[A3C_CURRENT_COMMAND_LEVEL] call A3C_ui_radialMenu_fnc_labelInnerRing;
 			};
 		} else {
 			A3C_CURRENT_COMMAND_LEVEL = "SQUAD";

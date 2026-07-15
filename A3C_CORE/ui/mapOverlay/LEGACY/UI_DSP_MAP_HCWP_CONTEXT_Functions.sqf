@@ -129,7 +129,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		private _uictrl = (finddisplay _a3c_dsp displayCtrl _id);
 		lbClear _uictrl;
 		{
-			[_uictrl, _x] call A3C_addLbEntry;
+			[_uictrl, _x] call A3C_ui_shared_fnc_addLbEntry;
 		} foreach ["COLUMN","STAG. COL.","WEDGE","ECH LEFT","ECH RIGHT","VEE","LINE","FILE","DIAMOND","NO CHANGE"];
 	} foreach [
 		IDC_MAP_HCWP_Formation_Combo,
@@ -666,8 +666,8 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		
 		_combo = (findDisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Type_Action);
 		lbClear _combo;
-		[_combo, A3C_HC_EDIT_ACTION] call A3C_addLbEntry;
-		[_combo, 0, true] call A3C_setCurSel;
+		[_combo, A3C_HC_EDIT_ACTION] call A3C_ui_shared_fnc_addLbEntry;
+		[_combo, 0, true] call A3C_ui_shared_fnc_lbSetCurSel;
 	} else {
 		[] call A3C_UI_MAP_WPMENU_ADDACTIONS;
 	};
@@ -689,9 +689,9 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	};
 	
 	{
-		[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Speed_Combo, _x] call A3C_addLbEntry;
+		[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Speed_Combo, _x] call A3C_ui_shared_fnc_addLbEntry;
 	} foreach ["UNCHANGED","LIMITED","NORMAL","FULL"];
-	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Speed_Combo, _lbVSpeed, true] call A3C_setCurSel;
+	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Speed_Combo, _lbVSpeed, true] call A3C_ui_shared_fnc_lbSetCurSel;
 
 	_refPos = ctrlPosition (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Formation_Combo);
 	_refH = _refPos select 3;
@@ -797,15 +797,15 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 
 		lbClear _subCombo1;
 		{
-			[_subCombo1, _x] call A3C_addLbEntry;
+			[_subCombo1, _x] call A3C_ui_shared_fnc_addLbEntry;
 		} foreach _subArray1;
-		[_subCombo1, _lbSel1, true] call A3C_setCurSel;
+		[_subCombo1, _lbSel1, true] call A3C_ui_shared_fnc_lbSetCurSel;
 
 		lbClear _subCombo2;
 		{
-			[_subCombo2, _x] call A3C_addLbEntry;
+			[_subCombo2, _x] call A3C_ui_shared_fnc_addLbEntry;
 		} foreach _subArray2;
-		[_subCombo2, _lbSel2, true] call A3C_setCurSel;
+		[_subCombo2, _lbSel2, true] call A3C_ui_shared_fnc_lbSetCurSel;
 
 
 	};
@@ -862,9 +862,9 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		lbClear _preCondModeCtrl;
 		{
 			private _lbText = if (_x == "GOCODE") then {"GO-CODE"} else {_x};
-			[_preCondModeCtrl, _lbText] call A3C_addLbEntry;
+			[_preCondModeCtrl, _lbText] call A3C_ui_shared_fnc_addLbEntry;
 			if (_x == A3C_HC_ACTIVE_PRE_COND_MODE) then {
-				[_preCondModeCtrl, _foreachIndex] call A3C_setCurSel;
+				[_preCondModeCtrl, _foreachIndex] call A3C_ui_shared_fnc_lbSetCurSel;
 			};
 		} foreach ["ARRIVAL","GOCODE","TIMEOUT","DAYTIME"];
 	};
@@ -880,7 +880,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		private _valueComboCtrl = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode);
 		
 		{
-			[_valueComboCtrl, _x] call A3C_addLbEntry;
+			[_valueComboCtrl, _x] call A3C_ui_shared_fnc_addLbEntry;
 			_lbValue = _x;
 			if (A3C_HC_ACTIVE_PRE_COND_MODE == "TIMEOUT") then {
 				//["30SEK","60SEK","90SEK","2MIN","3MIN","4MIN"];
@@ -894,14 +894,14 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 				};
 			};
 			if (A3C_HC_ACTIVE_PRE_COND_MODE == "DAYTIME") then {
-				[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode, _lbV2, true] call A3C_setCurSel;
+				[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode, _lbV2, true] call A3C_ui_shared_fnc_lbSetCurSel;
 			};
 			
 			
 			//player groupchat str [_lbValue , A3C_HC_ACTIVE_PRE_COND_VAL];
 			if (_lbValue == A3C_HC_ACTIVE_PRE_COND_VAL) then {
 				//systemchat str ['open_',_lbValue,A3C_HC_ACTIVE_PRE_COND_VAL];
-				[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode, _foreachIndex] call A3C_setCurSel;
+				[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode, _foreachIndex] call A3C_ui_shared_fnc_lbSetCurSel;
 				//if (A3C_HC_ACTIVE_PRE_COND_MODE == "DAYTIME") then {
 				//	//~~ currently this uses current date for re-opening UI - check if this creates trouble with date switch
 				//	A3C_HC_ACTIVE_PRE_COND_VAL = (format ["%1:%2:%3:",date select 0,date select 1,date select 2]) + _lbValue; 
@@ -929,7 +929,7 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		//if (_lbV3 > 0) then {
 		//	_lbV3 = _lbV3 + 1;
 		//};
-		[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, _x] call A3C_addLbEntry;
+		[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, _x] call A3C_ui_shared_fnc_addLbEntry;
 	} foreach _postConArray;
 	//systemchat str A3C_HC_ACTIVE_POST_COND_MODE;
 	_lbV3 = switch (toLower A3C_HC_ACTIVE_POST_COND_MODE) do {
@@ -947,19 +947,19 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 		};
 	};
 
-	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, _lbV3] call A3C_setCurSel;
+	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, _lbV3] call A3C_ui_shared_fnc_lbSetCurSel;
 
 	lbClear (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode);
 	{
-		[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_addLbEntry;
+		[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_ui_shared_fnc_addLbEntry;
 	} foreach _lbArray4;
 
 	_ctrlPosWPM = [_a3c_dsp,IDC_MAP_HCWP_Parent,_ctrlPosWPM] call A3C_UI_MAP_fnc_findCtrlSafePos;
 	_wpMenuCtrlsGroup ctrlSetPosition _ctrlPosWPM;
 	_wpMenuCtrlsGroup ctrlCommit 0;
-	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _lbV4] call A3C_setCurSel;
-	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Formation_Combo, _lbV5] call A3C_setCurSel;
-	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Formation_Combo, _lbV6] call A3C_setCurSel;
+	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _lbV4] call A3C_ui_shared_fnc_lbSetCurSel;
+	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Formation_Combo, _lbV5] call A3C_ui_shared_fnc_lbSetCurSel;
+	[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Action_Formation_Combo, _lbV6] call A3C_ui_shared_fnc_lbSetCurSel;
 
 	(finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Completion_Header_TXT) ctrlSetText _header3Text;
 
@@ -973,9 +973,9 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 
 	lbClear _comboCtrl;
 	{
-		[_comboCtrl, _x] call A3C_addLbEntry;
+		[_comboCtrl, _x] call A3C_ui_shared_fnc_addLbEntry;
 		if (_x == (waypointBehaviour [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND])) then {
-			[_comboCtrl, _foreachIndex] call A3C_setCurSel;
+			[_comboCtrl, _foreachIndex] call A3C_ui_shared_fnc_lbSetCurSel;
 		};
 	} foreach 
 	[
@@ -992,9 +992,9 @@ A3C_UI_MAP_FNC_HCWPContext_OpenMenu = {
 	lbClear _comboCtrl;
 	{
 		_translation = ["NO CHANGE","BLUE","GREEN","WHITE","YELLOW","RED"] select _foreachIndex;
-		[_comboCtrl, _x] call A3C_addLbEntry;
+		[_comboCtrl, _x] call A3C_ui_shared_fnc_addLbEntry;
 		if (_translation == (waypointCombatMode [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND])) then {
-			[_comboCtrl, _foreachIndex] call A3C_setCurSel;
+			[_comboCtrl, _foreachIndex] call A3C_ui_shared_fnc_lbSetCurSel;
 		};
 
 		_comboCtrl lbSetColor
@@ -1632,7 +1632,7 @@ A3C_Map_HC_waypointContext_ButtonFnc_Confirm = {
 			
 			lbClear _listBox;
 			{
-				[_listBox, _x] call A3C_addLbEntry;
+				[_listBox, _x] call A3C_ui_shared_fnc_addLbEntry;
 			} foreach ["YES", "NO"];
 
 			[_parent, _listBox, 2] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
@@ -1803,7 +1803,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 	lbClear _actionTypeCombo;
 
 	{
-		[_actionTypeCombo, _x] call A3C_addLbEntry;		
+		[_actionTypeCombo, _x] call A3C_ui_shared_fnc_addLbEntry;		
 	} foreach _array;
 
 
@@ -1819,7 +1819,7 @@ A3C_UI_MAP_WPMENU_ADDACTIONS = {
 			_lbText = "FULL LANDING";
 		};
 		if ((toLower _lbText) == (toLower A3C_HC_EDIT_ACTION)) then {
-			[_actionTypeCombo, _foreachIndex] call A3C_setCurSel;
+			[_actionTypeCombo, _foreachIndex] call A3C_ui_shared_fnc_lbSetCurSel;
 			
 		};
 	} foreach _array;
@@ -1893,10 +1893,10 @@ A3C_LB_HC = {
 
 							_preCondValCtrl ctrlShow true;
 							{
-								[_preCondValCtrl, _x] call A3C_addLbEntry;
+								[_preCondValCtrl, _x] call A3C_ui_shared_fnc_addLbEntry;
 							} foreach ["A","B","C","D"];
 							
-							[_preCondValCtrl, 0] call A3C_setCurSel;
+							[_preCondValCtrl, 0] call A3C_ui_shared_fnc_lbSetCurSel;
 							
 							A3C_HC_ACTIVE_PRE_COND_VAL = "A";
 
@@ -1905,10 +1905,10 @@ A3C_LB_HC = {
 						case (2) : {
 							_preCondValCtrl ctrlShow true;
 							{
-								[_preCondValCtrl, _x] call A3C_addLbEntry;
+								[_preCondValCtrl, _x] call A3C_ui_shared_fnc_addLbEntry;
 							} foreach ["30SEK","60SEK","90SEK","2MIN","3MIN","4MIN"];
 							
-							[_preCondValCtrl, 2] call A3C_setCurSel;
+							[_preCondValCtrl, 2] call A3C_ui_shared_fnc_lbSetCurSel;
 							
 							A3C_HC_ACTIVE_PRE_COND_VAL = 90;
 							"TIMEOUT"
@@ -1933,11 +1933,11 @@ A3C_LB_HC = {
 								if (_i == 1) then {
 									A3C_HC_ACTIVE_PRE_COND_VAL = format ["%1:%2:%3:%4:%5",_year,_month,_day,_hour,_min]; //-- condVal DOES need to include CURRENT year, month and day
 								};
-								[_preCondValCtrl, _timeString] call A3C_addLbEntry;
+								[_preCondValCtrl, _timeString] call A3C_ui_shared_fnc_addLbEntry;
 								_min = _min + 5;
 							};
 							
-							[_preCondValCtrl, 0] call A3C_setCurSel;
+							[_preCondValCtrl, 0] call A3C_ui_shared_fnc_lbSetCurSel;
 							
 							"DAYTIME"
 						};
@@ -1985,19 +1985,19 @@ A3C_LB_HC = {
 				_lbText = (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type) lbText _lb;
 				A3C_HC_ACTIVE_POST_COND_MODE = switch (tolower _lbText) do {
 					case ("none") : {
-						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 'NONE'] call A3C_addLbEntry;
+						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 'NONE'] call A3C_ui_shared_fnc_addLbEntry;
 						
-						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0] call A3C_ui_shared_fnc_lbSetCurSel;
 						A3C_HC_ACTIVE_POST_COND_VAL = "NONE";
 						
 						"NONE"
 					};
 					case ("timeout") : {
 						{
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_addLbEntry;
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_ui_shared_fnc_addLbEntry;
 						} foreach ["30SEK","60SEK","90SEK","2MIN","3MIN","4MIN"];
 						
-						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 2] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 2] call A3C_ui_shared_fnc_lbSetCurSel;
 						A3C_HC_ACTIVE_POST_COND_VAL = 90;
 						
 
@@ -2005,9 +2005,9 @@ A3C_LB_HC = {
 					};
 					case ("gocode") : {
 						{
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_addLbEntry;
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_ui_shared_fnc_addLbEntry;
 						} foreach ["A","B","C","D"];
-						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0] call A3C_ui_shared_fnc_lbSetCurSel;
 						
 						A3C_HC_ACTIVE_POST_COND_VAL = "A";
 						"GOCODE"
@@ -2037,10 +2037,10 @@ A3C_LB_HC = {
 							if (_i == 1) then {
 								A3C_HC_ACTIVE_POST_COND_VAL = format ["%1:%2:%3:%4:%5",_year,_month,_day,_hour,_min]; //-- condVal DOES need to include CURRENT year, month and day
 							};
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _timeString] call A3C_addLbEntry;
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _timeString] call A3C_ui_shared_fnc_addLbEntry;
 							_min = _min + 5;
 						};
-						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0] call A3C_ui_shared_fnc_lbSetCurSel;
 						
 						"DAYTIME"
 					};
@@ -2128,12 +2128,12 @@ A3C_LB_HC = {
 						
 						{lbClear (findDisplay _a3c_dsp displayCtrl _x)} foreach [IDC_MAP_HCWP_Condition_Post_Type,IDC_MAP_HCWP_Condition_Post_Mode];
 						{
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, _x] call A3C_addLbEntry;
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, _x] call A3C_ui_shared_fnc_addLbEntry;
 						} foreach ["TIMEOUT","GO-CODE","DAYTIME"]; ///bbbbb
 						{
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_addLbEntry;
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_ui_shared_fnc_addLbEntry;
 						} foreach ["30SEK","60SEK","90SEK","2MIN","3MIN","4MIN"];
-						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, 0] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, 0] call A3C_ui_shared_fnc_lbSetCurSel;
 						A3C_HC_ACTIVE_POST_COND_MODE = "TIMEOUT";
 						A3C_HC_ACTIVE_POST_COND_VAL = "90";
 						
@@ -2145,9 +2145,9 @@ A3C_LB_HC = {
 						
 						{lbClear (findDisplay _a3c_dsp displayCtrl _x)} foreach [IDC_MAP_HCWP_Condition_Pre_Type,IDC_MAP_HCWP_Condition_Pre_Mode];
 						{
-							[_preCondModeCtrl, _x] call A3C_addLbEntry;
+							[_preCondModeCtrl, _x] call A3C_ui_shared_fnc_addLbEntry;
 						} foreach ["ARRIVAL","GOCODE","TIMEOUT","DAYTIME"];
-						[_preCondModeCtrl, 0] call A3C_setCurSel;
+						[_preCondModeCtrl, 0] call A3C_ui_shared_fnc_lbSetCurSel;
 						A3C_HC_ACTIVE_POST_COND_MODE = "ARRIVAL";
 						A3C_HC_ACTIVE_POST_COND_VAL = "NONE";
 						
@@ -2190,12 +2190,12 @@ A3C_LB_HC = {
 							// 
 							lbClear (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode);
 							{
-								[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode, _x] call A3C_addLbEntry;
+								[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode, _x] call A3C_ui_shared_fnc_addLbEntry;
 							} foreach ["A","B","C","D"];
 							
 							
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Type, 1, true] call A3C_setCurSel;
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode, 0, true] call A3C_setCurSel;
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Type, 1, true] call A3C_ui_shared_fnc_lbSetCurSel;
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode, 0, true] call A3C_ui_shared_fnc_lbSetCurSel;
 							//-- Note = since we use true param, default post-cond values are already set here!
 							(finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Pre_Mode) ctrlShow true;
 						};
@@ -2217,8 +2217,8 @@ A3C_LB_HC = {
 						_ctrlText = "SUPPRESSION";
 						if (A3C_HC_ACTIVE_POST_COND_MODE == "NONE") then {
 							
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, 1, true] call A3C_setCurSel;
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 3, true] call A3C_setCurSel; //-->> Go-Code D
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, 1, true] call A3C_ui_shared_fnc_lbSetCurSel;
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 3, true] call A3C_ui_shared_fnc_lbSetCurSel; //-->> Go-Code D
 							//-- Note = since we use true param, default post-cond values are already set here!
 						};
 						_requiresPostData = true;
@@ -2227,8 +2227,8 @@ A3C_LB_HC = {
 						A3C_HC_EDIT_ACTION = "AMBUSH";
 						_ctrlText = "AMBUSH";
 						if (A3C_HC_ACTIVE_POST_COND_MODE == "NONE") then {
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, 1, true] call A3C_setCurSel;
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0, true] call A3C_setCurSel; //-->> Go-Code A
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, 1, true] call A3C_ui_shared_fnc_lbSetCurSel;
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0, true] call A3C_ui_shared_fnc_lbSetCurSel; //-->> Go-Code A
 							//-- Note = since we use true param, default post-cond values are already set here!
 						};
 						_requiresPostData = true;
@@ -2241,10 +2241,10 @@ A3C_LB_HC = {
 							
 							lbClear (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode);
 							{
-								[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_addLbEntry;
+								[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_ui_shared_fnc_addLbEntry;
 							} foreach ["A","B","C","D"];
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, 1, true] call A3C_setCurSel;
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0, true] call A3C_setCurSel; //-->> Go-Code A
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, 1, true] call A3C_ui_shared_fnc_lbSetCurSel;
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0, true] call A3C_ui_shared_fnc_lbSetCurSel; //-->> Go-Code A
 							//-- Note = since we use true param, default post-cond values are already set here!
 						};
 						_requiresPostData = true;
@@ -2265,10 +2265,10 @@ A3C_LB_HC = {
 							
 							lbClear (finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode);
 							{
-								[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_addLbEntry;
+								[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _x] call A3C_ui_shared_fnc_addLbEntry;
 							} foreach ["A","B","C","D"];
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, 1, true] call A3C_setCurSel;
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0, true] call A3C_setCurSel; //-->> Go-Code A
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, 1, true] call A3C_ui_shared_fnc_lbSetCurSel;
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0, true] call A3C_ui_shared_fnc_lbSetCurSel; //-->> Go-Code A
 							//-- Note = since we use true param, default post-cond values are already set here!
 						};
 						_requiresPostData = true;
@@ -2280,11 +2280,11 @@ A3C_LB_HC = {
 						
 						{lbClear (findDisplay _a3c_dsp displayCtrl _x)} foreach [IDC_MAP_HCWP_Condition_Post_Type,IDC_MAP_HCWP_Condition_Post_Mode];
 						{
-							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, _x] call A3C_addLbEntry;
+							[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, _x] call A3C_ui_shared_fnc_addLbEntry;
 						} foreach ["None","Timer","Go-Code","DayTime"]; ///bbbbb
-						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, "None"] call A3C_addLbEntry;
-						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, 0] call A3C_setCurSel;
-						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0] call A3C_setCurSel;
+						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, "None"] call A3C_ui_shared_fnc_addLbEntry;
+						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Type, 0] call A3C_ui_shared_fnc_lbSetCurSel;
+						[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, 0] call A3C_ui_shared_fnc_lbSetCurSel;
 						
 						
 						A3C_HC_ACTIVE_POST_COND_MODE = "NONE";
@@ -2359,7 +2359,7 @@ A3C_LB_HC = {
 						lbClear _listBox;
 						{
 							private _lbText = (getText (configfile >> "CfgMagazines" >> _x >> "displayName"));
-							[_listBox, _lbText] call A3C_addLbEntry;
+							[_listBox, _lbText] call A3C_ui_shared_fnc_addLbEntry;
 						} foreach A3C_REMFIRE_MAGTYPES;
 
 						[_parent,_listBox, count A3C_REMFIRE_MAGTYPES] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
@@ -2379,10 +2379,10 @@ A3C_LB_HC = {
 								case (_x isEqualTo ["machinegun","missilelauncher"]) : {'GUNS + MISSILES'};
 								case (_x isEqualTo ["bomblauncher"]) : {'BOMBING RUN'};
 							};
-							[_preCondModeCtrl, _casMode, true] call A3C_addLbEntry;
+							[_preCondModeCtrl, _casMode, true] call A3C_ui_shared_fnc_addLbEntry;
 						} foreach A3C_HC_CASMODES;
 
-						[_preCondModeCtrl, _casTypeCurrent] call A3C_setCurSel;
+						[_preCondModeCtrl, _casTypeCurrent] call A3C_ui_shared_fnc_lbSetCurSel;
 						_preCondModeCtrl ctrlShow true;
 						if (A3C_HC_ACTIVE_PRE_COND_MODE != "ARRIVAL") then { //-- reset any wp-conditions
 							A3C_HC_ACTIVE_PRE_COND_MODE = "ARRIVAL";
@@ -2464,17 +2464,17 @@ A3C_LB_HC = {
 						
 						lbClear _subCombo1;
 						{
-							[_subCombo1, _x] call A3C_addLbEntry;
+							[_subCombo1, _x] call A3C_ui_shared_fnc_addLbEntry;
 						} foreach _subArray1;
 
-						[_subCombo1, _lbSel1] call A3C_setCurSel;
+						[_subCombo1, _lbSel1] call A3C_ui_shared_fnc_lbSetCurSel;
 						
 
 						lbClear _subCombo2;
 						{
-							[_subCombo2, _x] call A3C_addLbEntry;
+							[_subCombo2, _x] call A3C_ui_shared_fnc_addLbEntry;
 						} foreach _subArray2;
-						[_subCombo2, _lbSel2] call A3C_setCurSel;
+						[_subCombo2, _lbSel2] call A3C_ui_shared_fnc_lbSetCurSel;
 						
 					};
 					
@@ -2527,7 +2527,7 @@ A3C_LB_HC = {
 
 				
 				if (_lb4Val != -1) then {
-					[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _lb4Val] call A3C_setCurSel;
+					[finddisplay _a3c_dsp displayCtrl IDC_MAP_HCWP_Condition_Post_Mode, _lb4Val] call A3C_ui_shared_fnc_lbSetCurSel;
 				};
 				
 			};

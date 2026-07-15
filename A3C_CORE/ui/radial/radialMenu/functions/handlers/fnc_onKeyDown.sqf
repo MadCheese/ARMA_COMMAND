@@ -22,7 +22,7 @@ if ([_key, _mods] isEqualTo ((["A3C", "A3C_KeyFnc_Switch_CommandLevel"] call CBA
 };
 
 if (_key == 16) then {
-    _bool = [0] call A3C_UI_RADIAL_CTRLS_QUICKTOGGLE;
+    _bool = [0] call A3C_ui_radialMenu_fnc_ctrlsQuickToggle;
 };
 
 //-- prevent opening of map while using radial

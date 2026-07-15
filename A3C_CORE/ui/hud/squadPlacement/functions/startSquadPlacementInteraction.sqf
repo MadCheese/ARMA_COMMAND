@@ -104,7 +104,7 @@ if !(profilenamespace getvariable ['A3C_UI_squadPlacement_interactionSHOW_VAR',t
 ((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 12) ctrlSetTextColor [1,1,1,0.7];
 //((uiNamespace getVariable "A3C_UI_squadPlacement_overlay") displayCtrl 15) ctrlSetText "A3C_CORE\ui\pictures\BG_HUD_Menu.paa";
 
-["HUD_MENU"] call A3C_UI_Shared_GetBackgroundColor;
+["HUD_MENU"] call A3C_ui_shared_fnc_getBackgroundColor;
 [0] call A3C_UI_squadPlacement_fnc_formButton;
 
 

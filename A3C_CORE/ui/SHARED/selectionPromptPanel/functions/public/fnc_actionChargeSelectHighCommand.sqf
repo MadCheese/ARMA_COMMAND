@@ -50,7 +50,7 @@ lbClear _listBox;
 
 {
 	private _lbText = getText (configFile >> "CfgMagazines" >> _x >> "displayName");
-	[_listBox, _lbText] call A3C_addLbEntry;
+	[_listBox, _lbText] call A3C_ui_shared_fnc_addLbEntry;
 } forEach _magTypes;
 
 [_parent, _listBox, _magCount] call A3C_ui_selectionPromptPanel_fnc_resizeBox;

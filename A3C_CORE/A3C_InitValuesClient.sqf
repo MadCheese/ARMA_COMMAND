@@ -498,7 +498,14 @@ A3C_UI_MAP_UNITBUTTONCEIL = 16;
 
 
 
-
+A3C_HC_MENU_REFERENCE_UNITS = [];
+A3C_RADIALMODE = "";
+A3C_UI_GRID_SIZE = 1;
+A3C_CURRENT_COMMAND_LEVEL = "SQUAD";
+A3C_UI_RADIAL_CTRLS_SHOWN = [];
+A3C_UI_RADIAL_CTRLS_SHOWN_ACTIVATED = false;
+A3C_UI_SHARED_createDashBoard_ExtraControls = [];
+A3C_ACTIVE_BUTTONUNIT = objnull;
 
 
 
@@ -581,6 +588,8 @@ uiNamespace setVariable [
     "A3C_UI_CustomFormation_saveLB",
     0
 ];
+
+
 
 
 //-- fetch reference game-controls once they exist

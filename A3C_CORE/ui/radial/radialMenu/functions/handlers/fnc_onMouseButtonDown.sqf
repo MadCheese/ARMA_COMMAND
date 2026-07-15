@@ -34,7 +34,7 @@ if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
     if (_refGroup in _hcAll) then {
         _group = _refGroup;
     } else {
-        private _groupIconsAtClickPos = [[_sX, _sY]] call A3C_UI_RADIAL_iconsAtClickPos;
+        private _groupIconsAtClickPos = [[_sX, _sY]] call A3C_ui_radialMenu_fnc_squad_getIconsAtClickPos;
         if (count _groupIconsAtClickPos > 0) then {
             private _clickedGroupIcon = _groupIconsAtClickPos select 0;
             _group = _clickedGroupIcon select 0;

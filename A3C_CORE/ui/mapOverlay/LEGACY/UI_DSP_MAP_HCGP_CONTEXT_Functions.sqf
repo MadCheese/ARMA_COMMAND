@@ -178,16 +178,16 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 		_ctrl = (findDisplay _a3c_dsp displayCtrl (_x select 0));
 		lbClear _ctrl;
 		private _forInd = _forEachIndex;
-		[_ctrl, -1] call A3C_setCurSel;
+		[_ctrl, -1] call A3C_ui_shared_fnc_lbSetCurSel;
 		{
-			[_ctrl, _x] call A3C_addLbEntry;
+			[_ctrl, _x] call A3C_ui_shared_fnc_addLbEntry;
 			if (_modeNum == 0) then {
 				switch (_forInd) do {
 					case (0) : {
 						if (behaviour (leader _group) == _x) then {
 							
 							A3C_Map_HC_groupContext_Behaviour = _x;
-							[_ctrl, _forEachIndex] call A3C_setCurSel;
+							[_ctrl, _forEachIndex] call A3C_ui_shared_fnc_lbSetCurSel;
 						};
 					};
 					case (1) : {
@@ -195,7 +195,7 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 							if (combatMode _group == _x) then {
 								
 								A3C_Map_HC_groupContext_CMode = _x;
-								[_ctrl, _forEachIndex] call A3C_setCurSel;
+								[_ctrl, _forEachIndex] call A3C_ui_shared_fnc_lbSetCurSel;
 							};
 						} foreach ["BLUE","GREEN","WHITE","YELLOW","RED"];
 					};
@@ -203,13 +203,13 @@ A3C_UI_MAP_FNC_HCGPContext_OpenMenu = {
 						if (formation _group == _x) then {
 							
 							A3C_Map_HC_groupContext_Form = _x;
-							[_ctrl, _forEachIndex] call A3C_setCurSel;
+							[_ctrl, _forEachIndex] call A3C_ui_shared_fnc_lbSetCurSel;
 						};
 					};
 					case (3) : {
 						if ( (_group getVariable ["A3C_HC_GroupColor","Blue"]) == _x) then {
 							A3C_Map_HC_groupContext_Color = _x;
-							[_ctrl, _forEachIndex] call A3C_setCurSel;
+							[_ctrl, _forEachIndex] call A3C_ui_shared_fnc_lbSetCurSel;
 
 						};
 					};
@@ -389,7 +389,7 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 			A3C_SelectionPromptPanel_MODE = "PARALOAD";
 			if (!isNull findDisplay IDD_RADIAL_MENU) then {
 				A3C_DISABLE_RADIAL = true;
-				[] call A3C_UI_RADIAL_CloseDisplay;
+				[] call A3C_ui_radialMenu_fnc_closeDisplay;
 
 				with uiNameSpace do {
 					A3C_HUD_OBS = (findDisplay 46) createDisplay "HUD_SelectionPromptPanel";
@@ -414,7 +414,7 @@ A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop = {//mumu
 			
 			{
 				private _lbText = format ["%1: %2 (%3m)",(getText (configfile >> "CfgVehicles" >> typeof _x >> "displayName")),if (count crew _x == 0) then {"Empty"} else {groupID group (crew _x select 0)},round(_vehicle distance _x)];
-				[_listBox, _lbText] call A3C_addLbEntry;
+				[_listBox, _lbText] call A3C_ui_shared_fnc_addLbEntry;
 			} foreach _cargoObjects;
 		} else {
 			systemchat "A3C: No loadable objects closeby";
@@ -463,7 +463,7 @@ A3C_AI_HIGHCOMMAND_fnc_mergeGroups = {
 		lbClear _listBox;
 		
 		{
-			[_listBox, _x] call A3C_addLbEntry;
+			[_listBox, _x] call A3C_ui_shared_fnc_addLbEntry;
 		} foreach ["Cancel","Proceed"];
 		
 

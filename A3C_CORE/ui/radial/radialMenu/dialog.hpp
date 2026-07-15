@@ -117,7 +117,7 @@ class A3C_DSP_RadialMenu
 		class RADIAL_CORE_REFRESHDATA_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_RADIAL_CORE_REFRESHDATA_BTN; //21001;
-			onMouseButtonDown = "['REFRESH',(_this select 1),(_this select 4)] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
+			onMouseButtonDown = "['REFRESH',(_this select 1),(_this select 4)] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
 			x = 0.493 - (0.5 * (2.5 * GUI_GRID_W));
 			y = 0.5 - (0.5 * (1.875 * GUI_GRID_H));
 			w = 2.5 * GUI_GRID_W;
@@ -142,8 +142,8 @@ class A3C_DSP_RadialMenu
 		class RADIAL_INNERRING_ACTIONS_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_RADIAL_INNERRING_ACTIONS_BTN; //9002;
-			onMouseEnter = "['ACTIONS'] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
-			onMouseButtonDown = "['ACTIONS',(_this select 1)] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
+			onMouseEnter = "['ACTIONS'] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
+			onMouseButtonDown = "['ACTIONS',(_this select 1)] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
 			
 			x = 15.48 * GUI_GRID_W + GUI_GRID_X;
 			y = 7.11 * GUI_GRID_H + GUI_GRID_Y;
@@ -163,8 +163,8 @@ class A3C_DSP_RadialMenu
 		class RADIAL_INNERRING_ROE_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_RADIAL_INNERRING_ROE_BTN; //9004;
-			onMouseEnter = "['ROE'] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
-			onMouseButtonDown = "['ROE',(_this select 1)] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
+			onMouseEnter = "['ROE'] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
+			onMouseButtonDown = "['ROE',(_this select 1)] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
 			x = 20 * GUI_GRID_W + GUI_GRID_X;
 			y = 7 * GUI_GRID_H + GUI_GRID_Y;
 			w = 4 * GUI_GRID_W;
@@ -184,8 +184,8 @@ class A3C_DSP_RadialMenu
 		class RADIAL_INNERRING_AUTO_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_RADIAL_INNERRING_AUTO_BTN; //9006;
-			onMouseEnter = "['BRAIN'] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
-			onMouseButtonDown = "['BRAIN',(_this select 1)] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
+			onMouseEnter = "['BRAIN'] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
+			onMouseButtonDown = "['BRAIN',(_this select 1)] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 9.98 * GUI_GRID_H + GUI_GRID_Y;
 			w = 4 * GUI_GRID_W;
@@ -206,8 +206,8 @@ class A3C_DSP_RadialMenu
 		class RADIAL_INNERRING_STANCES_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_RADIAL_INNERRING_STANCES_BTN; //9008;
-			onMouseEnter = "['STANCE'] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
-			onMouseButtonDown = "['STANCE',(_this select 1)] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
+			onMouseEnter = "['STANCE'] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
+			onMouseButtonDown = "['STANCE',(_this select 1)] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
 			x = 23.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 13 * GUI_GRID_H + GUI_GRID_Y;
 			w = 3.5 * GUI_GRID_W;
@@ -229,8 +229,8 @@ class A3C_DSP_RadialMenu
 		class RADIAL_INNERRING_ITEMS_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_RADIAL_INNERRING_ITEMS_BTN; //9010;
-			onMouseEnter = "['ITEMS'] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
-			onMouseButtonDown = "['ITEMS',(_this select 1)] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
+			onMouseEnter = "['ITEMS'] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
+			onMouseButtonDown = "['ITEMS',(_this select 1)] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
 			x = 20.16 * GUI_GRID_W + GUI_GRID_X;
 			y = 15.96 * GUI_GRID_H + GUI_GRID_Y;
 			w = 4 * GUI_GRID_W;
@@ -250,8 +250,8 @@ class A3C_DSP_RadialMenu
 		class RADIAL_INNERRING_VEHICLES_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_RADIAL_INNERRING_VEHICLES_BTN; //9012;
-			onMouseEnter = "['VEHICLES'] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
-			onMouseButtonDown = "['VEHICLES',(_this select 1)] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
+			onMouseEnter = "['VEHICLES'] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
+			onMouseButtonDown = "['VEHICLES',(_this select 1)] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
 			x = 15.6 * GUI_GRID_W + GUI_GRID_X;
 			y = 15.79 * GUI_GRID_H + GUI_GRID_Y;
 			w = 4 * GUI_GRID_W;
@@ -271,8 +271,8 @@ class A3C_DSP_RadialMenu
 		class RADIAL_INNERRING_FORMATION_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_RADIAL_INNERRING_FORMATION_BTN; //9014;
-			onMouseEnter = "['RINGFORM'] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
-			onMouseButtonDown = "['RINGFORM',(_this select 1),(_this select 4)] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
+			onMouseEnter = "['RINGFORM'] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
+			onMouseButtonDown = "['RINGFORM',(_this select 1),(_this select 4)] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
 			x = 13 * GUI_GRID_W + GUI_GRID_X;
 			y = 13 * GUI_GRID_H + GUI_GRID_Y;
 			w = 3.5 * GUI_GRID_W;
@@ -292,8 +292,8 @@ class A3C_DSP_RadialMenu
 		class RADIAL_INNERRING_GRENADES_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_RADIAL_INNERRING_GRENADES_BTN; //9016;
-			onMouseEnter = "['GRENADE'] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
-			onMouseButtonDown = "['GRENADE',(_this select 1)] call A3C_UI_RADIAL_BTN_FNC_RING_INNER";
+			onMouseEnter = "['GRENADE'] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
+			onMouseButtonDown = "['GRENADE',(_this select 1)] call A3C_ui_radialMenu_fnc_buttonActionInnerRing";
 			x = 12.4 * GUI_GRID_W + GUI_GRID_X;
 			y = 9.83 * GUI_GRID_H + GUI_GRID_Y;
 			w = 4 * GUI_GRID_W;
@@ -701,7 +701,7 @@ class A3C_DSP_RadialMenu
 			y = 5 * GUI_GRID_H + GUI_GRID_Y;
 			w = BAR_W;
 			h = BAR_H;
-			onMouseEnter = "['OPEN'] call A3C_UI_RADIAL_TOGGLE_LEFT_EXT";
+			onMouseEnter = "['OPEN'] call A3C_ui_radialMenu_fnc_extensionLeftToggle";
 		};
 
 		class RADIAL_EXTENSIONLEFT_HIDER: A3C_RscButton_Invisible
@@ -711,7 +711,7 @@ class A3C_DSP_RadialMenu
 			y = 5 * GUI_GRID_H + GUI_GRID_Y;
 			w = BAR_W;
 			h = BAR_H;
-			onMouseButtonDown = "['CLOSE'] call A3C_UI_RADIAL_TOGGLE_LEFT_EXT";
+			onMouseButtonDown = "['CLOSE'] call A3C_ui_radialMenu_fnc_extensionLeftToggle";
 		};
 
 		class RADIAL_EXTENSIONLEFT_BG: A3C_RscPicture
@@ -730,7 +730,7 @@ class A3C_DSP_RadialMenu
 		class RADIAL_EXTENSIONLEFT_CTRLSGROUP: A3C_RscControlsGroup_NoScroll
 		{
 			idc = IDC_RADIAL_EXTENSIONLEFT_CTRLSGROUP; //8071;
-			onMouseButtonDown = "_this call A3C_UI_RADIAL_TREE_MouseDown;";
+			onMouseButtonDown = "_this call A3C_ui_radialMenu_fnc_tree_onMouseDown;";
 			x = BAR_X;
 			y = 5 * GUI_GRID_H + GUI_GRID_Y;
 			w = BAR_W;
@@ -851,7 +851,7 @@ class A3C_DSP_RadialMenu
 					h = TEAMCOL_FRAME_H;
 					tooltip = "select team red (RMB for HUD mode)";
 					toolTipColorShade[] = {1,0,0,0.5};
-					onMouseButtonDown = "['Red',(_this select 1),(_this select 5)] call A3C_UI_RADIAL_FNC_TEAMCOLOR";
+					onMouseButtonDown = "['Red',(_this select 1),(_this select 5)] call A3C_ui_radialMenu_fnc_buttonTeamColor";
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_GREEN_IMG: A3C_RscPicture
 				{
@@ -872,7 +872,7 @@ class A3C_DSP_RadialMenu
 					h = TEAMCOL_FRAME_H;
 					tooltip = "select team green (RMB for HUD mode)";
 					toolTipColorShade[] = {0,1,0,0.5};
-					onMouseButtonDown = "['GREEN',(_this select 1),(_this select 5)] call A3C_UI_RADIAL_FNC_TEAMCOLOR";
+					onMouseButtonDown = "['GREEN',(_this select 1),(_this select 5)] call A3C_ui_radialMenu_fnc_buttonTeamColor";
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_BLUE_IMG: A3C_RscPicture
 				{
@@ -893,7 +893,7 @@ class A3C_DSP_RadialMenu
 					h = TEAMCOL_FRAME_H;
 					toolTipColorShade[] = {0,0,1,0.5};
 					tooltip = "select team blue (RMB for HUD mode)";
-					onMouseButtonDown = "['Blue',(_this select 1),(_this select 5)] call A3C_UI_RADIAL_FNC_TEAMCOLOR";
+					onMouseButtonDown = "['Blue',(_this select 1),(_this select 5)] call A3C_ui_radialMenu_fnc_buttonTeamColor";
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_YELLOW_IMG: A3C_RscPicture
 				{
@@ -914,7 +914,7 @@ class A3C_DSP_RadialMenu
 					h = TEAMCOL_FRAME_H;
 					toolTipColorShade[] = {1,1,0,0.5};
 					tooltip = "select team yellow (RMB for HUD mode)";
-					onMouseButtonDown = "['YELLOW',(_this select 1),(_this select 5)] call A3C_UI_RADIAL_FNC_TEAMCOLOR";
+					onMouseButtonDown = "['YELLOW',(_this select 1),(_this select 5)] call A3C_ui_radialMenu_fnc_buttonTeamColor";
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_WHITE_IMG: A3C_RscPicture
 				{
@@ -935,7 +935,7 @@ class A3C_DSP_RadialMenu
 					h = TEAMCOL_FRAME_H;
 					toolTipColorShade[] = {1,1,1,0.5};
 					tooltip = "select team white (RMB for HUD mode)";
-					onMouseButtonDown = "['MAIN',(_this select 1),(_this select 5)] call A3C_UI_RADIAL_FNC_TEAMCOLOR";
+					onMouseButtonDown = "['MAIN',(_this select 1),(_this select 5)] call A3C_ui_radialMenu_fnc_buttonTeamColor";
 				};
 				class RADIAL_EXTENSIONLEFT_TCBOX_PURPLE_IMG: A3C_RscPicture
 				{
@@ -956,7 +956,7 @@ class A3C_DSP_RadialMenu
 					h = TEAMCOL_FRAME_H;
 					toolTipColorShade[] = {0.5,0.2,0.6,0.6};
 					tooltip = "select all units (RMB for HUD mode)";
-					onMouseButtonDown = "['Purple',(_this select 1),(_this select 5)] call A3C_UI_RADIAL_FNC_TEAMCOLOR";
+					onMouseButtonDown = "['Purple',(_this select 1),(_this select 5)] call A3C_ui_radialMenu_fnc_buttonTeamColor";
 				};
 
 				class RADIAL_EXTENSIONLEFT_TC_BOX: A3C_LISTBOX

@@ -71,7 +71,6 @@ switch (_mode) do {
 
 	case 2: {
 		// Define and assign non-existent variable.
-		// Used in A3C_RadialMenu_INIT.sqf.
 		if (isNil "A3C_GREN_MUZZLE") then {
 			A3C_GREN_MUZZLE = A3C_AI_GREN_ARRAY select 0;
 		};
@@ -88,11 +87,11 @@ switch (_mode) do {
 };
 
 if (!isNull (findDisplay IDD_RADIAL_MENU)) then {
-	[A3C_GREN_MUZZLE, 0, _doChange] call A3C_UI_RADIAL_populateOuterRing_Grenades;
+	[A3C_GREN_MUZZLE, 0, _doChange] call A3C_ui_radialMenu_fnc_squad_labelOuterRingGrenades;
 } else {
 	(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_UFSB_WPACTION_IMG) ctrlSetTextColor [1, 1, 1, 1];
 
-	[A3C_GREN_MUZZLE, 1, _doChange] call A3C_UI_RADIAL_populateOuterRing_Grenades;
+	[A3C_GREN_MUZZLE, 1, _doChange] call A3C_ui_radialMenu_fnc_squad_labelOuterRingGrenades;
 };
 
 if ((A3C_TEMP_ACTION select 0) == "GRENADE") then {
