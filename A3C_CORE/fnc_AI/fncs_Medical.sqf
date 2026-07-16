@@ -450,7 +450,7 @@ A3C_AI_Shared_Action_Heal = {
 	if (stance _patient == "STAND") then {
 		_patient setunitpos "MIDDLE";
 	};
-	// [[units player select 2],true,false] call A3C_AI_Shared_cancelUnitPlot;
+	// [[units player select 2],true,false] call A3C_ai_shared_fnc_cancelUnitPlot;
 	// waitUntil {(_unit getvariable 'A3C_PLOT') isEqualTo []};
 	// systemchat str [_vehicleHeal, _unit distance _patient, (!(_vehicleHeal) && {_unit distance _patient > 3})];
 	if (

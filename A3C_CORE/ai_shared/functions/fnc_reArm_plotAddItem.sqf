@@ -65,7 +65,7 @@ if (_cancelCurrentPlot || { _addWaypoint }) then {
 
 if (_cancelCurrentPlot) then {
 	if ((count _plotData) > 0) then {
-		[[_unit], true, false] call A3C_AI_Shared_cancelUnitPlot;
+		[[_unit], true, false] call A3C_ai_shared_fnc_cancelUnitPlot;
 	};
 
 	waitUntil {

@@ -225,7 +225,7 @@ if !(_dynamicLanding) then {
 
 	if ((alive _vehicle) && {_runwayLanding}) then {
 		//-- park vehicle, disband pilot to the reserve
-		[[_unit],true,false] spawn A3C_AI_Shared_cancelUnitPlot;	//-- end units current plans just in case the player was being insane :)
+		[[_unit],true,false] spawn A3C_ai_shared_fnc_cancelUnitPlot;	//-- end units current plans just in case the player was being insane :)
 
 		_hangars = nearestObjects [_vehicle, ["Land_TentHangar_V1_F"], 1500];
 

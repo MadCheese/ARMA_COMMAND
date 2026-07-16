@@ -128,7 +128,7 @@ if (_artilleryShortcutCondition) exitWith {
 
 
 if (A3C_HC_DETONATION_BOOL) exitWith {
-	private _demoIcons = (["DEMO",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+	private _demoIcons = (["DEMO",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 	if (count _demoIcons > 0) then {
 		_hoverIcon = _demoIcons select 0;
 		_hoverVic = _hoverIcon select 0;
@@ -147,7 +147,7 @@ if (A3C_HC_EDIT_ACTION == "SLING LOAD" && {count A3C_PICKUP_OBJECTS > 0}) exitWi
 	A3C_HC_EDIT_ACTION = "";
 	//systemchat 'uuu3';
 	A3C_UI_MAPICONS_PICKUP = [A3C_UI_MAPICONS_PICKUP,[],{(_x select 2) distance2D _sPos},"ASCEND"] call BIS_fnc_sortBy;
-	private _slingIcons =(["SLINGLOAD",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+	private _slingIcons =(["SLINGLOAD",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 	A3C_PICKUP_OBJECTS = []; //-- remove UI
 	if (count _slingIcons > 0) then {
 		private _slingIcon = _slingIcons select 0;
@@ -169,7 +169,7 @@ if (A3C_Boarding_ACTIVE) exitWith {
 
 	private _vhIcons = [];
 	//-- Boarding HC-units via map-ui pt 2
-	_vhIcons = (["HC_VB",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+	_vhIcons = (["HC_VB",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 	_doReset = false;
 	if (_left) then {
 		if (count _vhIcons > 0) then {
@@ -223,12 +223,12 @@ if (A3C_isArtyAwaitingSuborder) exitWith { //~~ ??? wtf is going on here lol
 
 
 if (A3C_MAP_CommandMode in ["INF","AIR"]) then {
-	["SPACING","OFF"] call A3C_UI_MAP_FNC_CTEDIT_ACTIVATE;
+	["SPACING","OFF"] call A3C_ui_mapOverlay_fnc_CTEdit_setActive;
 };
 
 //-- detect click on HC-GROUP WAYPOINT ICON
 if !(_isHighCommand) then {
-	_wp_Icons = (["HC_WP",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+	_wp_Icons = (["HC_WP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 	if (count _wp_Icons > 0) then {
 		_wp_Icon = _wp_Icons select 0;
 		_gp = _wp_Icon select 0;
@@ -292,7 +292,7 @@ if !(_isHighCommand) then {
 			_wp_Icon = _wp_Icons select 0;
 			_gp = _wp_Icon select 0;
 			_wp_Index = _wp_Icon select 3;
-			[_gp,_wp_Index,A3C_HC_EDIT_ACTION,IDD_MAP_OVERLAY,[_sx, _sy]] call A3C_UI_MAP_FNC_HCWPContext_OpenMenu;
+			[_gp,_wp_Index,A3C_HC_EDIT_ACTION,IDD_MAP_OVERLAY,[_sx, _sy]] call A3C_ui_mapOverlay_fnc_HCWP_openMenu;
 			_resetSelection = false;
 		};
 
@@ -304,7 +304,7 @@ if !(_isHighCommand) then {
 if (_exit) exitWith {};
 
 
-_gpIcons = (["HC_GP",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+_gpIcons = (["HC_GP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 _gpIcons = 
 [
 	_gpIcons,
@@ -433,14 +433,14 @@ if (_gpIconsCount > 0) exitWith {
 				
 				
 				//A3C_SELECTED_HC_GROUPS_SETTINGS = [_gp];
-				//[_gp,0] call A3C_UI_MAP_FNC_HCGPContext_OpenMenu;
+				//[_gp,0] call A3C_ui_mapOverlay_fnc_HCGP_openMenu;
 				A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS;
 				if (count A3C_SELECTED_HC_GROUPS_SETTINGS > 1) then {
 					A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS;
-					[A3C_SELECTED_HC_GROUPS_SETTINGS,1] call A3C_UI_MAP_FNC_HCGPContext_OpenMenu;
+					[A3C_SELECTED_HC_GROUPS_SETTINGS,1] call A3C_ui_mapOverlay_fnc_HCGP_openMenu;
 				} else {
 					A3C_SELECTED_HC_GROUPS_SETTINGS = [_gp];
-					[_gp,0] call A3C_UI_MAP_FNC_HCGPContext_OpenMenu;
+					[_gp,0] call A3C_ui_mapOverlay_fnc_HCGP_openMenu;
 				};				
 			//};
 		};
@@ -452,7 +452,7 @@ if (_gpIconsCount > 0) exitWith {
 
 
 //-- detect click on PLAYER SQUAD UNIT ICONS
-_sqIcons = (["SQUAD",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+_sqIcons = (["SQUAD",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 if (count _sqIcons > 0) exitWith {
 	_sqIcon = _sqIcons select 0;
 	A3C_SQ_CLICKED_UNIT = _sqIcon select 0;
@@ -543,7 +543,7 @@ if (count _sqIcons > 0) exitWith {
 };
 
 //-- detect click on FORCE TRACKER ICON
-_trIcons = (["TRACKER",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+_trIcons = (["TRACKER",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 //systemchat str _trIcons;
 if ( !(_left) && (count _trIcons > 0)) exitWith {
 	_trIcon = _trIcons select 0;
@@ -565,7 +565,7 @@ if ( !(_left) && (count _trIcons > 0)) exitWith {
 
 
 //-- detect click on UI POLYGON MAIN MARKERS
-private _mapPolygons =(["POLY_MAIN",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+private _mapPolygons =(["POLY_MAIN",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 if (count _mapPolygons > 0 && {_left}) exitWith {
 
 	private _mapPolygon = _mapPolygons select 0;
@@ -602,7 +602,7 @@ if (count _mapPolygons > 0 && {_left}) exitWith {
 };
 
 //-- detect click on UI POLYGON EDGE MARKERS
-private _mapPolygonEdges = (["POLY_EDGE",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+private _mapPolygonEdges = (["POLY_EDGE",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 if (count _mapPolygonEdges > 0 && {_left}) exitWith {
 	private _PolygonEdgeIcon = _mapPolygonEdges select 0;
 	_parentPoly = _PolygonEdgeIcon select 0;
@@ -632,7 +632,7 @@ if (count _mapPolygonEdges > 0 && {_left}) exitWith {
 
 
 //-- detect click on PLAYER SQUAD UNIT WAYPOINT ICON
-private _squadWaypoints = (["SQ_WP_DOT",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+private _squadWaypoints = (["SQ_WP_DOT",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 if (count _squadWaypoints > 0) exitWith {
 	private _squadWaypointSelected = _squadWaypoints select 0;
 	_squadWaypointSelected params ["_unit","_size","_position","_wpDotIDS"];
@@ -648,12 +648,12 @@ if (count _squadWaypoints > 0) exitWith {
 			[_sx,_sy] call A3C_UI_MAP_onMouseButtonDown_Loop;
 		};
 	} else {
-		[_wpDotIDS select 0,[_sX,_sY]] call A3C_UI_MAP_FNC_SQContext_OpenMenu;
+		[_wpDotIDS select 0,[_sX,_sY]] call A3C_ui_mapOverlay_fnc_SQWP_openMenu;
 	};
 };
 
 //-- detect click on PLAYER SQUAD UNIT WAYPOINT LOOKDIR ICON
-private _squadWaypointLookDirs = (["SQ_WP_LOOKDIR",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+private _squadWaypointLookDirs = (["SQ_WP_LOOKDIR",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 if (count _squadWaypointLookDirs > 0) exitWith {
 	A3C_DIR_POS = (_map1 posscreentoworld [_sx,_sy]);
 	private _squadWaypointLookDirSelected = _squadWaypointLookDirs select 0;
@@ -716,7 +716,7 @@ if (_exit) exitWith {};
 // //-- LeftClick on A3-HC marker //~~??
 // if (_isHighCommand) then {
 // 	if (A3C_MAP_CommandMode == "HC") then {
-// 		if (count (["HC_WP",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos) > 0) then {
+// 		if (count (["HC_WP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos) > 0) then {
 // 			systemchat "ALERT! PLEASE REPORT IF YOU SEE THIS ERROR: MAP_LEFTDOWN_OLD_HC";
 // 			A3C_BOOL_MAP_MU = true;
 // 			A3C_BOOL_MOUSEMOVING = true;
@@ -1094,5 +1094,5 @@ if (  ((A3C_TEMP_ACTION select 0) in ['SLINGLOAD','CTRL_DET']) OR (_packMode == 
 
 
 A3C_ui_mapOverlay_fnc_UFSB_onUndoButton_MODE = 0;
-[0] call A3C_SET_ORDER_WIP;
+[0] call A3C_ui_mapOverlay_fnc_setorderWIP;
 

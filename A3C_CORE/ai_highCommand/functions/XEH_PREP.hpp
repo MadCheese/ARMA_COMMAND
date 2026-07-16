@@ -29,7 +29,6 @@ A3C_PREP(actionGroupHealDispatch);
 A3C_PREP(actionHeliLandingRailed);
 
 
-
 A3C_PREP(actionPlayerChargeMavic);
 A3C_PREP(actionPlayerChargeMavicDispatch);
 
@@ -37,7 +36,7 @@ A3C_PREP(actionPlayerChargeMavicDispatch);
 
 
 
-
+A3C_PREP(actionSwitchVehicleLights);
 A3C_PREP(actionRappell);
 
 A3C_PREP(actionReArm);
@@ -74,10 +73,12 @@ A3C_PREP(actionUavFPV);
 
 A3C_PREP(actionUnassembleWeapon);
 A3C_PREP(actionUnassembleWeaponDispatch);
+A3C_PREP(actionUnstuck);
 
 
 
-A3C_PREP(actionSwitchVehicleLights);
+
+
 A3C_PREP(actionVehicleRemote);
 A3C_PREP(actionVehicleRemoteDispatch);
 

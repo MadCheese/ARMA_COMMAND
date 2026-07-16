@@ -192,7 +192,7 @@ if (_overrideMode) then {
         };
     } forEach _orderedUnits;
 
-    [_activeUnits, true, false] call A3C_AI_Shared_cancelUnitPlot;
+    [_activeUnits, true, false] call A3C_ai_shared_fnc_cancelUnitPlot;
 
     while {
         ({alive _x && {(count (_x getVariable ["A3C_PLOT", []])) > 0}} count _activeUnits) > 0

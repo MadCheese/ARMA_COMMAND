@@ -263,7 +263,7 @@ A3C_boardSquadUnittoSeat = {
 	
 	
 	
-	[[_unit],false,true,true] spawn A3C_AI_Shared_cancelUnitPlot;
+	[[_unit],false,true,true] spawn A3C_ai_shared_fnc_cancelUnitPlot;
 
 
 	

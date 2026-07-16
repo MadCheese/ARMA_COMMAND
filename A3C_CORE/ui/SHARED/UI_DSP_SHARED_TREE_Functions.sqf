@@ -964,13 +964,13 @@ A3C_TREE_BOXCLICK = {
 				A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS select {typeName _x == "GROUP"};
 				
 				if (count A3C_SELECTED_HC_GROUPS_SETTINGS > 1) then {
-					[A3C_SELECTED_HC_GROUPS_SETTINGS,1] call A3C_UI_MAP_FNC_HCGPContext_OpenMenu;
+					[A3C_SELECTED_HC_GROUPS_SETTINGS,1] call A3C_ui_mapOverlay_fnc_HCGP_openMenu;
 					//systemchat '1';
 				} else {
 					//A3C_SELECTED_HC_GROUPS_SETTINGS = [_gp];
 					//systemChat str [A3C_SELECTED_HC_GROUPS_SETTINGS select 0];
 					if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
-						[A3C_SELECTED_HC_GROUPS_SETTINGS select 0,0] call A3C_UI_MAP_FNC_HCGPContext_OpenMenu;
+						[A3C_SELECTED_HC_GROUPS_SETTINGS select 0,0] call A3C_ui_mapOverlay_fnc_HCGP_openMenu;
 					};		
 				};
 			} else {
@@ -1110,7 +1110,7 @@ A3C_UI_MAP_UnitTree_Sync = {
 											if (_CT_TREE tvCount _ctrlParent == 0) then {
 												[_CT_TREE,_ctrlParent,"SQUAD"] call A3C_UI_MAP_UnitTree_CtrlDelete;
 											};
-											//_squadTreeCount = [_CT_TREE,_mainTreeIndex] call A3C_UI_MAP_TREE_getSubParentCount;
+											//_squadTreeCount = [_CT_TREE,_mainTreeIndex] call A3C_ui_shared_fnc_Tree_squad_getSubParentCount;
 											[_CT_TREE,"SQUAD_INF", [_buttonUnit],_mainTreeIndex, _CT_TREE tvCount [_mainTreeIndex] ] call A3C_UI_MAP_TREE_ADD_ITEM;
 										};
 									} else {

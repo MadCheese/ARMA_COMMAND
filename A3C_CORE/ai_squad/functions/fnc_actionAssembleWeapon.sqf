@@ -7,7 +7,7 @@ private _objectPlacerType = typeOf A3C_OBJECTPLACER;
 
 	if (_weapon == _objectPlacerType) exitWith {
 		if (_units findIf {!((_x getVariable ["A3C_PLOT", []]) isEqualTo [])} > -1) then {
-			[_units, true, false] call A3C_AI_Shared_cancelUnitPlot;
+			[_units, true, false] call A3C_ai_shared_fnc_cancelUnitPlot;
 
 			waitUntil {
 				sleep 0.1;

@@ -108,7 +108,7 @@ if (A3C_BOOL_DRAGLINE && {A3C_CONNECTING_MODE == "HCSYNC"}) exitWith  {
 	A3C_CONNECTING_MODE = "";
 	A3C_BOOL_DRAGLINE = false;
 	if !(_isHighCommand) then {
-		_wp_Icons = (["HC_WP",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+		_wp_Icons = (["HC_WP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 		A3C_HC_WP_SYNC_ROOT params ["_rootGroup","_rootWPI"];
 		if (count _wp_Icons > 0) then {
 			_wp_Icon = _wp_Icons select 0;
@@ -490,14 +490,14 @@ A3C_DRAGPOS = [];
 ////~~~~ TEMP! MOVE THIS!
 if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 	
-	_gpIcons = (["HC_GP",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
-	_drawBoardIcons = (["BOARDING_DRAW",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+	_gpIcons = (["HC_GP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
+	_drawBoardIcons = (["BOARDING_DRAW",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 	if (typeName A3C_SQ_CLICKED_UNIT == "OBJECT") then {
 		if (count _drawBoardIcons > 0) then {
 			private _drawBoardIcon = _drawBoardIcons select 0;
 			private _vehi = _drawBoardIcon select 0;
 			//systemchat 'sq units get in';
-			[A3C_SELECTED_UNITS,true,true] call A3C_AI_Shared_cancelUnitPlot;
+			[A3C_SELECTED_UNITS,true,true] call A3C_ai_shared_fnc_cancelUnitPlot;
 			
 			_vehi spawn {
 				sleep 1;
@@ -510,7 +510,7 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 				if ( (_unit == A3C_SQ_CLICKED_UNIT) && (A3C_MAP_CommandMode == "INF") ) then {
 					//_unit setvariable ["A3C_PLOT_TEMP",[],true];
 					if (count (_unit getVariable ["A3C_PLOT",[]]) > 0 ) then {
-						[[_unit],true,true] call A3C_AI_Shared_cancelUnitPlot;
+						[[_unit],true,true] call A3C_ai_shared_fnc_cancelUnitPlot;
 						waitUntil {count (_unit getvariable 'A3C_PLOT') == 0};
 					};
 					private _data = [];
@@ -667,7 +667,7 @@ if ( ((A3C_TEMP_ACTION select 0) in ["SLINGLOAD","CTRL_DET","STATIC"])) then {
 			switch (A3C_TEMP_ACTION select 0) do {
 				case ("SLINGLOAD") : {
 
-					//private _slingIcons =(["SLINGLOAD",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+					//private _slingIcons =(["SLINGLOAD",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 					A3C_PICKUP_OBJECTS = [];
 
 					if ( _veh distance2d _sPos < 60) then {
@@ -842,7 +842,7 @@ if (!isNull _hcGroup) then {
 	_actionCond = _wpStatements select 0;
 	_actionScript = _wpStatements select 1;
 	if (["PlantExplosive_HC",_actionScript] call BIS_fnc_instring) then {
-		_demoIcons = (["DEMO",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+		_demoIcons = (["DEMO",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 		if (count _demoIcons > 0) then {
 			_hoverIcon = _demoIcons select 0;
 			_hoverVic = _hoverIcon select 0;
@@ -933,7 +933,7 @@ A3C_CLICKPOS_2 = _pos;
 A3C_USERACTION pushback [A3C_USERACTION_ID,0,0];
 A3C_USERACTION_ID = A3C_USERACTION_ID + 1;
 
-[1] call A3C_SET_ORDER_WIP;
+[1] call A3C_ui_mapOverlay_fnc_setorderWIP;
 //systemchat 'yep';
 
 if !((A3C_TEMP_ACTION select 0) in ["SUPPRESSION"]) then {  //"GRENADE",

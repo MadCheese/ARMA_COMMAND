@@ -490,12 +490,17 @@ A3C_REFRESHING = false;
 
 A3C_CONVOY_GROUPORDER = [];
 
+A3C_HC_CASMODES = [];
+
+
 
 //-- HARDCODED UI CTRL VARIABLES >>> ALL NEED TO BE CHANGED TO QGVAR?
 
 A3C_UI_MAP_UNITBUTTONCEIL = 16;
 
 
+A3C_FlyinHeightArrayHeli = ["25","75","200","500"];
+A3C_FlyinHeightArrayJet = ["30","100","500","1000","2000"];
 
 
 A3C_HC_MENU_REFERENCE_UNITS = [];
@@ -565,25 +570,52 @@ A3C_ALLOW_HCrEFRESH = true;
 
 A3C_HC_engineOffUnits = [];
 
+A3C_MapSel_Field_Root = [0,0,0];
+A3C_MapSel_Field_DEST = [0,0,0];
+A3C_MapSel_Field_Active = false;
 
 
 
+A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_WIPE = {
+	A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_0 = [[],{}];
+	A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_1 = [[],{}];
+	A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_2 = [[],{}];
+	A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_3 = [[],{}];
+	A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_4 = [[],{}];
 
-A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_WIPE = {
-	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_0 = [[],{}];
-	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_1 = [[],{}];
-	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_2 = [[],{}];
-	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_3 = [[],{}];
-	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_4 = [[],{}];
-
-	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_5 = [[],{}];
-	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_6 = [[],{}];
-	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_7 = [[],{}];
-	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_8 = [[],{}];
-	A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_9 = [[],{}];
+	A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_5 = [[],{}];
+	A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_6 = [[],{}];
+	A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_7 = [[],{}];
+	A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_8 = [[],{}];
+	A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_9 = [[],{}];
 };
 
-[] call A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_WIPE;
+[] call A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_WIPE;
+
+A3C_HC_ACTIVEGROUP = grpNull;
+A3C_HC_ACTIVE_IND = 0;
+A3C_HC_ACTIVE_IND_A = 0;
+
+A3C_HC_ACTIVE_PRE_COND_MODE = "ARRIVAL";
+A3C_HC_ACTIVE_PRE_COND_VAL = 0;
+A3C_HC_ACTIVE_POST_COND_MODE = "NONE";
+A3C_HC_ACTIVE_POST_COND_VAL = "NONE";
+
+A3C_ACTIVE_HC_WP_ICON = -1;
+
+A3C_HC_ACTIVE_FORM_PRE = "LINE";
+A3C_HC_ACTIVE_FORM_POST = "LINE";
+
+A3C_HC_PREVENT_POLY = false;
+A3C_HC_ACTIVE_IND = 0;
+
+A3C_HC_EDIT_ACTION = "MOVE";
+A3C_HC_EDIT_TYPE = "MOVE";
+A3C_HC_RC_LB_MODE = 0;
+A3C_HC_EDIT_COMBOSUBVAL_1 = "CIRCLE_L";
+A3C_HC_EDIT_COMBOSUBVAL_2 = 1000;  
+
+
 
 //----------------------------- 
 

@@ -1826,7 +1826,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 	
 	//-- wipe action controls
 
-	[] call A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_WIPE;
+	[] call A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_WIPE;
 
 	{
 		_x params ["_bgIDC", "_imgIDC", "_btnIDC"];
@@ -2694,7 +2694,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_params = [];
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
-						[objNull] call A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop;
+						[objNull] call A3C_ui_mapOverlay_fnc_HCGP_actionParaLoadAndDrop;
 					};
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_loadVehicle.paa";
 					_button_toolTip = "LOAD VEHICLES IN CARGO";
@@ -2704,7 +2704,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";
 					_button_toolTip = "DISCHARGE CARGO (PARA)";
 					_buttonFnc = {
-						[objNull] call A3C_AI_HIGHCOMMAND_fnc_paraLoadAndDrop;
+						[objNull] call A3C_ui_mapOverlay_fnc_HCGP_actionParaLoadAndDrop;
 					};
 				};
 				case ("FLYINGHEIGHT") : {
@@ -2756,7 +2756,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 					_button_toolTip = "Unstuck/Unflip units and vehicles";
 					_buttonFnc = {
 						params ["_clickData","_buttonArray","_specialParams"];
-						[] call A3C_AI_HIGHCOMMAND_fnc_Unstuck;
+						[] call A3C_ai_highCommand_fnc_actionUnstuck;
 					};
 				};
 				case ("STATIC_DISASSEMBLE_HC") : {
@@ -3474,7 +3474,7 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 				call compile format
 				[
 					"
-						A3C_MAP_fnc_GroupMenu_Action_BTN_FNC_%1 = ['%2',%3];
+						A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_%1 = ['%2',%3];
 					",
 					_foreachIndex,
 					_params, //-- ~~ !!!!! is ALWAYS [], did not work with formatted stuff. does not hurt for now, but at some point clean up and remove params

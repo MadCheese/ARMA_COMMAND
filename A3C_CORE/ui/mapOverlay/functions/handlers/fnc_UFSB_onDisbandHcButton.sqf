@@ -256,7 +256,7 @@ if (count (_unit getVariable "A3C_PLOT") > 0) then {
 	A3C_SELECTED_UNITS,
 	true,
 	false
-] spawn A3C_AI_Shared_cancelUnitPlot;
+] spawn A3C_ai_shared_fnc_cancelUnitPlot;
 
 if (hcShownBar) then {
 	hcShowBar false;

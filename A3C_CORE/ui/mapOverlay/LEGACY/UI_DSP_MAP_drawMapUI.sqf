@@ -1269,7 +1269,7 @@ MAP_UI_fnc_drawMapUI = {
 				_drawName = (isPlayer (leader _group)) OR {_groupIsSel};
 				if !(_drawName) then {
 					if (_doFindIconGroup) then {
-						private _groupIconsMouseUnder = (["HC_GP",A3C_MAP_X,A3C_MAP_Y] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+						private _groupIconsMouseUnder = (["HC_GP",A3C_MAP_X,A3C_MAP_Y] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 						// hintsilent str _groupIconsMouseUnder;
 						if ({_group == _x select 0} count _groupIconsMouseUnder > 0) then {
 							_drawName = true;

@@ -391,7 +391,7 @@ A3C_UI_MAP_onMouseButtonDown_Loop = {
 	_map1 = findDisplay 12 displayCtrl 51;
 
 	private _waypointIDS = [];
-	private _squadWaypoints = (["SQ_WP_DOT",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+	private _squadWaypoints = (["SQ_WP_DOT",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 	private _waypointPosition = [0,0,0];
 	if (count _squadWaypoints > 0) then {
 		_squadWaypoint = _squadWaypoints select 0;
@@ -468,7 +468,7 @@ A3C_UI_MAP_onMouseButtonDown_Loop = {
 				};
 			} else {
 
-				{[_x] call A3C_LOOP_VIS_1} foreach _units;
+				{[_x] call A3C_ui_mapOverlay_fnc_resetUnitLoopState} foreach _units;
 				A3C_BOOL_LOOPING = true;
 				A3C_LOOPSYNC_START = [(_waypointIDS select 0),_waypointPosition] ;
 				if !(A3C_BOOL_DRAGLINE) then {
@@ -519,7 +519,7 @@ A3C_UI_MAP_onMouseButtonUp_Loop = {
 	A3C_BOOL_DRAGLINE = false;
 	//systemchat str time;
 	private _waypointIDS = [];
-	private _squadWaypoints = (["SQ_WP_DOT",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+	private _squadWaypoints = (["SQ_WP_DOT",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 	private _waypointPosition = [0,0,0];
 	if (count _squadWaypoints > 0) then {
 		_squadWaypoint = _squadWaypoints select 0;

@@ -71,17 +71,17 @@ switch (true) do {
 		switch (_key) do {
 			case 28: { // Enter
 				if (ctrlShown _groupContextmenuHC) then {
-					[] call A3C_Map_HC_groupContext_ButtonFnc_Confirm;
+					[] call A3C_ui_mapOverlay_fnc_HCGP_onConfirmButton;
 				} else {
 					if (ctrlShown _wpContextmenuHC) then {
-						[] call A3C_Map_HC_waypointContext_ButtonFnc_Confirm;
+						[] call A3C_ui_mapOverlay_fnc_HCWP_onConfirmButton;
 					};
 				};
 				_blockDefault = true;
 			};
 			case 57: { // Spacebar
 				if ( A3C_MAP_CommandMode in ["INF","AIR"] && {count groupselectedUnits player == 0}) then {
-					['ALL'] spawn A3C_Btn_fnc_Execute;
+					['ALL'] spawn A3C_ui_mapOverlay_fnc_UFSB_onCommitButton;
 				};
 				_blockDefault = true;
 			};
@@ -89,7 +89,7 @@ switch (true) do {
 				if (A3C_Selection_MultiWaypoint isEqualTo []) then {
 					//-- SINGLE - need to hover exactly over waypoint
 					getMousePosition params ["_sX","_sY"];
-					_wpIcons = (["HC_WP",_sx,_sy] call A3C_UI_MAP_Overlay_getIconsAtMapPos);
+					_wpIcons = (["HC_WP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 					if (count _wpIcons > 0) then {
 						_wpIcon = _wpIcons select 0;
 						_gp = _wpIcon select 0;

@@ -25,7 +25,7 @@ if (_mode == 0) then {
 	};
 
 	if (count _busyUnits > 0) then {
-		[_busyUnits, true, false] spawn A3C_AI_Shared_cancelUnitPlot;
+		[_busyUnits, true, false] spawn A3C_ai_shared_fnc_cancelUnitPlot;
 		sleep 1;
 	};
 

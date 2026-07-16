@@ -226,7 +226,7 @@ switch (_function) do {
 					if (isNull findDisplay IDD_MAP_OVERLAY) then {
 						profileNamespace setVariable ["A3C_MAP_OVERLAY_SHOWN", true];
 						A3C_OPACITY = 0.8;
-						nul = [IDD_MAP_OVERLAY] execVM "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_OpenOverlay.sqf";
+						[IDD_MAP_OVERLAY] spawn A3C_ui_mapOverlay_fnc_openOverlay;
 					} else {
 						A3C_OPACITY = 0;
 

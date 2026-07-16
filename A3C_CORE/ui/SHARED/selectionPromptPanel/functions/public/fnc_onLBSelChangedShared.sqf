@@ -518,7 +518,7 @@ if (_doubleClick) then {
 			switch (_selectedIndex) do {
 				case (0) : {A3C_LoiterRadius = 100};
 				case (1) : {
-					[A3C_SELECTED_HC_GROUPS_SETTINGS] spawn A3C_REJOIN_GROUPS;
+					[A3C_SELECTED_HC_GROUPS_SETTINGS] spawn A3C_ui_mapOverlay_fnc_rejoinDisbandedToPlayerGroup;
 				};
 			};
 		};
@@ -660,7 +660,7 @@ if (_doubleClick) then {
 
 			player groupRadio "SentCmdPlaceCharge";
 
-			[[_demoUnit], true, false] call A3C_AI_Shared_cancelUnitPlot;
+			[[_demoUnit], true, false] call A3C_ai_shared_fnc_cancelUnitPlot;
 
 			private _expDestination = [_demoUnit] call A3C_ai_shared_fnc_setDestination;
 

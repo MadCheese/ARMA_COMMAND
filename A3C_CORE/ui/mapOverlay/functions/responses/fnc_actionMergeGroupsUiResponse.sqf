@@ -2,7 +2,7 @@
 #include "..\..\..\SHARED\shared_ui_defines.hpp"
 
 //-- Note: This action does not have a action script itself. Instead, the mouseDown eventhandler registers A3C_isMergeGroupActive
-//--> click on icon will execute the action, so we do not need A3C_ai_highCOmmand_actionMergeGroups
+//--> click on icon will execute the action, so we do not need A3C_ui_mapOverlay_fnc_HCGP_actionMergeGroups
 
 
 {(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];

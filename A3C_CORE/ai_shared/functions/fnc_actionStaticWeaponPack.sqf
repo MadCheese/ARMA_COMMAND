@@ -42,7 +42,7 @@ private _selectedTaskUnits = (
 if ((count _selectedTaskUnits) == 2) then {
 	player groupRadio "SentDisAssemble";
 
-	[_selectedTaskUnits, true, false] call A3C_AI_Shared_cancelUnitPlot;
+	[_selectedTaskUnits, true, false] call A3C_ai_shared_fnc_cancelUnitPlot;
 
 	private _mainMarker = "A3C_SQ_" + str (random 10000000000);
 	private _weaponPos = position _weaponToDisassemble;

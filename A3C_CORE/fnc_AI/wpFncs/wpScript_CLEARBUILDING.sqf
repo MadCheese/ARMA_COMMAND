@@ -51,7 +51,7 @@ if (typeName _currentAction != "SCALAR") then {
 };
 _occupiedUnits = (units _group) select {!isPlayer _x && {count (_x getVariable ["A3C_PLOT",[]]) > 0}};
 
-[_occupiedUnits,false,true,true] spawn A3C_AI_Shared_cancelUnitPlot;
+[_occupiedUnits,false,true,true] spawn A3C_ai_shared_fnc_cancelUnitPlot;
 waituntil {{count (_x getVariable ["A3C_PLOT",[]]) > 0} count _occupiedUnits == 0};
 
 

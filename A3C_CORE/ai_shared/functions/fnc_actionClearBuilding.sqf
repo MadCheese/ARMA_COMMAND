@@ -107,7 +107,7 @@ private _buddyArrays = [_units] call _fnc_createBuddyTeams;
 private _roomArrays = [_building,_bpC,_roofSensitive] call A3C_main_fnc_buildingCreateRooms;
 
 if ({player == leader group _x} count _units == count _units) then {
-	[_units,true,false] call A3C_AI_Shared_cancelUnitPlot; //~~ ideally: _busyUnits only! || some issue with HC units not resetting A3C_PLOT
+	[_units,true,false] call A3C_ai_shared_fnc_cancelUnitPlot; //~~ ideally: _busyUnits only! || some issue with HC units not resetting A3C_PLOT
 } else {
 	{
 		if (count (_x getvariable ["A3C_PLOT",[]]) > 0) then {

@@ -30,6 +30,8 @@ A3C_PREP(actionWeaponAttachmentToggle);
 A3C_PREP(addEventhandlerFired);
 
 A3C_PREP(calculatePath);
+A3C_PREP(cancelUnitPlot);
+
 
 A3C_PREP(doMove);
 
