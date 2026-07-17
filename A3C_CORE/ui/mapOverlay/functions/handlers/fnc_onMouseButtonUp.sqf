@@ -649,7 +649,7 @@ if !(A3C_BOOL_MAP_MU) exitWith {};
 
 if !(getmarkerColor "A3C_RADIMARK" == "") then {deletemarkerLocal "A3C_RADIMARK"};
 if (A3C_BOOL_LOOPING) exitWith {
-	_this spawn A3C_UI_MAP_onMouseButtonUp_Loop;
+	_this spawn A3C_ui_mapOverlay_fnc_HXT_OMBU_setLoopOrSyncSQ;
 };
 
 

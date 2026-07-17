@@ -161,9 +161,6 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\functions\initFun
 
 
 
-call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_Handlers.sqf";
-
-
 
 
 

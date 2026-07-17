@@ -276,7 +276,7 @@ if !(_isHighCommand) then {
 						};
 						
 						A3C_MMCode = {
-							[A3C_HC_TOSWITCH,_this] spawn A3C_UI_MAP_onMouseDrag_HCWP;
+							[A3C_HC_TOSWITCH,_this] spawn A3C_ui_mapOverlay_fnc_onDragMapHCWP;
 						};
 					};
 						
@@ -408,7 +408,7 @@ if (_gpIconsCount > 0) exitWith {
 					A3C_MAP_DRAGPLANNING_ACTIVE = true;
 					A3C_BOOL_MOUSEMOVING = true;
 					A3C_MMCode = {
-						_this spawn A3C_UI_MAP_onMouseDrag;
+						_this spawn A3C_ui_mapOverlay_fnc_onDragMapStandard;
 					};
 				};
 			};
@@ -520,7 +520,7 @@ if (count _sqIcons > 0) exitWith {
 						A3C_MAP_DRAGPLANNING_ACTIVE = true;
 						A3C_BOOL_MOUSEMOVING = true;
 						A3C_MMCode = {
-							_this spawn A3C_UI_MAP_onMouseDrag;
+							_this spawn A3C_ui_mapOverlay_fnc_onDragMapStandard;
 						};
 					};
 					_exit = true; //~~?	
@@ -583,13 +583,13 @@ if (count _mapPolygons > 0 && {_left}) exitWith {
 				//systemchat str _polyRefID;
 				A3C_CUR_EDIT_POLY = ([(_x select 0) select 0,0,"",false] call A3C_ai_shared_fnc_polygonAreaCreate) select 0; //~~ poly: what is going on here: since create_poly does not create markers, it is used to find // 0 is replacing (markerDir A3C_MovedItem_ID)
 				A3C_MMCode = if (_ctrl) then {
-					{[_this,A3C_MovedItem_ID,"WP",true,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
+					{[_this,A3C_MovedItem_ID,"WP",true,false] spawn A3C_ui_mapOverlay_fnc_onDragMapItem;}
 				} else {
 					if (_alt) then {
 
-						{[_this,A3C_MovedItem_ID,"WP",false,true] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
+						{[_this,A3C_MovedItem_ID,"WP",false,true] spawn A3C_ui_mapOverlay_fnc_onDragMapItem;}
 					} else {
-						{[_this,A3C_MovedItem_ID,"WP",false,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;}
+						{[_this,A3C_MovedItem_ID,"WP",false,false] spawn A3C_ui_mapOverlay_fnc_onDragMapItem;}
 					};
 				};
 
@@ -643,9 +643,9 @@ if (count _squadWaypoints > 0) exitWith {
 			A3C_BOOL_MOUSEMOVING = true;
 			A3C_BOOL_MOVINGMARKER = true;
 			A3C_DRAGPOS = [_sx, _sy];
-			A3C_MMCode = {[_this,A3C_MovedItem_ID,"WP",false,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;};
+			A3C_MMCode = {[_this,A3C_MovedItem_ID,"WP",false,false] spawn A3C_ui_mapOverlay_fnc_onDragMapItem;};
 		} else {
-			[_sx,_sy] call A3C_UI_MAP_onMouseButtonDown_Loop;
+			[_sx,_sy] call A3C_ui_mapOverlay_fnc_HXT_OMBD_prepLoopOrSyncSQ;
 		};
 	} else {
 		[_wpDotIDS select 0,[_sX,_sY]] call A3C_ui_mapOverlay_fnc_SQWP_openMenu;
@@ -663,7 +663,7 @@ if (count _squadWaypointLookDirs > 0) exitWith {
 	A3C_BOOL_MOUSEMOVING = true;
 	A3C_BOOL_MOVINGMARKER = true;
 	A3C_DRAGPOS = [_sx, _sy];
-	A3C_MMCode = {[_this,A3C_MovedItem_ID,"LDIR",false,false] spawn A3C_UI_MAP_onMouseDrag_MapItem;};
+	A3C_MMCode = {[_this,A3C_MovedItem_ID,"LDIR",false,false] spawn A3C_ui_mapOverlay_fnc_onDragMapItem;};
 };
 
 
@@ -722,7 +722,7 @@ if (_exit) exitWith {};
 // 			A3C_BOOL_MOUSEMOVING = true;
 // 			A3C_BOOL_MOVINGHC = true;
 // 			A3C_MMCode = {
-// 				[A3C_HC_TOSWITCH,_this] spawn A3C_UI_MAP_onMouseDrag_HCWP
+// 				[A3C_HC_TOSWITCH,_this] spawn A3C_ui_mapOverlay_fnc_onDragMapHCWP
 // 			};
 // 			_exit = true;
 // 		};
@@ -888,7 +888,7 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 };
 
 if (_ctrl) exitWith {
-	[_sx,_sy] call A3C_UI_MAP_onMouseButtonDown_Loop;
+	[_sx,_sy] call A3C_ui_mapOverlay_fnc_HXT_OMBD_prepLoopOrSyncSQ;
 };
 
 
@@ -951,7 +951,7 @@ A3C_BOOL_MOUSEMOVING = true;
 if !((A3C_TEMP_ACTION select 0) in ["SUPPRESSION","SLINGLOAD","CTRL_DET","STATIC"]) then { //~~ REMOVE GRENADE FROM THIS??   "GRENADE",
 	A3C_CONNECTING_MODE = "LOOKDIR";
 	A3C_MMCode = {
-		_this spawn A3C_UI_MAP_onMouseDrag;
+		_this spawn A3C_ui_mapOverlay_fnc_onDragMapStandard;
 	};
 };
 
@@ -989,7 +989,7 @@ if ((A3C_TEMP_ACTION select 0) == 'CTRL_DET') then {
 
 				A3C_CONNECTING_MODE = "";
 				A3C_MMCode = {
-					_this spawn A3C_UI_MAP_onMouseDrag;
+					_this spawn A3C_ui_mapOverlay_fnc_onDragMapStandard;
 				};
 			};
 
@@ -1013,7 +1013,7 @@ if ((A3C_TEMP_ACTION select 0) == 'STATIC') then {
 		A3C_TEMP_ACTION = ["STATIC",["ASSEMBLE",((A3C_STATIC_PACKS select 0) select 1)]];
 		A3C_CONNECTING_MODE = "LOOKDIR";
 		A3C_MMCode = {
-			_this spawn A3C_UI_MAP_onMouseDrag;
+			_this spawn A3C_ui_mapOverlay_fnc_onDragMapStandard;
 		};
 	} else {
 		//_mSize = [0.5,0.5];
@@ -1031,7 +1031,7 @@ if ((A3C_TEMP_ACTION select 0) == 'STATIC') then {
 
 			A3C_CONNECTING_MODE = "";
 			A3C_MMCode = {
-				_this spawn A3C_UI_MAP_onMouseDrag;
+				_this spawn A3C_ui_mapOverlay_fnc_onDragMapStandard;
 			};
 		} else {
 			systemchat "A3C: No static weapons found or allowed";
@@ -1061,7 +1061,7 @@ if ((A3C_TEMP_ACTION select 0) == 'SLINGLOAD') then {
 				if (count A3C_PICKUP_OBJECTS > 0) then {
 					A3C_CONNECTING_MODE = "";
 					A3C_MMCode = {
-						_this spawn A3C_UI_MAP_onMouseDrag;
+						_this spawn A3C_ui_mapOverlay_fnc_onDragMapStandard;
 					};
 				} else {
 					systemchat "A3C: No sling-objects found";

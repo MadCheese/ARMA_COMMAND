@@ -3626,7 +3626,7 @@ A3C_AI_HighCommand_ActionDistribute_boardGroupsToVehicle = {
 				
 				A3C_BOOL_MOUSEMOVING = true;
 				A3C_MMCode = {
-					_this spawn A3C_UI_MAP_onMouseDrag;
+					_this spawn A3C_ui_mapOverlay_fnc_onDragMapStandard;
 				};
 				A3C_BOOL_DRAGLINE = true;
 				A3C_CONNECTING_MODE = "HCBOARD";

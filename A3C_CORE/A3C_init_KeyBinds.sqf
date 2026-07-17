@@ -105,7 +105,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"KeyDown",
 		{
 			disableSerialization;
-			private _return = _this call A3C_UI_MAP_onKeyDown_Map;
+			private _return = _this call A3C_ui_mapOverlay_fnc_MAP_onKeyDown;
 			_return	
 		}
 	] call A3C_UI_CreateSafeEventhandler;
