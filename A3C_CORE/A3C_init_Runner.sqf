@@ -76,7 +76,7 @@ A3C_ZEUS_UNIT = player;
 if (profileNameSpace getVariable "A3C_AUTOMEDIC") then {
 	[] spawn {
 		sleep 4;
-		[] spawn A3C_HEAL_AUTOLOOP;
+		[] spawn A3C_ai_shared_fnc_medical_startAutoHeal;
 	};
 };
 
@@ -121,7 +121,7 @@ A3C_is_Initialized = true;
 // 		};
 // 	}];
 
-// 	[] execVM "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_drawMapUI.sqf";
+// 	[] call A3C_ui_mapOverlay_fnc_refreshMapUiDrawHandler;;
 // 	[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
 
 // 	//-- In game loop - once per second
@@ -227,7 +227,7 @@ A3C_is_Initialized = true;
 			};
 		}];
 
-		[] execVM "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_drawMapUI.sqf";
+		[] call A3C_ui_mapOverlay_fnc_refreshMapUiDrawHandler;;
 		[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
 
 		waitUntil {isNull (findDisplay 46)};

@@ -111,7 +111,7 @@ switch (_function) do {
 			if (_mode == "DOWN") then {
 				if ((count groupSelectedUnits player) == 0) then {
 					// Prevent grenade throw when player is unconscious.
-					if !([player] call A3C_isUnconscious) then {
+					if !([player] call A3C_ai_shared_fnc_medical_isUnitUnconscious) then {
 						[_mode] call A3C_ai_shared_fnc_gtiGrenade_throwPlayer;
 					};
 				} else {
@@ -372,7 +372,7 @@ switch (_function) do {
 	};
 
 	case "COMMAND_LEVEL": {
-		if ((count A3C_HC_allGroupsClient_Current > 0) OR { [player] call A3C_isUnconscious }) then {
+		if ((count A3C_HC_allGroupsClient_Current > 0) OR { [player] call A3C_ai_shared_fnc_medical_isUnitUnconscious }) then {
 			{
 				player groupSelectUnit [_x, false];
 			} forEach ((units player) - [player]);
@@ -409,15 +409,15 @@ switch (_function) do {
 			};
 		} forEach A3C_RD_UNITS;
 
-		private _medics = [A3C_RD_UNITS] call A3C_FINDMEDICS;
+		private _medics = [A3C_RD_UNITS] call A3C_ai_shared_fnc_medical_findMedics;
 		_group setVariable ["A3C_MEDICS", _medics];
 
 		(group player) setVariable ["A3C_MEDICS_LB", _medics];
 
-		private _patients = [group player] call A3C_FINDPATIENTS;
+		private _patients = [group player] call A3C_ai_shared_fnc_medical_findPatients;
 		(group player) setVariable ["A3C_PATIENTS_LB", _patients];
 
-		[group player, 0] spawn A3C_MEDICAL_START;
+		[group player, 0] spawn A3C_ai_shared_fnc_medical_giveHealingOrder;
 	};
 
 	case "Voice_AUTOCOMBAT": {

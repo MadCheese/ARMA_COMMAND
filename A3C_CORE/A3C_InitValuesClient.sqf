@@ -6,6 +6,37 @@ A3C_PLAYERGROUP = group player;
 A3C_UNITCOUNT = ((count (units group player)) -1);
 
 
+//----------------------------- profileNameSpace Variables
+//-- A3C Version Check:
+//checks the current version of A3C and hints if new version is detected
+with profilenamespace do {
+	_giveHint = false;
+	if (isnil "A3C_CHECKVERSION") then {
+		_giveHint = true;
+		profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD PA001"];
+	} else {
+		if !( (profileNameSpace getvariable "A3C_CHECKVERSION") == "BUILD PA001") then {
+			_giveHint = true;
+			profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD PA001"];
+		};
+	};
+
+	if (_giveHint) then {
+		[] spawn {
+			waituntil {alive player};
+				"ARMA COMMAND DLC" hintC [
+				"You are playing a new build (#PA001) for the first time!",
+				"Please refer to the documentation                       ",
+				">>>>>>>   NEWS:   <<<<<<<                               ",
+				"PRE-ALPHA 01"
+			];		
+		};	
+	};
+};
+
+//----------------------------- 
+
+
 //-- #TODO: MESSY STUFF TO OVERHAUL 
 if (A3C_IsAICommand) then {
 	["AICommand",player] remoteExec ["A3C_checkserverAddon",2];
@@ -64,32 +95,7 @@ A3C_GREN_ALLOW_UNITSWITCH = false;
 
 A3C_Selection_MultiWaypoint = [];
 
-//-- A3C Version Check:
-//checks the current version of A3C and hints if new version is detected
-with profilenamespace do {
-	_giveHint = false;
-	if (isnil "A3C_CHECKVERSION") then {
-		_giveHint = true;
-		profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD PA001"];
-	} else {
-		if !( (profileNameSpace getvariable "A3C_CHECKVERSION") == "BUILD PA001") then {
-			_giveHint = true;
-			profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD PA001"];
-		};
-	};
 
-	if (_giveHint) then {
-		[] spawn {
-			waituntil {alive player};
-				"ARMA COMMAND DLC" hintC [
-				"You are playing a new build (#PA001) for the first time!",
-				"Please refer to the documentation                       ",
-				">>>>>>>   NEWS:   <<<<<<<                               ",
-				"PRE-ALPHA 01"
-			];		
-		};	
-	};
-};
 
 
 //----------------  V A L U E S   A N D   A R R A Y S   F O R   P L A N N I N G   M O D E  -------------
@@ -511,6 +517,11 @@ A3C_UI_RADIAL_CTRLS_SHOWN = [];
 A3C_UI_RADIAL_CTRLS_SHOWN_ACTIVATED = false;
 A3C_UI_SHARED_createDashBoard_ExtraControls = [];
 A3C_ACTIVE_BUTTONUNIT = objnull;
+
+//----------------------------- MEDICAL VARIABLES
+A3C_MEDICAL_INDICATOR = [];
+//----------------------------- 
+
 
 //----------------------------- MAP OVERLAY (#TODO: move other map overlay data here too)
 //-- Hardcoded GROUPMENU ACTIONBUTTONS array (HCGP Context)

@@ -256,9 +256,21 @@ switch (_actionType) do {
 				_target
 			] spawn A3C_ai_shared_fnc_polygonAreaActionLoop;
 
+			private _polygonMarkerId =
+				(_polygon select 0) param [
+					1,
+					"",
+					[""]
+				];
+
 			_unit setVariable [
 				"A3C_SUPPRESSION_TARGET",
-				[_target, true, (_polygon select 0) select 2, -1],
+				[
+					_target,
+					true,
+					_polygonMarkerId,
+					-1
+				],
 				true
 			];
 

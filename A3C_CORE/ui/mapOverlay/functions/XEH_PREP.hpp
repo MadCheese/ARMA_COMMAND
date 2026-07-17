@@ -70,6 +70,7 @@ A3C_PREP_SUBDIR(public,isCursorOverControl);
 A3C_PREP_SUBDIR(public,isWaypointLoop);
 A3C_PREP_SUBDIR(public,openOverlay);
 A3C_PREP_SUBDIR(public,rejoinDisbandedToPlayerGroup);
+A3C_PREP_SUBDIR(public,refreshMapUiDrawHandler);
 A3C_PREP_SUBDIR(public,resetMapClick);
 A3C_PREP_SUBDIR(public,resetUnitLoopState);
 A3C_PREP_SUBDIR(public,SQWP_goCodeSwitch);

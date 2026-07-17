@@ -29,7 +29,7 @@ if (_mode == 2) then {
 			// Keep the polygon center in place while rotating.
 			_workingPosition = _centerPosition;
 		};
-	} forEach A3C_ALL_POLYS;
+	} forEach _polygons;
 };
 
 // Remove malformed top-level entries.

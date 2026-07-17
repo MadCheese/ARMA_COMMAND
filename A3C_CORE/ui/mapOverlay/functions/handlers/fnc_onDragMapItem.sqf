@@ -91,12 +91,6 @@ if (
 						] call A3C_ui_mapOverlay_fnc_adjustPolygonMain;
 					};
 				} forEach _polygons;
-
-				_entity setVariable [
-					"A3C_UNIT_POLYS",
-					_polygons,
-					true
-				];
 			};
 		};
 	} forEach (
@@ -373,11 +367,5 @@ private _unitArray =
 	} forEach [
 		"A3C_PLOT",
 		"A3C_PLOT_TEMP"
-	];
-
-	_soldier setVariable [
-		"A3C_UNIT_POLYS",
-		_polygons,
-		true
 	];
 } forEach _unitArray;

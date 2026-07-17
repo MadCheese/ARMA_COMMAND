@@ -46,6 +46,31 @@ private _actual = if (_groupPlayer) then {
 	group _unit
 };
 
+private _getCurrentPolygon = {
+	params [
+		"_polygonOwner",
+		"_polygonMarkerId"
+	];
+
+	private _currentPolygons =
+		_polygonOwner getVariable [
+			"A3C_UNIT_POLYS",
+			[]
+		];
+
+	private _polygonIndex =
+		_currentPolygons findIf {
+			((_x select 0) select 1)
+				== _polygonMarkerId
+		};
+
+	if (_polygonIndex == -1) exitWith {
+		[]
+	};
+
+	+(_currentPolygons select _polygonIndex)
+};
+
 private _polys = [];
 private _polyID = -1;
 private _exitMain = true;
@@ -151,13 +176,12 @@ switch (_mode) do {
 			if (isNull _unit) exitWith {};
 			if (!alive _unit) exitWith {};
 
-			if (
-				!isNil "_poly" &&
-				{
-					!(_polyID == -1) &&
-					{ ({ _polyID == ((_x select 0) select 2) } count A3C_ALL_POLYS) == 0 }
-				}
-			) exitWith {};
+			private _currentPolygon = [
+				_actual,
+				_polyMarker
+			] call _getCurrentPolygon;
+
+			if (_currentPolygon isEqualTo []) exitWith {};
 
 			if (_exitRestrictive) exitWith {
 				[[_unit], "SUPPRESSION"] call A3C_ai_shared_fnc_polygonAreaActionOff;
@@ -230,13 +254,12 @@ switch (_mode) do {
 					_exitRestrictive = true;
 				};
 
-				if (
-					!isNil "_poly" &&
-					{
-						!(_polyID == -1) &&
-						{ ({ _polyID == ((_x select 0) select 2) } count A3C_ALL_POLYS) == 0 }
-					}
-				) exitWith {};
+				private _currentPolygon = [
+					_actual,
+					_polyMarker
+				] call _getCurrentPolygon;
+
+				if (_currentPolygon isEqualTo []) exitWith {};
 
 				_exit = false;
 				_cycle = _cycle + 1;
@@ -317,10 +340,20 @@ switch (_mode) do {
 						waitUntil {
 							scriptDone _rotateScript ||
 							{ !canMove _vehicle } ||
-							{ ({ _polyID == ((_x select 0) select 2) } count A3C_ALL_POLYS) == 0 }
+							{
+								([
+									_actual,
+									_polyMarker
+								] call _getCurrentPolygon) isEqualTo []
+							}
 						};
 
-						if (({ _polyID == ((_x select 0) select 2) } count A3C_ALL_POLYS) == 0) then {
+						if (
+							([
+								_actual,
+								_polyMarker
+							] call _getCurrentPolygon) isEqualTo []
+						) then {
 							_exitMain = true;
 						};
 					} else {
@@ -410,23 +443,19 @@ switch (_mode) do {
 				};
 
 				// Exit if poly no longer exists.
-				if (
-					!isNil "_poly" &&
-					{
-						!(_polyID == -1) &&
-						{ ({ _polyID == ((_x select 0) select 2) } count A3C_ALL_POLYS) == 0 }
-					}
-				) exitWith {};
+				private _currentPolygon = [
+					_actual,
+					_polyMarker
+				] call _getCurrentPolygon;
+
+				if (_currentPolygon isEqualTo []) exitWith {};
 
 				// Exit and reset loop if polygon was dragged.
+				private _currentCenter =
+					(_currentPolygon select 0) select 0;
+
 				if (
-					{
-						_polyID == ((_x select 0) select 2) &&
-						{
-							private _dist = (((_x select 0) select 0) distance2D _center);
-							_dist > 1
-						}
-					} count A3C_ALL_POLYS > 0
+					_currentCenter distance2D _center > 1
 				) exitWith {
 					sleep 1;
 				};

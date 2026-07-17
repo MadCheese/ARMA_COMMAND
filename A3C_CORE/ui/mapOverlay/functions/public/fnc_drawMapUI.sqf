@@ -1347,7 +1347,6 @@ if (!(A3C_DISABLE_TRACKER) && {A3C_TRACKER_VISIBLE == 1} ) then {
 				alive _trackedUnit
 			} count units _trackedGroup == 0) then {
 				A3C_TRACKER_GROUPS = A3C_TRACKER_GROUPS - [_trackerEntry];
-				deleteGroup _trackedGroup;
 			} else {
 				if ({
 					private _trackedUnit = _x;
@@ -1386,55 +1385,146 @@ if (!(A3C_DISABLE_TRACKER) && {A3C_TRACKER_VISIBLE == 1} ) then {
 //-- draw active-suppression lines
 {
 	private _suppressionGroup = _x;
-	if (!isPlayer (leader _suppressionGroup) OR (player == leader _suppressionGroup)) then { // Prevent suppression lines from other player-controlled groups.
+
+	// Prevent suppression lines from other player-controlled groups.
+	if (
+		!isPlayer leader _suppressionGroup
+		|| {player == leader _suppressionGroup}
+	) then {
 		{
 			private _suppressingUnit = _x;
-			private _suppressionTargetData = _suppressingUnit getVariable ["A3C_SUPPRESSION_TARGET",[0,false,-1]];
-			private _suppressionPolygonId = _suppressionTargetData select 2;
-			if !(typeName (_suppressionTargetData select 0) == "SCALAR") then { // A scalar target indicates that the unit is not currently suppressing. Consider replacing this sentinel with objNull.
-				private _availablePolygons = if (group _suppressingUnit == group player) then {_suppressingUnit getvariable ["A3C_UNIT_POLYS",[]]} else {(group _suppressingUnit) getvariable ["A3C_UNIT_POLYS",[]]};
-				if (_suppressionPolygonId != -1) then {
-					private _suppressionPolygon = nil;
-					{
-						private _candidatePolygon = _x;
-						private _polygonId = (_candidatePolygon select 0) select 2;
-						if (_polygonId == _suppressionPolygonId) exitWith {
-							_suppressionPolygon = _candidatePolygon;
-						};
-					} foreach _availablePolygons;
-					if (!isNil '_suppressionPolygon') then {
-						private _polygonPositions = (_suppressionPolygon select 1);
-						_polygonPositions = [_polygonPositions,[],{
-							private _polygonPosition = _x;
-							_polygonPosition distance2D _suppressingUnit
-						},"ASCEND"] call BIS_fnc_sortBy;
-						private _nearestPolygonPosition = _polygonPositions select 0;
-						private _suppressingUnitPosition = if (typeName _suppressingUnit == "OBJECT") then {getPos _suppressingUnit} else {getPos (leader _suppressingUnit)}; //~~ This local appears unused.
-						_mapControl drawline [getPos _suppressingUnit, _nearestPolygonPosition, [A3C_UI_COLOR_RED,0.3] call A3C_UI_fnc_setOpacity];
-						_mapControl drawIcon
-						[
-							"\a3\ui_f\data\Map\Markers\Military\dot_CA.paa",
-							[1,1,1,0.6],
-							getPos _suppressingUnit,
-							15,
-							15,
-							0,
-							'',
-							1,
-							0.03,
-							'PuristaLight',
-							'right'
-						];
+
+			private _suppressionTargetData =
+				_suppressingUnit getVariable [
+					"A3C_SUPPRESSION_TARGET",
+					[0, false, -1]
+				];
+
+			private _suppressionTarget =
+				_suppressionTargetData param [
+					0,
+					0
+				];
+
+			private _suppressionPolygonReference =
+				_suppressionTargetData param [
+					2,
+					-1
+				];
+
+			// A scalar target indicates that suppression is inactive.
+			if !(_suppressionTarget isEqualType 0) then {
+				private _polygonOwner =
+					if (
+						group _suppressingUnit
+							== group player
+					) then {
+						_suppressingUnit
+					} else {
+						group _suppressingUnit
 					};
 
+				private _availablePolygons =
+					_polygonOwner getVariable [
+						"A3C_UNIT_POLYS",
+						[]
+					];
+
+				if !(
+					_suppressionPolygonReference
+						isEqualTo -1
+				) then {
+					private _suppressionPolygon = nil;
+
+					{
+						private _candidatePolygon = _x;
+						private _candidateMetadata =
+							_candidatePolygon param [
+								0,
+								[]
+							];
+
+						private _candidateReference =
+							if (
+								_suppressionPolygonReference
+									isEqualType ""
+							) then {
+								_candidateMetadata param [
+									1,
+									""
+								]
+							} else {
+								_candidateMetadata param [
+									2,
+									-1
+								]
+							};
+
+						if (
+							_candidateReference
+								isEqualTo
+								_suppressionPolygonReference
+						) exitWith {
+							_suppressionPolygon =
+								_candidatePolygon;
+						};
+					} forEach _availablePolygons;
+
+					if (!isNil "_suppressionPolygon") then {
+						private _polygonPositions =
+							+(
+								_suppressionPolygon param [
+									1,
+									[]
+								]
+							);
+
+						_polygonPositions = [
+							_polygonPositions,
+							[],
+							{
+								_x distance2D
+									_suppressingUnit
+							},
+							"ASCEND"
+						] call BIS_fnc_sortBy;
+
+						if !(_polygonPositions isEqualTo []) then {
+							private _nearestPolygonPosition =
+								_polygonPositions select 0;
+
+							_mapControl drawLine [
+								getPos _suppressingUnit,
+								_nearestPolygonPosition,
+								[
+									A3C_UI_COLOR_RED,
+									0.3
+								] call A3C_UI_fnc_setOpacity
+							];
+
+							_mapControl drawIcon [
+								"\a3\ui_f\data\Map\Markers\Military\dot_CA.paa",
+								[1, 1, 1, 0.6],
+								getPos _suppressingUnit,
+								15,
+								15,
+								0,
+								"",
+								1,
+								0.03,
+								"PuristaLight",
+								"right"
+							];
+						};
+					};
 				};
 			};
-		} foreach (units _suppressionGroup);
+		} forEach units _suppressionGroup;
 	};
-} foreach ([(group player)] + _highCommandGroups);
-
-
-/////////////////////////////////
+} forEach (
+	[group player]
+	+ _highCommandGroups
+);
 
 // A3C_ALL_POLYS is recreated from entity variables on each frame.
 A3C_ALL_POLYS = [];
@@ -1442,9 +1532,11 @@ A3C_ALL_POLYS = [];
 // Draw area-of-fire polygons and waypoint-type icons.
 {
 	private _polygonOwner = _x;
-	private _ownerPolygons = _polygonOwner getVariable "A3C_UNIT_POLYS";
+	private _ownerPolygons = _polygonOwner getVariable [
+		"A3C_UNIT_POLYS",
+		[]
+	];
 	private _activePolygonReferences = [];
-	private _ownerPolygonsChanged = false;
 
 	if (typeName _polygonOwner == "GROUP") then {
 		_activePolygonReferences = waypoints _polygonOwner;
@@ -1463,16 +1555,19 @@ A3C_ALL_POLYS = [];
 	{
 		private _polygon = _x;
 		private _shouldAddPolygon = true;
-		private _polygonRecordType = "";
 
-		if (typeName _polygonOwner == "GROUP") then {
-			_polygonRecordType = "REC";
-		} else {
+		if (typeName _polygonOwner != "GROUP") then {
 			private _polygonMarkerId = (_polygon select 0) select 1;
 
 			_activePolygonReferences =
-				(_polygonOwner getVariable "A3C_PLOT_TEMP")
-				+ (_polygonOwner getVariable "A3C_PLOT");
+				(_polygonOwner getVariable [
+					"A3C_PLOT_TEMP",
+					[]
+				])
+				+ (_polygonOwner getVariable [
+					"A3C_PLOT",
+					[]
+				]);
 
 			if (
 				{
@@ -1493,28 +1588,12 @@ A3C_ALL_POLYS = [];
 						_polygon
 					] call A3C_ai_shared_fnc_polygonAreaRemove;
 
-					_ownerPolygons = _ownerPolygons - [_polygon];
-					_ownerPolygonsChanged = true;
 					_shouldAddPolygon = false;
 				};
-			} else {
-				_polygonRecordType = "REC";
 			};
 		};
 
 		if (_shouldAddPolygon) then {
-			/*
-			 * Preserve the existing stored metadata behavior, but mark the
-			 * entity dirty only when the metadata is actually added.
-			 *
-			 * This is equivalent to the former:
-			 *     _polygon pushBackUnique _polygonRecordType;
-			 */
-			if !(_polygonRecordType in _polygon) then {
-				_polygon pushBack _polygonRecordType;
-				_ownerPolygonsChanged = true;
-			};
-
 			A3C_ALL_POLYS pushBackUnique _polygon;
 
 			if (typeName _polygonOwner == "GROUP") then {
@@ -1552,14 +1631,6 @@ A3C_ALL_POLYS = [];
 			};
 		};
 	} forEach _ownerPolygons;
-
-	if (_ownerPolygonsChanged) then {
-		_polygonOwner setVariable [
-			"A3C_UNIT_POLYS",
-			_ownerPolygons,
-			true
-		];
-	};
 } forEach (
 	_highCommandGroups
 		+ units player

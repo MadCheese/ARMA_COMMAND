@@ -56,7 +56,7 @@ switch (_mode) do {
 			lbClear _x;
 		} forEach (["radial_extensionRightListboxes"] call FUNC(ctrlGroup));
 
-		private _medics = [A3C_RD_UNITS] call A3C_FINDMEDICS;
+		private _medics = [A3C_RD_UNITS] call A3C_ai_shared_fnc_medical_findMedics;
 		(group player) setVariable ["A3C_MEDICS", _medics];
 		private _multiMedic = (count _medics) > 1;
 		
@@ -99,7 +99,7 @@ switch (_mode) do {
 
 		} forEach _medics; // _squadAI
 
-		private _patients = [group player] call A3C_FINDPATIENTS;
+		private _patients = [group player] call A3C_ai_shared_fnc_medical_findPatients;
 		private _multiPatient = (count _patients) > 1;
 		if (_multiPatient) then {
 			[["HEAL ALL","",objNull,(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_BOX),""]] call A3C_ui_radialMenu_fnc_lbAdd;

@@ -680,7 +680,7 @@ class A3C_DSP_RadialMenu
 		class RADIAL_EXTENSIONRIGHT_GO_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_RADIAL_EXTENSIONRIGHT_GO_BTN; //8056;
-			action = "if (A3C_LBR_1 == 'MEDICAL') then {[group player, 0] spawn A3C_MEDICAL_START;} else { {[_x,A3C_TARGETVEH] spawn A3C_ai_shared_fnc_reArm_autoEvaluated} foreach (groupSelectedUnits player); player groupradio 'SentCmdRearm';}";
+			action = "if (A3C_LBR_1 == 'MEDICAL') then {[group player, 0] spawn A3C_ai_shared_fnc_medical_giveHealingOrder;} else { {[_x,A3C_TARGETVEH] spawn A3C_ai_shared_fnc_reArm_autoEvaluated} foreach (groupSelectedUnits player); player groupradio 'SentCmdRearm';}";
 			x = 38.5 * GUI_GRID_W + GUI_GRID_X;
 			y = 18 * GUI_GRID_H + GUI_GRID_Y;
 			w = 6.5 * GUI_GRID_W;

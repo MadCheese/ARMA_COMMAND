@@ -35,7 +35,7 @@ private _exit = false;
 if !(player == leader group player) then {
 	_exit = true;
 
-	if ([player] call A3C_isUnconscious) then {
+	if ([player] call A3C_ai_shared_fnc_medical_isUnitUnconscious) then {
 		if (player == ((units group player) select 0)) then {
 			_exit = false;
 		};

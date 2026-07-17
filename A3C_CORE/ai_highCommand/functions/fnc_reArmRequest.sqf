@@ -1,5 +1,5 @@
 // A3C_ai_highCommand_fnc_reArmRequest
-// Very performance-heavy because of A3C_FINDMEDICS; do not call too often.
+// Very performance-heavy because of A3C_ai_shared_fnc_medical_findMedics; do not call too often.
 
 params ["_group"];
 
@@ -13,7 +13,7 @@ if (_hasRearmingUnit) exitWith {
 	false
 };
 
-private _medics = [_units] call A3C_FINDMEDICS;
+private _medics = [_units] call A3C_ai_shared_fnc_medical_findMedics;
 
 if (_medics isEqualTo []) exitWith {
 	true

@@ -88,6 +88,15 @@ A3C_PREP(gtiGrenade_throwPlayer);
 
 A3C_PREP(loadVehicleCargo);
 
+A3C_PREP(medical_actionHealUnit);
+A3C_PREP(medical_applyHealing);
+A3C_PREP(medical_findMedics);
+A3C_PREP(medical_findPatients);
+A3C_PREP(medical_giveHealingOrder);
+A3C_PREP(medical_isUnitHurt);
+A3C_PREP(medical_isUnitUnconscious);
+A3C_PREP(medical_startAutoHeal);
+
 
 
 A3C_PREP(orderbhvCbmIndividual);

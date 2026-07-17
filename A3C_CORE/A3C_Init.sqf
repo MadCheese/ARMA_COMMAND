@@ -36,8 +36,6 @@ call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_sharedCommandingLev
 
 
 call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Ship.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Medical.sqf";          //-- mixed GLOBAL / CLient
-
 
 
 

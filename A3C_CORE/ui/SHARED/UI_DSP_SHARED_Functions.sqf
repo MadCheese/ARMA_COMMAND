@@ -646,7 +646,7 @@ A3C_GROUP_RESET = {
 	//systemchat 'hey';
 	
 	//-- refresh map UI and HUD UI
-	[] execVM "A3C_CORE\ui\mapOverlay\LEGACY\UI_DSP_MAP_drawMapUI.sqf";
+	[] call A3C_ui_mapOverlay_fnc_refreshMapUiDrawHandler;;
 	[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
 
 
@@ -1332,7 +1332,7 @@ A3C_UI_SHARED_createDashBoard = {
 			0.0340016 * safezoneH
 		];
 		
-		if (count ([units _group] call A3C_FINDMEDICS) > 0) then {
+		if (count ([units _group] call A3C_ai_shared_fnc_medical_findMedics) > 0) then {
 			_healingCapableIcon  = findDisplay _a3c_dsp ctrlCreate ["RscPicture",13000, findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT];
 			_healingCapableIcon ctrlSetPosition _supportButtonBasePos;
 			_healingCapableIcon ctrlSettext "A3C_CORE\ui\pictures\icon_menu_Medical.paa";
@@ -1962,8 +1962,8 @@ A3C_MAP_fnc_GroupMenu_LabelActionButtons = {
 
 		// 
 		if (_gp getVariable ["A3C_MEDICS_ACTIVE", [] ] isEqualTo []) then {
-			private _healersAvailable = [units _gp] call A3C_FINDMEDICS;
-			private _patients = [_gp] call A3C_FINDPATIENTS;
+			private _healersAvailable = [units _gp] call A3C_ai_shared_fnc_medical_findMedics;
+			private _patients = [_gp] call A3C_ai_shared_fnc_medical_findPatients;
 			// _disableHeal = true;
 			if ( { _x isEqualTo [] } count [_healersAvailable, _patients] == 0 ) then {
 				//-- there is both healers and patients, so we can add the heal action

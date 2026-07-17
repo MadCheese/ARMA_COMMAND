@@ -619,10 +619,10 @@ switch (_mode) do {
 									};
 								} else {
 									//-- shift: shortCut to heal only player
-									private _medics = [A3C_RD_UNITS] call A3C_FINDMEDICS;
+									private _medics = [A3C_RD_UNITS] call A3C_ai_shared_fnc_medical_findMedics;
 
 									(group player) setVariable ["A3C_MEDICS", _medics];
-									[group player] call A3C_FINDPATIENTS;
+									[group player] call A3C_ai_shared_fnc_medical_findPatients;
 									private _medics_lb = +(_medics);
 
 									if (player in (group player getVariable ["A3C_PATIENTS",[]])) then {
@@ -633,7 +633,7 @@ switch (_mode) do {
 										(group player) setVariable ["A3C_MEDICS", [(_medics select 0)]];
 										_medics_lb = [(_medics select 0)];
 
-										[group player, 0] spawn A3C_MEDICAL_START;
+										[group player, 0] spawn A3C_ai_shared_fnc_medical_giveHealingOrder;
 									} else {
 										(group player) setVariable ["A3C_PATIENTS",[]];
 									};
@@ -653,7 +653,7 @@ switch (_mode) do {
 										_x ctrlShow false;
 									} forEach (["radial_extensionRight"] call FUNC(ctrlGroup));
 
-									[] spawn A3C_HEAL_AUTOLOOP;
+									[] spawn A3C_ai_shared_fnc_medical_startAutoHeal;
 								};
 							};
 						}
