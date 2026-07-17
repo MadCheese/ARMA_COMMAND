@@ -41,7 +41,7 @@ if (_vehicle isKindOf "PLANE") then {
 	sleep 2;
 
 	if (_landingdata == "PICKUP") then {
-		[_vehicle, _playerUnit] execFSM "A3C_CORE\FSM\A3C_AssignPlayerToVehicleCargo.fsm";
+		[_vehicle, _playerUnit] execFSM "A3C_CORE\FSM\A3C_ai_squad_fnc_assignPlayerToVehicleCargo.fsm";
 		_vehicle land "GET IN";
 	} else {
 		_vehicle land "GET OUT";

@@ -32,7 +32,7 @@ private _shooters = [];
 if !(_unitsByGroups isEqualTo []) then {
     {
         private _groupUnits = _x select 1;
-        private _unitsViewOnTarget = [_groupUnits, _aimPos] call A3C_UI_SHARED_FIND_BEST_SHOOTERS;
+        private _unitsViewOnTarget = [_groupUnits, _aimPos] call A3C_ui_shared_fnc_findBestShooters;
 
         if !(_unitsViewOnTarget isEqualTo []) then {
             _shooters pushBackUnique (_unitsViewOnTarget select 0);

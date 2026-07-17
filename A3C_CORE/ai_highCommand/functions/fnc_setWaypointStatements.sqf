@@ -81,7 +81,7 @@ switch (_landingType) do {
 		_waypoint setWaypointType "SCRIPTED";
 
 		_waypointScript = format [
-			"A3C_CORE\fnc_AI\wpFncs\wpScript_CLEARBUILDING.sqf ['%1',['ARRIVAL','']]",
+			"A3C_CORE\waypointScripts\wpScript_CLEARBUILDING.sqf ['%1',['ARRIVAL','']]",
 			_playerUID
 		];
 	};

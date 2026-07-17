@@ -18,7 +18,7 @@ switch (true) do {
 		&& {_key in [200,203,205,208]}
 	) :
 	{
-			_this call A3C_UI_SHARED_onKeyUp_remoteVehicle;
+			_this call A3C_ui_shared_fnc_onKeyUp_remoteVehicle;
 	};
 	case (
 		vehicle player isKindOf "HELICOPTER"

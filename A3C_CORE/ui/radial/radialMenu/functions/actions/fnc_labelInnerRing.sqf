@@ -81,7 +81,7 @@ if (_commandLevel == "SQUAD") then {
 } else {
 	showHUD ([true] + (shownHUD select [1, 10]));
 
-	[] call A3C_UI_SHARED_createDashBoard;
+	[] call A3C_ui_shared_fnc_createDashBoard;
 
 	(_display displayCtrl IDC_RADIAL_CORE_REFRESHDATA_IMG) ctrlShow false;
 	(_display displayCtrl IDC_RADIAL_CORE_REFRESHDATA_BTN) ctrlShow false;
@@ -139,4 +139,4 @@ if (_commandLevel == "SQUAD") then {
 };
 
 (_display displayCtrl IDC_RADIAL_EXTENSIONLEFT_TC_BOX) ctrlShow false;
-[IDD_RADIAL_MENU] call A3C_UI_MAP_TREE_LABEL;
+[IDD_RADIAL_MENU] call A3C_ui_shared_fnc_Tree_labelItems;

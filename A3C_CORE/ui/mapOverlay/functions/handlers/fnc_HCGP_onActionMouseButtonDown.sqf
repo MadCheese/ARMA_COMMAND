@@ -29,5 +29,5 @@ private _functionArray = call compile format [
 
 	[
 		false
-	] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+	] call A3C_ui_shared_fnc_highCommand_actionsLabel;
 };

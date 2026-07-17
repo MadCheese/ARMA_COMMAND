@@ -72,7 +72,7 @@ _condition params ["_conditionType", "_conditionValue"];
 if (_conditionType == "GoCode") then {
 	A3C_GOCODES_HC pushBackUnique _conditionValue;
 	publicVariable "A3C_GOCODES_HC";
-	[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls", 0];
+	[] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls", 0];
 
 	_insCondition = format ["A3C_GoCode_Activate_%1", _conditionValue];
 } else {

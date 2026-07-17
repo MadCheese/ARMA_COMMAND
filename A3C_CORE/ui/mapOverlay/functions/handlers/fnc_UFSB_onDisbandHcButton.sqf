@@ -124,7 +124,7 @@ if (_isHighCommand) then {
 
 [
 	(units group player) - [player]
-] call A3C_GROUP_RESET;
+] call A3C_ui_shared_fnc_resetPlayerGroup;
 
 [
 	_newGroup,

@@ -104,7 +104,7 @@ if (_isFirstWaypoint) then {
 						if (abs speed _unitVehicle < 2) then {
 							[
 								[_unitVehicle],
-								A3C_SHIP_startBoat
+								A3C_ai_shared_fnc_startBoat
 							] remoteExec ["bis_fnc_call", _unitVehicle];
 						};
 					};

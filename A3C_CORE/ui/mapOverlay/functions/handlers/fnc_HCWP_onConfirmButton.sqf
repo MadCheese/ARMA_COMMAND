@@ -288,7 +288,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 		case ("CLEAR BUILDING") : {
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_CLEARBUILDING.sqf ['%1',%2]",
+				"A3C_CORE\waypointScripts\wpScript_CLEARBUILDING.sqf ['%1',%2]",
 				getPlayerUID player,
 				["ARRIVAL",""]//[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL]
 			];
@@ -299,7 +299,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 			_wpScript = (waypointScript _wp);
 			//format 
 			//[
-			//	"A3C_CORE\fnc_AI\wpFncs\wpScript_groupGetInVehicle.sqf %1",
+			//	"A3C_CORE\waypointScripts\wpScript_groupGetInVehicle.sqf %1",
 			//	_scriptParams
 			//];
 		};
@@ -307,7 +307,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 		case ("GET IN (SYNC)") : {
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_groupGetInVehicle.sqf ['%1',%2]",
+				"A3C_CORE\waypointScripts\wpScript_groupGetInVehicle.sqf ['%1',%2]",
 				getPlayerUID player,
 				[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL]
 			];
@@ -316,7 +316,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 		case ("LOAD GROUP (SYNC)") : {
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_loadGroupInVehicle.sqf ['%1',%2]",
+				"A3C_CORE\waypointScripts\wpScript_loadGroupInVehicle.sqf ['%1',%2]",
 				getPlayerUID player,
 				[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL]
 			];
@@ -324,7 +324,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 		case ("LOAD VIC (SYNC)") : {
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_loadVehicleInVehicle.sqf ['%1',%2]",
+				"A3C_CORE\waypointScripts\wpScript_loadVehicleInVehicle.sqf ['%1',%2]",
 				getPlayerUID player,
 				[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL]
 			];
@@ -332,7 +332,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 		case ("BOARD VIC (SYNC)") : {
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_groupGetVehicleInVehicle.sqf ['%1',%2]",
+				"A3C_CORE\waypointScripts\wpScript_groupGetVehicleInVehicle.sqf ['%1',%2]",
 				getPlayerUID player,
 				[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL]
 			];
@@ -367,7 +367,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 			_statements = "";
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_heli_overwatch.sqf ['%1',%2,%3,%4,%5,'%6']",
+				"A3C_CORE\waypointScripts\wpScript_heli_overwatch.sqf ['%1',%2,%3,%4,%5,'%6']",
 				getPlayerUID player,
 				[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL],
 				[A3C_HC_ACTIVE_POST_COND_MODE,A3C_HC_ACTIVE_POST_COND_VAL],
@@ -380,7 +380,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 			_statements = "";
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_repair.sqf ['%1',%2]",
+				"A3C_CORE\waypointScripts\wpScript_repair.sqf ['%1',%2]",
 				getPlayerUID player,
 				[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL]
 			];
@@ -401,7 +401,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 			_statements = "";
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_Landing.sqf ['%1',%2,%3]",
+				"A3C_CORE\waypointScripts\wpScript_Landing.sqf ['%1',%2,%3]",
 				getPlayerUID player,
 				[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL],
 				[A3C_HC_ACTIVE_POST_COND_MODE,A3C_HC_ACTIVE_POST_COND_VAL]
@@ -412,7 +412,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 			_statements = "";
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_Landing_Combat.sqf ['%1',%2, %3]",
+				"A3C_CORE\waypointScripts\wpScript_Landing_Combat.sqf ['%1',%2, %3]",
 				getPlayerUID player,
 				[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL],
 				[A3C_HC_ACTIVE_POST_COND_MODE,A3C_HC_ACTIVE_POST_COND_VAL]
@@ -423,7 +423,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 			// systemChat str [A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL];
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_TR_Unload.sqf ['%1',%2, %3]",
+				"A3C_CORE\waypointScripts\wpScript_TR_Unload.sqf ['%1',%2, %3]",
 				getPlayerUID player,
 				[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL],
 				[A3C_HC_ACTIVE_POST_COND_MODE,A3C_HC_ACTIVE_POST_COND_VAL]
@@ -435,7 +435,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 			_statements = "";
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_AssembleWeapon.sqf ['%1',%2,%3,'']",
+				"A3C_CORE\waypointScripts\wpScript_AssembleWeapon.sqf ['%1',%2,%3,'']",
 				getPlayerUID player,
 				[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL],
 				[A3C_HC_ACTIVE_POST_COND_MODE,A3C_HC_ACTIVE_POST_COND_VAL]
@@ -471,7 +471,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 			_statements = "";
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_Rappel.sqf ['%1',%2,'%3',4]",
+				"A3C_CORE\waypointScripts\wpScript_Rappel.sqf ['%1',%2,'%3',4]",
 				getPlayerUID player,
 				[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL],
 				["NONE","NONE"],
@@ -485,7 +485,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 			_statements = "";
 			_wpScript = format 
 			[
-				"A3C_CORE\fnc_AI\wpFncs\wpScript_Paradrop.sqf ['%1',%2]",
+				"A3C_CORE\waypointScripts\wpScript_Paradrop.sqf ['%1',%2]",
 				getPlayerUID player,
 				[A3C_HC_ACTIVE_PRE_COND_MODE,A3C_HC_ACTIVE_PRE_COND_VAL]
 			];
@@ -553,7 +553,7 @@ if (_isCurrentWaypoint) then {
 	} foreach units _group;
 };
 
-[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
+[] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls",0];
 A3C_HC_ACTIVE_WPOS = [0,0,0];
 
 if (A3C_HC_EDIT_ACTION == "TRANSPORT UNLOAD") then {

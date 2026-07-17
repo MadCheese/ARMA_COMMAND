@@ -8,10 +8,10 @@ private _bool = false;
 // Prevent continuous firing while holding down menu key.
 if (A3C_RadialMenu_KEY_ID select 0 == _key) exitWith {};
 
-// Does not need if ([_key] call A3C_UI_Shared_blockKeyDownEvent) condition.
+// Does not need if ([_key] call A3C_ui_shared_fnc_blockKeyDownEvent) condition.
 if (_key in A3C_UI_DOWNKEYS) exitWith {};
 
-[_key] call A3C_UI_Shared_FNC_AddDownkey;
+[_key] call A3C_ui_shared_fnc_addDownkey;
 
 // player groupchat format ["[RADIAL] onKeyDown , %1 (%2)", _key, keyname _key];
 

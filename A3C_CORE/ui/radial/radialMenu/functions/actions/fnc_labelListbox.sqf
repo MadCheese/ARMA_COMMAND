@@ -380,7 +380,7 @@ switch (_mode) do {
 					[
 						"
 							private _roleArray = [%1] + %2;
-							[_roleArray,_this select 1,%3,objNull] call A3C_AssignVehicleSeat;
+							[_roleArray,_this select 1,%3,objNull] call A3C_ai_squad_fnc_boarding_assignVehicleSeatSingle;
 						",
 						if (_occupyingUnit in units player) then {_occupyingUnit} else {if (isNull _occupyingUnit OR {!alive _occupyingunit}) then {0} else {1}},
 						_roleData select [1,4],
@@ -451,7 +451,7 @@ switch (_mode) do {
 						compile format
 						[
 							"
-								[A3C_TARGETVEH,'%1',_this select 1,%2] spawn A3C_ai_squad_fnc_boardingAssignVehicleSeatMacro ;
+								[A3C_TARGETVEH,'%1',_this select 1,%2] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro ;
 							",
 							if (_i == 0) then {'all'} else {'cargoFFV'},
 							_units

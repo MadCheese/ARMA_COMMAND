@@ -36,7 +36,7 @@ if (_mode == 0) then {
 	A3C_UI_RADIAL_CTRLS_SHOWN = [];
 
 	if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
-		[] call A3C_UI_SHARED_createDashBoard;
+		[] call A3C_ui_shared_fnc_createDashBoard;
 	};
 };
 

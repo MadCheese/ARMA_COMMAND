@@ -118,7 +118,7 @@ class FSM
                 {
                         name = "run_cleanup_";
                         itemno = 2;
-                        init = /*%FSM<STATEINIT""">*/"//[(units group player) - [player]] call A3C_GROUP_RESET;" \n
+                        init = /*%FSM<STATEINIT""">*/"//[(units group player) - [player]] call A3C_ui_shared_fnc_resetPlayerGroup;" \n
                          "[] call A3C_ai_squad_fnc_joinUnitToPlayerGroup;" \n
                          "_time = time;" \n
                          "//systemchat ""array changed"";" \n
@@ -408,7 +408,7 @@ class FSM
                 {
                         name = "Group_Reset";
                         itemno = 22;
-                        init = /*%FSM<STATEINIT""">*/"[(units group player) - [player]] call A3C_GROUP_RESET;" \n
+                        init = /*%FSM<STATEINIT""">*/"[(units group player) - [player]] call A3C_ui_shared_fnc_resetPlayerGroup;" \n
                          "//systemchat ""took control"";"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links

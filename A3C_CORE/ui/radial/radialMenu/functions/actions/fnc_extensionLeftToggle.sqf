@@ -24,9 +24,9 @@ if (_mode == "OPEN") then {
 			[
 				IDD_RADIAL_MENU,
 				if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {"INF"} else {"HC"}
-			] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
+			] call A3C_ui_shared_fnc_resizeTeamColors_XWH;
 
-			[0] call A3C_UI_MAP_RESIZE_TEAMCOLORS_Y;
+			[0] call A3C_ui_shared_fnc_resizeTeamColors_Y;
 
 			[
 				IDD_RADIAL_MENU,

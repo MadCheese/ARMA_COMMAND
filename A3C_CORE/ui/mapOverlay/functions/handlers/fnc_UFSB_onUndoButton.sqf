@@ -134,6 +134,6 @@ if (count A3C_WAYPOINTS_TEMP > 0) then {
 };
 
 [] remoteExec [
-	"A3C_UI_Shared_fnc_toggleGocodeCtrls",
+	"A3C_ui_shared_fnc_toggleGocodeCtrls",
 	0
 ];

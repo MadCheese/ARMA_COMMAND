@@ -13,9 +13,6 @@ A3C_PREP_SUBDIR(handlers,onKeyUp);
 A3C_PREP_SUBDIR(handlers,onLBSelChanged);
 
 //-- Public functions
-
-
-
 A3C_PREP_SUBDIR(public,actionArtilleryPromptStart);
 A3C_PREP_SUBDIR(public,actionCasStrikePromptStart);
 A3C_PREP_SUBDIR(public,actionChargeDetonatePromptStart);
@@ -26,18 +23,10 @@ A3C_PREP_SUBDIR(public,actionFlyInHeightStartPrompt);
 A3C_PREP_SUBDIR(public,actionLandingPrecisionPromptStart);
 A3C_PREP_SUBDIR(public,actionLimitSpeedStartPrompt);
 A3C_PREP_SUBDIR(public,actionUnassembleWeaponPromptStart);
-
-
-
-
-
+A3C_PREP_SUBDIR(public,listbox_NumberControl);
 A3C_PREP_SUBDIR(public,onLBSelChangedShared);
 A3C_PREP_SUBDIR(public,openSelectionPromptPanel);
-
-
-
 A3C_PREP_SUBDIR(public,resizeBox);
-
 A3C_PREP_SUBDIR(public,squadActionUnassembleWeaponStartPrompt);
 
 

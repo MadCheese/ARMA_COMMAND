@@ -79,7 +79,7 @@ switch (true) do {
 		a3c_is_HC_remote
 		&& {_key in [200, 203, 205, 208]}
 	): {
-		_this call A3C_UI_SHARED_onKeyDown_remoteVehicle;
+		_this call A3C_ui_shared_fnc_onKeyDown_remoteVehicle;
 
 		_blockDefaultKey = true;
 	};

@@ -128,14 +128,14 @@ class A3C_DSP_MapOverlay
 			idc = IDC_SHARED_UI_TREE_SELECTOR;
 
 			colorBackground[] = {0,0,0,0.6};
-			onMouseButtonDown = "_this call A3C_TREE_BOXCLICK;";
+			onMouseButtonDown = "_this call A3C_ui_shared_fnc_Tree_onBoxClick;";
 			x = 0 * safezoneW + safezoneX;
 			y = 100;
 			w = (8 * 0.03 / (getResolution select 5));
 			h = 0.05 / (getResolution select 5);
-			onTreeLButtonDown = "_this call A3C_TREE_TVCHANGE; false";
-			onTreeCollapsed = "[_this,'COLLAPSE',false,0.1] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE;  false";
-			onTreeExpanded = "[_this,'OPEN',false,0.1] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE;  false";
+			onTreeLButtonDown = "_this call A3C_ui_shared_fnc_Tree_onTvChange; false";
+			onTreeCollapsed = "[_this,'COLLAPSE',false,0.1] spawn A3C_ui_shared_fnc_Tree_openOrCollapse;  false";
+			onTreeExpanded = "[_this,'OPEN',false,0.1] spawn A3C_ui_shared_fnc_Tree_openOrCollapse;  false";
 			sizeEx = 0.03 / (getResolution select 5);
 
 		};
@@ -347,7 +347,7 @@ class A3C_DSP_MapOverlay
 		class A3C_Refresh_Data_1_Clk: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_TOP_REFRESH_BTN; //7073;
-			onmousebuttondown = "[(units group player) - [player]] call A3C_GROUP_RESET;";
+			onmousebuttondown = "[(units group player) - [player]] call A3C_ui_shared_fnc_resetPlayerGroup;";
 
 			x = 0.288066 * safezoneW + safezoneX;
 			y = 0.94007 * safezoneH + safezoneY;
@@ -2676,7 +2676,7 @@ class A3C_DSP_MapOverlay
 					y = 0 * GUI_GRID_H + GUI_GRID_Y;
 					w = 5.5 * GUI_GRID_W;
 					h = 1 * GUI_GRID_H;
-					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(A3C_LB_MODE,(_this select 1),IDD_MAP_OVERLAY)] call A3C_LB_Change);
+					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(A3C_LB_MODE,(_this select 1),IDD_MAP_OVERLAY)] call A3C_ui_shared_fnc_onLbChange);
 				};
 				class MAP_SQWP_Stance_Arrival_IMG :  A3C_RscPicture
 				{
@@ -2742,7 +2742,7 @@ class A3C_DSP_MapOverlay
 		class MAP_Order_GoCode_A_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_Order_GoCode_A_BTN; //709101;
-			action = "['A'] call A3C_ACTIVATEGOCODE";
+			action = "['A'] call A3C_ui_shared_fnc_activateGoCode";
 
 			x = 0.689022 * safezoneW + safezoneX;
 			y = safezoneY - (0.0220035 * safezoneH);
@@ -2762,7 +2762,7 @@ class A3C_DSP_MapOverlay
 		class MAP_Order_GoCode_B_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_Order_GoCode_B_BTN; //709103;
-			action = "['B'] call A3C_ACTIVATEGOCODE";
+			action = "['B'] call A3C_ui_shared_fnc_activateGoCode";
 
 			x = 0.706206 * safezoneW + safezoneX;
 			y = safezoneY - (0.0220035 * safezoneH);
@@ -2782,7 +2782,7 @@ class A3C_DSP_MapOverlay
 		class MAP_Order_GoCode_C_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_Order_GoCode_C_BTN; //709105;
-			action = "['C'] call A3C_ACTIVATEGOCODE";
+			action = "['C'] call A3C_ui_shared_fnc_activateGoCode";
 
 			x = 0.689022 * safezoneW + safezoneX;
 			y = safezoneY - (0.0220035 * safezoneH);
@@ -2802,7 +2802,7 @@ class A3C_DSP_MapOverlay
 		class MAP_Order_GoCode_D_BTN: A3C_RscButton_Invisible
 		{
 			idc = IDC_MAP_Order_GoCode_D_BTN; //709107;
-			action = "['D'] call A3C_ACTIVATEGOCODE";
+			action = "['D'] call A3C_ui_shared_fnc_activateGoCode";
 
 			x = 0.706206 * safezoneW + safezoneX;
 			y = safezoneY - (0.0220035 * safezoneH);
@@ -2826,7 +2826,7 @@ class A3C_DSP_MapOverlay
 		class MAP_DynamicCombo: A3C_RscCombo //-- name is misleading as control is used in multiple places
 		{
 			idc = IDC_MAP_DynamicCombo; //7078
-			onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(A3C_LB_MODE,(_this select 1),IDD_MAP_OVERLAY)] call A3C_LB_Change);
+			onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(A3C_LB_MODE,(_this select 1),IDD_MAP_OVERLAY)] call A3C_ui_shared_fnc_onLbChange);
 			x = 0.00166839 * safezoneW + safezoneX;
 			y = 14 * safezoneH + safezoneY;
 			w = 0.0630074 * safezoneW;

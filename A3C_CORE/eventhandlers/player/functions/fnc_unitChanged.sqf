@@ -40,6 +40,6 @@ if !(isNull _currentPlayer) then {
 	private _currentGroup = group _currentPlayer;
 
 	if (_currentPlayer isEqualTo leader _currentGroup) then {
-		[(units _currentGroup) - [_currentPlayer]] call A3C_GROUP_RESET;
+		[(units _currentGroup) - [_currentPlayer]] call A3C_ui_shared_fnc_resetPlayerGroup;
 	};
 };

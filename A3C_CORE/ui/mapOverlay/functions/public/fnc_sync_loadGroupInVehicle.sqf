@@ -25,7 +25,7 @@ private _hostPrecondition = [
 
 _hostWaypoint setWaypointType "SCRIPTED";
 _hostWaypoint setWaypointScript format [
-	"A3C_CORE\fnc_AI\wpFncs\wpScript_LoadGroupInVehicle.sqf ['%1',%2]",
+	"A3C_CORE\waypointScripts\wpScript_LoadGroupInVehicle.sqf ['%1',%2]",
 	_playerUid,
 	_hostPrecondition
 ];
@@ -39,7 +39,7 @@ _hostWaypoint setWaypointTimeout [0, 0, 0];
 
 	_x setWaypointType "SCRIPTED";
 	_x setWaypointScript format [
-		"A3C_CORE\fnc_AI\wpFncs\wpScript_groupGetInVehicle.sqf ['%1',%2]",
+		"A3C_CORE\waypointScripts\wpScript_groupGetInVehicle.sqf ['%1',%2]",
 		_playerUid,
 		_precondition
 	];

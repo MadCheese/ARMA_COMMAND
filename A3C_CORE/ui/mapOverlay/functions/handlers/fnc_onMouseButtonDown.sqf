@@ -24,7 +24,7 @@ private _left = _mouseButton == 0; // << #TODO this sux, remove lol
 
 
 if (a3c_is_HC_remote && {!(_left)}) exitWith {
-	_this call A3C_UI_SHARED_OnMouseButtonDown_remoteVehicle;
+	_this call A3C_ui_shared_fnc_OnMouseButtonDown_remoteVehicle;
 	false //-- potentially not needed. WIP stage, this entire mouseDown EH needs serious overhaul
 };
 
@@ -390,7 +390,7 @@ if (_gpIconsCount > 0) exitWith {
 							"OPEN",
 							false,
 							0.1
-						] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE
+						] spawn A3C_ui_shared_fnc_Tree_openOrCollapse
 					};
 				};	
 			};
@@ -512,7 +512,7 @@ if (count _sqIcons > 0) exitWith {
 								"OPEN",
 								false,
 								0.1
-							] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE
+							] spawn A3C_ui_shared_fnc_Tree_openOrCollapse
 						};
 					};
 					//if ( ((A3C_SELECTED_UNITS select 0) == A3C_SQ_CLICKED_UNIT) && (A3C_MAP_CommandMode == "INF") ) then {

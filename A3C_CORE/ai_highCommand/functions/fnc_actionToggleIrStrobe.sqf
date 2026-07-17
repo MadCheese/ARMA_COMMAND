@@ -68,5 +68,5 @@ A3C_Prevent_attach_IR = true;
 	sleep (_randomSleepMax + 1);
 
 	A3C_Prevent_attach_IR = false;
-	[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+	[false] call A3C_ui_shared_fnc_highCommand_actionsLabel;
 };

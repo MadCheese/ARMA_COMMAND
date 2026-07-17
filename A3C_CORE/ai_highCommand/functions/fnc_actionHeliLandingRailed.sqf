@@ -102,7 +102,7 @@ private _distributedPositions = [
 		_landingWaypoint setWaypointType "SCRIPTED";
 
 		_landingWaypoint setWaypointScript format [
-			"A3C_CORE\fnc_AI\wpFncs\wpScript_railedHeliLanding.sqf ['%1',%2,%3,'%4',%5,'%6']",
+			"A3C_CORE\waypointScripts\wpScript_railedHeliLanding.sqf ['%1',%2,%3,'%4',%5,'%6']",
 			_playerUID,
 			["ARRIVAL", ""],
 			["ARRIVAL", ""],
@@ -126,7 +126,7 @@ private _distributedPositions = [
 
 				A3C_GOCODES_HC pushBackUnique _subCondition;
 				publicVariable "A3C_GOCODES_HC";
-				[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls", 0];
+				[] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls", 0];
 			};
 
 			case "TRANSPORT UNLOAD": {

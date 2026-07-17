@@ -105,4 +105,4 @@ if (_effectiveCommander in units _group) then {
 };
 
 // -- refresh gocodes, since deleted waypoint may have been the only one with gocode attached
-[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls", 0];
+[] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls", 0];

@@ -515,7 +515,7 @@ A3C_UI_GRID_SIZE = 1;
 A3C_CURRENT_COMMAND_LEVEL = "SQUAD";
 A3C_UI_RADIAL_CTRLS_SHOWN = [];
 A3C_UI_RADIAL_CTRLS_SHOWN_ACTIVATED = false;
-A3C_UI_SHARED_createDashBoard_ExtraControls = [];
+A3C_ui_shared_fnc_createDashBoard_ExtraControls = [];
 A3C_ACTIVE_BUTTONUNIT = objnull;
 
 //----------------------------- MEDICAL VARIABLES
@@ -627,6 +627,8 @@ A3C_HC_EDIT_COMBOSUBVAL_1 = "CIRCLE_L";
 A3C_HC_EDIT_COMBOSUBVAL_2 = 1000;  
 
 
+
+
 //----------------------------- drawMapUI variables
 A3C_UI_MAPICONS_POLYGON_MAIN = [];
 A3C_UI_MAPICONS_POLYGON_EDGE = [];
@@ -645,7 +647,12 @@ A3C_UI_MAPICONS_HC_CONES = [];
 
 //----------------------------- 
 
+//----------------------------- SHARED UI VARIABLES
 
+//----------------------------- UnitSelection Tree Variables
+A3C_UI_MAP_TREES_OPEN = [];
+A3C_RADIAL_TREES_OPEN_SQ = [[0]];
+A3C_RADIAL_TREES_OPEN_HC = [[0]];
 
 
 //----------------------------- DATA: NAVIGABLE BUILDING POSITIONS
@@ -726,7 +733,8 @@ uiNamespace setVariable [
     0
 ];
 
-
+//-----------------------------  ZEUS (WIP)
+A3C_ZEUSMISSION = if (!isNil 'A3C_ZEUSMISSION') then {A3C_ZEUSMISSION} else {false};
 
 
 //-- fetch reference game-controls once they exist

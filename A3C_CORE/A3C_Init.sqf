@@ -29,13 +29,8 @@ call compile preprocessFileLineNumbers "A3C_CORE\data\A3C_data_bPosNoAccess.sqf"
 
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_fncs_Debug.sqf";
 
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_sharedCommandingLevels.sqf";
 
 
-
-
-
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Ship.sqf";
 
 
 
@@ -164,12 +159,6 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\mapOverlay\functions\initFun
 
 
 
-call compile preprocessFileLineNumbers "A3C_CORE\fnc_AI\fncs_Boarding.sqf";         //-- Not HC/remote compatible yet
-
-//-- Shared UI fncs
-call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_Functions.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_Handlers_dispatched.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\UI_DSP_SHARED_TREE_Functions.sqf";
 
 //-- Radial Dialog
 call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\radialMenu\functions\initFunctions.sqf";
@@ -209,7 +198,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\functions\initFunctio
 //-- Arsenal fnc library
 call compile preprocessFileLineNumbers "A3C_CORE\ui\arsenal\functions\initFunctions.sqf";
 
-call compile preprocessFileLineNumbers "A3C_CORE\A3C_Mode_ZEUS.sqf";
+
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\fncs_UI_main.sqf";
 
@@ -220,7 +209,6 @@ call compile preprocessFileLineNumbers "A3C_CORE\eventhandlers\player\functions\
 
 
 
-MCSS_fnc_createMarker = compile preprocessfileLineNumbers "A3C_CORE\fnc_GEN\createMarker.sqf";
 
 
 [] call A3C_ui_radialMenu_fnc_resetDynamicButtons; //-- relict from radial init - #Unclear why is this needed on init?

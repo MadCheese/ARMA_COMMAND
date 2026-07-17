@@ -147,4 +147,4 @@ if (_switchCommandMode) then {
 A3C_SPLIT_UNITS = A3C_SELECTED_UNITS;
 
 [A3C_MAP_CommandMode] call A3C_ui_mapOverlay_fnc_UFSB_applyPageMode;
-[] call A3C_UNITSEL_REFRESH_UI;
+[] call A3C_ui_shared_fnc_refreshUnitSelectionUi;

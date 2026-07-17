@@ -80,7 +80,7 @@ switch (_selection) do {
 	_unit setVariable [A3C_CHECKVAR, _data, true];
 } forEach A3C_GCUNITS;
 
-[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls", 0];
+[] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls", 0];
 
 missionNamespace setVariable [
 	"#markerSize_" + A3C_MARKERTOSWITCH,

@@ -50,7 +50,7 @@ if (A3C_UI_MAP_BOOL_isHCWaypointPosEdit) then {
 	A3C_MAP_CommandMode = "HC";
 
 
-	[] call A3C_UNITSEL_REFRESH_UI;
+	[] call A3C_ui_shared_fnc_refreshUnitSelectionUi;
 	// systemchat format ["HC Select WP-CLick: %1", [A3C_UI_MAP_BOOL_isHCWaypointPosEdit, A3C_SELECTED_UNITS]];
 
 	//~~
@@ -77,7 +77,7 @@ if (A3C_UI_MAP_BOOL_isHCWaypointPosEdit) then {
 					"OPEN",
 					false,
 					0.1
-				] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE
+				] spawn A3C_ui_shared_fnc_Tree_openOrCollapse
 			};
 		};	
 	};
@@ -460,7 +460,7 @@ if (A3C_MapSel_Field_Active) then {
 						"OPEN",
 						false,
 						0.1
-					] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE
+					] spawn A3C_ui_shared_fnc_Tree_openOrCollapse
 				};
 			};
 		};
@@ -502,7 +502,7 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 			_vehi spawn {
 				sleep 1;
 				_boardingUnits = (A3C_SELECTED_UNITS) select {isNull objectParent _x};
-				[_this,'all',0,_boardingUnits] spawn A3C_ai_squad_fnc_boardingAssignVehicleSeatMacro ;				
+				[_this,'all',0,_boardingUnits] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro ;				
 			};
 		} else {
 			if (count A3C_SELECTED_UNITS == 1) then {
@@ -801,7 +801,7 @@ if (!isNull _hcGroup) then {
 
 				_wpToEdit setWaypointPosition [(_build buildingPos 0),0];
 				_wpToEdit setWaypointType "SCRIPTED";
-				_wpToEdit setWaypointScript (format ["A3C_CORE\fnc_AI\wpFncs\wpScript_CLEARBUILDING.sqf ['%1',['ARRIVAL','']]",getPlayerUID player]);
+				_wpToEdit setWaypointScript (format ["A3C_CORE\waypointScripts\wpScript_CLEARBUILDING.sqf ['%1',['ARRIVAL','']]",getPlayerUID player]);
 
 				_statementsExec = "if !(false) then {[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint};"; //format
 				//[

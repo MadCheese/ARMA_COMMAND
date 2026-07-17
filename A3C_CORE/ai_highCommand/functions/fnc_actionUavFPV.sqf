@@ -15,7 +15,7 @@ if (!isNull _cursorTarget) then {
 	_wp setWaypointType "SCRIPTED";
 	_wp waypointAttachVehicle _cursorTarget;
 	_wp setWaypointSpeed "FULL";
-	_wp setWaypointScript "A3C_CORE\fnc_AI\wpFncs\wpScript_UAV_FPV.sqf [getPlayerUID player]"; 
+	_wp setWaypointScript "A3C_CORE\waypointScripts\wpScript_UAV_FPV.sqf [getPlayerUID player]"; 
 } else {
 	[] spawn {
 		hint "NO TARGET SELECTED!";

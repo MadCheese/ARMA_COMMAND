@@ -131,11 +131,11 @@ class FSM
                          "if ( (assignedVehicle _unit) == _chopper) then {" \n
                          "     _switchVar = 1;" \n
                          "      player removeAction A3C_assign_action_playerToVehicle;" \n
-                         "	A3C_assign_action_playerToVehicle = player addAction ['<t color=''#80FF00''>' + 'Unassign from Vehicle' + '</t>',""[0] spawn A3C_AssignPlayerToVehicleCargo; _switchVar = 0;"",false];" \n
+                         "	A3C_assign_action_playerToVehicle = player addAction ['<t color=''#80FF00''>' + 'Unassign from Vehicle' + '</t>',""[0] spawn A3C_ai_squad_fnc_assignPlayerToVehicleCargo; _switchVar = 0;"",false];" \n
                          "} else {" \n
                          "   _switchVar = 1;" \n
                          "      player removeAction A3C_assign_action_playerToVehicle;" \n
-                         "	A3C_assign_action_playerToVehicle = player addAction ['<t color=''#80FF00''>' + 'Assign Vehicle' + '</t>',""[1] spawn A3C_AssignPlayerToVehicleCargo; _switchVar = 0;"",false];" \n
+                         "	A3C_assign_action_playerToVehicle = player addAction ['<t color=''#80FF00''>' + 'Assign Vehicle' + '</t>',""[1] spawn A3C_ai_squad_fnc_assignPlayerToVehicleCargo; _switchVar = 0;"",false];" \n
                          "};" \n
                          "};"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;

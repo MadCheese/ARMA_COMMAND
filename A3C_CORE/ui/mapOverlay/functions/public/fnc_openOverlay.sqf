@@ -263,7 +263,7 @@ if (_highestUnitPage > A3C_BUTTONPAGE_TABLET) then {
 // Can take considerable time with many commanded units.
 [
 	_displayId
-] call A3C_UI_MAP_TREE_LABEL;
+] call A3C_ui_shared_fnc_Tree_labelItems;
 
 /*
  * Overlay step 1:
@@ -279,7 +279,7 @@ if (
 [
 	_displayId,
 	"INF"
-] call A3C_UI_MAP_Overlay_ResizeTeamColorsXWH;
+] call A3C_ui_shared_fnc_resizeTeamColors_XWH;
 
 sleep 0.1;
 
@@ -324,7 +324,7 @@ if (A3C_SELECTED_UNITS isEqualTo []) then {
 
 // Synchronize go-code control state on all machines.
 [] remoteExec [
-	"A3C_UI_Shared_fnc_toggleGocodeCtrls",
+	"A3C_ui_shared_fnc_toggleGocodeCtrls",
 	0
 ];
 

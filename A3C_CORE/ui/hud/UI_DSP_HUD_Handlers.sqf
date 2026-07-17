@@ -28,7 +28,7 @@ A3C_UI_HUD_onKeyDown = {
 		false
 	};
 
-	if ([_key] call A3C_UI_Shared_blockKeyDownEvent) exitWith {};
+	if ([_key] call A3C_ui_shared_fnc_blockKeyDownEvent) exitWith {};
 
 	// player sideChat format["HUD KEY-DOWN: %1 (%2)",_key, keyname _key];
 	
@@ -172,7 +172,7 @@ A3C_UI_HUD_onKeyDown = {
 	private _keyControlsMap = (inputAction "showMap") > 0;
 
 	if !(_keyControlsMap) then {
-		[_key] call A3C_UI_Shared_FNC_AddDownkey;
+		[_key] call A3C_ui_shared_fnc_addDownkey;
 		A3C_LASTUSED_KD = time;
 	};
 
@@ -224,7 +224,7 @@ A3C_UI_HUD_onKeyDown = {
 			&& {_key in [200,203,205,208]}
 		) :
 		{
-			_this call A3C_UI_SHARED_onKeyDown_remoteVehicle;
+			_this call A3C_ui_shared_fnc_onKeyDown_remoteVehicle;
 			_blockDefaultKey = true;
 		};
 
@@ -308,7 +308,7 @@ A3C_UI_HUD_onKeyUp = {
 	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];
 
 	if (_key == A3C_RadialMenu_KEY_ID select 0) exitWith {
-		[_display] call A3C_UI_Shared_fnc_ReleaseMenuKey;	
+		[_display] call A3C_ui_shared_fnc_releaseMenuKey;	
 	};
 
 	switch (true) do {
@@ -318,7 +318,7 @@ A3C_UI_HUD_onKeyUp = {
 			&& {_key in [200,203,205,208]}
 		) :
 		{
-				_this call A3C_UI_SHARED_onKeyUp_remoteVehicle;
+				_this call A3C_ui_shared_fnc_onKeyUp_remoteVehicle;
 		};
 		case (
 			vehicle player isKindOf "HELICOPTER"
@@ -354,7 +354,7 @@ A3C_UI_HUD_onMouseButtonDown = {
 	if (_mouseButton == 1) then {
 		if (_ctrl) then {
 			if (a3c_is_HC_remote) then {
-				_this call A3C_UI_SHARED_OnMouseButtonDown_remoteVehicle;
+				_this call A3C_ui_shared_fnc_OnMouseButtonDown_remoteVehicle;
 			} else {
 				if (count A3C_UI_squadPlacement_units > 0) then {
 					[_alt, _shift] call A3C_UI_squadPlacement_fnc_executeOrder;

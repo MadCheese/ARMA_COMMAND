@@ -165,7 +165,7 @@ switch (_function) do {
 						A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = [
 							A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units,
 							getPosASL A3C_SQ_REM_INDICATOR
-						] call A3C_UI_SHARED_FIND_BEST_SHOOTERS;
+						] call A3C_ui_shared_fnc_findBestShooters;
 
 						if ((count A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units) > 0) then {
 							[
@@ -356,19 +356,19 @@ switch (_function) do {
 	};
 
 	case "GoCode_A": {
-		["A"] call A3C_ACTIVATEGOCODE;
+		["A"] call A3C_ui_shared_fnc_activateGoCode;
 	};
 
 	case "GoCode_B": {
-		["B"] call A3C_ACTIVATEGOCODE;
+		["B"] call A3C_ui_shared_fnc_activateGoCode;
 	};
 
 	case "GoCode_C": {
-		["C"] call A3C_ACTIVATEGOCODE;
+		["C"] call A3C_ui_shared_fnc_activateGoCode;
 	};
 
 	case "GoCode_D": {
-		["D"] call A3C_ACTIVATEGOCODE;
+		["D"] call A3C_ui_shared_fnc_activateGoCode;
 	};
 
 	case "COMMAND_LEVEL": {
@@ -425,7 +425,7 @@ switch (_function) do {
 	};
 
 	case "Voice_REFRESH": {
-		[(units group player) - [player]] call A3C_GROUP_RESET;
+		[(units group player) - [player]] call A3C_ui_shared_fnc_resetPlayerGroup;
 	};
 
 	case "Voice_LookDir": {
@@ -482,11 +482,11 @@ switch (_function) do {
 					private _crewGroup = group _crewUnit;
 
 					if (_crewGroup != group player) then {
-						if ([_crewGroup, player] call A3C_isCargoGroupEjectable) then {
+						if ([_crewGroup, player] call A3C_main_fnc_isCargoGroupEjectable) then {
 							_dismountGroups pushBackUnique _crewGroup;
 						};
 					} else {
-						if ([_crewUnit, _vehicle] call A3C_isCargoUnitEjectable) then {
+						if ([_crewUnit, _vehicle] call A3C_main_fnc_isCargoUnitEjectable) then {
 							[[_crewUnit], A3C_ai_shared_fnc_unitGetOut] remoteExec ["BIS_fnc_call", _crewUnit];
 						};
 					};

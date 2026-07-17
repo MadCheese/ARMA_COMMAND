@@ -105,7 +105,7 @@ private _requestVar = format ["A3C_ATTACHMENT_REQUEST_%1", _type];
 	};
 } forEach _refGroups;
 
-[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+[false] call A3C_ui_shared_fnc_highCommand_actionsLabel;
 
 [_maxDelay, _type] spawn {
 	params ["_maxDelay", "_type"];
@@ -122,6 +122,6 @@ private _requestVar = format ["A3C_ATTACHMENT_REQUEST_%1", _type];
 		};
 	};
 
-	[false] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+	[false] call A3C_ui_shared_fnc_highCommand_actionsLabel;
 };
 

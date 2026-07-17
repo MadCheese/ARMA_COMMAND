@@ -218,7 +218,7 @@ while {!isNull _unit} do {
 		};
 		if (_shoreAction) then {
 			if (abs (speed _vehicle) < 2 ) then {
-				[_vehicle] call A3C_SHIP_startBoat;
+				[_vehicle] call A3C_ai_shared_fnc_startBoat;
 			};
 		};
 		//-- next line, pay attention: the true/false may seem counter intuitive. We are looking for ZERO units WITHOUT rebreathers (meaning all have one)
@@ -1043,7 +1043,7 @@ while {!isNull _unit} do {
 						sleep 0.2;
 						_vehicle flyInHeight 1;
 						_vehicle limitSpeed 0;
-						_spawnBehaviour = [_vehicle,"all",0,_pickUpUnits] spawn A3C_ai_squad_fnc_boardingAssignVehicleSeatMacro ;
+						_spawnBehaviour = [_vehicle,"all",0,_pickUpUnits] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro ;
 						waituntil {scriptDone _spawnBehaviour};
 
 						while {({(_x in _pickUpUnits)} count A3C_BOARD_UNITS_ACTIVE > 0) OR ({(assignedvehicle _x == _vehicle) && !(_x in _vehicle) && (alive _x)} count units group player > 0) } do {
@@ -1054,7 +1054,7 @@ while {!isNull _unit} do {
 						};
 					};
 					if !(_vehicle isKindOf "AIR") then {
-						_spawnBehaviour = [_vehicle,"all",0,_pickUpUnits] spawn A3C_ai_squad_fnc_boardingAssignVehicleSeatMacro ;
+						_spawnBehaviour = [_vehicle,"all",0,_pickUpUnits] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro ;
 						waituntil {scriptDone _spawnBehaviour};
 					};
 				};
@@ -1303,7 +1303,7 @@ while {!isNull _unit} do {
 		};
 		((_data select _cycle) select 2) set [1,"NONE"];
 		_unit setvariable ["A3C_PLOT",_switchdata,true];
-		[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
+		[] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls",0];
 	};
 
 	_vehicle = vehicle _unit; //-- refresh

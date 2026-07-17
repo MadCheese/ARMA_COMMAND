@@ -61,7 +61,7 @@ private _objectPlacerDir = getDir A3C_OBJECTPLACER;
 		};
 
 		private _waypointScript = format [
-			"A3C_CORE\fnc_AI\wpFncs\wpScript_AssembleWeapon.sqf ['%1',%2,%3,'%4']",
+			"A3C_CORE\waypointScripts\wpScript_AssembleWeapon.sqf ['%1',%2,%3,'%4']",
 			getPlayerUID player,
 			["ARRIVAL", 0],
 			["NONE", "NONE"],

@@ -470,7 +470,7 @@ if (_mode == 1) then {
 	] call A3C_ui_mapOverlay_fnc_UFSB_RefreshControlBar;
 } else {
 	[] remoteExec [
-		"A3C_UI_Shared_fnc_toggleGocodeCtrls",
+		"A3C_ui_shared_fnc_toggleGocodeCtrls",
 		0
 	];
 };

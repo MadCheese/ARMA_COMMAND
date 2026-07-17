@@ -58,8 +58,8 @@ if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
 
         
         A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_RD_UNITS;
-        [] call A3C_UNITSEL_REFRESH_UI;
-        [] call A3C_UI_SHARED_createDashBoard;
+        [] call A3C_ui_shared_fnc_refreshUnitSelectionUi;
+        [] call A3C_ui_shared_fnc_createDashBoard;
     };
 } else {
     private _refUnit = driver _clickedVehicle;
@@ -77,7 +77,7 @@ if (A3C_CURRENT_COMMAND_LEVEL == "HIGHCOMMAND") then {
             A3C_RD_UNITS = [_refUnit];
         };
 
-        [] call A3C_UNITSEL_REFRESH_UI;
+        [] call A3C_ui_shared_fnc_refreshUnitSelectionUi;
     };
 
     A3C_RD_UNITS = A3C_RD_UNITS select {!isPlayer _x};

@@ -35,14 +35,14 @@ if (
 	}
 ) exitWith {
 	if (_mapSelectionPromptPanelShown) then {
-		[_key, _mapSelectionPromptPanelListbox] spawn A3C_UI_Shared_SelectionPromptPanel_Listbox_NumberControl;
+		[_key, _mapSelectionPromptPanelListbox] spawn A3C_UI_SelectionPromptPanel_fnc_listbox_NumberControl;
 	};
 	true
 };
 
 //-- 2: DEFAULT EXIT CONDITIONS
 if (
-	[_key] call A3C_UI_Shared_blockKeyDownEvent
+	[_key] call A3C_ui_shared_fnc_blockKeyDownEvent
 	// || {A3C_UI_MAP_BOOL_CT_EDIT_ACTIVE}
 ) exitWith {};
 
@@ -52,7 +52,7 @@ if (_alt && {_key == 15}) exitWith {// safety if user alt-tabs out of the game
 };
 
 
-[_key] call A3C_UI_Shared_FNC_AddDownkey;
+[_key] call A3C_ui_shared_fnc_addDownkey;
 
 // player commandchat format ["Display %1, A3C_UI_MAP_onKeyDown_Overlay: %2 - %3", _display, keyName _key, round time];
 

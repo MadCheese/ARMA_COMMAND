@@ -647,7 +647,7 @@ class A3C_DSP_RadialMenu
 		{
 			idc = IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX; //8054;
 			style = CT_LISTBOX;
-			onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(BV_LB1,(_this select 1),IDD_RADIAL_MENU)] spawn A3C_LB_Change);
+			onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(BV_LB1,(_this select 1),IDD_RADIAL_MENU)] spawn A3C_ui_shared_fnc_onLbChange);
 			shadow = 0.75;
 			x = 35 * GUI_GRID_W + GUI_GRID_X;
 			y = 6.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -670,7 +670,7 @@ class A3C_DSP_RadialMenu
 		{
 			idc = IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_BOX; //8055;
 			style = CT_LISTBOX;   //CT_LISTNBOX  //ST_GROUP_BOX
-			onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(BV_LB2,(_this select 1),IDD_RADIAL_MENU)] spawn A3C_LB_Change);
+			onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(BV_LB2,(_this select 1),IDD_RADIAL_MENU)] spawn A3C_ui_shared_fnc_onLbChange);
 			sizeEx = "(((((safezoneW / safezoneH) min 1.3) / 1.3) / 25) * 1)";
 			x = 35 * GUI_GRID_W + GUI_GRID_X;
 			y = 13 * GUI_GRID_H + GUI_GRID_Y;
@@ -823,9 +823,9 @@ class A3C_DSP_RadialMenu
 					y = (2 * GUI_GRID_H + GUI_GRID_Y) + TEAMCOL_FRAME_H;
 					w = BAR_W;
 					h = BAR_H - (0.5 * GUI_GRID_H + GUI_GRID_Y) - ((2 * GUI_GRID_H + GUI_GRID_Y) + ( 0.0330053 * safezoneH)); //-- subtract Y of HOLD/CONT button to align to the bottow of BAR
-					onTreeLButtonDown = "_this call A3C_TREE_TVCHANGE; false";
-					onTreeCollapsed = "[_this,'COLLAPSE',false,0.1] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE;  false";
-					onTreeExpanded = "[_this,'OPEN',false,0.1] spawn A3C_UI_MAP_TREE_OPEN_COLLAPSE;  false";
+					onTreeLButtonDown = "_this call A3C_ui_shared_fnc_Tree_onTvChange; false";
+					onTreeCollapsed = "[_this,'COLLAPSE',false,0.1] spawn A3C_ui_shared_fnc_Tree_openOrCollapse;  false";
+					onTreeExpanded = "[_this,'OPEN',false,0.1] spawn A3C_ui_shared_fnc_Tree_openOrCollapse;  false";
 					sizeEx = 0.03 / (getResolution select 5);
 					colorBackground[] = {0.2,0.2,0.2,0.3};
 					colorBorder[] = {0,0,0,0};
@@ -968,7 +968,7 @@ class A3C_DSP_RadialMenu
 					y = 0 * GUI_GRID_H + GUI_GRID_Y;
 					w = 6.5 * GUI_GRID_W;
 					h = 5.1 * GUI_GRID_H;
-					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(A3C_LB_MODE,(_this select 1),IDD_RADIAL_MENU)] call A3C_LB_Change);
+					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(A3C_LB_MODE,(_this select 1),IDD_RADIAL_MENU)] call A3C_ui_shared_fnc_onLbChange);
 				};
    			};
     	};

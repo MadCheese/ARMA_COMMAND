@@ -439,7 +439,7 @@ switch (_mode) do {
 			A3C_RADIALMODE = "HC ACTIONS";
 			A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_RD_UNITS;
 
-			private _actions = [_doToggle] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+			private _actions = [_doToggle] call A3C_ui_shared_fnc_highCommand_actionsLabel;
 
 			private _outerRingBackgrounds = ["radial_outerRingBackgrounds"] call FUNC(ctrlGroup);
 
@@ -899,7 +899,7 @@ switch (_mode) do {
 					(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_OUTERRIGHT_3_BTN) ctrlSetTooltip "GoCode C";
 					(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_OUTERRIGHT_4_IMG) ctrlSetText "A3C_CORE\ui\pictures\icon_menu_gocode_D.paa";
 					(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_OUTERRIGHT_4_BTN) ctrlSetTooltip "GoCode D";
-					[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0];
+					[] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls",0];
 
 					A3C_OUTER_RING_BTN_fnc_5 =
 					[
@@ -910,7 +910,7 @@ switch (_mode) do {
 							//_units = call compile _units;
 
 
-							['A'] call A3C_ACTIVATEGOCODE;
+							['A'] call A3C_ui_shared_fnc_activateGoCode;
 
 						}
 					];
@@ -922,7 +922,7 @@ switch (_mode) do {
 							_btnData params ["_display","_button","_sX","_sY","_shift","_ctrl","_alt"];
 							//_units = call compile _units;
 
-							['B'] call A3C_ACTIVATEGOCODE;
+							['B'] call A3C_ui_shared_fnc_activateGoCode;
 
 						}
 					];
@@ -932,7 +932,7 @@ switch (_mode) do {
 						{
 							params ["_btnData","_units"];
 							_btnData params ["_display","_button","_sX","_sY","_shift","_ctrl","_alt"];
-							['C'] call A3C_ACTIVATEGOCODE;
+							['C'] call A3C_ui_shared_fnc_activateGoCode;
 
 						}
 					];
@@ -942,7 +942,7 @@ switch (_mode) do {
 						{
 							params ["_btnData","_units"];
 							_btnData params ["_display","_button","_sX","_sY","_shift","_ctrl","_alt"];
-							['D'] call A3C_ACTIVATEGOCODE;
+							['D'] call A3C_ui_shared_fnc_activateGoCode;
 						}
 					];
 				};
@@ -1076,7 +1076,7 @@ switch (_mode) do {
 				_x ctrlSetTooltip (_rightTooltips select _forEachIndex);
 			} forEach (["radial_outerRightButtons"] call FUNC(ctrlGroup));
 
-			[] remoteExec ["A3C_UI_Shared_fnc_toggleGocodeCtrls",0]; //-- check gocodes and assign color
+			[] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls",0]; //-- check gocodes and assign color
 
 			(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlShow true;
 			(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_BG_RIGHT) ctrlSetText "A3C_CORE\ui\pictures\BG_Radial_OuterRing_Right.paa"; //-- aiai
@@ -1084,28 +1084,28 @@ switch (_mode) do {
 			[
 				"A",
 				{
-					['A'] call A3C_ACTIVATEGOCODE;
+					['A'] call A3C_ui_shared_fnc_activateGoCode;
 				}
 			];
 			A3C_OUTER_RING_BTN_fnc_6 =
 			[
 				"B",
 				{
-					['B'] call A3C_ACTIVATEGOCODE;
+					['B'] call A3C_ui_shared_fnc_activateGoCode;
 				}
 			];
 			A3C_OUTER_RING_BTN_fnc_7 =
 			[
 				"C",
 				{
-					['C'] call A3C_ACTIVATEGOCODE;
+					['C'] call A3C_ui_shared_fnc_activateGoCode;
 				}
 			];
 			A3C_OUTER_RING_BTN_fnc_8 =
 			[
 				"D",
 				{
-					['D'] call A3C_ACTIVATEGOCODE;
+					['D'] call A3C_ui_shared_fnc_activateGoCode;
 				}
 			];
 
@@ -2492,7 +2492,7 @@ switch (_mode) do {
 				};
 
 			} else {
-				[(units group player) - [player]] call A3C_GROUP_RESET;
+				[(units group player) - [player]] call A3C_ui_shared_fnc_resetPlayerGroup;
 			};
 		};
 		A3C_RADIAL_HOVER = true;

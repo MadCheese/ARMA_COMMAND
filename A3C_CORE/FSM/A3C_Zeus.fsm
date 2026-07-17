@@ -83,7 +83,7 @@ class FSM
                         name = "add_mouseclick_";
                         itemno = 3;
                         init = /*%FSM<STATEINIT""">*/"systemchat 'zeus';" \n
-                         "A3C_ZEUS_EH_MBD = (findDisplay 312) displayAddEventHandler [""MouseButtonDown"", {_this call A3C_ZEUS_REMOTE}];"/*%FSM</STATEINIT""">*/;
+                         "A3C_ZEUS_EH_MBD = (findDisplay 312) displayAddEventHandler [""MouseButtonDown"", {_this call A3C_main_fnc_zeusRemote}];"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {

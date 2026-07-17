@@ -235,7 +235,7 @@ private _listboxDefinitions = [
 _startupBar progressSetPosition 0.75;
 
 if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
-	[] call A3C_UI_SHARED_createDashBoard;
+	[] call A3C_ui_shared_fnc_createDashBoard;
 
 	waitUntil {
 		isNull findDisplay IDD_MAP_OVERLAY
@@ -436,6 +436,6 @@ if (
 // Unfortunately, this has to happen after the controls group is shown.
 [
 	false
-] call A3C_MAP_fnc_GroupMenu_LabelActionButtons;
+] call A3C_ui_shared_fnc_highCommand_actionsLabel;
 
 playSound "ReadOutHideClick1";
