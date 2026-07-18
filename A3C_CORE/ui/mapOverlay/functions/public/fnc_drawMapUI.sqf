@@ -127,11 +127,11 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 		private _candidateBoardingVehicles = A3C_DRAGPOS nearentities [["CAR","TANK","AIR","SHIP","MOTORCYCLE"],220];
 		{
 			_lastDragCandidateVehicle = _x;
-			if ({
-				private _crewMember = _x;
-				((side _crewMember) getFriend (side player)) < 0.6
-			} count crew _lastDragCandidateVehicle > 0) then {
-			};
+			// if ({
+			// 	private _crewMember = _x;
+			// 	((side _crewMember) getFriend (side player)) < 0.6
+			// } count crew _lastDragCandidateVehicle > 0) then {
+			// };
 			if ({
 				private _seatRole = _x;
 				(_lastDragCandidateVehicle emptyPositions _seatRole) > 0
@@ -1765,25 +1765,44 @@ if (A3C_TAB_BUILDING_BOOL) then {
 		];
 	};
 };
+
 if (A3C_MapSel_Field_Active) then {
-	private _selectionFieldVertices =
-	[
-		A3C_MapSel_Field_Root,
-		[(A3C_MapSel_Field_DEST select 0), (A3C_MapSel_Field_Root select 1), 0],
-		A3C_MapSel_Field_DEST,
-		[(A3C_MapSel_Field_Root select 0), (A3C_MapSel_Field_DEST select 1), 0]
+	private _rootPosition =
+		A3C_MapSel_Field_Root;
+
+	private _destinationPosition =
+		A3C_MapSel_Field_DEST;
+
+	private _selectionFieldCenter = [
+		(
+			(_rootPosition select 0)
+			+ (_destinationPosition select 0)
+		) / 2,
+		(
+			(_rootPosition select 1)
+			+ (_destinationPosition select 1)
+		) / 2,
+		0
 	];
-	_mapControl drawTriangle
-	[
-		[
-			_selectionFieldVertices select 0,
-			_selectionFieldVertices select 1,
-			_selectionFieldVertices select 2,
-			_selectionFieldVertices select 2,
-			_selectionFieldVertices select 3,
-			_selectionFieldVertices select 0
-		],
-		_sharedDrawColor,
+
+	private _selectionFieldHalfWidth =
+		abs (
+			(_destinationPosition select 0)
+			- (_rootPosition select 0)
+		) / 2;
+
+	private _selectionFieldHalfHeight =
+		abs (
+			(_destinationPosition select 1)
+			- (_rootPosition select 1)
+		) / 2;
+
+	_mapControl drawRectangle [
+		_selectionFieldCenter,
+		_selectionFieldHalfWidth,
+		_selectionFieldHalfHeight,
+		0,
+		[0, 0.54, 0.98, 1],
 		"#(rgb,1,1,1)color(0,0.3,0.6,0.2)"
 	];
 };
@@ -1792,16 +1811,30 @@ if (A3C_MapSel_Field_Active) then {
 if (count A3C_PICKUP_OBJECTS > 0) then {
 	{
 		private _pickupObject = _x;
+
 		[
 			_mapControl,
 			_pickupObject,
 			25,
-			[A3C_UI_COLOR_BLUE,1] call A3C_ui_shared_fnc_getColorArrayWithOpacity,
-			(gettext(_cfgVehicles >> typeof _lastDragCandidateVehicle >> "displayName"))
-		] call A3C_ui_mapOverlay_fnc_drawIconVehicleMacro;	
-		A3C_UI_MAPICONS_PICKUP pushbackUnique [_pickupObject,[25,25], getPosASL _pickupObject];
-	} foreach A3C_PICKUP_OBJECTS;
+			[
+				A3C_UI_COLOR_BLUE,
+				1
+			] call A3C_ui_shared_fnc_getColorArrayWithOpacity,
+			getText (
+				_cfgVehicles
+				>> typeOf _pickupObject
+				>> "displayName"
+			)
+		] call A3C_ui_mapOverlay_fnc_drawIconVehicleMacro;
+
+		A3C_UI_MAPICONS_PICKUP pushBackUnique [
+			_pickupObject,
+			[25, 25],
+			getPosASL _pickupObject
+		];
+	} forEach A3C_PICKUP_OBJECTS;
 };
+
 if (A3C_Boarding_ACTIVE) then {
 	{
 		private _boardingVehicleIconData = _x;

@@ -19,7 +19,7 @@ if (
 	_defaultRoot + "b_hq_ca.paa"
 };
 
-private _drivenVehicles = [];
+private _drivenVehicles = []; //#TODO - replace with defined groupVehicles fnc!
 private _operatedVehicles = [];
 
 {

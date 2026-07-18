@@ -1,19 +1,43 @@
 // A3C_ai_highCommand_fnc_isGroupBoarding
-params ["_group"];
 
-if (isPlayer (leader _group)) exitWith {false};
+params [
+	["_group", grpNull, [grpNull]]
+];
 
-private _return = false;
+if (isNull _group) exitWith {
+	false
+};
+
+if (isPlayer leader _group) exitWith {
+	false
+};
+
+private _return =
+	false;
+
 {
-	if (isNull objectParent _x) then {
-		private _assignedVehicle = assignedVehicle _x;
+	private _unit =
+		_x;
+
+	if (
+		alive _unit
+		&& {isNull objectParent _unit}
+		&& {
+			currentCommand _unit
+				isEqualTo "GET IN"
+		}
+	) then {
+		private _assignedVehicle =
+			assignedVehicle _unit;
+
 		if (
 			!isNull _assignedVehicle
+			&& {alive _assignedVehicle}
 			&& {canMove _assignedVehicle}
-			&& {!(_x in _assignedVehicle)}
 		) exitWith {
 			_return = true;
 		};
 	};
-} foreach units _group;
+} forEach units _group;
+
 _return
