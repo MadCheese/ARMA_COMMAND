@@ -1,3 +1,6 @@
+#include "..\..\ui\mapOverlay\dialog_defines.hpp"
+
+
 // A3C_ai_shared_fnc_cancelUnitPlot
 
 // Abort existing orders.

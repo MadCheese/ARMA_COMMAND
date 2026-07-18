@@ -42,6 +42,7 @@ if (_doubleClick) then {
 					} forEach A3C_SELECTED_HC_GROUPS_SETTINGS;
 
 					A3C_SELECTED_HC_GROUPS_SETTINGS = [];
+					A3C_SELECTED_UNITS = [];
 				};
 			};
 

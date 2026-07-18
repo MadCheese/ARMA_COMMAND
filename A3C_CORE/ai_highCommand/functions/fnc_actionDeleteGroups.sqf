@@ -8,7 +8,11 @@ if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
 			systemchat format ["A3C: Group %1 was not deleted. Players detected", groupID _gp];
 		};
 	} foreach A3C_SELECTED_HC_GROUPS_SETTINGS;
+	A3C_SELECTED_HC_GROUPS_SETTINGS = [];
+	A3C_SELECTED_UNITS = [];
 } else {
 	//-- multiple groups selected: prompt confirmation (HUD-variant of SPP is spawned in UI response)
 	["DELETE"] call A3C_ui_selectionPromptPanel_fnc_openSelectionPromptPanel;
+
 };
+

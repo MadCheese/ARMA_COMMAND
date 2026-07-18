@@ -69,6 +69,7 @@ A3C_ZEUS_UNIT = player;
 
 	};
 } foreach (synchronizedObjects player);
+
 [player] execFSM "A3C_CORE\FSM\A3C_MON_PlayerGroup.fsm";
 
 

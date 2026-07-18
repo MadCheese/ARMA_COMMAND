@@ -86,15 +86,28 @@ switch (true) do {
 				_blockDefault = true;
 			};
 			case 207: { //-- END-key
+
 				if (A3C_Selection_MultiWaypoint isEqualTo []) then {
 					//-- SINGLE - need to hover exactly over waypoint
 					getMousePosition params ["_sX","_sY"];
-					_wpIcons = (["HC_WP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
+					private _wpIcons = (["HC_WP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 					if (count _wpIcons > 0) then {
 						_wpIcon = _wpIcons select 0;
 						_gp = _wpIcon select 0;
 						_wpiC = _wpIcon select 3;
 						[_gp, _wpiC] call A3C_ai_highCommand_fnc_removeWaypoint;
+					} else {
+						//-- Delete selected groups
+						private _gpIcons = (["HC_GP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
+						private _gpIconGroups = _gpIcons apply {_x select 0};
+						if (count _gpIconGroups > 0) then {
+							private _targetGroups = if (
+								{typeName _x == "GROUP"} count A3C_SELECTED_UNITS > 0
+							) then {+A3C_SELECTED_UNITS} else {_gpIconGroups};
+							A3C_SELECTED_HC_GROUPS_SETTINGS = +_targetGroups;
+							//-- always use selectionPrompt for map-hotkey deletion do prevent accidents
+							["DELETE"] call A3C_ui_selectionPromptPanel_fnc_openSelectionPromptPanel;
+						};
 					};
 				} else {
 					//-- MULTIPLE WAYPOINTS SELECTED - can just delete

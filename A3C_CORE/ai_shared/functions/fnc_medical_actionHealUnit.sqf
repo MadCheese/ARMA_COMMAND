@@ -213,6 +213,16 @@ if (stance _patient == "STAND") then {
 };
 
 /*
+	Records route-ending outcomes that should bypass fallback movement and
+	treatment without displaying the generic failure message.
+*/
+private _patientHealedEnRoute =
+	false;
+
+private _patientDiedEnRoute =
+	false;
+
+/*
 	Skip the full plot movement when the healer is already close enough.
 
 	This decision is independent of whether the patient is an AI unit or a
@@ -225,42 +235,42 @@ private _requiresPlotMovement =
 
 if (_requiresPlotMovement) then {
 	private _plotData = [
-	[
-		[
-			_treatmentPosition,
-			_treatmentPosition
-		],
-		[
-			"",
-			"",
-			""
-		],
-		[
-			"None",
-			[]
-		],
-		[
-			"NONE",
-			"NONE"
-		],
-		[
-			"UP",
-			"MIDDLE"
-		],
 		[
 			[
-				0,
-				false
-			]
-		],
-		true,
-		0,
-		-1,
-		25,
-		-1,
-		0
-	]
-];
+				_treatmentPosition,
+				_treatmentPosition
+			],
+			[
+				"",
+				"",
+				""
+			],
+			[
+				"None",
+				[]
+			],
+			[
+				"NONE",
+				"NONE"
+			],
+			[
+				"UP",
+				"MIDDLE"
+			],
+			[
+				[
+					0,
+					false
+				]
+			],
+			true,
+			0,
+			-1,
+			25,
+			-1,
+			0
+		]
+	];
 
 	_unit setVariable [
 		"A3C_PLOT",
@@ -296,10 +306,77 @@ if (_requiresPlotMovement) then {
 			// An unconscious healer cannot continue.
 		};
 
-		if (
-			!alive _unit
-			|| {!alive _patient}
+		if (!alive _unit) exitWith {
+			if (
+				(
+					_unit getVariable [
+						"A3C_PLOT",
+						[]
+					]
+				) isNotEqualTo []
+			) then {
+				_unit setVariable [
+					"A3C_ABORT_Data",
+					[
+						true,
+						false
+					],
+					true
+				];
+
+				waitUntil {
+					(
+						_unit getVariable [
+							"A3C_PLOT",
+							[]
+						]
+					) isEqualTo []
+				};
+			};
+		};
+
+		if (!alive _patient) exitWith {
+			_patientDiedEnRoute = true;
+
+			if (
+				(
+					_unit getVariable [
+						"A3C_PLOT",
+						[]
+					]
+				) isNotEqualTo []
+			) then {
+				_unit setVariable [
+					"A3C_ABORT_Data",
+					[
+						true,
+						false
+					],
+					true
+				];
+
+				waitUntil {
+					(
+						_unit getVariable [
+							"A3C_PLOT",
+							[]
+						]
+					) isEqualTo []
+				};
+			};
+		};
+
+		/*
+			Another healer may complete the treatment before this healer
+			reaches the patient. Stop the active movement plot immediately.
+		*/
+		if !(
+			[
+				_patient
+			] call A3C_ai_shared_fnc_medical_isUnitHurt
 		) exitWith {
+			_patientHealedEnRoute = true;
+
 			if (
 				(
 					_unit getVariable [
@@ -399,16 +476,22 @@ private _healingAborted = _patient getVariable [
 	A healer that is already within nine metres may immediately begin the
 	treatment interaction. The direct fallback movement is needed only when
 	the plot movement did not bring the healer sufficiently close.
+
+	An already-healed or dead patient bypasses fallback movement.
 */
 private _healerInRange =
-	_vehicleHeal
+	_patientHealedEnRoute
+	|| {_patientDiedEnRoute}
+	|| {_vehicleHeal}
 	|| {_unit distance2D _patient < 9};
 
 private _usedFallbackMovement =
 	false;
 
 if (
-	!_healerInRange
+	!_patientHealedEnRoute
+	&& {!_patientDiedEnRoute}
+	&& {!_healerInRange}
 	&& {!_healingAborted}
 	&& {alive _unit}
 	&& {alive _patient}
@@ -436,9 +519,13 @@ if (
 			false
 		];
 
+		if (!alive _patient) then {
+			_patientDiedEnRoute = true;
+		};
+
 		_healingAborted
 		|| {!alive _unit}
-		|| {!alive _patient}
+		|| {_patientDiedEnRoute}
 		|| {
 			[
 				_unit
@@ -449,7 +536,16 @@ if (
 	};
 
 	_healerInRange =
-		_unit distance2D _patient < 5;
+		!_patientDiedEnRoute
+		&& {_unit distance2D _patient < 5};
+};
+
+/*
+	Catch a death occurring after the final movement check but before the
+	treatment decision.
+*/
+if (!alive _patient) then {
+	_patientDiedEnRoute = true;
 };
 
 /*
@@ -461,6 +557,7 @@ if (
 	_usedFallbackMovement
 	&& {_healerInRange}
 	&& {!_healingAborted}
+	&& {!_patientDiedEnRoute}
 ) then {
 	private _designatedPatients = _unitGroup getVariable [
 		"A3C_PATIENTS_DESIGNATED",
@@ -480,7 +577,9 @@ private _healerUnconscious = [
 ] call A3C_ai_shared_fnc_medical_isUnitUnconscious;
 
 private _skipHealing =
-	!alive _unit
+	_patientHealedEnRoute
+	|| {_patientDiedEnRoute}
+	|| {!alive _unit}
 	|| {!alive _patient}
 	|| {_healingAborted}
 	|| {_healerUnconscious}
@@ -501,15 +600,27 @@ if (
 if (_isPlayerPatient) then {
 	A3C_MEDICAL_MeetingPos = [];
 } else {
-	_patient doWatch _unit;
+	if (alive _patient) then {
+		_patient doWatch _unit;
+	};
 };
 
 if (_skipHealing) then {
-	if !(
-		profileNamespace getVariable [
-			"A3C_AUTOMEDIC",
-			false
-		]
+	/*
+		Do not report a generic failure when another healer completed the
+		treatment or when the patient died during the approach.
+	*/
+	if (
+		!_patientHealedEnRoute
+		&& {!_patientDiedEnRoute}
+		&& {
+			!(
+				profileNamespace getVariable [
+					"A3C_AUTOMEDIC",
+					false
+				]
+			)
+		}
 	) then {
 		systemChat format [
 			"A3C: Patient %1 not healed, please repeat action",
@@ -598,7 +709,6 @@ _patient forceSpeed -1;
 	AI-led groups must not retain the crouched treatment posture.
 	Reset both the healer and patient after the healing animation.
 */
-
 if (!_isPlayerLedGroup) then {
 	{
 		if (!isNull _x) then {
@@ -608,6 +718,31 @@ if (!_isPlayerLedGroup) then {
 		_unit,
 		_patient
 	];
+};
+
+/*
+	Report route-ending medical outcomes through group chat rather than the
+	generic system-chat failure message.
+*/
+if (
+	_patientDiedEnRoute
+	&& {alive _unit}
+) then {
+	_unit groupChat format [
+		"%1 is KIA, aborting treatment!",
+		[
+			_patient
+		] call MCSS_fnc_getUnitNameString
+	];
+} else {
+	if (_patientHealedEnRoute) then {
+		_patient groupChat format [
+			"%1, I'm up! Save meds for someone else.",
+			[
+				_unit
+			] call MCSS_fnc_getUnitNameString
+		];
+	};
 };
 
 if (
