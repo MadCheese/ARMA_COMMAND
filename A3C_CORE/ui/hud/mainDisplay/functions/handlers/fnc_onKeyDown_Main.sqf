@@ -18,7 +18,7 @@ if (_key == 1) exitWith {
 	false
 };
 
-if (player != leader group player) exitWith {
+if !(A3C_isPlayerLeader) exitWith {
 	false
 };
 

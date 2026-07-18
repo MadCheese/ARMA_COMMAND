@@ -11,6 +11,9 @@
 
 	Returns false because normal KeyUp events are not consumed.
 */
+
+
+
 params [
 	["_display", displayNull, [displayNull]],
 	["_key", -1, [0]],
@@ -19,7 +22,9 @@ params [
 	["_alt", false, [false]]
 ];
 
-if (player != leader group player) exitWith {
+
+
+if !(A3C_isPlayerLeader) exitWith {
 	false
 };
 

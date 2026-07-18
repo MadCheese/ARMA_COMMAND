@@ -273,6 +273,29 @@ BR_A3C_TACV_throwTheta_Add = 0;
 
 /////////////////
 
+A3C_MEDICAL_itemStrings =
+[
+	//Regular
+	
+	"firstaid",
+	"fak",
+	"fielddressing",
+	"morphine",
+	//--ACE stuff
+	//"ACE_fieldDressing", //-- not necessary, fielddressing is already checked
+	"ace_morphine",
+	"ace_surgicalkit",
+	"ace_personalaidkit",
+	"ace_elasticbandage",
+	"ace_quikclot",
+	"ace_packingbandage",
+	"medi",
+	"medkit",
+	"medikit",
+	"biofoam"
+];
+
+
 
 //-- Server only
 

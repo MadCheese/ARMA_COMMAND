@@ -152,7 +152,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		],
 		{
 			if (visibleMap) exitWith {};
-			if !(player == leader group player) exitWith {};
+			if !(A3C_isPlayerLeader ) exitWith {};
 
 			if ((count groupSelectedUnits player) == 0) then {
 				{

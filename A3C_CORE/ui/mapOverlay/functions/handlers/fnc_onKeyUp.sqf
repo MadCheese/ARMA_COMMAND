@@ -6,7 +6,7 @@ params ["_display","_key","_shift","_ctrl","_alt"];
 
 // player commandchat format ["MAP KEY-UP: %1 (%2)", _key, keyName _key];
 
-if (player != (leader group player)) exitWith {false};
+if (A3C_isPlayerLeader) exitWith {false};
 if ( !isNull(findDisplay 312) ) exitWith {false}; //-- ZEUS interface is open. Prevent most A3C stuff
 
 A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];

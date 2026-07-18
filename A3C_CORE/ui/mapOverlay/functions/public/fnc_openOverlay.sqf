@@ -40,7 +40,7 @@ if (
 	&& {!hasInterface}
 ) exitWith {};
 
-if (player != leader group player) exitWith {};
+if !(A3C_isPlayerLeader) exitWith {};
 
 /*
  * Prevent opening the overlay while the radial menu is awaiting an

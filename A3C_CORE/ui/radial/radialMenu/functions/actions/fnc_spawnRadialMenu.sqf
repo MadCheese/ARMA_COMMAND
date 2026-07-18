@@ -1,8 +1,12 @@
 #include "..\..\script_component.hpp"
 #include "..\..\dialog_defines.hpp"
+#include "..\..\..\settingsMenu\dialog_defines.hpp"
 #include "..\..\..\..\mapOverlay\dialog_defines.hpp"
 
+
 // A3C_ui_radialMenu_fnc_spawnRadialMenu
+
+
 
 params ["_data", "_cursorObjectSelection"];
 
@@ -25,24 +29,18 @@ if (isNil "A3C_is_Initialized") exitWith {
 if (!isNull (findDisplay 602)) exitWith {};
 if (!isNull (findDisplay IDD_MAP_OVERLAY)) exitWith {};
 if (!isNull (findDisplay IDD_RADIAL_MENU)) exitWith {};
-if (!isNull (findDisplay 100010)) exitWith {};
+if (!isNull (findDisplay IDD_SETTINGS_MENU)) exitWith {};
 if (!isNull (findDisplay IDD_SQUAD_PLACEMENT_INTERACTION)) exitWith {};
 
 if (A3C_DISABLE_RADIAL) exitWith {};
 
 private _exit = false;
 
-if !(player == leader group player) then {
-	_exit = true;
+if !(A3C_isPlayerLeader) exitWith {};
 
-	if ([player] call A3C_ai_shared_fnc_medical_isUnitUnconscious) then {
-		if (player == ((units group player) select 0)) then {
-			_exit = false;
-		};
-	};
-};
 
-if (_exit) exitWith {};
+
+
 
 private _hcAll = A3C_HC_allGroupsClient_Current;
 private _cursorTarget = cursorTarget;
@@ -68,7 +66,7 @@ A3C_ACTIVE_BUTTONUNIT = if (count (groupSelectedUnits player) > 0) then {
 	objNull
 };
 
-_exit = false;
+private _exit = false;
 
 if (currentWeapon player == secondaryWeapon player) then {
 	if (getNumber (configFile >> "CfgWeapons" >> secondaryWeapon player >> "canLock") == 2) then {

@@ -1,27 +1,18 @@
 #include "..\..\..\radial\radialMenu\dialog_defines.hpp"
 #include "..\..\..\radial\radialMenu\script_component.hpp"
+#include "..\..\..\radial\settingsMenu\dialog_defines.hpp"
 
 // A3C_ui_squadPlacement_fnc_startSquadPlacementInteraction
 
 
 if  (!isnull findDisplay IDD_RADIAL_MENU) exitWith {};
-if  (!isnull (findDisplay 100010)) exitWith {};
+if  (!isnull (findDisplay IDD_SETTINGS_MENU)) exitWith {};
 if  (!isnull (findDisplay IDD_SQUAD_PLACEMENT_INTERACTION)) exitWith {};
 if ((count A3C_UI_squadPlacement_unitGhosts) == 0) exitWith {};
 
 
-_exit = false;
-if !(player == (leader group player)) then {
-	_exit = true;
 
-	if ([player] call A3C_ai_shared_fnc_medical_isUnitUnconscious) then {
-		if (player == (units group player select 0)) then {
-			_exit = false;
-		};
-	};
-
-};
-if (_exit) exitWith {};
+if !(A3C_isPlayerLeader) exitWith {};
 
 _data = _this select 0;
 _btn = _data select 1;

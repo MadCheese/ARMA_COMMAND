@@ -7,7 +7,7 @@ params [
 ];
 
 if (isDedicated) exitWith {};
-if !(player isEqualTo leader group player) exitWith {};
+if !(A3C_isPlayerLeader) exitWith {};
 
 /*
     Every activation or deactivation invalidates the previous manager and

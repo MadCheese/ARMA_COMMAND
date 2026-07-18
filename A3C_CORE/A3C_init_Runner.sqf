@@ -185,7 +185,7 @@ A3C_is_Initialized = true;
 
 		if
 		(
-			player == leader group player 
+			A3C_isPlayerLeader 
 			&& {currentCommand player != ""}
 		) then
 		{

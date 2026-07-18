@@ -85,7 +85,7 @@ private _fnc_resetFlippedVehicles = {
 	true
 ] call _fnc_resetFlippedVehicles;
 
-if (player != leader group player) exitWith {};
+if !(A3C_isPlayerLeader) exitWith {};
 
 if (!isNull _display) then {
 	{

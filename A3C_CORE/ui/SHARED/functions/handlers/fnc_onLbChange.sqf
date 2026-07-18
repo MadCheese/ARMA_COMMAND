@@ -305,28 +305,41 @@ switch (_mode) do {
 					IDC_MAP_SQWP_Parent
 				];
 			};
+
+			/*
+				The map variant now performs its complete team-color layout
+				in one immediate pass.
+			*/
+			[
+				0
+			] call A3C_ui_shared_fnc_resizeTeamColors_Y;
 		} else {
-			private _radialDisplay = findDisplay IDD_RADIAL_MENU;
+			private _radialDisplay =
+				findDisplay IDD_RADIAL_MENU;
 
 			if (!isNull _radialDisplay) then {
 				(
 					_radialDisplay
-					displayCtrl IDC_RADIAL_EXTENSIONLEFT_TC_BOX
+						displayCtrl IDC_RADIAL_EXTENSIONLEFT_TC_BOX
 				) ctrlShow false;
 			};
 
-			// The radial tree still requires its own dedicated refresh.
-		};
+			/*
+				Preserve the existing radial two-stage layout. The radial
+				menu uses separate layers and is not part of the map fix.
+			*/
+			[
+				_displayId,
+				A3C_MAP_CommandMode
+			] call A3C_ui_shared_fnc_resizeTeamColors_XWH;
 
-		[
-			_displayId,
-			A3C_MAP_CommandMode
-		] call A3C_ui_shared_fnc_resizeTeamColors_XWH;
+			[] spawn {
+				sleep 0.1;
 
-		[] spawn {
-			sleep 0.1;
-
-			[0] call A3C_ui_shared_fnc_resizeTeamColors_Y;
+				[
+					0
+				] call A3C_ui_shared_fnc_resizeTeamColors_Y;
+			};
 		};
 	};
 

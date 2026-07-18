@@ -5,6 +5,7 @@ A3C_CurrentPlayerObject = player;
 A3C_UNITCOUNTER =  (count (units group player));
 A3C_PLAYERGROUP = group player;
 A3C_UNITCOUNT = ((count (units group player)) -1);
+A3C_isPlayerLeader = player == leader group player;
 
 //----------------------------- Supported Addon Variables
 A3C_IsTAO = if (isClass(configFile/"CfgPatches"/"tao_foldmap_a3")) then {true} else {false}; //-- detect if TAO Folding Map is running
@@ -59,29 +60,6 @@ if (A3C_IsAICommand) then {
 
 
 
-A3C_MEDICAL_itemStrings =
-[
-	//Regular
-	
-	"firstaid",
-	"fak",
-	"fielddressing",
-	"morphine",
-	
-	
-	//--ACE stuff
-	//"ACE_fieldDressing", //-- not necessary, fielddressing is already checked
-	"ace_morphine",
-	"ace_surgicalkit",
-	"ace_personalaidkit",
-	"ace_elasticbandage",
-	"ace_quikclot",
-	"ace_packingbandage",
-	"medi",
-	"medkit",
-	"medikit",
-	"biofoam"
-];
 
 
 

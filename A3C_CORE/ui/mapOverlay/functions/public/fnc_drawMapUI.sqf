@@ -7,7 +7,7 @@ params ["_mapControl"];
 
 if ( (A3C_OPACITY == 0) OR {!visibleMap} ) exitWith {};
 if (!isNil 'A3C_disableMapPlanning' && {A3C_disableMapPlanning}) exitWith {};
-if !(player == leader group player) exitWith {};
+if !(A3C_isPlayerLeader) exitWith {};
 private _isShiftHeld = 42 in A3C_UI_DOWNKEYS;
 
 

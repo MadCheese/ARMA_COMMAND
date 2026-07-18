@@ -2,64 +2,111 @@
 
 // Requires the unit's "A3C_PLOT" variable and
 // A3C_ai_shared_fnc_actionExecuteUnitPlot.
-params ["_unit", "_patient"];
 
-private _unitObjectParent = objectParent _unit;
-private _patientObjectParent = objectParent _patient;
-private _vehicleHeal = _unitObjectParent == _patientObjectParent;
+params [
+	["_unit", objNull, [objNull]],
+	["_patient", objNull, [objNull]]
+];
+
+if (
+	isNull _unit
+	|| {isNull _patient}
+) exitWith {};
 
 if (isPlayer _unit) exitWith {};
 
-private _isPlayerPatient = _patient == player;
+private _unitGroup =
+	group _unit;
+
+private _unitObjectParent =
+	objectParent _unit;
+
+private _patientObjectParent =
+	objectParent _patient;
+
+/*
+	The treatment counts as an in-vehicle treatment only when both units
+	are actually inside the same non-null vehicle.
+
+	Two dismounted units both return objNull from objectParent and must not
+	be treated as sharing a vehicle.
+*/
+private _vehicleHeal =
+	!isNull _unitObjectParent
+	&& {
+		_unitObjectParent
+		isEqualTo _patientObjectParent
+	};
+
+private _isPlayerPatient =
+	isPlayer _patient;
 
 // Retain the destination setup performed for the patient.
-[_patient] call A3C_ai_shared_fnc_setDestination;
+[
+	_patient
+] call A3C_ai_shared_fnc_setDestination;
 
-private _patientUnitPosMode = switch (stance _patient) do {
+private _patientUnitPosMode = switch (
+	stance _patient
+) do {
 	case "STAND": {
 		"AUTO"
 	};
+
 	case "CROUCH": {
 		"MIDDLE"
 	};
+
 	case "PRONE": {
 		"DOWN"
 	};
+
 	default {
 		"AUTO"
 	};
 };
 
-private _assignedPatients = (group _unit) getVariable [
+private _assignedPatients = _unitGroup getVariable [
 	"A3C_PATIENTS_ASSIGNED",
 	[]
 ];
 
 _assignedPatients pushBackUnique _patient;
 
-(group _unit) setVariable [
+_unitGroup setVariable [
 	"A3C_PATIENTS_ASSIGNED",
 	_assignedPatients
 ];
 
-private _treatmentPosition = position _patient;
+private _treatmentPosition =
+	position _patient;
 
 if (
 	_unit != _patient
 	&& {!_vehicleHeal}
 ) then {
 	if (_isPlayerPatient) then {
-
 		_unit groupChat "Get Support!";
-		A3C_MEDICAL_MeetingPos = position player;
+
+		A3C_MEDICAL_MeetingPos =
+			position _patient;
 	} else {
 		_patient forceSpeed 0;
 	};
 
-	// Retained as a hook for future AI meetup-position adjustments.
+	/*
+		Retained as a hook for future AI meetup-position adjustments.
+
+		At present, an alternative treatment position is selected only for
+		a player patient.
+	*/
 	if (
 		_patient getHitPointDamage "Hitlegs" < 0.5
-		&& {!([_patient] call A3C_ai_shared_fnc_medical_isUnitUnconscious)}
+		&& {
+			!([
+				_patient
+			] call A3C_ai_shared_fnc_medical_isUnitUnconscious)
+		}
 	) then {
 		private _nearbyObjects = nearestObjects [
 			_patient,
@@ -74,9 +121,9 @@ if (
 			15
 		];
 
-		if (count _nearbyObjects == 0) then {
+		if (_nearbyObjects isEqualTo []) then {
 			_nearbyObjects = nearestTerrainObjects [
-				player,
+				_patient,
 				[
 					"Tree",
 					"Bush",
@@ -86,12 +133,12 @@ if (
 			];
 		};
 
-		if (count _nearbyObjects > 0) then {
+		if (_nearbyObjects isNotEqualTo []) then {
 			_nearbyObjects = [
 				_nearbyObjects,
 				[],
 				{
-					_x distance player
+					_x distance _patient
 				},
 				"ASCEND"
 			] call BIS_fnc_sortBy;
@@ -104,98 +151,116 @@ if (
 				_boundingBoxPositions,
 				[],
 				{
-					_x distance player
+					_x distance _patient
 				},
 				"ASCEND"
 			] call BIS_fnc_sortBy;
 
-			if (_isPlayerPatient) then {
-				A3C_MEDICAL_MeetingPos = _boundingBoxPositions select 0;
-				_treatmentPosition = _boundingBoxPositions select 0;
+			if (
+				_isPlayerPatient
+				&& {
+					_boundingBoxPositions
+					isNotEqualTo []
+				}
+			) then {
+				A3C_MEDICAL_MeetingPos =
+					_boundingBoxPositions select 0;
+
+				_treatmentPosition =
+					_boundingBoxPositions select 0;
 			};
 		};
 	};
 };
 
-if (_isPlayerPatient) then {
-	if (
-		player == leader group player
-		&& {!_vehicleHeal}
-	) then {
-		private _formationUnits = [];
+if (
+	_isPlayerPatient
+	&& {_patient == leader group _patient}
+	&& {!_vehicleHeal}
+) then {
+	private _patientGroup =
+		group _patient;
 
-		{
-			private _expectedDestination = expectedDestination _x;
+	private _activeMedics = _patientGroup getVariable [
+		"A3C_MEDICS_ACTIVE",
+		[]
+	];
 
-			if (
-				(_expectedDestination select 1) in [
-					"DoNotPlanFormation",
-					"FORMATION PLANNED"
-				]
-				&& {
-					!(
-						_x in (
-							(group player) getVariable [
-								"A3C_MEDICS_ACTIVE",
-								[]
-							]
-						)
-					)
-				}
-			) then {
-				_formationUnits pushBack _x;
-			};
-		} forEach ((units group player) - [player]);
+	private _formationUnits = [];
 
-		_formationUnits commandFollow player;
-	};
+	{
+		private _expectedDestination =
+			expectedDestination _x;
+
+		if (
+			(_expectedDestination select 1) in [
+				"DoNotPlanFormation",
+				"FORMATION PLANNED"
+			]
+			&& {!(_x in _activeMedics)}
+		) then {
+			_formationUnits pushBack _x;
+		};
+	} forEach (
+		(units _patientGroup) - [_patient]
+	);
+
+	_formationUnits commandFollow _patient;
 };
 
 if (stance _patient == "STAND") then {
 	_patient setUnitPos "MIDDLE";
 };
 
-if (
+/*
+	Skip the full plot movement when the healer is already close enough.
+
+	This decision is independent of whether the patient is an AI unit or a
+	player.
+*/
+private _requiresPlotMovement =
 	!_vehicleHeal
-	&& {_unit distance _patient > 3}
-) then {
+	&& {_unit != _patient}
+	&& {_unit distance2D _patient > 3};
+
+if (_requiresPlotMovement) then {
 	private _plotData = [
+	[
+		[
+			_treatmentPosition,
+			_treatmentPosition
+		],
+		[
+			"",
+			"",
+			""
+		],
+		[
+			"None",
+			[]
+		],
+		[
+			"NONE",
+			"NONE"
+		],
+		[
+			"UP",
+			"MIDDLE"
+		],
 		[
 			[
-				_treatmentPosition,
-				_treatmentPosition
-			],
-			[
-				"",
-				"",
-				""
-			],
-			[
-				"None",
-				[]
-			],
-			[
-				"NONE",
-				"NONE"
-			],
-			[
-				"UP",
-				"MIDDLE"
-			],
-			[
-				[
-					0,
-					false
-				]
-			],
-			true,
-			0,
-			-1,
-			25,
-			-1,
-			0
-		]
-	];
+				0,
+				false
+			]
+		],
+		true,
+		0,
+		-1,
+		25,
+		-1,
+		0
+	]
+];
 
 	_unit setVariable [
 		"A3C_PLOT",
@@ -205,36 +270,43 @@ if (
 
 	[
 		_unit,
-		_unit getVariable "A3C_PLOT"
+		_unit getVariable [
+			"A3C_PLOT",
+			[]
+		]
 	] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot;
 
-	while {!isNull _patient} do {
+	while {
+		!isNull _patient
+	} do {
 		if (
 			_patient getVariable [
 				"A3C_AbortHealing",
 				false
 			]
 		) exitWith {
-			// The player aborted the action with a double-click.
+			// The action was aborted externally.
 		};
 
-		if ([_unit] call A3C_ai_shared_fnc_medical_isUnitUnconscious) exitWith {
+		if (
+			[
+				_unit
+			] call A3C_ai_shared_fnc_medical_isUnitUnconscious
+		) exitWith {
 			// An unconscious healer cannot continue.
 		};
 
-		// Future self-healing support should avoid recursively recalling
-		// this complete function.
 		if (
 			!alive _unit
-			&& {!alive _patient}
+			|| {!alive _patient}
 		) exitWith {
 			if (
-				count (
+				(
 					_unit getVariable [
 						"A3C_PLOT",
 						[]
 					]
-				) > 0
+				) isNotEqualTo []
 			) then {
 				_unit setVariable [
 					"A3C_ABORT_Data",
@@ -246,35 +318,36 @@ if (
 				];
 
 				waitUntil {
-					count (
+					(
 						_unit getVariable [
 							"A3C_PLOT",
 							[]
 						]
-					) == 0
+					) isEqualTo []
 				};
 			};
 		};
 
 		if (
-			count (
+			(
 				_unit getVariable [
 					"A3C_PLOT",
 					[]
 				]
-			) == 0
+			) isEqualTo []
 		) exitWith {};
 
 		if (
-			_unit distance2D _treatmentPosition <= 2
+			_unit distance2D _treatmentPosition
+			<= 2
 		) exitWith {
 			if (
-				count (
+				(
 					_unit getVariable [
 						"A3C_PLOT",
 						[]
 					]
-				) > 0
+				) isNotEqualTo []
 			) then {
 				_unit setVariable [
 					"A3C_ABORT_Data",
@@ -286,12 +359,12 @@ if (
 				];
 
 				waitUntil {
-					count (
+					(
 						_unit getVariable [
 							"A3C_PLOT",
 							[]
 						]
-					) == 0
+					) isEqualTo []
 				};
 			};
 		};
@@ -300,66 +373,118 @@ if (
 	};
 };
 
+/*
+	Clear any remaining plot data before evaluating the final treatment
+	range.
+*/
 {
-	_x setVariable [
-		"A3C_PLOT",
-		[],
-		true
-	];
+	if (!isNull _x) then {
+		_x setVariable [
+			"A3C_PLOT",
+			[],
+			true
+		];
+	};
 } forEach [
 	_unit,
 	_patient
 ];
 
-private _skipHealing = true;
+private _healingAborted = _patient getVariable [
+	"A3C_AbortHealing",
+	false
+];
+
+/*
+	A healer that is already within nine metres may immediately begin the
+	treatment interaction. The direct fallback movement is needed only when
+	the plot movement did not bring the healer sufficiently close.
+*/
+private _healerInRange =
+	_vehicleHeal
+	|| {_unit distance2D _patient < 9};
+
+private _usedFallbackMovement =
+	false;
 
 if (
-	_unit distance2D _patient < 9
-	|| {_vehicleHeal}
+	!_healerInRange
+	&& {!_healingAborted}
+	&& {alive _unit}
+	&& {alive _patient}
+	&& {
+		!([
+			_unit
+		] call A3C_ai_shared_fnc_medical_isUnitUnconscious)
+	}
 ) then {
-	_skipHealing = false;
-} else {
-	if (_isPlayerPatient) then {
-		[
-			_unit,
-			position _unit
-		] call A3C_ai_shared_fnc_doMove;
+	_usedFallbackMovement = true;
 
-		for "_i" from 1 to 30 do {
-			if (
-				_patient getVariable [
-					"A3C_AbortHealing",
-					false
-				]
-			) exitWith {};
+	[
+		_unit,
+		_treatmentPosition
+	] call A3C_ai_shared_fnc_doMove;
 
-			if (player distance2D _unit < 5) exitWith {
-				_skipHealing = false;
-			};
+	private _movementTimeout =
+		time + 30;
 
-			sleep 1;
-		};
-	};
+	waitUntil {
+		sleep 0.25;
 
-	if (
-		_unit distance2D _patient < 5
-		&& {
-			!(
-				_patient getVariable [
-					"A3C_AbortHealing",
-					false
-				]
-			)
+		_healingAborted = _patient getVariable [
+			"A3C_AbortHealing",
+			false
+		];
+
+		_healingAborted
+		|| {!alive _unit}
+		|| {!alive _patient}
+		|| {
+			[
+				_unit
+			] call A3C_ai_shared_fnc_medical_isUnitUnconscious
 		}
-	) then {
-		(
-			(group player) getVariable [
-				"A3C_PATIENTS_DESIGNATED",
-				[]
-			]
-		) pushBackUnique _patient;
+		|| {_unit distance2D _patient < 5}
+		|| {time >= _movementTimeout}
 	};
+
+	_healerInRange =
+		_unit distance2D _patient < 5;
 };
+
+/*
+	Retain the designated-patient bookkeeping after a successful fallback
+	approach, but associate it with the healer's actual group rather than
+	group player.
+*/
+if (
+	_usedFallbackMovement
+	&& {_healerInRange}
+	&& {!_healingAborted}
+) then {
+	private _designatedPatients = _unitGroup getVariable [
+		"A3C_PATIENTS_DESIGNATED",
+		[]
+	];
+
+	_designatedPatients pushBackUnique _patient;
+
+	_unitGroup setVariable [
+		"A3C_PATIENTS_DESIGNATED",
+		_designatedPatients
+	];
+};
+
+private _healerUnconscious = [
+	_unit
+] call A3C_ai_shared_fnc_medical_isUnitUnconscious;
+
+private _skipHealing =
+	!alive _unit
+	|| {!alive _patient}
+	|| {_healingAborted}
+	|| {_healerUnconscious}
+	|| {!_healerInRange};
 
 if (
 	_patient getVariable [
@@ -379,11 +504,13 @@ if (_isPlayerPatient) then {
 	_patient doWatch _unit;
 };
 
-if (
-	!alive _unit
-	|| {_skipHealing}
-) then {
-	if !(profileNamespace getVariable "A3C_AUTOMEDIC") then {
+if (_skipHealing) then {
+	if !(
+		profileNamespace getVariable [
+			"A3C_AUTOMEDIC",
+			false
+		]
+	) then {
 		systemChat format [
 			"A3C: Patient %1 not healed, please repeat action",
 			name _patient
@@ -399,6 +526,7 @@ if (
 			];
 		} else {
 			_unit doWatch _patient;
+
 			_unit action [
 				"HealSoldier",
 				_patient
@@ -419,28 +547,41 @@ if (
 		sleep 1;
 	};
 
-	[_patient] call A3C_ai_shared_fnc_medical_applyHealing;
+	[
+		_patient
+	] call A3C_ai_shared_fnc_medical_applyHealing;
 
-	
 	_patient doWatch objNull;
 };
 
-_assignedPatients = (group _unit) getVariable [
+_assignedPatients = _unitGroup getVariable [
 	"A3C_PATIENTS_ASSIGNED",
 	[]
 ];
 
-_assignedPatients = _assignedPatients - [_patient];
+_assignedPatients =
+	_assignedPatients - [_patient];
 
-(group _unit) setVariable [
+_unitGroup setVariable [
 	"A3C_PATIENTS_ASSIGNED",
 	_assignedPatients
 ];
 
+private _isPlayerLedGroup =
+	isPlayer (leader _unitGroup);
+
 _patient forceSpeed -1;
-_patient setUnitPos "AUTO";
 _patient lookAt objNull;
-_patient setUnitPos _patientUnitPosMode;
+
+/*
+	Player-led squads retain the patient's stance mode from before
+	treatment. AI-led high-command groups are reset below after the
+	healing animation has ended.
+*/
+if (_isPlayerLedGroup) then {
+	_patient setUnitPos "AUTO";
+	_patient setUnitPos _patientUnitPosMode;
+};
 
 waitUntil {
 	!(
@@ -453,9 +594,27 @@ waitUntil {
 
 _patient forceSpeed -1;
 
+/*
+	AI-led groups must not retain the crouched treatment posture.
+	Reset both the healer and patient after the healing animation.
+*/
+
+if (!_isPlayerLedGroup) then {
+	{
+		if (!isNull _x) then {
+			_x setUnitPos "AUTO";
+		};
+	} forEach [
+		_unit,
+		_patient
+	];
+};
+
 if (
 	_patient != _unit
 	&& {!_isPlayerPatient}
 ) then {
-	[_unit] call A3C_ai_squad_fnc_actionResumeDestination;
+	[
+		_unit
+	] call A3C_ai_squad_fnc_actionResumeDestination;
 };
