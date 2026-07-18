@@ -39,8 +39,9 @@ missionNamespace setVariable [
     _unitGhost
 ];
 
-_unitGhost disableCollisionWith _camVic;
-_camVic disableCollisionWith _unitGhost;
+
+_unitGhost setPhysicsCollisionFlag false;
+
 
 _unitGhost enableSimulation false;
 

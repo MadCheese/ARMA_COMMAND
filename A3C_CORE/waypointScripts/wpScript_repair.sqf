@@ -1,5 +1,3 @@
-
-
 params ["_group", "_pos", "_target","_callerUID","_preCondition"];
 
 //-- #TODO: While it works now, anims scripting is sort of messy right now. Double check everything and m,ake sure unit is not trying to move anywhere
@@ -135,8 +133,8 @@ _group setBehaviourStrong "SAFE"; //-- set units to safe
 
 {
 	sleep 0.2;
-	[_x,_foreachIndex, _pos,_wpIndex,_callerUID] spawn {
-		params ["_unit","_unitIndex", "_pos","_wpIndex","_callerUID"];
+	[_x,_foreachIndex, _pos,_wpIndex,_callerUID, _fnc_repairAnim] spawn {
+		params ["_unit","_unitIndex", "_pos","_wpIndex","_callerUID", "_fnc_repairAnim"];
 		private _repairVic = vehicle _unit;
 
 		
@@ -430,7 +428,7 @@ _group setBehaviourStrong "SAFE"; //-- set units to safe
 
 						
 						
-						[_unit] spawn _fnc__repairAnim;
+						[_unit] spawn _fnc_repairAnim;
 						_unit setDir (_unit getDir _repairPatient);
 					} else {
 						(vehicle _unit) engineOn false;
@@ -518,10 +516,18 @@ while {true} do {
 	[_x,"ANIM"] remoteExec ["enableAI",0];
 	[_x,""] remoteExec ["switchMove",0];
 	[_x,"AUTO"] remoteExec ["setUnitPos",_x];
-	private _animHandler = _x getVariable ["A3C_HandlerID_AnimDone", -1];
-	if (_animHandler != -1) then {
-		_x removeEventhandler ["AnimDone", _animHandler];
-		_x setVariable ["A3C_HandlerID_AnimDone", nil, true];	
+
+	private _animData = _x getVariable [
+		"A3C_HandlerID_AnimDone",
+		[false, -1]
+	];
+
+	private _animHandler = _animData select 1;
+
+	_x setVariable ["A3C_HandlerID_AnimDone", nil, true];
+
+	if (_animHandler >= 0) then {
+		_x removeEventHandler ["AnimDone", _animHandler];
 	};
 	
 } foreach units _group;
@@ -532,5 +538,3 @@ _group setBehaviourStrong _behaviour; //-- set group back to their initial behav
 
 
 true
-
-

@@ -122,7 +122,7 @@ A3C_is_Initialized = true;
 // 	}];
 
 // 	[] call A3C_ui_mapOverlay_fnc_refreshMapUiDrawHandler;;
-// 	[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
+// 	[] call A3C_UI_mainDisplay_fnc_refreshHudUiDrawHandler;
 
 // 	//-- In game loop - once per second
 	// while {!isNull player && {!isNull (findDisplay 46)}} do {
@@ -228,7 +228,7 @@ A3C_is_Initialized = true;
 		}];
 
 		[] call A3C_ui_mapOverlay_fnc_refreshMapUiDrawHandler;;
-		[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
+		[] call A3C_UI_mainDisplay_fnc_refreshHudUiDrawHandler;
 
 		waitUntil {isNull (findDisplay 46)};
 		//diag_log "ENDED1";

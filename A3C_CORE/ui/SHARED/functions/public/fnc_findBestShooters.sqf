@@ -25,8 +25,7 @@ private _eligibleUnits = _units select {
 		!lineIntersects [
 			eyePos _unit,
 			_inputPosASL,
-			_unit,
-			A3C_SQ_REM_INDICATOR
+			_unit
 		]
 	} else {
 		/*

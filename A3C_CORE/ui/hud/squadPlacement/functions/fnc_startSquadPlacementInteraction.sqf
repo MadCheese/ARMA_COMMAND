@@ -1,7 +1,7 @@
 #include "..\..\..\radial\radialMenu\dialog_defines.hpp"
 #include "..\..\..\radial\radialMenu\script_component.hpp"
 
-
+// A3C_ui_squadPlacement_fnc_startSquadPlacementInteraction
 
 
 if  (!isnull findDisplay IDD_RADIAL_MENU) exitWith {};

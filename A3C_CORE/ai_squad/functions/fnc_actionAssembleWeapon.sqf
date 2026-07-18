@@ -56,7 +56,7 @@ private _objectPlacerType = typeOf A3C_OBJECTPLACER;
 		A3C_UI_HUD_3D_TAG_ICON_MOD = "ON";
 
 		private _tagPos = +position A3C_OBJECTPLACER;
-		[_tagPos, ""] spawn A3C_UI_HUD_3D_TAG;
+		[_tagPos, ""] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 	};
 } forEach A3C_STATIC_PACKS;
 

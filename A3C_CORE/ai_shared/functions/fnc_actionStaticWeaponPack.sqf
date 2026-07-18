@@ -18,7 +18,7 @@ A3C_UI_HUD_3D_TAG_ICON_POS = +(position _weaponToDisassemble);
 [
 	+(position _weaponToDisassemble),
 	""
-] spawn A3C_UI_HUD_3D_TAG;
+] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 
 if (({ group _x == group player } count crew _weaponToDisassemble) > 0) then {
 	{

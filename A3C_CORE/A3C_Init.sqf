@@ -27,7 +27,7 @@ if (A3C_IsAICommand && {!isDedicated}) exitWith {
 
 call compile preprocessFileLineNumbers "A3C_CORE\data\A3C_data_bPosNoAccess.sqf";
 
-call compile preprocessFileLineNumbers "A3C_CORE\A3C_fncs_Debug.sqf";
+
 
 
 
@@ -174,11 +174,6 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\settingsMenu\function
 call compile preprocessFileLineNumbers "A3C_CORE\ui\HUD\squadPlacement\functions\initFunctions.sqf";
 
 //-- HUD (findDisplay 46)
-A3C_SPAWN_HUD_MENU = compile preprocessfileLineNumbers "A3C_CORE\ui\HUD\squadPlacement\functions\startSquadPlacementInteraction.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers_dispatched.sqf";
-call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_UI.sqf";
-
 
 call compile preprocessFileLineNumbers "A3C_CORE\ui\SHARED\selectionPromptPanel\functions\initFunctions.sqf";
 
@@ -207,6 +202,8 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\arsenal\functions\initFuncti
 call compile preprocessFileLineNumbers "A3C_CORE\eventhandlers\player\functions\initFunctions.sqf";
 
 
+//-- Debug
+call compile preprocessFileLineNumbers "A3C_CORE\Debug\initFunctions.sqf";
 
 
 
@@ -215,6 +212,8 @@ call compile preprocessFileLineNumbers "A3C_CORE\eventhandlers\player\functions\
 
 
 [] execVM "A3C_CORE\A3C_init_Runner.sqf";
+
+
 
 
 

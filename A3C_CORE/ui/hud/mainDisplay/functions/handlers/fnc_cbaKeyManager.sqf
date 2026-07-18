@@ -1,5 +1,5 @@
-#include "..\..\..\radial\radialMenu\dialog_defines.hpp"
-#include "..\..\..\mapOverlay\dialog_defines.hpp"
+#include "..\..\..\..\radial\radialMenu\dialog_defines.hpp"
+#include "..\..\..\..\mapOverlay\dialog_defines.hpp"
 
 // A3C_UI_mainDisplay_fnc_cbaKeyManager
 
@@ -28,71 +28,7 @@ if (player != ((units player) select 0)) exitWith {};
 if (!isNull findDisplay 312) exitWith {};
 
 switch (_function) do {
-	case "SUPPRESSION": {
-		if (_mode == "DOWN") then {
-			if (!visibleMap) then {
-				if (player == leader group player) then {
-					if !((!isNull objectParent player) && { cameraView == "INTERNAL" }) then {
-						if ((count groupSelectedUnits player) == 0) then {
-							{
-								if (!isPlayer _x) then {
-									player groupSelectUnit [_x, true];
-								};
-							} forEach ((units group player) - [player]);
-						};
 
-						if ((count groupSelectedUnits player) > 0) then {
-							A3C_SUPPRESSION_UNITS_SQ_TEMP = groupSelectedUnits player;
-
-							{
-								if (isPlayer _x) then {
-									A3C_SUPPRESSION_UNITS_SQ_TEMP = A3C_SUPPRESSION_UNITS_SQ_TEMP - [_x];
-								};
-							} forEach A3C_SUPPRESSION_UNITS_SQ_TEMP;
-
-							if (({ _x in A3C_SUPPRESSION_UNITS_SQ_TEMP } count A3C_SUPPRESSION_UNITS_SQ) == 0) then {
-								// Spawn suppression indicator.
-								A3C_SUPPRESSIONHEIGHT = 0;
-								A3C_SUPPRESSION_INDICATOR = "MCSS_ASM_SUPRESSION_INDICATOR_F" createVehicleLocal (screenToWorld [0.5, 0.5]);
-								A3C_SUPPRESSION_INDICATOR setObjectTextureGlobal [0, "#(argb,8,8,3)color(1,0,0,0.5)"];
-							} else {
-								{
-									if !(_x in A3C_SUPPRESSION_UNITS_SQ) then {
-										A3C_SUPPRESSION_UNITS_SQ_TEMP = A3C_SUPPRESSION_UNITS_SQ_TEMP - [_x];
-									};
-								} forEach A3C_SUPPRESSION_UNITS_SQ_TEMP;
-
-								[A3C_SUPPRESSION_UNITS_SQ_TEMP, "SUPPRESSION"] call A3C_ai_shared_fnc_polygonAreaActionOff;
-							};
-
-							showCommandingMenu "";
-
-							{
-								inGameUISetEventHandler [_x, "true"];
-							} forEach ["PrevAction", "NextAction"];
-						};
-					} else {
-						systemChat "A3C: Switch camera view to order Suppression";
-					};
-				};
-			};
-		} else {
-			if !(isNull A3C_SUPPRESSION_INDICATOR) then {
-				[
-					A3C_SUPPRESSION_UNITS_SQ_TEMP,
-					[getPosATL A3C_SUPPRESSION_INDICATOR, ""],
-					"SUPPRESSION",
-					true
-				] spawn A3C_ai_shared_fnc_polygonAreaActionOn;
-
-				deleteVehicle A3C_SUPPRESSION_INDICATOR;
-			};
-
-			{
-				inGameUISetEventHandler [_x, "false"];
-			} forEach ["PrevAction", "NextAction"];
-		};
-	};
 
 	case "LOCK": {
 		if (_mode == "DOWN") then {
@@ -115,69 +51,59 @@ switch (_function) do {
 						[_mode] call A3C_ai_shared_fnc_gtiGrenade_throwPlayer;
 					};
 				} else {
-					_targetUnits = groupSelectedUnits player;
+					// //- PLACEHOLDER: #TODO: ADD HOTKEY OPTION FOR REMOTE FIRE!
 
-					{
-						if (isPlayer _x) then {
-							_targetUnits = _targetUnits - [_x];
-						};
-					} forEach _targetUnits;
+					// _targetUnits = groupSelectedUnits player;
 
-					A3C_BOOL_REMFIRE = true;
+					// {
+					// 	if (isPlayer _x) then {
+					// 		_targetUnits = _targetUnits - [_x];
+					// 	};
+					// } forEach _targetUnits;
 
-					// Remove units if they do not have GL, re-add them if they do have AT.
-					// This makes GL preferred over AT at this point.
-					// If the unit has GL and AT, he will later prefer AT.
-					{
-						_targetUnits = _targetUnits - [_x];
+					// A3C_BOOL_REMFIRE = true;
 
-						if ((count (getArtilleryAmmo [vehicle _x]) > 0) && { _x == gunner vehicle _x }) then {
-							if !(_x in _targetUnits) then {
-								_targetUnits = [_x] + _targetUnits;
-							};
-						};
+					// // Remove units if they do not have GL, re-add them if they do have AT.
+					// // This makes GL preferred over AT at this point.
+					// // If the unit has GL and AT, he will later prefer AT.
+					// {
+					// 	_targetUnits = _targetUnits - [_x];
 
-						if ([_x] call A3C_main_fnc_unitHasUGL) then {
-							_targetUnits pushBackUnique _x;
-						};
+					// 	if ((count (getArtilleryAmmo [vehicle _x]) > 0) && { _x == gunner vehicle _x }) then {
+					// 		if !(_x in _targetUnits) then {
+					// 			_targetUnits = [_x] + _targetUnits;
+					// 		};
+					// 	};
 
-						if ([_x] call A3C_main_fnc_unitHasAT) then {
-							_targetUnits pushBackUnique _x;
-						};
+					// 	if ([_x] call A3C_main_fnc_unitHasUGL) then {
+					// 		_targetUnits pushBackUnique _x;
+					// 	};
 
-						if ((vehicle _x isKindOf "Tank") && { _x == gunner vehicle _x }) then {
-							_targetUnits pushBackUnique _x;
-						};
-					} forEach _targetUnits;
+					// 	if ([_x] call A3C_main_fnc_unitHasAT) then {
+					// 		_targetUnits pushBackUnique _x;
+					// 	};
 
-					if ((count _targetUnits) > 0) then {
-						A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = _targetUnits;
-						A3C_SQ_REM_INDICATOR = "MCSS_ASM_SUPRESSION_INDICATOR_F" createVehicleLocal (screenToWorld [0.5, 0.5]);
-						A3C_SQ_REM_INDICATOR setObjectTextureGlobal [0, "#(argb,8,8,3)color(1,1,0,0.5)"];
-						showCommandingMenu "";
-					};
+					// 	if ((vehicle _x isKindOf "Tank") && { _x == gunner vehicle _x }) then {
+					// 		_targetUnits pushBackUnique _x;
+					// 	};
+					// } forEach _targetUnits;
+
+					// if ((count _targetUnits) > 0) then {
+					// 	A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = _targetUnits;
+
+					// 	showCommandingMenu "";
+					// };
 				};
 			} else {
 				if (A3C_BOOL_REMFIRE) then {
-					A3C_BOOL_REMFIRE = false;
 
-					if !(isNull A3C_SQ_REM_INDICATOR) then {
-						A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = [
-							A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units,
-							getPosASL A3C_SQ_REM_INDICATOR
-						] call A3C_ui_shared_fnc_findBestShooters;
+					// //-- PLACEHOLDER: KEYUP FOR SQUAD REMFIRE HOTKEY
 
-						if ((count A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units) > 0) then {
-							[
-								A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units select 0,
-								getPosASL A3C_SQ_REM_INDICATOR,
-								"FIND"
-							] spawn A3C_ai_shared_fnc_orderRemoteLaunch;
-						};
+					// A3C_BOOL_REMFIRE = false;
 
-						A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = [];
-						deleteVehicle A3C_SQ_REM_INDICATOR;
-					};
+					// use A3C_ui_shared_fnc_findBestShooters
+					// use A3C_ai_shared_fnc_orderRemoteLaunch
+					// 	A3C_UI_SPPRSSN_FCS_RMT_Current_Remfire_Units = [];
 				} else {
 					[_mode] call A3C_ai_shared_fnc_gtiGrenade_throwPlayer;
 				};
@@ -410,7 +336,7 @@ switch (_function) do {
 		} forEach A3C_RD_UNITS;
 
 		private _medics = [A3C_RD_UNITS] call A3C_ai_shared_fnc_medical_findMedics;
-		_group setVariable ["A3C_MEDICS", _medics];
+		(group player) setVariable ["A3C_MEDICS", _medics];
 
 		(group player) setVariable ["A3C_MEDICS_LB", _medics];
 

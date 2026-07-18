@@ -1,9 +1,15 @@
 #include "ui\mapOverlay\dialog_defines.hpp"
 
+//----------------------------- playerVariables
 A3C_CurrentPlayerObject = player;
 A3C_UNITCOUNTER =  (count (units group player));
 A3C_PLAYERGROUP = group player;
 A3C_UNITCOUNT = ((count (units group player)) -1);
+
+//----------------------------- Supported Addon Variables
+A3C_IsTAO = if (isClass(configFile/"CfgPatches"/"tao_foldmap_a3")) then {true} else {false}; //-- detect if TAO Folding Map is running
+A3C_LaxMount = if (isClass(configFile/"CfgPatches"/"L_MOUNT")) then {true} else {false}; //-- detect if L-MOUNT is running
+
 
 
 //----------------------------- profileNameSpace Variables
@@ -34,7 +40,11 @@ with profilenamespace do {
 	};
 };
 
-//----------------------------- 
+//----------------------------- UI VARIABLES
+//----------------------------- Main Display Variables
+
+A3C_UI_HUD_3D_TAGGING = false;
+
 
 
 //-- #TODO: MESSY STUFF TO OVERHAUL 
@@ -83,8 +93,6 @@ A3C_MEDICAL_itemStrings =
 
 
 
-A3C_IsTAO = if (isClass(configFile/"CfgPatches"/"tao_foldmap_a3")) then {true} else {false}; //-- detect if TAO Folding Map is running
-A3C_LaxMount = if (isClass(configFile/"CfgPatches"/"L_MOUNT")) then {true} else {false}; //-- detect if L-MOUNT is running
 
 
 A3C_GREN_MUZZLE = "";
@@ -190,9 +198,6 @@ A3C_LB_DEST = objnull;
 A3C_LB_TICKTIME = time;
 A3C_LB_MODE = -1;
 
-A3C_SUPPRESSION_INDICATOR = objNull;
-A3C_SQ_REM_INDICATOR = objNull;
-A3C_HC_REM_INDICATOR = objNull;
 
 
 A3C_BOOL_DRAGLINE = false;
@@ -519,7 +524,7 @@ A3C_ui_shared_fnc_createDashBoard_ExtraControls = [];
 A3C_ACTIVE_BUTTONUNIT = objnull;
 
 //----------------------------- MEDICAL VARIABLES
-A3C_MEDICAL_INDICATOR = [];
+A3C_MEDICAL_MeetingPos = [];
 //----------------------------- 
 
 
@@ -798,3 +803,6 @@ A3C_ZEUSMISSION = if (!isNil 'A3C_ZEUSMISSION') then {A3C_ZEUSMISSION} else {fal
 	A3C_MAP_GAMEUI_Upper_buttonH = 0.04 * safezoneH; 
 
 };
+
+//-- Debug 
+A3C_DebugHint = false;

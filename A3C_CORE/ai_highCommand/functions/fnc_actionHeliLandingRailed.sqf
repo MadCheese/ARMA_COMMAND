@@ -11,7 +11,7 @@ deleteVehicle A3C_OBJECTPLACER;
 A3C_OBJECTPLACER = objNull;
 
 A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\markers\HeliPad.paa";
-[A3C_UI_HUD_3D_TAG_ICON_POS, ""] spawn A3C_UI_HUD_3D_TAG;
+[A3C_UI_HUD_3D_TAG_ICON_POS, ""] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 
 private _groups = +A3C_SELECTED_HC_GROUPS_SETTINGS;
 

@@ -566,7 +566,7 @@ if (combatMode player != "YELLOW") then {
 // Refresh map and HUD UI.
 [] call A3C_ui_mapOverlay_fnc_refreshMapUiDrawHandler;
 
-[] execVM "A3C_CORE\ui\HUD\A3C_fnc_drawHudUI.sqf";
+[] call A3C_UI_mainDisplay_fnc_refreshHudUiDrawHandler;
 
 [] spawn {
 	sleep 0.5;

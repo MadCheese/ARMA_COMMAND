@@ -49,9 +49,9 @@ if (
 	&& {!_vehicleHeal}
 ) then {
 	if (_isPlayerPatient) then {
-		A3C_Mpos = position player;
+
 		_unit groupChat "Get Support!";
-		A3C_MEDICAL_INDICATOR = A3C_Mpos;
+		A3C_MEDICAL_MeetingPos = position player;
 	} else {
 		_patient forceSpeed 0;
 	};
@@ -110,7 +110,7 @@ if (
 			] call BIS_fnc_sortBy;
 
 			if (_isPlayerPatient) then {
-				A3C_Mpos = _boundingBoxPositions select 0;
+				A3C_MEDICAL_MeetingPos = _boundingBoxPositions select 0;
 				_treatmentPosition = _boundingBoxPositions select 0;
 			};
 		};
@@ -374,7 +374,7 @@ if (
 };
 
 if (_isPlayerPatient) then {
-	A3C_MEDICAL_INDICATOR = [];
+	A3C_MEDICAL_MeetingPos = [];
 } else {
 	_patient doWatch _unit;
 };

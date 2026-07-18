@@ -141,7 +141,7 @@ if (_doubleClick) then {
 				case ("BOMBING RUN") : {3};
 			};
 
-			[A3C_UI_HUD_3D_TAG_ICON_POS, ""] spawn A3C_UI_HUD_3D_TAG;
+			[A3C_UI_HUD_3D_TAG_ICON_POS, ""] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 
 			private _selectedGroups = +A3C_SELECTED_HC_GROUPS_SETTINGS;
 
@@ -575,7 +575,7 @@ if (_doubleClick) then {
 			A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configFile >> "CfgVehicles" >> typeOf _selectedWeapon >> "picture");
 			A3C_UI_HUD_3D_TAG_ICON_MOD = "OFF";
 
-			[position _selectedWeapon, ""] spawn A3C_UI_HUD_3D_TAG;
+			[position _selectedWeapon, ""] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 
 			with uiNamespace do {
 				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
@@ -775,7 +775,7 @@ if (_doubleClick) then {
 				_magPic
 			};
 
-			[_detoPosition, "DEMOLITION"] spawn A3C_UI_HUD_3D_TAG;
+			[_detoPosition, "STANDARD"] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 		};
 
 		case ("PLACE_CHARGE_HC") : {
@@ -850,7 +850,7 @@ if (_doubleClick) then {
 				_magPic
 			};
 
-			[A3C_UI_HUD_3D_TAG_ICON_POS, "DEMOLITION"] spawn A3C_UI_HUD_3D_TAG;
+			[A3C_UI_HUD_3D_TAG_ICON_POS, "STANDARD"] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 
 			with uiNamespace do {
 				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;

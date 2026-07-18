@@ -8,6 +8,8 @@ A3C_PREP(onLoad);
 A3C_PREP(onUnload);
 A3C_PREP(onOverlayLoad);
 A3C_PREP(onOverlayUnload);
+A3C_PREP(startSquadPlacementInteraction);
+
 
 // UI event handlers.
 A3C_PREP_SUBDIR(handlers,onButtonClick);

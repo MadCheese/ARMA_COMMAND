@@ -1,7 +1,7 @@
 if (isDedicated) exitWith {};
 
 
-
+//-- These global variable resets stay here instead of A3C_InitValuesClient.sqf so they can be easily reset.
 A3C_UI_HUD_KeyDown_EHID = -1;
 A3C_UI_HUD_KeyUp_EHID = -1;
 A3C_UI_HUD_MouseButtonDown_EHID = -1;
@@ -32,7 +32,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 			private _blockDefaultKey = false;
 			if (!visibleMap) then { //-- NOTE: THis is indeed necessary. If map is active and overlay is hidden, this bind still fires
 				//-- #UNCLEAR - note - if this fires when overlay is open, we could get rid of the MainMap KeyDown handler??
-				_blockDefaultKey = _this call A3C_UI_HUD_onKeyDown;
+				_blockDefaultKey = _this call A3C_ui_mainDisplay_fnc_onKeyDown_Main;
 			};
 			_blockDefaultKey
 		}
@@ -46,7 +46,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"KeyUp",
 		{
 			if (!visibleMap) then { //-- NOTE: THis is indeed necessary. If map is active and overlay is hidden, this bind still fires
-				_this call A3C_UI_HUD_onKeyUp;
+				_this call A3C_ui_mainDisplay_fnc_onKeyUp_Main;
 				false
 			};
 		}
@@ -61,7 +61,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"MouseButtonDown",
 		{
 			if (!visibleMap) then { //-- NOTE: THis is indeed necessary. If map is active and overlay is hidden, this bind still fires
-				_this spawn A3C_UI_HUD_onMouseButtonDown;
+				_this spawn A3C_ui_mainDisplay_fnc_onMouseButtonDown_Main;
 			};
 			
 			false
@@ -76,7 +76,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"MouseZChanged",
 		{
 			//-- visibleMap check not necessary as HUD-MouseZ does not fire on Map
-			private _blockDefaultKey = _this call A3C_UI_HUD_onMouseZChanged;
+			private _blockDefaultKey = _this call A3C_ui_mainDisplay_fnc_onMouseZChanged;
 			_blockDefaultKey
 		}
 	] call A3C_UI_CreateSafeEventhandler;
@@ -121,7 +121,7 @@ A3C_UI_FNC_ADD_KEYBINDS =
 	//
 	["A3C", "A3C_KeyFnc_Menu_cursor", ["Open 3D Menu (CursorObject)", "Open A3C Radial-Menu (CursorObject Selection)"], {[_this,true] call A3C_ui_radialMenu_fnc_spawnRadialMenu}, {}, [15,[false,true,false]],true] call cba_fnc_addKeybind;
 
-	["A3C", "A3C_KeyFnc_HUD_MENU", ["Open HUD MENU controls", "Get access to your HUD MODE settings via mouse while key is pressed."], {[_this] call A3C_SPAWN_HUD_MENU}, {}, [42,[true,false,false]],true] call cba_fnc_addKeybind;
+	["A3C", "A3C_KeyFnc_HUD_MENU", ["Open HUD MENU controls", "Get access to your HUD MODE settings via mouse while key is pressed."], {[_this] call A3C_ui_squadPlacement_fnc_startSquadPlacementInteraction}, {}, [42,[true,false,false]],true] call cba_fnc_addKeybind;
 
 	A3C_MAP_KEY_ID = [
 		"A3C",
@@ -215,8 +215,6 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		[20, [false, false, true]],
 		false
 	] call CBA_fnc_addKeybind;
-
-	//["A3C", "A3C_KeyFnc_Suppress_V2", ["Suppression Hotkey", "Key for ingame suppression actions"], {["SUPPRESSION","DOWN"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, {["SUPPRESSION","UP"] call A3C_UI_mainDisplay_fnc_cbaKeyManager}, [-1,[false,false,false]],false] call cba_fnc_addKeybind;
 
 
 
@@ -340,61 +338,3 @@ A3C_UI_FNC_ADD_KEYBINDS =
 };
 
 
-
-
-A3C_LARROW_KeyCheck = {
-
-	_bindings = actionKeysNamesArray _this; //--_this is inputAction string
-
-	_ctrl = false;
-	_shift = false;
-	_alt = false;
-
-	_keysArray = [];
-	{
-		_keysArray set [ _forEachIndex, [] ];
-		_index = _keysArray select _forEachIndex;
-
-		_keycombo = toLower _x;
-		_keys = _keycombo splitString "+";
-
-		{
-			_key = _x;
-			_multi = _key find "2x";
-			if ( _multi > -1 ) then {
-				_key = _key select [ 2, count _key - 2 ];
-				_multi = true;
-			}else{
-				_multi = false;
-			};
-
-			if ( {
-					if ( [ _x, _key ] call BIS_fnc_inString ) then {
-						switch ( _x ) do {
-							case "ctrl" : {
-								_ctrl = true;
-							};
-							case "shift" : {
-								_shift = true;
-							};
-							case "alt" : {
-								_alt = true;
-							};
-						};
-						_nul = _index pushBack [ _x, _multi ];
-						true
-					}else{
-						false
-					};
-				}count [ "ctrl", "shift", "alt" ] isEqualTo 0 ) then {
-				_nul = _index pushBack [ _key, _multi ];
-			};
-		}forEach _keys;
-	}forEach _bindings;
-
-	ctrl = _ctrl;
-	shift = _shift;
-	alt = _alt;
-	keys = _keysArray;
-	_keysArrays;
-};
