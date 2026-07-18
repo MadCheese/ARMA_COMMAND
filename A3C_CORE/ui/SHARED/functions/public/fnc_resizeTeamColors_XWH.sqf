@@ -37,7 +37,7 @@ private _controlX = if (_isRadial) then {
 	A3C_MAP_OVERLAY_GAMEUI_TREEX
 };
 
-private _controlHeight = 0.0110018 * safeZoneH;
+private _controlHeight = A3C_SHARED_UI_TEAMCOLOR_H;
 private _totalWidth = (ctrlPosition _treeControl) select 2;
 private _gapWidth = A3C_MAP_GAMEUI_PADDING_Y / 2;
 

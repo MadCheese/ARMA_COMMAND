@@ -488,7 +488,7 @@ _parentControl ctrlShow true;
 	private _locationText = "UNKNOWN LOCATION";
 
 	private _locations = nearestLocations [
-		position player,
+		position _leaderVehicle,
 		[
 			"NameLocal",
 			"NameCity",
@@ -1052,7 +1052,7 @@ _parentControl ctrlShow true;
 
 	private _progressEntries = [];
 
-	if (_hasVehicleOccupants) then {
+	if (_vehicles isNotEqualTo []) then {
 		_progressEntries pushBack [
 			"Health (Vehicles)",
 			_groupHealthVehicle
@@ -1267,14 +1267,14 @@ _parentControl ctrlShow true;
 				[
 					A3C_UI_COLOR_RED,
 					0.6
-				] call A3C_UI_fnc_setOpacity
+				] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 			};
 
 			case (_progress < 0.7): {
 				[
 					A3C_UI_COLOR_YELLOW,
 					0.6
-				] call A3C_UI_fnc_setOpacity
+				] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 			};
 
 			default {

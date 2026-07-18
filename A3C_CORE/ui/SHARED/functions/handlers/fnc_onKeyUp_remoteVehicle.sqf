@@ -14,6 +14,10 @@ params [
 	["_alt", false, [false]]
 ];
 
+if !(_key in [200, 203, 205, 208]) exitWith {
+	false
+};
+
 private _remoteVehicle = missionNamespace getVariable [
 	"a3c_remote_tank_obj",
 	objNull

@@ -172,9 +172,9 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\radial\settingsMenu\function
 
 //-- HUD UI elements
 call compile preprocessFileLineNumbers "A3C_CORE\ui\HUD\squadPlacement\functions\initFunctions.sqf";
-A3C_SPAWN_HUD_MENU = compile preprocessfileLineNumbers "A3C_CORE\ui\HUD\squadPlacement\functions\startSquadPlacementInteraction.sqf";
 
 //-- HUD (findDisplay 46)
+A3C_SPAWN_HUD_MENU = compile preprocessfileLineNumbers "A3C_CORE\ui\HUD\squadPlacement\functions\startSquadPlacementInteraction.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\UI_DSP_HUD_Handlers_dispatched.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ui\hud\HUD_UI.sqf";
@@ -200,7 +200,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\arsenal\functions\initFuncti
 
 
 
-call compile preprocessFileLineNumbers "A3C_CORE\ui\fncs_UI_main.sqf";
+
 
 
 //-- Player Eventhandlers
@@ -215,7 +215,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\eventhandlers\player\functions\
 
 
 [] execVM "A3C_CORE\A3C_init_Runner.sqf";
-//A3C_loaded = true;
+
 
 
 

@@ -343,7 +343,7 @@ switch (_mode) do {
 
 
 				if (!isNull _occupyingUnit && {alive _occupyingUnit}) then {
-					_buttonColor = if (_occupyingUnit in units player) then {[A3C_UI_COLOR_BLUE,0.7] call A3C_UI_fnc_setOpacity} else {[A3C_UI_COLOR_RED,0.7] call A3C_UI_fnc_setOpacity};
+					_buttonColor = if (_occupyingUnit in units player) then {[A3C_UI_COLOR_BLUE,0.7] call A3C_ui_shared_fnc_getColorArrayWithOpacity} else {[A3C_UI_COLOR_RED,0.7] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
 
 					if (_occupyingUnit in units player) then {
 						_positionName = _positionName + " (" + (name _occupyingUnit) + ")";
@@ -362,7 +362,7 @@ switch (_mode) do {
 						private _boardingData = _x;
 						if ({_x in _boardingData} count _refArray >= 2) exitWith {
 							_occupyingUnit = _x select 0;
-							_buttonColor = if (group _occupyingUnit == group player) then {[A3C_UI_COLOR_BLUE,0.3] call A3C_UI_fnc_setOpacity} else {[A3C_UI_COLOR_RED,0.3] call A3C_UI_fnc_setOpacity};
+							_buttonColor = if (group _occupyingUnit == group player) then {[A3C_UI_COLOR_BLUE,0.3] call A3C_ui_shared_fnc_getColorArrayWithOpacity} else {[A3C_UI_COLOR_RED,0.3] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
 							_nameAdd = " (Currently Boarded)";
 						};
 					} forEach _vicVar;

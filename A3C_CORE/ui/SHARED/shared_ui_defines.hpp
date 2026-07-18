@@ -1,3 +1,5 @@
+#define A3C_SHARED_UI_TEAMCOLOR_H (0.034 * safeZoneH)
+
 //-- DASHBOARD
 #define IDC_SHARED_UI_DASHBOARD_PARENT                   303030 // We use a unified numeric idc because map uses it too. 161
 #define IDC_SHARED_UI_DASHBOARD_BG                       303031 

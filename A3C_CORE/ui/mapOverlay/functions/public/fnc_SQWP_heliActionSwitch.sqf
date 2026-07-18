@@ -15,7 +15,7 @@ switch (_actionIndex) do {
 	case 0: {
 		_arrivalImage ctrlSetText "\a3\ui_f\data\GUI\Cfg\Ranks\sergeant_gs.paa";
 		_arrivalImage ctrlSetTextColor (
-			[A3C_UI_COLOR_BLUE, 0.8] call A3C_UI_fnc_setOpacity
+			[A3C_UI_COLOR_BLUE, 0.8] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 		);
 
 		_newAction = ["LANDING", "NONE"];

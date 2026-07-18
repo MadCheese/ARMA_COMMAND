@@ -183,7 +183,7 @@ A3C_fnc_drawHudUI = {
 					drawIcon3D
 					[
 						_iconType,
-						[A3C_UI_COLOR_BLUE,0.3] call A3C_UI_fnc_setOpacity,
+						[A3C_UI_COLOR_BLUE,0.3] call A3C_ui_shared_fnc_getColorArrayWithOpacity,
 						_iconPos,
 						_iconSize,
 						_iconSize,
@@ -235,7 +235,7 @@ A3C_fnc_drawHudUI = {
 			drawIcon3D
 			[
 				[group player] call A3C_main_fnc_getGroupIconType,
-				[A3C_UI_COLOR_BLUE,0.3] call A3C_UI_fnc_setOpacity,
+				[A3C_UI_COLOR_BLUE,0.3] call A3C_ui_shared_fnc_getColorArrayWithOpacity,
 				_iconPosPL, //_iconPos,
 				1, //_iconSize,
 				1, //_iconSize,
@@ -288,7 +288,7 @@ A3C_fnc_drawHudUI = {
 					drawIcon3D
 					[
 						_iconType,
-						[A3C_UI_COLOR_BLUE,0.6] call A3C_UI_fnc_setOpacity, //[0.8,0.6,0,0.6],
+						[A3C_UI_COLOR_BLUE,0.6] call A3C_ui_shared_fnc_getColorArrayWithOpacity, //[0.8,0.6,0,0.6],
 						_iconPos,
 						_iconSize,
 						_iconSize,
@@ -320,9 +320,9 @@ A3C_fnc_drawHudUI = {
 				_integer = (_vehicleHealth max 0.1) * 10; //-- to get the number for the progressbar
 				_repairProgress = format ["\a3c_ui\infoAdd\icon_3D_progress_%1.paa",_integer];
 				_progressCol = switch (true) do {
-					case (_integer <= 3) : { [A3C_UI_COLOR_RED,0.6] call A3C_UI_fnc_setOpacity};
-					case (_integer < 7) : { [A3C_UI_COLOR_YELLOW,0.6] call A3C_UI_fnc_setOpacity};
-					default {if (canMove _x) then {[0,1,0,0.6]} else { [A3C_UI_COLOR_YELLOW,0.6] call A3C_UI_fnc_setOpacity}};
+					case (_integer <= 3) : { [A3C_UI_COLOR_RED,0.6] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
+					case (_integer < 7) : { [A3C_UI_COLOR_YELLOW,0.6] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
+					default {if (canMove _x) then {[0,1,0,0.6]} else { [A3C_UI_COLOR_YELLOW,0.6] call A3C_ui_shared_fnc_getColorArrayWithOpacity}};
 				};
 			//};
 			//-- draw progress bar 
@@ -436,10 +436,10 @@ A3C_fnc_drawHudUI = {
 				];
 				private _assignedTeam = if (player == cameraOn) then {assignedTeam _x} else {_x getVariable ["A3C_ASSIGNEDTEAM","MAIN"]};
 				_color = switch (_assignedTeam) do {
-					case ("RED") : {[A3C_UI_COLOR_RED,_opacity] call A3C_UI_fnc_setOpacity};
-					case ("GREEN") : {[[0,1,0,1],_opacity] call A3C_UI_fnc_setOpacity};
-					case ("BLUE") : {[A3C_UI_COLOR_BLUE,_opacity] call A3C_UI_fnc_setOpacity};
-					case ("YELLOW") : {[A3C_UI_COLOR_YELLOW,_opacity] call A3C_UI_fnc_setOpacity};
+					case ("RED") : {[A3C_UI_COLOR_RED,_opacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
+					case ("GREEN") : {[[0,1,0,1],_opacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
+					case ("BLUE") : {[A3C_UI_COLOR_BLUE,_opacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
+					case ("YELLOW") : {[A3C_UI_COLOR_YELLOW,_opacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
 					default {[1,1,1,_opacity]}
 				};
 				
@@ -495,7 +495,7 @@ A3C_fnc_drawHudUI = {
 							A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
 						} else {
 							A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\hud\icon_HUD_movePos.paa";
-							A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0.5] call A3C_UI_fnc_setOpacity;
+							A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0.5] call A3C_ui_shared_fnc_getColorArrayWithOpacity;
 						};
 					};
 				};

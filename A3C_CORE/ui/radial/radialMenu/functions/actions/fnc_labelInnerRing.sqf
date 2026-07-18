@@ -93,7 +93,7 @@ if (_commandLevel == "SQUAD") then {
 	(_display displayCtrl IDC_RADIAL_INNERRING_ACTIONS_BTN)
 		ctrlSetToolTip format [
 			"MOVE - CONFIRM WITH 'Spacebar', CANCEL BY RELEASING %1",
-			["A3C", "A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+			["A3C", "A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 		];
 
 	(_display displayCtrl IDC_RADIAL_INNERRING_ROE_IMG) ctrlShow true;

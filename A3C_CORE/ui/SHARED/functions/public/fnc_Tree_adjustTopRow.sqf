@@ -50,11 +50,7 @@ private _treeWidth = _treePosition select 2;
 
 private _controlX = A3C_MAP_OVERLAY_GAMEUI_TREEX;
 
-/*
-	Preserved from the original dialog layout. This is the configured
-	height of the first team-color control.
-*/
-private _teamColorHeight = 0.034 * safeZoneH;
+private _teamColorHeight = A3C_SHARED_UI_TEAMCOLOR_H;
 
 /*
 	Resize and reposition the individual team-color controls first.

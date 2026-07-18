@@ -133,7 +133,7 @@ if (
 		[
 			A3C_UI_COLOR_BLUE,
 			0.7
-		] call A3C_UI_fnc_setOpacity
+		] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 	);
 };
 

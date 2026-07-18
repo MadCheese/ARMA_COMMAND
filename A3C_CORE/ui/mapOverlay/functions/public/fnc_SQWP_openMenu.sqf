@@ -137,7 +137,7 @@ private _findSquadWaypoint = {
 								[
 									A3C_UI_COLOR_BLUE,
 									0.8
-								] call A3C_UI_fnc_setOpacity
+								] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 							);
 						};
 

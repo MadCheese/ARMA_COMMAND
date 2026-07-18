@@ -181,12 +181,12 @@ A3C_CLICKPOS_ROOT = [
 A3C_LINECOLOR_DIAG = [
 	A3C_UI_COLOR_BLUE,
 	1
-] call A3C_UI_fnc_setOpacity;
+] call A3C_ui_shared_fnc_getColorArrayWithOpacity;
 
 A3C_LINECOLOR_MAP = [
 	A3C_UI_COLOR_BLUE,
 	A3C_OPACITY
-] call A3C_UI_fnc_setOpacity;
+] call A3C_ui_shared_fnc_getColorArrayWithOpacity;
 //~~ Check which of these color variables are no longer needed.
 
 A3C_GROUP_NAMING_ACTIVE = nil;

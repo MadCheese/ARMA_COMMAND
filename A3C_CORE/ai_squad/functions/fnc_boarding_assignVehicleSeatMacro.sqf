@@ -50,9 +50,9 @@ private _assignedVehicleCrew = _vehicle getVariable ["A3C_AssignedVehicleCrew", 
 					_occupyingUnit = _x select 0;
 
 					private _buttonColor = if (group _occupyingUnit == group player) then {
-						[A3C_UI_COLOR_BLUE, 0.3] call A3C_UI_fnc_setOpacity
+						[A3C_UI_COLOR_BLUE, 0.3] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 					} else {
-						[A3C_UI_COLOR_RED, 0.3] call A3C_UI_fnc_setOpacity
+						[A3C_UI_COLOR_RED, 0.3] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 					};
 				};
 			} forEach _assignedVehicleCrew;

@@ -3,7 +3,7 @@
 params ["_buildingPosition"];
 
 private _height = _buildingPosition select 2;
-private _color = [A3C_UI_COLOR_BLUE, 1] call A3C_UI_fnc_setOpacity;
+private _color = [A3C_UI_COLOR_BLUE, 1] call A3C_ui_shared_fnc_getColorArrayWithOpacity;
 private _size = 4;
 private _textSize = 0.03;
 

@@ -503,7 +503,7 @@ for "_i" from 0 to (((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do {
 			_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_remoteTankShell.paa";
 			_buttonClicker ctrlSetTooltip format [
 				"FIRE TANK SHELL - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-				["A3C", "A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+				["A3C", "A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 			];
 			_buttonFncData = [
 				[],
@@ -539,7 +539,7 @@ for "_i" from 0 to (((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do {
 			];
 			_buttonClicker ctrlSetTooltip format [
 				"FIRE STATIC ROCKET LAUNCHER - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-				["A3C", "A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+				["A3C", "A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 			];
 		};
 
@@ -561,7 +561,7 @@ for "_i" from 0 to (((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do {
 			];
 			_buttonClicker ctrlSetTooltip format [
 				"FIRE AT-ROCKET - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-				["A3C", "A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+				["A3C", "A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 			];
 		};
 
@@ -583,7 +583,7 @@ for "_i" from 0 to (((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do {
 			];
 			_buttonClicker ctrlSetTooltip format [
 				"FIRE UGL GRENADE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-				["A3C", "A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+				["A3C", "A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 			];
 		};
 
@@ -593,7 +593,7 @@ for "_i" from 0 to (((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do {
 			_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_suppression.paa";
 			_buttonClicker ctrlSetTooltip format [
 				"SUPPRESS POSITION - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-				["A3C", "A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+				["A3C", "A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 			];
 			_buttonFncData = [
 				[[], _display],
@@ -626,7 +626,7 @@ for "_i" from 0 to (((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do {
 			_buttonImage ctrlSetText "A3C_CORE\ui\pictures\icon_menu_action_explosives_Place.paa";
 			_buttonClicker ctrlSetTooltip format [
 				"PLACE EXPLOSIVE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-				["A3C", "A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+				["A3C", "A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 			];
 			_buttonFncData = [
 				[str _detoUnits, _display],
@@ -670,7 +670,7 @@ for "_i" from 0 to (((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do {
 						((A3C_STATIC_PACKS select 0) select 1) >>
 						"displayName"
 				),
-				["A3C", "A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+				["A3C", "A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 			];
 			_buttonFncData = [
 				[str _unitArray, _display],

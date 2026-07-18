@@ -1,9 +1,23 @@
 #include "..\script_component.hpp"
 #include "..\shared_ui_defines.hpp"
 
-params ["_display", "_name"];
+// A3C_ui_shared_fnc_ctrlGroup
 
-if (isNull _display) exitWith {[]};
+/*
+	Returns shared controls in a fixed semantic order.
+
+	Do not remove null controls from ordered groups. Callers such as
+	resizeTeamColors_Y depend on each image/button pair retaining its
+	original array indices.
+*/
+params [
+	["_display", displayNull, [displayNull]],
+	["_name", "", [""]]
+];
+
+if (isNull _display) exitWith {
+	[]
+};
 
 switch (_name) do {
 	case "shared_teamColorMacros": {
@@ -20,8 +34,10 @@ switch (_name) do {
 			_display displayCtrl IDC_SHARED_UI_TCBOX_WHITE_BTN,
 			_display displayCtrl IDC_SHARED_UI_TCBOX_PURPLE_IMG,
 			_display displayCtrl IDC_SHARED_UI_TCBOX_PURPLE_BTN
-		] select {!isNull _x}
+		]
 	};
 
-	default {[]};
+	default {
+		[]
+	};
 };

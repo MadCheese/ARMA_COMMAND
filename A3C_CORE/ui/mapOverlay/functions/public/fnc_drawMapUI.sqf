@@ -102,7 +102,7 @@ if (A3C_HC_DETONATION_BOOL) then {
 				_mapControl,
 				_demolitionTarget,
 				25,
-				[A3C_UI_COLOR_RED,1] call A3C_UI_fnc_setOpacity,
+				[A3C_UI_COLOR_RED,1] call A3C_ui_shared_fnc_getColorArrayWithOpacity,
 				(gettext(_cfgVehicles >> typeof _demolitionTarget >> "displayName"))
 			] call A3C_ui_mapOverlay_fnc_drawIconVehicleMacro;		
 			A3C_UI_MAPICONS_DEMO_VICS pushBack [_demolitionTarget,[25,25],getpos _demolitionTarget];
@@ -218,7 +218,7 @@ private _sharedDrawColor;
 
 				private _lineStartPosition = []; // Default: empty waypoint position.
 				private _waypointIndex = _forEachIndex;
-				private _waypointColor = if (_plotDataTypeIndex == 0) then {[A3C_UI_COLOR_BLACK,1] call A3C_UI_fnc_setOpacity} else {[A3C_UI_COLOR_GREY,1] call A3C_UI_fnc_setOpacity}; // Active and temporary waypoint data use different default colors.
+				private _waypointColor = if (_plotDataTypeIndex == 0) then {[A3C_UI_COLOR_BLACK,1] call A3C_ui_shared_fnc_getColorArrayWithOpacity} else {[A3C_UI_COLOR_GREY,1] call A3C_ui_shared_fnc_getColorArrayWithOpacity}; // Active and temporary waypoint data use different default colors.
 				private _waypointPosition = _wpPositions select 0;
 				private _waypointDirectionPosition = _wpPositions select 1;
 				private _mainMarkerId = _wpMarkers select 0;
@@ -485,10 +485,10 @@ private _sharedDrawColor;
 		_unitOpacity = _unitOpacity min A3C_OPACITY;
 		private _assignedTeamName = if (player == cameraOn) then {assignedTeam _squadUnit} else {_squadUnit getVariable ["A3C_ASSIGNEDTEAM","MAIN"]};
 		private _squadUnitColor = switch (_assignedTeamName) do {
-			case ("RED") :{if (_isUnitHeld) then {[1,0.55,0.52,_unitOpacity]} else {[A3C_UI_COLOR_RED,_unitOpacity] call A3C_UI_fnc_setOpacity} };
+			case ("RED") :{if (_isUnitHeld) then {[1,0.55,0.52,_unitOpacity]} else {[A3C_UI_COLOR_RED,_unitOpacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity} };
 			case ("GREEN") :{if (_isUnitHeld) then {[0.6,1,0.5,_unitOpacity]} else {[0,1,0,_unitOpacity]}};
-			case ("BLUE") :{if (_isUnitHeld) then {[0.5,0.67,0.98,_unitOpacity]} else {[A3C_UI_COLOR_BLUE,_unitOpacity] call A3C_UI_fnc_setOpacity} };
-			case ("YELLOW") :{if (_isUnitHeld) then {[0.98,0.95,0.63,_unitOpacity]} else {[A3C_UI_COLOR_YELLOW,_unitOpacity] call A3C_UI_fnc_setOpacity} };
+			case ("BLUE") :{if (_isUnitHeld) then {[0.5,0.67,0.98,_unitOpacity]} else {[A3C_UI_COLOR_BLUE,_unitOpacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity} };
+			case ("YELLOW") :{if (_isUnitHeld) then {[0.98,0.95,0.63,_unitOpacity]} else {[A3C_UI_COLOR_YELLOW,_unitOpacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity} };
 			case ("MAIN") :{if (_isUnitHeld) then {[0.52,0.52,0.52,_unitOpacity]} else {[0.8,0.8,0.8,_unitOpacity]}};
 			default {[0.8,0.8,0.8,_unitOpacity]};
 		};
@@ -687,12 +687,12 @@ private _dragPathTargetUnit = if (typeName A3C_SQ_CLICKED_UNIT == "GROUP") then 
 		if (_canDrawGroup) then {
 			private _groupColorName = toLower (_highCommandGroup getVariable ["A3C_HC_GroupColor","blue"]);
 			_groupIconColor = switch (_groupColorName) do {
-				case ("red") : {[A3C_UI_COLOR_RED,_groupOpacity] call A3C_UI_fnc_setOpacity};
-				case ("blue") : {[A3C_UI_COLOR_BLUE,_groupOpacity] call A3C_UI_fnc_setOpacity};
+				case ("red") : {[A3C_UI_COLOR_RED,_groupOpacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
+				case ("blue") : {[A3C_UI_COLOR_BLUE,_groupOpacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
 				case ("green") : {[0,1,0,_groupOpacity]};
-				case ("black") : {[A3C_UI_COLOR_Black,_groupOpacity] call A3C_UI_fnc_setOpacity};
+				case ("black") : {[A3C_UI_COLOR_Black,_groupOpacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
 				case ("white") : {[1,1,1,_groupOpacity]};
-				default {[A3C_UI_COLOR_BLUE,_groupOpacity] call A3C_UI_fnc_setOpacity};
+				default {[A3C_UI_COLOR_BLUE,_groupOpacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
 			};
 			{
 				private _waypoint = _x;
@@ -853,7 +853,7 @@ private _dragPathTargetUnit = if (typeName A3C_SQ_CLICKED_UNIT == "GROUP") then 
 									100,
 									100,
 									0,
-									[_repairAreaColor,0.5 min A3C_OPACITY] call A3C_UI_fnc_setOpacity,
+									[_repairAreaColor,0.5 min A3C_OPACITY] call A3C_ui_shared_fnc_getColorArrayWithOpacity,
 									"#(ai,512,512,9)perlinNoise(256,256,0,1)"
 								];
 								//-- vehicles to repair
@@ -1279,7 +1279,7 @@ private _dragPathTargetUnit = if (typeName A3C_SQ_CLICKED_UNIT == "GROUP") then 
 					private _staticWeaponIconDrawResult = _mapControl drawIcon
 					[
 						(gettext(_cfgVehicles >> (typeof (vehicle _staticWeaponUnit)) >> "icon")),
-						[A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_UI_fnc_setOpacity,
+						[A3C_UI_COLOR_BLUE,A3C_OPACITY] call A3C_ui_shared_fnc_getColorArrayWithOpacity,
 						getPos _staticWeaponUnit,
 						35,
 						35,
@@ -1499,7 +1499,7 @@ if (!(A3C_DISABLE_TRACKER) && {A3C_TRACKER_VISIBLE == 1} ) then {
 								[
 									A3C_UI_COLOR_RED,
 									0.3
-								] call A3C_UI_fnc_setOpacity
+								] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 							];
 
 							_mapControl drawIcon [
@@ -1625,7 +1625,7 @@ A3C_ALL_POLYS = [];
 						[
 							A3C_UI_COLOR_RED,
 							0.3
-						] call A3C_UI_fnc_setOpacity
+						] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 					];
 				};
 			};
@@ -1651,7 +1651,7 @@ A3C_ALL_POLYS = [];
 	//-- draw polygon, unless it's an Assembly Polygon
 	if (count _polygonData > 0 && {count (_polygonData select 1) > 0 }) then {
 		private _polygonColor = switch (_polygonType) do {
-			case ("SUP") : {[A3C_UI_COLOR_RED,0.7] call A3C_UI_fnc_setOpacity};
+			case ("SUP") : {[A3C_UI_COLOR_RED,0.7] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
 			case ("AMB") : {[0,0,0,0.7]};
 			case ("ASS") : {[0,0,0,0.7]};
 			case ("OTHER") : {[1,1,1,0.7]};
@@ -1796,7 +1796,7 @@ if (count A3C_PICKUP_OBJECTS > 0) then {
 			_mapControl,
 			_pickupObject,
 			25,
-			[A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity,
+			[A3C_UI_COLOR_BLUE,1] call A3C_ui_shared_fnc_getColorArrayWithOpacity,
 			(gettext(_cfgVehicles >> typeof _lastDragCandidateVehicle >> "displayName"))
 		] call A3C_ui_mapOverlay_fnc_drawIconVehicleMacro;	
 		A3C_UI_MAPICONS_PICKUP pushbackUnique [_pickupObject,[25,25], getPosASL _pickupObject];
@@ -1809,7 +1809,7 @@ if (A3C_Boarding_ACTIVE) then {
 			_mapControl,
 			_boardingVehicleIconData select 0,
 			32.5,
-			[A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity,
+			[A3C_UI_COLOR_BLUE,1] call A3C_ui_shared_fnc_getColorArrayWithOpacity,
 			""
 		] call A3C_ui_mapOverlay_fnc_drawIconVehicleMacro;
 	} foreach A3C_UI_MAPICONS_HC_VICS;

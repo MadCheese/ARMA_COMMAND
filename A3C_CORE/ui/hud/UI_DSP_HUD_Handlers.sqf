@@ -290,7 +290,7 @@ A3C_UI_HUD_onKeyDown = {
 	};
 
 	if (isNil '_blockDefaultKey') then {
-		_blockDefaultKey = [_key, [_shift, _ctrl, _alt]] call A3C_UI_fnc_getKeyBool; //<< #Clarify: is there a cleaner way here?
+		_blockDefaultKey = [_key, [_shift, _ctrl, _alt]] call A3C_ui_shared_fnc_getKeyBool; //<< #Clarify: is there a cleaner way here?
 	};
 	_blockDefaultKey
 };

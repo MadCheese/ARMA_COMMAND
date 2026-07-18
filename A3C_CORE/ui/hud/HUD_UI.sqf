@@ -26,9 +26,9 @@ A3C_UI_HUD_3D_TAG = {
 	//};
 	A3C_UI_HUD_3D_TAG_ICON_COL = switch (_mode) do {
 		case ("DEMOLITION") : {[1,1,1,0.7]};
-		//case ("HC_WP") : {[A3C_UI_COLOR_BLUE,0.7] call A3C_UI_fnc_setOpacity};
-		case ("BOARD") : {[A3C_UI_COLOR_YELLOW,0.7] call A3C_UI_fnc_setOpacity};
-		case ("SUPPRESSION") : {[A3C_UI_COLOR_RED,0.7] call A3C_UI_fnc_setOpacity};
+		//case ("HC_WP") : {[A3C_UI_COLOR_BLUE,0.7] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
+		case ("BOARD") : {[A3C_UI_COLOR_YELLOW,0.7] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
+		case ("SUPPRESSION") : {[A3C_UI_COLOR_RED,0.7] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
 		default {A3C_UI_HUD_3D_TAG_ICON_COL};
 	};
 	if (!isNull cursorTarget && {(_mode in ["DEMOLITION","BOARD"])}) then {

@@ -1,4 +1,3 @@
-#include "..\..\..\radial\radialMenu\script_component.hpp"
 #include "..\..\..\radial\radialMenu\dialog_defines.hpp"
 #include "..\..\shared_ui_defines.hpp"
 
@@ -12,11 +11,16 @@ private _hudBackground = controlNull;
 switch (_mode) do {
 	case "RADIAL": {
 		_radialBackgrounds = (
-			(["radial_extendedBackgrounds"] call FUNC(ctrlGroup)) +
 			[
-				["bgCore"] call FUNC(ctrl)
-			]
-		) select {
+				"radial_extendedBackgrounds"
+			] call A3C_ui_radialMenu_fnc_ctrlGroup
+		) + [
+			[
+				"bgCore"
+			] call A3C_ui_radialMenu_fnc_ctrl
+		];
+
+		_radialBackgrounds = _radialBackgrounds select {
 			!isNull _x
 		};
 	};

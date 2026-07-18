@@ -51,15 +51,13 @@ if (
 
 hint "CONTROL THE VEHICLE WITH ARROW KEYS. CANCEL REMOTE WITH CTRL+RMB";
 
-/*
-	Preserved global state. Note that the throttle code below still retains
-	the legacy hard limit of +/-5 model-space velocity.
-*/
-a3c_tank_speed_max = if (_shift) then {
+private _speedLimit = if (_shift) then {
 	15
 } else {
 	5
 };
+
+a3c_tank_speed_max = _speedLimit;
 
 switch (_key) do {
 	case 203: {
@@ -125,12 +123,14 @@ switch (_key) do {
 		[
 			[
 				_remoteVehicle,
-				_velocityChange
+				_velocityChange,
+				_speedLimit
 			],
 			{
 				params [
 					["_vehicle", objNull, [objNull]],
-					["_velocityChange", 0, [0]]
+					["_velocityChange", 0, [0]],
+					["_speedLimit", 5, [0]]
 				];
 
 				if (
@@ -149,8 +149,8 @@ switch (_key) do {
 
 				_forwardVelocity = (
 					(_forwardVelocity + _velocityChange)
-					max -5
-				) min 5;
+					max (-_speedLimit)
+				) min _speedLimit;
 
 				_velocityModelSpace set [
 					1,

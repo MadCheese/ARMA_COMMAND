@@ -221,7 +221,7 @@ switch (_mode) do {
 			case 0: {
 				[
 					"RED",
-					[A3C_UI_COLOR_RED, 1] call A3C_UI_fnc_setOpacity
+					[A3C_UI_COLOR_RED, 1] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 				]
 			};
 
@@ -235,14 +235,14 @@ switch (_mode) do {
 			case 2: {
 				[
 					"BLUE",
-					[A3C_UI_COLOR_BLUE, 1] call A3C_UI_fnc_setOpacity
+					[A3C_UI_COLOR_BLUE, 1] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 				]
 			};
 
 			case 3: {
 				[
 					"YELLOW",
-					[A3C_UI_COLOR_YELLOW, 1] call A3C_UI_fnc_setOpacity
+					[A3C_UI_COLOR_YELLOW, 1] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 				]
 			};
 

@@ -49,6 +49,11 @@ A3C_REMFIRE_StaticShot_Units = [];
 
 A3C_HC_DetoShot_Units = [];
 A3C_HC_NearStatics = [];
+A3C_STATIC_PACKS = [];
+
+if (_selectedGroups isEqualTo []) exitWith {
+	[]
+};
 
 private _actions = [];
 
@@ -111,16 +116,20 @@ if (count _selectedGroups == 1) then {
 		};
 	};
 
-	private _hasPlowVehicle = _allSelectedGroupVehicles findIf {
+	private _plowVehicleIndex = _allSelectedGroupVehicles findIf {
 		isClass (
 			configOf _x
 			>> "AnimationSources"
 			>> "moveplow"
 		)
-	} >= 0;
+	};
 
-	if (_hasPlowVehicle) then {
-		private _plowPhase = _leaderVehicle animationSourcePhase "moveplow";
+	if (_plowVehicleIndex >= 0) then {
+		private _plowVehicle =
+			_allSelectedGroupVehicles select _plowVehicleIndex;
+
+		private _plowPhase =
+			_plowVehicle animationSourcePhase "moveplow";
 
 		if (_plowPhase == 0) then {
 			_actions pushBack "PLOW_DEPLOY";
@@ -132,7 +141,8 @@ if (count _selectedGroups == 1) then {
 	};
 
 	private _hasAvailableLineCharge = _allSelectedGroupVehicles findIf {
-		private _vehicleType = typeOf _x;
+		private _vehicle = _x;
+		private _vehicleType = typeOf _vehicle;
 
 		_vehicleType in [
 			"B_APC_Tracked_01_CRV_F_Fixed",
@@ -140,7 +150,7 @@ if (count _selectedGroups == 1) then {
 		]
 		&& {
 			(
-				_leaderVehicle getVariable [
+				_vehicle getVariable [
 					"MCSS_MCLC_MAGCOUNT",
 					4
 				]
@@ -148,7 +158,7 @@ if (count _selectedGroups == 1) then {
 		}
 		&& {
 			!(
-				_leaderVehicle getVariable [
+				_vehicle getVariable [
 					"MCSS_MCLC_RELOADING",
 					false
 				]
@@ -347,12 +357,12 @@ if (count _selectedGroups == 1) then {
 			};
 
 			if (count _groupUnits > 1) then {
-				private _packedStaticWeapons = [
+				A3C_STATIC_PACKS = [
 					_testedUnits,
 					"PLANNING"
 				] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons;
 
-				if (_packedStaticWeapons isNotEqualTo []) then {
+				if (A3C_STATIC_PACKS isNotEqualTo []) then {
 					_actions pushBackUnique "STATIC_ASSEMBLE_HC";
 				};
 			};
@@ -962,6 +972,7 @@ private _actionPriority = [
 	"CONVOY_CREATE",
 	"HEAL",
 	"RE-ARM",
+	// "JOINPLAYER", //-- currently not used but kept around
 	"JOIN GROUP",
 	"UNSTUCK",
 	"REFRESH_HC_GROUP",

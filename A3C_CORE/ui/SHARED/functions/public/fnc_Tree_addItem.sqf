@@ -57,7 +57,7 @@ private _fnc_getButtonColor = {
 			[
 				A3C_UI_COLOR_RED,
 				1
-			] call A3C_UI_fnc_setOpacity
+			] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 		};
 
 		case "GREEN": {
@@ -68,14 +68,14 @@ private _fnc_getButtonColor = {
 			[
 				A3C_UI_COLOR_BLUE,
 				1
-			] call A3C_UI_fnc_setOpacity
+			] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 		};
 
 		case "YELLOW": {
 			[
 				A3C_UI_COLOR_YELLOW,
 				1
-			] call A3C_UI_fnc_setOpacity
+			] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 		};
 
 		default {
@@ -232,9 +232,7 @@ switch (_mode) do {
 
 		if (_driver in (_unitArray - [player])) then {
 			/*
-				The legacy function wrote this value to [0, _parentIndex].
-				That hard-coded root index was incorrect for trees whose
-				squad root was not zero.
+				The vehicle parent row represents the driver.
 			*/
 			_tree tvSetValue [
 				_vehiclePath,
@@ -242,6 +240,17 @@ switch (_mode) do {
 					_driver,
 					_unitArray
 				] call MCSS_fnc_getArrayIndex
+			];
+
+			/*
+				Store the parent path immediately. The SQUAD_CREW branch will
+				add the driver's crew-row path when that row is created.
+			*/
+			_driver setVariable [
+				"A3C_TREESEL_INDEX",
+				[
+					_vehiclePath
+				]
 			];
 		};
 
@@ -301,18 +310,42 @@ switch (_mode) do {
 			_crewIndex
 		];
 
-		_unit setVariable [
-			"A3C_TREESEL_INDEX",
-			[
-				_treePath
-			]
+		private _unitValue = [
+			_unit,
+			_unitArray
+		] call MCSS_fnc_getArrayIndex;
+
+		private _vehicleParentPath = [
+			_mainTreeIndex,
+			_parentIndex
 		];
 
-		_tree tvSetColor [
+		private _selectionPaths = [
+			_treePath
+		];
+
+		/*
+			The vehicle parent row carries the driver's unit value. When the values
+			match, this crew entry belongs to that same driver and both paths must
+			be retained.
+		*/
+		if (_unit == driver _vehicle) then {
+			_selectionPaths insert [
+				0,
+				[
+					_vehicleParentPath
+				]
+			];
+		};
+
+		_unit setVariable [
+			"A3C_TREESEL_INDEX",
+			_selectionPaths
+		];
+
+		_tree tvSetValue [
 			_treePath,
-			[
-				_unit
-			] call _fnc_getButtonColor
+			_unitValue
 		];
 
 		private _assignedRole = assignedVehicleRole _unit;
@@ -353,14 +386,6 @@ switch (_mode) do {
 		_tree tvSetPicture [
 			_treePath,
 			_rolePicture
-		];
-
-		_tree tvSetValue [
-			_treePath,
-			[
-				_unit,
-				_unitArray
-			] call MCSS_fnc_getArrayIndex
 		];
 	};
 

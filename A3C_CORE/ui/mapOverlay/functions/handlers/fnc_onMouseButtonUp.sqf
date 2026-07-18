@@ -215,7 +215,7 @@ if (A3C_BOOL_DRAGLINE && {A3C_CONNECTING_MODE == "HCSYNC"}) exitWith  {
 						private _btnClicker  = findDisplay IDD_MAP_OVERLAY ctrlCreate ["A3C_RscButton_Invisible", _clickerID];
 
 						_btnBG ctrlSetText "A3C_UI\markers\icon_marker_vehicleHexagon.paa";
-						_btnImg ctrlSetTextColor ([A3C_UI_COLOR_BLUE,1] call A3C_UI_fnc_setOpacity);
+						_btnImg ctrlSetTextColor ([A3C_UI_COLOR_BLUE,1] call A3C_ui_shared_fnc_getColorArrayWithOpacity);
 						//systemchat str [_bgID,_imgID,_clickerID];
 						private _btnFnc = {};
 						switch (_x) do {

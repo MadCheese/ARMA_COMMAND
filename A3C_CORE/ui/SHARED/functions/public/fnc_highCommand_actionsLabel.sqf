@@ -139,8 +139,7 @@ private _actions = [
 
 	{
 
-		// if (_foreachIndex < 10) then {
-		if (_forEachIndex < ((count _buttonArray) min 10)) then {
+		if (_forEachIndex < count _buttonArray) then {
 			private _actionName = _x;
 			private _params = [];
 			private _button_IMG = "";
@@ -365,7 +364,7 @@ private _actions = [
 				case ("LINE_CHARGE") : {
 					_params = [];
 					_button_IMG = "A3C_CORE\ui\pictures\icon_Menu_LineCharge.paa";
-					_button_toolTip = "Pack Static Weapon";
+					_button_toolTip = "Deploy Mine-Clearing Line Charge";
 					_buttonFnc = {
 						[A3C_SELECTED_HC_GROUPS_SETTINGS select 0] call A3C_ai_shared_fnc_actionLineCharge;
 					};
@@ -513,7 +512,7 @@ private _actions = [
 					_button_toolTip =  format
 					[
 						"FIRE TANK SHELL - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+						["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 					];
 
 					_buttonFnc = {
@@ -536,7 +535,7 @@ private _actions = [
 					_button_toolTip =  format
 					[
 						"FIRE GUNSHIP CANNON - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+						["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 					];
 
 					_buttonFnc = {
@@ -559,7 +558,7 @@ private _actions = [
 					_button_toolTip =  format
 					[
 						"FIRE GUNSHIP GATLING - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+						["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 					];
 					_buttonFnc = {
 						[
@@ -581,7 +580,7 @@ private _actions = [
 					_button_toolTip =  format
 					[
 						"FIRE GUNSHIP AUTOCANNON - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+						["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 					];
 
 					_buttonFnc = {
@@ -605,7 +604,7 @@ private _actions = [
 					_button_toolTip =  format
 					[
 						"FIRE UGL GRENADE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+						["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 					];
 
 					_buttonFnc = {
@@ -628,7 +627,7 @@ private _actions = [
 					_button_toolTip =  format
 					[
 						"FIRE AT-ROCKET - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+						["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 					];
 
 					_buttonFnc = {
@@ -652,7 +651,7 @@ private _actions = [
 					_button_toolTip =  format
 					[
 						"FIRE STATIC ROCKET LAUNCHER - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+						["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 					];
 					_buttonFnc = {
 						[
@@ -675,7 +674,7 @@ private _actions = [
 					_button_toolTip =  format
 					[
 						"FPV ATTACK - KEEP %1 PRESSED. CONFIRM TARGET WITH 'Spacebar' OR CANCEL BY RELEASING %1.",
-						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+						["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 					];
 
 					_buttonFnc = {
@@ -698,7 +697,7 @@ private _actions = [
 					_button_toolTip =  format
 					[
 						"REPAIR VEHICLES - KEEP %1 PRESSED. CONFIRM LOCATION WITH 'Spacebar' OR CANCEL BY RELEASING %1. REPAIR RADIUS: 100m",
-						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+						["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 					];
 					_buttonFnc = {
 						[
@@ -774,7 +773,7 @@ private _actions = [
 					_button_toolTip =  format
 					[
 						"ORDER CAS-STRIKE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+						["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 					];
 					_buttonFnc = {					
 						if (!isNull findDisplay IDD_RADIAL_MENU) then {
@@ -799,7 +798,7 @@ private _actions = [
 						_button_toolTip =  format
 						[
 							"RAPPEL CARGO - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1. Creates wp on destination and origin.",
-							["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+							["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 						];
 					} else {
 						_button_toolTip = "RAPPEL CARGO";
@@ -854,7 +853,7 @@ private _actions = [
 						_button_toolTip =  format
 						[
 							"SUPPRESSIVE FIRE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-							["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+							["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 						];
 					} else {
 						_button_toolTip = "SUPPRESSIVE FIRE - RELAY COORDINATES VIA MAPCLICK";
@@ -871,7 +870,7 @@ private _actions = [
 						_button_toolTip =  format
 						[
 							"FIRE ARTILLERY - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-							["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+							["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 						];
 					} else {
 						_button_toolTip = "FIRE ARTILLERY - RELAY COORDINATES VIA MAPCLICK";
@@ -948,7 +947,7 @@ private _actions = [
 					_button_toolTip =  format
 					[
 						"PLACE EXPLOSIVE - KEEP %1 PRESSED. CONFIRM WITH 'Spacebar' OR CANCEL BY RELEASING %1",
-						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+						["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 					];
 
 
@@ -996,7 +995,7 @@ private _actions = [
 					[
 						"ASSEMBLE %1 - KEEP %2 PRESSED. SELECT A WEAPON, POSITION AND ROTATE IT (MOUSEWHEEL). PRESS 'SpaceBar' TO CONFIRM OR RELEASE %1 TO CANCEL ",
 						(gettext(configFile >> "CfgVehicles" >> ((A3C_STATIC_PACKS select 0) select 1) >> "displayName")),
-						["A3C","A3C_KeyFnc_Menu"] call A3C_UI_fnc_getKeybindTranslation
+						["A3C","A3C_KeyFnc_Menu"] call A3C_ui_shared_fnc_getKeybindTranslation
 					];
 				};
 
