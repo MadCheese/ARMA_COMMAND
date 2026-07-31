@@ -15,7 +15,7 @@ if (isPlayer _unit) exitWith {[]};
 // Find vehicle containers.
 private _vehicleSources = nearestObjects [
 	_unit,
-	["Car", "Helicopter", "Ship", "Tank"],
+	["Car", "Helicopter", "Ship", "Tank", "ReammoBox_F"],
 	100
 ];
 

@@ -37,7 +37,7 @@ waituntil {
 	{
 		private ["_veh"];
 		_veh = vehicle _x;
-		if (_x == effectivecommander _vehicle) then {
+		if (_x == effectivecommander _veh) then {
 			if (!(_veh in _vehsMove)) then {
 
 

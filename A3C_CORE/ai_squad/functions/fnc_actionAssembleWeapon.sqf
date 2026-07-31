@@ -21,7 +21,7 @@ private _objectPlacerType = typeOf A3C_OBJECTPLACER;
 		player groupRadio "SentAssemble";
 
 		private _mainMark = "A3C_SQ_" + str random 10000000000;
-		private _screenCenterPos = screenToWorld [0.5, 0.5];
+		private _screenCenterPos = position A3C_OBJECTPLACER; //screenToWorld [0.5, 0.5];
 		private _assembleTargetPos = _screenCenterPos getPos [50, getDir A3C_OBJECTPLACER];
 
 		{
@@ -33,7 +33,7 @@ private _objectPlacerType = typeOf A3C_OBJECTPLACER;
 
 			private _plotData = [
 				[
-					[_screenCenterPos, _assembleTargetPos],		// Positions
+					[_screenCenterPos getPos [3, random 360], _assembleTargetPos],		// Positions
 					[_mainMark, "", ""],							// Markers
 					["STATIC", ["ASSEMBLE", _weapon]],				// WP action
 					["NONE", "NONE"],								// WP condition

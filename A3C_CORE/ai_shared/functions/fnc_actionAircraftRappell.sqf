@@ -214,20 +214,20 @@ if (_isHelicopter) then {
 	//-- Level non-heli hover-capable vehicles before rappelling.
 	private _aircraftPosASL = getPosASL _aircraft;
 
-	private _subBehaviour = [
-		_aircraft,
-		_aircraftPosASL,
-		_railPos,
-		vectorDirVisual _aircraft,
-		[getDir _aircraft] call MCSS_fnc_degreeToVector,
-		vectorUpVisual _aircraft,
-		[0, 0, 1],
-		3 //-- duration
-	] spawn A3C_ai_rail_fnc_vehicleOrient;
+	// private _subBehaviour = [
+	// 	_aircraft,
+	// 	_aircraftPosASL,
+	// 	_railPos,
+	// 	vectorDirVisual _aircraft,
+	// 	[getDir _aircraft] call MCSS_fnc_degreeToVector,
+	// 	vectorUpVisual _aircraft,
+	// 	[0, 0, 1],
+	// 	3 //-- duration
+	// ] spawn A3C_ai_rail_fnc_vehicleOrient;
 
-	waitUntil {
-		scriptDone _subBehaviour
-	};
+	// waitUntil {
+	// 	scriptDone _subBehaviour
+	// };
 };
 
 private _rappellGroups = [];

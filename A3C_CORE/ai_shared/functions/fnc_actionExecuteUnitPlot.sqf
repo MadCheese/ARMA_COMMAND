@@ -133,6 +133,7 @@ while {!isNull _unit} do {
 	_wpData params ["_wpPositions","_wpMarkers","_wpAction","_wpCondition","_wpStances","_wpSyncData","_wpCompleted","_wpCombatMode","_wpSpeed","_wpFlyInHeight","_wpLoopValue","_wpRadius"];
 
 	_wPos = _wpPositions select 0;
+	_wPosOriginal = +_wPos;
 	_lookAtPos = _wpPositions select 1;
 	_wpMarkerMain = _wpMarkers select 0;
 	_wpMarkerXtra = _wpMarkers select 1;
@@ -248,13 +249,17 @@ while {!isNull _unit} do {
 			{
 				private _shooter = _this select 0;
 				private _vel = _shooter getvariable "A3C_GRENADE_VEL";
+				
 				if (_this select 1 == "THROW") then
 					{
 						(_this select 6) setVelocity _vel;
 
 					};
-					_shooter removeEventHandler ["fired", _handlerID];
+					
+					_shooter removeEventHandler ["fired", _thisEventHandler];
+					_unit setvariable ["A3C_REMOTE_HANDLE",[-1,objNull]];
 			}];
+			_unit setvariable ["A3C_REMOTE_HANDLE",[_handlerID,objNull]];
 			_unit forceWeaponFire [_muzzle,_muzzle];
 
 			if ((side _unit) == WEST) then {
@@ -938,7 +943,7 @@ while {!isNull _unit} do {
 			[
 				_hubUnits,
 				_staticData,
-				_movePos,
+				_wPosOriginal,
 				if !(_lookAtPos isEqualTo []) then {[_movePos,_lookAtPos] call BIS_fnc_dirTo} else {0}
 			] spawn A3C_ai_shared_fnc_actionStaticWeaponExecute;
 			waitUntil {scriptDone _spawnBehaviour};
@@ -1281,19 +1286,25 @@ while {!isNull _unit} do {
 
 	///////////////////////////////////////////
 	//-- CHECK FOR GO-CODES
+	
 
 	if ((_wpCondition select 0) == "GOCODE") then {
 		_goCode = (_wpCondition select 1);
 		if !(_goCode == "NONE") then {
 			while {!(_goCode == "NONE")} do {
-				if ([_unit] call A3C_ai_shared_fnc_unitRouteIsWpAborted) exitWith {_abort = true};
+				if ([_unit] call A3C_ai_shared_fnc_unitRouteIsWpAborted) exitWith {
+					_abort = true;
+				};
 				if !(A3C_BOOL_MOVINGMARKER) then {
 					//-- exit stop
 					if ([_unit,_movePos,1] call A3C_ai_shared_fnc_unitRouteIsUnitStopped) then {
 						_abort = true;
 					};
 				};
-				if ([_unit,_origdest,_data,_cycle,1] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom) then {
+				if (
+					!((_wpAction select 0) in ["SUPPRESSION"]) &&
+					{[_unit,_origdest,_data,_cycle,1] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom}
+				) then {
 					_abort = true;
 				};
 				if (_abort) exitWith {};
@@ -1359,6 +1370,11 @@ _unit setVariable ["A3C_unitIsOnMainRoute",false,true];
 
 _unit setvariable ["A3C_ABORT_Data",[false,false],true];
 
+//-- disable suppression if last waypoint action had it 
+private _unitPolygons = _unit getVariable ["A3C_UNIT_POLYS", []];
+if !(_unitPolygons isEqualTo []) then {
+	[[_unit],"SUPPRESSION"] call A3C_ai_shared_fnc_polygonAreaActionOff;
+};
 
 //-- reset defaults
 {_unit enableAI _x} foreach ["MOVE","TARGET","AUTOTARGET","FSM","AUTOCOMBAT"]; //"PATHPLAN","THREAT_PATH",

@@ -94,7 +94,11 @@ sleep (0.5 * count _allClients); //-- give timeout to receive update from client
 			!isNull _objectParent && {_x == driver vehicle _x}
 		};
 
-		_group enableAttack false;
+		//-- enableAttack-false will prevent subordinates from moving when player commander does not want it 
+		//-- #ToDo: test if this makes sense to add as an action
+		[_group, false] remoteExecCall ["enableAttack", leader _group];
+		//-- allowFleeing disabled means that groups won't erratically move when player commander does not want it
+		[_group, 0] remoteExecCall ["allowFleeing", leader _group];
 
 		//-- exclude team AI from AI-Enhancing addons (group level)
 		_group setVariable ["NOAI", 1, false];
@@ -154,11 +158,15 @@ sleep (0.5 * count _allClients); //-- give timeout to receive update from client
 			};
 		};
 
-		//-- automatically replace dead gunners
+		//-- automatically replace dead gunners and disable driver "COVER" feature
 		{
 			private _driverUnit = _x;
 			private _vehicle = objectParent _driverUnit;
 			private _gunner = gunner _vehicle;
+
+			// if (_driverUnit checkAIFeature "COVER") then {
+			// 	_driverUnit enableAIFeature ["COVER", false];
+			// };
 
 			if (!isNull _gunner && {!alive _gunner}) then {
 				private _crewFromGroup = crew _vehicle select {

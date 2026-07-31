@@ -39,7 +39,10 @@ if (
 		2,
 		((boundingBox cursorTarget select 1) select 2) / 2
 	];
+	
 };
+
+A3C_UI_HUD_3D_TAG_ICON_POS = +_pos;
 
 // Animate icon zoom.
 if !(_mode in ["HC_WP", "SUPPRESSION"]) then {
@@ -47,7 +50,7 @@ if !(_mode in ["HC_WP", "SUPPRESSION"]) then {
 	private _animationLength = 3;
 
 	while { (time - _startTime) < _animationLength } do {
-		A3C_UI_HUD_3D_TAG_ICON_POS = _pos;
+		// A3C_UI_HUD_3D_TAG_ICON_POS = _pos;
 
 		private _animationProgress = (
 			_animationLength - (time - _startTime)

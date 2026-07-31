@@ -37,6 +37,8 @@ if (A3C_CURRENT_COMMAND_LEVEL == "SQUAD") then {
 //-- Spawn object placer
 if (_objectPlacerClass isNotEqualTo "") then {
 
+	// systemchat str _objectPlacerClass;
+
 	private _placer = createVehicleLocal [_objectPlacerClass, [0, 0, 100], [], 0, "CAN_COLLIDE"];
 
 	_placer allowDamage false;

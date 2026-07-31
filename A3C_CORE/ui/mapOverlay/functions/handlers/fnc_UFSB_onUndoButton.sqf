@@ -11,6 +11,8 @@ private _display = findDisplay IDD_MAP_OVERLAY;
 	IDC_MAP_SQWP_Parent
 ];
 
+if (A3C_WAYPOINTS_TEMP isEqualTo []) exitWith {};
+
 private _waypoint = A3C_WAYPOINTS_TEMP select (
 	(count A3C_WAYPOINTS_TEMP) - 1
 );

@@ -35,6 +35,12 @@ switch (_mode) do {
 	case 0: {
 		if (A3C_FORMMODE_TEMP in [4, 5]) then {
 			A3C_SNAP_MAP_BOOL = false;
+
+			if (A3C_FORMMODE_TEMP == 4) then {
+				_units = [
+					A3C_SPLIT_UNITS select 0
+				];
+			};
 		} else {
 			_units = [
 				A3C_SELECTED_UNITS select 0
@@ -434,8 +440,8 @@ if (_mode == 1) then {
 		];
 
 		{
-			private _switchData =
-				_x getVariable ["A3C_PLOT_TEMP", []];
+			private _switchData = _x getVariable ["A3C_PLOT_TEMP", []];
+
 
 			(
 				(

@@ -84,7 +84,7 @@ waituntil {
 	{
 		private ["_veh"];
 		_veh = vehicle _x;
-		if (_x == effectivecommander _vehicle) then {
+		if (_x == effectivecommander _veh) then {
 			if (!(_veh in _vehsMove)) then {
 
 
@@ -172,6 +172,13 @@ _loadVic setVariable ["A3C_HC_groupVehicleReadyToBoard",nil,true];
 		} foreach ['door_rear','door_rear_source','Door_1_source'];
 	};
 } foreach units _group;
+
+private _groupDrivers = [_group] call A3C_main_fnc_getGroupDrivers;
+
+//-- necessary workaround to snap pilot out of weird issues that leave him stuck on ground
+[_groupDrivers] call A3C_ai_shared_fnc_actionEngineOff;
+sleep 0.5;
+[_groupDrivers] call A3C_ai_shared_fnc_actionEngineOn;
 
 
 true

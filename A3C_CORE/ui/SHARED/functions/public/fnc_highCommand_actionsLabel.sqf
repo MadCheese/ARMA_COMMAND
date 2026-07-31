@@ -228,7 +228,7 @@ private _actions = [
 				case ("ORDER_DETO") : {
 					_params = [];
 					_button_IMG = "\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\cargoPut_ca.paa";
-					_button_toolTip = "MANAGE EXPLOSIVES";
+					_button_toolTip = "DETONATE EXPLOSIVES";
 
 					_buttonFnc = {
 						[] call A3C_UI_SelectionPromptPanel_fnc_actionChargeDetonatePromptStart;

@@ -3,6 +3,10 @@
 params ["_unit", "_targetPos", "_orderDetails"];
 _orderDetails params ["_targetVeh", "_ammoType"];
 
+
+
+
+
 //-- check for charge
 
 private _cfgMagazines = configFile >> "CfgMagazines";
@@ -82,7 +86,7 @@ if (_targetVeh isEqualType objNull && {!isNull _targetVeh}) then {
 		_targetDist = _targetDist * 1.3; //-- be more generous for AI-led groups
 	};
 
-	if (_targetVeh distance _targetPos > _targetDist || {speed _targetVeh > 0}) then {
+	if (_targetVeh distance2d _targetPos > _targetDist || {(abs (speed _targetVeh)) > 0.5}) then {
 		//-- the target object is no longer at the position
 		_exit = true;
 	} else {
@@ -94,7 +98,7 @@ if (_targetVeh isEqualType objNull && {!isNull _targetVeh}) then {
 };
 
 if (_exit) exitWith {
-	systemChat "exit (_exit)";
+	// systemChat "exit (_exit)";
 };
 
 //-- move to position
@@ -174,6 +178,19 @@ A3C_VARNAME_INDEX = A3C_VARNAME_INDEX + 1;
 			"_hasAttachPoint"
 		];
 
+		private _group = group _unit;
+		private _groupUnits = units _group;
+		private _idleUnits = _groupUnits - [_unit];
+		private _isHC = !(isPlayer (leader _group));
+
+		if (_isHC) then {
+			{_x forceSpeed 0} foreach _idleUnits;
+		};
+
+
+		
+
+
 		private _cfgMagazines = configFile >> "CfgMagazines";
 		private _cfgAmmo = configFile >> "CfgAmmo";
 
@@ -225,6 +242,9 @@ A3C_VARNAME_INDEX = A3C_VARNAME_INDEX + 1;
 				(_unit getVariable ["A3C_UNIT_EXPLOSIVES", []]) + [_ordnance],
 				true
 			];
+		};
+		if (_isHC) then {
+			{_x forceSpeed -1} foreach _idleUnits;
 		};
 	}
 ] remoteExec ["BIS_fnc_call", _unit];

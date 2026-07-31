@@ -1,0 +1,113 @@
+
+
+
+
+
+
+
+
+dev = "Mad_Cheese";
+author = "Mad_Cheese";
+briefingName = "A3C - INTRODUCTION";
+onLoadName = "A3C - INTRODUCTION";
+loadScreen = "a3c_overview.paa";
+
+onLoadMission = "Get familiar with ARMA COMMAND and learn how to maximize your control over friendly AI.";
+
+overviewText = "Get familiar with ARMA COMMAND and learn how to maximize your control over friendly AI.";
+// overviewPicture = "a3c_overview.paa";
+// overviewPicture = "\@arma_command\Addons\a3c_overview.paa";
+overviewPicture = "A3C_missions\showcases\A3C_INTRODUCTION.Malden\a3c_overview.paa"; 
+
+// doneKeys[] = {"BIS_Showcase_Helicopters.Stratis_done"};
+
+briefing = "Yeh Yeh Briefing";
+debriefing = "Yeh Yeh Debriefing";
+
+enableDebugConsole = 1;
+
+#include "hpp\controls.hpp"
+
+class RscTitles
+{
+    titles[]={};
+	
+	class TutorialHint {
+		idd = 50000;
+		
+		fadeout=0;
+		fadein=0;
+		duration = 1000000000000;
+		name = "TutorialHint";
+		onLoad = "uiNamespace setVariable ['TutorialHint', _this select 0]";
+
+		class controlsBackground {
+			class some_bg: RscPicture
+			{
+				idc = 50002;
+				//text = "#(argb,8,8,3)color(0,0,0,0.5)"; //--- ToDo: Localize;
+				x = 0 * safezoneW + safezoneX;
+				y = 0 * safezoneH + safezoneY;
+				w = safezoneW;
+				h = 0.0679939 * safezoneH;
+			};
+			class some_text: RscStructuredText
+			{
+				idc = 50001;
+				style = 2;
+				text = "WELCOME TO THE ARMA COMMAND BOOTCAMP!"; //--- ToDo: Localize;
+				x = 0.00394097 * safezoneW + safezoneX;
+				y = 0.0070183 * safezoneH + safezoneY;
+				w = 0.59207 * safezoneW;
+				h = 0.252994 * safezoneH;
+			};
+		};
+	};
+};
+
+class A3C_TUTORIAL_PROGRESS
+{
+	idd = 110101010101;
+	movingenable = false;
+
+
+
+	class Controls
+	{
+
+		class BTN_CONT: RscButton
+		{
+			idc = 1600;
+			text = "CONTINUE"; //--- ToDo: Localize;
+			x = 0.379986 * safezoneW + safezoneX;
+			y = 0.415003 * safezoneH + safezoneY;
+			w = 0.0960114 * safezoneW;
+			h = 0.0849968 * safezoneH;
+			action = "TUTORIAL_CONTINUE = 1; closeDialog 2;";
+		};
+		class BTN_REP: RscButton
+		{
+			idc = 1601;
+			text = "REPEAT LESSON"; //--- ToDo: Localize;
+			x = 0.491999 * safezoneW + safezoneX;
+			y = 0.415003 * safezoneH + safezoneY;
+			w = 0.0960114 * safezoneW;
+			h = 0.0849968 * safezoneH;
+			action = "TUTORIAL_CONTINUE = 2; closeDialog 2;";
+		};
+
+	};
+};
+
+class CfgIdentities
+{
+	class CROSSROADS
+	{
+		name="CROSSROADS";
+		nameSound = "CROSSROADS"; // ArmA3 only!
+		face="Miller";
+		glasses="None";
+		speaker="Male03ENG";
+		pitch=1.0;
+	};
+};

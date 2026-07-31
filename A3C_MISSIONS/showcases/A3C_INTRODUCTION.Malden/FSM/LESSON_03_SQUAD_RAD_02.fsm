@@ -1,0 +1,2759 @@
+/*%FSM<COMPILE "G:\!Games\Steam\steamapps\common\Arma 3 Tools\FSMEditor\scriptedFSM.cfg, lesson_RADIAL_2">*/
+/*%FSM<HEAD>*/
+/*
+item0[] = {"Start_",0,250,850.000000,-4725.000000,1000.000000,-4625.000000,0.000000,"Start" \n ""};
+item1[] = {"true___",4,218,850.000000,-4600.000000,1000.000000,-4525.000000,0.000000,"true" \n "" \n "" \n ""};
+item2[] = {"TASK_FIND_COVER",2,250,850.000000,-3925.000000,1000.000000,-3850.000000,0.000000,"TASK FIND COVER" \n ""};
+item3[] = {"units_on_route",4,218,875.000000,-3525.000000,975.000000,-3475.000000,0.000000,"units on route"};
+item4[] = {"LESSON_FINISHED",1,250,4150.000000,-3425.000000,4250.000000,-3375.000000,0.000000,"LESSON" \n "FINISHED"};
+item5[] = {"START_COVER",2,250,850.000000,-4475.000000,1000.000000,-4400.000000,0.000000,"START" \n "COVER"};
+item6[] = {"__s",4,218,850.000000,-4350.000000,1000.000000,-4275.000000,0.000000,"3s"};
+item7[] = {"formation",2,250,875.000000,-4250.000000,975.000000,-4200.000000,0.000000,"formation"};
+item8[] = {"Shots_Fired",4,218,875.000000,-4000.000000,975.000000,-3950.000000,0.000000,"Shots Fired"};
+item9[] = {"CLEAR",2,250,875.000000,-3450.000000,975.000000,-3400.000000,0.000000,"CLEAR"};
+item10[] = {"cleared",4,218,875.000000,-3350.000000,975.000000,-3300.000000,0.000000,"cleared"};
+item11[] = {"Radial_OPen",4,218,875.000000,-3825.000000,975.000000,-3775.000000,0.000000,"Radial OPen"};
+item12[] = {"ACTIONS",2,250,875.000000,-3750.000000,975.000000,-3700.000000,0.000000,"ACTIONS"};
+item13[] = {"ACTIONS",4,218,875.000000,-3675.000000,975.000000,-3625.000000,0.000000,"ACTIONS"};
+item14[] = {"FIND_COVER_ACTIO",2,250,875.000000,-3600.000000,975.000000,-3550.000000,0.000000,"FIND COVER ACTION"};
+item15[] = {"Radial_Closed_",4,218,1125.000000,-3925.000000,1225.000000,-3850.000000,0.000000,"Radial Closed" \n ""};
+item16[] = {"",7,210,1171.000000,-3728.999512,1179.000000,-3721.000244,0.000000,""};
+item17[] = {"",7,210,1170.999756,-3578.999512,1179.000244,-3571.000244,0.000000,""};
+item18[] = {"MOVE_TO__ROE",2,250,1550.000000,-4475.000000,1650.000000,-4425.000000,0.000000,"MOVE TO " \n "ROE"};
+item19[] = {"OPEN_RAD",2,250,2225.000000,-4475.000000,2325.000000,-4425.000000,0.000000,"OPEN RAD"};
+item20[] = {"Radial_OPen",4,218,2225.000000,-4375.000000,2325.000000,-4325.000000,0.000000,"Radial OPen"};
+item21[] = {"OPEN_ROE",2,250,2225.000000,-4300.000000,2325.000000,-4250.000000,0.000000,"OPEN ROE"};
+item22[] = {"ROE_OPEN",4,218,2225.000000,-4225.000000,2325.000000,-4175.000000,0.000000,"ROE OPEN"};
+item23[] = {"SELECT_FOML",2,250,2225.000000,-4150.000000,2325.000000,-4100.000000,0.000000,"SELECT" \n "FOML"};
+item24[] = {"Radial_Closed_",4,218,2450.000000,-4475.000000,2550.000000,-4425.000000,0.000000,"Radial Closed" \n ""};
+item25[] = {"FOML_d",4,218,2225.000000,-4075.000000,2325.000000,-4025.000000,0.000000,"FOML'd"};
+item26[] = {"TARGET",2,4346,2225.000000,-3850.000000,2325.000000,-3800.000000,0.000000,"TARGET"};
+item27[] = {"TARGETED",4,218,2225.000000,-3775.000000,2325.000000,-3725.000000,0.000000,"TARGETED"};
+item28[] = {"SHOOT",2,250,2225.000000,-3700.000000,2325.000000,-3650.000000,0.000000,"SHOOT"};
+item29[] = {"KILLED",4,218,2225.000000,-3625.000000,2325.000000,-3575.000000,0.000000,"KILLED"};
+item30[] = {"ROE_CLOSED",4,218,2100.000000,-4300.000000,2200.000000,-4250.000000,0.000000,"ROE CLOSED"};
+item31[] = {"",7,210,2145.999756,-4129.000000,2154.000244,-4121.000488,0.000000,""};
+item32[] = {"",7,210,2495.999756,-4129.000000,2504.000488,-4121.000488,0.000000,""};
+item33[] = {"MOVE_TO_POS",2,250,2825.000000,-4475.000000,2925.000000,-4425.000000,0.000000,"MOVE TO POS"};
+item34[] = {"at_pos",4,218,2825.000000,-4400.000000,2925.000000,-4350.000000,0.000000,"at pos"};
+item35[] = {"DISABLE_AUTO_TAR",2,250,2225.000000,-4000.000000,2325.000000,-3950.000000,0.000000,"DISABLE" \n "AUTO TARGET"};
+item36[] = {"AUTO_DISABLED",4,218,2225.000000,-3925.000000,2325.000000,-3875.000000,0.000000,"AUTO DISABLED"};
+item37[] = {"",7,210,2145.999756,-3978.999512,2154.000244,-3971.000488,0.000000,""};
+item38[] = {"",7,210,2495.999756,-3978.999512,2504.000488,-3971.000488,0.000000,""};
+item39[] = {"OPEN_RADIAL",2,250,2825.000000,-4325.000000,2925.000000,-4275.000000,0.000000,"OPEN RADIAL"};
+item40[] = {"Radial_OPen",4,218,2825.000000,-4250.000000,2925.000000,-4200.000000,0.000000,"Radial OPen"};
+item41[] = {"OPEN_ROE_1",2,250,2825.000000,-4175.000000,2925.000000,-4125.000000,0.000000,"OPEN ROE"};
+item42[] = {"ROE_OPEN",4,218,2825.000000,-4100.000000,2925.000000,-4050.000000,0.000000,"ROE OPEN"};
+item43[] = {"RESET_ROE",2,250,2825.000000,-4025.000000,2925.000000,-3975.000000,0.000000,"RESET ROE"};
+item44[] = {"Radial_Closed_",4,218,2975.000000,-4325.000000,3075.000000,-4275.000000,0.000000,"Radial Closed" \n ""};
+item45[] = {"RESET",4,218,2825.000000,-3950.000000,2925.000000,-3900.000000,0.000000,"RESET"};
+item46[] = {"ROE_CLOSED",4,218,2675.000000,-4175.000000,2775.000000,-4125.000000,0.000000,"ROE CLOSED"};
+item47[] = {"",7,210,2720.999756,-4003.999512,2729.000244,-3996.000488,0.000000,""};
+item48[] = {"",7,210,3020.999756,-4003.999512,3029.000488,-3996.000488,0.000000,""};
+item49[] = {"ALLOW_FIRE",2,250,2825.000000,-3875.000000,2925.000000,-3825.000000,0.000000,"ALLOW FIRE"};
+item50[] = {"enemy_killed",4,218,2825.000000,-3800.000000,2925.000000,-3750.000000,0.000000,"enemy killed"};
+item51[] = {"JOIN_MEDIC",2,250,3375.000000,-4475.000000,3475.000000,-4425.000000,0.000000,"JOIN MEDIC"};
+item52[] = {"TOGGLE_BUTTONS",2,250,3375.000000,-4300.000000,3475.000000,-4225.000000,0.000000,"TOGGLE BUTTONS"};
+item53[] = {"Radial_OPen",4,218,3375.000000,-4400.000000,3475.000000,-4350.000000,0.000000,"Radial OPen"};
+item54[] = {"buttons_toggled",4,218,3375.000000,-4200.000000,3475.000000,-4125.000000,0.000000,"buttons toggled"};
+item55[] = {"SELECT_U_6",2,250,3375.000000,-4100.000000,3475.000000,-4025.000000,0.000000,"SELECT U-6"};
+item56[] = {"Radial_OPen_U6",4,218,3375.000000,-4000.000000,3475.000000,-3950.000000,0.000000,"Radial OPen U6"};
+item57[] = {"Radial_Closed_",4,218,3725.000000,-4100.000000,3825.000000,-4025.000000,0.000000,"Radial Closed" \n ""};
+item58[] = {"Radial_OPen",4,218,3550.000000,-4300.000000,3650.000000,-4225.000000,0.000000,"Radial OPen"};
+item59[] = {"TASK_OPEN_RAD_",2,250,3725.000000,-4300.000000,3825.000000,-4225.000000,0.000000,"TASK OPEN RAD" \n ""};
+item60[] = {"skip",4,218,3200.000000,-3900.000000,3300.000000,-3850.000000,1.000000,"skip"};
+item61[] = {"AUTO_FNC",2,250,3375.000000,-3900.000000,3475.000000,-3850.000000,0.000000,"AUTO FNC"};
+item62[] = {"__BRAIN_",4,218,3375.000000,-3800.000000,3475.000000,-3750.000000,0.000000,"""BRAIN"""};
+item63[] = {"SELECT_RE_ARM",2,250,3375.000000,-3725.000000,3475.000000,-3675.000000,0.000000,"SELECT RE-ARM"};
+item64[] = {"RE_ARM_SELECTED",4,218,3375.000000,-3650.000000,3475.000000,-3600.000000,0.000000,"RE-ARM" \n "SELECTED"};
+item65[] = {"ASSIGN_REARM",2,250,3375.000000,-3575.000000,3475.000000,-3525.000000,0.000000,"ASSIGN REARM"};
+item66[] = {"",7,210,3571.000000,-3779.000000,3579.000000,-3771.000000,0.000000,""};
+item67[] = {"",7,210,3571.000000,-3704.000000,3579.000000,-3696.000000,0.000000,""};
+item68[] = {"has_backpack___m",4,218,3375.000000,-2775.000000,3475.000000,-2725.000000,0.000000,"has backpack & medikit"};
+item69[] = {"MEDIKIT_ASSIGNED",2,250,3375.000000,-2700.000000,3475.000000,-2650.000000,0.000000,"MEDIKIT ASSIGNED"};
+item70[] = {"skip",4,218,4475.000000,-2925.000000,4575.000000,-2875.000000,2.000000,"skip"};
+item71[] = {"radial_closed",4,218,3375.000000,-2625.000000,3475.000000,-2575.000000,0.000000,"radial closed"};
+item72[] = {"",7,210,4196.000000,-4579.000000,4204.000000,-4571.000000,0.000000,""};
+item73[] = {"OPEN_RADIAL_1",2,250,4150.000000,-4475.000000,4250.000000,-4425.000000,0.000000,"OPEN RADIAL"};
+item74[] = {"Radial_OPen",4,218,4150.000000,-4400.000000,4250.000000,-4350.000000,0.000000,"Radial OPen"};
+item75[] = {"AUTO_FNC_1",2,250,4150.000000,-4325.000000,4250.000000,-4275.000000,0.000000,"AUTO FNC"};
+item76[] = {"__BRAIN_",4,218,4150.000000,-4250.000000,4250.000000,-4200.000000,0.000000,"""BRAIN"""};
+item77[] = {"SELECT_MEDIC",2,250,4150.000000,-4175.000000,4250.000000,-4125.000000,0.000000,"SELECT MEDIC"};
+item78[] = {"Radial_Closed_",4,218,4325.000000,-4475.000000,4425.000000,-4425.000000,0.000000,"Radial Closed" \n ""};
+item79[] = {"MEDICAL_OPEN",4,218,4150.000000,-4100.000000,4250.000000,-4050.000000,1.000000,"MEDICAL OPEN"};
+item80[] = {"ISSUE_MEDICAL",2,250,4150.000000,-4025.000000,4250.000000,-3975.000000,0.000000,"ISSUE MEDICAL"};
+item81[] = {"HEALED",4,218,4150.000000,-3800.000000,4250.000000,-3750.000000,3.000000,"HEALED"};
+item82[] = {"",7,210,3571.000000,-3554.000000,3579.000000,-3546.000000,0.000000,""};
+item83[] = {"",7,210,3246.000000,-3779.000000,3254.000000,-3771.000000,0.000000,""};
+item84[] = {"EXPLAIN",2,250,4150.000000,-3725.000000,4250.000000,-3675.000000,0.000000,"EXPLAIN"};
+item85[] = {"explained",4,218,4150.000000,-3650.000000,4250.000000,-3600.000000,0.000000,"explained"};
+item86[] = {"healing_issued",4,218,4150.000000,-3950.000000,4250.000000,-3900.000000,2.000000,"healing" \n "issued"};
+item87[] = {"WAIT",2,250,4150.000000,-3875.000000,4250.000000,-3825.000000,0.000000,"WAIT"};
+item88[] = {"wrong_command",4,218,3475.000000,-3100.000000,3575.000000,-3050.000000,1.000000,"wrong" \n "command"};
+item89[] = {"RESET",2,250,3625.000000,-3100.000000,3725.000000,-3050.000000,0.000000,"RESET"};
+item90[] = {"WAIT",4,218,3625.000000,-3175.000000,3725.000000,-3125.000000,0.000000,"WAIT"};
+item91[] = {"spoken",4,218,3375.000000,-3500.000000,3475.000000,-3450.000000,0.000000,"spoken"};
+item92[] = {"BACKPACK",2,250,3375.000000,-3225.000000,3475.000000,-3175.000000,0.000000,"BACKPACK"};
+item93[] = {"",7,210,3571.000000,-3204.000000,3579.000000,-3196.000000,0.000000,""};
+item94[] = {"hasBackPackPlan",4,218,3325.000000,-3100.000000,3425.000000,-3050.000000,0.000000,"hasBackPackPlan"};
+item95[] = {"GET_MEDIKIT",2,250,3375.000000,-3000.000000,3475.000000,-2950.000000,0.000000,"GET MEDIKIT"};
+item96[] = {"hasKit",4,218,3375.000000,-2925.000000,3475.000000,-2875.000000,0.000000,"hasKit"};
+item97[] = {"STAND_BY",2,250,3375.000000,-2850.000000,3475.000000,-2800.000000,0.000000,"STAND BY"};
+item98[] = {"",7,210,1596.000000,-4579.000000,1604.000000,-4571.000000,0.000000,""};
+item99[] = {"",7,210,3246.000000,-4454.000000,3254.000000,-4446.000000,0.000000,""};
+item100[] = {"open",4,218,1550.000000,-4400.000000,1650.000000,-4350.000000,0.000000,"open"};
+item101[] = {"CALL_FORMATION",2,250,1550.000000,-4325.000000,1650.000000,-4275.000000,0.000000,"CALL FORMATION"};
+item102[] = {"IN_FORMATION",4,218,1550.000000,-4250.000000,1650.000000,-4200.000000,0.000000,"IN FORMATION"};
+item103[] = {"MOVE_COMP",2,250,1550.000000,-3950.000000,1650.000000,-3900.000000,0.000000,"MOVE COMP"};
+item104[] = {"SET_UP_DONE_",4,218,1550.000000,-3875.000000,1650.000000,-3825.000000,0.000000,"SET UP DONE" \n ""};
+item105[] = {"Radial_Closed_",4,218,1700.000000,-4325.000000,1825.000000,-4275.000000,0.000000,"Radial Closed" \n ""};
+item106[] = {"TASK_OPEN_RAD__1",2,250,1700.000000,-4400.000000,1825.000000,-4350.000000,0.000000,"TASK OPEN RAD" \n ""};
+item107[] = {"AUTO_RESET",2,250,1550.000000,-4175.000000,1650.000000,-4125.000000,0.000000,"AUTO-RESET"};
+item108[] = {"enemy",2,250,875.000000,-4100.000000,975.000000,-4050.000000,0.000000,"enemy"};
+item109[] = {"reset_done",4,218,1475.000000,-4025.000000,1575.000000,-3975.000000,0.000000,"reset" \n "done"};
+item110[] = {"Radial_Closed_",4,218,1625.000000,-4025.000000,1725.000000,-3975.000000,0.000000,"Radial Closed" \n ""};
+item111[] = {"TASK_OPEN_RAD__2",2,250,1850.000000,-4025.000000,1950.000000,-3975.000000,0.000000,"TASK OPEN RAD" \n ""};
+item112[] = {"open",4,218,1850.000000,-4175.000000,1950.000000,-4125.000000,0.000000,"open"};
+item113[] = {"close",4,218,875.000000,-4175.000000,975.000000,-4125.000000,0.000000,"close"};
+item114[] = {"unlock",2,250,4150.000000,-3575.000000,4250.000000,-3525.000000,0.000000,"unlock"};
+item115[] = {"nothing",4,218,4150.000000,-3500.000000,4250.000000,-3450.000000,0.000000,"nothing"};
+item116[] = {"",7,210,2496.000000,-4279.000000,2504.000000,-4271.000000,0.000000,""};
+item117[] = {"",7,210,3021.000000,-4154.000000,3029.000000,-4146.000000,0.000000,""};
+item118[] = {"",7,210,1271.000000,-4579.000000,1279.000000,-4571.000000,0.000000,""};
+item119[] = {"",7,210,1271.000000,-3329.000000,1279.000000,-3321.000000,0.000000,""};
+item120[] = {"",7,210,2271.000000,-4579.000000,2279.000000,-4571.000000,0.000000,""};
+item121[] = {"",7,210,1996.000000,-4579.000000,2004.000122,-4571.000000,0.000000,""};
+item122[] = {"",7,210,1996.000000,-3854.000000,2004.000000,-3846.000000,0.000000,""};
+item123[] = {"",7,210,2871.000000,-4579.000000,2879.000000,-4571.000000,0.000000,""};
+item124[] = {"",7,210,2596.000000,-4579.000000,2604.000000,-4571.000000,0.000000,""};
+item125[] = {"",7,210,2596.000000,-3604.000000,2604.000000,-3596.000000,0.000000,""};
+item126[] = {"",7,210,3246.000000,-4266.500000,3254.000000,-4258.500000,0.000000,""};
+item127[] = {"",7,210,3246.000000,-2754.000000,3254.000000,-2746.000000,0.000000,""};
+item128[] = {"",7,210,3896.000000,-4266.500000,3904.000000,-4258.500000,0.000000,""};
+item129[] = {"",7,210,3896.000000,-3978.999756,3904.000000,-3971.000000,0.000000,""};
+item130[] = {"",7,210,4021.000000,-4579.000000,4029.000000,-4571.000000,0.000000,""};
+item131[] = {"",7,210,4371.000000,-4004.000000,4379.000000,-3996.000000,0.000000,""};
+item132[] = {"",7,210,4371.000000,-4154.000000,4379.000000,-4146.000000,0.000000,""};
+item133[] = {"",7,210,4371.000000,-4304.000000,4379.000000,-4296.000000,0.000000,""};
+item134[] = {"",7,210,3121.000000,-3779.000000,3129.000000,-3771.000000,0.000000,""};
+item135[] = {"",7,210,3121.000000,-4579.000000,3129.000000,-4571.000000,0.000000,""};
+item136[] = {"",7,210,3421.000000,-4579.000488,3429.000000,-4571.000000,0.000000,""};
+item137[] = {"",7,210,3383.500000,-4729.000000,3391.500000,-4721.000000,0.000000,""};
+item138[] = {"",7,210,4021.000000,-2604.000000,4029.000000,-2596.000000,0.000000,""};
+item139[] = {"distribute",2,250,3375.000000,-3425.000000,3475.000000,-3375.000000,0.000000,"distribute"};
+item140[] = {"go_MEDIKIT",4,218,3325.000000,-3350.000000,3425.000000,-3300.000000,0.000000,"go MEDIKIT"};
+item141[] = {"go_BACKPACK",4,218,3450.000000,-3350.000000,3550.000000,-3300.000000,0.000000,"go BACKPACK"};
+item142[] = {"",7,210,3296.000000,-3254.000000,3304.000000,-3246.000000,0.000000,""};
+item143[] = {"",7,210,3296.000000,-2979.000000,3304.000000,-2971.000000,0.000000,""};
+item144[] = {"",7,210,3771.000000,-2979.000000,3779.000000,-2971.000000,0.000000,""};
+item145[] = {"",7,210,3771.000000,-3204.000000,3779.000000,-3196.000000,0.000000,""};
+item146[] = {"",7,210,3571.000000,-3404.000000,3579.000000,-3396.000000,0.000000,""};
+item147[] = {"",7,210,1146.000000,-4641.500000,1154.000000,-4633.499512,0.000000,""};
+item148[] = {"",7,210,4096.000000,-4454.000000,4104.000000,-4446.000000,0.000000,""};
+item149[] = {"",7,210,4096.000000,-4304.000000,4104.000000,-4296.000000,0.000000,""};
+item150[] = {"",7,210,4096.000000,-4154.000000,4104.000000,-4146.000000,0.000000,""};
+item151[] = {"",7,210,4096.000000,-4004.000000,4104.000000,-3996.000000,0.000000,""};
+item152[] = {"",7,210,4096.000000,-3854.000000,4104.000000,-3846.000000,0.000000,""};
+item153[] = {"",7,210,4096.000000,-4229.000000,4104.000000,-4221.000000,0.000000,""};
+item154[] = {"",7,210,4096.000000,-3779.000000,4104.000000,-3771.000000,0.000000,""};
+item155[] = {"",7,210,4096.000000,-4079.000000,4104.000000,-4071.000000,0.000000,""};
+item156[] = {"",7,210,4096.000000,-3929.000000,4104.000000,-3921.000000,0.000000,""};
+item157[] = {"____FAKE____",9,0,0.000000,0.000000,0.000000,0.000000,0.000000,"____FAKE____"};
+link0[] = {0,1};
+link1[] = {1,5};
+link2[] = {2,11};
+link3[] = {3,9};
+link4[] = {5,6};
+link5[] = {6,7};
+link6[] = {7,113};
+link7[] = {8,2};
+link8[] = {9,10};
+link9[] = {10,119};
+link10[] = {11,12};
+link11[] = {12,13};
+link12[] = {12,16};
+link13[] = {13,14};
+link14[] = {14,3};
+link15[] = {14,17};
+link16[] = {15,2};
+link17[] = {16,15};
+link18[] = {17,16};
+link19[] = {18,100};
+link20[] = {19,20};
+link21[] = {20,21};
+link22[] = {21,22};
+link23[] = {21,116};
+link24[] = {22,23};
+link25[] = {23,25};
+link26[] = {23,31};
+link27[] = {23,32};
+link28[] = {24,19};
+link29[] = {25,35};
+link30[] = {26,27};
+link31[] = {27,28};
+link32[] = {28,29};
+link33[] = {29,125};
+link34[] = {30,21};
+link35[] = {31,30};
+link36[] = {32,116};
+link37[] = {33,34};
+link38[] = {34,39};
+link39[] = {35,36};
+link40[] = {35,37};
+link41[] = {36,26};
+link42[] = {37,31};
+link43[] = {37,38};
+link44[] = {38,32};
+link45[] = {39,40};
+link46[] = {40,41};
+link47[] = {41,42};
+link48[] = {41,117};
+link49[] = {42,43};
+link50[] = {43,45};
+link51[] = {43,47};
+link52[] = {43,48};
+link53[] = {44,39};
+link54[] = {45,49};
+link55[] = {46,41};
+link56[] = {47,46};
+link57[] = {48,117};
+link58[] = {49,50};
+link59[] = {50,134};
+link60[] = {51,53};
+link61[] = {51,99};
+link62[] = {52,54};
+link63[] = {52,57};
+link64[] = {52,126};
+link65[] = {53,52};
+link66[] = {54,55};
+link67[] = {55,56};
+link68[] = {55,57};
+link69[] = {56,61};
+link70[] = {57,59};
+link71[] = {58,52};
+link72[] = {59,58};
+link73[] = {59,60};
+link74[] = {59,128};
+link75[] = {60,61};
+link76[] = {61,62};
+link77[] = {61,66};
+link78[] = {61,83};
+link79[] = {62,63};
+link80[] = {63,64};
+link81[] = {63,67};
+link82[] = {64,65};
+link83[] = {65,82};
+link84[] = {65,91};
+link85[] = {66,57};
+link86[] = {67,66};
+link87[] = {68,69};
+link88[] = {69,71};
+link89[] = {71,138};
+link90[] = {72,73};
+link91[] = {73,74};
+link92[] = {73,148};
+link93[] = {74,75};
+link94[] = {75,76};
+link95[] = {75,133};
+link96[] = {75,149};
+link97[] = {76,77};
+link98[] = {77,79};
+link99[] = {77,132};
+link100[] = {77,150};
+link101[] = {78,73};
+link102[] = {79,80};
+link103[] = {80,86};
+link104[] = {80,131};
+link105[] = {80,151};
+link106[] = {81,84};
+link107[] = {82,67};
+link108[] = {83,127};
+link109[] = {84,85};
+link110[] = {85,114};
+link111[] = {86,87};
+link112[] = {87,81};
+link113[] = {87,152};
+link114[] = {88,89};
+link115[] = {89,90};
+link116[] = {90,92};
+link117[] = {91,139};
+link118[] = {92,88};
+link119[] = {92,93};
+link120[] = {92,94};
+link121[] = {93,146};
+link122[] = {94,95};
+link123[] = {95,96};
+link124[] = {95,144};
+link125[] = {96,97};
+link126[] = {97,68};
+link127[] = {98,18};
+link128[] = {99,126};
+link129[] = {100,101};
+link130[] = {101,102};
+link131[] = {101,105};
+link132[] = {102,107};
+link133[] = {103,104};
+link134[] = {104,122};
+link135[] = {105,106};
+link136[] = {106,100};
+link137[] = {107,109};
+link138[] = {107,110};
+link139[] = {108,8};
+link140[] = {109,103};
+link141[] = {110,111};
+link142[] = {111,112};
+link143[] = {112,107};
+link144[] = {113,108};
+link145[] = {114,115};
+link146[] = {115,4};
+link147[] = {116,24};
+link148[] = {117,44};
+link149[] = {118,98};
+link150[] = {119,118};
+link151[] = {120,19};
+link152[] = {121,120};
+link153[] = {122,121};
+link154[] = {123,33};
+link155[] = {124,123};
+link156[] = {125,124};
+link157[] = {126,60};
+link158[] = {127,68};
+link159[] = {128,129};
+link160[] = {129,56};
+link161[] = {130,72};
+link162[] = {131,132};
+link163[] = {132,133};
+link164[] = {133,78};
+link165[] = {134,135};
+link166[] = {135,136};
+link167[] = {136,51};
+link168[] = {138,130};
+link169[] = {139,140};
+link170[] = {139,141};
+link171[] = {139,146};
+link172[] = {140,142};
+link173[] = {141,92};
+link174[] = {142,143};
+link175[] = {143,95};
+link176[] = {144,145};
+link177[] = {145,93};
+link178[] = {146,82};
+link179[] = {147,137};
+link180[] = {148,149};
+link181[] = {149,153};
+link182[] = {150,155};
+link183[] = {151,156};
+link184[] = {152,154};
+link185[] = {153,150};
+link186[] = {154,81};
+link187[] = {155,151};
+link188[] = {156,86};
+link189[] = {156,152};
+link190[] = {70,157};
+link191[] = {157,70};
+globals[] = {0.000000,0,0,0,0,640,480,5,592,6316128,1,1570.529785,2921.123535,-3731.171875,-4781.290039,872,678,1};
+window[] = {0,-1,-1,-1,-1,1058,208,1955,208,1,890};
+*//*%FSM</HEAD>*/
+class FSM
+{
+        fsmName = "lesson_RADIAL_2";
+        class States
+        {
+                /*%FSM<STATE "Start_">*/
+                class Start_
+                {
+                        name = "Start_";
+                        itemno = 0;
+                        init = /*%FSM<STATEINIT""">*/"params [""_uiVariables""];" \n
+                         "" \n
+                         "_uiVariables params [" \n
+                         "	""_IDD_RADIAL_MENU""," \n
+                         "	""_IDC_RADIAL_CORE_REFRESHDATA_IMG""," \n
+                         "	""_IDC_RADIAL_INNERRING_ACTIONS_IMG""," \n
+                         "	""_IDC_RADIAL_INNERRING_ROE_IMG""," \n
+                         "	""_IDC_RADIAL_INNERRING_AUTO_IMG""," \n
+                         "	""_IDC_RADIAL_INNERRING_STANCES_IMG""," \n
+                         "	""_IDC_RADIAL_INNERRING_GRENADES_IMG""," \n
+                         "	""_IDC_RADIAL_OUTERTOP_1_IMG""," \n
+                         "	""_IDC_RADIAL_OUTERTOP_2_IMG""," \n
+                         "	""_IDC_RADIAL_OUTERTOP_3_IMG""," \n
+                         "	""_IDC_RADIAL_OUTERRIGHT_2_IMG""," \n
+                         "	""_IDC_RADIAL_OUTERRIGHT_3_IMG""," \n
+                         "	""_IDC_RADIAL_OUTERRIGHT_4_IMG""," \n
+                         "	""_IDC_RADIAL_EXTENSIONRIGHT_GO_BTN""," \n
+                         "	""_IDC_RADIAL_EXTENSIONLEFT_CTRLSGROUP""," \n
+                         "	""_IDC_RADIAL_EXTENSIONLEFT_BG""," \n
+                         "" \n
+                         "	""_IDC_SHARED_UI_TREE_SELECTOR""," \n
+                         "" \n
+                         "	""_IDD_MAP_OVERLAY""," \n
+                         "" \n
+                         "	""_IDC_MAP_TOP_DISBAND_IMG""," \n
+                         "" \n
+                         "	""_IDC_MAP_UFSB_Subselection_01_Parent""," \n
+                         "	""_IDC_MAP_UFSB_Subselection_01_IMG_01""," \n
+                         "	""_IDC_MAP_UFSB_Subselection_01_IMG_02""," \n
+                         "	""_IDC_MAP_UFSB_Subselection_02_BTN_01""," \n
+                         "	""_IDC_MAP_UFSB_FRAME""," \n
+                         "	""_IDC_MAP_UFSB_STANCE_TRAVEL_IMG""," \n
+                         "	""_IDC_MAP_UFSB_WP_SPEED_IMG""," \n
+                         "	""_IDC_MAP_UFSB_STANCE_ARRIVAL_IMG""," \n
+                         "	""_IDC_MAP_UFSB_COMBATMODE_IMG""," \n
+                         "	""_IDC_MAP_UFSB_WPACTION_IMG""," \n
+                         "	""_IDC_MAP_UFSB_Subselection_01_IMG_03""," \n
+                         "	""_IDC_MAP_UFSB_WPCONDITION_IMG""," \n
+                         "	""_IDC_MAP_UFSB_WPFORMATION_IMG""," \n
+                         "	""_IDC_MAP_UFSB_UNDO_IMG""," \n
+                         "	""_IDC_MAP_UFSB_CANCEL_IMG""," \n
+                         "	""_IDC_MAP_UFSB_Subselection_01_IMG_05""," \n
+                         "	""_IDC_MAP_UFSB_Subselection_01_IMG_04""," \n
+                         "	""_IDC_MAP_UFSB_HOLD_IMG""," \n
+                         "	""_IDC_MAP_UFSB_CONTINUE_IMG""," \n
+                         "" \n
+                         "	""_IDC_MAP_HCGP_Parent""," \n
+                         "	""_IDC_MAP_HCGP_STANCES_AUTO_IMG""," \n
+                         "	""_IDC_MAP_HCGP_LISTBOX_BEHAVIOUR""," \n
+                         "	""_IDC_MAP_HCGP_LISTBOX_COMBATMODE""," \n
+                         "	""_IDC_MAP_HCGP_LISTBOX_FORMATION""," \n
+                         "	""_IDC_MAP_HCGP_LISTBOX_TEAMCOLOR""," \n
+                         "	""_IDC_MAP_HCGP_CONFIRM_BG""," \n
+                         "" \n
+                         "	""_IDC_MAP_HCGP_ActionMacro_0_BG""," \n
+                         "	""_IDC_MAP_HCGP_ActionMacro_0_IMG""," \n
+                         "	""_IDC_MAP_HCGP_ActionMacro_0_BTN""," \n
+                         "" \n
+                         "	""_IDC_MAP_HCGP_ActionMacro_1_BG""," \n
+                         "	""_IDC_MAP_HCGP_ActionMacro_1_IMG""," \n
+                         "	""_IDC_MAP_HCGP_ActionMacro_1_BTN""," \n
+                         "" \n
+                         "	""_IDC_MAP_HCGP_ActionMacro_2_BG""," \n
+                         "	""_IDC_MAP_HCGP_ActionMacro_2_IMG""," \n
+                         "	""_IDC_MAP_HCGP_ActionMacro_2_BTN""," \n
+                         "" \n
+                         "	""_IDC_MAP_HCWP_Parent""," \n
+                         "	""_IDC_MAP_HCWP_Completion_Parent""," \n
+                         "	""_IDC_MAP_HCWP_Condition_Pre_Type""," \n
+                         "	""_IDC_MAP_HCWP_Action_Parent_MAIN""," \n
+                         "	""_IDC_MAP_HCWP_Condition_Post_Type""," \n
+                         "	""_IDC_MAP_HCWP_Type_Parent""," \n
+                         "	""_IDC_MAP_HCWP_Type_Action""," \n
+                         "" \n
+                         "	""_IDC_MAP_Order_GoCode_A_BTN""," \n
+                         "	""_IDC_MAP_Order_GoCode_D_IMG""," \n
+                         "" \n
+                         "	""_IDC_MAP_DynamicCombo""," \n
+                         "" \n
+                         "	""_IDC_SHARED_UI_DASHBOARD_PARENT""," \n
+                         "	""_IDC_SHARED_UI_DASHBOARD_BG""," \n
+                         "" \n
+                         "	""_IDD_SELECTION_PROMPT_PANEL""," \n
+                         "	""_IDC_SHARED_UI_SelectionPromptPanel_Parent""," \n
+                         "	""_IDC_SHARED_UI_SelectionPromptPanel_ListBox""" \n
+                         "];" \n
+                         "_timer = time;" \n
+                         "titlecut [""RADIAL MENU - LESSON 2 [SQUAD]"",""black faded"",0];" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "setdate [2020,8,13,5,18];  0 setOvercast 0.6; 0 setRain 0; 0 setfog [0.28,0.021,-78];  setwind [0,0,true]; forceWeatherChange;  999999 setRain 0;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "(units gp1) joinSilent group player;" \n
+                         "[] call full_teamcolors;" \n
+                         "deleteGroup gp1;" \n
+                         "[] spawn {" \n
+                         "	sleep 2; " \n
+                         "	{_x setUnitPos ""AUTO""} foreach (units player);" \n
+                         "};" \n
+                         "" \n
+                         "" \n
+                         "{" \n
+                         "	[_x] call restore_loadout" \n
+                         "} foreach (units player - [player]);" \n
+                         "" \n
+                         "[medic] join grpNull;" \n
+                         "medic setPos [7555.23,10622,0];" \n
+                         "medic doMove [7555.23,10622,0];" \n
+                         "medic moveTo [7555.23,10622,0];" \n
+                         "removeAllweapons medic;" \n
+                         "medic addweapon ""arifle_MX_F"";" \n
+                         "//removeHeadGear medic;" \n
+                         "removeBackPack medic;" \n
+                         "medic addMagazine ""30Rnd_556x45_Stanag_green"";" \n
+                         "" \n
+                         "clearWeaponCargo crate1;" \n
+                         "clearItemCargo crate1;" \n
+                         "clearItemCargo crate2;" \n
+                         "{crate2 addItemCargo [_x,1]} foreach [""Medikit""];" \n
+                         "clearBackPackCargo crate1;" \n
+                         "crate1 addBackPackCargo [""B_AssaultPack_mcamo"",1];" \n
+                         "clearMagazineCargo crate1;" \n
+                         "" \n
+                         "" \n
+                         "[(units group player) - [player]] call A3C_ui_shared_fnc_resetPlayerGroup;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "true___">*/
+                                class true___
+                                {
+                                        itemno = 1;
+                                        priority = 0.000000;
+                                        to="START_COVER";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"alive player && time > _timer + 4" \n
+                                         "" \n
+                                         ""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "TASK_FIND_COVER">*/
+                class TASK_FIND_COVER
+                {
+                        name = "TASK_FIND_COVER";
+                        itemno = 2;
+                        init = /*%FSM<STATEINIT""">*/"//_scr = [[7412.23,9692.51,0],35,units player - [player],""FWD"",true,[[7412.2,9698.55,0],59],[2020,8,13,8,16]] spawn NEW_LOCATION;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_AT_ISSUE_FINDCOVER""];" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""Open the radial (Press and hold %1)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50002) ctrlSetText ""#(argb,8,8,3)color(0,0,0,0.9)"";" \n
+                         "///---" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_OPen">*/
+                                class Radial_OPen
+                                {
+                                        itemno = 11;
+                                        priority = 0.000000;
+                                        to="ACTIONS";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU && {count A3C_RD_UNITS == count _grunts}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "LESSON_FINISHED">*/
+                class LESSON_FINISHED
+                {
+                        name = "LESSON_FINISHED";
+                        itemno = 4;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "" \n
+                         "[] call lesson_selector;" \n
+                         "" \n
+                         "gp0 = creategroup resistance;" \n
+                         "[medic] join gp0;" \n
+                         "" \n
+                         "[medic] join grpNull;" \n
+                         "medic setPos [7555.23,10622,0];" \n
+                         "medic doMove [7555.23,10622,0];" \n
+                         "medic moveTo [7555.23,10622,0];" \n
+                         "" \n
+                         "gp1 = creategroup resistance;" \n
+                         "[r1,r2,r3,r4] joinSilent gp1;" \n
+                         "" \n
+                         "[] call init_position;" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "START_COVER">*/
+                class START_COVER
+                {
+                        name = "START_COVER";
+                        itemno = 5;
+                        init = /*%FSM<STATEINIT""">*/"//titlecut ["""",""black out"",2];" \n
+                         "_scr = [[7365.8,10593.3,0],120,units player - [player],""BWD"",true,[[7366.8,10594.7,0],110],[2020,8,13,8,16]] spawn NEW_LOCATION;" \n
+                         "_grunts = ((units player) - [player]);" \n
+                         "_t = time;" \n
+                         "" \n
+                         "" \n
+                         "//o1 setPos [7370.1,10590.8,0]; o1 setDir 345;" \n
+                         "" \n
+                         "" \n
+                         "tutorial_icon_type = ""\a3\ui_f\data\Map\GroupIcons\badge_gs.paa"";" \n
+                         "tutorial_icon_color = [1,1,1,1];" \n
+                         "tutorial_icon_pos = [7512.83,10537.1,0];" \n
+                         "tutorial_icon_text = ""MOVE"";" \n
+                         "" \n
+                         "_enemyData = [" \n
+                         "    [[7510.91,10552,32.749],282.273,""STAND""]," \n
+                         "    [[7514.96,10540.6,28.8614],255.22,""CROUCH""]," \n
+                         "    [[7479.57,10541.1,28.8405],255.22,""CROUCH""]" \n
+                         "];" \n
+                         "_enemyData spawn ENEMY_DATA;" \n
+                         "" \n
+                         "" \n
+                         "//enableRadio false;" \n
+                         "" \n
+                         "//{" \n
+                         "//	_u = _x;" \n
+                         "//	{_u removeMagazine _x} foreach magazines _x;" \n
+                         "//	_u setAmmo [primaryWeapon _u, 0];" \n
+                         "//	_u setAmmo [primaryWeapon _u, 1];" \n
+                         "//	{_u removeWeapon _x} foreach [secondaryWeapon _u, handGunWeapon _u];" \n
+                         "//} foreach (units player);"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "__s">*/
+                                class __s
+                                {
+                                        itemno = 6;
+                                        priority = 0.000000;
+                                        to="formation";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > _t + 3"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "formation">*/
+                class formation
+                {
+                        name = "formation";
+                        itemno = 7;
+                        init = /*%FSM<STATEINIT""">*/"{_x doFollow player; _x disableAI ""AUTOTARGET"";} foreach _grunts;" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_AT_INTRO_FINDCOVER""];"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "close">*/
+                                class close
+                                {
+                                        itemno = 113;
+                                        priority = 0.000000;
+                                        to="enemy";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"player distance2d [7510.91,10552,0] < 130"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "CLEAR">*/
+                class CLEAR
+                {
+                        name = "CLEAR";
+                        itemno = 9;
+                        init = /*%FSM<STATEINIT""">*/"{_x allowDamage true} foreach enemies;" \n
+                         "///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_AT_FINDCOVER_CLEAR""];" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""TAKE OUT THE TARGETS" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "_grunts spawn {" \n
+                         "	sleep 2;" \n
+                         "	{_x enableAI ""AUTOTARGET""} foreach _this;" \n
+                         "};"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "cleared">*/
+                                class cleared
+                                {
+                                        itemno = 10;
+                                        priority = 0.000000;
+                                        to="MOVE_TO__ROE";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{alive _x} count enemies == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ACTIONS">*/
+                class ACTIONS
+                {
+                        name = "ACTIONS";
+                        itemno = 12;
+                        init = /*%FSM<STATEINIT""">*/"//-- flash ACTIONS parent" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_INNERRING_ACTIONS_IMG)] spawn indicate_icon;" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SELECT ACTIONS (KEEP %1 PRESSED)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 15;
+                                        priority = 0.000000;
+                                        to="TASK_FIND_COVER";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "ACTIONS">*/
+                                class ACTIONS
+                                {
+                                        itemno = 13;
+                                        priority = 0.000000;
+                                        to="FIND_COVER_ACTIO";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_RADIALMODE == ""ACT"""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "FIND_COVER_ACTIO">*/
+                class FIND_COVER_ACTIO
+                {
+                        name = "FIND_COVER_ACTIO";
+                        itemno = 14;
+                        init = /*%FSM<STATEINIT""">*/"//-- FLASH FINDCOVER action" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_OUTERTOP_1_IMG)] spawn indicate_icon;" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SELECT FIND COVER ACTION (KEEP %1 PRESSED)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr; " \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 15;
+                                        priority = 0.000000;
+                                        to="TASK_FIND_COVER";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "units_on_route">*/
+                                class units_on_route
+                                {
+                                        itemno = 3;
+                                        priority = 0.000000;
+                                        to="CLEAR";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU &&" \n
+                                         "{" \n
+                                         "	{" \n
+                                         "		private _expD = toLower ((expectedDestination _x) select 1);" \n
+                                         "		""form"" in _expD" \n
+                                         "	} count _grunts == 0" \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "MOVE_TO__ROE">*/
+                class MOVE_TO__ROE
+                {
+                        name = "MOVE_TO__ROE";
+                        itemno = 18;
+                        init = /*%FSM<STATEINIT""">*/"///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_ROE_INTRO""];" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""Open the radial (Press and hold %1)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "open">*/
+                                class open
+                                {
+                                        itemno = 100;
+                                        priority = 0.000000;
+                                        to="CALL_FORMATION";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU && {count A3C_RD_UNITS == count _grunts}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "OPEN_RAD">*/
+                class OPEN_RAD
+                {
+                        name = "OPEN_RAD";
+                        itemno = 19;
+                        init = /*%FSM<STATEINIT""">*/"{_x disableAI ""ALL""} foreach enemies;" \n
+                         "" \n
+                         "///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_ROE_PAUSE1""];" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""Open the radial (Press and hold %1)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "cutRsc [""TutorialHint"", ""PLAIN""];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50002) ctrlSetText ""#(argb,8,8,3)color(0,0,0,0.9)"";"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_OPen">*/
+                                class Radial_OPen
+                                {
+                                        itemno = 20;
+                                        priority = 0.000000;
+                                        to="OPEN_ROE";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU && {count A3C_RD_UNITS == count _grunts}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "OPEN_ROE">*/
+                class OPEN_ROE
+                {
+                        name = "OPEN_ROE";
+                        itemno = 21;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "" \n
+                         "//-- flash ACTIONS parent" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_INNERRING_ROE_IMG)] spawn indicate_icon;" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SELECT ROE (KEEP %1 PRESSED)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50002) ctrlSetText ""#(argb,8,8,3)color(0,0,0,0.9)"";" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 24;
+                                        priority = 0.000000;
+                                        to="OPEN_RAD";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "ROE_OPEN">*/
+                                class ROE_OPEN
+                                {
+                                        itemno = 22;
+                                        priority = 0.000000;
+                                        to="SELECT_FOML";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_RADIALMODE == ""ROE"""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "SELECT_FOML">*/
+                class SELECT_FOML
+                {
+                        name = "SELECT_FOML";
+                        itemno = 23;
+                        init = /*%FSM<STATEINIT""">*/"///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_ROE_PAUSE2""];" \n
+                         "" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SELECT FOML (KEEP %1 PRESSED)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "//-- FLASH FOML action" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_OUTERTOP_3_IMG)] spawn indicate_icon;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "ROE_CLOSED">*/
+                                class ROE_CLOSED
+                                {
+                                        itemno = 30;
+                                        priority = 0.000000;
+                                        to="OPEN_ROE";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_RADIALMODE != ""ROE"""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 24;
+                                        priority = 0.000000;
+                                        to="OPEN_RAD";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "FOML_d">*/
+                                class FOML_d
+                                {
+                                        itemno = 25;
+                                        priority = 0.000000;
+                                        to="DISABLE_AUTO_TAR";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(count A3C_fireOnMyLeadUnits) == count _grunts"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "TARGET">*/
+                class TARGET
+                {
+                        name = "TARGET";
+                        itemno = 26;
+                        init = /*%FSM<STATEINIT""">*/"///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_ROE_ORDER1""];" \n
+                         "" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = ""GIVE TARGETS TO TWO UNITS WITH DEFAULT A3-CONTROLS"";" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "{_x allowdamage true; _x setCaptive false} foreach enemies;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "TARGETED">*/
+                                class TARGETED
+                                {
+                                        itemno = 27;
+                                        priority = 0.000000;
+                                        to="SHOOT";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{!isNull assignedTarget _x} count _grunts > 1"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "SHOOT">*/
+                class SHOOT
+                {
+                        name = "SHOOT";
+                        itemno = 28;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "//allow firing " \n
+                         "player removeAction _act;" \n
+                         "" \n
+                         "" \n
+                         "///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_ROE_ORDER2""];" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SHOOT YOUR TARGET" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "KILLED">*/
+                                class KILLED
+                                {
+                                        itemno = 29;
+                                        priority = 0.000000;
+                                        to="MOVE_TO_POS";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{!alive _x} count enemies > 2"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "MOVE_TO_POS">*/
+                class MOVE_TO_POS
+                {
+                        name = "MOVE_TO_POS";
+                        itemno = 33;
+                        init = /*%FSM<STATEINIT""">*/"///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_ROE_ORDER3""];" \n
+                         "" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""MOVE TO NEXT POSITION" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "" \n
+                         "tutorial_icon_type = ""\a3\ui_f\data\Map\GroupIcons\badge_gs.paa"";" \n
+                         "tutorial_icon_color = [1,1,1,1];" \n
+                         "tutorial_icon_pos = [7534.22,10588.4,0];" \n
+                         "tutorial_icon_text = ""MOVE"";" \n
+                         "" \n
+                         "_act = player addAction ["""", {}, """", 0, false, true, ""DefaultAction""];" \n
+                         "" \n
+                         "_enemyData = [" \n
+                         "    [[7540.37,10613.2,28.8614],161.967,""STAND""]," \n
+                         "    [[7546.12,10611,28.8614],161.967,""STAND""]" \n
+                         "];" \n
+                         "" \n
+                         "_enemyData call ENEMY_DATA;" \n
+                         "" \n
+                         "{_x allowdamage true; _x setCaptive false; _x disableAI ""ALL""} foreach enemies;" \n
+                         "" \n
+                         "{_x enableAI ""PATH""; _x doFollow player; _x enableAI ""ALL""} foreach _grunts;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "at_pos">*/
+                                class at_pos
+                                {
+                                        itemno = 34;
+                                        priority = 0.000000;
+                                        to="OPEN_RADIAL";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"player distance2D [7534.22,10588.4,0] < 45"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "DISABLE_AUTO_TAR">*/
+                class DISABLE_AUTO_TAR
+                {
+                        name = "DISABLE_AUTO_TAR";
+                        itemno = 35;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_ROE_PAUSE3""];" \n
+                         "" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SELECT 'FIRE ONLY AT DESIGNATED TARGETS' (KEEP %1 PRESSED)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "//-- FLASH AUTOTARGET action" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_OUTERTOP_2_IMG)] spawn indicate_icon;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "ROE_CLOSED">*/
+                                class ROE_CLOSED
+                                {
+                                        itemno = 30;
+                                        priority = 0.000000;
+                                        to="OPEN_ROE";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_RADIALMODE != ""ROE"""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 24;
+                                        priority = 0.000000;
+                                        to="OPEN_RAD";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "AUTO_DISABLED">*/
+                                class AUTO_DISABLED
+                                {
+                                        itemno = 36;
+                                        priority = 0.000000;
+                                        to="TARGET";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{_x checkAIFeature ""AUTOTARGET""} count _grunts == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "OPEN_RADIAL">*/
+                class OPEN_RADIAL
+                {
+                        name = "OPEN_RADIAL";
+                        itemno = 39;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "[] call reset_hudImage;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_ROE_ORDER4""];" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""Open the radial (Press and hold %1)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_OPen">*/
+                                class Radial_OPen
+                                {
+                                        itemno = 40;
+                                        priority = 0.000000;
+                                        to="OPEN_ROE_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU && {count A3C_RD_UNITS == count _grunts}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "OPEN_ROE_1">*/
+                class OPEN_ROE_1
+                {
+                        name = "OPEN_ROE_1";
+                        itemno = 41;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "" \n
+                         "//-- flash ACTIONS parent" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_INNERRING_ROE_IMG)] spawn indicate_icon;" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SELECT ROE (KEEP %1 PRESSED)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 44;
+                                        priority = 0.000000;
+                                        to="OPEN_RADIAL";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "ROE_OPEN">*/
+                                class ROE_OPEN
+                                {
+                                        itemno = 42;
+                                        priority = 0.000000;
+                                        to="RESET_ROE";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_RADIALMODE == ""ROE"""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "RESET_ROE">*/
+                class RESET_ROE
+                {
+                        name = "RESET_ROE";
+                        itemno = 43;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SELECT 'FIRE AT WILL' (KEEP %1 PRESSED)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "//-- FLASH FAW action" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_OUTERTOP_1_IMG)] spawn indicate_icon;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "ROE_CLOSED">*/
+                                class ROE_CLOSED
+                                {
+                                        itemno = 46;
+                                        priority = 0.000000;
+                                        to="OPEN_ROE_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_RADIALMODE != ""ROE"""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 44;
+                                        priority = 0.000000;
+                                        to="OPEN_RADIAL";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "RESET">*/
+                                class RESET
+                                {
+                                        itemno = 45;
+                                        priority = 0.000000;
+                                        to="ALLOW_FIRE";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{!(_x checkAIFeature ""AUTOTARGET"")} count _grunts == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ALLOW_FIRE">*/
+                class ALLOW_FIRE
+                {
+                        name = "ALLOW_FIRE";
+                        itemno = 49;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "player removeAction _act;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "enemy_killed">*/
+                                class enemy_killed
+                                {
+                                        itemno = 50;
+                                        priority = 0.000000;
+                                        to="JOIN_MEDIC";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{alive _x} count enemies == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "JOIN_MEDIC">*/
+                class JOIN_MEDIC
+                {
+                        name = "JOIN_MEDIC";
+                        itemno = 51;
+                        init = /*%FSM<STATEINIT""">*/"//{_x setPos [7534.81,10591,0]} foreach units player; //-- DEBUG FOR EDITING" \n
+                         "" \n
+                         "" \n
+                         "private _hasBackPack = false;" \n
+                         "" \n
+                         "_grunts = ((units player) - [player]);" \n
+                         "" \n
+                         "{" \n
+                         "	_x allowDamage true;" \n
+                         "	_x setdamage 0.3;" \n
+                         "	_x setHitPointDamage [""hitLegs"", 0.5];" \n
+                         "	if (_foreachIndex > 0) then {_x removeitem ""FirstAidKit"";};	" \n
+                         "} foreach _grunts;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "//{_x setPos [7541.16,10603.2,0]} forEach (units player);" \n
+                         "" \n
+                         "[medic] join (group player);" \n
+                         "//medic doFollow player;" \n
+                         "[medic,[7540.44,10610.6,0]] call A3C_ai_shared_fnc_doMove;" \n
+                         "_grunts pushBack medic;" \n
+                         "" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_REARM_1""];" \n
+                         "" \n
+                         "[] spawn {" \n
+                         "	sleep 3;" \n
+                         "	{deleteVehicle _x} foreach alldead;" \n
+                         "};" \n
+                         "" \n
+                         "[(units player select 1),[7527.23,10571.8,0]] call A3C_ai_shared_fnc_doMove;" \n
+                         "[(units player select 2),[7533.26,10581.9,0]] call A3C_ai_shared_fnc_doMove;" \n
+                         "[(units player select 3),[7524.84,10579.6,0]] call A3C_ai_shared_fnc_doMove;" \n
+                         "[(units player select 4),[7517.63,10586.6,0]] call A3C_ai_shared_fnc_doMove;" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "skip">*/
+                                class skip
+                                {
+                                        itemno = 60;
+                                        priority = 1.000000;
+                                        to="AUTO_FNC";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU && {A3C_RD_UNITS isequalTo [units player select 5]}" \n
+                                         "" \n
+                                         ""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_OPen">*/
+                                class Radial_OPen
+                                {
+                                        itemno = 53;
+                                        priority = 0.000000;
+                                        to="TOGGLE_BUTTONS";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU &&" \n
+                                         "{" \n
+                                         "	o1 kbWasSaid [p1, ""Lesson1"", ""L2_RAD_REARM_1"",99999999999]" \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "TOGGLE_BUTTONS">*/
+                class TOGGLE_BUTTONS
+                {
+                        name = "TOGGLE_BUTTONS";
+                        itemno = 52;
+                        init = /*%FSM<STATEINIT""">*/"///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_SELECTION_SELECTORS_TOGGLE""];" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""Hover your mouse over the left side of the screen<br/><br/>There's a hidden menu there." \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "" \n
+                         "[_IDD_RADIAL_MENU, _IDC_SHARED_UI_TREE_SELECTOR, _IDC_RADIAL_EXTENSIONLEFT_BG] spawn {" \n
+                         "	params [""_IDD_RADIAL_MENU"", ""_IDC_SHARED_UI_TREE_SELECTOR"", ""_IDC_RADIAL_EXTENSIONLEFT_BG""];" \n
+                         "	sleep 1;" \n
+                         "    {" \n
+                         "        private _ctrl = findDisplay _IDD_RADIAL_MENU displayCtrl _x;" \n
+                         "		  private _ctrlText = ctrlText _ctrl;" \n
+                         "		  _ctrl ctrlSetTextColor [1,1,1,0.3];" \n
+                         "        for ""_i"" from 1 to 3 do {" \n
+                         "            _ctrl ctrlShow true;" \n
+                         "				if (ctrlShown (findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_SHARED_UI_TREE_SELECTOR)) exitWith {};" \n
+                         "            sleep 0.2;" \n
+                         "            _ctrl ctrlShow false;" \n
+                         "            sleep 0.2;" \n
+                         "        };" \n
+                         "		  _ctrl ctrlSetTextColor [0,0,0,0.6];" \n
+                         "" \n
+                         "    } forEach [_IDC_RADIAL_EXTENSIONLEFT_BG]; " \n
+                         "};" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "skip">*/
+                                class skip
+                                {
+                                        itemno = 60;
+                                        priority = 1.000000;
+                                        to="AUTO_FNC";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU && {A3C_RD_UNITS isequalTo [units player select 5]}" \n
+                                         "" \n
+                                         ""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 57;
+                                        priority = 0.000000;
+                                        to="TASK_OPEN_RAD_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "buttons_toggled">*/
+                                class buttons_toggled
+                                {
+                                        itemno = 54;
+                                        priority = 0.000000;
+                                        to="SELECT_U_6";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"ctrlShown (findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_EXTENSIONLEFT_CTRLSGROUP) &&" \n
+                                         "{" \n
+                                         "	o1 kbWasSaid [p1, ""Lesson1"", ""L2_RAD_SELECTION_SELECTORS_TOGGLE"",99999999999]" \n
+                                         "}" \n
+                                         ""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "SELECT_U_6">*/
+                class SELECT_U_6
+                {
+                        name = "SELECT_U_6";
+                        itemno = 55;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_REARM_2""];" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""Select Unit 6 (%1) by using the tree-button<br/><br/>" \n
+                         "	""," \n
+                         "	name (units player select 4)" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "///---" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         " " \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 57;
+                                        priority = 0.000000;
+                                        to="TASK_OPEN_RAD_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_OPen_U6">*/
+                                class Radial_OPen_U6
+                                {
+                                        itemno = 56;
+                                        priority = 0.000000;
+                                        to="AUTO_FNC";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU &&" \n
+                                         "{" \n
+                                         "	(groupselectedUnits player) isEqualTo [units player select 5] &&" \n
+                                         "	{" \n
+                                         "		o1 kbWasSaid [p1, ""Lesson1"", ""L2_RAD_REARM_2"",99999999999]" \n
+                                         "	}" \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "TASK_OPEN_RAD_">*/
+                class TASK_OPEN_RAD_
+                {
+                        name = "TASK_OPEN_RAD_";
+                        itemno = 59;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "///--- VOICE HINT" \n
+                         " [""L2_RAD_ReOpen""] call fnc_interrupt;" \n
+                         "" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""Open the radial (Press and hold %1)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "skip">*/
+                                class skip
+                                {
+                                        itemno = 60;
+                                        priority = 1.000000;
+                                        to="AUTO_FNC";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU && {A3C_RD_UNITS isequalTo [units player select 5]}" \n
+                                         "" \n
+                                         ""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_OPen_U6">*/
+                                class Radial_OPen_U6
+                                {
+                                        itemno = 56;
+                                        priority = 0.000000;
+                                        to="AUTO_FNC";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU &&" \n
+                                         "{" \n
+                                         "	(groupselectedUnits player) isEqualTo [units player select 5] &&" \n
+                                         "	{" \n
+                                         "		o1 kbWasSaid [p1, ""Lesson1"", ""L2_RAD_REARM_2"",99999999999]" \n
+                                         "	}" \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_OPen">*/
+                                class Radial_OPen
+                                {
+                                        itemno = 58;
+                                        priority = 0.000000;
+                                        to="TOGGLE_BUTTONS";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_timer = time;" \n
+                                         "!isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "AUTO_FNC">*/
+                class AUTO_FNC
+                {
+                        name = "AUTO_FNC";
+                        itemno = 61;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "" \n
+                         " [""L2_RAD_REARM_3""] call fnc_interrupt;" \n
+                         "" \n
+                         "" \n
+                         "//-- flash BRAIN parent" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_INNERRING_AUTO_IMG)] spawn indicate_icon;" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SELECT 'AUTO FUNCTIONS' (KEEP %1 PRESSED)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 57;
+                                        priority = 0.000000;
+                                        to="TASK_OPEN_RAD_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "has_backpack___m">*/
+                                class has_backpack___m
+                                {
+                                        itemno = 68;
+                                        priority = 0.000000;
+                                        to="MEDIKIT_ASSIGNED";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"//backPack medic == ""B_AssaultPack_mcamo"" && {""FirstAidKit"" in (items medic)}" \n
+                                         "{""Medikit"" in (items _x)} count _grunts > 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "__BRAIN_">*/
+                                class __BRAIN_
+                                {
+                                        itemno = 62;
+                                        priority = 0.000000;
+                                        to="SELECT_RE_ARM";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_RADIALMODE == ""BRAIN"" //&&" \n
+                                         "//{" \n
+                                         "//	o1 kbWasSaid [p1, ""Lesson1"", ""L2_RAD_REARM_3"",99999999999]" \n
+                                         "//}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "SELECT_RE_ARM">*/
+                class SELECT_RE_ARM
+                {
+                        name = "SELECT_RE_ARM";
+                        itemno = 63;
+                        init = /*%FSM<STATEINIT""">*/"//-- FLASH FINDCOVER action" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_OUTERRIGHT_4_IMG)] spawn indicate_icon;" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SELECT 'RE-ARM' (KEEP %1 PRESSED)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr; " \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 57;
+                                        priority = 0.000000;
+                                        to="TASK_OPEN_RAD_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "RE_ARM_SELECTED">*/
+                                class RE_ARM_SELECTED
+                                {
+                                        itemno = 64;
+                                        priority = 0.000000;
+                                        to="ASSIGN_REARM";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_LBR_1 == ""REARM"""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ASSIGN_REARM">*/
+                class ASSIGN_REARM
+                {
+                        name = "ASSIGN_REARM";
+                        itemno = 65;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_REARM_4""];" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""DOUBLE-CLICK ON ITEMS IN LOWER BOX TO PICK UP. BACKPACK FIRST!<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "" \n
+                         "(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_EXTENSIONRIGHT_GO_BTN) buttonSetAction ""playSound 'Beep_Target'; systemchat 'Please use the double-click method for this lesson.'""; " \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 57;
+                                        priority = 0.000000;
+                                        to="TASK_OPEN_RAD_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "spoken">*/
+                                class spoken
+                                {
+                                        itemno = 91;
+                                        priority = 0.000000;
+                                        to="distribute";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"o1 kbWasSaid [p1, ""Lesson1"", ""L2_RAD_REARM_4"",2]"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "MEDIKIT_ASSIGNED">*/
+                class MEDIKIT_ASSIGNED
+                {
+                        name = "MEDIKIT_ASSIGNED";
+                        itemno = 69;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_HEAL1""];" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "radial_closed">*/
+                                class radial_closed
+                                {
+                                        itemno = 71;
+                                        priority = 0.000000;
+                                        to="OPEN_RADIAL_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU &&" \n
+                                         "{" \n
+                                         "	o1 kbWasSaid [p1, ""Lesson1"", ""L2_RAD_HEAL1"",99999999999]" \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "OPEN_RADIAL_1">*/
+                class OPEN_RADIAL_1
+                {
+                        name = "OPEN_RADIAL_1";
+                        itemno = 73;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "" \n
+                         "///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_HEAL1_1""];" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""Open the radial (Press and hold %1)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "medic doFollow player;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "HEALED">*/
+                                class HEALED
+                                {
+                                        itemno = 81;
+                                        priority = 3.000000;
+                                        to="EXPLAIN";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{damage _x > 0.1} count units player == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "healing_issued">*/
+                                class healing_issued
+                                {
+                                        itemno = 86;
+                                        priority = 2.000000;
+                                        to="WAIT";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"count ((group player) getVariable [""A3C_MEDICS_ACTIVE"", [] ])  > 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_OPen">*/
+                                class Radial_OPen
+                                {
+                                        itemno = 74;
+                                        priority = 0.000000;
+                                        to="AUTO_FNC_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU "/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "AUTO_FNC_1">*/
+                class AUTO_FNC_1
+                {
+                        name = "AUTO_FNC_1";
+                        itemno = 75;
+                        init = /*%FSM<STATEINIT""">*/"//-- flash BRAIN parent" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_INNERRING_AUTO_IMG)] spawn indicate_icon;" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SELECT 'AUTO FUNCTIONS' (KEEP %1 PRESSED)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "HEALED">*/
+                                class HEALED
+                                {
+                                        itemno = 81;
+                                        priority = 3.000000;
+                                        to="EXPLAIN";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{damage _x > 0.1} count units player == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "healing_issued">*/
+                                class healing_issued
+                                {
+                                        itemno = 86;
+                                        priority = 2.000000;
+                                        to="WAIT";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"count ((group player) getVariable [""A3C_MEDICS_ACTIVE"", [] ])  > 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 78;
+                                        priority = 0.000000;
+                                        to="OPEN_RADIAL_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "__BRAIN_">*/
+                                class __BRAIN_
+                                {
+                                        itemno = 76;
+                                        priority = 0.000000;
+                                        to="SELECT_MEDIC";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_RADIALMODE == ""BRAIN"""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "SELECT_MEDIC">*/
+                class SELECT_MEDIC
+                {
+                        name = "SELECT_MEDIC";
+                        itemno = 77;
+                        init = /*%FSM<STATEINIT""">*/"//-- FLASH MEDIC action" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_OUTERRIGHT_2_IMG)] spawn indicate_icon;" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SELECT 'AI-HEAL' (KEEP %1 PRESSED)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr; " \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "HEALED">*/
+                                class HEALED
+                                {
+                                        itemno = 81;
+                                        priority = 3.000000;
+                                        to="EXPLAIN";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{damage _x > 0.1} count units player == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "healing_issued">*/
+                                class healing_issued
+                                {
+                                        itemno = 86;
+                                        priority = 2.000000;
+                                        to="WAIT";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"count ((group player) getVariable [""A3C_MEDICS_ACTIVE"", [] ])  > 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "MEDICAL_OPEN">*/
+                                class MEDICAL_OPEN
+                                {
+                                        itemno = 79;
+                                        priority = 1.000000;
+                                        to="ISSUE_MEDICAL";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_LBR_1 == ""MEDICAL"" &&" \n
+                                         "{" \n
+                                         "	o1 kbWasSaid [p1, ""Lesson1"", ""L2_RAD_HEAL1_1"",99999999999]" \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 78;
+                                        priority = 0.000000;
+                                        to="OPEN_RADIAL_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ISSUE_MEDICAL">*/
+                class ISSUE_MEDICAL
+                {
+                        name = "ISSUE_MEDICAL";
+                        itemno = 80;
+                        init = /*%FSM<STATEINIT""">*/"///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""SELECT 'ALL UNITS' AND 'HEAL ALL', THEN  CLICK 'ORDER' (KEEP %1 PRESSED)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr; " \n
+                         "" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_HEAL2""];" \n
+                         "" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_EXTENSIONRIGHT_GO_BTN)] spawn indicate_icon;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "HEALED">*/
+                                class HEALED
+                                {
+                                        itemno = 81;
+                                        priority = 3.000000;
+                                        to="EXPLAIN";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{damage _x > 0.1} count units player == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "healing_issued">*/
+                                class healing_issued
+                                {
+                                        itemno = 86;
+                                        priority = 2.000000;
+                                        to="WAIT";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"count ((group player) getVariable [""A3C_MEDICS_ACTIVE"", [] ])  > 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 78;
+                                        priority = 0.000000;
+                                        to="OPEN_RADIAL_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "EXPLAIN">*/
+                class EXPLAIN
+                {
+                        name = "EXPLAIN";
+                        itemno = 84;
+                        init = /*%FSM<STATEINIT""">*/"setacctime 1;" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_HEAL3""];" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_COMPLETE""];"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "explained">*/
+                                class explained
+                                {
+                                        itemno = 85;
+                                        priority = 0.000000;
+                                        to="unlock";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"o1 kbWasSaid [p1, ""Lesson1"", ""L2_RAD_COMPLETE"",2]"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "WAIT">*/
+                class WAIT
+                {
+                        name = "WAIT";
+                        itemno = 87;
+                        init = /*%FSM<STATEINIT""">*/"((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText ""STAND BY"";" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_REARM_4_3""]; "/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "HEALED">*/
+                                class HEALED
+                                {
+                                        itemno = 81;
+                                        priority = 3.000000;
+                                        to="EXPLAIN";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{damage _x > 0.1} count units player == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "RESET">*/
+                class RESET
+                {
+                        name = "RESET";
+                        itemno = 89;
+                        init = /*%FSM<STATEINIT""">*/"[_grunts,true,true] call A3C_ai_shared_fnc_cancelUnitPlot;" \n
+                         "hintSilent ""SELECT THE BACKPACK FIRST"";" \n
+                         "playSound 'Beep_Target';" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "WAIT">*/
+                                class WAIT
+                                {
+                                        itemno = 90;
+                                        priority = 0.000000;
+                                        to="BACKPACK";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{!( (_x getVariable [""A3C_PLOT"",[]]) isEqualTo [])} count _grunts == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "BACKPACK">*/
+                class BACKPACK
+                {
+                        name = "BACKPACK";
+                        itemno = 92;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "[""L2_RAD_REARM_4_1""] call fnc_interrupt;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "wrong_command">*/
+                                class wrong_command
+                                {
+                                        itemno = 88;
+                                        priority = 1.000000;
+                                        to="RESET";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_cancel = !(backPack (units player select 5) in ["""",""B_AssaultPack_mcamo""]);" \n
+                                         "if !(_cancel) then {" \n
+                                         "	{" \n
+                                         "		private _var = _x getVariable [""A3C_PLOT"",[]];" \n
+                                         "		_cancel = count _var > 0 &&" \n
+                                         "		{" \n
+                                         "			_x != (units player select 5) OR" \n
+                                         "			{" \n
+                                         "				private _actionType = ((_var select 0) select 2) select 0;" \n
+                                         "				_actionType != ""REARM"" OR" \n
+                                         "				{" \n
+                                         "					private _item = (((((_var select 0) select 2) select 1) select 1) select 0) select 0;" \n
+                                         "					_item != ""B_AssaultPack_mcamo"";" \n
+                                         "				}" \n
+                                         "			}" \n
+                                         "		};" \n
+                                         "		if (_cancel) exitWith {};" \n
+                                         "	} foreach _grunts;" \n
+                                         "};" \n
+                                         "" \n
+                                         "" \n
+                                         "_cancel"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 57;
+                                        priority = 0.000000;
+                                        to="TASK_OPEN_RAD_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "hasBackPackPlan">*/
+                                class hasBackPackPlan
+                                {
+                                        itemno = 94;
+                                        priority = 0.000000;
+                                        to="GET_MEDIKIT";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"" \n
+                                         "_u = units player select 5;" \n
+                                         "" \n
+                                         "backPack _u == ""B_AssaultPack_mcamo"" OR" \n
+                                         "{" \n
+                                         "	private _var = _u getVariable [""A3C_PLOT"",[]];" \n
+                                         "	_backPack = count _var > 0 &&" \n
+                                         "	{" \n
+                                         "		private _actionType = ((_var select 0) select 2) select 0;" \n
+                                         "		_actionType == ""REARM"" &&" \n
+                                         "		{" \n
+                                         "			private _item = (((((_var select 0) select 2) select 1) select 1) select 0) select 0;" \n
+                                         "			_item == ""B_AssaultPack_mcamo""" \n
+                                         "		}" \n
+                                         "	};" \n
+                                         "	_backPack" \n
+                                         "}" \n
+                                         "" \n
+                                         "" \n
+                                         ""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "GET_MEDIKIT">*/
+                class GET_MEDIKIT
+                {
+                        name = "GET_MEDIKIT";
+                        itemno = 95;
+                        init = /*%FSM<STATEINIT""">*/"[""L2_RAD_REARM_4_2""] call fnc_interrupt;" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText ""PICK UP THE MEDIKIT FROM THE OTHER CRATE"";" \n
+                         "" \n
+                         "_hasBackPack = true; "/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 57;
+                                        priority = 0.000000;
+                                        to="TASK_OPEN_RAD_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "hasKit">*/
+                                class hasKit
+                                {
+                                        itemno = 96;
+                                        priority = 0.000000;
+                                        to="STAND_BY";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"private _hasKit = false;" \n
+                                         "private _var = _u getVariable [""A3C_PLOT"",[]];" \n
+                                         "{" \n
+                                         "	private _actionType = (_x select 2) select 0;" \n
+                                         "	_hasKit = _actionType ==""REARM"" &&" \n
+                                         "	{" \n
+                                         "		private _item = ((((_x select 2) select 1) select 1) select 0) select 0;" \n
+                                         "		_item == ""MediKit"";" \n
+                                         "	};" \n
+                                         "	if (_hasKit) exitWith {};" \n
+                                         "} foreach _var;" \n
+                                         "_hasKit OR { {""Medikit"" in items _x} count units player > 0  }"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "STAND_BY">*/
+                class STAND_BY
+                {
+                        name = "STAND_BY";
+                        itemno = 97;
+                        init = /*%FSM<STATEINIT""">*/"((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText ""STAND BY""; " \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_REARM_4_3""];"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "has_backpack___m">*/
+                                class has_backpack___m
+                                {
+                                        itemno = 68;
+                                        priority = 0.000000;
+                                        to="MEDIKIT_ASSIGNED";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"//backPack medic == ""B_AssaultPack_mcamo"" && {""FirstAidKit"" in (items medic)}" \n
+                                         "{""Medikit"" in (items _x)} count _grunts > 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "CALL_FORMATION">*/
+                class CALL_FORMATION
+                {
+                        name = "CALL_FORMATION";
+                        itemno = 101;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "" \n
+                         "///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_ROE_INTRO_1""];" \n
+                         "" \n
+                         "//-- FLASH REFRESH action" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_CORE_REFRESHDATA_IMG)] spawn indicate_icon;" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText ""RIGHT CLICK ON THE REFRESH BUTTON"";" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 105;
+                                        priority = 0.000000;
+                                        to="TASK_OPEN_RAD__1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "IN_FORMATION">*/
+                                class IN_FORMATION
+                                {
+                                        itemno = 102;
+                                        priority = 0.000000;
+                                        to="AUTO_RESET";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{" \n
+                                         "		private _expD = toLower ((expectedDestination _x) select 1);" \n
+                                         "		!(""form"" in _expD)" \n
+                                         "	} count _grunts == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "MOVE_COMP">*/
+                class MOVE_COMP
+                {
+                        name = "MOVE_COMP";
+                        itemno = 103;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "_t = time;" \n
+                         "setacctime 1;" \n
+                         "titlecut ["""",""black out"",2];" \n
+                         "_scr = [[7541.95,10547.7,0],50,units player - [player],""BWD"",true,[[7538.3,10532.8,0],16],[2020,8,13,8,16]] spawn NEW_LOCATION;" \n
+                         "//o1 setpos [7542.82,10536.1,0]; o1 setDir 218;" \n
+                         "" \n
+                         "[] call reset_hudImage;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "//-- prevent firing" \n
+                         "_act = player addAction ["""", {}, """", 0, false, true, ""DefaultAction""];" \n
+                         "" \n
+                         "player enableSimulation true;" \n
+                         "" \n
+                         "_enemyData = [" \n
+                         "    [[7546.88,10563,29.7135],104.703,""STAND""]," \n
+                         "    [[7552.15,10563.3,29.7094],279.841,""STAND""]," \n
+                         "    [[7559.18,10565.7,29.7106],206.064,""STAND""]" \n
+                         "];" \n
+                         "" \n
+                         "HAS_FIRED = false;" \n
+                         "" \n
+                         "_enemyData spawn ENEMY_DATA;" \n
+                         "" \n
+                         "{_x disableAI ""PATH""} foreach _grunts;" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "SET_UP_DONE_">*/
+                                class SET_UP_DONE_
+                                {
+                                        itemno = 104;
+                                        priority = 0.000000;
+                                        to="OPEN_RAD";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > _t + 3;"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "TASK_OPEN_RAD__1">*/
+                class TASK_OPEN_RAD__1
+                {
+                        name = "TASK_OPEN_RAD__1";
+                        itemno = 106;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_ReOpen""];" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""Open the radial (Press and hold %1)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "///---" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "open">*/
+                                class open
+                                {
+                                        itemno = 100;
+                                        priority = 0.000000;
+                                        to="CALL_FORMATION";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU && {count A3C_RD_UNITS == count _grunts}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "AUTO_RESET">*/
+                class AUTO_RESET
+                {
+                        name = "AUTO_RESET";
+                        itemno = 107;
+                        init = /*%FSM<STATEINIT""">*/"//-- flash BRAIN parent" \n
+                         "[(findDisplay _IDD_RADIAL_MENU displayCtrl _IDC_RADIAL_INNERRING_AUTO_IMG)] spawn indicate_icon;" \n
+                         "" \n
+                         "" \n
+                         "///--- VOICE HINT" \n
+                         "[""L2_RAD_ROE_INTRO_2""] call fnc_interrupt;" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText ""RIGHT CLICK ON THE 'AUTO-FUNCTIONS' BUTTON"";"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 110;
+                                        priority = 0.000000;
+                                        to="TASK_OPEN_RAD__2";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "reset_done">*/
+                                class reset_done
+                                {
+                                        itemno = 109;
+                                        priority = 0.000000;
+                                        to="MOVE_COMP";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{stance _x != ""STAND""} count _grunts == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "enemy">*/
+                class enemy
+                {
+                        name = "enemy";
+                        itemno = 108;
+                        init = /*%FSM<STATEINIT""">*/"{" \n
+                         "	_u = _x;" \n
+                         "	_u allowdamage true;" \n
+                         "	_u setCaptive false;" \n
+                         "	{" \n
+                         "		_u reveal [_x,4];" \n
+                         "	} foreach (units player);" \n
+                         "} foreach enemies;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Shots_Fired">*/
+                                class Shots_Fired
+                                {
+                                        itemno = 8;
+                                        priority = 0.000000;
+                                        to="TASK_FIND_COVER";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNil 'HAS_FIRED' && {HAS_FIRED}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "TASK_OPEN_RAD__2">*/
+                class TASK_OPEN_RAD__2
+                {
+                        name = "TASK_OPEN_RAD__2";
+                        itemno = 111;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "///--- VOICE HINT" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""L2_RAD_ReOpen""];" \n
+                         "" \n
+                         "///--- KEY-HINT" \n
+                         "_fncBind = [""A3C_KeyFnc_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = parseText format " \n
+                         "[" \n
+                         "	""Open the radial (Press and hold %1)<br/><br/>" \n
+                         "	""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "///---" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "open">*/
+                                class open
+                                {
+                                        itemno = 112;
+                                        priority = 0.000000;
+                                        to="AUTO_RESET";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU && {count A3C_RD_UNITS == count _grunts}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "unlock">*/
+                class unlock
+                {
+                        name = "unlock";
+                        itemno = 114;
+                        init = /*%FSM<STATEINIT""">*/"_t = time;" \n
+                         "_s = 0;" \n
+                         "" \n
+                         "_unlocked = profileNameSpace getVariable [""A3C_TUTORIAL_LESSONS"",[]];" \n
+                         "if !(""STRATEGIC_1"" in _unlocked) then {" \n
+                         "	_s = 3;" \n
+                         "	_unlocked set [count _unlocked, ""STRATEGIC_1""];" \n
+                         "" \n
+                         "	_separator = parseText ""<br />___________________________<br />""; " \n
+                         "	_image = '\a3\ui_f\data\Map\GroupIcons\badge_gs.paa'; " \n
+                         "	_txt1 = text ""- STRATEGIC [SQUAD]""; " \n
+                         "	_txt1 setAttributes [""align"", ""left""]; " \n
+                         "	_structuredText = composeText [image _image, lineBreak, lineBreak, text ""LESSON UNLOCKED"", _separator,lineBreak,  _txt1, lineBreak]; " \n
+                         "	hint _structuredText;" \n
+                         "};" \n
+                         "profileNameSpace setVariable [""A3C_TUTORIAL_LESSONS"",_unlocked];" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "nothing">*/
+                                class nothing
+                                {
+                                        itemno = 115;
+                                        priority = 0.000000;
+                                        to="LESSON_FINISHED";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "distribute">*/
+                class distribute
+                {
+                        name = "distribute";
+                        itemno = 139;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "go_BACKPACK">*/
+                                class go_BACKPACK
+                                {
+                                        itemno = 141;
+                                        priority = 0.000000;
+                                        to="BACKPACK";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!_hasBackPack"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Radial_Closed_">*/
+                                class Radial_Closed_
+                                {
+                                        itemno = 57;
+                                        priority = 0.000000;
+                                        to="TASK_OPEN_RAD_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"isNull findDisplay _IDD_RADIAL_MENU OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "go_MEDIKIT">*/
+                                class go_MEDIKIT
+                                {
+                                        itemno = 140;
+                                        priority = 0.000000;
+                                        to="GET_MEDIKIT";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_hasBackPack"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "____FAKE____">*/
+                class ____FAKE____
+                {
+                        name = "____FAKE____";
+                        itemno = 157;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "skip">*/
+                                class skip
+                                {
+                                        itemno = 70;
+                                        priority = 2.000000;
+                                        to="____FAKE____";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull findDisplay _IDD_RADIAL_MENU &&" \n
+                                         "{" \n
+                                         "	o1 kbWasSaid [p1, ""Lesson1"", ""L2_RAD_HEAL1"",99999999999]" \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+        };
+        initState="Start_";
+        finalStates[] =
+        {
+                "LESSON_FINISHED",
+        };
+};
+/*%FSM</COMPILE>*/

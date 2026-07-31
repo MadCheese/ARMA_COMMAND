@@ -1,0 +1,1931 @@
+class Sentences
+{
+	//////////////////////////////////////////////
+	//////////  LESSON 1: TACTICAL MODE //////////
+	//////////////////////////////////////////////
+	
+	
+	
+	class Ll_01
+	{
+		text="WELCOME TO AFB COLUMBUS SERGEANT. MY NAME IS CAPTAIN STEVEN COLLINS - TODAY WE ARE GOING TO SHARPEN UP YOUR LEADERSHIP SKILLS!";
+		speech[]={"\sound\Ll_01.ogg"};
+		class Arguments {};
+	};
+	class Ll_02
+	{
+		text="YOU HAVE THREE NEW COMMANDING ASSETS AT YOUR DISPOSAL - TACTICAL MODE, MAP PLANNING AND THE RADIAL MENU.";
+		speech[]={"\sound\Ll_02.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class Ll_03
+	{
+		text="CONTROL HINTS WILL BE DISPLAYED AT ALL TIMES SO YOU DON'T LOSE TRACK. ";
+		speech[]={"\sound\Ll_03.ogg"};
+		class Arguments {};
+	};
+	////////////////////////////////////
+	
+		
+	class Ll_HUD_Intro_01
+	{
+		text="WELCOME TO A LESSON IN SQUAD MOVEMENT, SERGEANT. TACTICAL MODE IS WHERE YOU POSITION YOUR UNITS IN PRECISE LOCATIONS WHILE OPERATING IN 3D-SPACE.";
+		speech[]={"\sound\Ll_HUD_Intro_01.ogg"};
+		class Arguments {};
+	};
+	
+	
+	
+	class Ll_HUD_Intro_02
+	{
+		text="YOU WILL BE USING ENVIRONMENT SENSITIVE INDICATORS THAT SHOW YOU WHERE YOUR UNITS WILL MOVE, WHERE THEY WILL ORIENT THEMSELVES AND WHAT STANCE THEY WILL TAKE.";
+		speech[]={"\sound\Ll_HUD_Intro_02.ogg"};
+		class Arguments {};
+	};
+	
+	class Ll_HUD_SEL_IND
+	{
+		text="FIRST, YOU CAN SELECT UNITS INDIVIDUALLY, SIMILAR TO ARMA'S VANILLA COMMANDS. HOLD DOWN CTRL AND PRESS F2 TO SELECT ONLY UNIT 2 IN TACTICAL!";
+		speech[]={"\sound\Ll_HUD_SEL_IND.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class Ll_HUD_ROT_IND 
+	{
+		text="YOU CAN ROTATE THE SELECTION WITH YOUR MOUSEWHEEL. TRY IT RIGHT NOW.";
+		speech[]={"\sound\Ll_HUD_ROT_IND.ogg"};
+		class Arguments {};
+	};
+	
+	class Ll_HUD_MOVE_IND
+	{
+		text="GOOD JOB - NOW SEND THE UNIT 2 TO THE MARKED POSITION BY PRESSING SPACE-BAR.";
+		speech[]={"\sound\Ll_HUD_MOVE_IND.ogg"};
+		class Arguments {};
+	};
+	
+	class Ll_HUD_SEL_ALL
+	{
+		text="THE REAL POWER OF TACTICAL MODE LIES IN BULK MANAGEMENT. SELECT ALL UNITS AT ONCE! (KEYBIND HINT TOP LEFT SCREEN)";
+		speech[]={"\sound\Ll_HUD_SEL_ALL.ogg"};
+		class Arguments {};
+	};
+	
+	class Ll_HUD_SPACING
+	{
+		text="IF YOU HOLD DOWN CTRL AND SCROLL YOUR MOUSEWHEEL, YOU CAN CHANGE THE FORMATION SPACING.";
+		speech[]={"\sound\Ll_HUD_SPACING.ogg"};
+		class Arguments {};
+	};
+	
+	class Ll_HUD_UI_INTRO
+	{
+		text="YOU MAY HAVE RECOGNIZED THE UI ELEMENT IN THE BOTTOM - YOU CAN INTERACT WITH THIS UI BY HOLDING DOWN SHIFT.";
+		speech[]={"\sound\Ll_HUD_UI_INTRO.ogg"};
+		class Arguments {};
+	};
+	class Ll_HUD_UI_FNC
+	{
+		text="THIS MENU STAYS INTERACTIVE AS LONG AS YOU HOLD DOWN SHIFT.";
+		speech[]={"\sound\Ll_HUD_UI_FNC.ogg"};
+		class Arguments {};
+	};
+	class Ll_HUD_UI_CHANGEFORM
+	{
+		text="NOW CHANGE THE FORMSECTOR BY CLICKING ON THE BIG ROUND ICON IN THE MIDDLE. SELECT THE CIRCLE FORMATION WITH MOUSEBUTTONS OR MOUSEWHEEL";
+		speech[]={"\sound\Ll_HUD_UI_CHANGEFORM.ogg"};
+		class Arguments {};
+	};
+	class Ll_HUD_UI_CHANGESTANCE
+	{
+		text="VERY GOOD - NOW CHANGE THE STANCES - THE FIRST ICON REPRESENTS TRAVEL STANCE, THE SECOND REPRESENTS ARRIVAL STANCE. CHANGE THE ARRIVAL STANCE TO CROUCH";
+		speech[]={"\sound\Ll_HUD_UI_CHANGESTANCE.ogg"};
+		class Arguments {};
+	};
+	class Ll_HUD_UI_ORDER
+	{
+		text="NOW LET GO OF SHIFT AND CONFIRM THE ORDER. THE UNITS WILL CROUCH ON ARRIVAL";
+		speech[]={"\sound\Ll_HUD_UI_ORDER.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class Ll_SEL_RED
+	{
+		text="FIRE-TEAM MANAGEMENT IS ANOTHER STRENGTH OF TACTICAL MODE. PLEASE SELECT TEAM RED NOW.";
+		speech[]={"\sound\Ll_SEL_RED.ogg"};
+		class Arguments {};
+	};
+	
+	class Ll_SNAP_HESCO
+	{
+		text="THE INDICATORS SNAP THE ENVIRONMENT TO ALIGN YOUR FORMATION WITH BUILDINGS AND OTHER OBJECTS. DRAG THEM ON AGAINST A HESCO BARRIER.";
+		speech[]={"\sound\Ll_SNAP_HESCO.ogg"};
+		class Arguments {};
+	};
+	class Ll_SNAP_HESCO_MOVE
+	{
+		text="CONFIRM TEAM RED'S ORDER (SPACEBAR)";
+		speech[]={"\sound\Ll_SNAP_HESCO_MOVE.ogg"};
+		class Arguments {};
+	};
+
+	class Ll_SEL_GREEN
+	{
+		text="GOOD JOB. NOW SELECT TEAM GREEN.";
+		speech[]={"\sound\Ll_SEL_GREEN.ogg"};
+		class Arguments {};
+	};
+	
+	class Ll_SNAP_BUILDING_01
+	{
+		text="NOW DRAG THE INDICATORS ON TO THE OFFICE BUILDING.";
+		speech[]={"\sound\Ll_SNAP_BUILDING_01.ogg"};
+		class Arguments {};
+	};
+	
+	class Ll_SNAP_BUILDING_02
+	{
+		text="YOU CAN SELECT AVAILABLE BUILDING POSITIONS CLOSEST TO THE POSITION YOU ARE LOOKING AT. TRY LOOKING AT DIFFERENT POSITIONS OF THE BUILDING.";
+		speech[]={"\sound\Ll_SNAP_BUILDING_02.ogg"};
+		class Arguments {};
+	};
+	
+	class Ll_SNAP_ROOF
+	{
+		text="TRY TO LOOK UP AND POSITION YOUR UNITS ON THE ROOF - IT MAY BE A BIT TRICKY AT FIRST.";
+		speech[]={"\sound\Ll_SNAP_ROOF.ogg"};
+		class Arguments {};
+	};
+	
+	class Ll_SNAP_ROOF_MOVE	
+	{
+		text="EXCELLENT. NOW GIVE THE MOVEMENT ORDER.";
+		speech[]={"\sound\Ll_SNAP_ROOF_MOVE.ogg"};
+		class Arguments {};
+	};
+	
+	class Ll_SNAP_ROOF_MOVE_WAIT	
+	{
+		text="GOOD. NOW LET'S WAIT FOR THEM TO GET IN POSITION";
+		speech[]={"\sound\Ll_SNAP_ROOF_MOVE_WAIT.ogg"};
+		class Arguments {};
+	};
+	
+	class Ll_HUD_END
+	{
+		text="WELL DONE SERGEANT. YOU HAVE NOW AQUIRED THE SKILLS TO BOOST YOUR PERFORMANCE WITH TACTICAL MODE. DISMISSED!";
+		speech[]={"\sound\Ll_HUD_END.ogg"};
+		class Arguments {};
+	};
+	
+
+	//////////////////////////////////////////////
+	//////////  LESSON 2-1: RADIAL 1  ////////////
+	//////////////////////////////////////////////
+	
+	class L2_RAD_INTRO_1
+	{
+		text="WELCOME BACK SERGEANT. IN THIS LESSON WE WILL LEARN HOW TO USE THE RADIAL MENU. LET'S TAKE A LOOK AT THE MENU BEFORE WE START - OPEN IT AND MAKE SURE TO KEEP YOUR MENU KEY PRESSED DOWN!";
+		speech[]={"\sound\L2_RAD_INTRO_1.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_INTRO_2
+	{
+		text="THE RADIAL PROVIDES QUICK ACCESS TO A LARGE RANGE OF ACTIONS AND ESSENTIAL SETTINGS. HOVERING OVER A SECTION TOGGLES IT'S SELECTION - CLICK ON SECTION TO DISABLE HOVERING. TAKE A LOOK AROUND AND CLOSE THE MENU WHEN YOU'RE READY TO START THE LESSON. ";
+		speech[]={"\sound\L2_RAD_INTRO_2.ogg"};
+		class Arguments {};
+	};
+
+	
+	class L2_RAD_SELECTION
+	{
+		text="BY DEFAULT ALL UNITS ARE SELECTED, BUT YOU CAN CHOOSE WHICH UNITS ARE GOING TO BE TARGETED BY THE RADIAL MENU";
+		speech[]={"\sound\L2_RAD_SELECTION.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_SELECTION1
+	{
+		text="FIRST SELECT UNIT-2 WITH THE F2-KEY";
+		speech[]={"\sound\L2_RAD_SELECTION1.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_SELECTION_U2
+	{
+		text="NOW OPEN THE RADIAL AGAIN - THIS TIME, ONLY UNIT 2 WILL BE TARGETED";
+		speech[]={"\sound\L2_RAD_SELECTION_U2.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_SELECTION_U2_CROUCH
+	{
+		text="OPEN THE STANCES SECTION AND ORDER HIM TO CROUCH!";
+		speech[]={"\sound\L2_RAD_SELECTION_U2_CROUCH.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_ReOpen
+	{
+		text="OPEN THE RADIAL SERGEANT";
+		speech[]={"\sound\L2_RAD_ReOpen.ogg"};
+		class Arguments {};
+	};
+	
+	
+	//OPEN THE STANCES SECTION AND MAKE HIM CROUCH!
+	
+	class L2_RAD_SELECTION_SELECTORS_TOGGLE
+	{
+		text="TO ADJUST YOUR SELECTION, HOVER YOUR MOUSE OVER THE LEFT AREA OF THE SCREEN TO TOGGLE THE HIDDEN UNIT SELECTORS";
+		speech[]={"\sound\L2_RAD_SELECTION_SELECTORS_TOGGLE.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_SELECTION_SELECTORS_TOGGLED
+	{
+		text="NOW SELECT UNIT-5!";
+		speech[]={"\sound\L2_RAD_SELECTION_SELECTORS_TOGGLED.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_SELECTION_SELECTORS_GRENADE
+	{
+		text="NOW LET'S THROW A GRENADE. OPEN THE GRENADE SELECTION BY HOVERING OR CLICKING ON THE 'AI GRENADES' FIELD";
+		speech[]={"\sound\L2_RAD_SELECTION_SELECTORS_GRENADE.ogg"};
+		class Arguments {};
+	};
+	class L2_RAD_SELECTION_SELECTORS_GRENADE_1
+	{
+		text="SELECT A GRENADE TYPE AND KEEP YOUR MENU KEY PRESSED DOWN";
+		speech[]={"\sound\L2_RAD_SELECTION_SELECTORS_GRENADE_1.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_SELECTION_SELECTORS_GRENADE_ACTIVATED
+	{
+		text="USE THE INDICATORS TO FIND YOUR DESIRED POSITION. HIT SPACEBAR TO CONFIRM, OR RELEASE YOUR MENU KEY TO CANCEL.";
+		speech[]={"\sound\L2_RAD_SELECTION_SELECTORS_GRENADE_ACTIVATED.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class L2_RAD_ACTIONS_INTRO
+	{
+		text="NOW LET'S LOOK AT THE RADIAL'S POWERFUL ACTION SECTION - MOST EVOLVE AROUND THE SAME MECHANIC.";
+		speech[]={"\sound\L2_RAD_ACTIONS_INTRO.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_ACTIONS_INTRO1
+	{
+		text="OPEN THE RADIAL WITH ALL UNITS SELECTED.";
+		speech[]={"\sound\L2_RAD_ACTIONS_INTRO1.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class L2_RAD_ACTIONS_SELECT_0
+	{
+		text="SELECT THE ACTIONS SECTION. AS YOU WILL SEE, MOST ACTIONS ARE BUILT AROUND THE SAME CONTROL MECHANIC.";
+		speech[]={"\sound\L2_RAD_ACTIONS_SELECT_0.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_ACTIONS_SELECT
+	{
+		text="OPEN THE ACTION SECTION";
+		speech[]={"\sound\L2_RAD_ACTIONS_SELECT.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class L2_RAD_STATIC_SELECT
+	{
+		text="YOUR TEAM IS CARRYING A PACKED STATIC WEAPON - SELECT THE RADIAL'S 'ASSEMBLE STATIC WEAPON' ACTION AND KEEP YOUR MENU-KEY PRESSED DOWN.";
+		speech[]={"\sound\L2_RAD_STATIC_SELECT.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class L2_RAD_STATIC_DUMMYOBJECT
+	{
+		text="WHEN YOU SELECT THE WEAPON, YOU WILL SPAWN A DUMMY OBJECT THAT YOU CAN DRAG TO YOUR DESIRED POSITION. YOU CAN ALWAYS CANCEL BY RELEASING YOUR MENU-KEY.";
+		speech[]={"\sound\L2_RAD_STATIC_DUMMYOBJECT.ogg"};
+		class Arguments {};
+	};
+	class L2_RAD_STATIC_DUMMY_ROTATE
+	{
+		text="ROTATE THE DUMMY-OBJECT WITH MOUSEWHEEL. WHEN YOU'RE HAPPY, HIT SPACEBAR.";
+		speech[]={"\sound\L2_RAD_STATIC_DUMMY_ROTATE.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_STATIC_WEAPON_ASSEMBLED
+	{
+		text="PERFECT. LET'S WAIT FOR THE GUYS TO ASSEMBLE THE WEAPON";
+		speech[]={"\sound\L2_RAD_STATIC_WEAPON_ASSEMBLED.ogg"};
+		class Arguments {};
+	};
+	
+	
+	
+	
+	
+	
+	class L2_RAD_MOVEUP
+	{
+		text="GOOD JOB. JOIN YOUR BUDDIES AT THE SANDBAGS SERGEANT.";
+		speech[]={"\sound\L2_RAD_MOVEUP.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class L2_RAD_OPEN
+	{
+		text="OKAY SERGEANT, OPEN THE RADIAL MENU ONCE AGAIN!";
+		speech[]={"\sound\L2_RAD_OPEN.ogg"};
+		class Arguments {};
+	};
+	
+	
+	
+	class L2_03
+	{
+		text="PLEASE SELECT THE SUPPRESSION ACTION AND KEEP YOUR MENU KEY PRESSED DOWN.";
+		speech[]={"\sound\L2_03.ogg"};
+		class Arguments {};
+	};
+	class L2_04
+	{
+		text="YOU CAN CANCEL AT ANY STAGE BY LETTING GO OF YOUR MENU-KEY. TO CONFIRM, HIT SPACEBAR!";
+		speech[]={"\sound\L2_04.ogg"};
+		class Arguments {};
+	};
+	class L2_05
+	{
+		text="THAT'S SOME NICE SUPPRESSIVE FIRE SERGEANT. NOW OPEN THE RADIAL AGAIN AND ORDER YOUR UNITS TO STOP.";
+		speech[]={"\sound\L2_05.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_AT_ISSUE
+	{
+		text="LET'S DO SOMETHING ABOUT THAT IFV. YOU CAN ORDER YOUR AT-UNITS TO SHOOT A MISSILE AT ANY POSITION.";
+		speech[]={"\sound\L2_RAD_AT_ISSUE.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_AT_ISSUE_2
+	{
+		text="SELECT THE 'FIRE AT-ROCKET' ACTION";
+		speech[]={"\sound\L2_RAD_AT_ISSUE_2.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_AT_MISSED
+	{
+		text="NOT GOOD ENOUGH SERGEANT - TRY AGAIN! DON'T WORRY, WE HAVE ENOUGH AMMO.";
+		speech[]={"\sound\L2_RAD_AT_MISSED.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_AT_ISSUE_WINDOW
+	{
+		text="YOU CAN NOW FIRE ROCKETS AT ANY POSITION. THERE'S AN ENEMY IN THAT BUILDING - GET YOUR MISSILE THROUGH THAT WINDOW!";
+		speech[]={"\sound\L2_RAD_AT_ISSUE_WINDOW.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_AT_END
+	{
+		text="GREAT EFFORT SERGEANT. YOU ARE NOW QUALIFIED TO USE THE RADIAL MENU'S ACTION SECTION. DISMISSED.";
+		speech[]={"\sound\L2_RAD_AT_END.ogg"};
+		class Arguments {};
+	};
+	
+	//////////////////////////////////////////////
+	//////////  LESSON 2-2: RADIAL 2  ////////////
+	//////////////////////////////////////////////
+	
+	
+	class L2_RAD_AT_INTRO_FINDCOVER
+	{
+		text="WELCOME BACK SERGEANT. YOU SEE THAT COMPOUND AHEAD? I'M GONNA NEED YOU TO MOVE UP THERE.";
+		speech[]={"\sound\L2_RAD_AT_INTRO_FINDCOVER.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_AT_ISSUE_FINDCOVER
+	{
+		text="ENEMIES AHEAD! OPEN THE RADIAL AND ORDER ALL UNITS TO TAKE COVER";
+		speech[]={"\sound\L2_RAD_AT_ISSUE_FINDCOVER.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_AT_FINDCOVER_CLEAR
+	{
+		text="WELL PLAYED SERGEANT - USE THE NEW  ADVANTAGE AND TAKE OUT THE ENEMY";
+		speech[]={"\sound\L2_RAD_AT_FINDCOVER_CLEAR.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_ROE_INTRO
+	{
+		text="NICE - NOW MOVE INTO THE COMPOUND. CALL YOUR UNITS BACK INTO FORMATION - OPEN THE RADIAL";
+		speech[]={"\sound\L2_RAD_ROE_INTRO.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_ROE_INTRO_1
+	{
+		text="SIMPLY RIGHT CLICK ON THE REFRESH ICON CENTER MENU TO RE-GROUP YOUR SELECTION";
+		speech[]={"\sound\L2_RAD_ROE_INTRO_1.ogg"};
+		class Arguments {};
+	};
+	class L2_RAD_ROE_INTRO_2
+	{
+		text="YOU CAN ADDITIONALLY RESET STANCE AND LOOKING DIRECTION. RIGHT CLICK ON THE AUTO-FUNCTIONS BUTTON";
+		speech[]={"\sound\L2_RAD_ROE_INTRO_2.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_ROE_PAUSE1
+	{
+		text="LET'S TRY SOME STEALTH MOVES - TOGGLE THE RADIAL AND OPEN THE ROE SECTION";
+		speech[]={"\sound\L2_RAD_ROE_PAUSE1.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_ROE_PAUSE2
+	{
+		text="FIRST, SELECT 'FIRE ON MY LEAD' - THIS WILL MAKE YOUR UNITS HOLD FIRE UNTIL YOU SHOOT";
+		speech[]={"\sound\L2_RAD_ROE_PAUSE2.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_ROE_PAUSE3
+	{
+		text="NOW, PREVENT YOUR UNITS FROM SELF-ASSIGNING ANY TARGETS";
+		speech[]={"\sound\L2_RAD_ROE_PAUSE3.ogg"};
+		class Arguments {};
+	};
+	
+	//class L2_RAD_ROE_CONT
+	//{
+	//	text="GREAT - MOVE INTO THE COMPOUND. DO NOT FIRE AT THE ENEMY YET";
+	//	speech[]={"\sound\.ogg"};
+	//	class Arguments {};
+	//};
+	
+	class L2_RAD_ROE_ORDER1
+	{
+		text="USE ARMA'S DEFAULT TARGETING TO ASSIGN TARGETS TO YOUR UNITS. CLOSE THE RADIAL, SELECT A UNIT AND PRESS MIDDLE MOUSE BUTTON WHILE LOOKING AT A TARGET. UNITS WILL HOLD FIRE UNTIL YOU SHOOT YOURSELF.";
+		speech[]={"\sound\L2_RAD_ROE_ORDER1.ogg"};
+		class Arguments {}; 
+	};
+	class L2_RAD_ROE_ORDER2
+	{
+		text="NOW SHOOT!";
+		speech[]={"\sound\L2_RAD_ROE_ORDER2.ogg"};
+		class Arguments {};
+	};
+	class L2_RAD_ROE_ORDER3
+	{
+		text="FORMIDABLE SYNC SHOT SERGEANT. MOVE TO THE NEXT CORNER, DO NOT SHOOT THE ENEMY YET";
+		speech[]={"\sound\L2_RAD_ROE_ORDER3.ogg"};
+		class Arguments {};
+	};
+	class L2_RAD_ROE_ORDER4
+	{
+		text="OPEN THE RADIAL AGAIN AND RESET YOUR UNITS TO DEFAULT ENGAGEMENT";
+		speech[]={"\sound\L2_RAD_ROE_ORDER4.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_REARM_1
+	{
+		text="A MEDIC HAS JOINED YOUR SQUAD, BUT WE NEED TO EQUIP HIM. OPEN THE RADIAL";
+		speech[]={"\sound\L2_RAD_REARM_1.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_REARM_2
+	{
+		text="SELECT UNIT 6";
+		speech[]={"\sound\L2_RAD_REARM_2.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_REARM_3
+	{
+		text="NOW SELECT THE 'RE-ARM' CONTROLS IN 'AI-AUTO FUNCTIONS'";
+		speech[]={"\sound\L2_RAD_REARM_3.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_REARM_4
+	{
+		text= "SINCE YOU ONLY HAVE ONE UNIT SELECTED, YOU CAN DOUBLECLICK ON ANY ITEM IN THE LOWER BOX TO PICK IT UP";
+		speech[]={"\sound\L2_RAD_REARM_4.ogg"};
+		class Arguments {};
+	};
+	class L2_RAD_REARM_4_1
+	{
+		text= "FIRST PICK UP THE BACKPACK";
+		speech[]={"\sound\L2_RAD_REARM_4_1.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_REARM_4_2
+	{
+		text= "NOW PICK UP THE MEDI-KIT FROM THE OTHER CRATE";
+		speech[]={"\sound\L2_RAD_REARM_4_2.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_REARM_4_3
+	{
+		text= "GOOD JOB. NOW LET HIM WORK.";
+		speech[]={"\sound\L2_RAD_REARM_4_3.ogg"};
+		class Arguments {};
+	};
+	
+	
+	
+	
+	class L2_RAD_HEAL1_1
+	{
+		text="OPEN THE RADIAL'S MEDICAL SECTION";
+		speech[]={"\sound\L2_RAD_HEAL1_1.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_HEAL1
+	{
+		text="YOUR UNITS ARE WOUNDED, LET'S FIX THEM UP.";
+		speech[]={"\sound\L2_RAD_HEAL1.ogg"};
+		class Arguments {};
+	};
+	
+	class L2_RAD_HEAL2
+	{
+		text="IN THIS MENU YOU CAN DESIGNATE WHO IS HEALING WHO WITH THE DESIRED PRECISION. ORDER ALL UNITS TO HEAL ALL PATIENTS AND SEE WHAT HAPPENS";
+		speech[]={"\sound\L2_RAD_HEAL2.ogg"};
+		class Arguments {};
+	};
+	class L2_RAD_HEAL3
+	{
+		text="UNIT-2 HAD A FAK AND WAS ABLE TO HEAL HIMSELF, BUT HE SPENT THAT FAK. BUT UNIT-6 HAS THE MEDI-KIT AND CAN HEAL WITHOUT LIMIT.";
+		speech[]={"\sound\L2_RAD_HEAL3.ogg"};
+		class Arguments {};
+	};
+	
+	
+	
+	
+	class L2_RAD_COMPLETE
+	{
+		text="GREAT EFFORT SERGEANT. YOU HAVE ACQUIRED ADVANCED SKILLS USING THE RADIAL MENU. DISMISSED.";
+		speech[]={"\sound\L2_RAD_COMPLETE.ogg"};
+		class Arguments {};
+	};
+	
+	
+	
+	/////////////////////////////////////////////////
+	//////////  LESSON 3-1: STRATEGIC 1  ////////////
+	/////////////////////////////////////////////////
+	
+	class L3100
+	{
+		text="OPEN THE MAP";
+		speech[]={"\sound\L3100.ogg"}; //
+		class Arguments {};
+	};
+	
+	class L3101
+	{
+		text="IN THIS LESSON WE ARE GOING TO LOOK AT STRATEGIC MODE, SPECIFICALLY ON SQUAD LEVEL. STRATEGIC MODE ENABLES YOU TO PLAN AND EXECUTE ELABORATE ACTIONS.";
+		speech[]={"\sound\L3101.ogg"};
+		class Arguments {};
+	};
+	
+	class L31011
+	{
+		text="THE MAP-OVERLAY IS ENABLED BY DEFAULT. YOU CAN HIDE IT BY PRESSING THE �C� BUTTON ON YOUR KEYBOARD.";
+		speech[]={"\sound\L31011.ogg"};
+		class Arguments {};
+	};
+	
+	class L31012
+	{
+		text="THE HIDDEN STATE IS STORED IN YOUR PROFILE AND YOU WILL NOT SEE THE OVERLAY AGAIN UNTIL YOU MANUALLY TOGGLE IT BACK.";
+		speech[]={"\sound\L31012.ogg"};
+		class Arguments {};
+	};
+	
+	class L31013
+	{
+		text="BRING BACK THE OVERLAY BY PRESSING THE �C� KEY.";
+		speech[]={"\sound\L31013.ogg"};
+		class Arguments {};
+	};
+	
+	class L3102
+	{
+		text="PLEASE OPEN YOUR MAP.";
+		speech[]={"\sound\L3102.ogg"};
+		class Arguments {};
+	};
+	
+	class L3103
+	{
+		text="AT THE START, THE STRATEGIC OVERLAY IS MINIMIZED. LET�S START BY OPENING THE SELECTION-PANEL - CLICK ON THE LITTLE ARROW NEXT TO YOUR GROUP NAME.";
+		speech[]={"\sound\L3103.ogg"};
+		class Arguments {};
+	};
+	class L3104
+	{
+		text="THE UNFOLDED TREE-PANEL DISPLAYS YOUR UNITS NAMES AS WELL AS THEIR TEAMCOLORS, WEAPON AND SUPPORT ABILITIES.";
+		speech[]={"\sound\L3104.ogg"};
+		class Arguments {};
+	};
+	class L3105
+	{
+		text="CLICKING ON A UNIT NAME WILL SELECT THAT UNIT INDIVIDUALLY. IF YOU HAVE INDIVIDUAL UNITS SELECTED, YOU CAN RIGHT-CLICK ANYWHERE INTO THE BOX TO RE-CENTER THE MAP ON THAT UNIT�S POSITION. SELECT UNIT TWO AND CENTER THE MAP (RIGHT CLICK ON NAME/BOX).";
+		speech[]={"\sound\L3105.ogg"};
+		class Arguments {};
+	};
+	class L3106
+	{
+		text="YOU CAN USE THE STANDARD �CTRL + CLICK� AND �SHIFT + CLICK� TO SELECT MULTIPLE LIST ITEMS. SELECT UNIT-2 AND UNIT-3.";
+		speech[]={"\sound\L3106.ogg"};
+		class Arguments {};
+	};
+	class L3107
+	{
+		text="ONCE UNITS ARE SELECTED, SHIFT+RMB ANYWHERE INTO THE PANEL WILL OPEN THE TEAMCOLOR SELECTOR. ASSIGN UNITS 2 AND 3 TO TEAM RED.";
+		speech[]={"\sound\L3107.ogg"};
+		class Arguments {};
+	};
+	class L3108
+	{
+		text="THE TEAMCOLOR CONTROLS ABOVE THE SELECTION-TREE HAVE ADAPTED TO DISPLAY THE NEW CONFIGURATION.";
+		speech[]={"\sound\L3108.ogg"};
+		class Arguments {};
+	};
+	class L31081
+	{
+		text="SELECT ALL UNITS BY CLICKING ON THE PURPLE COLOR BAR ABOVE THE SELECTION PANEL.";
+		speech[]={"\sound\L31081.ogg"};
+		class Arguments {};
+	};
+	class L3109
+	{
+		text="VERY GOOD SERGEANT. YOU CAN ALSO SELECT UNITS BY CLICKING ON THEIR ICONS. SELECT UNIT-2 BY LEFT CLICKING ON IT�S MAP-ICON.";
+		speech[]={"\sound\L3109.ogg"};
+		class Arguments {};
+	};
+	
+	class L31091
+	{ 
+		text="NOW ADD UNIT-4 TO THE SELECTION BY HOLDING DOWN CTRL AND LEFT-CLICKING ON IT'S UNIT-ICON";
+		speech[]={"\sound\L31091.ogg"};
+		class Arguments {};
+	};
+	
+	class L3110
+	{
+		text="GOOD. YOU CAN DRAW A SELECTION FIELD BY HOLDING DOWN CTRL AND DRAGGING LMB TO DESIGNATE YOUR DESIRED AREA. ANY UNITS WITHIN THAT AREA WILL BE ADDED- OR REMOVED - FROM YOUR SELECTION. SELECT SOME UNITS BY DRAGGING A FIELD.";
+		speech[]={"\sound\L3110.ogg"};
+		class Arguments {};
+	};
+	class L3111
+	{
+		text="TIME TO PLACE A WAYPOINT. LEFT-CLICK ON YOUR DESIRED POSITION AND KEEP THE BUTTON PRESSED WHILE DRAGGING THE MOUSE OFF TO YOUR DESIRED LOOKING DIRECTION. VISION CONES CAN BE MODIFIED AFTERWARDS.";
+		speech[]={"\sound\L3111.ogg"};
+		class Arguments {};
+	};
+	class L3112
+	{
+		text="ON SQUAD LEVEL, YOU NEED TO CONFIRM YOUR PLANS BEFORE THEY ARE EXECUTED. 'COMMIT ALL' WILL EXECUTE ALL PLANS,  WHILE �COMMIT� WILL EXECUTE PLANS FOR THE CURRENT SELECTION. THE �COMMIT ALL� BEHAVIOUR CAN ALSO BE QUICK-SELECTED BY HITTING SPACE-BAR.";
+		speech[]={"\sound\L3112.ogg"};
+		class Arguments {};
+	};
+	class L3113
+	{
+		text="NOW SELECT UNIT-2 INDIVIDUALLY WITH YOUR PREFERRED METHOD.";
+		speech[]={"\sound\L3113.ogg"};
+		class Arguments {};
+	};
+	class L3114
+	{
+		text="YOU MAY HAVE NOTICED THE COMMAND-BAR UNFOLDING FROM THE MENU ONCE UNITS WERE SELECTED. THESE SETTINGS CONFIGURE THE PROPERTIES OF THE NEXT WAYPOINT THAT YOU PLACE.";
+		speech[]={"\sound\L3114.ogg"};
+		class Arguments {};
+	};
+	class L3115
+	{
+		text="YOU ARE ALREADY FAMILIAR WITH SOME OF THESE CONTROLS AS WELL. TRAVEL STANCE, SPEED AND ARRIVAL STANCE WORK EXACLTY AS THEY DO IN TACTICAL MODE.";
+		speech[]={"\sound\L3115.ogg"};
+		class Arguments {};
+	};
+	class L3116
+	{
+		text="COMBAT MODE HAS TWO SETTINGS, �ENGAGE� IS SIMPLY DEFAULT BEHAVIOUR, �DISENGAGE� IS  ALSO KNOWN AS �AT ALL COST�. KEEP IT ON �ENGAGE� FOR NOW.";
+		speech[]={"\sound\L3116.ogg"};
+		class Arguments {};
+	};
+	
+	class L3117
+	{
+		text="THE WAYPOINT ACTIONS ARE AGAIN A KEY FACTOR OF THIS MENU. IT�S CONTENTS ARE DEPENDENT ON YOUR CURRENT SELECTION. OPEN THE ACTION-SELECTOR.";
+		speech[]={"\sound\L3117.ogg"};
+		class Arguments {};
+	};
+	
+	class L3118
+	{
+		text="NOW SELECT �THROWABLES�, CHOSE YOUR DESIRED GRENADE-TYPE AND CLICK THE POSITION YOU WANT IT THROWN AT. MAX THROWING DISTANCE IS APPROXIMATELY 30M.";
+		speech[]={"\sound\L3118.ogg"};
+		class Arguments {};
+	};
+	
+	class L3119
+	{
+		text="GREAT. NOW SELECT THE �SUPPRESS AREA� ACTION AND PLACE A WAYPOINT.";
+		speech[]={"\sound\L3119.ogg"};
+		class Arguments {};
+	};
+	
+	class L31191
+	{
+		text="THE SUPPRESSION-ACTION SPAWNED A VISIBLE POLYGON AREA ON THE MAP";
+		speech[]={"\sound\L31191.ogg"};
+		class Arguments {};
+	};
+	
+	class L31192
+	{
+		text="YOU CAN DRAG AROUND THE EDGES OF THE POLYGON FOR ADJUSTMENT, AND YOU CAN MOVE IT AROUND BY DRAGGING IT'S CENTER MARKER WITH LEFT-MOUSE-BUTTON";
+		speech[]={"\sound\L31192.ogg"};
+		class Arguments {};
+	};
+	
+	class L31193
+	{
+		text="IF YOU DRAG THE CENTER-MARK WHILE HOLDING 'CTRL', YOU WILL ADJUST THE TOTAL SIZE OF THE POLYGON. FINALLY YOU CAN ROTATE THE POLYGON BY HOLDING DOWN 'ALT' AS YOU DRAG THE CENTER-ICON.";
+		speech[]={"\sound\L31193.ogg"};
+		class Arguments {};
+	};
+	
+	class L3120
+	{
+		text="DID YOU SPOT THE �GO� BUTTON CHANGE TO �D�? THAT�S BECAUSE WE NEED  AN EXIT CONDITION TO KNOW WHEN TO STOP SUPPRESSION. CONDITIONS ARE A POWERFUL TOOL FOR WAYPOINT PLANS.";
+		speech[]={"\sound\L3120.ogg"};
+		class Arguments {};
+	};
+	class L31202
+	{
+		text="OPEN THE CONDITION SELECTION";
+		speech[]={"\sound\L31202.ogg"};
+		class Arguments {};
+	};
+	class L31201
+	{
+		text="HERE WE HAVE ACCESS TO THE TIMEOUT AND GO-CODE TYPE. TIMEOUT WILL MAKE THE UNIT WAIT FOR X-SECONDS BEFORE CONTINUING TO THE NEXT WAYPOINT. GOCODES WILL MAKE THE UNITS WAIT  UNTIL YOU MANUALLY ACTIVATE THE GOCODE. THE SUPPRESSION ACTION WILL SELECT GOCODE �D� BY DEFAULT IF NO CONDITION WAS SPECIFIED.";
+		speech[]={"\sound\L31201.ogg"};
+		class Arguments {};
+	};
+	
+	class L3121
+	{
+		text="SELECT ANY CONDITION OTHER THAN 'GO' AND PLACE ANOTHER WAYPOINT.";
+		speech[]={"\sound\L3121.ogg"};
+		class Arguments {};
+	};
+	class L31211
+	{
+		text="NOW RESET THE CONDITION TO 'GO', WHICH MEANS 'NO CONDITION'";
+		speech[]={"\sound\L31211.ogg"};
+		class Arguments {};
+	};
+	
+	class L31212
+	{
+		text="PLACE ONE FINAL WAYPOINT";
+		speech[]={"\sound\L31212.ogg"}; //
+		class Arguments {};
+	};
+	
+	class L31213
+	{
+		text="NOW COMMIT TO YOUR PLAN";
+		speech[]={"\sound\L31213.ogg"}; //
+		class Arguments {};
+	};
+	
+	class L31214
+	{
+		text="stand by";
+		speech[]={"\sound\L31214.ogg"};
+		class Arguments {};
+	};
+	
+	class L3123
+	{
+		text="THE UNIT STARTED SUPPRESSING. NOW WE NEED TO ACTIVATE GOCODE-D TO STOP HIM. THE MAP�S GOCODE CONTROLS ARE LOCATED IN THE TOP RIGHT OF THE MAP FRAME.";
+		speech[]={"\sound\L3123.ogg"};
+		class Arguments {};
+	};
+	
+	class L3124
+	{
+		text="GOOD. THE UNIT STOPPED SUPPRESSING AND NOW MOVES TO THE NEXT WAYPOINT. WAIT FOR THE TIME OUT OR TOGGLE THE GO-CODE IF NEEDED";
+		speech[]={"\sound\L3124.ogg"};
+		class Arguments {};
+	};
+	
+	class L3125
+	{
+		text="WE HAVE TO KEEP IT BRIEF SERGEANT, BUT THERE�S SOME LESS INTUITIVE FUNCTIONS THAT WE WILL GET FAMILIAR WITH.";
+		speech[]={"\sound\L3125.ogg"};
+		class Arguments {};
+	};
+	
+	class L3126
+	{
+		text="FORMATIONS FOR MULTIPLE UNITS ARE POWERFUL, BUT LESS INTUITIVE. THEY COMBINE FORMATION AND ORIENTATION AT THE SAME TIME.";
+		speech[]={"\sound\L3126.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class L3127
+	{
+		text="PLACE A WAYPOINT AND DRAG THE LOOKING DIRECTION TO THE NORTH. BY DEFAULT, THE UNITS WILL BE FORM UP A LINE BEHIND THE FIRST UNIT, FORMING A 180 DEGREE FIRING SECTOR.";
+		speech[]={"\sound\L3127.ogg"};
+		class Arguments {};
+	};
+	
+	class L31271
+	{
+		text="PLEASE OPEN THE FORMATION SELECTION.";
+		speech[]={"\sound\L31271.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class L3128
+	{
+		text="NOW SELECT THE SECOND SETTING ( + 90 DEG) AND PLACE ANOTHER WAYPOINT, ALSO  WITH A LOOKING DIRECTION TO THE NORTH. THIS TIME UNITS WILL STACK UP TOWARDS THE RIGHT/EAST.";
+		speech[]={"\sound\L3128.ogg"};
+		class Arguments {};
+	};
+	
+	class L3129
+	{
+		text="THE LEFT VARIANT WORKS CORRESPONDINGLY. SELECT THE �CIRCLE� FORMATION NOW.";
+		speech[]={"\sound\L3129.ogg"};
+		class Arguments {};
+	};
+	
+	class L3130
+	{
+		text="CIRCLE FORMATION DOES NOT REQUIRE ORIENTATION, IN THIS CASE YOUR MOUSE-DRAG WILL DETERMINE THE CIRCLE-RADIUS. PLACE A WAYPOINT WITH CIRCLE FORMATION";
+		speech[]={"\sound\L3130.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class L31301
+	{
+		text="LET'S LOOK AT SOME WAYS TO REMOVE WAYPOINTS. FIRST, YOU CAN USE THE 'UNDO' FUCTION. USE IT TO REMOVE YOUR LAST ACTION.";
+		speech[]={"\sound\L31301.ogg"}; //
+		class Arguments {};
+	};
+	
+	class L31302
+	{
+		text="next, RIGHT-CLICK ON ONE OF THE WAYPOINTS AND USE THE TRASHCAN ACTION";
+		speech[]={"\sound\L31302.ogg"}; //
+		class Arguments {};
+	};
+	
+	class L31303
+	{
+		text="FINALLY, THERE'S THE DELETE BUTTON. REFER TO THE TOOLTIP FOR DETAILS AND USE A SIMPLE CLICK TO REMOVE THE CURRENT PLANNING STAGE";
+		speech[]={"\sound\L31303.ogg"}; //
+		class Arguments {};
+	};
+	
+	class L3131
+	{
+		text="LAST BUT NOT LEAST, SPLIT FORMATION IS A VERY USEFUL MECHANIC ONCE UNDERSTOOD. IN THIS FORMATION, YOU WILL PLACE DOWN INDIVIDUAL WAYPOINTS, CYCLING THROUGH YOUR UNIT SELECTION ONE BY ONE. THESE WAYPOINTS ARE SYNCHRONIZED AUTOMATICALLY, SO YOU CAN USE IT TO QUICKLY MOVE FIRETEAMS FROM COVER TO COVER. OPEN THE FORMATION SELECTION AND SELECT �SPLIT FORMATION�.";
+		speech[]={"\sound\L3131.ogg"};
+		class Arguments {};
+	};
+	
+	class L3132
+	{
+		text="PLACE TWO WAYPOINTS PER UNIT - 8 WAYPOINTS TOTAL - THE UNITS ARE TARGETED AUTOMATICALLY. ";
+		speech[]={"\sound\L3132.ogg"};
+		class Arguments {};
+	};
+	
+	
+	
+	
+	class L3133
+	{
+		text="NOW COMMIT AND OBSERVE THE BEHAVIOUR.";
+		speech[]={"\sound\L3133.ogg"};
+		class Arguments {};
+	};
+	
+	class L3134
+	{
+		text="YOU CAN USE THE �HOLD/CONTINUE� FUNCTION TO INTERRUPT YOUR PLANS UNTIL YOU WANT TO CONTINUE.";
+		speech[]={"\sound\L3134.ogg"};
+		class Arguments {};
+	};
+	class L31341
+	{
+		text="TOO SLOW SERGEANT - PLACE A FEW WAYPOINTS AND COMMIT. OCCUPY THE UNIT A LITTLE BY LEAVING  SOME SPACE BETWEEN WAYPOINTS";
+		speech[]={"\sound\L31341.ogg"}; //
+		class Arguments {};
+	};
+	class L3135
+	{
+		text="PUT ALL UNITS INTO �HOLD� STATE BY CLICKING THE PAUSE BUTTON.";
+		speech[]={"\sound\L3135.ogg"};
+		class Arguments {};
+	};
+	
+	class L3136
+	{
+		text="OBSERVE HOW THE UNITS WILL TAKE CONVER. THE HOLD STATE IS REPRESENTED BY LOWER OPACITIES FOR THE UNIT�S MAP ICONS.";
+		speech[]={"\sound\L3136.ogg"};
+		class Arguments {};
+	};
+	
+	class L3137
+	{
+		text="WHEN YOU ARE READY TO CONTINUE, CLICK ON THE PLAY BUTTON TO MAKE SELECTED UNITS CONTINUE THEIR PLANS.";
+		speech[]={"\sound\L3137.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class L31371
+	{
+		text="YOU CAN USE THE FORCE TRACKER TO ASSIGN TARGETS TO YOUR COMMANDED UNITS. RIGHT CLICK ON THE ENEMY ICON AND SELECT �ATTACK� TO ASSIGN THE TARGET TO YOUR SELECTED UNITS.";
+		speech[]={"\sound\L31371.ogg"};
+		class Arguments {};
+	};
+	
+	class L31372
+	{
+		text="IN ADDITION TO USING �GO-CODES�, YOU CAN ALSO SYNCHRONIZE WAYPOINTS DIRECTLY.";
+		speech[]={"\sound\L31372.ogg"};
+		class Arguments {};
+	};
+	
+	class L31373
+	{
+		text="SELECT UNIT-2 AND PLACE TWO WAYPOINTS.";
+		speech[]={"\sound\L31373.ogg"};
+		class Arguments {};
+	};
+	
+	class L31374
+	{
+		text="TOO EARLY SERGEANT. USE THE �DELETE WAYPOINTS� FUNCTION OR WAIT FOR THE ROUTE TO COMPLETE.";
+		speech[]={"\sound\L31374.ogg"};
+		class Arguments {};
+	};
+	
+	class L31375
+	{
+		text="NOW SELECT UNIT-3 AND GIVE HIM TWO WAYPOINTS AS WELL.";
+		speech[]={"\sound\L31375.ogg"};
+		class Arguments {};
+	};
+	
+	class L31376
+	{
+		text=" SYNCHRONIZE BOTH UNITS� FIRST WAYPOINTS. HOLD ALT AND DRAG A LINE FROM ONE WAYPOINT TO THE OTHER.";
+		speech[]={"\sound\L31376.ogg"};
+		class Arguments {};
+	};
+	
+	class L313761
+	{
+		text="USE THE 'COMMIT ALL' MECHANIC TO EXECUTE THE PLANS FOR BOTH UNITS.";
+		speech[]={"\sound\L313761.ogg"};
+		class Arguments {};
+	};
+	
+	class L31DRAG
+	{
+		text="IF A UNIT DOES NOT MOVE TOWARDS IT'S WAYPOINT, DRAG THE WAYPOINT AROUND A LITTLE BIT TO GIVE IT A LITTLE NUDGE.";
+		speech[]={"\sound\L31DRAG.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class L31377
+	{
+		text="THE UNITS WILL WAIT FOR EACH OTHER AT THEIR WAYPOINTS. STAND BY AND OBSERVE.";
+		speech[]={"\sound\L31377.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class L3138
+	{
+		text="THERE�S A LITTLE EASTER EGG FOR MOVING INDIVIDUAL UNITS. LEFT CLICK ON ONE OF YOUR UNITS, KEEP YOUR MOUSE PRESSED DOWN AND DRAW A PATH ON THE MAP BY DRAGGING THE MOUSE AROUND.";
+		speech[]={"\sound\L3138.ogg"};
+		class Arguments {};
+	};
+	
+	class L3139
+	{
+		text="YOU HAVE NOW CREATED AN EXTREMELY PRECISE WAYPOINT ROUTE. THIS CAN BE USEFUL IF YOU NEED TO BE SURE THAT YOUR UNIT AVOIDS THREATENING POSITIONS.";
+		speech[]={"\sound\L3139.ogg"};
+		class Arguments {};
+	};
+	class L3140
+	{
+		text="GREAT EFFORT SERGEANT. YOU HAVE ACQUIRED THE SKILLS TO MAKE ELABORATE SQUAD PLANS USING STRATEGIC MODE. DISMISSED.";
+		speech[]={"\sound\L3140.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class LSMHC01
+	{
+		text="WELCOME BACK. IN THIS LESSON WE WILL LOOK AT STRATEGIC MODE ON HIGH COMMAND LEVEL. ";
+		speech[]={"\sound\LSMHC01.ogg"};
+		class Arguments {};
+	};
+	class LSMHC02
+	{
+		text="OPEN YOUR MAP.";
+		speech[]={"\sound\LSMHC02.ogg"};
+		class Arguments {};
+	};
+	class LSMHC03
+	{
+		text="WE CURRENTLY HAVE NO CONTROL OVER ANY HIGH COMMAND ASSETS. SELECT SQUAD UNITS 2 AND 3 WITH YOUR PREFERRED METHOD.";
+		speech[]={"\sound\LSMHC03.ogg"};
+		class Arguments {};
+	};
+	class LSMHC04
+	{
+		text="NOW TRIGGER THE �DISBAND� ACTION.";
+		speech[]={"\sound\LSMHC04.ogg"};
+		class Arguments {};
+	};
+	class LSMHC05
+	{
+		text="THE UNITS HAVE BEEN MOVED INTO A NEW HIGH COMMAND GROUP.";
+		speech[]={"\sound\LSMHC05.ogg"};
+		class Arguments {};
+	};
+	class LSMHC06
+	{
+		text="CREATE ANOTHER HIGH COMMAND GROUP WITH UNITS 2 AND 3 .";
+		speech[]={"\sound\LSMHC06.ogg"};
+		class Arguments {};
+	};
+	class LSMHC07
+	{
+		text="OPEN THE �HIGH COMMAND� SECTION IN THE COMMANDING TREE.";
+		speech[]={"\sound\LSMHC07.ogg"};
+		class Arguments {};
+	};
+	class LSMHC08
+	{
+		text="HIGH COMMAND UNITS ARE GROUPED INTO CLASSES DEPENDING ON THEIR LEADER�S VEHICLE. CARGO GROUPS WILL BE SORTED UNDER THE VEHICLE THAT IS CURRENTLY HOSTING THEM.";
+		speech[]={"\sound\LSMHC08.ogg"};
+		class Arguments {};
+	};
+	class LSMHC09
+	{
+		text="SELECTING WORKS AS IT DOES ON SQUAD LEVEL. YOU CAN USE THE TREE OR CLICK ON THE GROUPS MAP-ICONS. ";
+		speech[]={"\sound\LSMHC09.ogg"};
+		class Arguments {};
+	};
+	class LSMHC11
+	{
+		text="SELECT A3C-ALPHA.";
+		speech[]={"\sound\LSMHC11.ogg"};
+		class Arguments {};
+	};
+	class LSMHC12
+	{
+		text="NOW CLICK ON THE MAP TO PLACE DOWN A NEW WAYPOINT.";
+		speech[]={"\sound\LSMHC12.ogg"};
+		class Arguments {};
+	};
+	class LSMHC13
+	{
+		text="THE UNITS WILL START MOVING IMMEDIATELY - BUT THEY HAVE BEEN FROZEN FOR THIS EXERCISE SO YOU CAN GET FAMILIAR WITH THE CONTROLS.";
+		speech[]={"\sound\LSMHC13.ogg"};
+		class Arguments {};
+	};
+	class LSMHC14
+	{
+		text="YOU CAN DRAG THE WAYPOINT POSITION AROUND AS YOU CAN ON SQUAD LEVEL.";
+		speech[]={"\sound\LSMHC14.ogg"};
+		class Arguments {};
+	};
+	class LSMHC15
+	{
+		text="LET�S LOOK AT THE WAYPOINT MENU - OPEN IT BY CLICKING YOUR RIGHT MOUSE BUTTON ON A WAYPOINT.";
+		speech[]={"\sound\LSMHC15.ogg"};
+		class Arguments {};
+	};
+	class LSMHC16
+	{
+		text="THE WAYPOINT MENU GIVES YOU QUICK ACCESS TO A LARGE ARRAY OF WAYPOINT SETTINGS. ";
+		speech[]={"\sound\LSMHC16.ogg"};
+		class Arguments {};
+	};
+	class LSMHC17
+	{
+		text="LET�S LOOK AT WAYPOINT COMPLETION. THE CONDITION SET HERE HAS TO BE FULFILLED BEFORE PROGRESSING TO THE NEXT WAYPOINT OR ACTION. CLICK ON  �ARRIVAL� TO OPEN THE SELECTION.";
+		speech[]={"\sound\LSMHC17.ogg"};
+		class Arguments {};
+	};
+	class LSMHC18
+	{
+		text="HIGH COMMAND ALSO FEATURES THE �DAYTIME� OPTION. ";
+		speech[]={"\sound\LSMHC18.ogg"};
+		class Arguments {};
+	};
+	class LSMHC19
+	{
+		text="SELECT �DAYTIME� AND SET IT TO �08:45� AND CLICK �CONFIRM'";
+		speech[]={"\sound\LSMHC19.ogg"};
+		class Arguments {};
+	};
+	class LSMHC20
+	{
+		text="CREATE A SECOND WAYPOINT FOR A3C-ALPHA AND OPEN THE WAYPOINT MENU.";
+		speech[]={"\sound\LSMHC20.ogg"};
+		class Arguments {};
+	};
+	class LSMHC21
+	{
+		text="USE THE �TYPE� FIELD TO SELECT WAYPOINT TYPES AND ACTIONS. THE OPENED SELECTION CAN DEPEND ON GROUP VEHICLES AND EQUIPMENT.";
+		speech[]={"\sound\LSMHC21.ogg"};
+		class Arguments {};
+	};
+	class LSMHC22
+	{
+		text="SELECT THE �FIRE SUPPORT� ACTION";
+		speech[]={"\sound\LSMHC22.ogg"};
+		class Arguments {};
+	};
+	class LSMHC23
+	{
+		text="NOTE THAT CERTAIN ACTIONS SUCH AS �FIRE SUPPORT� REQUIRE EXIT CONDITIONS THEMSELVES. THESE ARE SEPERATED FROM THE ABOVE �COMPLETION� IN ORDER TO GIVE YOU MORE PLANNING FLEXIBILITY. ";
+		speech[]={"\sound\LSMHC23.ogg"};
+		class Arguments {};
+	};
+	class LSMHC24
+	{
+		text="SET YOUR ACTION COMPLETION �GO-CODE A� AND CLICK �CONFIRM�";
+		speech[]={"\sound\LSMHC24.ogg"};
+		class Arguments {};
+	};
+	class LSMHC25
+	{
+		text="JUST AS ON SQUAD LEVEL, THE �FIRE SUPPORT� ACTION CREATES A POLYGON TO DETERMINE THE AREA TO BE FIRED AT. ADJUST THE SETTINGS TO YOUR LIKING";
+		speech[]={"\sound\LSMHC25.ogg"};
+		class Arguments {};
+	};
+	class LSMHC26
+	{
+		text="NOW PLACE ONE FINAL WAYPOINT AND LEAVE IT AS IS.";
+		speech[]={"\sound\LSMHC26.ogg"};
+		class Arguments {};
+	};
+	class LSMHC27
+	{
+		text="NICE WORK. LET�S WAIT.";
+		speech[]={"\sound\LSMHC27.ogg"};
+		class Arguments {};
+	};
+
+	class LSMHC28
+	{
+		text="3,2,1 - WAYPOINT COMPLETE";
+		speech[]={"\sound\LSMHC28.ogg"};
+		class Arguments {};
+	};
+	class LSMHC29
+	{
+		text="THE GROUP IS NOW MOVING IN POSITION TO PROVIDE FIRE SUPPORT";
+		speech[]={"\sound\LSMHC29.ogg"};
+		class Arguments {};
+	};
+	class LSMHC30
+	{
+		text="THE UNIT STARTED IT�S FIRING SUPPORT - USE �GO-CODE A� TO COMPLETE THE WAYPOINT.";
+		speech[]={"\sound\LSMHC30.ogg"};
+		class Arguments {};
+	};
+	class LSMHC31
+	{
+		text="NOW SELECT GROUP �A3C-BRAVO�.";
+		speech[]={"\sound\LSMHC31.ogg"};
+		class Arguments {};
+	};
+	class LSMHC321
+	{
+		text="PLACE A WAYPOINT.";
+		speech[]={"\sound\LSMHC321.ogg"};
+		class Arguments {};
+	};
+	class LSMHC322
+	{
+		text="NOW OPEN THE WAYPOINT MENU.";
+		speech[]={"\sound\LSMHC322.ogg"};
+		class Arguments {};
+	};
+	class LSMHC33
+	{
+		text="OPEN THE �TYPE� FIELD.";
+		speech[]={"\sound\LSMHC33.ogg"};
+		class Arguments {};
+	};
+	class LSMHC34
+	{
+		text="SELECT THE �ASSEMBLE WEAPON� ACTION AND CLICK �CONFIRM�.";
+		speech[]={"\sound\LSMHC34.ogg"};
+		class Arguments {};
+	};
+	class LSMHC35
+	{
+		text="THE �ASSEMBLE WEAPON� ACTION CREATES AN ATTACHED MARKER THAT DETERMINES THE WEAPON�S ORIENTATION. DRAG IT TO YOUR DESIRED DIRECTION.";
+		speech[]={"\sound\LSMHC35.ogg"};
+		class Arguments {};
+	};
+	class LSMHC36
+	{
+		text="NEXT WE WILL LOOK AT THE �GROUP-INTERACTION MENU�. CLICK �RIGHT MOUSE BUTTON� ON A3C-BRAVO�S GROUP-ICON.";
+		speech[]={"\sound\LSMHC36.ogg"};
+		class Arguments {};
+	};
+	class LSMHC37
+	{
+		text="THE GROUP-INTERACTION MENU CONSISTS OF TWO PARTS. ON THE LEFT WE HAVE THE GROUP DASHBOARD.";
+		speech[]={"\sound\LSMHC37.ogg"};
+		class Arguments {};
+	};
+	class LSMHC38
+	{
+		text="THIS ELEMENT GIVES YOU A QUICK SITREP. YOU CAN ALSO RENAME THE GROUP�S CALLSIGN  HERE.";
+		speech[]={"\sound\LSMHC38.ogg"};
+		class Arguments {};
+	};
+	class LSMHC39
+	{
+		text="THE RIGHT ELEMENT IS THE ACTUAL MENU. YOU CAN SET GROUP STANCE, BEHAVIOUR, RULES OF ENGAGEMENT, FORMATION AND A TEAMCOLOR HERE.";
+		speech[]={"\sound\LSMHC39.ogg"};
+		class Arguments {};
+	};
+	class LSMHC40
+	{
+		text="THE BAR ON THE RIGHT EDGE OF THE MENU GIVES YOU AN ARRAY OF IMMEDIATE ACTIONS FOR THE GROUP. SELECT THE �SUPPRESSIVE FIRE� ACTION.";
+		speech[]={"\sound\LSMHC40.ogg"};
+		class Arguments {};
+	};
+	class LSMHC41
+	{
+		text="NOW RELAY THE FIRING POSITION VIA MAPCLICK.";
+		speech[]={"\sound\LSMHC41.ogg"};
+		class Arguments {};
+	};
+	class LSMHC42
+	{
+		text="THE SUPPRESSION ACTION DEFAULTED TO �GO-CODE D�. ENGAGE IT TO COMPLETE THE ACTION. ";
+		speech[]={"\sound\LSMHC42.ogg"};
+		class Arguments {};
+	};
+	class LSMHC421
+	{
+		text="LET'S TAKE DOWN THE ASSEMBLED WEAPON BEFORE WE MOVE ON. OPEN THE GROUP MENU ON 'A3C-BRAVO'.";
+		speech[]={"\sound\LSMHC421.ogg"};
+		class Arguments {};
+	};
+	class LSMHC422
+	{
+		text="SELECT THE 'PACK STATIC WEAPON' ACTION.";
+		speech[]={"\sound\LSMHC422.ogg"};
+		class Arguments {};
+	};
+	class LSMHC43
+	{
+		text="GOOD WORK SERGEANT. TIME TO MOVE YOU UP THE CHAIN A LITTLE BIT. COLLECT THE C2-TABLET FROM THE CRATE, IN ORDER TO GAIN CONTROL OVER ALL FRIENDLY TROOPS.";
+		speech[]={"\sound\LSMHC43.ogg"};
+		class Arguments {};
+	};
+	class LSMHC44
+	{
+		text="YOU NOW HAVE ACCESS TO ALL FRIENDLY GROUPS. OPEN THE MAP.";
+		speech[]={"\sound\LSMHC44.ogg"};
+		class Arguments {};
+	};
+	class LSMHC45
+	{
+		text="OPEN THE GROUP-CONTEXT MENU FOR �ARTILLERY� BY RIGHT CLICKING ON IT�S GROUP ICON.";
+		speech[]={"\sound\LSMHC45.ogg"};
+		class Arguments {};
+	};
+	class LSMHC46
+	{
+		text="LET�S USE THE ACTION SECTION FOR A FIRE MISSION. SELECT THE �FIRE ARTILLERY� ACTION.";
+		speech[]={"\sound\LSMHC46.ogg"};
+		class Arguments {};
+	};
+	class LSMHC47
+	{
+		text="SELECT AMMOTYPE AND AMOUNT.";
+		speech[]={"\sound\LSMHC47.ogg"};
+		class Arguments {};
+	};
+	class LSMHC48
+	{
+		text="NOW RELAY THE COORDINATES VIA MAPCLICK.";
+		speech[]={"\sound\LSMHC48.ogg"};
+		class Arguments {};
+	};
+	class LSMHC49
+	{
+		text="THE GROUP-INTERACTION MENU CAN ALSO BE OPENED ON MULTIPLE GROUP SELECTIONS. ";
+		speech[]={"\sound\LSMHC49.ogg"};
+		class Arguments {};
+	};
+	class LSMHC50
+	{
+		text="SELECT GROUPS �A3C-ALPHA� AND �A3C-BRAVO�.";
+		speech[]={"\sound\LSMHC50.ogg"};
+		class Arguments {};
+	};
+	class LSMHC51
+	{
+		text="NOW OPEN THE GROUP-INTERACTION MENU. CLICK �RIGHT MOUSE BUTTON� ON EITHER GROUPICONS OR THE COMMANDING-TREE.";
+		speech[]={"\sound\LSMHC51.ogg"};
+		class Arguments {};
+	};
+	class LSMHC52
+	{
+		text="CLICK �LEFT MOUSE BUTTON� ON THE 'ASSIGN AND UNASSIGN VEHICLES� ACTION.";
+		speech[]={"\sound\LSMHC52.ogg"};
+		class Arguments {};
+	};
+	class LSMHC53
+	{
+		text="NOW CLICK �LEFT MOUSE BUTTON� ON THE TRANSPORT VEHICLE�S ICON.";
+		speech[]={"\sound\LSMHC53.ogg"};
+		class Arguments {};
+	};
+	class LSMHC54
+	{
+		text="GREAT. BOTH GROUPS ARE NOW BOARDING THE TRANSPORT VEHICLE. KEEP IN MIND THAT THE LEADER MIGHT BOARD BEFORE OTHER UNITS DO, SO WAIT A LITTLE BIT ONCE THE ICONS ARE IN �CARGO� STATE. ";
+		speech[]={"\sound\LSMHC54.ogg"};
+		class Arguments {};
+	};
+	class LSMHC55
+	{
+		text="ALL IN. NOW SELECT THE �TRANSPORT� GROUP AND GIVE IT TWO WAYPOINTS.";
+		speech[]={"\sound\LSMHC55.ogg"};
+		class Arguments {};
+	};
+	class LSMHC56
+	{
+		text="OPEN THE WAYPOINT MENU BY CLICKING �RIGHT MOUSE BUTTON� ON THE FIRST WAYPOINT.";
+		speech[]={"\sound\LSMHC56.ogg"};
+		class Arguments {};
+	};
+	class LSMHC57
+	{
+		text="OPEN THE �TYPE� FIELD AND SELECT �TRANSPORT UNLOAD�.";
+		speech[]={"\sound\LSMHC57.ogg"};
+		class Arguments {};
+	};
+	class LSMHC57_1
+	{
+		text="YOU CAN NOW CHOOSE TO ADD WAYPOINTS FOR ALL CARGO GROUPS. SELECT AS YOU WISH, BUT 'YES' IS RECOMMENDED.";
+		speech[]={"\sound\LSMHC57_1.ogg"};
+		class Arguments {};
+	};
+
+	class LSMHC57_2
+	{
+		text="CLICK ON TWO DIFFERENT MAP POSITIONS TO ADD WAYPOINTS FOR BOTH CARGO GROUPS IN SUCCESSION - THIS MECHANIC STREAMLINES MAKING FURTHER PLANS FOR CARGO GROUPS.";
+		speech[]={"\sound\LSMHC57_2.ogg"};
+		class Arguments {};
+	};
+
+
+	
+	class LSMHC58
+	{
+		text="THE COMMANDING-TREE HAS ADAPTED TO THE NEW CARGO-SITUATION. OPEN �TRANSPORT� GROUP�S COMMANDING-TREE AND SELECT BOTH �A3C-ALPHA� AND �A3C-BRAVO� USING SHIFT OR CTRL CLICKS.";
+		speech[]={"\sound\LSMHC58.ogg"};
+		class Arguments {};
+	};
+	class LSMHC59
+	{
+		text="NOW CLICK ON THE MAP TO GIVE A WAYPOINT TO BOTH GROUPS. THE WAYPOINTS WILL BE DISTRIBUTED IN A WEDGE FORMATION.";
+		speech[]={"\sound\LSMHC59.ogg"};
+		class Arguments {};
+	};
+	class LSMHC60
+	{
+		text="GOOD. NOW LET�S WATCH.";
+		speech[]={"\sound\LSMHC60.ogg"};
+		class Arguments {};
+	};
+	class LSMHC61
+	{
+		text="THE UNITS HAVE ARRIVED AND ARE DISMOUNTING. THEY WILL MOVE IN POSITION WHILE THE TRUCK IS MOVING OFF.";
+		speech[]={"\sound\LSMHC61.ogg"};
+		class Arguments {};
+	};
+	
+	class LSMHC611
+	{
+		text="SELECT �A3C-ALPHA� AND PLACE TWO WAYPOINTS.";
+		speech[]={"\sound\LSMHC611.ogg"};
+		class Arguments {};
+	};
+	
+	class LSMHC612
+	{
+		text="NOW SELECT �A3C-BRAVO� AND GIVE THEM TWO WAYPOINTS AS WELL.";
+		speech[]={"\sound\LSMHC612.ogg"};
+		class Arguments {};
+	};
+	
+	class LSMHC613
+	{
+		text="YOU CAN USE SYNCHRONIZATION TO ORDER GROUPS OR VEHICLES INTO ANOTHER GROUP�S CARGO-SPACE.";
+		speech[]={"\sound\LSMHC613.ogg"};
+		class Arguments {};
+	};
+	
+	class LSMHC614
+	{
+		text="�BUZZARD� IS A VTOL-AIRCRAFT THAT CAN TRANSPORT �THUNDER� AND THEIR PROWLER. BOTH ALREADY HAVE THEIR WAYPOINTS ASSIGNED.";
+		speech[]={"\sound\LSMHC614.ogg"};
+		class Arguments {};
+	};
+	
+	class LSMHC615
+	{
+		text="SYNCHRONIZE THE FIRST WAYPOINTS OF THUNDER AND BUZZARD.";
+		speech[]={"\sound\LSMHC615.ogg"};
+		class Arguments {};
+	};
+	
+	class LSMHC616
+	{
+		text="USE THE �VEHICLE GET IN� TYPE TO SELECT �BOARDING SYNCHRONIZATION�.";
+		speech[]={"\sound\LSMHC616.ogg"};
+		class Arguments {};
+	};
+	
+	class LSMHC617
+	{
+		text="OPEN THE WAYPOINT MENU ON BUZZARD�S SECOND WAYPOINT.";
+		speech[]={"\sound\LSMHC617.ogg"};
+		class Arguments {};
+	};
+	
+	class LSMHC618
+	{
+		text="OPEN THE 'TYPE' SELECTION AND SELECT THE �PARADROP� ACTION.";
+		speech[]={"\sound\LSMHC618.ogg"};
+		class Arguments {};
+	};
+	
+	class LSMHC619
+	{
+		text="NOW CONFIRM YOUR SETTINGS.";
+		speech[]={"\sound\LSMHC619.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class LSMHC62
+	{
+		text="VERY GOOD SERGEANT. STAND BY.";
+		speech[]={"\sound\LSMHC62.ogg"};
+		class Arguments {};
+	};
+	class LSMHC63
+	{
+		text="WE NEED TO MOVE THIS CONVOY TO �LA TRINITE�. HOLD �CTRL� AND DRAG �LEFT MOUSE BUTTON� OVER TO CREATE A SELECTION FIELD THAT COVERS ALL CONVOY GROUPS.";
+		speech[]={"\sound\LSMHC63.ogg"};
+		class Arguments {};
+	};
+	class LSMHC64
+	{
+		text="PLACE A WAYPOINT ON THE ROAD, JUST BEFORE THE JUNCTION IN �SAINT LOUIS�. YOU WILL BE ASKED TO CONFIRM, IN ORDER TO PREVENT ACCIDENTAL WAYPOINT SPAMMING. ";
+		speech[]={"\sound\LSMHC64.ogg"};
+		class Arguments {};
+	};
+	class LSMHC65
+	{
+		text="YOU HAVE NOW CREATED A CONVOY-SEQUENCE AND ISSUED WAYPOINTS TO ALL GROUPS IN THAT SEQUENCE. THE ORDER OF VEHICLES HAS BEEN STORED.";
+		speech[]={"\sound\LSMHC65.ogg"};
+		class Arguments {};
+	};
+	class LSMHC66
+	{
+		text="CREATE A SECOND WAYPOINT SEQUENCE ON THE MAIN ROAD IN THE CENTER OF �LA TRINITE�.";
+		speech[]={"\sound\LSMHC66.ogg"};
+		class Arguments {};
+	};
+	class LSMHC67
+	{
+		text="YOU CAN USE THIS METHOD TO MOVE A BULK INDIVIDUAL GROUPS ALL ACROSS THE MAP IN BULK AND IN AN ORDERLY FASHION. UNITS WILL NOT OVERTAKE EACH OTHER AND WHILE PATH FINDING CAN DIFFER, THE UNITS WILL ARRIVE IN THE SAME ORDER THEY STARTED.";
+		speech[]={"\sound\LSMHC67.ogg"};
+		class Arguments {};
+	};
+
+	
+	class LSMHC68
+	{
+		text="GREAT EFFORT SERGEANT. YOU HAVE ACQUIRED BASIC SKILLS IN COMMANDING HIGH COMMAND ASSETS USING STRATEGIC MODE. DISMISSED.";
+		speech[]={"\sound\LSMHC68.ogg"};
+		class Arguments {};
+	};
+	
+	
+	
+	
+	class LRMHC01
+	{
+		text="WELCOME BACK. IN THIS LESSON WE WILL LOOK AT THE RADIAL MENU�S HIGH COMMAND LAYER.";
+		speech[]={"\sound\LRMHC01.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC02
+	{
+		text="PICK UP THE C2-TABLET FROM THE CRATE";
+		speech[]={"\sound\LRMHC02.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC03
+	{
+		text="TO SWITCH TO 'HIGH COMMAND MODE', HOLD  �CTRL� AND PRESS 'SPACE BAR'.";
+		speech[]={"\sound\LRMHC03.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC04
+	{
+		text="OPEN THE RADIAL MENU.";
+		speech[]={"\sound\LRMHC04.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC05
+	{
+		text="THERE�S TWO WAYS TO SELECT HIGH COMMAND UNITS VIA THE RADIAL MENU.";
+		speech[]={"\sound\LRMHC05.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC06
+	{
+		text="HOVER YOUR MOUSE OVER THE LEFT AREA OF THE SCREEN TO TOGGLE THE HIDDEN UNIT SELECTORS.";
+		speech[]={"\sound\LRMHC06.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC061
+	{
+		text="OPEN THE 'INFANTRY' TREE AND SELECT THE 'AT-SPECIALIST'.";
+		speech[]={"\sound\LRMHC061.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC07
+	{
+		text="ALTERNATIVELY, YOU CAN CLICK ON THE UNITS OR THEIR ICONS THEMSELVES.";
+		speech[]={"\sound\LRMHC07.ogg"};
+		class Arguments {};
+	};
+	class LRMHC071
+	{
+		text="ENGAGE 'SELECTION MODE' BY HOLDING DOWN THE 'Q' BUTTON.";
+		speech[]={"\sound\LRMHC071.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC08
+	{
+		text="SELECTION MODE HIDES THE RADIAL WHILE 'Q' IS PRESSED. YOU CAN SELECT SINGLE GROUPS WITH 'LEFT MOUSE BUTTON' AND ADD- OR REMOVE UNITS WITH 'RIGHT MOUSE BUTTON'.";
+		speech[]={"\sound\LRMHC08.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC09
+	{
+		text="SELECT THE 'INFANTRY' GROUP.";
+		speech[]={"\sound\LRMHC09.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC091
+	{
+		text="RELEASE 'Q' to get back to the radial";
+		speech[]={"\sound\LRMHC091.ogg"};
+		class Arguments {};
+	};
+	
+	
+	
+	
+	class LRMHC10
+	{
+		text="YOU CAN USE THE RADIAL MENU TO ADD WAYPOINTS TO POSITIONS YOU HAVE A VISUAL ON. USE THE 'PLACE WAYPOINT' BUTTON.";
+		speech[]={"\sound\LRMHC10.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC11
+	{
+		text="NOW DRAG THE ICON TO YOUR DESIRED POSITION. CONFIRM WITH 'SPACE BAR.'";
+		speech[]={"\sound\LRMHC11.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC12
+	{
+		text="LET�S LOOK AT THE POWERFUL 'HC-ACTIONS' NOW.";
+		speech[]={"\sound\LRMHC12.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC13
+	{
+		text="CONTRARY TO SQUAD LEVEL, THE HIGH COMMAND RADIAL KEEPS THE SELECTION PERSISTENT, SO YOUR SELECTION STAYS IN FOCUS WHEN RE-OPENING THE RADIAL.";
+		speech[]={"\sound\LRMHC13.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC14
+	{
+		text="OPEN THE 'ACTIONS' SECTION.";
+		speech[]={"\sound\LRMHC14.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC15
+	{
+		text="SELECT THE 'FIRE AT' ACTION.";
+		speech[]={"\sound\LRMHC15.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC16
+	{
+		text="DRAG THE ICON TO THE DESIGNATED TARGET. CONFIRM WITH 'SPACE BAR'.";
+		speech[]={"\sound\LRMHC16.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC17
+	{
+		text="WE HAVE NOT PLACED ANY EXPLOSIVES YET. OPEN THE ACTION SECTION.";
+		speech[]={"\sound\LRMHC17.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC18
+	{
+		text="SELECT THE 'PLACE EXPLOSIVE' ACTION.";
+		speech[]={"\sound\LRMHC18.ogg"};
+		class Arguments {};
+	};
+	
+	
+	
+	class LRMHC19
+	{
+		text="DRAG THE ICON TO YOUR DESIRED POSITION. LOOK AT A VEHICLE TO ATTACH ANY REMOTE CHARGES TO THAT VEHICLE.";
+		speech[]={"\sound\LRMHC19.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC20
+	{
+		text="KEEP TAB PRESSED DOWN AS YOU SELECT YOUR AMMO-TYPE.";
+		speech[]={"\sound\LRMHC20.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC201
+	{
+		text="CHARGE IS SET.";
+		speech[]={"\sound\LRMHC201.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC21
+	{
+		text="OPEN THE RADIAL AGAIN.";
+		speech[]={"\sound\LRMHC21.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC22
+	{
+		text="THE 'DETONATE EXPLOSIVES' ACTION HAS BECOME AVAILABLE. SELECT IT NOW AND KEEP TAB PRESSED.";
+		speech[]={"\sound\LRMHC22.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC23
+	{
+		text="YOU CAN SELECT ALL CHARGES SIMULTANIOUSLY OR INDIVIDUALLY. BOTH HAVE THE SAME EFFECT NOW SINCE WE ONLY HAVE ONE SATCHEL PLACED.";
+		speech[]={"\sound\LRMHC23.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC24
+	{
+		text="SELECT THE 'ARMOR' GROUP.";
+		speech[]={"\sound\LRMHC24.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC25
+	{
+		text="SELECT THE 'FIRE TANK SHELL' ACTION. USE IT JUST AS YOU USED THE 'AT-ROCKETS'.";
+		speech[]={"\sound\LRMHC25.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class LRMHC251
+	{
+		text="SELECT THE 'ARTILLERY' GROUP.";
+		speech[]={"\sound\LRMHC251.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC252
+	{
+		text="SELECT THE 'FIRE ARTILLERY' ACTION.";
+		speech[]={"\sound\LRMHC252.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC253
+	{
+		text="SELECT AMMO TYPE AND SHELL AMOUNT.";
+		speech[]={"\sound\LRMHC253.ogg"};
+		class Arguments {};
+	};
+	
+	
+	
+	
+	
+	
+	class LRMHC26
+	{
+		text="LOOKS LIKE YOU ARE READY FOR SOME MORE RESPONSIBILTY SERGEANT. LET�S GET YOU FAMILIAR WITH CLOSE AIR SUPPORT. 'SANDY' IS A WASP-AIRCRAFT THAT IS CURRENTLY STATIONED ON A TRANSPORT CARRIER AT SEA.";
+		speech[]={"\sound\LRMHC26.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC27
+	{
+		text="SELECT 'SANDY' WITH YOUR PREFERRED METHOD.";
+		speech[]={"\sound\LRMHC27.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC28
+	{
+		text="SELECT THE 'CAS' ACTION AND KEEP TAB PRESSED DOWN.";
+		speech[]={"\sound\LRMHC28.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC281
+	{
+		text="SELECT THE 'CAS-TYPE'";
+		speech[]={"\sound\LRMHC281.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC29
+	{
+		text="DRAG THE ICON TO THE DESIGNATED POSITION. CONFIRM WITH 'SPACE BAR'.";
+		speech[]={"\sound\LRMHC29.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC30
+	{
+		text="GOOD JOB. THE AIRCRAFT WILL TAKE OFF AND EXECUTE THE AIRSTRIKE. STAND BY.";
+		speech[]={"\sound\LRMHC30.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC31
+	{
+		text="FANTASTIC SERGEANT. THAT WOULD HAVE HURT. THE AIRCRAFT WAS NOT AIRBORNE WHEN YOU ISSUED THE AIRSTRIKE - IT WILL AUTOMATICALLY  RETURN TO IT'S INITIAL POSITION AND LAND ON THE CARRIER.";
+		speech[]={"\sound\LRMHC31.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC32
+	{
+		text="LANDING WAYPOINTS CAN HANDLE TRANSPORT CARRIERS AND REGULAR AIRFIELDS. PLANES WILL LAND BEFORE BEING STORED IN A SAFE POSITION.UNTIL THEY ARE ORDERED TO TAKE OFF AGAIN. FUEL WILL BE REMOVED UNTIL TAKEOFF.";
+		speech[]={"\sound\LRMHC32.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC33
+	{
+		text="GREAT EFFORT SERGEANT. YOU HAVE ACQUIRED THE SKILL OF COMMANDING HIGH COMMAND GROUPS IN 3D SPACE, USING THE RADIAL MENU.";
+		speech[]={"\sound\LRMHC33.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC34
+	{
+		text="THIS CONCLUDES OUR LESSONS IN LEADERSHIP, SERGEANT. I HOPE YOU WILL ENJOY YOUR FUTURE BATTLES UTILIZING THE ARMA COMMAND DLC. STAY SAFE, AND KEEP OUR FORCES ALIVE.";
+		speech[]={"\sound\LRMHC34.ogg"};
+		class Arguments {};
+	};
+	
+	
+	class LRMHC35
+	{
+		text="NICE WORK";
+		speech[]={"\sound\LRMHC35.ogg"};
+		class Arguments {};
+	};
+	
+	class LRMHC36
+	{
+		text="LET'S WAIT";
+		speech[]={"\sound\LRMHC36.ogg"};
+		class Arguments {};
+	};
+
+	
+	
+	
+	
+	//class L2_01_1
+	//{
+	//	text="By default, all units are selected. But you can also pre-select units beforehand with your F-Keys";
+	//	speech[]={""};
+	//	class Arguments {};
+	//};
+		
+	//class L2_02
+	//{
+	//	text="WE WILL LOOK AT IT'S POWERFUL ACTION SECTION FIRST - HOVER OVER THE HIGHLIGHTED ICON";
+	//	speech[]={""};
+	//	class Arguments {};
+	//};
+	
+	//class L2_10
+	//{
+	//	text="HERE WE GO. NOW ";
+	//	speech[]={""};
+	//	class Arguments {};
+	//};
+	
+};
+
+class Arguments{};
+class Special{};
+startWithVocal[]={hour};
+startWithConsonant[]={europe,university};
+
+

@@ -2,17 +2,10 @@
 #include "..\..\dialog_defines.hpp"
 #include "..\..\..\SHARED\shared_ui_defines.hpp"
 
-/*
-Let's overwork this entire handler shall we.
-Best shot right now:
-1. Pick up all icons (and/or markers)
-2. Seperate execution through right and leftclick
-*/
 
 
 
 params ["_displayCtrl","_mouseButton","_sX","_sY","_shift","_ctrl","_alt"];
-private ["_mouseOverIcon","_groupControls","_isHCMark"];
 
 disableserialization;
 
@@ -20,12 +13,12 @@ A3C_BOOL_MAP_MD = true;
 
 private _exit = false;
 
-private _left = _mouseButton == 0; // << #TODO this sux, remove lol
+private _left = _mouseButton == 0;
 
 
 if (a3c_is_HC_remote && {!(_left)}) exitWith {
 	_this call A3C_ui_shared_fnc_OnMouseButtonDown_remoteVehicle;
-	false //-- potentially not needed. WIP stage, this entire mouseDown EH needs serious overhaul
+	false
 };
 
 
@@ -65,7 +58,8 @@ private _ctls =
 	IDC_MAP_Order_GoCode_BG,
 	IDC_SHARED_UI_SelectionPromptPanel_Parent,
 	IDC_MAP_INPUT_BLOCKER,
-	IDC_MAP_HCGP_Parent
+	IDC_MAP_HCGP_Parent,
+	IDC_MAP_UFSB_BACKGROUND
 ];
 
 //-- exit if mouseclick was within certain controls
@@ -80,7 +74,6 @@ if (ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo)) ex
 	};
 };
 
-//-----------------------------------------------------------------------------------
 
 
 
@@ -89,10 +82,10 @@ if (ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo)) ex
 private _unitArray = (profileNamespace getvariable "A3C_GROUPUNITS");
 private _map1 = findDisplay 12 displayCtrl 51;
 private _sPos = (_map1 posscreentoworld [_sx,_sy]);
-private _clickdata = (ctrlMapMouseOver _map1); //~~ IS THIS STILL USED?
+private _clickdata = (ctrlMapMouseOver _map1);
 private _isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
 private _marker = "";
-private _isHcMark= false;
+private _isHcMark = false;
 
 A3C_MovedItem_ID = ""; //-- reset movedItem on every moueDown event
 A3C_MMCode = {};
@@ -130,8 +123,8 @@ if (_artilleryShortcutCondition) exitWith {
 if (A3C_HC_DETONATION_BOOL) exitWith {
 	private _demoIcons = (["DEMO",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 	if (count _demoIcons > 0) then {
-		_hoverIcon = _demoIcons select 0;
-		_hoverVic = _hoverIcon select 0;
+		private _hoverIcon = _demoIcons select 0;
+		private _hoverVic = _hoverIcon select 0;
 		if ((vehicleVarName _hoverVic) == "") then {
 			_hoverVic = missionNameSpace getVariable ([_hoverVic] call A3C_main_fnc_setVehicleVarname);
 		};
@@ -145,19 +138,17 @@ if (A3C_HC_DETONATION_BOOL) exitWith {
 //-- detect SLING LOAD PICKUP icons
 if (A3C_HC_EDIT_ACTION == "SLING LOAD" && {count A3C_PICKUP_OBJECTS > 0}) exitWith {
 	A3C_HC_EDIT_ACTION = "";
-	//systemchat 'uuu3';
 	A3C_UI_MAPICONS_PICKUP = [A3C_UI_MAPICONS_PICKUP,[],{(_x select 2) distance2D _sPos},"ASCEND"] call BIS_fnc_sortBy;
 	private _slingIcons =(["SLINGLOAD",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 	A3C_PICKUP_OBJECTS = []; //-- remove UI
 	if (count _slingIcons > 0) then {
 		private _slingIcon = _slingIcons select 0;
 		private _veh = (_slingIcon select 0);
-		//systemChat str (typeOf _veh);
 		
 		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] setWaypointPosition [(position _veh),0];
 		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] setWayPointType "HOOK";
 		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] waypointAttachVehicle _veh;
-		_statements = waypointStatements [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND];
+		private _statements = waypointStatements [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND];
 		_statements set [1, (_statements select 1) + " 'SLING LOAD HOOK'; " ]; //-- just to have something for the UI to read
 		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] setWaypointStatements _statements;
 		
@@ -170,12 +161,11 @@ if (A3C_Boarding_ACTIVE) exitWith {
 	private _vhIcons = [];
 	//-- Boarding HC-units via map-ui pt 2
 	_vhIcons = (["HC_VB",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
-	_doReset = false;
+	private _doReset = false;
 	if (_left) then {
 		if (count _vhIcons > 0) then {
-			_vhIcon = _vhIcons select 0;
+			private _vhIcon = _vhIcons select 0;
 			private _selectedVehicle = _vhIcon select 0;
-			//_boardGroup = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
 
 			[A3C_SELECTED_HC_GROUPS_SETTINGS,_selectedVehicle] call A3C_ai_highCommand_fnc_assignGroupToVehicle;
 			_doReset = true;
@@ -202,16 +192,15 @@ if (A3C_Boarding_ACTIVE) exitWith {
 };
 A3C_PICKUP_OBJECTS = []; //-- if no sling vic was selected via click, remove icons
 
-//-- right click limited to rightClicks (<< ~~say wut??). Change this for future left doubleclicks
+//-- Double-click detection currently applies to right clicks only
 private _doubleClick = false;
 if !(_left) then {
-	_tickTime = (time - A3C_LB_TICKTIME);
+	private _tickTime = (time - A3C_LB_TICKTIME);
 	if ((_tickTime > 0.07) && (_tickTime < 0.3)) then {
 		_doubleClick = true;
 	};
 };
-if (A3C_isArtyAwaitingSuborder) exitWith { //~~ ??? wtf is going on here lol
-	//systemchat 'oi';
+if (A3C_isArtyAwaitingSuborder) exitWith {
 	if (_doubleClick && !(_left)) then {
 		A3C_isArtyAwaitingSuborder = false;
 		player groupChat format ["Fire-Support, this is %1, firemission is no longer needed.", groupID (group player)];
@@ -228,12 +217,12 @@ if (A3C_MAP_CommandMode in ["INF","AIR"]) then {
 
 //-- detect click on HC-GROUP WAYPOINT ICON
 if !(_isHighCommand) then {
-	_wp_Icons = (["HC_WP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
+	private _wp_Icons = (["HC_WP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 	if (count _wp_Icons > 0) then {
-		_wp_Icon = _wp_Icons select 0;
-		_gp = _wp_Icon select 0;
-		_wp_Index = _wp_Icon select 3;
-		_exit = true; //~~ sure?
+		private _wp_Icon = _wp_Icons select 0;
+		private _gp = _wp_Icon select 0;
+		private _wp_Index = _wp_Icon select 3;
+		_exit = true;
 		if (_left) then {
 			if (_alt) then {
 				//-- HC waypoint sync
@@ -247,7 +236,7 @@ if !(_isHighCommand) then {
 					_this spawn {
 						params ["_clickData","_sX","_sY"];
 						if (isNull findDisplay IDD_MAP_OVERLAY) exitWith {};
-						_map1 = findDisplay 12 displayCtrl 51;
+						private _map1 = findDisplay 12 displayCtrl 51;
 						A3C_DRAGPOS = (_map1 posscreentoworld [_sx,_sy]);
 					};
 				};
@@ -271,7 +260,7 @@ if !(_isHighCommand) then {
 						A3C_HC_ACTIVEGROUP = _gp;
 						A3C_HC_ACTIVE_IND = _wp_Index;
 						A3C_UI_MAP_BOOL_isHCWaypointPosEdit = true;
-						if (["PlantExplosive_HC",(waypointStatements [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]) select 1 ] call BIS_fnc_instring) then {
+						if (["plantExplosive",(waypointStatements [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND]) select 1 ] call BIS_fnc_instring) then {
 							A3C_HC_DETONATION_BOOL = true;
 						};
 						
@@ -293,7 +282,7 @@ if !(_isHighCommand) then {
 			_gp = _wp_Icon select 0;
 			_wp_Index = _wp_Icon select 3;
 			[_gp,_wp_Index,A3C_HC_EDIT_ACTION,IDD_MAP_OVERLAY,[_sx, _sy]] call A3C_ui_mapOverlay_fnc_HCWP_openMenu;
-			_resetSelection = false;
+			private _resetSelection = false;
 		};
 
 	} else {
@@ -304,14 +293,14 @@ if !(_isHighCommand) then {
 if (_exit) exitWith {};
 
 
-_gpIcons = (["HC_GP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
+private _gpIcons = (["HC_GP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 _gpIcons = 
 [
 	_gpIcons,
 	[],
 	{
-		_gp = _x select 0;
-		_val = if (driver vehicle leader _gp in (units _gp)) then {1} else {0};
+		private _gp = _x select 0;
+		private _val = if (driver vehicle leader _gp in (units _gp)) then {1} else {0};
 		_val
 	},
 	"ASCEND"
@@ -322,12 +311,10 @@ if (_gpIconsCount > 0) exitWith {
 
 	
 		
-	// _gpIcon = _gpIcons select 0;
-	_gpIcon = if ({typeName _x != "GROUP"} count A3C_SELECTED_UNITS == 0 && {count A3C_SELECTED_UNITS == 1}) then {
+	private _gpIcon = if ({typeName _x != "GROUP"} count A3C_SELECTED_UNITS == 0 && {count A3C_SELECTED_UNITS == 1}) then {
 		private _selectionIndex = -1;
 		
 		{
-			// private _iconIndex = [_x,_gpIcons] call MCSS_fnc_getArrayIndex;
 			if (_x select 0 == A3C_SELECTED_UNITS select 0) exitWith {
 				_selectionIndex = _foreachIndex;
 			};
@@ -337,7 +324,6 @@ if (_gpIconsCount > 0) exitWith {
 			_gpIcons select 0
 		} else {
 			private _newIndex = _selectionIndex + 1;
-			// systemchat str _newIndex;
 			_newIndex = if (_newIndex >= _gpIconsCount) then {0} else {_newIndex};
 			_gpIcons select _newIndex;
 		};
@@ -345,20 +331,19 @@ if (_gpIconsCount > 0) exitWith {
 	} else {
 		_gpIcons select 0
 	};
-	// systemchat str _gpIcon;
 
 	private _gp = _gpIcon select 0;
 	A3C_SQ_CLICKED_UNIT = _gp;
 	_exit = true;
 	if (_left) then {
 		if (A3C_isMergeGroupActive) then {
-			_gp1 = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
+			private _gp1 = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
 			(units _gp1) joinSilent A3C_SQ_CLICKED_UNIT;
 			deleteGroup _gp1;
 			A3C_isMergeGroupActive = false;
 		} else {
 			A3C_MAP_CommandMode = "HC";
-			_resetSelection = false;
+			private _resetSelection = false;
 			if (_ctrl) then {
 				A3C_SELECTED_UNITS = if (_gp in A3C_SELECTED_UNITS) then {
 					A3C_SELECTED_UNITS - [_gp];
@@ -369,17 +354,15 @@ if (_gpIconsCount > 0) exitWith {
 				A3C_SELECTED_UNITS = [_gp];
 			};
 			
-			//~~
-			//-- #TODO: #HuiHui -- streamline this duplicate code for visualizing selection change in tree-UI
 			private _CT_TREE = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 			_CT_TREE tvSetCurSel [-1];
 
 			
-			if (count A3C_SELECTED_UNITS == 1) then { //--
-				_button = (A3C_SELECTED_UNITS select 0) getVariable ["A3C_TREESEL_INDEX",[]];
+			if (count A3C_SELECTED_UNITS == 1) then {
+				private _button = (A3C_SELECTED_UNITS select 0) getVariable ["A3C_TREESEL_INDEX",[]];
 				if (count _button > 0) then {
 					_button = _button select 0;
-					_buttonParent = _button select [0,count _button -1];
+					private _buttonParent = _button select [0,count _button -1];
 					if ([_button select 0] in A3C_UI_MAP_TREES_OPEN) then {
 						_CT_TREE tvSetCurSel _button;
 						[
@@ -394,11 +377,8 @@ if (_gpIconsCount > 0) exitWith {
 					};
 				};	
 			};
-			//~~
 
-			//playsound 'A3C_MenuSound1';
 			if (A3C_UI_MAP_Overlay_VAR_isUnFolded) then {
-				//systemchat 'ay';
 				["COLLAPSE",0.1] call A3C_ui_mapOverlay_fnc_UFSB_onToggleBar;
 			};
 
@@ -415,25 +395,17 @@ if (_gpIconsCount > 0) exitWith {
 		};			
 	} else {
 		if (A3C_isMergeGroupActive) then {
-			_gp1 = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
+			private _gp1 = A3C_SELECTED_HC_GROUPS_SETTINGS select 0;
 			(units _gp1) joinSilent A3C_SQ_CLICKED_UNIT;
 			deleteGroup _gp1;
 			A3C_isMergeGroupActive = false;
 		} else {
 			
-			//if (_ctrl) then {
-				//(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCGP_Parent) ctrlShow true;
-				// if ({private _ld = leader _x; isPlayer _ld} count A3C_SELECTED_UNITS == 0) then {
 					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCGP_Parent) ctrlSetPosition ([IDD_MAP_OVERLAY,IDC_MAP_HCGP_Parent,[_sx, _sy]] call A3C_ui_mapOverlay_fnc_findCtrlSafePos);
 					(findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCGP_Parent) ctrlCommit 0;
-				// } else {
-					// hint "A3C: "; //-- not needed, should already be executed in actions
-				// };
 
 				
 				
-				//A3C_SELECTED_HC_GROUPS_SETTINGS = [_gp];
-				//[_gp,0] call A3C_ui_mapOverlay_fnc_HCGP_openMenu;
 				A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS;
 				if (count A3C_SELECTED_HC_GROUPS_SETTINGS > 1) then {
 					A3C_SELECTED_HC_GROUPS_SETTINGS = A3C_SELECTED_UNITS;
@@ -442,7 +414,6 @@ if (_gpIconsCount > 0) exitWith {
 					A3C_SELECTED_HC_GROUPS_SETTINGS = [_gp];
 					[_gp,0] call A3C_ui_mapOverlay_fnc_HCGP_openMenu;
 				};				
-			//};
 		};
 		
 	};
@@ -452,18 +423,18 @@ if (_gpIconsCount > 0) exitWith {
 
 
 //-- detect click on PLAYER SQUAD UNIT ICONS
-_sqIcons = (["SQUAD",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
+private _sqIcons = (["SQUAD",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 if (count _sqIcons > 0) exitWith {
-	_sqIcon = _sqIcons select 0;
+	private _sqIcon = _sqIcons select 0;
 	A3C_SQ_CLICKED_UNIT = _sqIcon select 0;
 	if (_left) then {
 		if (_ctrl && _shift) then {
-			_cargoObjects = ([vehicle A3C_SQ_CLICKED_UNIT] call A3C_main_fnc_getNearCargoLoadObjects);
+			private _cargoObjects = ([vehicle A3C_SQ_CLICKED_UNIT] call A3C_main_fnc_getNearCargoLoadObjects);
 			if ( ((getPosATL (vehicle A3C_SQ_CLICKED_UNIT)) select 2) < 1) then {
 				if ((count _cargoObjects > 0) && (A3C_SQ_CLICKED_UNIT == driver (vehicle A3C_SQ_CLICKED_UNIT))) then {
-					_parent = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
-					_text = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
-					_listBox = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
+					private _parent = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
+					private _text = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
+					private _listBox = findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
 					A3C_SelectionPromptPanel_MODE = "PARALOAD_SQ";
 					_parent ctrlShow true;
 					_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
@@ -497,12 +468,11 @@ if (count _sqIcons > 0) exitWith {
 				_CT_TREE tvSetCurSel [-1];
 
 				if (count A3C_SELECTED_UNITS == 1) then {
-					_button = (A3C_SELECTED_UNITS select 0) getVariable ["A3C_TREESEL_INDEX",[]];
+					private _button = (A3C_SELECTED_UNITS select 0) getVariable ["A3C_TREESEL_INDEX",[]];
 					if (count _button > 0) then {
 						_button = _button select 0;
-						_buttonParent = _button select [0,count _button -1];
+						private _buttonParent = _button select [0,count _button -1];
 						if ([_button select 0] in A3C_UI_MAP_TREES_OPEN) then {
-							//systemchat str _button;
 							_CT_TREE tvSetCurSel _button;
 							[
 								[
@@ -515,7 +485,6 @@ if (count _sqIcons > 0) exitWith {
 							] spawn A3C_ui_shared_fnc_Tree_openOrCollapse
 						};
 					};
-					//if ( ((A3C_SELECTED_UNITS select 0) == A3C_SQ_CLICKED_UNIT) && (A3C_MAP_CommandMode == "INF") ) then {
 					if (count A3C_SELECTED_UNITS > 0) then {
 						A3C_MAP_DRAGPLANNING_ACTIVE = true;
 						A3C_BOOL_MOUSEMOVING = true;
@@ -523,13 +492,12 @@ if (count _sqIcons > 0) exitWith {
 							_this spawn A3C_ui_mapOverlay_fnc_onDragMapStandard;
 						};
 					};
-					_exit = true; //~~?	
+					_exit = true;	
 				};
 				
 				//-- toggle or collapse wpsettings bar
-				_foldMode = if (count A3C_SELECTED_UNITS > 0) then {"OPEN"} else {"COLLAPSE"};
+				private _foldMode = if (count A3C_SELECTED_UNITS > 0) then {"OPEN"} else {"COLLAPSE"};
 				[_foldMode,0.1] call A3C_ui_mapOverlay_fnc_UFSB_onToggleBar;
-				//A3C_SELECTED_UNITS = [A3C_SQ_CLICKED_UNIT];
 				if (vehicle A3C_SQ_CLICKED_UNIT isKindOf "AIR") then {
 					A3C_MAP_CommandMode = "AIR";
 					["AIR"] call A3C_ui_mapOverlay_fnc_UFSB_applyPageMode;
@@ -543,10 +511,9 @@ if (count _sqIcons > 0) exitWith {
 };
 
 //-- detect click on FORCE TRACKER ICON
-_trIcons = (["TRACKER",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
-//systemchat str _trIcons;
+private _trIcons = (["TRACKER",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 if ( !(_left) && (count _trIcons > 0)) exitWith {
-	_trIcon = _trIcons select 0;
+	private _trIcon = _trIcons select 0;
 	if (_trIcon select 3 == "ENEMY") then {
 		A3C_LB_MODE = 1;
 		A3C_TRACKED_ENEMYGROUP = _trIcon select 0;
@@ -571,7 +538,7 @@ if (count _mapPolygons > 0 && {_left}) exitWith {
 	private _mapPolygon = _mapPolygons select 0;
 
 	private _polyID = (_mapPolygon select 0);
-	A3C_MovedItem_ID = _polyID; //= "";
+	A3C_MovedItem_ID = _polyID;
 	if ({((_x select 0) select 1) == _polyID} count A3C_ALL_POLYS > 0) then {
 		A3C_BOOL_MAP_MU = true;
 		A3C_BOOL_MOUSEMOVING = true;
@@ -580,8 +547,7 @@ if (count _mapPolygons > 0 && {_left}) exitWith {
 		{
 			private _polyRefID = (_x select 0) select 1;
 			if (_polyID == _polyRefID) exitWith {
-				//systemchat str _polyRefID;
-				A3C_CUR_EDIT_POLY = ([(_x select 0) select 0,0,"",false] call A3C_ai_shared_fnc_polygonAreaCreate) select 0; //~~ poly: what is going on here: since create_poly does not create markers, it is used to find // 0 is replacing (markerDir A3C_MovedItem_ID)
+				A3C_CUR_EDIT_POLY = ([(_x select 0) select 0,0,"",false] call A3C_ai_shared_fnc_polygonAreaCreate) select 0; //-- Recreate the polygon edit area without creating markers
 				A3C_MMCode = if (_ctrl) then {
 					{[_this,A3C_MovedItem_ID,"WP",true,false] spawn A3C_ui_mapOverlay_fnc_onDragMapItem;}
 				} else {
@@ -605,15 +571,14 @@ if (count _mapPolygons > 0 && {_left}) exitWith {
 private _mapPolygonEdges = (["POLY_EDGE",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 if (count _mapPolygonEdges > 0 && {_left}) exitWith {
 	private _PolygonEdgeIcon = _mapPolygonEdges select 0;
-	_parentPoly = _PolygonEdgeIcon select 0;
-	_edgePosition = _PolygonEdgeIcon select 2;
-	//systemchat str _PolygonEdgeIcon;
+	private _parentPoly = _PolygonEdgeIcon select 0;
+	private _edgePosition = _PolygonEdgeIcon select 2;
 
 	{
 		private _polyRefID = (_x select 0) select 1;
 		if (_parentPoly == _polyRefID) exitWith {
 
-			_poses = _x select 1;
+			private _poses = _x select 1;
 			private _ind = [_edgePosition,_poses] call MCSS_fnc_getArrayIndex;
 			A3C_MovedItem_ID = [_parentPoly,_ind];
 			A3C_BOOL_MAP_MU = true;
@@ -713,21 +678,6 @@ if !(_left) exitWith {
 
 if (_exit) exitWith {};
 
-// //-- LeftClick on A3-HC marker //~~??
-// if (_isHighCommand) then {
-// 	if (A3C_MAP_CommandMode == "HC") then {
-// 		if (count (["HC_WP",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos) > 0) then {
-// 			systemchat "ALERT! PLEASE REPORT IF YOU SEE THIS ERROR: MAP_LEFTDOWN_OLD_HC";
-// 			A3C_BOOL_MAP_MU = true;
-// 			A3C_BOOL_MOUSEMOVING = true;
-// 			A3C_BOOL_MOVINGHC = true;
-// 			A3C_MMCode = {
-// 				[A3C_HC_TOSWITCH,_this] spawn A3C_ui_mapOverlay_fnc_onDragMapHCWP
-// 			};
-// 			_exit = true;
-// 		};
-// 	};
-// };
 
 
 
@@ -761,7 +711,7 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 				} foreach A3C_SELECTED_UNITS;
 				
 				{
-					_gp = _x;
+					private _gp = _x;
 					[_gp, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 				} foreach A3C_SELECTED_UNITS;
 				publicVariable 'A3C_BLACKLIST_WAYPOINT_EDIT';
@@ -779,15 +729,13 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 				waituntil {!ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent)};
 			};
 
-			//systemchat str [_clickPos,isOnRoad _clickPos];
-			private _refArray = +A3C_SELECTED_UNITS; // select {(driver (vehicle leader _x))  in units _x};
+			private _refArray = +A3C_SELECTED_UNITS;
 			
-			//private _switchsafe = false;
 			if (count _refArray > 1) then {
 
 				private _infantryOnly = true;
 				{
-					if ({!isNull objectParent _x && {_x == driver (objectParent _x)}} count (units _x) > 0 ) exitWith { //
+					if ({!isNull objectParent _x && {_x == driver (objectParent _x)}} count (units _x) > 0 ) exitWith {
 						_infantryOnly = false;
 					};
 				} foreach _refArray;
@@ -807,13 +755,13 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 				if (count A3C_SELECTED_UNITS == 1) then {
 					private _wpPos = _clickPos;
 					private _gp = A3C_SELECTED_UNITS select 0;
-					_wpParams = [_gp,_wpPos];
-					_eligibleForBuildingSearch  = {!isNull objectParent _x && {(assignedVehicleRole _x) select 0 != "cargo"}} count (units _gp) == 0;
-					_addWp = true;
+					private _wpParams = [_gp,_wpPos];
+					private _eligibleForBuildingSearch = {!isNull objectParent _x && {(assignedVehicleRole _x) select 0 != "cargo"}} count (units _gp) == 0;
+					private _addWp = true;
 					if (_eligibleForBuildingSearch) then {
-						_nearestB = nearestBuilding _clickPos;
+						private _nearestB = nearestBuilding _clickPos;
 
-						_ref = waypoints _gp;
+						private _ref = waypoints _gp;
 						{
 							if (_x select 1 < currentWaypoint _gp) then {
 								_ref = _ref - [_x];
@@ -839,43 +787,7 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 						systemchat "A3C: Clearing this building is already planned for this group";
 					};
 				} else {
-					/*
-					_pathFnc = {
-						params ["_unit"];
-						if !(local _unit) exitWith {};
-						private _handle = _unit addEventHandler 
-						[
-							"PathCalculated",
-							{
-								params ["_agent", "_path"];
-								if (count _path == 2 && {(_path select 0) isEqualTo (_path select 1)}) exitWith {};
-								private _data = _agent getVariable ["A3C_PathHandler",[-1,-1]];
-								_data params ["_handler","_sumDist"];
-								if (_handler == -1) exitWith {};
-								private _distance = 0;
-								{
-									_pathpos = _x;
-									if (_foreachIndex > 0) then {
-										_distance = _distance + (_pathpos distance (_path select (_forEachIndex - 1)));
-									} else {
-										_distance = _distance + (vehicle _agent distance _pathPos);
-									};
-								} forEach _path;
-								
-								_data set [1,_distance];
-								_agent removeEventhandler ["PathCalculated",_handler];
-								_data set [0,-1];
-								_agent setVariable ["A3C_PathHandler",_data,false];
-								
-							}
-						];
-						_unit setVariable ["A3C_PathHandler",[_handle,-1],false];
-					};
-					*/
 
-					//private _drivers = [];
-					//systemchat str _refArray;
-					// true; //{currentWaypoint _x >= count waypoints _x} count A3C_SELECTED_UNITS > 0;
 					[_refArray,_clickPos] spawn A3C_ai_highCommand_fnc_convoyMultigroup;
 					
 				};
@@ -924,8 +836,6 @@ if (_exit) exitWith {};
 
 if ((count A3C_SELECTED_UNITS) == 0) exitWith {};
 
-//-- precaution: if player is effectiveCommander of vehicle, ALT must be held down to prevent clash with engine-command
-//if ( ({(player == (effectivecommander (vehicle _x)))  && (_x == (driver (vehicle _x)))} count (units group player - [player]) > 0) && !(_alt) && (_left)) exitWith {};
 
 
 
@@ -948,14 +858,14 @@ A3C_MovedItem_ID = "";
 
 
 A3C_BOOL_MOUSEMOVING = true;
-if !((A3C_TEMP_ACTION select 0) in ["SUPPRESSION","SLINGLOAD","CTRL_DET","STATIC"]) then { //~~ REMOVE GRENADE FROM THIS??   "GRENADE",
+if !((A3C_TEMP_ACTION select 0) in ["SUPPRESSION","SLINGLOAD","CTRL_DET","STATIC"]) then {
 	A3C_CONNECTING_MODE = "LOOKDIR";
 	A3C_MMCode = {
 		_this spawn A3C_ui_mapOverlay_fnc_onDragMapStandard;
 	};
 };
 
-_pos = A3C_CLICKPOS_ORIG;
+private _pos = A3C_CLICKPOS_ORIG;
 if (A3C_FORMMODE_TEMP == 5) then {
 	A3C_RADIMARK = ["A3C_RADIMARK",_pos,"Ellipse","Ellipse",[0,0],"","ColorOrange",0,"SolidBorder"] call MCSS_fnc_createMarker;
 	"A3C_RADIMARK" setmarkeralphaLocal 1;
@@ -972,7 +882,6 @@ if ((A3C_TEMP_CONDITION select 0) == "TIMEOUT") then {
 
 
 
-//~~WTF CLEAN THIS UP, move up in the swith block! :S
 if ((A3C_TEMP_ACTION select 0) == 'CTRL_DET') then {
 
 	if (count A3C_SELECTED_UNITS == 1) then {
@@ -1009,14 +918,13 @@ if ((A3C_TEMP_ACTION select 0) == 'STATIC') then {
 	_packMode = [A3C_SELECTED_UNITS] call A3C_ai_shared_fnc_getWeaponAssemblyMode;
 	if (_packMode in ["ASSEMBLE","DUAL"]) then {
 		_packMode = "ASSEMBLE";
-		_text = (getText (configfile >> "CfgVehicles" >> ((A3C_STATIC_PACKS select 0) select 1) >> "displayName"));
+		private _text = (getText (configfile >> "CfgVehicles" >> ((A3C_STATIC_PACKS select 0) select 1) >> "displayName"));
 		A3C_TEMP_ACTION = ["STATIC",["ASSEMBLE",((A3C_STATIC_PACKS select 0) select 1)]];
 		A3C_CONNECTING_MODE = "LOOKDIR";
 		A3C_MMCode = {
 			_this spawn A3C_ui_mapOverlay_fnc_onDragMapStandard;
 		};
 	} else {
-		//_mSize = [0.5,0.5];
 		A3C_STATE_CHECKING_PICKUP = true;
 		A3C_PICKUP_OBJECTS = []; //-- find near statics to selected units
 		{
@@ -1041,11 +949,8 @@ if ((A3C_TEMP_ACTION select 0) == 'STATIC') then {
 
 };
 if ((A3C_TEMP_ACTION select 0) == 'SLINGLOAD') then {
-	//_mCol = 'DEFAULT';
-	//_mSize = [1,1]; uuu
 
 
-	//SYSTEMCHAT 'UU1';
 
 	if (count A3C_SELECTED_UNITS == 1) then {
 		if ( (vehicle (A3C_SELECTED_UNITS select 0)) isKindOf 'HELICOPTER') then {
@@ -1086,7 +991,6 @@ if (_exit) exitWith {
 
 A3C_TEMP_WP_ID_MAIN = if ((A3C_TEMP_ACTION select 0) in ["SUPPRESSION"]) then {format ['A3C_SUP_WP_Mark_%1',A3C_MARKER_COUNT]} else {format ['A3C_Mark_P%1',A3C_MARKER_COUNT]};
 A3C_MARKER_COUNT = A3C_MARKER_COUNT + 1;
-//A3C_MARKERS_TEMP pushback A3C_TEMP_WP_ID_MAIN;
 if (  ((A3C_TEMP_ACTION select 0) in ['SLINGLOAD','CTRL_DET']) OR (_packMode == "DISASSEMBLE")  ) then {
 	A3C_MovedItem_ID = A3C_TEMP_WP_ID_MAIN;
 };

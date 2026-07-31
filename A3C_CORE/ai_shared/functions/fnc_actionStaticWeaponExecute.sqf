@@ -1,6 +1,8 @@
 //-- Action to assemble or disassemble static weapons.
 //-- Used by HC actions, waypoint actions, squad actions, and squad waypoint actions.
 
+// A3C_ai_shared_fnc_actionStaticWeaponExecute
+
 params ["_units", "_staticData", "_weaponPos", "_weaponDir"];
 
 private _action = _staticData select 0;

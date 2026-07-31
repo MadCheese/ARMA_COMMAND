@@ -2227,6 +2227,7 @@ switch (_mode) do {
 						{
 							private _entities = (_soldier nearEntities [_x, 220]) select {
 								canMove _x &&
+								{!(unitIsUAV _x)} &&
 								{
 									(side _x == civilian) || {((side _x) getFriend (side player)) > 0.6}
 								}

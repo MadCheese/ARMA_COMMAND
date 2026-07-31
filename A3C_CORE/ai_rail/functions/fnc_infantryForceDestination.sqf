@@ -84,20 +84,20 @@ if (_doRotate) then {
 		1
 	];
 
-	private _rotationHandle = [
-		_unit,
-		_unitPosASL,
-		_unitPosASL,
-		vectorDirVisual _unit,
-		[_unit getDir _destination] call MCSS_fnc_degreeToVector,
-		vectorUpVisual _unit,
-		[0, 0, 1],
-		_rotationDuration
-	] spawn A3C_ai_rail_fnc_vehicleOrient;
+	// private _rotationHandle = [
+	// 	_unit,
+	// 	_unitPosASL,
+	// 	_unitPosASL,
+	// 	vectorDirVisual _unit,
+	// 	[_unit getDir _destination] call MCSS_fnc_degreeToVector,
+	// 	vectorUpVisual _unit,
+	// 	[0, 0, 1],
+	// 	_rotationDuration
+	// ] spawn A3C_ai_rail_fnc_vehicleOrient;
 
-	waitUntil {
-		scriptDone _rotationHandle
-	};
+	// waitUntil {
+	// 	scriptDone _rotationHandle
+	// };
 } else {
 	(vehicle _unit) setDir _directionToDestination;
 };

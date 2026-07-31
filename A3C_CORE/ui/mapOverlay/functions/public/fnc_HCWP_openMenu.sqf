@@ -556,7 +556,7 @@ switch (true) do {
 		A3C_HC_EDIT_ACTION = "ASSEMBLE UAV";
 	};
 
-	case (["PlantExplosive_HC", _actionScript] call BIS_fnc_inString): {
+	case (["plantExplosive", _actionScript] call BIS_fnc_inString): {
 		A3C_HC_EDIT_ACTION = "DEMOLITION";
 	};
 

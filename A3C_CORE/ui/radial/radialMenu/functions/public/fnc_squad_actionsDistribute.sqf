@@ -1,5 +1,6 @@
 #include "..\..\script_component.hpp"
 #include "..\..\..\..\SHARED\selectionPromptPanel\dialog_defines.hpp"
+#include "..\..\..\..\SHARED\shared_ui_defines.hpp"
 
 params ["_display", "_unitArray"]; // _display is the display IDD.
 
@@ -407,7 +408,7 @@ for "_i" from 0 to (((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do {
 
 		case "ORDER_DETO": {
 			_buttonImage ctrlSetText "\a3\ui_f\data\GUI\Rsc\RscDisplayArsenal\cargoPut_ca.paa";
-			_buttonClicker ctrlSetTooltip "MANAGE EXPLOSIVES";
+			_buttonClicker ctrlSetTooltip "DETONATE EXPLOSIVES";
 			_buttonFncData = [
 				[],
 				{

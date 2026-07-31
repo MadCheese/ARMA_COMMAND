@@ -636,82 +636,219 @@ if (A3C_UI_squadPlacement_units isNotEqualTo []) then {
 	} forEach _ghostDrawData;
 };
 
+
+
+// Resolve the aimed surface once for object placement and tag repositioning.
+private _objectPlacer = missionNamespace getVariable [
+	"A3C_OBJECTPLACER",
+	objNull
+];
+
+private _updateObjectPlacer =
+	!isNull _objectPlacer;
+
+private _hasActivePositionalTag =
+	false;
+
+if (
+	typeName A3C_UI_HUD_3D_TAG_ICON_TYPE
+	== "STRING"
+) then {
+	_hasActivePositionalTag =
+		A3C_UI_HUD_3D_TAG_ICON_TYPE != "";
+};
+
+private _repositionPositionalTag = (
+	_hasActivePositionalTag
+	&& {A3C_UI_HUD_3D_TAG_reposition}
+);
+
+private _resolveAimedSurface = (
+	_updateObjectPlacer
+	|| {_repositionPositionalTag}
+);
+
+private _surfaceIntersection = [];
+private _intersectionPositionAsl = [];
+private _surfaceNormal = [0, 0, 1];
+private _intersectionObject = objNull;
+
+if (_resolveAimedSurface) then {
+	private _surfaceIntersections = lineIntersectsSurfaces [
+		AGLToASL positionCameraToWorld [0, 0, 0],
+		AGLToASL positionCameraToWorld [0, 0, viewDistance],
+		cameraOn,
+		_objectPlacer,
+		true,
+		1,
+		"GEOM",
+		"NONE"
+	];
+
+	if (_surfaceIntersections isNotEqualTo []) then {
+		_surfaceIntersection =
+			_surfaceIntersections select 0;
+
+		_intersectionPositionAsl =
+			_surfaceIntersection select 0;
+
+		_surfaceNormal =
+			_surfaceIntersection select 1;
+
+		_intersectionObject =
+			_surfaceIntersection select 2;
+	};
+
+	/*
+		The snap object is the object returned by the general aimed-surface
+		query. Its state is independent of whether an object placer exists.
+	*/
+	A3C_SNAP_OBJECT =
+		_intersectionObject;
+};
+
+// Update the active object placer independently of snap-object state and tag repositioning.
+if (
+	_updateObjectPlacer
+	&& {_surfaceIntersection isNotEqualTo []}
+) then {
+	
+	_objectPlacer setPosASL
+		_intersectionPositionAsl;
+
+	_objectPlacer setDir
+		A3C_OBJECTPLACER_DIR;
+
+	if (isNull _intersectionObject) then {
+		_objectPlacer setVectorUp
+			_surfaceNormal;
+	} else {
+		_objectPlacer setVectorUp [
+			0,
+			0,
+			1
+		];
+	};
+
+	A3C_UI_HUD_3D_TAG_ICON_POS =
+		ASLToAGL _intersectionPositionAsl;
+};
+
 // Reposition and draw the active positional-action tag.
-if (typeName A3C_UI_HUD_3D_TAG_ICON_TYPE == "STRING") then {
-	if (A3C_UI_HUD_3D_TAG_ICON_TYPE != "") then {
+if (_hasActivePositionalTag) then {
+	if (_repositionPositionalTag) then {
+		if (_surfaceIntersection isEqualTo []) then {
+			A3C_UI_HUD_3D_TAG_ICON_POS =
+				screenToWorld [0.5, 0.5];
+		} else {
+			A3C_UI_HUD_3D_TAG_ICON_POS =
+				ASLToAGL _intersectionPositionAsl;
 
-		if (A3C_UI_HUD_3D_TAG_reposition) then {
+			if (
+				{
+					_x in toLower A3C_UI_HUD_3D_TAG_ICON_TYPE
+				} count [
+					"movepos",
+					"building"
+				] > 0
+			) then {
+				private _eligibleForBuildingSearch = (
+					count A3C_RD_UNITS == 1
+					&& {
+						{
+							!isNull objectParent _x
+							&& {
+								(
+									assignedVehicleRole _x
+								) select 0 != "cargo"
+							}
+						} count (
+							units (
+								A3C_RD_UNITS select 0
+							)
+						) == 0
+					}
+				);
 
-			private _surfaceIntersections = lineIntersectsSurfaces
-			[
-				AGLToASL positionCameraToWorld [0,0,0],AGLToASL positionCameraToWorld [0,0,viewDistance],
-				cameraOn,
-				A3C_OBJECTPLACER,
-				true,
-				1,
-				"GEOM",
-				"NONE"
-			];
-			if (count _surfaceIntersections == 0) then {
-				A3C_UI_HUD_3D_TAG_ICON_POS = screenToWorld [0.5,0.5];
-			} else {
+				if (
+					_eligibleForBuildingSearch
+					&& {_cursorTarget isKindOf "HOUSE"}
+					&& {
+						[
+							_cursorTarget
+						] call MCSS_fnc_getLastBuildingPosIndex > 0
+					}
+				) then {
+					A3C_UI_HUD_3D_TAG_ICON_TYPE =
+						"a3c_ui\markers\building.paa";
 
-				A3C_UI_HUD_3D_TAG_ICON_POS = ASLtoAGL((_surfaceIntersections select 0) select 0);
+					A3C_UI_HUD_3D_TAG_ICON_COL =
+						[1, 1, 1, 0.7];
+				} else {
+					A3C_UI_HUD_3D_TAG_ICON_TYPE =
+						"\a3c_ui\hud\icon_HUD_movePos.paa";
 
-				if ({_x in toLower A3C_UI_HUD_3D_TAG_ICON_TYPE} count ["movepos","building"] > 0) then {
-					private _eligibleForBuildingSearch = (count A3C_RD_UNITS == 1) && {{!isNull objectParent _x && {(assignedVehicleRole _x) select 0 != "cargo"}} count (units (A3C_RD_UNITS select 0)) == 0};
-
-					if (_eligibleForBuildingSearch && {_cursorTarget isKindOf "HOUSE" && {([_cursorTarget] call MCSS_fnc_getLastBuildingPosIndex) > 0}}) then {
-						A3C_UI_HUD_3D_TAG_ICON_TYPE = "a3c_ui\markers\building.paa";
-						A3C_UI_HUD_3D_TAG_ICON_COL = [1,1,1,0.7];
-					} else {
-						A3C_UI_HUD_3D_TAG_ICON_TYPE = "\a3c_ui\hud\icon_HUD_movePos.paa";
-						A3C_UI_HUD_3D_TAG_ICON_COL = [A3C_UI_COLOR_BLUE,0.5] call A3C_ui_shared_fnc_getColorArrayWithOpacity;
-					};
+					A3C_UI_HUD_3D_TAG_ICON_COL = [
+						A3C_UI_COLOR_BLUE,
+						0.5
+					] call A3C_ui_shared_fnc_getColorArrayWithOpacity;
 				};
 			};
-
-			private _distance =
-				player distance2D A3C_UI_HUD_3D_TAG_ICON_POS;
-
-			private _minimumSize = 0.25;
-			private _maximumDistance = 500;
-
-			A3C_UI_HUD_3D_TAG_ICON_SIZE = (linearConversion [ 0, _maximumDistance, _distance, 1.1, _minimumSize, true ]) *2;
-
 		};
 
-		drawIcon3D
-		[
-			A3C_UI_HUD_3D_TAG_ICON_TYPE,
-			A3C_UI_HUD_3D_TAG_ICON_COL,
+		private _distance =
+			player distance2D A3C_UI_HUD_3D_TAG_ICON_POS;
+
+		private _minimumSize = 0.25;
+		private _maximumDistance = 500;
+
+		A3C_UI_HUD_3D_TAG_ICON_SIZE = (
+			linearConversion [
+				0,
+				_maximumDistance,
+				_distance,
+				1.1,
+				_minimumSize,
+				true
+			]
+		) * 2;
+	};
+
+	drawIcon3D [
+		A3C_UI_HUD_3D_TAG_ICON_TYPE,
+		A3C_UI_HUD_3D_TAG_ICON_COL,
+		A3C_UI_HUD_3D_TAG_ICON_POS,
+		A3C_UI_HUD_3D_TAG_ICON_SIZE,
+		A3C_UI_HUD_3D_TAG_ICON_SIZE,
+		0,
+		"",
+		1,
+		0.05
+	];
+
+	if (
+		A3C_UI_HUD_3D_TAG_ICON_MOD
+		!= "NONE"
+	) then {
+		private _modifierIcon = if (
+			A3C_UI_HUD_3D_TAG_ICON_MOD
+			== "ON"
+		) then {
+			"\a3c_ui\markers\icon_Rad_3D_Modifier_ON.paa"
+		} else {
+			"\a3c_ui\markers\icon_Rad_3D_Modifier_OFF.paa"
+		};
+
+		drawIcon3D [
+			_modifierIcon,
+			[1, 1, 1, 1],
 			A3C_UI_HUD_3D_TAG_ICON_POS,
-			A3C_UI_HUD_3D_TAG_ICON_SIZE,
-			A3C_UI_HUD_3D_TAG_ICON_SIZE,
+			A3C_UI_HUD_3D_TAG_ICON_SIZE * 1.7,
+			A3C_UI_HUD_3D_TAG_ICON_SIZE * 1.7,
 			0,
-			'',
+			"",
 			1,
 			0.05
 		];
-
-		if (A3C_UI_HUD_3D_TAG_ICON_MOD != "NONE") then {
-			private _modifierIcon = if (A3C_UI_HUD_3D_TAG_ICON_MOD == "ON") then {
-				"\a3c_ui\markers\icon_Rad_3D_Modifier_ON.paa"
-			} else {
-				"\a3c_ui\markers\icon_Rad_3D_Modifier_OFF.paa"
-			};
-			drawIcon3D
-			[
-				_modifierIcon,
-				[1,1,1,1],
-				A3C_UI_HUD_3D_TAG_ICON_POS,
-				A3C_UI_HUD_3D_TAG_ICON_SIZE * 1.7,
-				A3C_UI_HUD_3D_TAG_ICON_SIZE * 1.7,
-				0,
-				'',
-				1,
-				0.05
-			];
-		};
 	};
 };

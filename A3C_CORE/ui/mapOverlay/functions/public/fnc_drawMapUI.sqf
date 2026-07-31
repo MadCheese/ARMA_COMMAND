@@ -889,7 +889,7 @@ private _dragPathTargetUnit = if (typeName A3C_SQ_CLICKED_UNIT == "GROUP") then 
 								};
 								
 							};
-							case (["PlantExplosive_HC",_waypointScriptCode] call BIS_fnc_instring) : {
+							case (["plantExplosive",_waypointScriptCode] call BIS_fnc_instring) : {
 								_waypointIconSize = 20;
 								_waypointIconPath = "a3c_ui\markers\A3C_Marker_Detonation.paa";
 								if (["objnull",_waypointScriptCode] call BIS_fnc_instring) then {

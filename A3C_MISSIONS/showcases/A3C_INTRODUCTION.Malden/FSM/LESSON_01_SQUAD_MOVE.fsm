@@ -1,0 +1,1829 @@
+/*%FSM<COMPILE "G:\!Games\Steam\steamapps\common\Arma 3 Tools\FSMEditor\scriptedFSM.cfg, LESSON_HUD">*/
+/*%FSM<HEAD>*/
+/*
+item0[] = {"ASSIGN__select_UNIT",2,250,-100.000000,-775.000000,50.000000,-675.000000,0.000000,"ASSIGN: select UNIT 2" \n ""};
+item1[] = {"UNIT2__selected",4,218,-100.000000,-625.000000,50.000000,-525.000000,0.000000,"UNIT2  selected"};
+item2[] = {"Start_",0,4346,-100.000000,-1625.000000,50.000000,-1525.000000,0.000000,"Start" \n ""};
+item3[] = {"Assign__Select_A",2,250,-100.000000,0.000000,50.000000,75.000000,0.000000,"Assign: Select All"};
+item4[] = {"SEL_CHANGED",4,218,-75.000000,1650.000000,50.000000,1725.000000,0.000000,"SEL CHANGED"};
+item5[] = {"wait___",4,218,-100.000000,-950.000000,50.000000,-825.000000,0.000000,"wait" \n "" \n "" \n ""};
+item6[] = {"all_units_selected",4,218,-100.000000,100.000000,50.000000,200.000000,0.000000,"all units selected" \n ""};
+item7[] = {"wait",2,250,-100.000000,-1375.000000,50.000000,-1275.000000,0.000000,"wait"};
+item8[] = {"true___",4,218,-100.000000,-1500.000000,50.000000,-1400.000000,0.000000,"true" \n "" \n "" \n ""};
+item9[] = {"SEL_CHANGED",4,218,-50.000000,3175.000000,75.000000,3250.000000,0.000000,"SEL CHANGED"};
+item10[] = {"Success_",1,250,-25.000000,6700.000000,150.000000,6800.000000,0.000000,"Success" \n ""};
+item11[] = {"Assign__Rotate",2,250,-100.000000,-500.000000,50.000000,-400.000000,0.000000,"Assign: Rotate"};
+item12[] = {"rotated_",4,218,-100.000000,-375.000000,50.000000,-275.000000,0.000000,"rotated" \n ""};
+item13[] = {"Assign__change_s",2,250,-100.000000,225.000000,50.000000,325.000000,0.000000,"Assign: change spacing"};
+item14[] = {"spacing_changed",4,218,-100.000000,350.000000,50.000000,450.000000,0.000000,"spacing changed" \n ""};
+item15[] = {"ASSIGN__CHANGE_FORMATION",2,250,-125.000000,1025.000000,100.000000,1125.000000,0.000000,"ASSIGN: CHANGE FORMATION" \n ""};
+item16[] = {"FORMATION_CHANGED",4,218,-100.000000,1150.000000,75.000000,1250.000000,0.000000,"FORMATION CHANGED" \n ""};
+item17[] = {"Assign__change_s_1",2,250,-125.000000,1275.000000,100.000000,1375.000000,0.000000,"Assign: change stance"};
+item18[] = {"stance_changed_",4,218,-75.000000,1400.000000,50.000000,1500.000000,2.000000,"stance changed" \n ""};
+item19[] = {"Assign__give_ord",2,250,-100.000000,-250.000000,50.000000,-150.000000,0.000000,"Assign: give order"};
+item20[] = {"units_running_",4,218,-100.000000,-125.000000,50.000000,-25.000000,0.000000,"units running" \n ""};
+item21[] = {"Assign_snap_mode",2,250,-75.000000,2775.000000,100.000000,2875.000000,0.000000,"Assign:snap mode"};
+item22[] = {"objects_snapped",4,218,-75.000000,2900.000000,100.000000,3000.000000,1.000000,"objects snapped"};
+item23[] = {"ASSIGN__DRAG_ON",2,250,-50.000000,4200.000000,125.000000,4300.000000,0.000000,"ASSIGN: DRAG ON BUILDING"};
+item24[] = {"objects_in_buidi",4,218,-50.000000,4325.000000,125.000000,4425.000000,0.000000,"objects in buiding"};
+item25[] = {"HINT__COMPLETE",2,250,-25.000000,6200.000000,150.000000,6300.000000,0.000000,"HINT: COMPLETE"};
+item26[] = {"units_running_",4,218,-175.000000,3625.000000,-25.000000,3725.000000,2.000000,"units running" \n ""};
+item27[] = {"ASSIGN_select_TEAM",2,250,-75.000000,2425.000000,100.000000,2525.000000,0.000000,"ASSIGN:select TEAM RED"};
+item28[] = {"TEAM_RED_SELECTE",4,218,-75.000000,2600.000000,100.000000,2700.000000,0.000000,"TEAM RED SELECTED"};
+item29[] = {"ASSIGN__OPEN_MENU",2,250,-100.000000,500.000000,50.000000,600.000000,0.000000,"ASSIGN: OPEN MENU" \n ""};
+item30[] = {"MENU_ACTIVE",4,218,-100.000000,625.000000,50.000000,725.000000,0.000000,"MENU ACTIVE"};
+item31[] = {"HInt__HUD_MENU",2,250,-100.000000,750.000000,50.000000,850.000000,0.000000,"HInt: HUD MENU"};
+item32[] = {"WAIT__",4,218,-100.000000,875.000000,50.000000,975.000000,0.000000,"WAIT" \n "" \n ""};
+item33[] = {"Assign__give_ord_1",2,250,-100.000000,1525.000000,75.000000,1625.000000,0.000000,"Assign: give order"};
+item34[] = {"units_running_",4,218,-200.000000,2100.000000,-50.000000,2200.000000,2.000000,"units running" \n ""};
+item35[] = {"ASSIGN_select_TEAM_1",2,250,-50.000000,3925.000000,125.000000,4025.000000,0.000000,"ASSIGN:select TEAM GREEN"};
+item36[] = {"TEAM_GREEN_SELEC",4,218,-50.000000,4075.000000,125.000000,4175.000000,0.000000,"TEAM GREEN SELECTED"};
+item37[] = {"Assign__give_ord_2",2,250,-50.000000,5225.000000,125.000000,5325.000000,0.000000,"Assign: give order"};
+item38[] = {"wait_hint_",2,250,-25.000000,5950.000000,150.000000,6050.000000,0.000000,"wait hint" \n ""};
+item39[] = {"units_arrived_",4,218,-25.000000,6075.000000,150.000000,6175.000000,0.000000,"units arrived" \n ""};
+item40[] = {"wait___",4,218,-100.000000,-1250.000000,50.000000,-1150.000000,0.000000,"wait" \n "" \n "" \n ""};
+item41[] = {"wait_1",2,250,-100.000000,-1100.000000,50.000000,-1000.000000,0.000000,"wait"};
+item42[] = {"MENU_CLOSED",4,218,225.000000,1000.000000,350.000000,1100.000000,0.000000,"MENU CLOSED"};
+item43[] = {"Assign__give_ord_3",2,250,-75.000000,3050.000000,100.000000,3150.000000,0.000000,"Assign: give order"};
+item44[] = {"_",2,250,200.000000,3500.000000,300.000000,3550.000000,0.000000,""};
+item45[] = {"ASSIGN__SMART_BP",2,250,-50.000000,4450.000000,125.000000,4550.000000,0.000000,"ASSIGN: SMART BPOS"};
+item46[] = {"objects_in_buidi",4,218,-50.000000,4575.000000,125.000000,4675.000000,1.000000,"objects in buiding"};
+item47[] = {"ASSIGN__DRAG_ON_1",2,250,-50.000000,4700.000000,125.000000,4800.000000,0.000000,"ASSIGN: DRAG ON BUILDING"};
+item48[] = {"objects_in_buidi",4,218,-50.000000,4825.000000,125.000000,4925.000000,0.000000,"objects in buiding"};
+item49[] = {"__1",-1,250,25.000000,6425.000000,50.000000,6450.000000,0.000000,""};
+item50[] = {"NO_HUD_UNITS",4,218,-375.000000,0.000000,-275.000000,75.000000,0.000000,"NO HUD UNITS"};
+item51[] = {"MENU_CLOSED",4,218,-400.000000,1275.000000,-275.000000,1375.000000,0.000000,"MENU CLOSED"};
+item52[] = {"NO_HUD_UNITS",4,218,-525.000000,1400.000000,-400.000000,1500.000000,1.000000,"NO HUD UNITS"};
+item53[] = {"ASSIGN__OPEN_MENU_1",2,250,-525.000000,1150.000000,-400.000000,1250.000000,0.000000,"ASSIGN: OPEN MENU" \n ""};
+item54[] = {"MENU_ACTIVE",4,218,-300.000000,1150.000000,-175.000000,1250.000000,0.000000,"MENU ACTIVE"};
+item55[] = {"Assign__Select_A_1",2,250,-775.000000,1400.000000,-625.000000,1500.000000,0.000000,"Assign: Select All"};
+item56[] = {"all_units_selected",4,218,-775.000000,1150.000000,-625.000000,1250.000000,0.000000,"all units selected" \n ""};
+item57[] = {"wait_2",2,250,-50.000000,3300.000000,75.000000,3375.000000,0.000000,"wait"};
+item58[] = {"SELECTION_CHANGE",4,218,200.000000,3925.000000,375.000000,4025.000000,0.000000,"SELECTION CHANGED"};
+item59[] = {"sentence_end_",4,218,-25.000000,6325.000000,150.000000,6425.000000,0.000000,"sentence end" \n ""};
+item60[] = {"wait_",2,250,-50.000000,5000.000000,125.000000,5075.000000,0.000000,"wait" \n ""};
+item61[] = {"objects_in_buidi",4,218,-50.000000,5100.000000,125.000000,5200.000000,0.000000,"objects in buiding"};
+item62[] = {"lost",4,218,-350.000000,5000.000000,-225.000000,5075.000000,0.000000,"lost"};
+item63[] = {"wait__1",2,250,-350.000000,4850.000000,-225.000000,4900.000000,0.000000,"wait" \n ""};
+item64[] = {"waited",4,218,-50.000000,3400.000000,75.000000,3475.000000,0.000000,"waited"};
+item65[] = {"",7,210,258.500000,2821.000000,266.500000,2829.000000,0.000000,""};
+item66[] = {"",7,210,283.500000,4746.000000,291.500000,4754.000000,0.000000,""};
+item67[] = {"",7,210,283.500000,4496.000000,291.500000,4504.000000,0.000000,""};
+item68[] = {"",7,210,283.500000,4246.000000,291.500000,4254.000000,0.000000,""};
+item69[] = {"UNLOCK",2,250,-25.000000,6450.000000,150.000000,6525.000000,0.000000,"UNLOCK"};
+item70[] = {"sleep",4,218,-25.000000,6575.000000,150.000000,6675.000000,0.000000,"sleep"};
+item71[] = {"",7,210,-329.000000,270.999969,-321.000000,279.000031,0.000000,""};
+item72[] = {"",7,210,-329.000000,546.000000,-321.000000,554.000000,0.000000,""};
+item73[] = {"Assign__Select_A_2",2,250,125.000000,1775.000000,225.000000,1850.000000,0.000000,"Assign: Select All"};
+item74[] = {"all_units_selected",4,218,125.000000,1525.000000,225.000000,1625.000000,0.000000,"all units selected" \n ""};
+item75[] = {"SELECTION_CHANGE",4,218,175.000000,2425.000000,350.000000,2525.000000,0.000000,"SELECTION CHANGED"};
+item76[] = {"",7,210,283.500000,5033.500000,291.500000,5041.500000,0.000000,""};
+item77[] = {"distribute",2,250,-50.000000,3500.000000,75.000000,3575.000000,0.000000,"distribute"};
+item78[] = {"NO_HUD_UNITS",4,218,375.000000,1125.000000,500.000000,1225.000000,1.000000,"NO HUD UNITS"};
+item79[] = {"ASSIGN__OPEN_MENU_2",2,250,375.000000,875.000000,500.000000,975.000000,0.000000,"ASSIGN: OPEN MENU" \n ""};
+item80[] = {"MENU_ACTIVE",4,218,125.000000,875.000000,250.000000,975.000000,0.000000,"MENU ACTIVE"};
+item81[] = {"Assign__Select_A_3",2,250,525.000000,1125.000000,675.000000,1225.000000,0.000000,"Assign: Select All"};
+item82[] = {"all_units_selected",4,218,525.000000,875.000000,675.000000,975.000000,0.000000,"all units selected" \n ""};
+item83[] = {"",7,210,-329.000000,796.000000,-321.000000,804.000000,0.000000,""};
+item84[] = {"wait_3",2,250,-75.000000,1775.000000,50.000000,1850.000000,0.000000,"wait"};
+item85[] = {"waited",4,218,-75.000000,1875.000000,50.000000,1950.000000,0.000000,"waited"};
+item86[] = {"distribute_1",2,250,-75.000000,1975.000000,50.000000,2050.000000,0.000000,"distribute"};
+item87[] = {"no_units_running",4,218,100.000000,2100.000000,250.000000,2200.000000,2.000000,"no units running" \n ""};
+item88[] = {"no_units_running",4,218,125.000000,3625.000000,275.000000,3725.000000,2.000000,"no units running" \n ""};
+item89[] = {"SEL_CHANGED",4,218,-25.000000,5350.000000,100.000000,5425.000000,0.000000,"SEL CHANGED"};
+item90[] = {"units_running_",4,218,-150.000000,5800.000000,0.000000,5900.000000,2.000000,"units running" \n ""};
+item91[] = {"__2",2,250,225.000000,5675.000000,350.000000,5725.000000,0.000000,""};
+item92[] = {"wait_4",2,250,-25.000000,5475.000000,100.000000,5550.000000,0.000000,"wait"};
+item93[] = {"waited",4,218,-25.000000,5575.000000,100.000000,5650.000000,0.000000,"waited"};
+item94[] = {"distribute_2",2,250,-25.000000,5675.000000,100.000000,5750.000000,0.000000,"distribute"};
+item95[] = {"no_units_running",4,218,150.000000,5800.000000,300.000000,5900.000000,2.000000,"no units running" \n ""};
+item96[] = {"__3",2,250,-50.000000,2250.000000,50.000000,2300.000000,0.000000,""};
+item97[] = {"wait",4,218,-50.000000,2350.000000,50.000000,2400.000000,0.000000,"wait"};
+item98[] = {"__4",2,250,-25.000000,3775.000000,75.000000,3825.000000,0.000000,""};
+item99[] = {"wait",4,218,-25.000000,3850.000000,75.000000,3900.000000,0.000000,"wait"};
+version=1;
+class LayoutItems
+{
+	class Item49
+	{
+		class ItemInfo
+		{
+			FontFace="Arial";
+			FontHeight=10;
+			lStyle=1;
+		};
+	};
+};
+link0[] = {0,1};
+link1[] = {1,11};
+link2[] = {2,8};
+link3[] = {3,6};
+link4[] = {4,84};
+link5[] = {5,0};
+link6[] = {6,13};
+link7[] = {7,40};
+link8[] = {8,7};
+link9[] = {9,57};
+link10[] = {11,12};
+link11[] = {12,19};
+link12[] = {13,14};
+link13[] = {13,71};
+link14[] = {14,29};
+link15[] = {15,16};
+link16[] = {15,42};
+link17[] = {15,78};
+link18[] = {16,17};
+link19[] = {17,18};
+link20[] = {17,51};
+link21[] = {17,52};
+link22[] = {18,33};
+link23[] = {19,20};
+link24[] = {20,3};
+link25[] = {21,22};
+link26[] = {21,65};
+link27[] = {22,43};
+link28[] = {23,24};
+link29[] = {23,68};
+link30[] = {24,45};
+link31[] = {25,59};
+link32[] = {26,98};
+link33[] = {27,28};
+link34[] = {28,21};
+link35[] = {29,30};
+link36[] = {29,72};
+link37[] = {30,31};
+link38[] = {31,32};
+link39[] = {31,83};
+link40[] = {32,15};
+link41[] = {33,4};
+link42[] = {34,96};
+link43[] = {35,36};
+link44[] = {36,23};
+link45[] = {37,89};
+link46[] = {38,39};
+link47[] = {39,25};
+link48[] = {40,41};
+link49[] = {41,5};
+link50[] = {42,79};
+link51[] = {43,9};
+link52[] = {44,65};
+link53[] = {45,46};
+link54[] = {45,67};
+link55[] = {46,47};
+link56[] = {47,48};
+link57[] = {47,66};
+link58[] = {48,60};
+link59[] = {50,3};
+link60[] = {51,53};
+link61[] = {52,55};
+link62[] = {53,52};
+link63[] = {53,54};
+link64[] = {54,17};
+link65[] = {55,56};
+link66[] = {56,53};
+link67[] = {57,64};
+link68[] = {58,35};
+link69[] = {59,69};
+link70[] = {60,61};
+link71[] = {60,62};
+link72[] = {60,76};
+link73[] = {61,37};
+link74[] = {62,63};
+link75[] = {63,48};
+link76[] = {64,77};
+link77[] = {65,75};
+link78[] = {66,67};
+link79[] = {67,68};
+link80[] = {68,58};
+link81[] = {69,70};
+link82[] = {70,10};
+link83[] = {71,50};
+link84[] = {72,71};
+link85[] = {73,74};
+link86[] = {74,33};
+link87[] = {75,27};
+link88[] = {76,66};
+link89[] = {77,26};
+link90[] = {77,88};
+link91[] = {78,81};
+link92[] = {79,78};
+link93[] = {79,80};
+link94[] = {80,15};
+link95[] = {81,82};
+link96[] = {82,79};
+link97[] = {83,72};
+link98[] = {84,85};
+link99[] = {85,86};
+link100[] = {86,34};
+link101[] = {86,87};
+link102[] = {87,73};
+link103[] = {88,44};
+link104[] = {89,92};
+link105[] = {90,38};
+link106[] = {91,76};
+link107[] = {92,93};
+link108[] = {93,94};
+link109[] = {94,90};
+link110[] = {94,95};
+link111[] = {95,91};
+link112[] = {96,97};
+link113[] = {97,27};
+link114[] = {98,99};
+link115[] = {99,35};
+globals[] = {0.000000,0,0,0,0,640,480,5,349,6316128,1,-936.777466,1227.273804,-749.950195,-2021.052246,1362,800,1};
+window[] = {0,-1,-1,-1,-1,1136,947,3335,164,1,1380};
+*//*%FSM</HEAD>*/
+class FSM
+{
+        fsmName = "LESSON_HUD";
+        class States
+        {
+                /*%FSM<STATE "ASSIGN__select_UNIT">*/
+                class ASSIGN__select_UNIT
+                {
+                        name = "ASSIGN__select_UNIT";
+                        itemno = 0;
+                        init = /*%FSM<STATEINIT""">*/"//-- Assign Task: Select UNIT 2" \n
+                         "_fncBind = [""A3C_KeyFnc_Hud_Unit_02""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""Select only UNIT-2 in TACTICAL MODE (Press %1)"",_fncBind];" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50002) ctrlSetText ""#(argb,8,8,3)color(0,0,0,0.9)"";" \n
+                         "" \n
+                         "" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""Ll_HUD_SEL_IND""];" \n
+                         "" \n
+                         "o1 domove [8216.17,10261.3,0];" \n
+                         "_timer = time;" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "UNIT2__selected">*/
+                                class UNIT2__selected
+                                {
+                                        itemno = 1;
+                                        priority = 0.000000;
+                                        to="Assign__Rotate";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_UI_squadPlacement_units isEqualTo [units player select 1] OR WIP_SKIP &&" \n
+                                         "{" \n
+                                         "	o1 kbWasSaid [p1, ""Lesson1"", ""Ll_HUD_SEL_IND"",99999999999]" \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Start_">*/
+                class Start_
+                {
+                        name = "Start_";
+                        itemno = 2;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "_timer = time;" \n
+                         "titlecut [""TACTICAL MODE"",""black faded"",0];" \n
+                         "(units gp1) joinSilent group player;" \n
+                         "(units gp2) joinSilent group player;" \n
+                         "" \n
+                         "[] call full_teamcolors;" \n
+                         "[(units group player) - [player]] call A3C_ui_shared_fnc_resetPlayerGroup;" \n
+                         "" \n
+                         "{deleteGroup _x} foreach [gp1,gp2];" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "true___">*/
+                                class true___
+                                {
+                                        itemno = 8;
+                                        priority = 0.000000;
+                                        to="wait";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"alive player && time > _timer + 4" \n
+                                         "" \n
+                                         ""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Assign__Select_A">*/
+                class Assign__Select_A
+                {
+                        name = "Assign__Select_A";
+                        itemno = 3;
+                        init = /*%FSM<STATEINIT""">*/"AskPlayerToContinue = false; //-- for loop" \n
+                         "TUTORIAL_CONTINUE = 0;" \n
+                         "" \n
+                         "//-- Assign Task: Select All Units In HUD" \n
+                         "_fncBind = [""A3C_KeyFnc_Hud_TeamSel_ALL""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""Select all units in TACTICAL MODE (Press %1)"",_fncBind];" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "//-- create the necessary situation for exercise" \n
+                         "{[_x] call A3C_UI_squadPlacement_fnc_removeUnitGhost} foreach A3C_UI_squadPlacement_units;" \n
+                         "" \n
+                         "[""Ll_HUD_SEL_ALL""] call fnc_interrupt;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "[] call reset_hudImage;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "all_units_selected">*/
+                                class all_units_selected
+                                {
+                                        itemno = 6;
+                                        priority = 0.000000;
+                                        to="Assign__change_s";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(count A3C_UI_squadPlacement_units) == (count (units group player - [player])) "/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait">*/
+                class wait
+                {
+                        name = "wait";
+                        itemno = 7;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "_time = time;" \n
+                         "_scr = [[8195.75,10280.5,0.00144005], 160,units player - [player],""BWD"", false,[[8207.1,10261.9,0.00144768],348.136],[2020,8,13,3,16]] spawn NEW_LOCATION;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "//o1 setpos [8207.21,10265.2,0.00143242]; " \n
+                         "//o1 setdir 186; " \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "wait___">*/
+                                class wait___
+                                {
+                                        itemno = 40;
+                                        priority = 0.000000;
+                                        to="wait_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"scriptdone _scr" \n
+                                         "" \n
+                                         ""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Success_">*/
+                class Success_
+                {
+                        name = "Success_";
+                        itemno = 10;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "_units = (units player - [player]);" \n
+                         "" \n
+                         "" \n
+                         "[] call lesson_selector;" \n
+                         "" \n
+                         "{" \n
+                         "	if (vehicle _x isKindOf ""STATICWEAPON"") then {" \n
+                         "		deletevehicle (vehicle _x);	" \n
+                         "	};" \n
+                         "	[[_x],true,false] call A3C_ai_shared_fnc_cancelUnitPlot;" \n
+                         "	_x setUnitPos ""AUTO"";" \n
+                         "} foreach _units;" \n
+                         "" \n
+                         "gp1 = creategroup resistance;" \n
+                         "[r1,r2,r3,r4] joinSilent gp1;" \n
+                         "" \n
+                         "gp2 = creategroup resistance;" \n
+                         "[g1,g2,g3,g4] joinSilent gp2;" \n
+                         "" \n
+                         "{" \n
+                         "	{" \n
+                         "		[_x] call restore_loadout" \n
+                         "	} foreach units _x;" \n
+                         "} foreach [gp1,gp2];" \n
+                         "" \n
+                         "[] call init_position;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Assign__Rotate">*/
+                class Assign__Rotate
+                {
+                        name = "Assign__Rotate";
+                        itemno = 11;
+                        init = /*%FSM<STATEINIT""">*/"((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText ""Use your MouseWheel to rotate the formation"";" \n
+                         "_tested = A3C_FORMATION_DIR;" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""Ll_HUD_ROT_IND""];" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "rotated_">*/
+                                class rotated_
+                                {
+                                        itemno = 12;
+                                        priority = 0.000000;
+                                        to="Assign__give_ord";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_tested != A3C_FORMATION_DIR OR WIP_SKIP &&" \n
+                                         "{" \n
+                                         "	o1 kbWasSaid [p1, ""Lesson1"", ""Ll_HUD_ROT_IND"",99999999999]" \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Assign__change_s">*/
+                class Assign__change_s
+                {
+                        name = "Assign__change_s";
+                        itemno = 13;
+                        init = /*%FSM<STATEINIT""">*/"((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText ""Hold down CTRL and use your MouseWheel to change spacing"";" \n
+                         "_tested = A3C_HUD_SPACING;" \n
+                         "" \n
+                         "" \n
+                         "[""Ll_HUD_SPACING""] call fnc_interrupt;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "NO_HUD_UNITS">*/
+                                class NO_HUD_UNITS
+                                {
+                                        itemno = 50;
+                                        priority = 0.000000;
+                                        to="Assign__Select_A";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(count A3C_UI_squadPlacement_units) != 8 && !WIP_SKIP"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "spacing_changed">*/
+                                class spacing_changed
+                                {
+                                        itemno = 14;
+                                        priority = 0.000000;
+                                        to="ASSIGN__OPEN_MENU";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_tested != A3C_HUD_SPACING "/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ASSIGN__CHANGE_FORMATION">*/
+                class ASSIGN__CHANGE_FORMATION
+                {
+                        name = "ASSIGN__CHANGE_FORMATION";
+                        itemno = 15;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "_hintStr = format [""Make sure the menu is open (hold %1) and click on CHANGE FORMATION (Big Icon)"",_fncBind];" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "_tested = A3C_HUD_FORM_ICON;" \n
+                         "" \n
+                         "" \n
+                         "[""Ll_HUD_UI_CHANGEFORM""] call fnc_interrupt;" \n
+                         "" \n
+                         "[] spawn {" \n
+                         "	sleep 1;" \n
+                         "	_ctrl1 = ((finddisplay 100050) displayCtrl 14);" \n
+                         "	[_ctrl1] spawn indicate_icon;" \n
+                         "};"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "NO_HUD_UNITS">*/
+                                class NO_HUD_UNITS
+                                {
+                                        itemno = 78;
+                                        priority = 1.000000;
+                                        to="Assign__Select_A_3";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"((count A3C_UI_squadPlacement_units) != 8) && ({count (_x getVariable ""A3C_PLOT"") > 0} count (units player) == 0)  && {!WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "MENU_CLOSED">*/
+                                class MENU_CLOSED
+                                {
+                                        itemno = 42;
+                                        priority = 0.000000;
+                                        to="ASSIGN__OPEN_MENU_2";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"((count A3C_UI_squadPlacement_units) == 8) &&  {isNull (findDisplay 100050)}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "FORMATION_CHANGED">*/
+                                class FORMATION_CHANGED
+                                {
+                                        itemno = 16;
+                                        priority = 0.000000;
+                                        to="Assign__change_s_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_HUD_FORM == 7 "/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Assign__change_s_1">*/
+                class Assign__change_s_1
+                {
+                        name = "Assign__change_s_1";
+                        itemno = 17;
+                        init = /*%FSM<STATEINIT""">*/"((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText (parseText ""Change stances: The first soldier represents Travel Stance, the second soldier represents the stance he will take upon arrival. <br/><br/>Set the arrival stance to 'crouch' by clicking on the right soldier icon!"");" \n
+                         "" \n
+                         "[""Ll_HUD_UI_CHANGESTANCE""] call fnc_interrupt;" \n
+                         "" \n
+                         "[] spawn {" \n
+                         "" \n
+                         "	_ctrl1 = ((finddisplay 100050) displayCtrl 14);" \n
+                         "	[_ctrl1,[0,1,0,1]] spawn indicate_icon;" \n
+                         "" \n
+                         "	//sleep 2;" \n
+                         "	//_ctrl1 = ((uiNamespace getVariable ""A3C_HUD_MENU_UI"") displayCtrl 11);" \n
+                         "	//[_ctrl1] spawn indicate_icon;" \n
+                         "};"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "stance_changed_">*/
+                                class stance_changed_
+                                {
+                                        itemno = 18;
+                                        priority = 2.000000;
+                                        to="Assign__give_ord_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_HUD_STANCE_MODE_DESTINATION == 1 "/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "NO_HUD_UNITS">*/
+                                class NO_HUD_UNITS
+                                {
+                                        itemno = 52;
+                                        priority = 1.000000;
+                                        to="Assign__Select_A_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"((count A3C_UI_squadPlacement_units) !=8) && ({count (_x getVariable ""A3C_PLOT"") > 0} count (units player) == 0)  && {!WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "MENU_CLOSED">*/
+                                class MENU_CLOSED
+                                {
+                                        itemno = 51;
+                                        priority = 0.000000;
+                                        to="ASSIGN__OPEN_MENU_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"((count A3C_UI_squadPlacement_units) == 8) &&  {isNull (findDisplay 100050)}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Assign__give_ord">*/
+                class Assign__give_ord
+                {
+                        name = "Assign__give_ord";
+                        itemno = 19;
+                        init = /*%FSM<STATEINIT""">*/"_fncBind = [""A3C_KeyFnc_Hud_Order_Reg""] call MCSS_C2TUT_getCBABind;" \n
+                         "" \n
+                         "_hintStr = format " \n
+                         "[" \n
+                         "	""GIVE THE ORDER TO MOVE: %1 OR (CTRL + RMB)""," \n
+                         "	_fncBind" \n
+                         "];" \n
+                         "" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""Ll_HUD_MOVE_IND""];" \n
+                         "" \n
+                         "" \n
+                         "tutorial_icon_type = ""\a3\ui_f\data\Map\GroupIcons\badge_gs.paa"";" \n
+                         "tutorial_icon_color = [1,1,1,1];" \n
+                         "tutorial_icon_pos =[8178.16,10278.7,0.00143051];" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "units_running_">*/
+                                class units_running_
+                                {
+                                        itemno = 20;
+                                        priority = 0.000000;
+                                        to="Assign__Select_A";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(count A3C_UI_squadPlacement_units) == 0 &&" \n
+                                         "{" \n
+                                         "	{count (_x getVariable ""A3C_PLOT"") > 0} count (units player) > 0" \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Assign_snap_mode">*/
+                class Assign_snap_mode
+                {
+                        name = "Assign_snap_mode";
+                        itemno = 21;
+                        init = /*%FSM<STATEINIT""">*/"((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText ""Drag the objects onto a HESCO barrier"";" \n
+                         "" \n
+                         "" \n
+                         "[""Ll_SNAP_HESCO""] call fnc_interrupt;" \n
+                         "" \n
+                         "tutorial_icon_type = ""\a3\ui_f\data\Map\GroupIcons\badge_gs.paa"";" \n
+                         "tutorial_icon_color = [1,1,1,1];" \n
+                         "tutorial_icon_pos = [8211.55,10273.2,0];" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "objects_snapped">*/
+                                class objects_snapped
+                                {
+                                        itemno = 22;
+                                        priority = 1.000000;
+                                        to="Assign__give_ord_3";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_HUD_Snap &&" \n
+                                         "{" \n
+                                         "	""barrier"" in tolower (typeOf A3C_HUD_collider) &&" \n
+                                         "	{" \n
+                                         "		o1 kbWasSaid [p1, ""Lesson1"",""Ll_SNAP_HESCO"",120]" \n
+                                         "	}" \n
+                                         "} "/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "SELECTION_CHANGE">*/
+                                class SELECTION_CHANGE
+                                {
+                                        itemno = 75;
+                                        priority = 0.000000;
+                                        to="ASSIGN_select_TEAM";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"" \n
+                                         "!(count A3C_UI_squadPlacement_units == 4 && {{_x in A3C_UI_squadPlacement_units} count _teamRed == 4})"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ASSIGN__DRAG_ON">*/
+                class ASSIGN__DRAG_ON
+                {
+                        name = "ASSIGN__DRAG_ON";
+                        itemno = 23;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "_hintStr =  ""Drag the objects on the office building"";" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "[""Ll_SNAP_BUILDING_01""] call fnc_interrupt;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "SELECTION_CHANGE">*/
+                                class SELECTION_CHANGE
+                                {
+                                        itemno = 58;
+                                        priority = 0.000000;
+                                        to="ASSIGN_select_TEAM_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(count A3C_UI_squadPlacement_units == 4 && {{_x in A3C_UI_squadPlacement_units} count _teamGreen == 4})"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "objects_in_buidi">*/
+                                class objects_in_buidi
+                                {
+                                        itemno = 24;
+                                        priority = 0.000000;
+                                        to="ASSIGN__SMART_BP";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_UI_squadPlacement_unitGhostsInBuilding && {o1 kbWasSaid [p1, ""Lesson1"",""Ll_SNAP_BUILDING_01"",120]}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "HINT__COMPLETE">*/
+                class HINT__COMPLETE
+                {
+                        name = "HINT__COMPLETE";
+                        itemno = 25;
+                        init = /*%FSM<STATEINIT""">*/"_fncBind = [""A3C_KeyFnc_Hud_Order_Reg""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""TACTICAL MODE LESSON COMPLETE"",_fncBind];" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""Ll_HUD_END""];" \n
+                         "" \n
+                         "setacctime 1;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "sentence_end_">*/
+                                class sentence_end_
+                                {
+                                        itemno = 59;
+                                        priority = 0.000000;
+                                        to="UNLOCK";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"o1 kbWasSaid [p1, ""Lesson1"", ""Ll_HUD_END"",2]"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ASSIGN_select_TEAM">*/
+                class ASSIGN_select_TEAM
+                {
+                        name = "ASSIGN_select_TEAM";
+                        itemno = 27;
+                        init = /*%FSM<STATEINIT""">*/"//-- Assign Task: Select TEAM RED" \n
+                         "_fncBind = [""A3C_KeyFnc_Hud_TeamSel_Red""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""Select TEAM RED in TACTICAL MODE (Press %1)"",_fncBind];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "[""Ll_SEL_RED""] call fnc_interrupt;" \n
+                         "" \n
+                         "" \n
+                         "_teamRed = ((units player) select {(assignedTeam _x) == ""RED""});" \n
+                         "" \n
+                         "[] call reset_hudImage;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "TEAM_RED_SELECTE">*/
+                                class TEAM_RED_SELECTE
+                                {
+                                        itemno = 28;
+                                        priority = 0.000000;
+                                        to="Assign_snap_mode";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(A3C_UI_squadPlacement_units isEqualTo _teamRed) "/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ASSIGN__OPEN_MENU">*/
+                class ASSIGN__OPEN_MENU
+                {
+                        name = "ASSIGN__OPEN_MENU";
+                        itemno = 29;
+                        init = /*%FSM<STATEINIT""">*/"//-- Assign Task: Select TEAM RED" \n
+                         "_fncBind = [""A3C_KeyFnc_HUD_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""Access the UI by HOLDING DOWN %1"",_fncBind];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "[""Ll_HUD_UI_INTRO""] call fnc_interrupt;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "NO_HUD_UNITS">*/
+                                class NO_HUD_UNITS
+                                {
+                                        itemno = 50;
+                                        priority = 0.000000;
+                                        to="Assign__Select_A";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(count A3C_UI_squadPlacement_units) != 8 && !WIP_SKIP"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "MENU_ACTIVE">*/
+                                class MENU_ACTIVE
+                                {
+                                        itemno = 30;
+                                        priority = 0.000000;
+                                        to="HInt__HUD_MENU";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!isNull (findDisplay 100050)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "HInt__HUD_MENU">*/
+                class HInt__HUD_MENU
+                {
+                        name = "HInt__HUD_MENU";
+                        itemno = 31;
+                        init = /*%FSM<STATEINIT""">*/"//-- Assign Task: Selecting Individual Units In HUD" \n
+                         "_time = time;" \n
+                         "" \n
+                         "_hintSTR = format [""While you hold down %1, you can change TACTICAL MODE's settings with your mousebuttons or mousewheel."",_fncBind];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "" \n
+                         "[""Ll_HUD_UI_FNC""] call fnc_interrupt;" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "NO_HUD_UNITS">*/
+                                class NO_HUD_UNITS
+                                {
+                                        itemno = 50;
+                                        priority = 0.000000;
+                                        to="Assign__Select_A";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(count A3C_UI_squadPlacement_units) != 8 && !WIP_SKIP"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "WAIT__">*/
+                                class WAIT__
+                                {
+                                        itemno = 32;
+                                        priority = 0.000000;
+                                        to="ASSIGN__CHANGE_FORMATION";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"o1 kbWasSaid [p1, ""Lesson1"",""Ll_HUD_UI_FNC"",2]"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Assign__give_ord_1">*/
+                class Assign__give_ord_1
+                {
+                        name = "Assign__give_ord_1";
+                        itemno = 33;
+                        init = /*%FSM<STATEINIT""">*/"_fncBind = [""A3C_KeyFnc_Hud_Order_Reg""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""MOVEMENT ORDER: %1 OR (CTRL + RMB)"",_fncBind];" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "[""Ll_HUD_UI_ORDER""] call fnc_interrupt;" \n
+                         "" \n
+                         "" \n
+                         "tutorial_icon_type = ""\a3\ui_f\data\Map\GroupIcons\badge_gs.paa"";" \n
+                         "tutorial_icon_color = [1,1,1,1];" \n
+                         "tutorial_icon_pos = [8177.81,10266.8,0];" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "SEL_CHANGED">*/
+                                class SEL_CHANGED
+                                {
+                                        itemno = 4;
+                                        priority = 0.000000;
+                                        to="wait_3";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(count A3C_UI_squadPlacement_units) != 8"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ASSIGN_select_TEAM_1">*/
+                class ASSIGN_select_TEAM_1
+                {
+                        name = "ASSIGN_select_TEAM_1";
+                        itemno = 35;
+                        init = /*%FSM<STATEINIT""">*/"//-- Assign Task: Select TEAM RED" \n
+                         "_fncBind = [""A3C_KeyFnc_Hud_TeamSel_Green""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""Select TEAM GREEN in TACTICAL MODE (Press %1)"",_fncBind];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "" \n
+                         "[""Ll_SEL_GREEN""] call fnc_interrupt;" \n
+                         "" \n
+                         "_teamGreen = ((units player) select {(assignedTeam _x) == ""GREEN""});" \n
+                         "" \n
+                         "[] call reset_hudImage;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "TEAM_GREEN_SELEC">*/
+                                class TEAM_GREEN_SELEC
+                                {
+                                        itemno = 36;
+                                        priority = 0.000000;
+                                        to="ASSIGN__DRAG_ON";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"count A3C_UI_squadPlacement_units == 4 && {{_x in A3C_UI_squadPlacement_units} count _teamGreen == 4}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Assign__give_ord_2">*/
+                class Assign__give_ord_2
+                {
+                        name = "Assign__give_ord_2";
+                        itemno = 37;
+                        init = /*%FSM<STATEINIT""">*/"_fncBind = [""A3C_KeyFnc_Hud_Order_Reg""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""MOVEMENT ORDER: %1 OR (CTRL + RMB)"",_fncBind];" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "o1 kbTell [p1, ""Lesson1"", ""Ll_SNAP_ROOF_MOVE""];" \n
+                         "" \n
+                         "[] call reset_hudImage;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "SEL_CHANGED">*/
+                                class SEL_CHANGED
+                                {
+                                        itemno = 89;
+                                        priority = 0.000000;
+                                        to="wait_4";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(count A3C_UI_squadPlacement_units == 4 && {{_x in A3C_UI_squadPlacement_units} count _teamGreen == 4})"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait_hint_">*/
+                class wait_hint_
+                {
+                        name = "wait_hint_";
+                        itemno = 38;
+                        init = /*%FSM<STATEINIT""">*/"_fncBind = [""A3C_KeyFnc_Hud_Order_Reg""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""Please wait until the units reach their destination"",_fncBind];" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "[""Ll_SNAP_ROOF_MOVE_WAIT""] call fnc_interrupt;" \n
+                         "" \n
+                         "[] spawn {" \n
+                         "	sleep 2;" \n
+                         "	setacctime 4;" \n
+                         "};" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "units_arrived_">*/
+                                class units_arrived_
+                                {
+                                        itemno = 39;
+                                        priority = 0.000000;
+                                        to="HINT__COMPLETE";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"((count A3C_UI_squadPlacement_units) == 0) && ({count (_x getVariable ""A3C_PLOT"") > 0 && assignedTeam _x == ""GREEN"" } count (units player) == 0)  OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait_1">*/
+                class wait_1
+                {
+                        name = "wait_1";
+                        itemno = 41;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "_time = time;" \n
+                         "" \n
+                         "profilenamespace setvariable [""A3C_HUD_STANCE_MODE_DESTINATION"",2]; " \n
+                         "A3C_HUD_STANCE_MODE_DESTINATION = 2;  " \n
+                         "[1] call A3C_UI_squadPlacement_fnc_setStance;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "_scr = [] spawn {" \n
+                         "	{" \n
+                         "		o1 kbTell [p1, ""Lesson1"", _x];" \n
+                         "		waituntil {o1 kbWasSaid [p1, ""Lesson1"", _x,2]};" \n
+                         "	} foreach [""Ll_HUD_Intro_01"",""Ll_HUD_Intro_02""];" \n
+                         "};" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "wait___">*/
+                                class wait___
+                                {
+                                        itemno = 5;
+                                        priority = 0.000000;
+                                        to="ASSIGN__select_UNIT";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"scriptdone _scr"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Assign__give_ord_3">*/
+                class Assign__give_ord_3
+                {
+                        name = "Assign__give_ord_3";
+                        itemno = 43;
+                        init = /*%FSM<STATEINIT""">*/"_fncBind = [""A3C_KeyFnc_Hud_Order_Reg""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""MOVEMENT ORDER: %1 OR (CTRL + RMB)"",_fncBind];" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "" \n
+                         "[""Ll_SNAP_HESCO_MOVE""] call fnc_interrupt;" \n
+                         "" \n
+                         "[] call reset_hudImage;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "SEL_CHANGED">*/
+                                class SEL_CHANGED
+                                {
+                                        itemno = 9;
+                                        priority = 0.000000;
+                                        to="wait_2";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(count A3C_UI_squadPlacement_units == 4 && {{_x in A3C_UI_squadPlacement_units} count _teamRed == 4})"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "_">*/
+                class _
+                {
+                        name = "_";
+                        itemno = 44;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "SELECTION_CHANGE">*/
+                                class SELECTION_CHANGE
+                                {
+                                        itemno = 75;
+                                        priority = 0.000000;
+                                        to="ASSIGN_select_TEAM";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"" \n
+                                         "!(count A3C_UI_squadPlacement_units == 4 && {{_x in A3C_UI_squadPlacement_units} count _teamRed == 4})"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ASSIGN__SMART_BP">*/
+                class ASSIGN__SMART_BP
+                {
+                        name = "ASSIGN__SMART_BP";
+                        itemno = 45;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "_hintStr = parseText ""Point at different positions on the building."";" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "[""Ll_SNAP_BUILDING_02""] call fnc_interrupt;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "_timer = time;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "objects_in_buidi">*/
+                                class objects_in_buidi
+                                {
+                                        itemno = 46;
+                                        priority = 1.000000;
+                                        to="ASSIGN__DRAG_ON_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > _timer + 3 && " \n
+                                         "{" \n
+                                         "	A3C_UI_squadPlacement_unitGhostsInBuilding && " \n
+                                         "	{" \n
+                                         "		o1 kbWasSaid [p1, ""Lesson1"",""Ll_SNAP_BUILDING_02"",120]" \n
+                                         "	}" \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "SELECTION_CHANGE">*/
+                                class SELECTION_CHANGE
+                                {
+                                        itemno = 58;
+                                        priority = 0.000000;
+                                        to="ASSIGN_select_TEAM_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(count A3C_UI_squadPlacement_units == 4 && {{_x in A3C_UI_squadPlacement_units} count _teamGreen == 4})"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ASSIGN__DRAG_ON_1">*/
+                class ASSIGN__DRAG_ON_1
+                {
+                        name = "ASSIGN__DRAG_ON_1";
+                        itemno = 47;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "_hintStr = parseText ""Look at the tip of the building and position your units on the roof"";" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetStructuredText _hintStr;" \n
+                         "" \n
+                         "[""Ll_SNAP_ROOF""] call fnc_interrupt;" \n
+                         "" \n
+                         "tutorial_icon_type = ""\a3\ui_f\data\Map\GroupIcons\badge_gs.paa"";" \n
+                         "tutorial_icon_color = [1,1,1,1];" \n
+                         "tutorial_icon_pos = [8191.41,10299.1,7.66903];" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "SELECTION_CHANGE">*/
+                                class SELECTION_CHANGE
+                                {
+                                        itemno = 58;
+                                        priority = 0.000000;
+                                        to="ASSIGN_select_TEAM_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(count A3C_UI_squadPlacement_units == 4 && {{_x in A3C_UI_squadPlacement_units} count _teamGreen == 4})"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "objects_in_buidi">*/
+                                class objects_in_buidi
+                                {
+                                        itemno = 48;
+                                        priority = 0.000000;
+                                        to="wait_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_UI_squadPlacement_unitGhostsInBuilding && " \n
+                                         "{" \n
+                                         "	(getPosATL (A3C_UI_squadPlacement_unitGhosts select 0)) select 2 > 6 " \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ASSIGN__OPEN_MENU_1">*/
+                class ASSIGN__OPEN_MENU_1
+                {
+                        name = "ASSIGN__OPEN_MENU_1";
+                        itemno = 53;
+                        init = /*%FSM<STATEINIT""">*/"//-- Assign Task: Select TEAM RED" \n
+                         "_fncBind = [""A3C_KeyFnc_HUD_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""Access the UI by HOLDING DOWN %1"",_fncBind];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "[""Ll_HUD_UI_INTRO""] call fnc_interrupt;" \n
+                         "" \n
+                         "[] call reset_hudImage;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "NO_HUD_UNITS">*/
+                                class NO_HUD_UNITS
+                                {
+                                        itemno = 52;
+                                        priority = 1.000000;
+                                        to="Assign__Select_A_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"((count A3C_UI_squadPlacement_units) !=8) && ({count (_x getVariable ""A3C_PLOT"") > 0} count (units player) == 0)  && {!WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "MENU_ACTIVE">*/
+                                class MENU_ACTIVE
+                                {
+                                        itemno = 54;
+                                        priority = 0.000000;
+                                        to="Assign__change_s_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(!isNull (findDisplay 100050)) OR WIP_SKIP"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Assign__Select_A_1">*/
+                class Assign__Select_A_1
+                {
+                        name = "Assign__Select_A_1";
+                        itemno = 55;
+                        init = /*%FSM<STATEINIT""">*/"AskPlayerToContinue = false; //-- for loop" \n
+                         "TUTORIAL_CONTINUE = 0;" \n
+                         "" \n
+                         "//-- Assign Task: Select All Units In HUD" \n
+                         "_fncBind = [""A3C_KeyFnc_Hud_TeamSel_ALL""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""Select all units in TACTICAL MODE (Press %1)"",_fncBind];" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "//-- create the necessary situation for exercise" \n
+                         "{[_x] call A3C_UI_squadPlacement_fnc_removeUnitGhost} foreach A3C_UI_squadPlacement_units;" \n
+                         "" \n
+                         "[""Ll_HUD_SEL_ALL""] call fnc_interrupt;" \n
+                         "" \n
+                         "[] call reset_hudImage;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "all_units_selected">*/
+                                class all_units_selected
+                                {
+                                        itemno = 56;
+                                        priority = 0.000000;
+                                        to="ASSIGN__OPEN_MENU_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(count A3C_UI_squadPlacement_units) == (count (units group player - [player])) OR WIP_SKIP"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait_2">*/
+                class wait_2
+                {
+                        name = "wait_2";
+                        itemno = 57;
+                        init = /*%FSM<STATEINIT""">*/"_timer = time;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "waited">*/
+                                class waited
+                                {
+                                        itemno = 64;
+                                        priority = 0.000000;
+                                        to="distribute";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > _timer + 1"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait_">*/
+                class wait_
+                {
+                        name = "wait_";
+                        itemno = 60;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "_timer = time"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "lost">*/
+                                class lost
+                                {
+                                        itemno = 62;
+                                        priority = 0.000000;
+                                        to="wait__1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"" \n
+                                         "" \n
+                                         "(!A3C_UI_squadPlacement_unitGhostsInBuilding OR {(getPosATL (A3C_UI_squadPlacement_unitGhosts select 0)) select 2 < 6}) OR WIP_SKIP"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "SELECTION_CHANGE">*/
+                                class SELECTION_CHANGE
+                                {
+                                        itemno = 58;
+                                        priority = 0.000000;
+                                        to="ASSIGN_select_TEAM_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(count A3C_UI_squadPlacement_units == 4 && {{_x in A3C_UI_squadPlacement_units} count _teamGreen == 4})"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "objects_in_buidi">*/
+                                class objects_in_buidi
+                                {
+                                        itemno = 61;
+                                        priority = 0.000000;
+                                        to="Assign__give_ord_2";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(time > _timer + 1) &&" \n
+                                         "" \n
+                                         "(A3C_UI_squadPlacement_unitGhostsInBuilding && {(getPosATL (A3C_UI_squadPlacement_unitGhosts select 0)) select 2 > 6}) OR WIP_SKIP"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait__1">*/
+                class wait__1
+                {
+                        name = "wait__1";
+                        itemno = 63;
+                        init = /*%FSM<STATEINIT""">*/"" \n
+                         "_timer = time" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "objects_in_buidi">*/
+                                class objects_in_buidi
+                                {
+                                        itemno = 48;
+                                        priority = 0.000000;
+                                        to="wait_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"A3C_UI_squadPlacement_unitGhostsInBuilding && " \n
+                                         "{" \n
+                                         "	(getPosATL (A3C_UI_squadPlacement_unitGhosts select 0)) select 2 > 6 " \n
+                                         "}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "UNLOCK">*/
+                class UNLOCK
+                {
+                        name = "UNLOCK";
+                        itemno = 69;
+                        init = /*%FSM<STATEINIT""">*/"_t = time;" \n
+                         "_s = 0;" \n
+                         "" \n
+                         "_unlocked = profileNameSpace getVariable [""A3C_TUTORIAL_LESSONS"",[]];" \n
+                         "if !(""STRATEGIC_1"" in _unlocked) then {" \n
+                         "	_s = 3;" \n
+                         "	_unlocked set [count _unlocked, ""RADIAL_1""];" \n
+                         "" \n
+                         "	_separator = parseText ""<br />___________________________<br />""; " \n
+                         "	_image = '\a3\ui_f\data\Map\GroupIcons\badge_gs.paa'; " \n
+                         "	_txt1 = text ""- RADIAL PT 1 [SQUAD]""; " \n
+                         "	_txt1 setAttributes [""align"", ""left""]; " \n
+                         "	_structuredText = composeText [image _image, lineBreak, lineBreak, text ""LESSON UNLOCKED"", _separator,lineBreak,  _txt1, lineBreak]; " \n
+                         "	hint _structuredText;" \n
+                         "};" \n
+                         "profileNameSpace setVariable [""A3C_TUTORIAL_LESSONS"",_unlocked];"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "sleep">*/
+                                class sleep
+                                {
+                                        itemno = 70;
+                                        priority = 0.000000;
+                                        to="Success_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > _t + _s"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Assign__Select_A_2">*/
+                class Assign__Select_A_2
+                {
+                        name = "Assign__Select_A_2";
+                        itemno = 73;
+                        init = /*%FSM<STATEINIT""">*/"AskPlayerToContinue = false; //-- for loop" \n
+                         "TUTORIAL_CONTINUE = 0;" \n
+                         "" \n
+                         "//-- Assign Task: Select All Units In HUD" \n
+                         "_fncBind = [""A3C_KeyFnc_Hud_TeamSel_ALL""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""Select all units in TACTICAL MODE (Press %1)"",_fncBind];" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "//-- create the necessary situation for exercise" \n
+                         "{[_x] call A3C_UI_squadPlacement_fnc_removeUnitGhost} foreach A3C_UI_squadPlacement_units;" \n
+                         "" \n
+                         "[""Ll_HUD_SEL_ALL""] call fnc_interrupt;" \n
+                         "" \n
+                         "[] call reset_hudImage;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "all_units_selected">*/
+                                class all_units_selected
+                                {
+                                        itemno = 74;
+                                        priority = 0.000000;
+                                        to="Assign__give_ord_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(count A3C_UI_squadPlacement_units) == (count (units group player - [player])) OR WIP_SKIP"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "distribute">*/
+                class distribute
+                {
+                        name = "distribute";
+                        itemno = 77;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "no_units_running">*/
+                                class no_units_running
+                                {
+                                        itemno = 88;
+                                        priority = 2.000000;
+                                        to="_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{count (_x getVariable ""A3C_PLOT"") > 0} count _teamRed == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "units_running_">*/
+                                class units_running_
+                                {
+                                        itemno = 26;
+                                        priority = 2.000000;
+                                        to="__4";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{count (_x getVariable ""A3C_PLOT"") > 0} count _teamRed > 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "ASSIGN__OPEN_MENU_2">*/
+                class ASSIGN__OPEN_MENU_2
+                {
+                        name = "ASSIGN__OPEN_MENU_2";
+                        itemno = 79;
+                        init = /*%FSM<STATEINIT""">*/"//-- Assign Task: Select TEAM RED" \n
+                         "_fncBind = [""A3C_KeyFnc_HUD_MENU""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""Access the UI by HOLDING DOWN %1"",_fncBind];" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "[""Ll_HUD_UI_INTRO""] call fnc_interrupt;" \n
+                         "" \n
+                         "[] call reset_hudImage;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "NO_HUD_UNITS">*/
+                                class NO_HUD_UNITS
+                                {
+                                        itemno = 78;
+                                        priority = 1.000000;
+                                        to="Assign__Select_A_3";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"((count A3C_UI_squadPlacement_units) != 8) && ({count (_x getVariable ""A3C_PLOT"") > 0} count (units player) == 0)  && {!WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "MENU_ACTIVE">*/
+                                class MENU_ACTIVE
+                                {
+                                        itemno = 80;
+                                        priority = 0.000000;
+                                        to="ASSIGN__CHANGE_FORMATION";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(!isNull (findDisplay 100050)) OR {WIP_SKIP}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Assign__Select_A_3">*/
+                class Assign__Select_A_3
+                {
+                        name = "Assign__Select_A_3";
+                        itemno = 81;
+                        init = /*%FSM<STATEINIT""">*/"AskPlayerToContinue = false; //-- for loop" \n
+                         "TUTORIAL_CONTINUE = 0;" \n
+                         "" \n
+                         "//-- Assign Task: Select All Units In HUD" \n
+                         "_fncBind = [""A3C_KeyFnc_Hud_TeamSel_ALL""] call MCSS_C2TUT_getCBABind;" \n
+                         "_hintStr = format [""Select all units in TACTICAL MODE (Press %1)"",_fncBind];" \n
+                         "" \n
+                         "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText _hintStr;" \n
+                         "" \n
+                         "//-- create the necessary situation for exercise" \n
+                         "{[_x] call A3C_UI_squadPlacement_fnc_removeUnitGhost} foreach A3C_UI_squadPlacement_units;" \n
+                         "" \n
+                         "[""Ll_HUD_SEL_ALL""] call fnc_interrupt;" \n
+                         "" \n
+                         "[] call reset_hudImage;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "all_units_selected">*/
+                                class all_units_selected
+                                {
+                                        itemno = 82;
+                                        priority = 0.000000;
+                                        to="ASSIGN__OPEN_MENU_2";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(count A3C_UI_squadPlacement_units) == (count (units group player - [player])) OR WIP_SKIP"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait_3">*/
+                class wait_3
+                {
+                        name = "wait_3";
+                        itemno = 84;
+                        init = /*%FSM<STATEINIT""">*/"_timer = time;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "waited">*/
+                                class waited
+                                {
+                                        itemno = 85;
+                                        priority = 0.000000;
+                                        to="distribute_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > _timer + 1"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "distribute_1">*/
+                class distribute_1
+                {
+                        name = "distribute_1";
+                        itemno = 86;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "no_units_running">*/
+                                class no_units_running
+                                {
+                                        itemno = 87;
+                                        priority = 2.000000;
+                                        to="Assign__Select_A_2";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{count (_x getVariable ""A3C_PLOT"") > 0} count (units player) > 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "units_running_">*/
+                                class units_running_
+                                {
+                                        itemno = 34;
+                                        priority = 2.000000;
+                                        to="__3";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{count (_x getVariable ""A3C_PLOT"") > 0} count (units player) > 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "__2">*/
+                class __2
+                {
+                        name = "__2";
+                        itemno = 91;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "SELECTION_CHANGE">*/
+                                class SELECTION_CHANGE
+                                {
+                                        itemno = 58;
+                                        priority = 0.000000;
+                                        to="ASSIGN_select_TEAM_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"!(count A3C_UI_squadPlacement_units == 4 && {{_x in A3C_UI_squadPlacement_units} count _teamGreen == 4})"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "wait_4">*/
+                class wait_4
+                {
+                        name = "wait_4";
+                        itemno = 92;
+                        init = /*%FSM<STATEINIT""">*/"_timer = time;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "waited">*/
+                                class waited
+                                {
+                                        itemno = 93;
+                                        priority = 0.000000;
+                                        to="distribute_2";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"time > _timer + 1"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "distribute_2">*/
+                class distribute_2
+                {
+                        name = "distribute_2";
+                        itemno = 94;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "no_units_running">*/
+                                class no_units_running
+                                {
+                                        itemno = 95;
+                                        priority = 2.000000;
+                                        to="__2";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{count (_x getVariable ""A3C_PLOT"") > 0} count _teamGreen == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "units_running_">*/
+                                class units_running_
+                                {
+                                        itemno = 90;
+                                        priority = 2.000000;
+                                        to="wait_hint_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{count (_x getVariable ""A3C_PLOT"") > 0} count _teamGreen > 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "__3">*/
+                class __3
+                {
+                        name = "__3";
+                        itemno = 96;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "wait">*/
+                                class wait
+                                {
+                                        itemno = 97;
+                                        priority = 0.000000;
+                                        to="ASSIGN_select_TEAM";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{count (_x getVariable [""A3C_PLOT"",[]]) > 0 } count units player == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "__4">*/
+                class __4
+                {
+                        name = "__4";
+                        itemno = 98;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "wait">*/
+                                class wait
+                                {
+                                        itemno = 99;
+                                        priority = 0.000000;
+                                        to="ASSIGN_select_TEAM_1";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"{count (_x getVariable [""A3C_PLOT"",[]]) > 0 } count units player == 0"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+        };
+        initState="Start_";
+        finalStates[] =
+        {
+                "Success_",
+        };
+};
+/*%FSM</COMPILE>*/

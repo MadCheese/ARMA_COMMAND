@@ -270,7 +270,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 		if (["TR_Unload",_x] call BIS_fnc_instring) then {
 			_funcsCurr = _funcsCurr - [_x];
 		};
-		if (["PlantExplosive_HC",_x] call BIS_fnc_instring) then {
+		if (["plantExplosive",_x] call BIS_fnc_instring) then {
 			_funcsCurr = _funcsCurr - [_x];
 		};
 		if (["ASSEMBLE_UAV",_x] call BIS_fnc_instring) then {

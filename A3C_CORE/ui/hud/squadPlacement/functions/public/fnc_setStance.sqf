@@ -1,6 +1,8 @@
 #include "..\..\script_component.hpp"
 #include "..\..\dialog_defines.hpp"
 
+// A3C_UI_squadPlacement_fnc_setStance
+
 params ["_mode"];
 
 private _data = [];

@@ -59,6 +59,8 @@ if (_doubleClick) then {
 				case (0) : {
 					//-- YES: fetch cargo groups and prompt to place waypoints
 					//-- save unit selection to reestablish later
+					A3C_isIssuingCargoWPs = true;
+					
 					private _cargoGroups = ([A3C_HC_ACTIVEGROUP] call MCSS_fnc_getCargoGroups) select {
 						private _cargoGroup = _x;
 						(waypointPosition [_cargoGroup, currentWaypoint _cargoGroup]) distance2D [0,0,0] == 0
@@ -66,6 +68,8 @@ if (_doubleClick) then {
 
 					[_cargoGroups] spawn {
 						params ["_cargoGroups"];
+
+						
 
 						private _storedSelection = +A3C_SELECTED_UNITS;
 						private _storedCommandMode = A3C_MAP_CommandMode;
@@ -89,7 +93,7 @@ if (_doubleClick) then {
 							};
 
 							if (!visibleMap) exitWith {
-								systemChat "MAP CLOSED";
+								// systemChat "MAP CLOSED";
 								_doExit = true;
 								hintSilent "";
 							};
@@ -104,6 +108,7 @@ if (_doubleClick) then {
 							sleep 2;
 							hintSilent "";
 						};
+						A3C_isIssuingCargoWPs = false;
 					};
 				};
 
@@ -539,6 +544,8 @@ if (_doubleClick) then {
 
 			showCommandingMenu "";
 
+
+
 			{
 				private _weaponClass = _x select 1;
 
@@ -786,75 +793,185 @@ if (_doubleClick) then {
 			{
 				private _testedMagName = _x;
 
-				if (getText (configFile >> "CfgMagazines" >> _testedMagName >> "displayName") == _chargeDisplayName) exitWith {
+				if (
+					getText (
+						configFile >>
+						"CfgMagazines" >>
+						_testedMagName >>
+						"displayName"
+					) == _chargeDisplayName
+				) exitWith {
 					_magName = _testedMagName;
 				};
 			} forEach A3C_REMFIRE_MAGTYPES;
 
+			if (_magName == "") exitWith {
+				if (A3C_DEBUG) then {
+					systemChat format [
+						"place charge aborted: magazine not found | display name %1",
+						_chargeDisplayName
+					];
+				};
+			};
+
+			/*
+				Reset clearing state once before processing the selected groups.
+				There is no need to repeat this entire loop for every group in
+				A3C_RD_UNITS.
+			*/
+			{
+				{
+					_x setVariable [
+						"A3C_CLEARING",
+						false,
+						true
+					];
+				} forEach units _x;
+			} forEach A3C_SELECTED_UNITS;
+
+			/*
+				Capture the object once. Re-reading cursorTarget inside the group
+				loop could theoretically produce different targets for different
+				groups.
+			*/
+			private _cursorObject = if (
+				!isNull cursorTarget &&
+				{
+					{
+						cursorTarget isKindOf _x
+					} count [
+						"CAR",
+						"TANK",
+						"SHIP",
+						"AIR",
+						"MOTORCYCLE"
+					] > 0
+				}
+			) then {
+				cursorTarget
+			} else {
+				objNull
+			};
+
+			[_cursorObject] call A3C_main_fnc_setVehicleVarname;
+
 			{
 				private _selectedGroup = _x;
 
-				_selectedGroup setVariable ["A3C_UNIT_POLYS", [], true];
+				_selectedGroup setVariable [
+					"A3C_UNIT_POLYS",
+					[],
+					true
+				];
 
-				//-- clear all waypoints
-				{
-					{
-						_x setVariable ["A3C_CLEARING", false, true];
-					} forEach units _x;
-				} forEach A3C_SELECTED_UNITS;
+				//-- clear all existing waypoints
+				[
+					_selectedGroup,
+					"ALL"
+				] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 
-				_selectedGroup = A3C_RD_UNITS select 0;
-
-				[_selectedGroup, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
-
+				//-- add the plant-charge waypoint
 				private _plantExplosiveWP = [
 					_selectedGroup,
 					ASLToATL A3C_UI_HUD_3D_TAG_ICON_POS
 				] call A3C_ai_highCommand_fnc_addWaypoint;
 
-				private _cursorObject = if (!isNull cursorTarget && {{cursorTarget isKindOf _x} count ["CAR", "TANK", "SHIP", "AIR", "MOTORCYCLE"] > 0}) then {
-					cursorTarget
-				} else {
-					objNull
-				};
+				private _plantWPIndex = _plantExplosiveWP select 1;
 
-				[_cursorObject] call A3C_main_fnc_setVehicleVarname;
+				/*
+					Waypoint activation statements can run on multiple machines.
+					Only the machine that owns the group starts the action.
 
-				private _plantExplosiveStatements = format [
+					The exact waypoint index is passed rather than resolving
+					currentWaypoint later, after the group may already have
+					advanced to the return waypoint.
+				*/
+				private _plantExplosiveStatement = format [
 					"
-						[[group this,'%1'], A3C_AI_HighCommand_fnc_wpAction_plantExplosive] remoteExec ['bis_fnc_call',0];
+						if (local (group this)) then {
+							[
+								group this,
+								%1,
+								%2
+							] call A3C_AI_HighCommand_fnc_wpAction_plantExplosive;
+						};
 					",
-					_magName
+					_plantWPIndex,
+					str _magName
 				];
 
-				private _plantExplosiveWPStatements = waypointStatements _plantExplosiveWP;
+				private _existingWPStatements =
+					waypointStatements _plantExplosiveWP;
+
+				private _existingCondition =
+					_existingWPStatements select 0;
+
+				private _existingActivation =
+					_existingWPStatements select 1;
+
+				/*
+					Run the plant action first. The existing activation statement
+					from fnc_addWaypoint may modify or remove the completed
+					waypoint.
+				*/
+				private _combinedActivation =
+					_plantExplosiveStatement +
+					_existingActivation;
 
 				_plantExplosiveWP waypointAttachVehicle _cursorObject;
+
 				_plantExplosiveWP setWaypointStatements [
-					_plantExplosiveWPStatements select 0,
-					(_plantExplosiveWPStatements select 1) + _plantExplosiveStatements
+					_existingCondition,
+					_combinedActivation
 				];
 
+				//-- add return waypoint
 				private _returnWP = [
 					_selectedGroup,
 					getPos (vehicle leader _selectedGroup)
 				] call A3C_ai_highCommand_fnc_addWaypoint;
+
+				if (A3C_DEBUG) then {
+					diag_log format [
+						[
+							"[A3C PLACE CHARGE] Issued waypoints",
+							"group: %1",
+							"plant index: %2",
+							"return index: %3",
+							"waypoint count: %4",
+							"existing plant activation: %5"
+						] joinString " | ",
+						_selectedGroup,
+						_plantExplosiveWP select 1,
+						_returnWP select 1,
+						count waypoints _selectedGroup,
+						_existingActivation
+					];
+				};
 			} forEach A3C_RD_UNITS;
 
 			player groupRadio "SentCmdPlaceCharge";
 
-			private _magPic = getText (configFile >> "CfgMagazines" >> _magName >> "picture");
+			private _magPic = getText (
+				configFile >>
+					"CfgMagazines" >>
+					_magName >>
+					"picture"
+			);
 
-			A3C_UI_HUD_3D_TAG_ICON_TYPE = if (_magPic == "") then {
-				A3C_UI_HUD_3D_TAG_ICON_TYPE
-			} else {
-				_magPic
+			if (_magPic != "") then {
+				A3C_UI_HUD_3D_TAG_ICON_TYPE = _magPic;
 			};
 
-			[A3C_UI_HUD_3D_TAG_ICON_POS, "STANDARD"] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
+			[
+				A3C_UI_HUD_3D_TAG_ICON_POS,
+				"STANDARD"
+			] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 
 			with uiNamespace do {
-				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
+				(
+					findDisplay IDD_SELECTION_PROMPT_PANEL
+				) closeDisplay 0;
 			};
 		};
 

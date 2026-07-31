@@ -841,7 +841,7 @@ if (!isNull _hcGroup) then {
 	_wpStatements = (waypointStatements [_hcGroup,_wpID]);
 	_actionCond = _wpStatements select 0;
 	_actionScript = _wpStatements select 1;
-	if (["PlantExplosive_HC",_actionScript] call BIS_fnc_instring) then {
+	if (["plantExplosive",_actionScript] call BIS_fnc_instring) then {
 		_demoIcons = (["DEMO",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 		if (count _demoIcons > 0) then {
 			_hoverIcon = _demoIcons select 0;
