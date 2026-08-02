@@ -20,38 +20,68 @@ private _currentActions = _group getVariable ["A3C_SCRIPTS", []];
 	};
 } forEach _currentActions;
 
-_group setVariable ["A3C_SCRIPTS", _currentActions, true]; //-- guarantee at least the 2 sec of no script so that old one can exit
+_group setVariable [
+	"A3C_SCRIPTS",
+	_currentActions,
+	true
+]; //-- guarantee at least the 2 sec of no script so that old one can exit
 
-private _vehicleConfig = configFile >> "CfgVehicles" >> typeOf _leaderVehicle;
+private _isLeaderVTOL =
+	getNumber (configOf _leaderVehicle >> "vtol") > 0;
+
+private _vehicleConfig =
+	configFile >> "CfgVehicles" >> typeOf _leaderVehicle;
 
 //-- determine landing distance
-private _landingDistance = (getNumber (_vehicleConfig >> "precision")) + 50;
+private _landingDistance =
+	(getNumber (_vehicleConfig >> "precision")) +
+	(if (_isLeaderVTOL) then {
+		100
+	} else {
+		50
+	});
 
 private _shouldContinueApproach = {
-	params ["_vehicle", "_destinationPos", "_landingDistance"];
+	params [
+		"_vehicle",
+		"_destinationPos",
+		"_landingDistance"
+	];
 
-	// !unitReady driver _vehicle || {
-		_vehicle distance2D _destinationPos > (_landingDistance * 2)
-	// }
+	_vehicle distance2D _destinationPos >
+		(_landingDistance * 2)
 };
 
-
-
-private _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
-
+private _groupVehicles =
+	[_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
 //-- default enabling all vehicles
 {
-	_x flyInHeight (_x getVariable ["A3C_FLYINHEIGHT", 75]);
+	_x flyInHeight (
+		_x getVariable [
+			"A3C_FLYINHEIGHT",
+			75
+		]
+	);
+
 	_x limitSpeed 9999;
-} foreach _groupVehicles;
+} forEach _groupVehicles;
 
-
-while {[_leaderVehicle, _pos, _landingDistance] call _shouldContinueApproach} do {
+//-- wait for arrival / approach
+while {
+	[
+		_leaderVehicle,
+		_pos,
+		_landingDistance
+	] call _shouldContinueApproach
+} do {
 	_leader = leader _group;
 	_leaderVehicle = vehicle _leader; //-- has to be refreshed in case of crash
 
 	if !(alive _leaderVehicle && {canMove _leaderVehicle}) exitWith {};
+
+	_isLeaderVTOL =
+		getNumber (configOf _leaderVehicle >> "vtol") > 0;
 
 	private _wpPos = waypointPosition _wp;
 
@@ -61,28 +91,59 @@ while {[_leaderVehicle, _pos, _landingDistance] call _shouldContinueApproach} do
 
 	{
 		_x set [2, 0];
-	} forEach [_pos2D, _wpPos2D];
+	} forEach [
+		_pos2D,
+		_wpPos2D
+	];
 
 	if !(_pos2D isEqualTo _wpPos2D) then {
 		_pos = _wpPos;
 	};
 
-	private _distance2D = _leaderVehicle distance2D _pos;
+	private _distance2D =
+		_leaderVehicle distance2D _pos;
 
-	[
-		_group,
-		_pos,
-		30,     //-- final approach speed in km/h before combat landing logic takes over
-		25,     //-- final approach altitude ATL
-		1600,   //-- slowdown starts here; higher value helps fast VTOLs bleed momentum earlier
-		350     //-- anti-overshoot damping starts here
-	] call A3C_ai_shared_fnc_approachWaypointHelicopter;
+	if (_isLeaderVTOL) then {
+		/*
+			VTOL approach helper is deliberately movement-command-free.
 
-	sleep ([_leaderVehicle, _distance2D] call A3C_ai_highCommand_fnc_getHeliWaypointSleep);
+			The active waypoint remains solely responsible for navigation.
+			The helper only shapes altitude, speed and horizontal momentum.
+		*/
+		[
+			_group,
+			_pos,
+			90,     //-- controlled forward speed near the landing handoff area
+			60,     //-- ATL approach altitude; landAt owns the final descent
+			3000,   //-- VTOL slowdown starts substantially earlier
+			1000    //-- minimum anti-overshoot damping envelope
+		] call A3C_ai_shared_fnc_approachWaypointVTOL;
+	} else {
+		/*
+			Existing helicopter approach behavior remains unchanged for all
+			non-VTOL groups using this waypoint.
+		*/
+		[
+			_group,
+			_pos,
+			30,     //-- final approach speed in km/h before combat landing logic takes over
+			25,     //-- final approach altitude ATL
+			1600,   //-- slowdown starts here
+			350     //-- anti-overshoot damping starts here
+		] call A3C_ai_shared_fnc_approachWaypointHelicopter;
+	};
+
+	sleep (
+		[
+			_leaderVehicle,
+			_distance2D
+		] call A3C_ai_highCommand_fnc_getHeliWaypointSleep
+	);
 };
 
 //-- refresh _groupVehicles
-_groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
+_groupVehicles =
+	[_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
 	_x limitSpeed 9999;
@@ -92,27 +153,43 @@ _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
 private _exitCondition = {};
 
 {
-	_x params ["_conditionType", "_conditionValue"];
+	_x params [
+		"_conditionType",
+		"_conditionValue"
+	];
 
 	_exitCondition = switch (toUpper _conditionType) do {
 		case "TIMEOUT": {
-			private _timeAtCompletion = time + _conditionValue;
-			compile format ["time > %1", _timeAtCompletion]
+			private _timeAtCompletion =
+				time + _conditionValue;
+
+			compile format [
+				"time > %1",
+				_timeAtCompletion
+			]
 		};
 
 		case "GOCODE": {
-			compile format ["A3C_GoCode_Activate_%1", _conditionValue]
+			compile format [
+				"A3C_GoCode_Activate_%1",
+				_conditionValue
+			]
 		};
 
 		case "DAYTIME": {
-			private _conditionParts = _conditionValue splitString ":";
+			private _conditionParts =
+				_conditionValue splitString ":";
+
 			private _checkParams = [];
 
 			{
 				_checkParams pushBack parseNumber _x;
 			} forEach _conditionParts;
 
-			compile format ["%1 call A3C_main_fnc_isDaytimeCompleted", _checkParams]
+			compile format [
+				"%1 call A3C_main_fnc_isDaytimeCompleted",
+				_checkParams
+			]
 		};
 
 		default {
@@ -133,19 +210,33 @@ private _exitCondition = {};
 				_postCondition
 			];
 
-			_wp setWaypointPosition [_pos, 0];
+			_wp setWaypointPosition [
+				_pos,
+				0
+			];
 
-			private _statements = waypointStatements _wp;
-			_statements set [0, "true"];
+			private _statements =
+				waypointStatements _wp;
+
+			_statements set [
+				0,
+				"true"
+			];
 
 			_wp setWaypointStatements _statements;
 		};
 	};
-} forEach [_preCondition, _postCondition];
+} forEach [
+	_preCondition,
+	_postCondition
+];
 
 private _vehiclesLanding = [];
 
-private _landingSpacing = _group getVariable ["A3C_HELI_LANDING_SPACING", 30];
+private _landingSpacing = _group getVariable [
+	"A3C_HELI_LANDING_SPACING",
+	30
+];
 
 private _heliLandingSlots = [
 	_group,
@@ -155,7 +246,11 @@ private _heliLandingSlots = [
 ] call A3C_ai_shared_fnc_getHeliGroupLandingSlots;
 
 private _fnc_getHeliLandingPosition = {
-	params ["_vehicle", "_landingSlots", "_fallbackPos"];
+	params [
+		"_vehicle",
+		"_landingSlots",
+		"_fallbackPos"
+	];
 
 	private _slot = _landingSlots select {
 		(_x select 0) == _vehicle
@@ -168,9 +263,23 @@ private _fnc_getHeliLandingPosition = {
 	+((_slot select 0) select 1)
 };
 
-private _groupHelicopters = ([_group] call A3C_main_fnc_getGroupDrivenVehicles) select {
+private _currentDrivenVehicles =
+	[_group] call A3C_main_fnc_getGroupDrivenVehicles;
+
+private _groupHelicopters = _currentDrivenVehicles select {
 	_x isKindOf "HELICOPTER"
 };
+
+private _groupVTOLs = _currentDrivenVehicles select {
+	getNumber (configOf _x >> "vtol") > 0
+};
+
+private _groupLandingAircraft =
+	+_groupHelicopters;
+
+{
+	_groupLandingAircraft pushBackUnique _x;
+} forEach _groupVTOLs;
 
 {
 	private _vehicle = _x;
@@ -181,42 +290,127 @@ private _groupHelicopters = ([_group] call A3C_main_fnc_getGroupDrivenVehicles) 
 		_pos
 	] call _fnc_getHeliLandingPosition;
 
-	_vehicle landAt [_landingPos, "Get Out", 99999];
+	_vehicle landAt [
+		_landingPos,
+		"Get Out",
+		99999
+	];
 
 	if !(_vehicle in _vehiclesLanding) then {
 		_vehiclesLanding pushBack _vehicle;
 	};
-} forEach _groupHelicopters;
+} forEach _groupLandingAircraft;
 
-_vehiclesLanding = _vehiclesLanding arrayIntersect _groupHelicopters;
+_vehiclesLanding =
+	_vehiclesLanding arrayIntersect _groupLandingAircraft;
 
-
-
+//-- wait for post-condition
 waitUntil {
-	
 	sleep 0.1;
 	[] call _exitCondition
 };
 
-private _isFinalWP = [_group] call A3C_main_fnc_isGroupOnFinalWP;
+private _isFinalWP =
+	[_group] call A3C_main_fnc_isGroupOnFinalWP;
 
 //-- refresh _groupVehicles
-_groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
+_groupVehicles =
+	[_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
 	_x limitSpeed 9999;
 } forEach _groupVehicles; //-- release slowdown after combat landing handling
 
+private _currentGroupVTOLs = _groupVehicles select {
+	getNumber (configOf _x >> "vtol") > 0
+};
+
 if !(_isFinalWP) then {
+	/*
+		Release the landing state for all existing landing-capable aircraft.
+
+		This is the original combat-landing behavior and remains unchanged for
+		helicopters.
+	*/
 	{
 		_x land "NONE";
 	} forEach _groupVehicles;
+
+	/*
+		Restore VTOL cruise settings explicitly.
+
+		The engine-off/on workaround is intentionally not used because current
+		testing shows that it is unnecessary.
+	*/
+	{
+		private _vehicle = _x;
+
+		_vehicle limitSpeed 9999;
+
+		_vehicle flyInHeight (
+			_vehicle getVariable [
+				"A3C_FLYINHEIGHT",
+				75
+			]
+		);
+	} forEach _currentGroupVTOLs;
+
+	/*
+		Apply the same VTOL-only departure handoff used by the working
+		LoadVehicleInVehicle waypoint.
+
+		This is only issued when another waypoint exists. Helicopter drivers
+		receive no additional movement command.
+	*/
+	if !(_currentGroupVTOLs isEqualTo []) then {
+		private _groupDrivers = [
+			_group
+		] call A3C_main_fnc_getGroupDrivers;
+
+		private _currentWP =
+			currentWaypoint _group;
+
+		if (
+			{
+				(_x select 1) > _currentWP
+			} count (waypoints _group) > 0
+		) then {
+			private _nextWpPos = waypointPosition [
+				_group,
+				_currentWP + 1
+			];
+
+			{
+				private _driver = _x;
+				private _vehicle = vehicle _driver;
+
+				if (_vehicle in _currentGroupVTOLs) then {
+					[
+						_driver,
+						_nextWpPos
+					] call A3C_ai_shared_fnc_doMove;
+				};
+			} forEach _groupDrivers;
+		};
+	};
 };
 
-[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
+/*
+	Preserve the established movement reinitialization for helicopter and other
+	non-VTOL groups.
 
-[] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls", 0]; //-- check gocodes and assign color
+	The working VTOL implementation currently runs without this final call, so
+	it is deliberately skipped whenever the group contains a VTOL.
+*/
+if (_currentGroupVTOLs isEqualTo []) then {
+	[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
+} else {
+	// [_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
+};
 
-
+[] remoteExec [
+	"A3C_ui_shared_fnc_toggleGocodeCtrls",
+	0
+]; //-- check gocodes and assign color
 
 true
