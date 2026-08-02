@@ -19,6 +19,7 @@ A3C_PREP(actionSwitchVehicleLights);
 A3C_PREP(actionUnstuck);
 A3C_PREP(approachWaypointHelicopter);
 A3C_PREP(approachWaypointRegular);
+A3C_PREP(approachWaypointVTOL);
 A3C_PREP(actionWeaponAttachmentSet);
 A3C_PREP(actionWeaponAttachmentToggle);
 A3C_PREP(addEventhandlerFired);

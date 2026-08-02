@@ -30,9 +30,9 @@ private _landingDistance = (getNumber (_vehicleConfig >> "precision")) + 50;
 private _shouldContinueApproach = {
 	params ["_vehicle", "_destinationPos", "_landingDistance"];
 
-	!unitReady driver _vehicle || {
+	// !unitReady driver _vehicle || {
 		_vehicle distance2D _destinationPos > (_landingDistance * 2)
-	}
+	// }
 };
 
 

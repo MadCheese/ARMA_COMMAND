@@ -160,6 +160,6 @@ A3C_PREP(syncWaypoint);
 A3C_PREP(reInitGroupMovement);
 A3C_PREP(wpAction_landingFull);
 A3C_PREP(wpActionLandingTick);
-A3C_PREP(wpAction_plantExplosive);
+
 
 

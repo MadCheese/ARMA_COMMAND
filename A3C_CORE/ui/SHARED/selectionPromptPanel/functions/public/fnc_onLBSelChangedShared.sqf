@@ -225,11 +225,15 @@ if (_doubleClick) then {
 
 		case ("DETONATE_SELECTED_CHARGE_SHARED") : {
 			player customRadio [A3C_CUSTOMRADIO_ID, "SentCmdDetonate"];
+			private _remfireUnits = +A3C_UI_RADIAL_Current_Remfire_Units;
 
 			if (_listBoxCtrl lbText _selectedIndex == "DETONATE ALL CHARGES") then {
 				//-- detonate all charges at once
 
-				[] spawn {
+				[_remfireUnits] spawn {
+					params ["_remfireUnits"];
+
+					
 					sleep 1;
 
 					{
@@ -254,13 +258,14 @@ if (_doubleClick) then {
 						];
 
 						_charge setDamage 1;
-					} forEach A3C_UI_RADIAL_Current_Remfire_Units;
+					} forEach _remfireUnits;
 
 					A3C_UI_RADIAL_Current_Remfire_Units = [];
 				};
 			} else {
 				//-- detonate individual charge
-				private _selectedChargeTarget = A3C_UI_RADIAL_Current_Remfire_Units select (_selectedIndex - 1);
+
+				private _selectedChargeTarget = _remfireUnits select (_selectedIndex - 1);
 
 				A3C_UI_RADIAL_Current_Remfire_Units = A3C_UI_RADIAL_Current_Remfire_Units - [_selectedChargeTarget];
 
@@ -855,6 +860,7 @@ if (_doubleClick) then {
 
 			[_cursorObject] call A3C_main_fnc_setVehicleVarname;
 
+
 			{
 				private _selectedGroup = _x;
 
@@ -876,54 +882,17 @@ if (_doubleClick) then {
 					ASLToATL A3C_UI_HUD_3D_TAG_ICON_POS
 				] call A3C_ai_highCommand_fnc_addWaypoint;
 
-				private _plantWPIndex = _plantExplosiveWP select 1;
-
-				/*
-					Waypoint activation statements can run on multiple machines.
-					Only the machine that owns the group starts the action.
-
-					The exact waypoint index is passed rather than resolving
-					currentWaypoint later, after the group may already have
-					advanced to the return waypoint.
-				*/
-				private _plantExplosiveStatement = format [
-					"
-						if (local (group this)) then {
-							[
-								group this,
-								%1,
-								%2
-							] call A3C_AI_HighCommand_fnc_wpAction_plantExplosive;
-						};
-					",
-					_plantWPIndex,
-					str _magName
+				private _waypointScript = format [
+					"A3C_CORE\waypointScripts\wpScript_plantExplosives.sqf ['%1',%2,%3,%4]",
+					getPlayerUID player,
+					["ARRIVAL", 0],
+					["NONE", "NONE"],
+					[_magName]
 				];
 
-				private _existingWPStatements =
-					waypointStatements _plantExplosiveWP;
-
-				private _existingCondition =
-					_existingWPStatements select 0;
-
-				private _existingActivation =
-					_existingWPStatements select 1;
-
-				/*
-					Run the plant action first. The existing activation statement
-					from fnc_addWaypoint may modify or remove the completed
-					waypoint.
-				*/
-				private _combinedActivation =
-					_plantExplosiveStatement +
-					_existingActivation;
-
+				_plantExplosiveWP setWaypointType "Scripted";
+				_plantExplosiveWP setWaypointScript _waypointScript;
 				_plantExplosiveWP waypointAttachVehicle _cursorObject;
-
-				_plantExplosiveWP setWaypointStatements [
-					_existingCondition,
-					_combinedActivation
-				];
 
 				//-- add return waypoint
 				private _returnWP = [
@@ -989,23 +958,21 @@ if (_doubleClick) then {
 
 			A3C_HC_DETONATION_BOOL = true;
 
-			[A3C_HC_ACTIVEGROUP, A3C_HC_ACTIVE_IND] waypointAttachVehicle objNull;
+			private _plantExplosiveWP = +([A3C_HC_ACTIVEGROUP, A3C_HC_ACTIVE_IND]);
 
-			//-- step 1: set deto on waypoint (no target)
-			private _statements = waypointStatements [A3C_HC_ACTIVEGROUP, A3C_HC_ACTIVE_IND];
+			
+			private _waypointScript = format [
+					"A3C_CORE\waypointScripts\wpScript_plantExplosives.sqf ['%1',%2,%3,%4]",
+					getPlayerUID player,
+					["ARRIVAL", 0],
+					["NONE", "NONE"],
+					[_magName]
+				];
 
-			_statements = [
-				_statements select 0,
-				format [
-					"
-						[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint;
-						[[group this,'%1'], A3C_AI_HighCommand_fnc_wpAction_plantExplosive] remoteExec ['bis_fnc_call',0];
-					",
-					_magName
-				]
-			];
-
-			[A3C_HC_ACTIVEGROUP, A3C_HC_ACTIVE_IND] setWaypointStatements _statements;
+			_plantExplosiveWP setWaypointType "Scripted";
+			_plantExplosiveWP setWaypointScript _waypointScript;
+			//-- vehicle/waypoint attachment happens via icon click so we predefine it as objNull
+			_plantExplosiveWP waypointAttachVehicle objNull;
 
 			_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
 		};

@@ -1,15 +1,8 @@
-//-- REQUIRED PARAMETERS. ADD CUSTOM PARAMETERS AS YOU WISH.
-params
-[
-	"_group",
-	"_pos",
-	"_target",
-	"_callerUID",
-	"_preCondition", //-- _preCondition: ARRAY >> example: ["GOCODE","A"]
-	"_postCondition" //-- _postCondition: ARRAY >> example: ["GOCODE","A"]
-]; 
+params ["_group","_pos","_target","_callerUID","_preCondition", "_postCondition", "_explosivesData"];
 
 if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
+
+_explosivesData params ["_chargeType"];
 
 private _wpIndex = currentWaypoint _group;
 private _wp = [_group,_wpIndex];
@@ -21,13 +14,13 @@ private _precision = (getNumber (configfile >> "CfgVehicles" >> (typeOf _leaderV
 
 //-- WAIT FOR ARRIVAL
 while {_leaderVic distance2d _pos >= _precision} do { //--_precision
-	_wPos = waypointPosition _wp;
+	private _wPos = waypointPosition _wp;
 	{_x set [2,0]} foreach [_pos, _wPos];
 	if !(_pos isEqualTo _wPos) then {
 		_pos = _wPos;
 	};
 	[_group,_pos] call A3C_ai_shared_fnc_approachWaypointRegular;
-	sleep 5;
+	sleep 1;
 };
 
 //-- CONDITIONS: Step 1
@@ -52,6 +45,7 @@ private _exitCondition = {{true}};
 		};
 		default {{true}};
 	};
+	
 
 	//-- pre-condition other than 'arrival' will wait and re-trigger waypoint script
 	//-- when script is re-triggered, condition is satisfied and script continues
@@ -94,6 +88,37 @@ private _exitCondition = {{true}};
 
 waitUntil {[] call _exitCondition};
 
+//-- NOTE: _attachToObject should be fetched after arrival because it might be objNull as waypointscript starts
+private _attachToObject = waypointAttachedVehicle _wp;
+
+// systemchat str _chargeType;
+
+//-- get unit with type of charge
+private _detoUnits = (
+	[units _group] call A3C_ai_shared_fnc_getUnitsWithExplosives
+) select {_chargeType in (magazines _x)};
+
+
+
+//-- no units with _chargeType >> exit
+if (_detoUnits isEqualTo []) exitWith {true};
+
+//-- choose unit to place charge
+private _plantUnit = _detoUnits select 0;
+
+//-- action: place charge
+private _actionScript = [
+	_plantUnit,
+	_pos,
+	[
+		_attachToObject,
+		_chargeType
+	]
+] spawn A3C_AI_Shared_fnc_wpActionPlantExplosive;
+
+waituntil {scriptDone _actionScript}; //-- << maybe better to remove this so waypoint completes? team units are frozen anyways
+
 //-- SCRIPT END
 [] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls",0]; //-- check gocodes and assign color
+
 true;

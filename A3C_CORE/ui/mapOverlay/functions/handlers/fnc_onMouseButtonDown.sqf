@@ -129,6 +129,8 @@ if (A3C_HC_DETONATION_BOOL) exitWith {
 			_hoverVic = missionNameSpace getVariable ([_hoverVic] call A3C_main_fnc_setVehicleVarname);
 		};
 		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] waypointAttachVehicle _hoverVic;
+		private _newPos = (position _hoverVic) getPos [10, _hoverVic getDir (leader A3C_HC_ACTIVEGROUP)];
+		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] setWaypointPosition [_newPos,0];
 	};
 	A3C_HC_DETONATION_BOOL = false;
 };
