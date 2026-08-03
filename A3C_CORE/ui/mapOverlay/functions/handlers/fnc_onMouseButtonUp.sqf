@@ -838,15 +838,12 @@ if (!isNull _hcGroup) then {
 			};
 		};
 	};
-	_wpStatements = (waypointStatements [_hcGroup,_wpID]);
-	_actionCond = _wpStatements select 0;
-	_actionScript = _wpStatements select 1;
-	if (["plantExplosive",_actionScript] call BIS_fnc_instring) then {
+
+	if ("plantExplosives" in (waypointScript [_hcGroup,_wpID])) then {
 		_demoIcons = (["DEMO",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 		if (count _demoIcons > 0) then {
 			_hoverIcon = _demoIcons select 0;
 			_hoverVic = _hoverIcon select 0;
-			_actionScript = _actionScript splitString ";";
 			if ((vehicleVarName _hoverVic) == "") then {
 				_hoverVic = missionNameSpace getVariable ([_hoverVic] call A3C_main_fnc_setVehicleVarname);
 			};

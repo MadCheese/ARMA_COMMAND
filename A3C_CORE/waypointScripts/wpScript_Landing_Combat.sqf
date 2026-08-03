@@ -266,21 +266,27 @@ private _fnc_getHeliLandingPosition = {
 private _currentDrivenVehicles =
 	[_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
-private _groupHelicopters = _currentDrivenVehicles select {
-	_x isKindOf "HELICOPTER"
-};
+/*
+	Separate helicopters and VTOLs so that their landing states can be
+	maintained independently.
 
+	VTOL classification takes priority in case a modded VTOL also inherits
+	from a helicopter base class.
+*/
 private _groupVTOLs = _currentDrivenVehicles select {
 	getNumber (configOf _x >> "vtol") > 0
 };
 
-private _groupLandingAircraft =
-	+_groupHelicopters;
+private _groupHelicopters = _currentDrivenVehicles select {
+	_x isKindOf "HELICOPTER" &&
+	{!(_x in _groupVTOLs)}
+};
 
-{
-	_groupLandingAircraft pushBackUnique _x;
-} forEach _groupVTOLs;
+/*
+	Existing helicopter landing behavior remains unchanged.
 
+	Helicopters receive the established one-shot Get Out landAt command.
+*/
 {
 	private _vehicle = _x;
 
@@ -299,7 +305,41 @@ private _groupLandingAircraft =
 	if !(_vehicle in _vehiclesLanding) then {
 		_vehiclesLanding pushBack _vehicle;
 	};
-} forEach _groupLandingAircraft;
+} forEach _groupHelicopters;
+
+/*
+	VTOLs receive the same initial Get Out landAt command.
+
+	The landing-slot helper may not return a VTOL slot. In that case,
+	_fnc_getHeliLandingPosition returns the original waypoint position as the
+	fallback.
+*/
+{
+	private _vehicle = _x;
+
+	private _landingPos = [
+		_vehicle,
+		_heliLandingSlots,
+		_pos
+	] call _fnc_getHeliLandingPosition;
+
+	_vehicle landAt [
+		_landingPos,
+		"Get Out",
+		99999
+	];
+
+	if !(_vehicle in _vehiclesLanding) then {
+		_vehiclesLanding pushBack _vehicle;
+	};
+} forEach _groupVTOLs;
+
+private _groupLandingAircraft =
+	+_groupHelicopters;
+
+{
+	_groupLandingAircraft pushBackUnique _x;
+} forEach _groupVTOLs;
 
 _vehiclesLanding =
 	_vehiclesLanding arrayIntersect _groupLandingAircraft;
@@ -307,6 +347,27 @@ _vehiclesLanding =
 //-- wait for post-condition
 waitUntil {
 	sleep 0.1;
+
+	/*
+		A VTOL's Get Out landAt state does not reliably keep it grounded while
+		the scripted combat-landing waypoint remains active.
+
+		Reassert the proven normal Get Out landing command after touchdown and
+		for the entire duration of the post-condition wait. Helicopter behavior
+		remains untouched.
+	*/
+	{
+		private _vehicle = _x;
+
+		if (
+			alive _vehicle &&
+			{canMove _vehicle} &&
+			{isTouchingGround _vehicle}
+		) then {
+			_vehicle land "Get Out";
+		};
+	} forEach _groupVTOLs;
+
 	[] call _exitCondition
 };
 

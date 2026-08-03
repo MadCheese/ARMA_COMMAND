@@ -270,9 +270,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 		if (["TR_Unload",_x] call BIS_fnc_instring) then {
 			_funcsCurr = _funcsCurr - [_x];
 		};
-		if (["plantExplosive",_x] call BIS_fnc_instring) then {
-			_funcsCurr = _funcsCurr - [_x];
-		};
+		
 		if (["ASSEMBLE_UAV",_x] call BIS_fnc_instring) then {
 			_funcsCurr = _funcsCurr - [_x];
 		};
@@ -284,6 +282,7 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 		//systemChat str _x;
 
 	} foreach _funcsCurr;
+
 	switch (A3C_HC_EDIT_ACTION) do {
 		case ("CLEAR BUILDING") : {
 			_wpScript = format 

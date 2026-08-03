@@ -892,12 +892,13 @@ private _dragPathTargetUnit = if (typeName A3C_SQ_CLICKED_UNIT == "GROUP") then 
 							case (["plantExplosive",_waypointScriptCode] call BIS_fnc_instring) : {
 								_waypointIconSize = 20;
 								_waypointIconPath = "a3c_ui\markers\A3C_Marker_Detonation.paa";
-								if (["objnull",_waypointScriptCode] call BIS_fnc_instring) then {
-									_sharedDrawColor = [1,1,1,_groupOpacity];
-								} else {
-									_sharedDrawColor = [0.99,0.42,0.4,_groupOpacity];
+								_sharedDrawColor = [1,1,1,_groupOpacity];
+								// if (["objnull",_waypointScriptCode] call BIS_fnc_instring) then {
+								// 	_sharedDrawColor = [1,1,1,_groupOpacity];
+								// } else {
+								// 	_sharedDrawColor = [0.99,0.42,0.4,_groupOpacity];
 
-								};
+								// };
 							};
 							case (["ASSEMBLE_UAV",_waypointScriptCode] call BIS_fnc_instring) : {
 								_waypointIconSize = 20;

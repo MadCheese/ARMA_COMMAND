@@ -61,8 +61,11 @@ if (
 			"SLING DROP"
 		]
 	) then {
+		private _isLeaderVTOL = getNumber (configOf _leaderVehicle >> "vtol") > 0;
+
 		_landingTypes = if (
-			_leaderVehicle isKindOf "HELICOPTER"
+			_leaderVehicle isKindOf "HELICOPTER" ||
+			{_isLeaderVTOL}
 		) then {
 			[
 				"FIRE SUPPORT",
