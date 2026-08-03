@@ -3,14 +3,15 @@
 // A3C_ui_shared_fnc_activateGoCode
 
 /*
-	Activates a go-code for 2.1 seconds.
+	Activates a side-qualified go-code for 2.1 seconds.
 
 	Used by the radial menu and map overlay. The corresponding map-overlay
 	controls are hidden when the map overlay is open.
 */
 
 params [
-	["_code", "", [""]]
+	["_code", "", [""]],
+	["_activationSide", side (group player), [west]]
 ];
 
 _code = toUpper _code;
@@ -19,6 +20,19 @@ if !(_code in ["A", "B", "C", "D"]) exitWith {
 	diag_log format [
 		"A3C_ui_shared_fnc_activateGoCode: Invalid go-code: %1",
 		_code
+	];
+};
+
+private _activationVariableName = [
+	_code,
+	_activationSide
+] call A3C_main_fnc_getGoCodeActivationVariableName;
+
+if (_activationVariableName == "") exitWith {
+	diag_log format [
+		"A3C_ui_shared_fnc_activateGoCode: Invalid activation side for go-code %1: %2",
+		_code,
+		_activationSide
 	];
 };
 
@@ -76,16 +90,12 @@ private _hasTerminal = (
 } > -1;
 
 /*
-	Dynamic missionNamespace access replaces the previous compile/format block.
+	The activation variable is qualified by both the GoCode and the
+	activating player's side.
 
-	For example, code "A" resolves to:
-	A3C_GoCode_Activate_A
+	For example, code "A" activated by a West player resolves to:
+	A3C_GoCode_Activate_A_WEST
 */
-private _activationVariableName = format [
-	"A3C_GoCode_Activate_%1",
-	_code
-];
-
 [
 	_activationVariableName,
 	_hasTerminal
@@ -121,11 +131,6 @@ private _activationVariableName = format [
 		has therefore been removed.
 	*/
 	publicVariable _activationVariableName;
-};
-
-if !(isNil "A3C_GOCODES_HC") then {
-	A3C_GOCODES_HC = A3C_GOCODES_HC - [_code];
-	publicVariable "A3C_GOCODES_HC";
 };
 
 [] spawn {

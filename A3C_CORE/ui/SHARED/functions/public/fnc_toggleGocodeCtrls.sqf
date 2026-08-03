@@ -5,10 +5,12 @@
 // A3C_ui_shared_fnc_toggleGocodeCtrls
 
 /*
-	Refreshes the availability and placement of go-code controls.
+	Refreshes the availability and placement of GoCode controls.
+
+	Only plans belonging to the player's exact side are considered.
 
 	Squad plots and high-command waypoints are scanned once. The resulting
-	availability state is then applied to go-codes A through D.
+	availability state is then applied to GoCodes A through D.
 */
 
 if (isDedicated) exitWith {};
@@ -24,6 +26,7 @@ private _display = findDisplay _displayId;
 if (isNull _display) exitWith {};
 
 private _isRadial = _displayId == IDD_RADIAL_MENU;
+private _playerSide = side (group player);
 
 private _goCodes = [
 	"A",
@@ -42,7 +45,7 @@ private _availableGoCodes = createHashMap;
 } forEach _goCodes;
 
 /*
-	Scan the player's squad plots.
+	Scan squad plots belonging to the player's exact side.
 
 	A3C_PLOT:
 		Only the current and future plot entries are relevant.
@@ -95,10 +98,17 @@ private _fnc_scanPlot = {
 	};
 };
 
-private _groupUnits = profileNamespace getVariable [
-	"A3C_GROUPUNITS",
-	[]
-];
+private _groupUnits = (
+	profileNamespace getVariable [
+		"A3C_GROUPUNITS",
+		[]
+	]
+) select {
+	!isNull _x
+	&& {
+		side (group _x) isEqualTo _playerSide
+	}
+};
 
 {
 	private _unit = _x;
@@ -128,7 +138,8 @@ private _groupUnits = profileNamespace getVariable [
 } forEach _groupUnits;
 
 /*
-	Scan current and future high-command waypoints.
+	Scan current and future high-command waypoints belonging to the
+	player's exact side.
 
 	The legacy function searched for:
 	- "GoCode"
@@ -136,10 +147,17 @@ private _groupUnits = profileNamespace getVariable [
 
 	Both matching forms are preserved.
 */
-private _highCommandGroups = missionNamespace getVariable [
-	"A3C_HC_allGroupsClient_Current",
-	[]
-];
+private _highCommandGroups = (
+	missionNamespace getVariable [
+		"A3C_HC_allGroupsClient_Current",
+		[]
+	]
+) select {
+	!isNull _x
+	&& {
+		side _x isEqualTo _playerSide
+	}
+};
 
 {
 	private _group = _x;

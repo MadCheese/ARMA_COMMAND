@@ -66,21 +66,28 @@ if (_actionType == "SYNCBOARD_VIV") then {
 
 private _specialCondition = {};
 private _insCondition = "";
+private _goCodeActivationVariableName = "";
 
 _condition params ["_conditionType", "_conditionValue"];
 
-if (_conditionType == "GoCode") then {
-	A3C_GOCODES_HC pushBackUnique _conditionValue;
-	publicVariable "A3C_GOCODES_HC";
-	[] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls", 0];
+if (toUpper _conditionType == "GOCODE") then {
+	_goCodeActivationVariableName = [
+		_conditionValue,
+		side _group
+	] call A3C_main_fnc_getGoCodeActivationVariableName;
 
-	_insCondition = format ["A3C_GoCode_Activate_%1", _conditionValue];
+	_insCondition = _goCodeActivationVariableName;
+
+	[] remoteExec [
+		"A3C_ui_shared_fnc_toggleGocodeCtrls",
+		0
+	];
 } else {
 	if (_conditionType == "NONE") then {
 		_insCondition = "";
 		_specialCondition = {true};
 	} else {
-		_insCondition = "time > time"; // can never return true on purpose, just needs to be a valid condition for the icon to be drawn // why not just use "false"?
+		_insCondition = "time > time"; // can never return true on purpose
 	};
 };
 
@@ -116,25 +123,40 @@ if (_actionType == "RAPPELL") then {
 if (_actionType in ["SUPPRESSION", "AMBUSH"]) then {
 	_condition params ["_conditionType", "_conditionValue"];
 
-	_specialCondition = switch (_conditionType) do {
-		case "GOCODE": {
-			compile format ["%1", _insCondition]
-		};
+	/*
+		GoCode conditions are handled directly by the dedicated "GOCODE"
+		branch in the spawned completion monitor below.
 
-		case "TIMEOUT": {
-			private _timeAtCompletion = time + _conditionValue;
-			compile format ["time > %1", _timeAtCompletion]
-		};
+		No _specialCondition closure is required for GoCodes.
+	*/
+	if (toUpper _conditionType != "GOCODE") then {
+		_specialCondition = switch (toUpper _conditionType) do {
+			case "TIMEOUT": {
+				private _timeAtCompletion = time + _conditionValue;
 
-		case "DAYTIME": {
-			private _timeParts = _conditionValue splitString ":";
-			private _checkParams = [];
+				compile format [
+					"time > %1",
+					_timeAtCompletion
+				]
+			};
 
-			{
-				_checkParams pushBack parseNumber _x;
-			} forEach _timeParts;
+			case "DAYTIME": {
+				private _timeParts = _conditionValue splitString ":";
+				private _checkParams = [];
 
-			compile format ["%1 call A3C_main_fnc_isDaytimeCompleted", _checkParams]
+				{
+					_checkParams pushBack parseNumber _x;
+				} forEach _timeParts;
+
+				compile format [
+					"%1 call A3C_main_fnc_isDaytimeCompleted",
+					_checkParams
+				]
+			};
+
+			default {
+				_specialCondition
+			};
 		};
 	};
 };
@@ -347,8 +369,32 @@ if (_actionType in ["SUPPRESSION", "AMBUSH"]) then {
 
 // -- spawn 'real' condition. Shared by all HighCommand Modes.
 
-[_group, _wpCurr, _wpPos, _condition, _statements, _actionType, _wp, _specialCondition, _var, _heliPad] spawn {
-	params ["_group", "_wpCurr", "_wpPos", "_condition", "_statements", "_actionType", "_wp", "_specialCondition", "_var", "_heliPad"];
+[
+	_group,
+	_wpCurr,
+	_wpPos,
+	_condition,
+	_statements,
+	_actionType,
+	_wp,
+	_specialCondition,
+	_var,
+	_heliPad,
+	_goCodeActivationVariableName
+] spawn {
+	params [
+		"_group",
+		"_wpCurr",
+		"_wpPos",
+		"_condition",
+		"_statements",
+		"_actionType",
+		"_wp",
+		"_specialCondition",
+		"_var",
+		"_heliPad",
+		"_goCodeActivationVariableName"
+	];
 
 	waitUntil {
 		_var isEqualTo (_group getVariable ["A3C_UNIT_POLYS", []])
@@ -389,13 +435,18 @@ if (_actionType in ["SUPPRESSION", "AMBUSH"]) then {
 		};
 
 		case "GOCODE": {
-			_condition params ["_conditionType", "_conditionValue"];
+			{
+				params [
+					"_gp",
+					"_timeInit",
+					"_condition",
+					"_goCodeActivationVariableName"
+				];
 
-			switch (_conditionValue) do {
-				case "A": {{A3C_GoCode_Activate_A}};
-				case "B": {{A3C_GoCode_Activate_B}};
-				case "C": {{A3C_GoCode_Activate_C}};
-				case "D": {{A3C_GoCode_Activate_D}};
+				missionNamespace getVariable [
+					_goCodeActivationVariableName,
+					false
+				]
 			}
 		};
 
@@ -416,7 +467,14 @@ if (_actionType in ["SUPPRESSION", "AMBUSH"]) then {
 	while {true} do {
 		private _exit = false;
 
-		if ([_group, _timeInit, _condition] call _check) then {
+		if (
+			[
+				_group,
+				_timeInit,
+				_condition,
+				_goCodeActivationVariableName
+			] call _check
+		) then {
 			_exit = true;
 		};
 

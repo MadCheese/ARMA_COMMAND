@@ -59,11 +59,23 @@ private _exitCondition = {true};
 	_exitCondition = switch (toUpper _conditionType) do {
 		case "TIMEOUT": {
 			private _timeAtCompletion = time + _conditionValue;
-			compile format ["time > %1", _timeAtCompletion]
+
+			compile format [
+				"time > %1",
+				_timeAtCompletion
+			]
 		};
 
 		case "GOCODE": {
-			compile format ["A3C_GoCode_Activate_%1", _conditionValue]
+			private _goCodeActivationVariableName = [
+				_conditionValue,
+				side _group
+			] call A3C_main_fnc_getGoCodeActivationVariableName;
+
+			compile format [
+				"missionNamespace getVariable [%1, false]",
+				str _goCodeActivationVariableName
+			]
 		};
 
 		case "DAYTIME": {
@@ -74,7 +86,10 @@ private _exitCondition = {true};
 				_checkParams pushBack parseNumber _x;
 			} forEach _conditionParts;
 
-			compile format ["%1 call A3C_main_fnc_isDaytimeCompleted", _checkParams]
+			compile format [
+				"%1 call A3C_main_fnc_isDaytimeCompleted",
+				_checkParams
+			]
 		};
 
 		default {

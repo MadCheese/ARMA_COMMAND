@@ -17,6 +17,7 @@ A3C_PREP(getBoardableVehicles);
 A3C_PREP(getCASmodes);
 A3C_PREP(getDismountData);
 A3C_PREP(getFlatContainerItems);
+A3C_PREP(getGoCodeActivationVariableName);
 A3C_PREP(getGroupDrivers);
 A3C_PREP(getGroupDrivenVehicles);
 A3C_PREP(getGroupIconType);

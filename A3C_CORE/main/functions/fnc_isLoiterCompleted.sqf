@@ -37,7 +37,15 @@ if (_exitCondition) then {
 		};
 
 		case "GOCODE": {
-			call compile format ["A3C_GoCode_Activate_%1", _condVal]
+			private _goCodeActivationVariableName = [
+				_condVal,
+				side _group
+			] call A3C_main_fnc_getGoCodeActivationVariableName;
+
+			missionNamespace getVariable [
+				_goCodeActivationVariableName,
+				false
+			]
 		};
 
 		case "DAYTIME": {

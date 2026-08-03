@@ -182,10 +182,10 @@ _condition = if (
 		_parameters = _preConditionMode;
 
 		if ((_parameters select 0) == "GOCODE") then {
-			_parameters = format [
-				"A3C_GoCode_Activate_%1",
-				_parameters select 1
-			];
+			_parameters = [
+				_parameters select 1,
+				side _gp
+			] call A3C_main_fnc_getGoCodeActivationVariableName;
 		} else {
 			_parameters = str _parameters;
 		};
@@ -260,36 +260,28 @@ if (["GOCODE", _condition] call BIS_fnc_inString) then {
 	A3C_HC_ACTIVE_PRE_COND_MODE = "GOCODE";
 
 	//~~ put all these instring things in function
-	if (
-		["A3C_GoCode_Activate_A", _condition]
-			call BIS_fnc_inString
-	) then {
-		A3C_HC_ACTIVE_PRE_COND_VAL = "A";
-		_lbV2 = 0;
+	private _goCodes = [
+		"A",
+		"B",
+		"C",
+		"D"
+	];
+
+	private _goCodeIndex = _goCodes findIf {
+		private _activationVariableName = [
+			_x,
+			side _gp
+		] call A3C_main_fnc_getGoCodeActivationVariableName;
+
+		[
+			_activationVariableName,
+			_condition
+		] call BIS_fnc_inString
 	};
 
-	if (
-		["A3C_GoCode_Activate_B", _condition]
-			call BIS_fnc_inString
-	) then {
-		A3C_HC_ACTIVE_PRE_COND_VAL = "B";
-		_lbV2 = 1;
-	};
-
-	if (
-		["A3C_GoCode_Activate_C", _condition]
-			call BIS_fnc_inString
-	) then {
-		A3C_HC_ACTIVE_PRE_COND_VAL = "C";
-		_lbV2 = 2;
-	};
-
-	if (
-		["A3C_GoCode_Activate_D", _condition]
-			call BIS_fnc_inString
-	) then {
-		A3C_HC_ACTIVE_PRE_COND_VAL = "D";
-		_lbV2 = 3;
+	if (_goCodeIndex > -1) then {
+		A3C_HC_ACTIVE_PRE_COND_VAL = _goCodes select _goCodeIndex;
+		_lbV2 = _goCodeIndex;
 	};
 } else {
 	if (["TIMEOUT", _condition] call BIS_fnc_inString) then {

@@ -9,18 +9,13 @@
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 params ["_unit","_data"];
-private
-[
-	"_exit","_cycle","_syncComplete","_syncIndex","_timer","_abort","_muzzle","_completionRadius",
-	"_maxSpeed","_goCode","_moveOrder","_isLoop","_rail","_movePos","_wpData","_pickUpUnits","_precision"
-];
 
 _count = count _data;
 
 
-_abort = false;
-_exit = false;
-_SyncComplete = false;
+private _abort = false;
+private _exit = false;
+private _SyncComplete = false;
 _SyncCompleteMain = false;
 _hubComplete = false;
 
@@ -33,18 +28,18 @@ _crew = [];
 _vectorup = [];
 _abortData = [];
 _wpos = [];
-_pickUpUnits = [];
-_movePos = [];
-_timer = time;
+private _pickUpUnits = [];
+private _movePos = [];
+private _timer = time;
 _counter = 0;
 _threshold = 50;
-_cycle = 0;
+private _cycle = 0;
 _pause = 0;
 
-_syncIndex = 0;
-_completionRadius = 5;
+private _syncIndex = 0;
+private _completionRadius = 5;
 _maxdist = 20;
-_maxSpeed = -1;
+private _maxSpeed = -1;
 _comparedWP = 0;
 _dataCompared = 0;
 _syncDataCompared = 0;
@@ -53,9 +48,8 @@ _landingpos = [];
 _landingdir = 0;
 _timeNow = 0;
 _velo = 0;
-_goCode = "";
 _varidist = 0;
-_muzzle = "";
+private _muzzle = "";
 
 private _vehicle = vehicle _unit;
 
@@ -63,7 +57,7 @@ _landingdata = "NONE";
 
 _unitNumber = _unit getvariable "A3C_VVNI";
 
-_precision = (getNumber (configfile >> "CfgVehicles" >> (typeOf _vehicle) >> "precision"));
+private _precision = (getNumber (configfile >> "CfgVehicles" >> (typeOf _vehicle) >> "precision"));
 
 if (isPlayer _unit) exitWith {
 	{
@@ -128,7 +122,7 @@ while {!isNull _unit} do {
 
 
 	_vehicle = vehicle _unit;
-	_wpData = (_data select _cycle);
+	private _wpData = (_data select _cycle);
 
 	_wpData params ["_wpPositions","_wpMarkers","_wpAction","_wpCondition","_wpStances","_wpSyncData","_wpCompleted","_wpCombatMode","_wpSpeed","_wpFlyInHeight","_wpLoopValue","_wpRadius"];
 
@@ -746,7 +740,7 @@ while {!isNull _unit} do {
 					if (count (lineIntersectsObjs [_aslP, _aslRef, _unit, objnull, false]) == 0) then {
 						waituntil {speed _unit < 1};
 						if !(_lookAtPos isEqualTo []) then {
-							_rail = [_unit,_wPos] spawn A3C_ai_rail_fnc_infantryForceDestination;
+							private _rail = [_unit,_wPos] spawn A3C_ai_rail_fnc_infantryForceDestination;
 							waituntil {scriptDone _rail};
 							_unit dowatch _lookAtPos;
 							_unit lookat _lookAtPos;
@@ -1126,34 +1120,82 @@ while {!isNull _unit} do {
 	//-- WAIT FOR Helicopter CARGO
 	_landingpos = position _vehicle;
 	_vectorup = vectorup _vehicle;
-	private _isGoCode = ((_wpCondition select 0) == "GOCODE");
+	private _isGoCode = (
+		toUpper (_wpCondition param [0, ""])
+	) == "GOCODE";
+
+	private _goCode = if (_isGoCode) then {
+		toUpper (
+			_wpCondition param [
+				1,
+				"NONE"
+			]
+		)
+	} else {
+		"NONE"
+	};
+
+	private _hasActiveGoCode = (
+		_isGoCode
+		&& {
+			_goCode in [
+				"A",
+				"B",
+				"C",
+				"D"
+			]
+		}
+	);
+
+	private _goCodeActivationVariableName = if (_hasActiveGoCode) then {
+		[
+			_goCode,
+			side (group _unit)
+		] call A3C_main_fnc_getGoCodeActivationVariableName
+	} else {
+		""
+	};
+
+	private _goCodeConditionSatisfied = false;
 
 	if ( (_vehicle isKindOf "HELICOPTER") && (_landingdata in ["PICKUP","DROPOFF"]) && !(_abort) ) then {
 		{_x disableAI "MOVE"} foreach [_unit,_vehicle];
 		_vehicle limitSpeed 0;
 		sleep 0.2;
 		_exit = false;
+
 		while {canmove _vehicle} do {
 			if (isNull _unit) exitWith {_abort = true};
+
 			_vehicle = vehicle _unit;
 			_unit dowatch objnull;
 			_vehicle limitspeed 0;
-			
 
 			_vehicle flyinheight 0;
 			_velocity = [0,0,0];
-			if ((velocity _vehicle) select 2 > 0) then {_velocity set [2,-2]};
+
+			if ((velocity _vehicle) select 2 > 0) then {
+				_velocity set [2,-2];
+			};
+
 			_vehicle setvelocity _velocity;
+
 			if (_landingdata == "DROPOFF") then {
 				//~~ WHAT IS THIS??	AUTHORNOTE
 				if (({(( ((_x select 2) getfriend (side _unit)) < 0.6)) && (_unit knowsabout (_x select 4) > 1.5)} count (_unit neartargets viewdistance)) > 0) then {
 					[_unit,(position _vehicle)] call A3C_ai_shared_fnc_doMove;
 				};
 			};
-			if (_isGoCode) then {
-				_goCode = (_wpCondition select 1);
-				if (call compile format ["A3C_GoCode_Activate_%1",(parseText _goCode)]) then {
-					_exit = true
+
+			if (_hasActiveGoCode) then {
+				if (
+					missionNamespace getVariable [
+						_goCodeActivationVariableName,
+						false
+					]
+				) then {
+					_goCodeConditionSatisfied = true;
+					_exit = true;
 				};
 			} else {
 				if (_landingdata == "PICKUP") then {
@@ -1165,6 +1207,7 @@ while {!isNull _unit} do {
 						_exit = true;
 					};
 				};
+
 				if (_landingdata == "DROPOFF") then {
 					if !( {[_x] call A3C_main_fnc_shouldEjectFromHeli} count crew _vehicle == 0) then {
 						_exit = false;
@@ -1172,21 +1215,25 @@ while {!isNull _unit} do {
 						_exit = true;
 					};
 				};
+
 				if ({_x} count (_unit getvariable "A3C_ABORT_Data") > 0) then {
 					_abort = true;
 					_exit = true;
 					_vehicle land "NONE";
 				};
-
 			};
 
+			if !(_unit == (driver _vehicle)) then {
+				_exit = true;
+			};
 
-			if !(_unit == (driver _vehicle)) then {_exit = true};
 			if (_exit) exitWith {};
+
 			if !(_exit) then {
 				sleep 0.01;
 			};
 		};
+
 		_vehicle limitspeed 1000;
 		_vehicle flyinheight 3;
 		_vehicle = vehicle _unit; //-- refresh
@@ -1286,35 +1333,83 @@ while {!isNull _unit} do {
 
 	///////////////////////////////////////////
 	//-- CHECK FOR GO-CODES
-	
 
-	if ((_wpCondition select 0) == "GOCODE") then {
-		_goCode = (_wpCondition select 1);
-		if !(_goCode == "NONE") then {
-			while {!(_goCode == "NONE")} do {
+	if (_isGoCode) then {
+		/*
+			PICKUP and DROPOFF helicopter waypoints may already have consumed
+			the GoCode while holding the aircraft on the ground. Do not require
+			the same short activation pulse to be detected a second time.
+		*/
+		if (
+			_hasActiveGoCode
+			&& {
+				!_goCodeConditionSatisfied
+			}
+		) then {
+			while {true} do {
 				if ([_unit] call A3C_ai_shared_fnc_unitRouteIsWpAborted) exitWith {
 					_abort = true;
 				};
+
 				if !(A3C_BOOL_MOVINGMARKER) then {
 					//-- exit stop
 					if ([_unit,_movePos,1] call A3C_ai_shared_fnc_unitRouteIsUnitStopped) then {
 						_abort = true;
 					};
 				};
+
 				if (
-					!((_wpAction select 0) in ["SUPPRESSION"]) &&
-					{[_unit,_origdest,_data,_cycle,1] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom}
+					!((_wpAction select 0) in ["SUPPRESSION"])
+					&& {
+						[
+							_unit,
+							_origdest,
+							_data,
+							_cycle,
+							1
+						] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom
+					}
 				) then {
 					_abort = true;
 				};
+
 				if (_abort) exitWith {};
-				if (call compile format ["A3C_GoCode_Activate_%1",(parseText _goCode)]) exitWith {};
+
+				if (
+					missionNamespace getVariable [
+						_goCodeActivationVariableName,
+						false
+					]
+				) exitWith {
+					_goCodeConditionSatisfied = true;
+				};
+
 				sleep 0.1;
 			};
 		};
-		((_data select _cycle) select 2) set [1,"NONE"];
-		_unit setvariable ["A3C_PLOT",_switchdata,true];
-		[] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls",0];
+
+		/*
+			The completed or inactive GoCode is removed from the waypoint
+			condition so the UI availability scan no longer considers this
+			plot entry.
+
+			Waypoint data index 3 is _wpCondition. Index 2 is _wpAction.
+		*/
+		((_data select _cycle) select 3) set [
+			1,
+			"NONE"
+		];
+
+		_unit setVariable [
+			"A3C_PLOT",
+			_data,
+			true
+		];
+
+		[] remoteExec [
+			"A3C_ui_shared_fnc_toggleGocodeCtrls",
+			0
+		];
 	};
 
 	_vehicle = vehicle _unit; //-- refresh

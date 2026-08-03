@@ -91,14 +91,22 @@ private _distributedPositions = [
 	private _statements = "";
 
 	if (_groupIndex == 0 && {!_forceDefaultLanding}) then {
-		private _subCondition = if (_landingRailType == "COMBAT LANDING") then {
-			format ["A3C_GoCode_Activate_%1", (_condition splitString "") select 8]
-		} else {
-			""
+	private _subCondition = "";
+
+	if (_landingRailType == "COMBAT LANDING") then {
+			private _goCode = (
+				_condition splitString ""
+			) param [
+				8,
+				""
+			];
+
+			_subCondition = [
+				_goCode,
+				side _group
+			] call A3C_main_fnc_getGoCodeActivationVariableName;
 		};
 
-		//-- assumption: waypointScript gets executed on every machine - if the script is present
-		//-- assumption 2: a function can be remotely executed from the machine that executed the script (needs to be determined?)
 		_landingWaypoint setWaypointType "SCRIPTED";
 
 		_landingWaypoint setWaypointScript format [
@@ -123,9 +131,6 @@ private _distributedPositions = [
 					_playerUID,
 					_subCondition
 				];
-
-				A3C_GOCODES_HC pushBackUnique _subCondition;
-				publicVariable "A3C_GOCODES_HC";
 				[] remoteExec ["A3C_ui_shared_fnc_toggleGocodeCtrls", 0];
 			};
 

@@ -424,7 +424,6 @@ A3C_Prevent_SwitchWeapon = false;
 A3C_SNAP_MAP_BOOL = false;
 
 
-A3C_GOCODES_HC = [];
 
 
 A3C_VEHSAV= [];

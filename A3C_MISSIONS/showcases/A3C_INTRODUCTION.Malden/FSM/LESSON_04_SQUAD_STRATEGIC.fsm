@@ -6380,7 +6380,7 @@ class FSM
                                         priority = 1.000000;
                                         to="wait_gocode";
                                         precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-                                        condition=/*%FSM<CONDITION""">*/"A3C_GoCode_Activate_D OR {A3C_ALL_POLYS isEqualTo []}"/*%FSM</CONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(missionNamespace getVariable ['A3C_GoCode_Activate_D_WEST', false]) OR {A3C_ALL_POLYS isEqualTo []}"/*%FSM</CONDITION""">*/;
                                         action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
                                 };
                                 /*%FSM</LINK>*/
@@ -6452,7 +6452,7 @@ class FSM
                                         priority = 1.000000;
                                         to="wait_gocode";
                                         precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-                                        condition=/*%FSM<CONDITION""">*/"A3C_GoCode_Activate_D OR {A3C_ALL_POLYS isEqualTo []}"/*%FSM</CONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(missionNamespace getVariable ['A3C_GoCode_Activate_D_WEST', false]) OR {A3C_ALL_POLYS isEqualTo []}"/*%FSM</CONDITION""">*/;
                                         action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
                                 };
                                 /*%FSM</LINK>*/

@@ -170,9 +170,14 @@ private _exitCondition = {};
 		};
 
 		case "GOCODE": {
+			private _goCodeActivationVariableName = [
+				_conditionValue,
+				side _group
+			] call A3C_main_fnc_getGoCodeActivationVariableName;
+
 			compile format [
-				"A3C_GoCode_Activate_%1",
-				_conditionValue
+				"missionNamespace getVariable ['%1', false]",
+				_goCodeActivationVariableName
 			]
 		};
 

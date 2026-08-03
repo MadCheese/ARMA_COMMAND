@@ -91,11 +91,30 @@ _array = "true" configClasses (configFile >> "CfgVehicles");{
 
 
 
+{
+	private _sideKey = _x;
 
-A3C_GoCode_Activate_A = false;
-A3C_GoCode_Activate_B = false;
-A3C_GoCode_Activate_C = false;
-A3C_GoCode_Activate_D = false;
+	{
+		missionNamespace setVariable [
+			format [
+				"A3C_GoCode_Activate_%1_%2",
+				_x,
+				_sideKey
+			],
+			false
+		];
+	} forEach [
+		"A",
+		"B",
+		"C",
+		"D"
+	];
+} forEach [
+	"WEST",
+	"EAST",
+	"GUER",
+	"CIV"
+];
 
 A3C_MISSIONENDED = false;
 

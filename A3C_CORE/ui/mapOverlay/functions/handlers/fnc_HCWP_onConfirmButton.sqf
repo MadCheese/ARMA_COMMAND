@@ -21,15 +21,26 @@ _wpMenuCtrlsGroup ctrlShow false;
 private _leader = leader _group;
 private _wp = [_group, A3C_HC_ACTIVE_IND];
 private _preCondition = switch (A3C_HC_ACTIVE_PRE_COND_MODE) do {
-	case ("ARRIVAL") : {"true"};
-	case ("GOCODE") : {format ["A3C_GoCode_Activate_%1",A3C_HC_ACTIVE_PRE_COND_VAL]};
+	case ("ARRIVAL") : {
+		"true"
+	};
+
+	case ("GOCODE") : {
+		[
+			A3C_HC_ACTIVE_PRE_COND_VAL,
+			side _group
+		] call A3C_main_fnc_getGoCodeActivationVariableName
+	};
+
 	case ("TIMEOUT") : {
 		//-- (count ['TIMEOUT'] == 1) returns true and is just there to include "TIMEOUT" in the condition
 		"true && (count ['TIMEOUT'] == 1)"
 	};
+
 	case ("DAYTIME") : {
 		//-- (count ['DAYTIME'] == 1) returns true and is just there to include "DAYTIME" in the condition
 		private _str = A3C_HC_ACTIVE_PRE_COND_VAL splitString ":";
+
 		format
 		[
 			"(([%1,%2,%3,%4,%5] call A3C_main_fnc_isDaytimeCompleted) && (count ['DAYTIME'] == 1))",
@@ -65,10 +76,7 @@ if (A3C_HC_EDIT_ACTION in ["ASSEMBLE WEAPON"]) then {
 
 private _statementsINS = [[A3C_HC_ACTIVE_POST_COND_MODE,A3C_HC_ACTIVE_POST_COND_VAL],A3C_HC_EDIT_ACTION];
 
-if (A3C_HC_ACTIVE_PRE_COND_MODE == "GOCODE") then {
-	A3C_GOCODES_HC pushBackUnique A3C_HC_ACTIVE_PRE_COND_VAL;
-	publicVariable 'A3C_GOCODES_HC';
-};
+
 
 _tPos = (waypointPosition _wp);
 _tPos = [_tPos,_dist,0] call BIS_fnc_relPos;

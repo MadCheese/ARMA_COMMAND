@@ -17,9 +17,9 @@ class EditorData
 	class Camera
 	{
 		pos[]={14036.593,368.36877,15691.22};
-		dir[]={-0.2392004,-0.66563928,0.70689994};
-		up[]={-0.21335497,0.74627364,0.63051993};
-		aside[]={0.94723964,0,0.32052642};
+		dir[]={-0.23920041,-0.66563922,0.7069};
+		up[]={-0.21335493,0.74627376,0.63051987};
+		aside[]={0.94723964,-1.4901161e-08,0.32052642};
 	};
 };
 binarizationWanted=0;
@@ -4608,10 +4608,41 @@ class Mission
 					{
 						skill=0.44999999;
 						rank="CORPORAL";
+						init="tg1 = group this";
 					};
 					id=5036;
 					type="B_HeavyGunner_F";
 					atlOffset=271.51599;
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="speaker";
+							expression="_this setspeaker _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="STRING";
+									value="Male04ENG";
+								};
+							};
+						};
+						class Attribute1
+						{
+							property="pitch";
+							expression="_this setpitch _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="SCALAR";
+									value=1.04;
+								};
+							};
+						};
+						nAttributes=2;
+					};
 				};
 				class Item3
 				{

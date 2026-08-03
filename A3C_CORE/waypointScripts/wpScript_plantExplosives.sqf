@@ -30,20 +30,42 @@ private _exitCondition = {{true}};
 	_exitCondition = switch (toUpper _condType) do {
 		case ("TIMEOUT") : {
 			_timeAtCompletion = time + _condVal;
-			compile format ["time > %1",_timeAtCompletion];
+
+			compile format [
+				"time > %1",
+				_timeAtCompletion
+			];
 		};
+
 		case ("GOCODE") : {
-			compile format ["A3C_GoCode_Activate_%1",_condVal];
+			private _goCodeActivationVariableName = [
+				_condVal,
+				side _group
+			] call A3C_main_fnc_getGoCodeActivationVariableName;
+
+			compile format [
+				"missionNamespace getVariable [%1, false]",
+				str _goCodeActivationVariableName
+			];
 		};
+
 		case ("DAYTIME") : {
 			_str = _condVal splitString ":";
 			_checkParams = [];
+
 			{
-				_checkParams pushBack (parseNumber _X)
+				_checkParams pushBack (parseNumber _x);
 			} foreach _str;
-			compile format ["%1 call A3C_main_fnc_isDaytimeCompleted",_checkParams];
+
+			compile format [
+				"%1 call A3C_main_fnc_isDaytimeCompleted",
+				_checkParams
+			];
 		};
-		default {{true}};
+
+		default {
+			{true}
+		};
 	};
 	
 

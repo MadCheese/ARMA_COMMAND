@@ -107,11 +107,23 @@ private _exitCondition = {};
 	_exitCondition = switch (toUpper _condType) do {
 		case ("TIMEOUT"): {
 			_timeAtCompletion = time + _condVal;
-			compile format ["time > %1",_timeAtCompletion];
+
+			compile format [
+				"time > %1",
+				_timeAtCompletion
+			];
 		};
 
 		case ("GOCODE"): {
-			compile format ["A3C_GoCode_Activate_%1",_condVal];
+			private _goCodeActivationVariableName = [
+				_condVal,
+				side _group
+			] call A3C_main_fnc_getGoCodeActivationVariableName;
+
+			compile format [
+				"missionNamespace getVariable ['%1', false]",
+				_goCodeActivationVariableName
+			];
 		};
 
 		case ("DAYTIME"): {
