@@ -378,6 +378,9 @@ private _landingScript = if (_useVerticalLanding) then {
 				_pos
 			] call _fnc_getLandingPosition;
 
+			private _landingPosWorld =
+				AGLToASL _landingPos;
+
 			/*
 				"Land" is the full landing mode for this waypoint.
 
@@ -385,7 +388,7 @@ private _landingScript = if (_useVerticalLanding) then {
 				loop hands control over to the landing phase.
 			*/
 			_vehicle landAt [
-				_landingPos,
+				_landingPosWorld,
 				"Land",
 				99999
 			];
@@ -711,7 +714,7 @@ if (
 };
 
 A3C_BLACKLIST_WAYPOINT_EDIT =
-	A3C_BLACKLIST_WAYPOINT_EDIT - [_wp];
+A3C_BLACKLIST_WAYPOINT_EDIT - [_wp];
 
 publicVariable "A3C_BLACKLIST_WAYPOINT_EDIT";
 

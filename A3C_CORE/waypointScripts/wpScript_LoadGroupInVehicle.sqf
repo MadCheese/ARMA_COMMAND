@@ -284,8 +284,11 @@ if (_groupVTOLs isEqualTo []) then {
 		_pos
 	] call _fnc_getLandingPosition;
 
+	private _landingPosWorld =
+		AGLToASL _landingPos;
+
 	_vehicle landAt [
-		_landingPos,
+		_landingPosWorld,
 		"GET IN",
 		99999
 	];

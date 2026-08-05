@@ -609,38 +609,46 @@ private _sharedDrawColor;
 
 
 //-- DRAW PATH: UI Line (composed of rectangles, but built with triangles due to no better idea)
-private _dragPathTargetUnit = if (typeName A3C_SQ_CLICKED_UNIT == "GROUP") then {leader A3C_SQ_CLICKED_UNIT} else {(A3C_SELECTED_UNITS select 0)};
-{
-	private _dragPosition = _x;
-	private _previousDragPosition = if (_forEachIndex == 0) then {[]} else {A3C_MAP_DRAGPLANNING_POSITIONS select (_forEachIndex - 1)};
-	private _segmentDirection = if (_forEachIndex == 0) then {_dragPathTargetUnit getDir _dragPosition} else {  _previousDragPosition getdir _dragPosition};
-	private _segmentBottomLeft = if (_forEachIndex == 0) then {(_dragPosition getPos [5,_segmentDirection + 180]) getPos [1,_segmentDirection - 90]} else {_previousDragPosition getPos [1,_segmentDirection - 90]};
-	private _segmentBottomRight = if (_forEachIndex == 0) then {(_dragPosition getPos [5,_segmentDirection + 180]) getPos [1,_segmentDirection + 90]} else {_previousDragPosition getPos [1,_segmentDirection + 90]};
-	private _segmentTopLeft = _dragPosition getPos [1,_segmentDirection - 90];
-	private _segmentTopRight = _dragPosition getPos [1,_segmentDirection + 90];
+
+if (
+	!isNull A3C_SQ_CLICKED_UNIT
+	&& {A3C_MAP_DRAGPLANNING_POSITIONS isNotEqualTo []}
+) then {
+	private _dragPathTargetUnit = if (typeName A3C_SQ_CLICKED_UNIT == "GROUP") then {leader A3C_SQ_CLICKED_UNIT} else {(A3C_SELECTED_UNITS select 0)};
+	{
+		private _dragPosition = _x;
+		private _previousDragPosition = if (_forEachIndex == 0) then {[]} else {A3C_MAP_DRAGPLANNING_POSITIONS select (_forEachIndex - 1)};
+		private _segmentDirection = if (_forEachIndex == 0) then {_dragPathTargetUnit getDir _dragPosition} else {  _previousDragPosition getdir _dragPosition};
+		private _segmentBottomLeft = if (_forEachIndex == 0) then {(_dragPosition getPos [5,_segmentDirection + 180]) getPos [1,_segmentDirection - 90]} else {_previousDragPosition getPos [1,_segmentDirection - 90]};
+		private _segmentBottomRight = if (_forEachIndex == 0) then {(_dragPosition getPos [5,_segmentDirection + 180]) getPos [1,_segmentDirection + 90]} else {_previousDragPosition getPos [1,_segmentDirection + 90]};
+		private _segmentTopLeft = _dragPosition getPos [1,_segmentDirection - 90];
+		private _segmentTopRight = _dragPosition getPos [1,_segmentDirection + 90];
 
 
-	private _segmentVertices =
-	[
-		_segmentBottomLeft,
-		_segmentTopLeft,
-		_segmentTopRight,
-		_segmentBottomRight
-	];
-	_mapControl drawTriangle
-	[
+		private _segmentVertices =
 		[
-			_segmentVertices select 0,
-			_segmentVertices select 1,
-			_segmentVertices select 2,
-			_segmentVertices select 2,
-			_segmentVertices select 3,
-			_segmentVertices select 0
-		],
-		[0,0,1,0.7],
-		"#(rgb,1,1,1)color(0,0.3,0.6,0.2)"
-	];
-} foreach A3C_MAP_DRAGPLANNING_POSITIONS;
+			_segmentBottomLeft,
+			_segmentTopLeft,
+			_segmentTopRight,
+			_segmentBottomRight
+		];
+		_mapControl drawTriangle
+		[
+			[
+				_segmentVertices select 0,
+				_segmentVertices select 1,
+				_segmentVertices select 2,
+				_segmentVertices select 2,
+				_segmentVertices select 3,
+				_segmentVertices select 0
+			],
+			[0,0,1,0.7],
+			"#(rgb,1,1,1)color(0,0.3,0.6,0.2)"
+		];
+	} foreach A3C_MAP_DRAGPLANNING_POSITIONS;
+};
+
+
 
 //////////////////////////////////
 //-- UI-ICONS HIGHCOMMAND LEVEL //

@@ -32,7 +32,7 @@ private _groupLeader = leader _group;
 
 private _leaderVehicle = vehicle _groupLeader;
 private _existingWaypoints = waypoints _group;
-private _isFirstWaypoint = currentWaypoint _group > selectMax (_existingWaypoints apply {_x # 1});
+private _isFirstWaypoint = _existingWaypoints isEqualTo [] || {currentWaypoint _group > selectMax (_existingWaypoints apply {_x # 1})};
 
 private _groupUnits = units _group;
 
@@ -79,7 +79,7 @@ if (_isFirstWaypoint) then {
 				[_unitVehicle, true] remoteExec ["engineOn", _unitVehicle];
 
 				if (_unitVehicle isKindOf "PLANE") then {
-					if (isTouchingGround _unitVehicle) then {
+					if (isTouchingGround _unitVehicle || {(getposATL _unitVehicle) select 2 < 0.7}) then { 
 						_requiresJetTakeoff = true;
 					};
 				};

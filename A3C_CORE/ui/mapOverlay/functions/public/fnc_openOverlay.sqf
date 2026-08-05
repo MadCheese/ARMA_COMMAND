@@ -119,6 +119,9 @@ showHUD _modifiedHud;
 	_x setMarkerAlphaLocal 1;
 } forEach A3C_MARKERS;
 
+//-- Clear Multi-Waypoint-selection
+A3C_Selection_MultiWaypoint = [];
+
 //---------------------------------------------------------------------------------------------
 // Per-open state reset
 //---------------------------------------------------------------------------------------------

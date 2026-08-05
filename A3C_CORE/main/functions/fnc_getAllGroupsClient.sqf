@@ -65,4 +65,11 @@ private _civilianUAVsCaptive = allUnitsUAV select {
 	_x setCaptive false;
 } forEach _civilianUAVsCaptive;
 
+//-- If A3C is not running on server, we can only allow local groups (aka disbanded or ZEUS etc)
+//-- Reason: HC code would be called on server where functions are not defined. 
+//-- Reason for design: If A3C is not running on server, it's likely not intended for players to command all HC groups.
+if !(A3C_IsA3CServer) then {
+	_hcArray = _hcArray select {local _x};
+};
+
 _hcArray

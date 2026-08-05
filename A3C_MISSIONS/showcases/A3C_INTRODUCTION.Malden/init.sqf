@@ -109,6 +109,7 @@ A3C_HC_isGroupIdle = {
 	{_x select 1 == currentWaypoint _group} count (waypoints _group) == 0
 };
 
+{_x allowDamage false} foreach allunits;
 
 lesson_selector = {
 	

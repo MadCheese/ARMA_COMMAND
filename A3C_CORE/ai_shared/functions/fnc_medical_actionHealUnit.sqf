@@ -1,7 +1,6 @@
 // A3C_ai_shared_fnc_medical_actionHealUnit
 
-// Requires the unit's "A3C_PLOT" variable and
-// A3C_ai_shared_fnc_actionExecuteUnitPlot.
+// Requires the unit's "A3C_PLOT" variable and A3C_ai_shared_fnc_actionExecuteUnitPlot.
 
 params [
 	["_unit", objNull, [objNull]],

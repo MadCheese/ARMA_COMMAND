@@ -10,52 +10,52 @@
 
 params ["_unit","_data"];
 
-_count = count _data;
+private _count = count _data;
 
 
 private _abort = false;
 private _exit = false;
 private _SyncComplete = false;
-_SyncCompleteMain = false;
-_hubComplete = false;
+private _SyncCompleteMain = false;
+private _hubComplete = false;
 
-_inBuilding = false;
-_inside = false;
-_syncData = [];
-_switchData = [];
-_otherUnits = [];
-_crew = [];
-_vectorup = [];
-_abortData = [];
-_wpos = [];
+private _inBuilding = false;
+private _inside = false;
+private _syncData = [];
+private _switchData = [];
+private _otherUnits = [];
+private _crew = [];
+private _vectorup = [];
+private _abortData = [];
+private _wpos = [];
 private _pickUpUnits = [];
 private _movePos = [];
 private _timer = time;
-_counter = 0;
-_threshold = 50;
+private _counter = 0;
+private _threshold = 50;
 private _cycle = 0;
-_pause = 0;
+private _pause = 0;
 
 private _syncIndex = 0;
 private _completionRadius = 5;
-_maxdist = 20;
+private _maxdist = 20;
 private _maxSpeed = -1;
-_comparedWP = 0;
-_dataCompared = 0;
-_syncDataCompared = 0;
-_testedSyncSubArray = 0;
-_landingpos = [];
-_landingdir = 0;
-_timeNow = 0;
-_velo = 0;
-_varidist = 0;
+private _comparedWP = 0;
+private _dataCompared = 0;
+private _syncDataCompared = 0;
+private _testedSyncSubArray = 0;
+private _landingpos = [];
+private _landingdir = 0;
+private _timeNow = 0;
+private _velo = 0;
+private _varidist = 0;
 private _muzzle = "";
 
 private _vehicle = vehicle _unit;
 
-_landingdata = "NONE";
+private _landingdata = "NONE";
 
-_unitNumber = _unit getvariable "A3C_VVNI";
+private _unitNumber = _unit getvariable "A3C_VVNI";
 
 private _precision = (getNumber (configfile >> "CfgVehicles" >> (typeOf _vehicle) >> "precision"));
 
@@ -88,7 +88,7 @@ _unit setvariable ["A3C_WAITCARGO",false,true];
 _unit setvariable ["A3C_ABORT_Data",[false,false],true];
 _unit setvariable ["A3C_SKILLDATA",[(_unit skill "commanding"),(_unit skill "spotDistance"),(_unit skill "spotTime")],true];
 
-_origDest = [0,0,0];
+private _origDest = [0,0,0];
 if (_vehicle isKindOf "AIR") then {
 	_unit setvariable ["A3C_CREWCOUNT",(count crew _vehicle),true];
 } else {
@@ -127,16 +127,16 @@ while {!isNull _unit} do {
 	_wpData params ["_wpPositions","_wpMarkers","_wpAction","_wpCondition","_wpStances","_wpSyncData","_wpCompleted","_wpCombatMode","_wpSpeed","_wpFlyInHeight","_wpLoopValue","_wpRadius"];
 
 	_wPos = _wpPositions select 0;
-	_wPosOriginal = +_wPos;
-	_lookAtPos = _wpPositions select 1;
-	_wpMarkerMain = _wpMarkers select 0;
-	_wpMarkerXtra = _wpMarkers select 1;
-	//_wpMarkerDir = _wpMarkers select 2;
-	_unitPosTravel = _wpStances select 0;
-	_unitPosDest = _wpStances select 1;
+	private _wPosOriginal = +_wPos;
+	private _lookAtPos = _wpPositions select 1;
+	private _wpMarkerMain = _wpMarkers select 0;
+	private _wpMarkerXtra = _wpMarkers select 1;
+
+	private _unitPosTravel = _wpStances select 0;
+	private _unitPosDest = _wpStances select 1;
 	_movePos = if ((_wpAction select 0) in ["GRENADE","SUPPRESSION"]) then {position _unit} else {_wPos};
 	_landingdata = if ((_wpAction select 0) == "LANDING") then {_wpAction select 1} else {""};
-	_wpTimeoutValue = if ((_wpAction select 0) == "TIMEOUT") then {_wpAction select 1} else {0};
+	private _wpTimeoutValue = if ((_wpAction select 0) == "TIMEOUT") then {_wpAction select 1} else {0};
 
 	_precision = (getNumber (configfile >> "CfgVehicles" >> (typeOf _vehicle) >> "precision"));
 
@@ -164,13 +164,13 @@ while {!isNull _unit} do {
 	};
 
 	//-- default: switch default unit behavior on for each WP
-	{_unit enableAI _x} foreach ["TARGET","AUTOTARGET","FSM"]; //,"WAYPOINT_STOP"
+	{_unit enableAI _x} foreach ["TARGET","AUTOTARGET","FSM"];
 
 	_unit dowatch objnull;
 	_unit lookat objnull;
 	//-- exit function if required (_abort returns true), delete lines/markers and reset values
 	if (_abort) exitWith {
-		{_unit enableAI _x} foreach ["TARGET","AUTOTARGET","FSM","AUTOCOMBAT"]; //"THREAT_PATH","PATHPLAN",
+		{_unit enableAI _x} foreach ["TARGET","AUTOTARGET","FSM","AUTOCOMBAT"];
 		_unit forcespeed -1;
 		_vehicle forcespeed -1;
 		if !(_vehicle == _unit) then {
@@ -187,7 +187,7 @@ while {!isNull _unit} do {
 	if (_vehicle isKindOf "PLANE") then {
 		if (_unit == (driver _vehicle)) then {
 			if ( ((getposATL _vehicle) select 2) < 5) then {
-				//_vehicle setfuel 1;
+
 				{_vehicle animateDoor [_x, 0]} foreach ['door_R','door_L','door_rear','door_rear_source','Door_L_source','Door_R_source','DoorL_Front_Open','DoorR_Front_Open','DoorL_Back_Open','DoorR_Back_Open','Door_1_source'];
 				if ((getNumber (configfile >> "CfgVehicles" >> typeOf _vehicle >> "landingSpeed")) > 10) then {
 					[_unit] spawn A3C_ai_shared_fnc_planeTakeOff;
@@ -217,7 +217,7 @@ while {!isNull _unit} do {
 			};
 		};
 		//-- next line, pay attention: the true/false may seem counter intuitive. We are looking for ZERO units WITHOUT rebreathers (meaning all have one)
-		if ( { _c = count (getArray (configfile >> "CfgWeapons" >> vest _x >> "hiddenUnderwaterSelections")); if (_c > 0) then {false} else {true};  } count (crew _vehicle) == 0      ) then {
+		if ( { private _c = count (getArray (configfile >> "CfgWeapons" >> vest _x >> "hiddenUnderwaterSelections")); if (_c > 0) then {false} else {true};  } count (crew _vehicle) == 0      ) then {
 			_vehicle swimInDepth -30;
 		} else {
 			_vehicle swimInDepth 0;
@@ -287,7 +287,7 @@ while {!isNull _unit} do {
 		};
 		if (_wpFlyInHeight == 1000) then {
 			//-- weird fix for pilots bugging out in high altitudes
-			_h = (getpos _vehicle) select 2;
+			private _h = (getpos _vehicle) select 2;
 			while {_h < 1000} do {
 				_h = _h + 100;
 				_vehicle flyinHeight _h;
@@ -322,7 +322,7 @@ while {!isNull _unit} do {
 	} else {
 		if (_vehicle isKindOf "Air") then {
 			if (_landingdata == "NONE") then {
-				_variDist = if (_wpAction select 0 == "PARADROP") then {50} else {150}; //500
+				_variDist = if (_wpAction select 0 == "PARADROP") then {50} else {150};
 			} else {
 				_variDist = 150;
 			};
@@ -454,17 +454,22 @@ while {!isNull _unit} do {
 
 
 	_timer = time;
-	_ct = 0;
-	_conPos = [0,0,0];
-	_checkTime = 5;
+	private _ct = 0;
+	private _conPos = [0,0,0];
+	private _checkTime = 5;
 
 	if ((effectivecommander _vehicle) == player) then {sleep 1};
 
 	private _stuckCycles = 0;
 	
-	
+	//////////////////////////////////
+	//-- MAIN TRAVEL LOOP
+	//////////////////////////////////
 
-	while {true} do { //~~ is 'alive _unit' not a safer condition?
+	while {alive _unit} do { 
+		
+		
+
 		//-- Update Waypoint Data
 		waituntil {!A3C_REFRESHING};
 		_data = (_unit getvariable ["A3C_PLOT",[]]);
@@ -479,6 +484,13 @@ while {!isNull _unit} do {
 		_wpData = (_data select _cycle);
 		_wpData params ["_wpPositions","_wpMarkers","_wpAction","_wpCondition","_wpStances","_wpSyncData","_wpCompleted","_wpCombatMode","_wpSpeed","_wpFlyInHeight","_wpLoopValue","_wpRadius"];
 		_wPos = _wpPositions select 0;
+
+		if (A3C_DEBUG) then {
+			private _debugMessage = format ["unitPlot Main Travel Loop (%1 / %2), unitReady: %3, distance: %4", _unit, round time, unitReady _unit, round (_unit distance2d _wpos)];
+			_debugMessage remoteExec ["systemchat", 0];
+		};
+
+
 		_lookAtPos = _wpPositions select 1;
 		_wpMarkerMain = _wpMarkers select 0;
 		_wpMarkerXtra = _wpMarkers select 1;
@@ -486,7 +498,7 @@ while {!isNull _unit} do {
 		_unitPosDest = _wpStances select 1;
 		_vehicle = vehicle _unit; //-- refresh
 		_movePos = _wPos;
-		_doExit = false;
+		private _doExit = false;
 		_landingdata = if ((_wpAction select 0) == "LANDING") then {_wpAction select 1} else {""};
 		_wpTimeoutValue = if ((_wpAction select 0) == "TIMEOUT") then {_wpAction select 1} else {0};
 		if (_complete) exitWith {};
@@ -606,7 +618,7 @@ while {!isNull _unit} do {
 				};
 
 				if (!(A3C_BOOL_MOVINGMARKER) && !(_wpAction select 0 == "REARM")) then { //~~ Temp Fix!!
-					if ([_unit,_origdest,_data,_cycle,0] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom) then { //(false) then { // 
+					if ([_unit,_origdest,_data,_cycle,0] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom) then {
 						_abort = true;					
 					};
 				};
@@ -639,13 +651,13 @@ while {!isNull _unit} do {
 
 			//-- switch of default behavior if ordered. done in the loop to prevent loss during saveGame/loadGame
 			if (_wpCombatMode == 1) then {
-				{_unit disableAI _x} foreach ["TARGET","AUTOTARGET","FSM","AUTOCOMBAT"]; //"THREAT_PATH","PATHPLAN",
+				{_unit disableAI _x} foreach ["TARGET","AUTOTARGET","FSM","AUTOCOMBAT"];
 				if !(combatmode _unit == "BLUE") then {
 					[_unit,["COMBATMODE","BLUE"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;
 				};
 			};
 
-			_getDistance = if (_vehicle == _unit) then {
+			private _getDistance = if (_vehicle == _unit) then {
 				(_unit distance _movePos)
 			} else {
 				(((getposASL _vehicle) select [0,2]) distance (_movePos select [0,2]))
@@ -653,7 +665,7 @@ while {!isNull _unit} do {
 
 
 
-			_speedDist = 1200;
+			private _speedDist = 1200;
 			if (_landingData == "RAPPEL") then {_speedDist = 300};
 			if (_vehicle isKindOf "Helicopter") then {
 				if ((_wpAction select 0) == "NONE") then {
@@ -677,7 +689,7 @@ while {!isNull _unit} do {
 					_wpRadius = 50;
 					_varidist = 10;
 				};
-				{_unit disableAI _x} foreach ["TARGET","AUTOTARGET","FSM","AUTOCOMBAT"]; //"THREAT_PATH","PATHPLAN",
+				{_unit disableAI _x} foreach ["TARGET","AUTOTARGET","FSM","AUTOCOMBAT"];
 				_unit dotarget objnull; _unit dowatch objnull;
 				{_unit setskill [_x,0]} foreach ["commanding","spotTime","spotDistance"];
 				_vehicle land "NONE";
@@ -732,8 +744,8 @@ while {!isNull _unit} do {
 		if !((_wpAction select 0) in ["GRENADE","SUPPRESSION","REARM"]) then {
 			if (profileNameSpace getVariable ["A3C_FORCERAIL_VAR", false]) then {
 				if (isnull objectparent _unit && {_cycle == ((count _data) - 1)}) then { //~~ ONLY DO THIS IF IT'S FINAL WAYPOINT OR UNIT HAS TO WAIT
-					_aslP = +(getPosASL _unit);
-					_aslRef = ATLtoASL _wPos;
+					private _aslP = +(getPosASL _unit);
+					private _aslRef = ATLtoASL _wPos;
 					{
 						_x set [2,(_x select 2) + 0.3];
 					} foreach [_aslP,_aslRef];
@@ -754,7 +766,7 @@ while {!isNull _unit} do {
 			if ( ((_wpCondition select 0) != "NONE") OR ((_cycle + 1) == count (_unit getVariable ["A3C_PLOT",[]])) ) then {
 				if !(_lookAtPos isEqualTo []) then {
 					waituntil {unitReady _unit && speed _vehicle == 0};
-					_spawnBehaviour = [_vehicle,_lookAtPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
+					private _spawnBehaviour = [_vehicle,_lookAtPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
 					waitUntil {scriptDone _spawnBehaviour};
 				};
 			};
@@ -771,28 +783,28 @@ while {!isNull _unit} do {
 				[_unit,position _unit] call A3C_ai_shared_fnc_doMove;
 			};
 			case ("REARM") : {
-				_spawnBehaviour = [_unit,(_wpAction select 1)] spawn A3C_ai_shared_fnc_reArm_plotBehaviour;
+				private _spawnBehaviour = [_unit,(_wpAction select 1)] spawn A3C_ai_shared_fnc_reArm_plotBehaviour;
 				waitUntil {scriptDone _spawnBehaviour};
 				[_unit,_movePos] call A3C_ai_shared_fnc_doMove;
 				sleep 2;
 			};
 			case ("SLINGLOAD") : {
-				_slingMode = if (isnull (getSlingLoad _vehicle)) then {0} else {1};
+				private _slingMode = if (isnull (getSlingLoad _vehicle)) then {0} else {1};
 				waitUntil {(getPosATL _vehicle select 2) > 5};
 				waitUntil {speed _vehicle < 50};
-				_spawnBehaviour = {};
+				private _spawnBehaviour = {};
 				if (_slingMode == 0) then {
 					_spawnBehaviour = [_slingMode,_vehicle,_wpAction select 1] spawn A3C_ai_squad_fnc_actionHeliSling;
 					waitUntil {scriptDone _spawnBehaviour};
 				} else {
-					_slingCargo = getSlingLoad _vehicle;
+					private _slingCargo = getSlingLoad _vehicle;
 					if !(isnull _slingCargo) then {
-						_cargoHeight = (((boundingBoxreal _slingCargo) select 1) select 2) + 10;
+						private _cargoHeight = (((boundingBoxreal _slingCargo) select 1) select 2) + 10;
 						waitUntil {speed _vehicle < 50};
 						[_unit,position _vehicle] call A3C_ai_shared_fnc_doMove;
 						sleep 1;
 
-						_slingPos = +(_movePos);
+						private _slingPos = +(_movePos);
 						_slingPos set [2,_cargoHeight];
 						_spawnBehaviour = [_slingMode,_vehicle, ATLtoASL _slingPos] spawn A3C_ai_squad_fnc_actionHeliSling;
 						waitUntil {scriptDone _spawnBehaviour};
@@ -803,7 +815,7 @@ while {!isNull _unit} do {
 				};
 			};
 			case ("CTRL_DET") : {
-				_spawnBehaviour = [_unit,_movePos,(_wpAction select 1)] spawn A3C_AI_Shared_fnc_wpActionPlantExplosive;
+				private _spawnBehaviour = [_unit,_movePos,(_wpAction select 1)] spawn A3C_AI_Shared_fnc_wpActionPlantExplosive;
 				waitUntil {scriptDone _spawnBehaviour};
 				sleep 0.5;
 			};
@@ -813,15 +825,15 @@ while {!isNull _unit} do {
 			_unit setvariable ["A3C_CREWCOUNT",(count crew _vehicle),true];
 			switch (true) do {
 				case (_landingdata in ["PICKUP","DROPOFF"]) : {
-					_spawnBehaviour = [_unit,(leader group _unit),_movePos,_landingData,_landingdata] spawn A3C_ai_squad_fnc_actionHeliPickupAndDrop; 
+					private _spawnBehaviour = [_unit,(leader group _unit),_movePos,_landingData,_landingdata] spawn A3C_ai_squad_fnc_actionHeliPickupAndDrop; 
 					waitUntil {scriptDone _spawnBehaviour};
 				};
 				case (_landingdata == "LANDFINAL") : {
-					_spawnBehaviour = [_unit,(leader group _unit),_movePos] spawn A3C_ai_squad_fnc_actionHeliLandFinal;
+					private _spawnBehaviour = [_unit,(leader group _unit),_movePos] spawn A3C_ai_squad_fnc_actionHeliLandFinal;
 					waitUntil {scriptDone _spawnBehaviour};
 				};
 				case (_landingdata == "RAPPEL") : {
-					_spawnBehaviour = [_unit,(leader group _unit),_movePos] spawn A3C_ai_shared_fnc_actionAircraftRappell;
+					private _spawnBehaviour = [_unit,(leader group _unit),_movePos] spawn A3C_ai_shared_fnc_actionAircraftRappell;
 					waitUntil {scriptDone _spawnBehaviour};
 				};
 			};
@@ -829,7 +841,7 @@ while {!isNull _unit} do {
 		if (_vehicle isKindOf "Helicopter") then {
 			if ((_wpAction select 0) == "NONE") then {
 				if (_cycle == (count _data - 1)) then {
-					_subBehaviour =
+					private _subBehaviour =
 					[
 						_vehicle,
 						getPosASL _vehicle,
@@ -929,7 +941,7 @@ while {!isNull _unit} do {
 	//-- WP ACTION: STATIC WEAPONS (had to wait unitil HUB is complete
 	if (_wpAction select 0 == "STATIC" && {!(_abort)}) then {
 		sleep 0.2;
-		_staticData = _wpAction select 1;
+		private _staticData = _wpAction select 1;
 
 		//-- bundle HUB units into one function
 		if (_hubLeader) then {
@@ -991,7 +1003,7 @@ while {!isNull _unit} do {
 			_pickUp = if (_wpAction select 1 == "PICKUP") then {true} else {false};
 			_pickUpUnits = [];
 			{
-				_soldier = _x;
+				private _soldier = _x;
 				if (alive _soldier) then {
 					_dataCompared = ((_soldier getvariable ["A3C_PLOT",[]]));
 					{
@@ -1004,7 +1016,7 @@ while {!isNull _unit} do {
 								private ["_syncIndex"];
 								_syncIndex = (_x select 0);
 								{
-									_fi = _foreachIndex;
+									private _fi = _foreachIndex;
 									if !(_syncIndex == 0) then {
 										if ((_x select 0) == _syncIndex) then {
 											if !(_isComp) then {
@@ -1042,7 +1054,7 @@ while {!isNull _unit} do {
 						sleep 0.2;
 						_vehicle flyInHeight 1;
 						_vehicle limitSpeed 0;
-						_spawnBehaviour = [_vehicle,"all",0,_pickUpUnits] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro ;
+						private _spawnBehaviour = [_vehicle,"all",0,_pickUpUnits] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro ;
 						waituntil {scriptDone _spawnBehaviour};
 
 						while {({(_x in _pickUpUnits)} count A3C_BOARD_UNITS_ACTIVE > 0) OR ({(assignedvehicle _x == _vehicle) && !(_x in _vehicle) && (alive _x)} count units group player > 0) } do {
@@ -1053,7 +1065,7 @@ while {!isNull _unit} do {
 						};
 					};
 					if !(_vehicle isKindOf "AIR") then {
-						_spawnBehaviour = [_vehicle,"all",0,_pickUpUnits] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro ;
+						private _spawnBehaviour = [_vehicle,"all",0,_pickUpUnits] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro ;
 						waituntil {scriptDone _spawnBehaviour};
 					};
 				};
@@ -1086,7 +1098,7 @@ while {!isNull _unit} do {
 	
 	
 	
-	if ( !(_abort) && {(_wpAction select 0) == "CARGO_OUT" && {{_vehicle isKindOf _x} count ["AIR","MAN"] == 0}} ) then { //~~{_unit == driver _vehicle && 
+	if ( !(_abort) && {(_wpAction select 0) == "CARGO_OUT" && {{_vehicle isKindOf _x} count ["AIR","MAN"] == 0}} ) then {
 		_vehicle limitSpeed 0;
 		{
 			if ((assignedVehicleRole _x) select 0 == "CARGO") then {
@@ -1100,7 +1112,7 @@ while {!isNull _unit} do {
 			};
 		} foreach crew _vehicle;
 		while {canMove _vehicle} do {
-			_ex = true;
+			private _ex = true;
 			{
 				if !(_x in [driver _vehicle,gunner _vehicle, commander _vehicle]) then {
 					_ex = false;
@@ -1172,7 +1184,7 @@ while {!isNull _unit} do {
 			_vehicle limitspeed 0;
 
 			_vehicle flyinheight 0;
-			_velocity = [0,0,0];
+			private _velocity = [0,0,0];
 
 			if ((velocity _vehicle) select 2 > 0) then {
 				_velocity set [2,-2];
@@ -1292,7 +1304,7 @@ while {!isNull _unit} do {
 			if ((_wpAction select 0) in ["SUPPRESSION"]) then {
 				if (((expectedDestination _unit) select 1) in ["DoNotPlanFormation", "FORMATION PLANNED"]) then {_abort = true};
 			} else {
-				//systemchat 'brokenfrom6';
+
 				if ([_unit,_origdest,_data,_cycle,1] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom) then {
 					_abort = true;
 					{
@@ -1302,8 +1314,8 @@ while {!isNull _unit} do {
 			};
 			_otherUnits = [];
 			{
-				_soldier = _x;
-				_unitData = (_soldier getvariable ["A3C_PLOT",[]]);
+				private _soldier = _x;
+				private _unitData = (_soldier getvariable ["A3C_PLOT",[]]);
 				if (alive _soldier) then {
 					{
 						if (_wpMarkerMain == ((_x select 1) select 0)) then {
@@ -1416,7 +1428,7 @@ while {!isNull _unit} do {
 
 
 	if (_wpAction select 0 == "PARADROP") then {
-		_spawnBehaviour = [getPlayerUID player,_vehicle] call A3C_ai_shared_fnc_paradropManage;
+		private _spawnBehaviour = [getPlayerUID player,_vehicle] call A3C_ai_shared_fnc_paradropManage;
 		waitUntil {scriptDone _spawnBehaviour};
 		sleep 2;
 		[_unit ,_movePos] call A3C_ai_shared_fnc_doMove;
@@ -1472,7 +1484,7 @@ if !(_unitPolygons isEqualTo []) then {
 };
 
 //-- reset defaults
-{_unit enableAI _x} foreach ["MOVE","TARGET","AUTOTARGET","FSM","AUTOCOMBAT"]; //"PATHPLAN","THREAT_PATH",
+{_unit enableAI _x} foreach ["MOVE","TARGET","AUTOTARGET","FSM","AUTOCOMBAT"];
 {_unit setskill [_x,((_unit getvariable "A3C_SKILLDATA") select _foreachindex)]} foreach ["commanding","spotDistance","spotTime"];
 _unit forcespeed -1;
 _vehicle = vehicle _unit; //-- refresh

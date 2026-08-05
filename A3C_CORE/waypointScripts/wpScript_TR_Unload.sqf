@@ -438,9 +438,12 @@ waitUntil {
 								_pos
 							] call _fnc_getHeliLandingPosition;
 
+							private _landingPosWorld =
+								AGLToASL _landingPos;
+
 							if !(_vehicle in _vehiclesLanding) then {
 								_vehicle landAt [
-									_landingPos,
+									_landingPosWorld,
 									"Get Out",
 									99999
 								];
@@ -481,11 +484,14 @@ waitUntil {
 								_pos
 							] call _fnc_getHeliLandingPosition;
 
+							private _landingPosWorld =
+								AGLToASL _landingPos;
+
 							if !(_vehicle in _vehiclesLanding) then {
 								commandStop (driver _vehicle);
 								
 								_vehicle landAt [
-									_landingPos,
+									_landingPosWorld,
 									"Get Out",
 									99999
 								];

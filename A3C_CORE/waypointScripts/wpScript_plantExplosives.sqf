@@ -1,6 +1,14 @@
 params ["_group","_pos","_target","_callerUID","_preCondition", "_postCondition", "_explosivesData"];
 
-if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {};
+if ([_callerUID, _group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith {
+	if (A3C_DEBUG) then {
+		"placeExplosives - Script blocked" remoteExec ["systemchat", 0];
+	};
+	
+	true
+};
+
+
 
 _explosivesData params ["_chargeType"];
 
@@ -10,7 +18,7 @@ private _leader = leader _group;
 private _leaderVic = vehicle _leader;
 private _precision = (getNumber (configfile >> "CfgVehicles" >> (typeOf _leaderVic) >> "precision")) * 1.3;
 
-
+[_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 //-- WAIT FOR ARRIVAL
 while {_leaderVic distance2d _pos >= _precision} do { //--_precision
@@ -123,10 +131,21 @@ private _detoUnits = (
 
 
 //-- no units with _chargeType >> exit
-if (_detoUnits isEqualTo []) exitWith {true};
+if (_detoUnits isEqualTo []) exitWith {
+	
+	if (A3C_DEBUG) then {
+		private _debugString = "_detoUnits is empty. No units with charge type: " + _chargeType + " found in group: " + str _group;
+		_debugString remoteExec ["systemchat", 0];
+	};
+	
+	true
+};
 
 //-- choose unit to place charge
 private _plantUnit = _detoUnits select 0;
+if (A3C_DEBUG) then {
+	"PLACING CHARGE" remoteExec ["systemchat", 0];
+};
 
 //-- action: place charge
 private _actionScript = [

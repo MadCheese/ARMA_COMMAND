@@ -262,6 +262,12 @@ if !(_isHighCommand) then {
 						A3C_HC_ACTIVEGROUP = _gp;
 						A3C_HC_ACTIVE_IND = _wp_Index;
 						A3C_UI_MAP_BOOL_isHCWaypointPosEdit = true;
+
+						//-- Clear A3C_Selection_MultiWaypoint if the clicked waypoint is not within it
+						//-- otherwise the UX feels weird
+						if !([_gp, _wp_Index] in A3C_Selection_MultiWaypoint) then {
+							A3C_Selection_MultiWaypoint = [];
+						};
 						
 						if ("plantExplosives" in (waypointScript [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND])) then {
 							A3C_HC_DETONATION_BOOL = true;

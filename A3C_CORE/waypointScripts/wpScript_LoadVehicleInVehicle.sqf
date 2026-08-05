@@ -120,8 +120,11 @@ private _groupVTOLs = [
 		_pos
 	] call _fnc_getHeliLandingPosition;
 
+	private _landingPosWorld =
+		AGLToASL _landingPos;
+
 	_vehicle landAt [
-		_landingPos,
+		_landingPosWorld,
 		"Get Out",
 		99999
 	];

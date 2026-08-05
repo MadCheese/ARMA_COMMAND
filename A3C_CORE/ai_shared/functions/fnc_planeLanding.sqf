@@ -211,7 +211,7 @@ if !(_dynamicLanding) then {
 	private _mode = "TENT";
 	private _hangars = [];
 
-	_vehicle setFuel 0;
+	[_vehicle,0] remoteExec ["setFuel",_vehicle];
 	[_vehicle,["Door_1_source",1]] remoteExec ["animateDoor",_vehicle];
 
 	private _hangar = objNull;

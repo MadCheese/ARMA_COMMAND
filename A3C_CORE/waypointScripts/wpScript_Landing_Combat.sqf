@@ -301,8 +301,11 @@ private _groupHelicopters = _currentDrivenVehicles select {
 		_pos
 	] call _fnc_getHeliLandingPosition;
 
+	private _landingPosWorld =
+		AGLToASL _landingPos;
+
 	_vehicle landAt [
-		_landingPos,
+		_landingPosWorld,
 		"Get Out",
 		99999
 	];
@@ -328,8 +331,11 @@ private _groupHelicopters = _currentDrivenVehicles select {
 		_pos
 	] call _fnc_getHeliLandingPosition;
 
+	private _landingPosWorld =
+		AGLToASL _landingPos;
+
 	_vehicle landAt [
-		_landingPos,
+		_landingPosWorld,
 		"Get Out",
 		99999
 	];
