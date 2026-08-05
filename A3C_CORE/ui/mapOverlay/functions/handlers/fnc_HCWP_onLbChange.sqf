@@ -16,6 +16,13 @@ if (isNil "_mode") exitWith {};
 private _a3c_dsp = IDD_MAP_OVERLAY;
 private _display = findDisplay _a3c_dsp;
 
+if (
+	!isNull _display
+	&& {_display getVariable ["A3C_HCWP_MULTI_ACTIVE", false]}
+) exitWith {
+	_this call A3C_ui_mapOverlay_fnc_HCWP_onLbChangeMulti;
+};
+
 private _header3Text = "COMPLETION";
 
 private _preCondModeCtrl =

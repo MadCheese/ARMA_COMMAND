@@ -290,7 +290,39 @@ if !(_isHighCommand) then {
 			_wp_Icon = _wp_Icons select 0;
 			_gp = _wp_Icon select 0;
 			_wp_Index = _wp_Icon select 3;
-			[_gp,_wp_Index,A3C_HC_EDIT_ACTION,IDD_MAP_OVERLAY,[_sx, _sy]] call A3C_ui_mapOverlay_fnc_HCWP_openMenu;
+			private _clickedWaypoint = [_gp, _wp_Index];
+			private _multiWaypointSelection = [];
+
+			{
+				_multiWaypointSelection pushBackUnique _x;
+			} forEach A3C_Selection_MultiWaypoint;
+
+			if (
+				count _multiWaypointSelection > 1
+				&& {_clickedWaypoint in _multiWaypointSelection}
+			) then {
+				[
+					_gp,
+					_wp_Index,
+					A3C_HC_EDIT_ACTION,
+					IDD_MAP_OVERLAY,
+					[_sx, _sy],
+					_multiWaypointSelection
+				] call A3C_ui_mapOverlay_fnc_HCWP_openMenuMulti;
+			} else {
+				if ({isPlayer _x} count (units _gp) == 0) then {
+					[
+						_gp,
+						_wp_Index,
+						A3C_HC_EDIT_ACTION,
+						IDD_MAP_OVERLAY,
+						[_sx, _sy]
+					] call A3C_ui_mapOverlay_fnc_HCWP_openMenu;
+				} else {
+					"PLAYER DETECTED IN GROUP - MENU PROHIBITED" spawn MCSS_fnc_ShortHint;
+				};
+			};
+			
 			private _resetSelection = false;
 		};
 

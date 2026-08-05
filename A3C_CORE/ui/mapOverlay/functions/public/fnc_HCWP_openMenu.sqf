@@ -36,6 +36,32 @@ if ([_gp, _wpiC] in A3C_BLACKLIST_WAYPOINT_EDIT) exitWith {
 };
 
 private _display = findDisplay _a3c_dsp;
+
+_display setVariable ["A3C_HCWP_MULTI_ACTIVE", false];
+_display setVariable ["A3C_HCWP_MULTI_INITIALIZING", false];
+_display setVariable ["A3C_HCWP_MULTI_SELECTION", nil];
+_display setVariable ["A3C_HCWP_MULTI_GROUPS", nil];
+
+{
+	(
+		_display displayCtrl _x
+	) ctrlShow true;
+} forEach [
+	IDC_MAP_HCWP_Confirm_BG,
+	IDC_MAP_HCWP_Confirm_TEXT,
+	IDC_MAP_HCWP_Delete_BG,
+	IDC_MAP_HCWP_Delete_TEXT
+];
+
+{
+	(
+		_display displayCtrl _x
+	) ctrlEnable true;
+} forEach [
+	IDC_MAP_HCWP_Confirm_TEXT,
+	IDC_MAP_HCWP_Delete_TEXT
+];
+
 private _wpMenuCtrlsGroup =
 	_display displayCtrl IDC_MAP_HCWP_Parent;
 

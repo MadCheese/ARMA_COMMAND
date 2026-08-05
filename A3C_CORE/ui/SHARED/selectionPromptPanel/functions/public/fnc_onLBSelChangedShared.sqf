@@ -61,9 +61,29 @@ if (_doubleClick) then {
 					//-- save unit selection to reestablish later
 					A3C_isIssuingCargoWPs = true;
 					
-					private _cargoGroups = ([A3C_HC_ACTIVEGROUP] call MCSS_fnc_getCargoGroups) select {
+					private _cargoGroups = +(
+						_parentCtrl getVariable [
+							"A3C_CARGO_WAYPOINT_GROUPS",
+							[]
+						]
+					);
+
+
+					//-- Revalidate before beginning the interaction. A cargo group might have
+					//-- received a waypoint while the YES/NO prompt was open.
+
+					_cargoGroups = _cargoGroups select {
 						private _cargoGroup = _x;
-						(waypointPosition [_cargoGroup, currentWaypoint _cargoGroup]) distance2D [0,0,0] == 0
+
+						!isNull _cargoGroup
+						&& {
+							(
+								waypointPosition [
+									_cargoGroup,
+									currentWaypoint _cargoGroup
+								]
+							) distance2D [0, 0, 0] == 0
+						}
 					};
 
 					[_cargoGroups] spawn {

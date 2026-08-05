@@ -9,7 +9,9 @@ private _effectiveCommander = effectiveCommander _leaderVehicle;
 if !(_effectiveCommander in units _group) exitWith {};
 
 private _drivers = (units _group - [_leader]) select {
-	_x == driver vehicle _x
+	private _vehicle = vehicle _x;
+	_vehicle != _leaderVehicle //-- prevent, because if the unit is in the same vehicle as leader, it will struggle moving and constantly try to form up with itself
+	&& {_x == driver _vehicle}
 };
 
 {

@@ -8,13 +8,14 @@ private _leader = leader _group;
 {
 	private _unit = _x;
 	private _vehicle = objectParent _unit;
+	
 
 	{
 		_unit enableAI _x;
 	} forEach ["MOVE", "PATH"];
 
 	if (!isNull _vehicle && {_unit == driver _vehicle}) then {
-		_vehicle limitSpeed 5000;
+		_vehicle limitSpeed 9999;
 		if (_vehicle isKindOf "AIR") then {
 			private _flyInHeight = _vehicle getVariable ["A3C_FLYINHEIGHT", 75];
 			_vehicle flyInHeight _flyInHeight;
@@ -25,7 +26,10 @@ private _leader = leader _group;
 		} forEach ["MOVE", "PATH"];
 	};
 	
-	if (_unit != _leader) then {
+	if (
+		_unit != _leader
+		&& {objectParent _unit != objectParent _leader}
+	) then {
 		_unit commandFollow _leader;
 	};
 } forEach (units _group);

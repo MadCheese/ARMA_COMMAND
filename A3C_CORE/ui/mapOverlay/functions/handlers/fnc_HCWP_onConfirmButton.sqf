@@ -6,6 +6,10 @@
 disableSerialization;
 
 private _display = findDisplay IDD_MAP_OVERLAY;
+if (_display getVariable ["A3C_HCWP_MULTI_ACTIVE",false]) exitWith {
+	[] call A3C_ui_mapOverlay_fnc_HCWP_onConfirmButtonMulti;
+};
+
 private _group = A3C_HC_ACTIVEGROUP;
 private _wpMenuCtrlsGroup = _display displayCtrl IDC_MAP_HCWP_Parent;
 
@@ -564,33 +568,9 @@ if (_isCurrentWaypoint) then {
 A3C_HC_ACTIVE_WPOS = [0,0,0];
 
 if (A3C_HC_EDIT_ACTION == "TRANSPORT UNLOAD") then {
-	//-- extra TR Unload functionality: Request waypoints for cargo groups
-	private _cargoGroups = ([A3C_HC_ACTIVEGROUP] call MCSS_fnc_getCargoGroups) select {private _gp = _x; (waypointPosition [_gp, currentWaypoint _gp]) distance2D [0,0,0] == 0};
-	if !(_cargoGroups isEqualTo []) then { //-- here we check for existing cargo units that can have waypoints assigned.
-		//-- Prompt user to select desired option
-		private _parent = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
-		private _text = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
-		private _listBox = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
-
-		ctrlSetFocus _listBox;
-		
-		lbClear _listBox;
-		ctrlSetFocus _listBox;
-
-		A3C_SelectionPromptPanel_MODE = "CARGO_WAYPOINTS";
-		_text ctrlSetText "SET WAYPOINTS FOR CARGO GROUPS?";
-		_parent ctrlShow true;
-		_parent ctrlSetPosition [0.383108 * safezoneW + safezoneX, 0.378986 * safezoneH + safezoneY];
-		_parent ctrlCommit 0;
-
-		ctrlSetFocus _listBox;
-		
-		lbClear _listBox;
-		{
-			[_listBox, _x] call A3C_ui_shared_fnc_addLbEntry;
-		} foreach ["YES", "NO"];
-
-		[_parent, _listBox, 2] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
-
-	};
+	[
+		[
+			A3C_HC_ACTIVEGROUP
+		]
+	] call A3C_ui_mapOverlay_fnc_HCWP_openCargoWaypointPrompt;
 };

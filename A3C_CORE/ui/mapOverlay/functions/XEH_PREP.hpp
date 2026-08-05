@@ -11,12 +11,18 @@ A3C_PREP(onUnload);
 // UI event handlers.
 A3C_PREP_SUBDIR(handlers,HCGP_onActionMouseButtonDown);
 A3C_PREP_SUBDIR(handlers,HCGP_onConfirmButton);
-A3C_PREP_SUBDIR(handlers,HCGP_onLbChange);
-A3C_PREP_SUBDIR(handlers,HCGP_onStanceButton);
-A3C_PREP_SUBDIR(handlers,HCWP_onConfirmButton);
 A3C_PREP_SUBDIR(handlers,HCWP_onLbChange);
+A3C_PREP_SUBDIR(handlers,HCGP_onStanceButton);
+
+A3C_PREP_SUBDIR(handlers,HCWP_onConfirmButton);
+A3C_PREP_SUBDIR(handlers,HCWP_onConfirmButtonMulti);
+A3C_PREP_SUBDIR(handlers,HCWP_onDeleteButton);
+A3C_PREP_SUBDIR(handlers,HCGP_onLbChange);
+A3C_PREP_SUBDIR(handlers,HCWP_onLbChangeMulti);
+
 A3C_PREP_SUBDIR(handlers,HXT_OMBD_prepLoopOrSyncSQ);
 A3C_PREP_SUBDIR(handlers,HXT_OMBU_setLoopOrSyncSQ);
+
 A3C_PREP_SUBDIR(handlers,MAP_onKeyDown);
 A3C_PREP_SUBDIR(handlers,onDragMapHCWP);
 A3C_PREP_SUBDIR(handlers,onDragMapItem);
@@ -65,7 +71,10 @@ A3C_PREP_SUBDIR(public,HCGP_activateDashboardEditName);
 A3C_PREP_SUBDIR(public,HCGP_openMenu);
 A3C_PREP_SUBDIR(public,HCWP_addActions);
 A3C_PREP_SUBDIR(public,HCWP_dayTimeZeroComp);
+A3C_PREP_SUBDIR(public,HCWP_getWaypointPreCondition);
+A3C_PREP_SUBDIR(public,HCWP_openCargoWaypointPrompt);
 A3C_PREP_SUBDIR(public,HCWP_openMenu);
+A3C_PREP_SUBDIR(public,HCWP_openMenuMulti);
 A3C_PREP_SUBDIR(public,isCursorOverControl);
 A3C_PREP_SUBDIR(public,isWaypointLoop);
 A3C_PREP_SUBDIR(public,openOverlay);

@@ -2560,7 +2560,7 @@ class A3C_DSP_MapOverlay
 					idc = IDC_MAP_HCWP_Delete_TEXT; //709134;
 					text = "DELETE";
 					shadow = 0;
-					action = EXPAND_AND_QUOTE([ARR_2(A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND)] call A3C_ai_highCommand_fnc_removeWaypoint; (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCWP_Parent) ctrlShow false);
+					action = EXPAND_AND_QUOTE([] call A3C_ui_mapOverlay_fnc_HCWP_onDeleteButton);
 					x = 4.5 * GUI_GRID_W;
 					y = 14 * GUI_GRID_H;
 					w = 4.5 * GUI_GRID_W;
