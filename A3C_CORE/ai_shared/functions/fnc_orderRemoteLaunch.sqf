@@ -443,8 +443,11 @@ switch (_weaponGroup) do {
 
         sleep 2;
 
-        private _setDir = (_unit modelToWorld (_unit selectionPosition "lefthand")) getDir _targetPos;
-        _unit setDir _setDir;
+        // private _setDir = (_unit modelToWorld (_unit selectionPosition "lefthand")) getDir _targetPos;
+        // _unit setDir _setDir;
+
+        private _spawnBehaviour = [_unit,_targetPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
+        waitUntil {sleep 0.1; scriptDone _spawnBehaviour};
 
         private _wm = (getArray (_cfgWeapons >> secondaryWeapon _unit >> "modes")) select 0;
 

@@ -533,7 +533,8 @@ switch (_mode) do {
 						(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_OUTERRIGHT_2_IMG) ctrlSetTextColor [1,1,1,0.6];
 						(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_OUTERRIGHT_2_BTN) ctrlSetTooltip "AI Healing: LMB: open medical controls. || SHIFT+LMB: Closest Medic Heal Player || RMB: AUTO-MEDICS";
 					} else {
-						if ({private _unit = _x; {_unit getHitPointDamage _x > 0.2} count A3C_HUMAN_HITPOINTS > 0} count (units player) > 0) then {
+						// if ({private _unit = _x; {_unit getHitPointDamage _x > 0.2} count A3C_HUMAN_HITPOINTS > 0} count (units player) > 0) then {
+						if (([group player] call A3C_ai_shared_fnc_medical_findPatients) isNotEqualTo []) then {
 							(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_OUTERRIGHT_2_IMG) ctrlSetTextColor [1,0.3,0.3,0.6];
 							(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_OUTERRIGHT_2_BTN) ctrlSetTooltip "AI Healing: LMB: open medical controls. || SHIFT+LMB: Closest Medic Heal Player || RMB: AUTO-MEDICS";
 						} else {

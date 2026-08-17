@@ -628,7 +628,10 @@ if (_skipHealing) then {
 	};
 } else {
 	// Heal the patient.
-	if (!_vehicleHeal) then {
+	if (
+		!_vehicleHeal
+		&& {!A3C_IsAce3}
+	) then {
 		if (_unit == _patient) then {
 			_unit action [
 				"HealSoldierSelf",
@@ -658,17 +661,11 @@ if (_skipHealing) then {
 	};
 
 	[
+		_unit,
 		_patient
 	] call A3C_ai_shared_fnc_medical_applyHealing;
 
-	//-- ANTISTASI healing
-	if (!isNil 'A3A_fnc_actionRevive') then {
-		[_patient, _unit] remoteExec [
-			"A3A_fnc_actionRevive",
-			_unit,
-			false
-		];
-	};
+	
 
 	_patient doWatch objNull;
 };

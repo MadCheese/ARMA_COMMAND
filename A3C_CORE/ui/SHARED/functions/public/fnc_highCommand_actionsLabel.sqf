@@ -277,6 +277,16 @@ private _actions = [
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_loadVehicle.paa";
 					_button_toolTip = "LOAD VEHICLES IN CARGO";
 				};
+				
+				case ("UNLOADVEHICLECARGO") : {
+					_params = [];
+					_buttonFnc = {
+						params ["_clickData","_buttonArray","_specialParams"];
+						[] spawn A3C_ai_highCommand_fnc_unloadVehicleCargo;
+					};
+					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_unloadVehicle.paa";
+					_button_toolTip = "UNLOAD VEHICLE CARGO";
+				};
 				case ("PARADROP") : {
 					_params = [];
 					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_paradrop.paa";

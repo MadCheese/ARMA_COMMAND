@@ -317,6 +317,19 @@ if (count _selectedGroups == 1) then {
 				_actions pushBackUnique "PARALOAD";
 			};
 
+			
+
+			if ((getPosATL _leaderVehicle) select 2 < 1) then {
+				private _vehicleCargo = getVehicleCargo _leaderVehicle;
+				if (_vehicleCargo isNotEqualTo []) then {
+					_actions pushBackUnique "UNLOADVEHICLECARGO";
+				};
+			};
+
+			
+
+
+
 			if (
 				_isRadial
 				&& {A3C_israppel}
@@ -950,6 +963,7 @@ private _actionPriority = [
 	"PARADROP",
 	"RAPPEL",
 	"PARALOAD",
+	"UNLOADVEHICLECARGO",
 	"FLYINGHEIGHT",
 	"REPAIR",
 	"ATSHOT",

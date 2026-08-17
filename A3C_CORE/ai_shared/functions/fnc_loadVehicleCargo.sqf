@@ -33,8 +33,8 @@ private _chat = format [
 	_cargoVehicleDisplayName
 ];
 
-if !((_vehicle canVehicleCargo player) select 0) then {
-	_chat = _chat + " Vehicle is now full";
-};
+// if !((_vehicle canVehicleCargo player) select 0) then {
+// 	_chat = _chat + " Vehicle is now full";
+// };
 
 systemChat _chat;

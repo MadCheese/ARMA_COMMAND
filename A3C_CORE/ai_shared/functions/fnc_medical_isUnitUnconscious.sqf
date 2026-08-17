@@ -2,13 +2,18 @@
 
 params ["_unit"];
 
+//-- ACE exit
+if (A3C_IsAce3) exitWith {
+	_unit getVariable ["ACE_isUnconscious", false]
+};
+
 (lifeState _unit) in ["UNCONSCIOUS", "INCAPACITATED"]
-|| {
-	A3C_IsAce3
-	&& {
-		_unit getVariable ["ACE_isUnconscious", false]
-	}
-}
+// || {
+// 	A3C_IsAce3
+// 	&& {
+// 		_unit getVariable ["ACE_isUnconscious", false]
+// 	}
+// }
 || {_unit getVariable ["ais_unconscious", false]}
 || {_unit getVariable ["unit_is_unconscious", false]}
 || {_unit getVariable ["tcb_ais_agony", false]}

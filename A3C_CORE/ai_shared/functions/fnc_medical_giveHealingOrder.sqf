@@ -238,24 +238,44 @@ _group setVariable ["A3C_MEDICS_LB", _selectedMedics];
 					[]
 				];
 
-				private _hasMedicalSupplies = (
-					{
-						private _itemName = _x;
-
-						(
-							{
+				private _hasMedicalSupplies = if (A3C_IsAce3) then {
+					(
+						[
+							"@bandage",
+							"@iv",
+							"tourniquet",
+							"splint",
+							"morphine",
+							"epinephrine"
+						] findIf {
+							(
 								[
-									_x,
-									_itemName
-								] call MCSS_fnc_isInString
-							} count [
-								"Medi",
-								"FirstAid",
-								"FAK"
-							]
-						) > 0
-					} count items _healer
-				) > 0;
+									_healer,
+									_x
+								] call ace_medical_ai_fnc_itemCheck
+							) param [0, false]
+						}
+					) != -1
+				} else {
+					(
+						{
+							private _itemName = _x;
+
+							(
+								{
+									[
+										_x,
+										_itemName
+									] call MCSS_fnc_isInString
+								} count [
+									"Medi",
+									"FirstAid",
+									"FAK"
+								]
+							) > 0
+						} count items _healer
+					) > 0
+				};
 
 				if (!_hasMedicalSupplies) exitWith {
 					if (

@@ -8,7 +8,7 @@ class EditorData
 	toggles=1057;
 	class ItemIDProvider
 	{
-		nextID=5122;
+		nextID=5113;
 	};
 	class MarkerIDProvider
 	{
@@ -17,9 +17,9 @@ class EditorData
 	class Camera
 	{
 		pos[]={14881.163,23.343664,16578.4};
-		dir[]={-0.24430272,-0.16350155,0.95581555};
-		up[]={-0.040488727,0.98654312,0.15840901};
-		aside[]={0.96885335,0,0.24763514};
+		dir[]={-0.34709534,-0.74188375,0.57370144};
+		up[]={-0.38403201,0.67052853,0.63475269};
+		aside[]={0.85559589,1.4901161e-08,0.51764441};
 	};
 };
 binarizationWanted=0;
@@ -76,14 +76,13 @@ addons[]=
 	"A3C_OBJECTS",
 	"A3_Characters_F_Heads",
 	"A3_Characters_F_Tank",
-	"A3_Characters_F_AoW",
-	"A3_Soft_F_MRAP_01"
+	"A3_Characters_F_AoW"
 };
 class AddonsMetaData
 {
 	class List
 	{
-		items=40;
+		items=39;
 		class Item0
 		{
 			className="A3_Structures_F";
@@ -352,13 +351,6 @@ class AddonsMetaData
 			author="Bohemia Interactive";
 			url="https://www.arma3.com";
 		};
-		class Item39
-		{
-			className="A3_Soft_F";
-			name="Arma 3 Alpha - Unarmored Land Vehicles";
-			author="Bohemia Interactive";
-			url="https://www.arma3.com";
-		};
 	};
 };
 dlcs[]=
@@ -419,7 +411,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=107;
+		items=103;
 		class Item0
 		{
 			dataType="Trigger";
@@ -5823,228 +5815,6 @@ class Mission
 			{
 			};
 			id=5112;
-		};
-		class Item103
-		{
-			dataType="Group";
-			side="West";
-			class Entities
-			{
-				items=1;
-				class Item0
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={14874.421,17.91888,16602.805};
-						angles[]={-0,0,6.2818937};
-					};
-					side="West";
-					flags=6;
-					class Attributes
-					{
-					};
-					id=5115;
-					type="B_Soldier_F";
-					atlOffset=3.8146973e-06;
-				};
-			};
-			class Attributes
-			{
-			};
-			class CrewLinks
-			{
-				class LinkIDProvider
-				{
-					nextID=1;
-				};
-				class Links
-				{
-					items=1;
-					class Item0
-					{
-						linkID=0;
-						item0=5115;
-						item1=5114;
-						class CustomData
-						{
-							role=1;
-						};
-					};
-				};
-			};
-			id=5113;
-			atlOffset=3.8146973e-06;
-		};
-		class Item104
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14874.424,20.123386,16602.752};
-				angles[]={-0,0,6.2818937};
-			};
-			side="West";
-			flags=6;
-			class Attributes
-			{
-			};
-			id=5114;
-			type="B_MRAP_01_F";
-			atlOffset=3.8146973e-06;
-		};
-		class Item105
-		{
-			dataType="Group";
-			side="West";
-			class Entities
-			{
-				items=4;
-				class Item0
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={14859.31,17.912527,16626.734};
-						angles[]={-0,0,6.2818937};
-					};
-					side="West";
-					flags=6;
-					class Attributes
-					{
-					};
-					id=5118;
-					type="B_T_Pilot_F";
-					atlOffset=1.9073486e-06;
-				};
-				class Item1
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={14859.31,24.602102,16626.744};
-						angles[]={-0,0,6.2818937};
-					};
-					side="West";
-					class Attributes
-					{
-					};
-					id=5119;
-					type="B_T_Pilot_F";
-					atlOffset=6.6895905;
-				};
-				class Item2
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={14859.31,24.602102,16626.744};
-						angles[]={-0,0,6.2818937};
-					};
-					side="West";
-					class Attributes
-					{
-					};
-					id=5120;
-					type="B_T_Pilot_F";
-					atlOffset=6.6895905;
-				};
-				class Item3
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={14859.31,24.602102,16626.744};
-						angles[]={-0,0,6.2818937};
-					};
-					side="West";
-					class Attributes
-					{
-					};
-					id=5121;
-					type="B_T_Pilot_F";
-					atlOffset=6.6895905;
-				};
-			};
-			class Attributes
-			{
-			};
-			class CrewLinks
-			{
-				class LinkIDProvider
-				{
-					nextID=4;
-				};
-				class Links
-				{
-					items=4;
-					class Item0
-					{
-						linkID=0;
-						item0=5118;
-						item1=5117;
-						class CustomData
-						{
-							role=1;
-						};
-					};
-					class Item1
-					{
-						linkID=1;
-						item0=5119;
-						item1=5117;
-						class CustomData
-						{
-							role=2;
-							turretPath[]={0};
-						};
-					};
-					class Item2
-					{
-						linkID=2;
-						item0=5120;
-						item1=5117;
-						class CustomData
-						{
-							role=2;
-							turretPath[]={1};
-						};
-					};
-					class Item3
-					{
-						linkID=3;
-						item0=5121;
-						item1=5117;
-						class CustomData
-						{
-							role=2;
-							turretPath[]={2};
-						};
-					};
-				};
-			};
-			id=5116;
-			atlOffset=-1.1444092e-05;
-		};
-		class Item106
-		{
-			dataType="Object";
-			class PositionInfo
-			{
-				position[]={14867.363,24.606422,16614.227};
-				angles[]={-0,0,6.2818937};
-			};
-			side="West";
-			flags=6;
-			class Attributes
-			{
-				reportRemoteTargets=1;
-				receiveRemoteTargets=1;
-				reportOwnPosition=1;
-			};
-			id=5117;
-			type="B_T_VTOL_01_vehicle_F";
-			atlOffset=-1.1444092e-05;
 		};
 	};
 	class Connections

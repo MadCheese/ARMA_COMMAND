@@ -30,7 +30,7 @@ class CfgPatches
 		units[] = {};
 		weapons[] = {};
 		requiredVersion = 0.1;
-		requiredAddons[] = {"CBA_Extended_EventHandlers", "A3_Dubbing_Radio_F"};
+		requiredAddons[] = {"CBA_Extended_EventHandlers", "cba_keybinding", "A3_Dubbing_Radio_F"};
 		projectName = "ARMA COMMAND DLC";
 		author = "Mad_Cheese";
 	};
@@ -46,7 +46,8 @@ class CfgPatches
 
 class Extended_PreInit_EventHandlers
 {
-	A3C_init = "call compile preprocessFileLineNumbers 'A3C_CORE\A3C_Init.sqf';";
+	A3C_registerKeybinds = "call compile preprocessFileLineNumbers '\A3C_CORE\A3C_init_KeyBinds_CBA.sqf';";
+	A3C_init = "call compile preprocessFileLineNumbers '\A3C_CORE\A3C_Init.sqf';";
 };
 
 class CfgRemoteExec
