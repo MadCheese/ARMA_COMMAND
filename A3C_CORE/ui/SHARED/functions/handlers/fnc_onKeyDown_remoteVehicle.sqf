@@ -7,8 +7,9 @@
 		true	Remote-control input was handled; block the engine keybind.
 		false	No valid remote-control action was performed.
 */
+
 params [
-	["_display", displayNull, [displayNull]],
+	"_uiSource",
 	["_key", -1, [0]],
 	["_shift", false, [false]],
 	["_ctrl", false, [false]],
@@ -35,6 +36,7 @@ if !(_remoteVehicle isEqualType objNull) exitWith {
 if (
 	isNull _remoteVehicle
 	|| {!alive _remoteVehicle}
+	|| {(getPosATL _remoteVehicle) select 2 > 0.1}
 ) exitWith {
 	false
 };

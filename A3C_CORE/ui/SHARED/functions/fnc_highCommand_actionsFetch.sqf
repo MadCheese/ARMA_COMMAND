@@ -81,13 +81,20 @@ if ([player, "Laserbatteries"] call BIS_fnc_hasItem) then {
 };
 
 private _allSelectedGroupVehicles = [];
+private _selectionContainsGroupWithoutDrivenVehicle = false;
 
 {
+	private _groupDrivenVehicles = [
+		_x
+	] call A3C_main_fnc_getGroupDrivenVehicles;
+
+	if (_groupDrivenVehicles isEqualTo []) then {
+		_selectionContainsGroupWithoutDrivenVehicle = true;
+	};
+
 	{
 		_allSelectedGroupVehicles pushBackUnique _x;
-	} forEach (
-		[_x] call A3C_main_fnc_getGroupDrivenVehicles
-	);
+	} forEach _groupDrivenVehicles;
 } forEach _selectedGroups;
 
 if (count _selectedGroups == 1) then {
@@ -628,11 +635,14 @@ if (!_selectionContainsConvoyGroup) then {
 	if (count _selectedGroups > 1) then {
 		private _selectionContainsAircraft = _selectedGroups findIf {
 			(units _x) findIf {
-				vehicle _x isKindOf "AIR"
+				vehicle _x isKindOf "AIR" //-- exclude Aircraft-group presence
 			} >= 0
 		} >= 0;
 
-		if (!_selectionContainsAircraft) then {
+		if (
+			!_selectionContainsAircraft
+			&& {!_selectionContainsGroupWithoutDrivenVehicle}
+		) then {
 			_actions pushBack "CONVOY_CREATE";
 		};
 	};

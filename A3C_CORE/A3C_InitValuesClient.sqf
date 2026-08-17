@@ -31,7 +31,7 @@ with profilenamespace do {
 	if (_giveHint) then {
 		[] spawn {
 			waituntil {alive player};
-				"ARMA COMMAND DLC" hintC [
+			"ARMA COMMAND DLC" hintC [
 				"You are playing a new build (#PA001) for the first time!",
 				"Please refer to the documentation                       ",
 				">>>>>>>   NEWS:   <<<<<<<                               ",

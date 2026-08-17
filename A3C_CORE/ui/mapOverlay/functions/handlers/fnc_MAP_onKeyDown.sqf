@@ -4,27 +4,27 @@
 // A3C_ui_mapOverlay_fnc_MAP_onKeyDown
 
 /*
- * This handler is needed because ESC behaves differently than all other keys.
- *
- * This keybind is the current fix for what are probably Arma 3 quirks:
- *
- * 1. Arrow keys used for vehicle remote do not seem to register at all
- *    in keyDown events attached to the dialog itself. They do register
- *    on the main map display.
- *
- *    Strangely enough, keyUp registers fine. So for arrows, and the block
- *    with PageUp/PageDown, this handler is required.
- *
- *    It is possible that the project creates this circumstance somewhere.
- *
- * 2. To use ESC for closing popup menus, such as GP/WP context menus,
- *    without closing the entire map, this must be added directly to the map.
- *
- *    `if (_key == 1) exitWith {true};` only works on the main map.
- *
- * The map and overlay handlers are still kept separate for organization.
- * They may eventually be merged into the map event-handler path.
- */
+	This handler is needed because ESC behaves differently than all other keys.
+
+	This keybind is the current fix for what are probably Arma 3 quirks:
+
+	1. Arrow keys used for vehicle remote do not seem to register at all
+	   in keyDown events attached to the dialog itself. They do register
+	   on the main map display.
+
+	   Strangely enough, keyUp registers fine. So for arrows, and the block
+	   with PageUp/PageDown, this handler is required.
+
+	   It is possible that the project creates this circumstance somewhere.
+
+	2. To use ESC for closing popup menus, such as GP/WP context menus,
+	   without closing the entire map, this must be added directly to the map.
+
+	   `if (_key == 1) exitWith {true};` only works on the main map.
+
+	The map and overlay handlers are still kept separate for organization.
+	They may eventually be merged into the map event-handler path.
+*/
 
 params [
 	"_mapControl",
@@ -79,9 +79,8 @@ switch (true) do {
 		a3c_is_HC_remote
 		&& {_key in [200, 203, 205, 208]}
 	): {
-		_this call A3C_ui_shared_fnc_onKeyDown_remoteVehicle;
-
-		_blockDefaultKey = true;
+		_blockDefault =
+			_this call A3C_ui_shared_fnc_onKeyDown_remoteVehicle;
 	};
 };
 

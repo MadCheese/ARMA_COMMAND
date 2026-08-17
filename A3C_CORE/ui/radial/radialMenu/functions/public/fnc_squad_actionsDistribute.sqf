@@ -492,7 +492,7 @@ for "_i" from 0 to (((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do {
 					_fncData params ["_unitArray"];
 
 					_unitArray = call compile _unitArray;
-					[_unitArray] call A3C_ai_squad_fnc_actionFindCover;
+					[_unitArray] spawn A3C_ai_squad_fnc_actionFindCover;
 				},
 				true
 			];

@@ -1,43 +1,57 @@
 // A3C_main_fnc_getAllGroupsClient
 // Gets all HC groups: real, disbanded, and custom HC groups.
 
-private _hcArray = A3C_HC_DISBANDED + ((hcAllGroups player) - A3C_HC_DISBANDED);
 
-private _hasA3CTerminal = (((items player) + (assignedItems player)) findIf {
+//-- 1: Check if player has any tablet
+private _inventoryItems = (items player) + (assignedItems player);
+
+private _terminalIndex = _inventoryItems findIf {
 	["A3C_Terminal", _x] call BIS_fnc_inString
-}) >= 0;
-
-if (_hasA3CTerminal) then {
-	_hcArray = A3C_MON_SERVER_checkGroups;
 };
+
+private _hasA3CTerminal = _terminalIndex >= 0;
+private _a3cTerminal = "";
+private _a3cTerminalSide = sideUnknown;
+
+private _defaultGroups = A3C_HC_DISBANDED select {local _x};
+
+//-- no terminal - only self-disbanded groups are available to player.
+if !(_hasA3CTerminal) exitWith {
+	_defaultGroups
+};
+
+_a3cTerminal = _inventoryItems select _terminalIndex;
+
+
+
+_a3cTerminalSide = switch (true) do {
+	case ("B_" in _a3cTerminal) : {WEST};
+	case ("O_" in _a3cTerminal) : {EAST};
+	case ("I_" in _a3cTerminal) : {resistance};
+	default {side player} //-- for NO UAV variant
+};
+
+
+
+private _playerSide = side group player;
+
+//-- player is carrying wrong tablet: No units fetched 
+//-- TODO: Either add map hint or decide to allow controlling enemy forces. Latter would require enemy side player in lobby
+if (_playerSide != _a3cTerminalSide) exitWith {
+	_defaultGroups
+};
+
+private _hcArray = A3C_HC_DISBANDED + (A3C_MON_SERVER_checkGroups - A3C_HC_DISBANDED);
 
 _hcArray = _hcArray select {
-	!(_x getVariable ["A3C_HC_BLACKLIST", false]) &&
-	{
-		((units _x) findIf { alive _x }) >= 0 &&
-		{
-			!(captive leader _x)
-		}
-	}
-};
-
-if (side player != civilian) then {
-	// Only show civilian units if player is civilian.
-	// Civilian usage of A3C is not really developed.
-	_hcArray = _hcArray select {
-		side _x != civilian
-	};
-} else {
-	// Civilian player can see civilian and resistance groups, but not animals.
-	_hcArray = _hcArray select {
-		!(side _x in [east, west]) &&
-		{ !(leader _x isKindOf "Animal") }
-	};
+	side _x == _a3cTerminalSide
+	&& {!(_x getVariable ["A3C_HC_BLACKLIST", false])}
+	&& {((units _x) findIf { alive _x }) >= 0}
+	&& {!(captive leader _x)}
 };
 
 // Bug workaround for side UAVs that may appear as civilian.
 // Example: CROCUS.
-private _playerSide = side player;
 
 private _civilianUAVsCaptive = allUnitsUAV select {
 	captive _x &&

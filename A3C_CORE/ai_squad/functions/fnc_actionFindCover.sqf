@@ -3,6 +3,8 @@
 
 params ["_units"];
 
+if (isNil '_units') exitWith {};
+
 if (typeName _units == "STRING") then {
 	_units = call compile _units;
 };

@@ -9,12 +9,12 @@ item4[] = {"game_quit___",4,218,425.000000,350.000000,525.000000,450.000000,0.00
 item5[] = {"NEW_CYCLE",2,250,-100.000000,-125.000000,50.000000,-25.000000,0.000000,"NEW CYCLE"};
 item6[] = {"start_conditions",4,218,-100.000000,-250.000000,50.000000,-150.000000,0.000000,"" \n "" \n "" \n "start conditions" \n "" \n "" \n ""};
 item7[] = {"STATE_",2,250,100.000000,350.000000,200.000000,450.000000,0.000000,"STATE" \n ""};
-item8[] = {"HC_ACTIONS__relay",2,250,-275.000000,200.000000,-150.000000,250.000000,0.000000,"HC ACTIONS:" \n "relay target info" \n "prevent dismounts" \n ""};
+item8[] = {"HC_ACTIONS__relay",2,4346,-275.000000,200.000000,-150.000000,250.000000,0.000000,"HC ACTIONS:" \n "relay target info" \n "prevent dismounts" \n ""};
 item9[] = {"wait_10s_",4,218,-275.000000,50.000000,-150.000000,125.000000,0.000000,"wait" \n "10s" \n ""};
 item10[] = {"nothing_",4,218,-75.000000,350.000000,25.000000,450.000000,0.000000,"nothing" \n ""};
 item11[] = {"",7,210,-28.147552,-6.260452,-20.147552,1.739563,0.000000,""};
 item12[] = {"secondary_s_out",4,218,-100.000000,50.000000,50.000000,125.000000,0.000000,"" \n "" \n "" \n "secondary's out" \n "" \n "" \n "" \n ""};
-item13[] = {"MISSILE__TARGET",2,4346,-100.000000,175.000000,50.000000,250.000000,0.000000,"MISSILE " \n "TARGET" \n "DISTRIBUTION" \n ""};
+item13[] = {"MISSILE__TARGET",2,250,-100.000000,175.000000,50.000000,250.000000,0.000000,"MISSILE " \n "TARGET" \n "DISTRIBUTION" \n ""};
 item14[] = {"wait_2s_",4,218,100.000000,50.000000,225.000000,125.000000,0.000000,"wait" \n "2s" \n ""};
 item15[] = {"WP_RADIUS",2,250,139.026764,204.280579,229.026794,254.280579,0.000000,"WP RADIUS"};
 item16[] = {"",7,210,-454.000000,396.000000,-446.000000,404.000000,0.000000,""};
@@ -43,7 +43,7 @@ link19[] = {17,4};
 link20[] = {17,18};
 link21[] = {18,7};
 globals[] = {0.000000,0,0,0,0,640,480,1,181,6316128,1,-1055.625977,1040.948364,766.296143,-376.471924,1398,762,1};
-window[] = {0,-1,-1,-1,-1,960,26,2606,26,1,1416};
+window[] = {0,-1,-1,-1,-1,1410,281,2861,476,1,1416};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -253,6 +253,11 @@ class FSM
                          "[] spawn A3C_server_fnc_serverMonitorMain; //-- spawn instead of call because we need to wait for client results" \n
                          "" \n
                          "_time2 = time;" \n
+                         "" \n
+                         "//-- make all groups ready their launchers for RHS" \n
+                         "{" \n
+                         "	[[_x], A3C_ai_shared_fnc_readyLaunchers] remoteExec [""bis_fnc_call"", leader _x];" \n
+                         "} foreach A3C_MON_SERVER_checkGroups;" \n
                          ""/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links

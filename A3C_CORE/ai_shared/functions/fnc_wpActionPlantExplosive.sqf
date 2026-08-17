@@ -104,7 +104,7 @@ if (_exit) exitWith {
 //-- move to position
 
 private _hasTargetVehicle = _targetVeh isEqualType objNull && {!isNull _targetVeh};
-private _plantDistance = if (_hasTargetVehicle) then {6} else {4};
+private _plantDistance = if (_hasTargetVehicle) then {15} else {4};
 
 [_unit, _targetPos] call A3C_ai_shared_fnc_doMove;
 

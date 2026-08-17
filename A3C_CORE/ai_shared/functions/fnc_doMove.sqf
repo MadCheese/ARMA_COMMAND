@@ -19,7 +19,7 @@ private _effectiveCommander = effectiveCommander _vehicle;
 
 private _commanderNotInDriverGroup = !(_effectiveCommander in units _driver);
 
-// -- if effectiveCommander is not in driver's group, we should transfer command, otherwise driver will not listVehicleSensors
+// -- if effectiveCommander is not in driver's group, we should transfer command, otherwise driver will not listen
 if (_commanderNotInDriverGroup) then {
 	_vehicle setEffectiveCommander _driver;
 	_effectiveCommander = effectiveCommander _vehicle;
@@ -74,10 +74,20 @@ if (expectedDestination _unit isEqualTo []) then {
 _unit enableAI "MOVE";
 _unit forceSpeed -1;
 
+if (player in _vehicle && {_effectiveCommander != player}) then {
+	//-- this is necessary so the player does not get ejected from movement order
+	//--> switches back once player gets out
+	_vehicle setEffectiveCommander player;
+	_effectiveCommander = effectiveCommander _vehicle;
+};
+
+
 if (_effectiveCommander == player) then {
 	_unit commandMove _destination;
 	_unit moveTo _destination;
 } else {
+	
+	
 	[_unit, _effectiveCommander, _destination] spawn {
 		params ["_unit", "_effectiveCommander", "_destination"];
 
@@ -108,3 +118,4 @@ if (_effectiveCommander == player) then {
 };
 
 _unit
+

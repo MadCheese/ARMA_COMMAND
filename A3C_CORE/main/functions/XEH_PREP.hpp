@@ -46,7 +46,11 @@ A3C_PREP(isItemAssignable);
 A3C_PREP(isLoiterCompleted);
 A3C_PREP(isNVGoggles);
 A3C_PREP(isPositionInsideBuilding);
+A3C_PREP(isRHSdisposableLauncher);
+
 A3C_PREP(isStaticMissileLauncher);
+A3C_PREP(issueCommandingTablet);
+
 A3C_PREP(isTargetWithinTurretElevationRange);
 A3C_PREP(isVehicleDamaged);
 A3C_PREP(knowsAboutServerReceive);

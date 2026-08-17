@@ -48,3 +48,13 @@ A3C_HandlerID_SlotItemChangedPlayer = _unit addEventHandler [
 		_this spawn A3C_playerEventhandler_fnc_slotItemChanged;
 	}
 ];
+
+//-- ANTISTASI - give tablet to commander
+if (
+	A3C_IsA3CServer
+	&& {"antistasi" in (toLower missionName)}
+	&& {player isEqualTo (missionNamespace getVariable ["theBoss", objNull])}
+	&& {{"A3C_Terminal" in _x} count ((assignedItems player) + (items player)) == 0}
+) then {
+	[player] call A3C_main_fnc_issueCommandingTablet;
+};

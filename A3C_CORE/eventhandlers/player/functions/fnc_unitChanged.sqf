@@ -43,3 +43,14 @@ if !(isNull _currentPlayer) then {
 		[(units _currentGroup) - [_currentPlayer]] call A3C_ui_shared_fnc_resetPlayerGroup;
 	};
 };
+
+
+//-- ANTISTASI - give tablet to commander
+if (
+	A3C_IsA3CServer
+	&& {"antistasi" in (toLower missionName)}
+	&& {player isEqualTo (missionNamespace getVariable ["theBoss", objNull])}
+	&& {{"A3C_Terminal" in _x} count ((assignedItems player) + (items player)) == 0}
+) then {
+	[player] call A3C_main_fnc_issueCommandingTablet;
+};

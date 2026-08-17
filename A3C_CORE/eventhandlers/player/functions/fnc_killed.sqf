@@ -44,3 +44,5 @@ if (_body isEqualTo (missionNamespace getVariable ["A3C_EVENTHANDLER_UNIT", objN
 if (_body isEqualTo (missionNamespace getVariable ["A3C_CURRENT_PLAYER_UNIT", objNull])) then {
 	A3C_CURRENT_PLAYER_UNIT = objNull;
 };
+
+

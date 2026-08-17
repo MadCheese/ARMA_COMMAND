@@ -74,6 +74,7 @@ A3C_PREP(polygonAreaActionOn);
 A3C_PREP(polygonAreaCreate);
 A3C_PREP(polygonAreaRemove);
 A3C_PREP(preparePointerAttachmentMode);
+A3C_PREP(readyLaunchers);
 A3C_PREP(reArm_autoEvaluated);
 A3C_PREP(reArm_autoIssueOrder);
 A3C_PREP(reArm_plotAddItem);

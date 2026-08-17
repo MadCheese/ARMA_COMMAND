@@ -1,13 +1,18 @@
 #include "..\..\script_component.hpp"
 
+// A3C_UI_squadPlacement_fnc_addUnitGhost
+
 params ["_unit", "_btn"];
 
 if (isNil "A3C_is_Initialized") exitWith {
-    hint "ARMA COMMAND IS INITIALIZING - STAND BY";
-    waitUntil {!isNil "A3C_is_Initialized"};
-    hint "ARMA COMMAND INITIALIZED";
-    sleep 3;
-    hint "";
+    [] spawn {
+        hint "ARMA COMMAND IS INITIALIZING - STAND BY";
+        waitUntil {!isNil "A3C_is_Initialized"};
+        hint "ARMA COMMAND INITIALIZED";
+        sleep 3;
+        hint "";
+    };
+    
 };
 
 if !(alive _unit) exitWith {

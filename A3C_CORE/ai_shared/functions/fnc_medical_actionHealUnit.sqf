@@ -661,6 +661,15 @@ if (_skipHealing) then {
 		_patient
 	] call A3C_ai_shared_fnc_medical_applyHealing;
 
+	//-- ANTISTASI healing
+	if (!isNil 'A3A_fnc_actionRevive') then {
+		[_patient, _unit] remoteExec [
+			"A3A_fnc_actionRevive",
+			_unit,
+			false
+		];
+	};
+
 	_patient doWatch objNull;
 };
 
