@@ -102,7 +102,10 @@ if (_unitDetected) then {
 
     if (count A3C_RD_UNITS == 1) then {
         _button = (A3C_RD_UNITS select 0) getVariable ["A3C_TREESEL_INDEX", []];
-        _button = _button select ((count _button) - 1);
-        _CT_TREE tvSetCurSel _button;
+
+        if (_button isNotEqualTo []) then {
+            _button = _button select -1;
+            _CT_TREE tvSetCurSel _button;
+        };
     };
 };

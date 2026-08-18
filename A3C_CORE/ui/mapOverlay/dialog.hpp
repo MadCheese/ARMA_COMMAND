@@ -25,7 +25,7 @@ class A3C_DSP_MapOverlay
     onKeyUp = EXPAND_AND_QUOTE(_this call FUNC(onKeyUp));
 
     onMouseButtonDown = EXPAND_AND_QUOTE(_this spawn FUNC(onMouseButtonDown));
-    onMouseButtonUp = EXPAND_AND_QUOTE(_this call FUNC(onMouseButtonUp));
+    onMouseButtonUp = EXPAND_AND_QUOTE(_this spawn FUNC(onMouseButtonUp));
 		
 	class ControlsBackground 
 	{	

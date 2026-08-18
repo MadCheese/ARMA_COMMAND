@@ -81,8 +81,3 @@ class CfgRemoteExec
 		// your commands here
 	};
 };
-
-// class RscChatListDefault {
-//     colorMessage[]={0.99,0.29,0.25,1};
-//    colorMessageProtocol[]={0.99,0.29,0.25,1};
-// };

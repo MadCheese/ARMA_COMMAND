@@ -330,6 +330,10 @@ for "_i" from 0 to (((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do {
 					params ["_clickData", "_fncData"];
 					_fncData params ["_unitArray", "_cursorString", "_display"];
 
+					if (isNil '_unitArray') exitWith {
+						systemchat "A3C: No unit array provided";
+					};
+
 					_unitArray = call compile _unitArray;
 					[_unitArray, _cursorString] call A3C_ai_shared_fnc_actionClearBuilding;
 				},
@@ -490,6 +494,10 @@ for "_i" from 0 to (((count A3C_DYNAMIC_BUTTON_ACTIONS) - 1) min 11) do {
 				{
 					params ["_clickData", "_fncData"];
 					_fncData params ["_unitArray"];
+
+					if (isNil '_unitArray') exitWith {
+						systemchat "A3C: No unit array provided";
+					};
 
 					_unitArray = call compile _unitArray;
 					[_unitArray] spawn A3C_ai_squad_fnc_actionFindCover;

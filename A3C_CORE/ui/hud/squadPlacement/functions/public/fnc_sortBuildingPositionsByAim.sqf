@@ -7,7 +7,11 @@ private _buildingType = typeOf _building;
 private _prohibitedPositions = [];
 
 {
-    if ((_x select 0) == _buildingType) exitWith {
+    if (
+        !isNil "_x" //-- #TODO / #NOTE: THis is a spaghetti fix :) find out what can cause _x to be nil
+        && {count _x >= 2}
+        && {(_x select 0) == _buildingType}
+    ) exitWith {
         _prohibitedPositions = _x select 1;
     };
 } forEach (profileNamespace getVariable ["A3C_PROFILEVAR_BUILDINGS_DEFUNCT", []]);

@@ -7,6 +7,9 @@ private ["_exit","_sX","_sY","_sPos","_marker","_veh","_unit","_wpData"];
 A3C_BOOL_MAP_MD = false;
 A3C_BOOL_MOUSEMOVING = false;
 
+// #TODO: Optimize
+
+
 
 _sX = _this select 2;
 _sY = _this select 3;
@@ -496,7 +499,6 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 		if (count _drawBoardIcons > 0) then {
 			private _drawBoardIcon = _drawBoardIcons select 0;
 			private _vehi = _drawBoardIcon select 0;
-			//systemchat 'sq units get in';
 			[A3C_SELECTED_UNITS,true,true] call A3C_ai_shared_fnc_cancelUnitPlot;
 			
 			_vehi spawn {
@@ -508,7 +510,6 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 			if (count A3C_SELECTED_UNITS == 1) then {
 				private _unit = A3C_SELECTED_UNITS select 0;
 				if ( (_unit == A3C_SQ_CLICKED_UNIT) && (A3C_MAP_CommandMode == "INF") ) then {
-					//_unit setvariable ["A3C_PLOT_TEMP",[],true];
 					if (count (_unit getVariable ["A3C_PLOT",[]]) > 0 ) then {
 						[[_unit],true,true] call A3C_ai_shared_fnc_cancelUnitPlot;
 						waitUntil {count (_unit getvariable 'A3C_PLOT') == 0};
