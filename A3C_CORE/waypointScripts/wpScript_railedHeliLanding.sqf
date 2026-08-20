@@ -115,4 +115,6 @@ waitUntil {
 
 sleep 2;
 
+_leaderVehicle limitSpeed 9999;
+
 true

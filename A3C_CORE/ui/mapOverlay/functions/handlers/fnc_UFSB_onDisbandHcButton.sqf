@@ -2,6 +2,11 @@
 
 // A3C_ui_mapOverlay_fnc_UFSB_onDisbandHcButton
 
+//-- prevent action if player is captive (security mechanic to prevent accidental creation of civilian or misequipped group in ANTISTASI)
+if (captive player) exitWith {
+	"DISBANDING DISABLED WHEN IN CAPTIVE / UNDERCOVER STATE" spawn MCSS_fnc_ShortHint;
+};
+
 private _display = findDisplay IDD_MAP_OVERLAY;
 
 {
@@ -11,7 +16,7 @@ private _display = findDisplay IDD_MAP_OVERLAY;
 	IDC_MAP_SQWP_Parent
 ];
 
-//~~ below is not bulletproof! what if AICOmmand, but not synced to module
+
 private _isHighCommand = (
 	{
 		typeOf _x in [
@@ -30,8 +35,7 @@ if (
 	|| {A3C_MAP_CommandMode == "HC"}
 ) exitWith {};
 
-private _unitArray =
-	profileNamespace getVariable "A3C_GROUPUNITS";
+private _unitArray = profileNamespace getVariable "A3C_GROUPUNITS";
 
 // Disband units.
 private _units = A3C_SELECTED_UNITS;
@@ -54,7 +58,7 @@ private _units = A3C_SELECTED_UNITS;
 	(units group player) - [player]
 );
 
-private _newGroup = createGroup side player;
+private _newGroup = createGroup (side group player);
 
 private _disbandedPhonetics = [];
 

@@ -27,6 +27,8 @@ private _itemsToCheck = if (_mode == 0) then {
 	primaryWeaponItems _unit
 };
 
+
+
 private _compatibleItemsConfig = configFile >> "CfgWeapons" >> _primaryWeapon >> "WeaponSlotsInfo" >> _slot >> "compatibleItems";
 private _compatibleItemsArray = getArray _compatibleItemsConfig;
 private _hasCompatibleItemsClass = isClass _compatibleItemsConfig;

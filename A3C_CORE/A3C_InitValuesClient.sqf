@@ -783,8 +783,6 @@ A3C_ZEUSMISSION = if (!isNil 'A3C_ZEUSMISSION') then {A3C_ZEUSMISSION} else {fal
 
 };
 
-//-- Debug 
-A3C_DebugHint = false;
 
 
 if ("antistasi" in (toLower missionName)) then {
@@ -793,12 +791,19 @@ if ("antistasi" in (toLower missionName)) then {
 		//-- ANTISTASI - give tablet to commander
 		if (
 			A3C_IsA3CServer
-			&& {player isEqualTo (missionNamespace getVariable ["theBoss", objNull])}
-			&& {{"A3C_Terminal" in _x} count ((assignedItems player) + (items player)) == 0}
+			&& {
+				player isEqualTo (missionNamespace getVariable ["commanderX", objNull])
+				|| {player isEqualTo (missionNamespace getVariable ["theBoss", objNull])}	
+			}
+			&& {{"A3C_Terminal" in _x} count ((assignedItems player) + (items player)) == 0}	
 		) then {
 			waitUntil {
 				uiSleep 0.25;
         		missionNamespace getVariable ["initClientDone", false]
+			};
+			sleep 2;
+			if (A3C_DEBUG) then {
+				systemchat "INIT COMPLETE";
 			};
 			[player] call A3C_main_fnc_issueCommandingTablet;
 		};

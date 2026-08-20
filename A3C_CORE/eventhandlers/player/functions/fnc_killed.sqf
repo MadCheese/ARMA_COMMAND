@@ -45,4 +45,9 @@ if (_body isEqualTo (missionNamespace getVariable ["A3C_CURRENT_PLAYER_UNIT", ob
 	A3C_CURRENT_PLAYER_UNIT = objNull;
 };
 
+//-- remove any commanding tablet
+private _tablets = ((items _body) + (assignedItems _body)) select {"A3C_Terminal" in _x};
+{_body unassignItem _x; _body removeItem _x} foreach _tablets;
+
+
 

@@ -676,6 +676,8 @@ _data = [];
 TUTORIAL_REPEAT = false;
 TUTORIAL_CONTINUE = false;
 
+TUTORIAL_DEBUG = true;
+
 
 
 //setdate [2020,8,13,3,16]; 0 setOvercast 0.7; 0 setRain 0; 0 setfog 0;  setwind [0,0,true]; forceWeatherChange;  999999 setRain 0;
@@ -732,4 +734,25 @@ sleep 1;
 
 
 
+A3C_Tutorial_fnc_loadLauncher = {
+	params ["_unit"];
+
+	private _launcher = secondaryWeapon _unit;
+
+	if (
+		_launcher isEqualTo ""
+		|| {secondaryWeaponMagazine _unit isNotEqualTo []}
+	) exitWith {};
+
+	private _compatibleMagazines = compatibleMagazines _launcher;
+
+	if (_compatibleMagazines isNotEqualTo []) then {
+		_unit addWeaponItem [
+			_launcher,
+			_compatibleMagazines select 0,
+			true
+		];
+	};
+
+};
 

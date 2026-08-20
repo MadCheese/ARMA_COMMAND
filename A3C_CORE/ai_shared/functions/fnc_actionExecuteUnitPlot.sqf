@@ -942,7 +942,6 @@ while {!isNull _unit} do {
 	if (_wpAction select 0 == "STATIC" && {!(_abort)}) then {
 		sleep 0.2;
 		private _staticData = _wpAction select 1;
-
 		//-- bundle HUB units into one function
 		if (_hubLeader) then {
 			private _spawnBehaviour =

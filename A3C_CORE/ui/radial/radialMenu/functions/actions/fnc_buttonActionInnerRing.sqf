@@ -1921,6 +1921,8 @@ switch (_mode) do {
 
 								_buttonImg ctrlSetTextColor [1,1,1,0.3];
 
+
+
 								{
 									if ({[_x, "SILENCER"] call A3C_main_fnc_hasWeaponItem} count A3C_RD_UNITS > 0) then {
 										_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_OFF.paa";

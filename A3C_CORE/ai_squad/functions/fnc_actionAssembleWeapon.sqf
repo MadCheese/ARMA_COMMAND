@@ -33,11 +33,11 @@ private _objectPlacerType = typeOf A3C_OBJECTPLACER;
 
 			private _plotData = [
 				[
-					[_screenCenterPos getPos [3, random 360], _assembleTargetPos],		// Positions
+					[_screenCenterPos, _assembleTargetPos],		    // Positions
 					[_mainMark, "", ""],							// Markers
 					["STATIC", ["ASSEMBLE", _weapon]],				// WP action
 					["NONE", "NONE"],								// WP condition
-					["UP", "AUTO"],								// WP stances
+					["UP", "AUTO"],								    // WP stances
 					[[0, false]],									// WP sync data
 					false,											// Is WP completed
 					0,												// Combat mode
