@@ -68,6 +68,13 @@ switch (true) do {
 	};
 
 	case (_key == 29): {
+		//-- hack to get CTRL into downkeys (WTF PREVENTS THAT ANYWAYS??). Note: Keyup will remove it
+		if (profileNamespace getVariable ["A3C_MAP_OVERLAY_SHOWN", false]) then {//-- condition necessary as default map has no keyup
+			A3C_UI_DOWNKEYS pushBackUnique _key;
+		};
+		
+
+
 		if (!isNull _display) then {
 			// Additional prevention of vanilla engine-level line drawing
 			// while the overlay is open.

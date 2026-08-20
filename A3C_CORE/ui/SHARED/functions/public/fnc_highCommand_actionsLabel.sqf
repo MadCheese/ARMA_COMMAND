@@ -885,6 +885,7 @@ private _actions = [
 					} else {
 						_button_toolTip = "FIRE ARTILLERY - RELAY COORDINATES VIA MAPCLICK";
 					}; 
+
 					_buttonFnc = {
 						
 						private _a3c_dsp = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {IDD_MAP_OVERLAY} else {IDD_RADIAL_MENU};
@@ -909,6 +910,8 @@ private _actions = [
 								playsound "TacticalPing4";
 								sleep 0.5;
 								if (visibleMap) then {
+
+
 									A3C_isArtyAwaitingSuborder = true;
 									
 									
@@ -918,14 +921,19 @@ private _actions = [
 										"onMapSingleClick",
 										{
 											//-- test for right mouse button?
-											private _shift = _this select 3;
+
+											if ( ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent) ) exitWith {};
+											private _ctrl = _29 in A3C_UI_DOWNKEYS;
+
 											A3C_HC_FOCUS_ARTY_POS = _pos;
 
-											if !(_shift) then {
+
+
+											if !(_ctrl) then {
 												A3C_isArtyAwaitingSuborder = false;
 											};
+
 											["ARTY"] call A3C_ui_selectionPromptPanel_fnc_openSelectionPromptPanel;
-											
 										} 
 									] call BIS_fnc_addStackedEventHandler;
 
@@ -1074,10 +1082,6 @@ private _actions = [
 					_forEachIndex
 				];
 
-				/*
-					The legacy map handler stored str _params rather than the
-					array itself. Preserve that payload contract here.
-				*/
 				missionNamespace setVariable [
 					_handlerVariableName,
 					[

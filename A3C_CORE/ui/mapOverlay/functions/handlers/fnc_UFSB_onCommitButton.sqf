@@ -31,6 +31,8 @@ private _display = findDisplay IDD_MAP_OVERLAY;
 	_display displayCtrl IDC_MAP_UFSB_UNDO_IMG
 ) ctrlSetTextColor [1, 1, 1, 0.2];
 
+private _safetyDelay = if ({currentCommand _x == "STOP"} count _addressedUnits > 0) then {0.1} else {0};
+
 {
 	private _unit = _x;
 	private _plotTemp =
@@ -71,5 +73,8 @@ private _display = findDisplay IDD_MAP_OVERLAY;
 			[],
 			true
 		];
+	};
+	if (_safetyDelay > 0) then {
+		sleep _safetyDelay;
 	};
 } forEach _addressedUnits;

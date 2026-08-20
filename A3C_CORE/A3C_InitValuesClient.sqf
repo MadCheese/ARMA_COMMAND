@@ -568,7 +568,7 @@ A3C_MapSel_Field_DEST = [0,0,0];
 A3C_MapSel_Field_Active = false;
 
 
-
+//-- #TODO #UNCLEAR >> should not be defined here, also remember - vars are formatted in other scripts, not called directly
 A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_WIPE = {
 	A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_0 = [[],{}];
 	A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown_FNC_1 = [[],{}];

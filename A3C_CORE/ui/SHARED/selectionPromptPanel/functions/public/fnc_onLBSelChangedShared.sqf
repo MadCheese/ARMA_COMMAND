@@ -369,15 +369,35 @@ if (_doubleClick) then {
 		};
 
 		case ("ARTY_1") : {
-			A3C_HC_FOCUS_ARTY_AmmoCount = call compile (_listBoxCtrl lbText _selectedIndex);
-
-			_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
+			A3C_HC_FOCUS_ARTY_AmmoCount = call compile (
+				_listBoxCtrl lbText _selectedIndex
+			);
 
 			with uiNamespace do {
 				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
 			};
 
-			[A3C_HC_FOCUS_ARTY_POS, false] spawn A3C_ai_shared_fnc_actionFireArtillery;
+			[
+				A3C_HC_FOCUS_ARTY_POS,
+				false
+			] spawn A3C_ai_shared_fnc_actionFireArtillery;
+
+			if (A3C_isArtyAwaitingSuborder) then {
+				[_display] spawn {
+					params ["_display"];
+
+					sleep 0.4;
+
+					if (!isNull _display) then {
+						_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
+					};
+					if !(29 in A3C_UI_DOWNKEYS) then {
+						A3C_isArtyAwaitingSuborder = false;
+					};
+				};
+			} else {
+				_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
+			};
 		};
 
 		case ("CTRL_DET") : {

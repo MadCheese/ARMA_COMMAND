@@ -4,6 +4,8 @@
 
 params ["_display","_key","_shift","_ctrl","_alt"];
 
+
+
 // player commandchat format ["MAP KEY-UP: %1 (%2)", _key, keyName _key];
 
 if !(A3C_isPlayerLeader) exitWith {false};

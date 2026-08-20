@@ -9,6 +9,10 @@ params ["_display","_key","_shift","_ctrl","_alt"];
 
 
 
+//-- CTRL key must block default engine bind to disable map drawing || NOTE : NOTE EVEN EXECUTED
+if (_key == 29) then {
+	_blockDefault = true;
+};
 
 //-- 1: MAP KEYBIND (close map > Does not work if overlay is open)
 if ((_this select 1) in actionKeys "showmap") exitWith {
@@ -20,8 +24,7 @@ if ((_this select 1) in actionKeys "showmap") exitWith {
 //-- declare variable for suppression of Engine Binds
 private _blockDefault = false;
 
-//-- CTRL key must block default engine bind to disable map drawing
-if (_key == 29) then {_blockDefault = true;};
+
 
 //-- Disable Numbers (ie to disable weapon switch) or control SelectionPromptPanel-Listbox
 private _mapSelectionPromptPanelListbox = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
@@ -39,6 +42,8 @@ if (
 	};
 	true
 };
+
+
 
 //-- 2: DEFAULT EXIT CONDITIONS
 if (

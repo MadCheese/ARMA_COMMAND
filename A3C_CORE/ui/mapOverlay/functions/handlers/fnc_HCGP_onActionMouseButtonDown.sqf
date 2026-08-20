@@ -1,3 +1,5 @@
+#include "..\..\dialog_defines.hpp"
+
 // A3C_ui_mapOverlay_fnc_HCGP_onActionMouseButtonDown
 
 params [
@@ -27,7 +29,13 @@ private _functionArray = call compile format [
 [] spawn {
 	sleep 0.1;
 
-	[
-		false
-	] call A3C_ui_shared_fnc_highCommand_actionsLabel;
+	private _mapDisplay = findDisplay IDD_MAP_OVERLAY;
+
+	if (!isNull _mapDisplay) then {
+		private _actionParent = _mapDisplay displayCtrl IDC_MAP_HCGP_Parent;
+
+		if (!isNull _actionParent && {ctrlShown _actionParent}) then {
+			[false] call A3C_ui_shared_fnc_highCommand_actionsLabel;
+		};
+	};
 };

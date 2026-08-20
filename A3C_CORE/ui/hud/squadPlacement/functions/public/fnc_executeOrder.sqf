@@ -201,6 +201,8 @@ if (_overrideMode) then {
     };
 };
 
+private _safetyDelay = if ({currentCommand _x == "STOP"} count _orderedUnits > 0) then {0.1} else {0};
+
 {
     private _orderData = _x;
     private _unit = _orderData select 0;
@@ -290,6 +292,9 @@ if (_overrideMode) then {
         if (alive _unit) then {
             _unit setVariable ["A3C_PEEL_ACTIVE", false, false];
         };
+    };
+    if (_safetyDelay > 0) then {
+        sleep _safetyDelay;
     };
 } forEach _storeData;
 

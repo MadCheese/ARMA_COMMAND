@@ -23,6 +23,27 @@ private _fnc_playStaticWeaponWorkAnimation = {
 	};
 };
 
+private _fnc_addBackpackWithMagazineState = {
+	params ["_unit", "_backpackClass", "_backpackMagazineState"];
+
+	[
+		[_unit, _backpackClass, _backpackMagazineState],
+		{
+			params ["_unit", "_backpackClass", "_backpackMagazineState"];
+
+			_unit addBackpack _backpackClass;
+
+			if ((backpack _unit) isEqualTo _backpackClass) then {
+				(unitBackpack _unit) setVariable [
+					"A3C_STATIC_MAGAZINE_STATE",
+					_backpackMagazineState,
+					true
+				];
+			};
+		}
+	] remoteExec ["bis_fnc_call", _unit];
+};
+
 if (_action == "ASSEMBLE") then {
 	private _requestedStaticClass = _staticData select 1;
 
@@ -56,6 +77,9 @@ if (_action == "ASSEMBLE") then {
 			};
 
 			private _removedBackpacks = [];
+			private _removedBackpackMagazineStates = [];
+			private _storedStaticMagazineState = [];
+			private _hasStoredStaticMagazineState = false;
 			private _removeGunnerMagazines = false;
 			private _usesIFAWeaponParts = count _ifaAssemblyWeaponParts > 0;
 
@@ -71,7 +95,29 @@ if (_action == "ASSEMBLE") then {
 
 					[_unit, _weaponPartClass] remoteExec ["removeWeapon", _unit];
 				} else {
+					private _backpackObject = unitBackpack _unit;
+
+					private _backpackMagazineState = if (isNull _backpackObject) then {
+						[]
+					} else {
+						_backpackObject getVariable [
+							"A3C_STATIC_MAGAZINE_STATE",
+							[]
+						]
+					};
+
 					_removedBackpacks pushBack (backpack _unit);
+					_removedBackpackMagazineStates pushBack _backpackMagazineState;
+
+					if (
+						!_hasStoredStaticMagazineState
+						&& {count _backpackMagazineState == 2}
+						&& {(_backpackMagazineState select 0) == _staticClassToCreate}
+					) then {
+						_hasStoredStaticMagazineState = true;
+						_storedStaticMagazineState = _backpackMagazineState select 1;
+					};
+
 					[_unit] remoteExec ["removeBackpack", _unit];
 				};
 
@@ -101,7 +147,20 @@ if (_action == "ASSEMBLE") then {
 								private _backpackClass = _removedBackpacks select _forEachIndex;
 
 								if (_backpackClass != "") then {
-									[_x, _backpackClass] remoteExec ["addBackpack", _x];
+									private _backpackMagazineState = _removedBackpackMagazineStates param [
+										_forEachIndex,
+										[]
+									];
+
+									if (_backpackMagazineState isEqualTo []) then {
+										[_x, _backpackClass] remoteExec ["addBackpack", _x];
+									} else {
+										[
+											_x,
+											_backpackClass,
+											_backpackMagazineState
+										] call _fnc_addBackpackWithMagazineState;
+									};
 								};
 							};
 						} forEach _assemblyUnits;
@@ -127,6 +186,24 @@ if (_action == "ASSEMBLE") then {
 
 					private _terrainVectors = [_weaponPos, _weaponDir] call MCSS_fnc_getTerrainTilt;
 					private _createdStatic = _staticClassToCreate createVehicle _weaponPos;
+
+					if (_hasStoredStaticMagazineState) then {
+						_createdStatic removeAllMagazinesTurret [];
+
+						{
+							_x params [
+								"_magazineClass",
+								"_turretPath",
+								"_ammoCount"
+							];
+
+							_createdStatic addMagazineTurret [
+								_magazineClass,
+								_turretPath,
+								_ammoCount
+							];
+						} forEach _storedStaticMagazineState;
+					};
 
 					[_createdStatic, ATLToASL _weaponPos] remoteExec ["setPosASL", _createdStatic];
 					[_createdStatic, _terrainVectors] remoteExec ["setVectorDirAndUp", _createdStatic];
@@ -254,6 +331,17 @@ if (_action == "ASSEMBLE") then {
 		configFile >> "CfgVehicles" >> _staticWeaponType >> "assembleInfo" >> "dissasembleTo"
 	);
 
+	//-- Store magazine state only on the primary weapon backpack, never on the pod.
+	private _weaponBackpackIndex = _disassemblyBackpacks findIf {
+		getNumber (
+			configFile
+			>> "CfgVehicles"
+			>> _x
+			>> "assembleInfo"
+			>> "primary"
+		) == 1
+	};
+
 	//-- IFA statics disassemble into weapons. The second config item maps to the equipped tripod weapon.
 	private _ifaPodWeaponClass = if (count _ifaDisassemblyItems > 1) then {
 		getText (
@@ -273,6 +361,8 @@ if (_action == "ASSEMBLE") then {
 		if ({alive _x} count _disassemblyUnits != _requiredUnitCount) exitWith {};
 
 		if ({animationState _x == "ainvpknlmstpslaywrfldnon_medic"} count _disassemblyUnits == 0) exitWith {
+			private _staticMagazineState = magazinesAllTurrets _staticWeapon;
+
 			deleteVehicle _staticWeapon;
 
 			//-- If only one unit is ever allowed for a special case, duplicate it so indexed assignment does not fail.
@@ -286,7 +376,20 @@ if (_action == "ASSEMBLE") then {
 						private _backpackClass = _disassemblyBackpacks select _forEachIndex;
 
 						if (_backpackClass != "") then {
-							[_x, _backpackClass] remoteExec ["addBackpack", _x];
+							if (_forEachIndex == _weaponBackpackIndex) then {
+								private _backpackMagazineState = [
+									_staticWeaponType,
+									_staticMagazineState
+								];
+
+								[
+									_x,
+									_backpackClass,
+									_backpackMagazineState
+								] call _fnc_addBackpackWithMagazineState;
+							} else {
+								[_x, _backpackClass] remoteExec ["addBackpack", _x];
+							};
 						};
 					};
 				} forEach _disassemblyUnits;
