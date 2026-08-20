@@ -1,45 +1,48 @@
 // MCSS_fnc_getWeaponItems
-// Gets a unit's carried/attached weapon items compatible with a specific weapon slot.
+
+// Gets a unit's carried or attached weapon items compatible with a specific weapon slot.
 //
-// _mode 0: check inventory items
-// _mode 1: check currently attached primary weapon items
+// _mode 0: check items carried in the unit's inventory
+// _mode 1: check items attached to the specified weapon
 //
-// Returns item classnames compatible with _slot.
+// _weapon defaults to the unit's primary weapon.
+//
+// Returns item classnames from the selected source that are compatible with _slot.
 
 params [
-	"_unit",
-	"_slot",
-	["_mode", 0],
-	["_primaryWeapon", ""]
+	["_unit", objNull, [objNull]],
+	["_slot", "", [""]],
+	["_mode", 0, [0]],
+	["_weapon", "", [""]]
 ];
 
-if (_primaryWeapon isEqualTo "") then {
-	_primaryWeapon = primaryWeapon _unit;
+if (isNull _unit) exitWith {
+	[]
 };
 
-if (_primaryWeapon isEqualTo "") exitWith {
+if !(_mode in [0, 1]) exitWith {
+	[]
+};
+
+if (_weapon isEqualTo "") then {
+	_weapon = primaryWeapon _unit;
+};
+
+if (_weapon isEqualTo "") exitWith {
 	[]
 };
 
 private _itemsToCheck = if (_mode == 0) then {
 	items _unit
 } else {
-	primaryWeaponItems _unit
+	_unit weaponAccessories _weapon
 };
 
-
-
-private _compatibleItemsConfig = configFile >> "CfgWeapons" >> _primaryWeapon >> "WeaponSlotsInfo" >> _slot >> "compatibleItems";
-private _compatibleItemsArray = getArray _compatibleItemsConfig;
-private _hasCompatibleItemsClass = isClass _compatibleItemsConfig;
-
+private _compatibleItems = compatibleItems [_weapon, _slot];
 private _weaponItems = [];
 
 {
-	if (
-		_x in _compatibleItemsArray ||
-		{ _hasCompatibleItemsClass && { isClass (_compatibleItemsConfig >> _x) } }
-	) then {
+	if (_x in _compatibleItems) then {
 		_weaponItems pushBackUnique _x;
 	};
 } forEach _itemsToCheck;

@@ -1678,7 +1678,7 @@ switch (_mode) do {
 
 
 									if (_mode == "ON") then {
-										_execute = [_unit, _type] call A3C_ai_squad_fnc_preparePointerAttachmentMode;
+										_execute = [_unit, _type] call A3C_ai_shared_fnc_preparePointerAttachmentMode;
 									} else {
 										_execute = (_unit getVariable ["A3C_isGunPoiterSlotOn", ""] == _stateValue);
 									};
@@ -1817,7 +1817,7 @@ switch (_mode) do {
 									private _execute = false;
 
 									if (_mode == "ON") then {
-										_execute = [_unit, _type] call A3C_ai_squad_fnc_preparePointerAttachmentMode;
+										_execute = [_unit, _type] call A3C_ai_shared_fnc_preparePointerAttachmentMode;
 									} else {
 										_execute = (_unit getVariable ["A3C_isGunPoiterSlotOn", ""] == _stateValue);
 									};
@@ -1889,7 +1889,7 @@ switch (_mode) do {
 							private _silencerImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_OFF.paa";
 							private _silencerToolTip = "Attach Suppressor";
 
-							if ({[_x, "SILENCER"] call A3C_main_fnc_hasWeaponItem} count (A3C_RD_UNITS - [player]) > 0) then {
+							if ({[_x, "SILENCER"] call A3C_main_fnc_hasWeaponItem} count A3C_RD_UNITS > 0) then {
 								_silencerImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_ON.paa";
 								_silencerToolTip = "Remove Suppressor";
 							};
@@ -1921,89 +1921,299 @@ switch (_mode) do {
 
 								_buttonImg ctrlSetTextColor [1,1,1,0.3];
 
-
+								private _removeMuzzleItems = _units findIf {
+									[_x, "SILENCER"] call A3C_main_fnc_hasWeaponItem
+								} != -1;
 
 								{
-									if ({[_x, "SILENCER"] call A3C_main_fnc_hasWeaponItem} count A3C_RD_UNITS > 0) then {
+									if (_removeMuzzleItems) then {
 										_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_OFF.paa";
 										_tooltip = "Attach Suppressor";
 
-										private _slotItems = [_x, "MuzzleSlot", 1, currentWeapon _x] call MCSS_fnc_getWeaponItems;
+										private _unit = _x;
+										private _weapon = currentWeapon _unit;
 
-										if (count _slotItems > 0) then {
+										private _weaponSlot = switch (true) do {
+											case (_weapon isEqualTo primaryWeapon _unit): {
+												"PRIMARY"
+											};
+
+											case (_weapon isEqualTo handgunWeapon _unit): {
+												"HANDGUN"
+											};
+
+											case (_weapon isEqualTo secondaryWeapon _unit): {
+												"SECONDARY"
+											};
+
+											default {
+												""
+											};
+										};
+
+										private _slotItems = [
+											_unit,
+											"MuzzleSlot",
+											1,
+											_weapon
+										] call MCSS_fnc_getWeaponItems;
+
+										if (
+											_weaponSlot isNotEqualTo ""
+											&& {count _slotItems > 0}
+										) then {
+											private _muzzleItem = _slotItems select 0;
+											private _gesture = [
+												_unit,
+												_weapon,
+												true
+											] call A3C_main_fnc_getMuzzleSwitchGesture;
+
 											private _delay = random 1;
 
 											_totalStandBy = _totalStandBy max _delay;
 
-											[_slotItems, _x, _delay] spawn {
-												params ["_slotItems", "_unit", "_delay"];
+											[
+												_muzzleItem,
+												_unit,
+												_weapon,
+												_weaponSlot,
+												_gesture,
+												_delay
+											] spawn {
+												params [
+													"_muzzleItem",
+													"_unit",
+													"_weapon",
+													"_weaponSlot",
+													"_gesture",
+													"_delay"
+												];
 
 												sleep _delay;
 
-												if ((currentWeapon _unit) == (handgunWeapon _unit)) then {
-													_unit playActionNow "gestureDismountMuzzle";
-
-													if (A3C_LaxMount) then {
-
+												private _weaponStillEquipped = switch (_weaponSlot) do {
+													case "PRIMARY": {
+														primaryWeapon _unit isEqualTo _weapon
 													};
 
-													sleep 1.2;
-
-													_unit removeHandgunItem (_slotItems select 0);
-												} else {
-													_unit playActionNow "gestureDismountMuzzle";
-
-													if (A3C_LaxMount) then {
-
+													case "HANDGUN": {
+														handgunWeapon _unit isEqualTo _weapon
 													};
 
-													sleep 1.2;
+													case "SECONDARY": {
+														secondaryWeapon _unit isEqualTo _weapon
+													};
 
-													_unit removePrimaryWeaponItem (_slotItems select 0);
+													default {
+														false
+													};
 												};
 
-												_unit addItem (_slotItems select 0);
+												if (!_weaponStillEquipped) exitWith {};
+
+												_unit selectWeapon _weapon;
+
+												if (_gesture isNotEqualTo "") then {
+													_unit playActionNow _gesture;
+												};
+
+												sleep 1.2;
+
+												_weaponStillEquipped = switch (_weaponSlot) do {
+													case "PRIMARY": {
+														primaryWeapon _unit isEqualTo _weapon
+													};
+
+													case "HANDGUN": {
+														handgunWeapon _unit isEqualTo _weapon
+													};
+
+													case "SECONDARY": {
+														secondaryWeapon _unit isEqualTo _weapon
+													};
+
+													default {
+														false
+													};
+												};
+
+												if (!_weaponStillEquipped) exitWith {};
+
+												private _attachedMuzzleItem = (
+													_unit weaponAccessories _weapon
+												) param [0, ""];
+
+												if (_attachedMuzzleItem isNotEqualTo _muzzleItem) exitWith {};
+												if !(_unit canAdd _muzzleItem) exitWith {};
+
+												switch (_weaponSlot) do {
+													case "PRIMARY": {
+														_unit removePrimaryWeaponItem _muzzleItem;
+													};
+
+													case "HANDGUN": {
+														_unit removeHandgunItem _muzzleItem;
+													};
+
+													case "SECONDARY": {
+														_unit removeSecondaryWeaponItem _muzzleItem;
+													};
+												};
+
+												_attachedMuzzleItem = (
+													_unit weaponAccessories _weapon
+												) param [0, ""];
+
+												if (_attachedMuzzleItem isNotEqualTo _muzzleItem) then {
+													_unit addItem _muzzleItem;
+												};
 											};
 										};
 									} else {
-										private _slotItems = [_x, "MuzzleSlot", 0, currentWeapon _x] call MCSS_fnc_getWeaponItems;
+										private _unit = _x;
+										private _weapon = currentWeapon _unit;
 
-										if (count _slotItems > 0) then {
+										private _weaponSlot = switch (true) do {
+											case (_weapon isEqualTo primaryWeapon _unit): {
+												"PRIMARY"
+											};
+
+											case (_weapon isEqualTo handgunWeapon _unit): {
+												"HANDGUN"
+											};
+
+											case (_weapon isEqualTo secondaryWeapon _unit): {
+												"SECONDARY"
+											};
+
+											default {
+												""
+											};
+										};
+
+										private _slotItems = [
+											_unit,
+											"MuzzleSlot",
+											0,
+											_weapon
+										] call MCSS_fnc_getWeaponItems;
+
+										if (
+											_weaponSlot isNotEqualTo ""
+											&& {count _slotItems > 0}
+										) then {
 											_btnImage = "A3C_CORE\ui\pictures\icon_menu_item_Silencer_ON.paa";
 											_tooltip = "Remove Suppressor";
+
+											private _muzzleItem = _slotItems select 0;
+											private _gesture = [
+												_unit,
+												_weapon,
+												false
+											] call A3C_main_fnc_getMuzzleSwitchGesture;
 
 											private _delay = random 1;
 
 											_totalStandBy = _totalStandBy max _delay;
 
-											[_slotItems, _x, _delay] spawn {
-												params ["_slotItems", "_unit", "_delay"];
+											[
+												_muzzleItem,
+												_unit,
+												_weapon,
+												_weaponSlot,
+												_gesture,
+												_delay
+											] spawn {
+												params [
+													"_muzzleItem",
+													"_unit",
+													"_weapon",
+													"_weaponSlot",
+													"_gesture",
+													"_delay"
+												];
 
 												sleep _delay;
 
-												if ((currentWeapon _unit) == (handgunWeapon _unit)) then {
-													_unit playActionNow "gestureMountMuzzle";
-
-													if (A3C_LaxMount) then {
-
+												private _weaponStillEquipped = switch (_weaponSlot) do {
+													case "PRIMARY": {
+														primaryWeapon _unit isEqualTo _weapon
 													};
 
-													sleep 1.2;
-
-													_unit addHandgunItem (_slotItems select 0);
-												} else {
-													_unit playActionNow "gestureMountMuzzle";
-
-													if (A3C_LaxMount) then {
-
+													case "HANDGUN": {
+														handgunWeapon _unit isEqualTo _weapon
 													};
 
-													sleep 1.2;
+													case "SECONDARY": {
+														secondaryWeapon _unit isEqualTo _weapon
+													};
 
-													_unit addPrimaryWeaponItem (_slotItems select 0);
+													default {
+														false
+													};
 												};
 
-												_unit removeItem (_slotItems select 0);
+												if (!_weaponStillEquipped) exitWith {};
+
+												if !(_muzzleItem in items _unit) exitWith {};
+
+												_unit selectWeapon _weapon;
+
+												if (_gesture isNotEqualTo "") then {
+													_unit playActionNow _gesture;
+												};
+
+												sleep 1.2;
+
+												_weaponStillEquipped = switch (_weaponSlot) do {
+													case "PRIMARY": {
+														primaryWeapon _unit isEqualTo _weapon
+													};
+
+													case "HANDGUN": {
+														handgunWeapon _unit isEqualTo _weapon
+													};
+
+													case "SECONDARY": {
+														secondaryWeapon _unit isEqualTo _weapon
+													};
+
+													default {
+														false
+													};
+												};
+
+												if (!_weaponStillEquipped) exitWith {};
+												if !(_muzzleItem in items _unit) exitWith {};
+
+												private _attachedMuzzleItem = (
+													_unit weaponAccessories _weapon
+												) param [0, ""];
+
+												if (_attachedMuzzleItem isNotEqualTo "") exitWith {};
+
+												switch (_weaponSlot) do {
+													case "PRIMARY": {
+														_unit addPrimaryWeaponItem _muzzleItem;
+													};
+
+													case "HANDGUN": {
+														_unit addHandgunItem _muzzleItem;
+													};
+
+													case "SECONDARY": {
+														_unit addSecondaryWeaponItem _muzzleItem;
+													};
+												};
+
+												_attachedMuzzleItem = (
+													_unit weaponAccessories _weapon
+												) param [0, ""];
+
+												if (_attachedMuzzleItem isEqualTo _muzzleItem) then {
+													_unit removeItem _muzzleItem;
+												};
 											};
 										};
 									};
@@ -2038,6 +2248,7 @@ switch (_mode) do {
 								};
 							};
 						};
+
 					};
 
 					call compile format [

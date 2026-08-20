@@ -1,6 +1,8 @@
 #include "..\..\script_component.hpp"
 #include "..\..\dialog_defines.hpp"
 
+// A3C_ui_radialMenu_fnc_labelInnerRing
+
 params ["_commandLevel"];
 
 private _display = findDisplay IDD_RADIAL_MENU;

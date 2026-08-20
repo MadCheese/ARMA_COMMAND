@@ -1,3 +1,5 @@
+// A3C_ai_shared_fnc_staticWeaponPrepareDisassembly
+
 params [
 	["_candidateUnits", [], [[]]],
 	["_selectedUnits", [], [[]]],

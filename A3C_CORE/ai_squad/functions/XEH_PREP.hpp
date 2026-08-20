@@ -22,7 +22,6 @@ A3C_PREP(boarding_boardUnitToSeat);
 A3C_PREP(getProminentUnitBhvCbm);
 A3C_PREP(initializeUnit);
 A3C_PREP(joinUnitToPlayerGroup);
-A3C_PREP(preparePointerAttachmentMode);
 A3C_PREP(releaseFOML);
 A3C_PREP(setROE);
 A3C_PREP(toggleAutoCombat);
