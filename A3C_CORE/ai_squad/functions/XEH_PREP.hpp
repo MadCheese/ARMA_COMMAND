@@ -17,7 +17,10 @@ A3C_PREP(assignPlayerToVehicleCargo);
 A3C_PREP(boarding_assignVehicleSeatMacro);
 A3C_PREP(boarding_assignVehicleSeatSingle);
 A3C_PREP(boarding_boardingHack);
+A3C_PREP(boarding_boardUnitsToVehicle);
 A3C_PREP(boarding_boardUnitToSeat);
+A3C_PREP(boarding_createPlayerGroupUIProxy);
+
 
 A3C_PREP(getProminentUnitBhvCbm);
 A3C_PREP(initializeUnit);

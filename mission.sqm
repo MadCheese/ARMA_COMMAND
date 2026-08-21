@@ -8,7 +8,7 @@ class EditorData
 	toggles=1057;
 	class ItemIDProvider
 	{
-		nextID=5141;
+		nextID=5144;
 	};
 	class MarkerIDProvider
 	{
@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={15064.835,23.496452,16693.121};
-		dir[]={-0.0087222364,-0.62882525,0.77749914};
-		up[]={-0.007053921,0.77754664,0.62878621};
-		aside[]={0.99993831,2.3464963e-10,0.011217613};
+		pos[]={14805.181,42.872292,16505.359};
+		dir[]={-0.084732607,-0.22654705,0.97030771};
+		up[]={-0.019708334,0.97400022,0.22568819};
+		aside[]={0.99620891,0,0.086994439};
 	};
 };
 binarizationWanted=0;
@@ -444,7 +444,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=106;
+		items=108;
 		class Item0
 		{
 			dataType="Trigger";
@@ -4813,8 +4813,8 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14295.424,17.911438,15747.883};
-						angles[]={-0,5.7596216,0};
+						position[]={14790.949,17.86377,16550.801};
+						angles[]={0.0012918708,5.7596216,0};
 					};
 					side="West";
 					flags=6;
@@ -5040,7 +5040,7 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={14299.26,17.911438,15747.033};
+						position[]={14794.785,17.867823,16549.949};
 					};
 					side="West";
 					flags=5;
@@ -5187,6 +5187,7 @@ class Mission
 					};
 					id=5110;
 					type="B_soldier_LAT2_F";
+					atlOffset=1.9073486e-06;
 					class CustomAttributes
 					{
 						class Attribute0
@@ -6704,6 +6705,70 @@ class Mission
 			{
 			};
 			id=5134;
+		};
+		class Item106
+		{
+			dataType="Group";
+			side="West";
+			class Entities
+			{
+				items=1;
+				class Item0
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={14773.188,17.861439,16567.033};
+					};
+					side="West";
+					flags=6;
+					class Attributes
+					{
+					};
+					id=5143;
+					type="B_Soldier_F";
+				};
+			};
+			class Attributes
+			{
+			};
+			class CrewLinks
+			{
+				class LinkIDProvider
+				{
+					nextID=1;
+				};
+				class Links
+				{
+					items=1;
+					class Item0
+					{
+						linkID=0;
+						item0=5143;
+						item1=5142;
+						class CustomData
+						{
+							role=1;
+						};
+					};
+				};
+			};
+			id=5141;
+		};
+		class Item107
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={14773.188,20.065947,16566.98};
+			};
+			side="West";
+			flags=6;
+			class Attributes
+			{
+			};
+			id=5142;
+			type="B_MRAP_01_F";
 		};
 	};
 	class Connections
