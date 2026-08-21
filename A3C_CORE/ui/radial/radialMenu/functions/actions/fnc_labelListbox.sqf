@@ -236,7 +236,16 @@ switch (_mode) do {
 	case ("VEHICLES") : {
 		_lbText1 = "SELECT VEHICLE";
 
-		
+		private _boardingPlayerGroup = missionNamespace getVariable [
+			"A3C_BOARDING_PLAYER_GROUP",
+			grpNull
+		];
+
+		if (isNull _boardingPlayerGroup) then {
+			_boardingPlayerGroup = group player;
+		};
+
+		private _boardingPlayerGroupUnits = units _boardingPlayerGroup;
 
 		//-- idc's stay numeric here as they were created dynamically with ctrlCreate
 		for "_i" from 0 to 45 do {
@@ -250,20 +259,31 @@ switch (_mode) do {
 			ctrlDelete (findDisplay IDD_RADIAL_MENU displayCtrl _i);
 		};
 
-		if (!isNil 'A3C_TARGETVEH') then {
+		if (!isNil "A3C_TARGETVEH") then {
 			private _vehicleSeatData = [];
-			//-- re-arrange
+
+			//-- Re-arrange
 			{
 				private _testedRole = _x;
-				{
-					if (_x select 1 == _testedRole) then {
-						if (_testedRole != "driver" OR {!(A3C_TARGETVEH isKindOf "STATICWEAPON")}) then {
-							_vehicleSeatData pushBackUnique _x;
-						};		
-					};
-				} forEach (fullCrew [A3C_TARGETVEH,"",true]);
-			} forEach ["driver","gunner","commander","Turret","cargo"];
 
+				{
+					if (toLower (_x select 1) == _testedRole) then {
+						if (
+							_testedRole != "driver"
+							OR {!(A3C_TARGETVEH isKindOf "STATICWEAPON")}
+						) then {
+							_vehicleSeatData pushBackUnique _x;
+						};
+					};
+				} forEach (fullCrew [A3C_TARGETVEH, "", true]);
+
+			} forEach [
+				"driver",
+				"gunner",
+				"commander",
+				"turret",
+				"cargo"
+			];
 
 			private _rowEntries = 0;
 			private _rowAmount = 0;
@@ -272,235 +292,464 @@ switch (_mode) do {
 			private _GUI_GRID_W = 0.025;
 			private _GUI_GRID_H = 0.04;
 
-			private _btnH = if (count _vehicleSeatData > 15) then {1} else {2}; //-- 15 seats is threshold instead of 20 because we need the last row for 'board all'
+			//-- 15 seats is threshold instead of 20 because we need the last row
+			//-- for 'board all'.
+			private _btnH = if (count _vehicleSeatData > 15) then {
+				1
+			} else {
+				2
+			};
+
 			private _btnW = _btnH * 1.25;
-			private _rowThreshold = if (count _vehicleSeatData > 15) then {10} else {5};
+
+			private _rowThreshold = if (count _vehicleSeatData > 15) then {
+				10
+			} else {
+				5
+			};
 
 			_btnW = _btnW * _GUI_GRID_W;
 			_btnH = _btnH * _GUI_GRID_H;
+
 			private _spacingFactor = 0.1;
-
-
 			private _vehicleType = typeOf A3C_TARGETVEH;
-
 
 			{
 				private _roleData = _x;
-				_roleData params ["_occupyingUnit","_role","_cargoIndex","_turretPath","_isFFV"];
 
-				private _buttonColor = [1,1,1,1];
+				_roleData params [
+					"_occupyingUnit",
+					"_role",
+					"_cargoIndex",
+					"_turretPath",
+					"_isFFV"
+				];
+
+				private _buttonColor = [1, 1, 1, 1];
 
 				private _fei = _forEachIndex;
-				private _btnImg  = findDisplay IDD_RADIAL_MENU ctrlCreate ["A3C_RscPicture", 10101 + (_fei * 2)];
-				private _btnClicker  = findDisplay IDD_RADIAL_MENU ctrlCreate ["A3C_RscButton_Invisible", 10101 + (_fei * 2) + 1];
+
+				private _btnImg = findDisplay IDD_RADIAL_MENU ctrlCreate [
+					"A3C_RscPicture",
+					10101 + (_fei * 2)
+				];
+
+				private _btnClicker = findDisplay IDD_RADIAL_MENU ctrlCreate [
+					"A3C_RscButton_Invisible",
+					10101 + (_fei * 2) + 1
+				];
+
 				private _btnIcon = "";
 
+				//-- Can not use role as default value: it ends up lowercase.
+				private _positionName = "";
 
-				private _positionName = ""; //-- can not use 'role' as default value - ends up being lower case and that's not purdy
-				
 				switch (toLower _role) do {
 					case ("driver") : {
 						_btnIcon = "\a3\ui_f\data\IGUI\RscIngameUI\RscUnitInfo\role_driver_ca.paa";
 						_positionName = "Driver";
 					};
+
 					case ("turret") : {
-						private _cfgPath = configFile >> "CfgVehicles" >> _vehicleType;
+						private _cfgPath = (
+							configFile
+							>> "CfgVehicles"
+							>> _vehicleType
+						);
+
 						{
-							_cfgPath = ( _cfgPath >> "turrets" ) select _x;
+							_cfgPath = (
+								_cfgPath
+									>> "turrets"
+							) select _x;
 						} forEach _turretPath; //-- teacher: Larrow
-						_positionName = getText( _cfgPath >> "gunnerName" );
-						
-						// systemchat str [_role, _vehicleType];
+
+						_positionName = getText (
+							_cfgPath
+								>> "gunnerName"
+						);
+
 						switch (_positionName) do {
 							case ("Commander") : {
 								_btnIcon = "\a3\ui_f\data\IGUI\RscIngameUI\RscUnitInfo\role_commander_ca.paa";
-
 							};
+
 							case ("Copilot") : {
 								_btnIcon = "\a3\ui_f\data\IGUI\RscIngameUI\RscUnitInfo\role_commander_ca.paa";
 							};
+
 							default {
 								_btnIcon = "\a3\ui_f\data\IGUI\RscIngameUI\RscUnitInfo\role_gunner_ca.paa";
 							};
 						};
+
 						if (_isFFV) then {
 							_positionName = _positionName + " - FFV";
 						};
 					};
+
 					case ("gunner") : {
 						_positionName = "Gunner";
 						_btnIcon = "\a3\ui_f\data\IGUI\RscIngameUI\RscUnitInfo\role_gunner_ca.paa";
 					};
+
 					case ("commander") : {
 						_positionName = "Commander";
 						_btnIcon = "\a3\ui_f\data\IGUI\RscIngameUI\RscUnitInfo\role_commander_ca.paa";
 					};
+
 					case ("cargo") : {
 						_btnIcon = "\a3\ui_f\data\IGUI\RscIngameUI\RscUnitInfo\role_cargo_ca.paa";
-						_positionName = format ["Cargo Seat %1",_cargoIndex + 1];
+						_positionName = format [
+							"Cargo Seat %1",
+							_cargoIndex + 1
+						];
 					};
 				};
 
-
-				if (!isNull _occupyingUnit && {alive _occupyingUnit}) then {
-					_buttonColor = if (_occupyingUnit in units player) then {[A3C_UI_COLOR_BLUE,0.7] call A3C_ui_shared_fnc_getColorArrayWithOpacity} else {[A3C_UI_COLOR_RED,0.7] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
-
-					if (_occupyingUnit in units player) then {
-						_positionName = _positionName + " (" + (name _occupyingUnit) + ")";
+				if (
+					!isNull _occupyingUnit
+					&& {alive _occupyingUnit}
+				) then {
+					_buttonColor = if (
+						_occupyingUnit in _boardingPlayerGroupUnits
+					) then {
+						[
+							A3C_UI_COLOR_BLUE,
+							0.7
+						] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 					} else {
-						_positionName = _positionName + " (occupied by " + (groupID (group _occupyingUnit)) + ")";
+						[
+							A3C_UI_COLOR_RED,
+							0.7
+						] call A3C_ui_shared_fnc_getColorArrayWithOpacity
 					};
+
+					if (_occupyingUnit in _boardingPlayerGroupUnits) then {
+						_positionName = _positionName
+							+ " ("
+							+ name _occupyingUnit
+							+ ")";
+					} else {
+						_positionName = _positionName
+							+ " (occupied by "
+							+ groupID (group _occupyingUnit)
+							+ ")";
+					};
+
 				} else {
-
-
 					private _nameAdd = " (Available)";
 
-					private _vicVar = A3C_TARGETVEH getVariable ["A3C_AssignedVehicleCrew",[]];
+					private _vicVar = A3C_TARGETVEH getVariable [
+						"A3C_AssignedVehicleCrew",
+						[]
+					];
 
-					private _refArray = _roleData select [1,3]; //[_roleData select 1,_roleData select _checkIndex];
+					private _roleLower = toLower _role;
+
+					private _canonicalRole = if (
+						_roleLower in [
+							"gunner",
+							"commander",
+							"turret"
+						]
+					) then {
+						"turret"
+					} else {
+						_roleLower
+					};
+
+					private _seatIndexPath = if (
+						_roleLower in ["driver", "cargo"]
+					) then {
+						_cargoIndex
+					} else {
+						_turretPath
+					};
+
 					{
 						private _boardingData = _x;
-						if ({_x in _boardingData} count _refArray >= 2) exitWith {
-							_occupyingUnit = _x select 0;
-							_buttonColor = if (group _occupyingUnit == group player) then {[A3C_UI_COLOR_BLUE,0.3] call A3C_ui_shared_fnc_getColorArrayWithOpacity} else {[A3C_UI_COLOR_RED,0.3] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
-							_nameAdd = " (Currently Boarded)";
-						};
-					} forEach _vicVar;
-					_positionName = _positionName + _nameAdd;
 
+						private _registeredRole = toLower (
+							_boardingData param [1, ""]
+						);
+
+						private _registeredCanonicalRole = if (
+							_registeredRole in [
+								"gunner",
+								"commander",
+								"turret"
+							]
+						) then {
+							"turret"
+						} else {
+							_registeredRole
+						};
+
+						if (
+							_registeredCanonicalRole == _canonicalRole
+							&& {
+								(_boardingData param [2, -2])
+									isEqualTo _seatIndexPath
+							}
+						) exitWith {
+							_occupyingUnit = _boardingData select 0;
+
+							_buttonColor = if (
+								group _occupyingUnit
+									== _boardingPlayerGroup
+							) then {
+								[
+									A3C_UI_COLOR_BLUE,
+									0.3
+								] call A3C_ui_shared_fnc_getColorArrayWithOpacity
+							} else {
+								[
+									A3C_UI_COLOR_RED,
+									0.3
+								] call A3C_ui_shared_fnc_getColorArrayWithOpacity
+							};
+
+							_nameAdd = " (Currently Boarding)";
+						};
+
+					} forEach _vicVar;
+
+					_positionName = _positionName + _nameAdd;
 				};
+
 				_btnImg ctrlSetTextColor _buttonColor;
 				_btnClicker ctrlSetTooltip _positionName;
-				//-- when looking at this fnc, keep in mind that it requires vehicleVarname or an !isNull object. Hence the format (Player units have vehicleVarname
-				//-- NOTE: ctrlAddEventHandler is allowed as button is created with ctrlCreate 
-				_btnClicker ctrlAddEventHandler
-				[
+
+				//-- When looking at this function, keep in mind that it requires
+				//-- vehicleVarName or a non-null object.
+				//-- ctrlAddEventHandler is allowed because the button was created
+				//-- with ctrlCreate.
+				_btnClicker ctrlAddEventHandler [
 					"MouseButtonDown",
-					compile format
-					[
+					compile format [
 						"
 							private _roleArray = [%1] + %2;
-							[_roleArray,_this select 1,%3,objNull] call A3C_ai_squad_fnc_boarding_assignVehicleSeatSingle;
+
+							[
+								_roleArray,
+								_this select 1,
+								%3,
+								objNull
+							] call A3C_ai_squad_fnc_boarding_assignVehicleSeatSingle;
 						",
-						if (_occupyingUnit in units player) then {_occupyingUnit} else {if (isNull _occupyingUnit OR {!alive _occupyingunit}) then {0} else {1}},
-						_roleData select [1,4],
+						if (
+							_occupyingUnit in _boardingPlayerGroupUnits
+						) then {
+							_occupyingUnit
+						} else {
+							if (
+								isNull _occupyingUnit
+								OR {!alive _occupyingUnit}
+							) then {
+								0
+							} else {
+								1
+							}
+						},
+						_roleData select [1, 4],
 						10101 + (_fei * 2)
 					]
 				];
 
-
 				{
-					_x ctrlSetPosition
-					[
-						(35.5 * _GUI_GRID_W + _GUI_GRID_X) + (_rowEntries * (_btnW + (_btnW * _spacingFactor))),
-						(11.5 * _GUI_GRID_H + _GUI_GRID_Y) + (_rowAmount * (_btnH + (_btnH * _spacingFactor)) ),
+					_x ctrlSetPosition [
+						(35.5 * _GUI_GRID_W + _GUI_GRID_X)
+							+ (
+								_rowEntries
+									* (
+										_btnW
+											+ (_btnW * _spacingFactor)
+									)
+							),
+						(11.5 * _GUI_GRID_H + _GUI_GRID_Y)
+							+ (
+								_rowAmount
+									* (
+										_btnH
+											+ (_btnH * _spacingFactor)
+									)
+							),
 						_btnW,
 						_btnH
 					];
+
 					_x ctrlCommit 0;
-				} forEach [_btnImg,_btnClicker];
+
+				} forEach [
+					_btnImg,
+					_btnClicker
+				];
 
 				_btnImg ctrlSetText _btnIcon;
 
-
 				_rowEntries = _rowEntries + 1;
+
 				if (_rowEntries == _rowThreshold) then {
 					_rowEntries = 0;
-					if (_forEachIndex < ((count _vehicleSeatData) - 1)) then {
+
+					if (
+						_forEachIndex
+							< ((count _vehicleSeatData) - 1)
+					) then {
 						_rowAmount = _rowAmount + 1;
 					};
 				};
+
 			} forEach _vehicleSeatData;
 
 			_rowAmount = _rowAmount + 1;
-			if (!isNull A3C_TARGETVEH && {count A3C_RD_UNITS > 1 && {count _vehicleSeatData > 1}}) then {
-				//-- macro buttons
-				for "_i" from 0 to 1 do {
 
-					private _btnImg  = findDisplay IDD_RADIAL_MENU ctrlCreate ["A3C_RscPicture", 11101 + (_i * 2)];
-					private _btnClicker  = findDisplay IDD_RADIAL_MENU ctrlCreate ["A3C_RscButton_Invisible", 11101 + (_i * 2) + 1];
+			if (
+				!isNull A3C_TARGETVEH
+				&& {
+					count A3C_RD_UNITS > 1
+					&& {count _vehicleSeatData > 1}
+				}
+			) then {
+				//-- Macro buttons
+				for "_i" from 0 to 1 do {
+					private _btnImg = findDisplay IDD_RADIAL_MENU ctrlCreate [
+						"A3C_RscPicture",
+						11101 + (_i * 2)
+					];
+
+					private _btnClicker = findDisplay IDD_RADIAL_MENU ctrlCreate [
+						"A3C_RscButton_Invisible",
+						11101 + (_i * 2) + 1
+					];
 
 					private _btnIcon = switch (_i) do {
-						case (0) : {"\a3\ui_f\data\IGUI\Cfg\Cursors\getIn_ca.paa"};
-						case (1) : {"\a3\ui_f\data\IGUI\RscIngameUI\RscUnitInfo\role_cargo_ca.paa"};
+						case (0) : {
+							"\a3\ui_f\data\IGUI\Cfg\Cursors\getIn_ca.paa"
+						};
+
+						case (1) : {
+							"\a3\ui_f\data\IGUI\RscIngameUI\RscUnitInfo\role_cargo_ca.paa"
+						};
 					};
+
 					_btnImg ctrlSetText _btnIcon;
 
 					private _btnTooltip = switch (_i) do {
-						case (0) : {"BOARD ALL POSITIONS"};
-						case (1) : {"BOARD CARGO & FFV"};
+						case (0) : {
+							"BOARD ALL POSITIONS"
+						};
+
+						case (1) : {
+							"BOARD CARGO & FFV"
+						};
 					};
+
 					_btnClicker ctrlSetTooltip _btnTooltip;
+
 					{
-						_x ctrlSetPosition
-						[
-							(39  * _GUI_GRID_W + _GUI_GRID_X) + (_i * (_btnW + (_btnW * _spacingFactor))),
-							(11.5 * _GUI_GRID_H + _GUI_GRID_Y) + (_rowAmount  * (_btnH + (_btnH * _spacingFactor)) ),
+						_x ctrlSetPosition [
+							(39 * _GUI_GRID_W + _GUI_GRID_X)
+								+ (
+									_i
+										* (
+											_btnW
+												+ (_btnW * _spacingFactor)
+										)
+								),
+							(11.5 * _GUI_GRID_H + _GUI_GRID_Y)
+								+ (
+									_rowAmount
+										* (
+											_btnH
+												+ (_btnH * _spacingFactor)
+										)
+								),
 							_btnW,
 							_btnH
 						];
-						_x ctrlCommit 0;
-					} forEach [_btnImg,_btnClicker];
 
-					private _units = +(A3C_RD_UNITS);
-					
-					//-- NOTE: ctrlAddEventHandler is allowed as button is created with ctrlCreate 
-					_btnClicker ctrlAddEventHandler
-					[
+						_x ctrlCommit 0;
+
+					} forEach [
+						_btnImg,
+						_btnClicker
+					];
+
+					private _units = +A3C_RD_UNITS;
+
+					//-- ctrlAddEventHandler is allowed because the button was
+					//-- created with ctrlCreate.
+					_btnClicker ctrlAddEventHandler [
 						"MouseButtonDown",
-						compile format
-						[
+						compile format [
 							"
-								[A3C_TARGETVEH,'%1',_this select 1,%2] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro ;
+								[
+									A3C_TARGETVEH,
+									'%1',
+									_this select 1,
+									%2
+								] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro;
 							",
-							if (_i == 0) then {'all'} else {'cargoFFV'},
+							if (_i == 0) then {
+								"all"
+							} else {
+								"cargoFFV"
+							},
 							_units
 						]
 					];
 				};
 			};
-			
-			//-- add macro options: getIn all, all cargoFFV
 
+			//-- Add macro options: getIn all, all cargoFFV
 			if (_isCategorySwitch == 0) then {
 				{
 					private _c = (crew _x) - [player];
 					private _n = "";
+
 					{
-						if ((group _x) == (group player)) then {
-							_n = _n + 
-							(
+						if ((group _x) == _boardingPlayerGroup) then {
+							_n = _n + (
 								[
 									_x,
-									if (_forEachIndex == ((count _c) - 1)) then {true} else {false}
+									_forEachIndex
+										== ((count _c) - 1)
 								] call MCSS_fnc_getUnitNameString
 							);
 						} else {
 							_c = _c - [_x];
 						};
+
 					} forEach _c;
-					if !(_n == "") then {
+
+					if (_n != "") then {
 						_n = "(" + _n + ")";
 					};
+
 					[
 						[
-							format
-							[
+							format [
 								"%1 %2",
-								(getText (configFile >> "CfgVehicles" >> (typeOf _x) >> "displayName")),
+								getText (
+									configFile
+										>> "CfgVehicles"
+										>> typeOf _x
+										>> "displayName"
+								),
 								_n
 							],
-						(typeOf _x),
-						_x,
-						(findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX),
-						""
+							typeOf _x,
+							_x,
+							findDisplay IDD_RADIAL_MENU displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX,
+							""
 						]
 					] call A3C_ui_radialMenu_fnc_lbAdd;
+
 				} forEach A3C_VEHSAV;
 			};
 		};
-
-		
 	};
 };
 

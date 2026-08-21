@@ -19,7 +19,15 @@ A3C_PREP(boarding_assignVehicleSeatSingle);
 A3C_PREP(boarding_boardingHack);
 A3C_PREP(boarding_boardUnitsToVehicle);
 A3C_PREP(boarding_boardUnitToSeat);
+A3C_PREP(boarding_cancelUnitAssignment);
 A3C_PREP(boarding_createPlayerGroupUIProxy);
+A3C_PREP(boarding_finishUnitAssignment);
+A3C_PREP(boarding_processBoardUnitsToVehicleQueue);
+A3C_PREP(boarding_queueBoardUnitsToVehicle);
+A3C_PREP(boarding_registerUnitAssignment);
+
+
+
 
 
 A3C_PREP(getProminentUnitBhvCbm);

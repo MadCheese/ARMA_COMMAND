@@ -41,6 +41,14 @@ with profilenamespace do {
 	};
 };
 
+//----------------------------- AI BOARDING VARIABLES
+A3C_BOARDING_QUEUE = [];
+A3C_BOARDING_QUEUE_ACTIVE = false;
+A3C_BOARDING_TRANSACTION_ACTIVE = false;
+A3C_BOARDING_REQUEST_ID = 0;
+A3C_BOARDING_PLAYER_GROUP = grpNull;
+
+
 //----------------------------- UI VARIABLES
 //----------------------------- Main Display Variables
 

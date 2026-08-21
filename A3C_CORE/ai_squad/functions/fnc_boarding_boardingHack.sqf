@@ -1,5 +1,7 @@
 // A3C_ai_squad_fnc_boarding_boardingHack
 
+// >> UNUSED, replaced by the new, better A3C_ai_squad_fnc_boarding_boardUnitsToVehicle
+
 params [
 	"_unit",
 	"_vehicle",

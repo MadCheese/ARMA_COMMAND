@@ -36,7 +36,17 @@ private _proxyData = [];
 		"NONE"
 	];
 
-	_unit hideObjectGlobal true;
+	_unit hideObject true;
+	[
+		[_unit],
+		{
+			params ["_unit"];
+
+			if (!isNull _unit) then {
+				_unit hideObjectGlobal true;
+			};
+		}
+	] remoteExecCall ["BIS_fnc_call", 2];
 
 	[_unit, [0,100,0]] call A3C_ai_shared_fnc_doMove; //-- just to give 'busy' status instead of 'away'
 

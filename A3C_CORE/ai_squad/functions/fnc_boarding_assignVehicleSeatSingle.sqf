@@ -2,7 +2,6 @@
 
 // A3C_ai_squad_fnc_boarding_assignVehicleSeatSingle
 
-// Assigns an individual vehicle seat. Called from a seat button or board-all logic.
 params [
 	"_roleData",
 	"_mouseButton",
@@ -20,6 +19,9 @@ _roleData params [
 	"_isFFV"
 ];
 
+private _roleEngine = _role;
+_role = toLower _role;
+
 private _buttonImageControl = (findDisplay IDD_RADIAL_MENU) displayCtrl _buttonImageIdc;
 
 if (isNil "_vehicle") then {
@@ -27,301 +29,228 @@ if (isNil "_vehicle") then {
 };
 
 if (isNil "_referenceUnits") then {
-	_referenceUnits = A3C_RD_UNITS;
+	_referenceUnits = +A3C_RD_UNITS;
+} else {
+	_referenceUnits = +_referenceUnits;
 };
 
-if (count _referenceUnits == 0) exitWith {};
+if (_referenceUnits isEqualTo [] || {isNull _vehicle}) exitWith {};
 
-private _fnc_unassignSeat = {
+//-- Dynamically compiled seat buttons use scalar 0/1 sentinels for an empty
+//-- seat or a seat occupied outside the player squad.
+if !(_specifiedUnit isEqualType objNull) then {
+	_specifiedUnit = objNull;
+};
+
+private _playerGroup = missionNamespace getVariable [
+	"A3C_BOARDING_PLAYER_GROUP",
+	grpNull
+];
+
+if (isNull _playerGroup) then {
+	_playerGroup = group player;
+};
+
+private _playerGroupUnits = units _playerGroup;
+
+private _seatIndexPath = if (_role in ["driver", "cargo"]) then {
+	_cargoIndex
+} else {
+	+_turretPath
+};
+
+private _fnc_canonicalRole = {
+	params ["_testedRole"];
+
+	if (toLower _testedRole in ["gunner", "commander", "turret"]) then {
+		"turret"
+	} else {
+		toLower _testedRole
+	}
+};
+
+private _canonicalRole = [_role] call _fnc_canonicalRole;
+
+private _fnc_matchesSeat = {
 	params [
-		"_unit",
-		"_buttonImageControl",
-		"_assignmentData"
+		"_testedRole",
+		"_testedSeatIndexPath"
 	];
 
-	_assignmentData params [
-		"_vehicle",
-		"_role",
-		"_seatIndexPath",
-		"_boardingScript",
-		"_image"
-	];
-
-	if (count _assignmentData > 0) then {
-		if (typeName _boardingScript != "STRING") then {
-			terminate _boardingScript;
-		};
-
-		[
-			[_unit],
-			A3C_ai_shared_fnc_unitGetOut
-		] remoteExec ["BIS_fnc_call", _unit];
-
-		if (
-			A3C_RADIALMODE == "VEHS"
-			&& {A3C_TARGETVEH == _vehicle}
-		) then {
-			_buttonImageControl ctrlSetTextColor [1, 1, 1, 1];
-		};
-
-		_unit setVariable ["A3C_assignedVehicleSeat", nil];
-
-		waitUntil {
-			isNull objectParent _unit
-		};
-
-		_unit doMove position _unit;
-	};
+	([_testedRole] call _fnc_canonicalRole) == _canonicalRole
+	&& {_testedSeatIndexPath isEqualTo _seatIndexPath}
 };
 
-// Right mouse button: dismount a unit from the player's group.
 if (_mouseButton == 1) exitWith {
-	if (_occupyingUnit in units player) then {
-		if (_occupyingUnit in _vehicle) then {
-			_occupyingUnit remoteExec ["unassignVehicle", 0];
-			doGetOut _occupyingUnit;
+	private _unitToCancel = objNull;
 
-			_buttonImageControl ctrlSetTextColor [1, 1, 1, 1];
+	if (
+		!isNull _specifiedUnit
+		&& {_specifiedUnit in _playerGroupUnits}
+		&& {!isPlayer _specifiedUnit}
+	) then {
+		_unitToCancel = _specifiedUnit;
+	} else {
+		if (
+			_occupyingUnit isEqualType objNull
+			&& {!isNull _occupyingUnit}
+			&& {_occupyingUnit in _playerGroupUnits}
+			&& {!isPlayer _occupyingUnit}
+		) then {
+			_unitToCancel = _occupyingUnit;
 		} else {
-			if (typeName _occupyingUnit == "OBJECT") then {
-				// The unit belongs to the player's group but has not boarded yet.
-				private _assignmentData = _occupyingUnit getVariable [
+			{
+				private _candidateUnit = _x;
+				private _assignmentData = _candidateUnit getVariable [
 					"A3C_assignedVehicleSeat",
 					[]
 				];
 
-				[
-					_occupyingUnit,
-					_buttonImageControl,
-					_assignmentData
-				] spawn _fnc_unassignSeat;
-			};
-		};
-	} else {
-		{
-			private _candidateUnit = _x;
-			private _assignmentData = _candidateUnit getVariable [
-				"A3C_assignedVehicleSeat",
-				[]
-			];
+				private _matchesPendingAssignment = false;
 
-			private _matchesSeat = (
-				count _assignmentData > 0
-				&& {(_assignmentData select 0) == _vehicle}
-				&& {
-					{
-						_x in _roleData
-					} count (_assignmentData select [1, 2]) == 2
-				}
-			) || {
-				// The unit entered the selected seat while the menu remained open.
-				switch (_role) do {
+				if (_assignmentData isNotEqualTo []) then {
+					_matchesPendingAssignment =
+						(_assignmentData select 0) == _vehicle
+						&& {
+							[
+								_assignmentData select 1,
+								_assignmentData select 2
+							] call _fnc_matchesSeat
+						};
+				};
+
+				private _matchesOccupiedSeat = switch (_canonicalRole) do {
 					case "driver": {
 						_candidateUnit == driver _vehicle
 					};
-					case "gunner": {
-						_candidateUnit == gunner _vehicle
-					};
-					case "commander": {
-						_candidateUnit == commander _vehicle
-					};
-					case "Turret": {
-						_candidateUnit == (_vehicle turretUnit _turretPath)
-					};
+
 					case "cargo": {
-						_cargoIndex == (_vehicle getCargoIndex _candidateUnit)
+						_candidateUnit in _vehicle
+						&& {_vehicle getCargoIndex _candidateUnit == _seatIndexPath}
+					};
+
+					case "turret": {
+						_candidateUnit == (_vehicle turretUnit _seatIndexPath)
+					};
+
+					default {
+						false
 					};
 				};
-			};
 
-			if (_matchesSeat) exitWith {
-				if (_assignmentData isEqualTo []) then {
-					_assignmentData = [
-						_vehicle,
-						_role,
-						-1,
-						"",
-						""
-					];
+				if (_matchesPendingAssignment || {_matchesOccupiedSeat}) exitWith {
+					_unitToCancel = _candidateUnit;
 				};
+			} forEach _playerGroupUnits;
+		};
+	};
 
-				[
-					_candidateUnit,
-					_buttonImageControl,
-					_assignmentData
-				] spawn _fnc_unassignSeat;
+	if (!isNull _unitToCancel) then {
+		private _assignmentData = _unitToCancel getVariable [
+			"A3C_assignedVehicleSeat",
+			[]
+		];
+
+		if (_assignmentData isNotEqualTo []) then {
+			[
+				_unitToCancel,
+				[1, 1, 1, 1]
+			] call A3C_ai_squad_fnc_boarding_cancelUnitAssignment;
+		} else {
+			[_unitToCancel] spawn A3C_ai_shared_fnc_unitGetOut;
+
+			if (!isNull _buttonImageControl) then {
+				_buttonImageControl ctrlSetTextColor [1, 1, 1, 1];
 			};
-		} forEach units player;
+		};
 	};
 };
-
-_buttonImageControl ctrlSetTextColor (
-	[
-		A3C_UI_COLOR_BLUE,
-		0.3
-	] call A3C_ui_shared_fnc_getColorArrayWithOpacity
-);
 
 private _assignedVehicleCrew = _vehicle getVariable [
 	"A3C_AssignedVehicleCrew",
 	[]
 ];
 
-private _isSeatOccupied = (
-	typeName _occupyingUnit == "OBJECT"
+private _seatReserved = _assignedVehicleCrew findIf {
+	[
+		_x param [1, ""],
+		_x param [2, -2]
+	] call _fnc_matchesSeat
+} != -1;
+
+private _seatOccupied = (
+	_occupyingUnit isEqualType objNull
 	&& {!isNull _occupyingUnit}
 	&& {alive _occupyingUnit}
 ) || {
-	typeName _occupyingUnit == "SCALAR"
+	_occupyingUnit isEqualType 0
 	&& {_occupyingUnit == 1}
 };
 
-{
-	private _boardingData = _x;
-
-	if (
-		{
-			_x in _boardingData
-		} count [
-			_role,
-			_cargoIndex,
-			_turretPath
-		] >= 2
-	) then {
-		_isSeatOccupied = true;
-	};
-} forEach _assignedVehicleCrew;
-
-if (_isSeatOccupied) exitWith {};
-
-private _seatIndexPath = if (_role in ["driver", "cargo"]) then {
-	_cargoIndex
-} else {
-	_turretPath
-};
+if (_seatOccupied || {_seatReserved}) exitWith {};
 
 if (!isNull _specifiedUnit) then {
-	// A particular unit was supplied.
 	if (isPlayer _specifiedUnit) then {
-		// Players cannot be automatically assigned.
 		_specifiedUnit = objNull;
-	} else {
-		private _unitBoardingData = _specifiedUnit getVariable [
-			"A3C_assignedVehicleSeat",
-			[]
-		];
-
-		// Override an existing assignment that has not yet boarded.
-		if (
-			isNull objectParent _specifiedUnit
-			&& {count _unitBoardingData > 0}
-		) then {
-			_x remoteExec ["unassignVehicle", 0];
-
-			terminate (_unitBoardingData select 3);
-
-			_specifiedUnit setVariable [
-				"A3C_assignedVehicleSeat",
-				nil,
-				true
-			];
-
-			_specifiedUnit setVariable [
-				"A3C_PLOT_TEMP",
-				[],
-				false
-			];
-
-			_specifiedUnit setVariable [
-				"A3C_PLOT",
-				[],
-				true
-			];
-		};
 	};
 } else {
-	// Filter suitable units for both single-unit and multi-unit selections.
 	private _suitableUnits = _referenceUnits select {
-		!isPlayer _x
+		!isNull _x
+		&& {alive _x}
+		&& {!isPlayer _x}
 		&& {isNull objectParent _x}
 		&& {
-			count (
-				_x getVariable [
-					"A3C_assignedVehicleSeat",
-					[]
-				]
-			) == 0
+			(_x getVariable ["A3C_assignedVehicleSeat", []]) isEqualTo []
 		}
 	};
 
-	if (count _suitableUnits > 0) then {
+	if (_suitableUnits isNotEqualTo []) then {
 		_specifiedUnit = _suitableUnits select 0;
 	} else {
+		//-- Preserve the existing individual-seat behavior: when every
+		//-- selected unit already has a pending seat, replace the first
+		//-- selected unit's previous assignment.
 		_specifiedUnit = _referenceUnits select 0;
 	};
 };
 
-if (isNull _specifiedUnit) exitWith {};
+if (
+	isNull _specifiedUnit
+	|| {!alive _specifiedUnit}
+	|| {isPlayer _specifiedUnit}
+	|| {!isNull objectParent _specifiedUnit}
+) exitWith {};
 
-// Override the unit's previous seat assignment.
-private _previousAssignment = _specifiedUnit getVariable [
-	"A3C_assignedVehicleSeat",
-	[]
-];
+if ((_specifiedUnit getVariable ["A3C_assignedVehicleSeat", []]) isNotEqualTo []) then {
+	[_specifiedUnit] call A3C_ai_squad_fnc_boarding_cancelUnitAssignment;
+};
 
-if (count _previousAssignment > 0) then {
-	_previousAssignment params [
-		"_previousVehicle",
-		"_previousRole",
-		"_previousSeatIndexPath",
-		"_previousBoardingScript",
-		"_previousButtonImageControl"
-	];
+private _requestId = [
+	_specifiedUnit,
+	_vehicle,
+	_roleEngine,
+	_seatIndexPath,
+	_buttonImageControl
+] call A3C_ai_squad_fnc_boarding_registerUnitAssignment;
 
-	_specifiedUnit doMove position _specifiedUnit;
+if (_requestId < 0) exitWith {};
 
-	terminate _previousBoardingScript;
-
-	private _runningBoardingScripts = _specifiedUnit getVariable [
-		"A3C_boardingScript",
-		[]
-	];
-
-	if (count _runningBoardingScripts > 0) then {
-		terminate (_runningBoardingScripts select 0);
-	};
-
-	if (
-		A3C_RADIALMODE == "VEHS"
-		&& {A3C_TARGETVEH == _previousVehicle}
-	) then {
-		_previousButtonImageControl ctrlSetTextColor [1, 1, 1, 1];
-	};
-
-	_specifiedUnit setVariable ["A3C_boardingScript", nil];
-	_specifiedUnit setVariable ["A3C_assignedVehicleSeat", nil];
-
-	{
-		private _assignedCrewData = _x;
-
-		if (_specifiedUnit == (_assignedCrewData select 0)) then {
-			_assignedVehicleCrew = _assignedVehicleCrew - [_assignedCrewData];
-		};
-	} forEach _assignedVehicleCrew;
-
-	_vehicle setVariable [
-		"A3C_AssignedVehicleCrew",
-		_assignedVehicleCrew,
-		true
-	];
+if (!isNull _buttonImageControl) then {
+	_buttonImageControl ctrlSetTextColor (
+		[
+			A3C_UI_COLOR_BLUE,
+			0.3
+		] call A3C_ui_shared_fnc_getColorArrayWithOpacity
+	);
 };
 
 private _boardingScript = [
 	_specifiedUnit,
 	_vehicle,
-	_role,
+	_roleEngine,
 	_seatIndexPath,
-	_buttonImageControl
+	_buttonImageControl,
+	_requestId
 ] spawn A3C_ai_squad_fnc_boarding_boardUnitToSeat;
 
 _specifiedUnit setVariable [

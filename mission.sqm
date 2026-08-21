@@ -8,7 +8,7 @@ class EditorData
 	toggles=1057;
 	class ItemIDProvider
 	{
-		nextID=5144;
+		nextID=5146;
 	};
 	class MarkerIDProvider
 	{
@@ -17,9 +17,9 @@ class EditorData
 	class Camera
 	{
 		pos[]={14805.181,42.872292,16505.359};
-		dir[]={-0.084732607,-0.22654705,0.97030771};
-		up[]={-0.019708334,0.97400022,0.22568819};
-		aside[]={0.99620891,0,0.086994439};
+		dir[]={-0.084732607,-0.22654703,0.97030771};
+		up[]={-0.019708332,0.97400028,0.22568817};
+		aside[]={0.99620897,-1.8626451e-09,0.086994447};
 	};
 };
 binarizationWanted=0;
@@ -6725,7 +6725,7 @@ class Mission
 					class Attributes
 					{
 					};
-					id=5143;
+					id=5145;
 					type="B_Soldier_F";
 				};
 			};
@@ -6744,8 +6744,8 @@ class Mission
 					class Item0
 					{
 						linkID=0;
-						item0=5143;
-						item1=5142;
+						item0=5145;
+						item1=5144;
 						class CustomData
 						{
 							role=1;
@@ -6760,15 +6760,15 @@ class Mission
 			dataType="Object";
 			class PositionInfo
 			{
-				position[]={14773.188,20.065947,16566.98};
+				position[]={14773.188,20.084791,16566.982};
 			};
 			side="West";
 			flags=6;
 			class Attributes
 			{
 			};
-			id=5142;
-			type="B_MRAP_01_F";
+			id=5144;
+			type="B_Truck_01_transport_F";
 		};
 	};
 	class Connections
