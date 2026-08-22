@@ -6,6 +6,7 @@ private _proxyGroup = group player;
 
 private _groupData = (units _group) apply {
 	[
+		_x,
 		typeOf _x,
 		name _x,
 		_x getVariable ["A3C_ASSIGNEDTEAM", "MAIN"],
@@ -20,6 +21,7 @@ private _proxyData = [];
 
 {
 	_x params [
+		"_sourceUnit",
 		"_type",
 		"_name",
 		"_assignedTeam",
@@ -60,6 +62,11 @@ private _proxyData = [];
 			_primaryWeapon,
 			_secondaryWeapon,
 			_magazines
+		];
+
+		_unit setVariable [
+			"A3C_boardingProxySourceUnit",
+			_sourceUnit
 		];
 	};
 

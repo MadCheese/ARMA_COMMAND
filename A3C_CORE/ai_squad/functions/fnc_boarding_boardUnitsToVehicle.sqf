@@ -173,11 +173,7 @@ A3C_BOARDING_PLAYER_GROUP = _playerGroup;
 
 [_playerUnit] joinSilent _tempGroup;
 
-private _fakeGroupUnits = if (shownHUD param [6, false]) then {
-	_playerGroup call A3C_ai_squad_fnc_boarding_createPlayerGroupUIProxy
-} else {
-	[]
-};
+private _fakeGroupUnits = _playerGroup call A3C_ai_squad_fnc_boarding_createPlayerGroupUIProxy;
 
 if (_debug) then {
 	systemChat format [
@@ -358,11 +354,101 @@ if (_pendingUnits isNotEqualTo [] && {_debug}) then {
 	];
 };
 
+//-- Capture cancellation commands issued through the proxy group before
+//-- returning the player to the real group.
+private _proxyCancellationRequests = [];
+
+{
+	private _proxyUnit = _x;
+
+	if (!isNull _proxyUnit && {alive _proxyUnit}) then {
+		private _sourceUnit = _proxyUnit getVariable [
+			"A3C_boardingProxySourceUnit",
+			objNull
+		];
+
+		private _assignmentIndex = _orderedAssignments findIf {
+			(_x select 0) == _sourceUnit
+		};
+
+		if (
+			!isNull _sourceUnit
+			&& {_assignmentIndex >= 0}
+		) then {
+			private _expectedDestinationData =
+				expectedDestination _proxyUnit;
+
+			private _planningMode = toLower (
+				_expectedDestinationData param [1, ""]
+			);
+
+			private _proxyCancelledBoarding =
+				currentCommand _proxyUnit == "STOP"
+				|| {(_planningMode find "form") >= 0};
+
+			if (_proxyCancelledBoarding) then {
+				private _assignment =
+					_orderedAssignments select _assignmentIndex;
+
+				_proxyCancellationRequests pushBack [
+					_sourceUnit,
+					_assignment select 3
+				];
+			};
+		};
+	};
+} forEach _fakeGroupUnits;
+
 //-- From this point onward, keep cleanup linear. Do not add exitWith paths
 //-- between the player leaving the original group and this restoration.
 if (!isNull _playerGroup && {!isNull _playerUnit}) then {
 	[_playerUnit] joinSilent _playerGroup;
 };
+
+//-- Transfer proxy cancellation requests to the corresponding real units.
+//-- Request IDs prevent delayed requests from cancelling newer assignments.
+{
+	_x params [
+		"_unit",
+		"_requestId"
+	];
+
+	if (!isNull _unit) then {
+		[
+			[
+				_unit,
+				_vehicle,
+				_requestId
+			],
+			{
+				params [
+					"_unit",
+					"_vehicle",
+					"_requestId"
+				];
+
+				if (
+					!isNull _unit
+					&& {alive _unit}
+					&& {!isNull _vehicle}
+					&& {vehicle _unit != _vehicle}
+					&& {assignedVehicle _unit == _vehicle}
+					&& {
+						_unit getVariable [
+							"A3C_boardingRequestId",
+							-1
+						] == _requestId
+					}
+				) then {
+					unassignVehicle _unit;
+				};
+			}
+		] remoteExecCall [
+			"BIS_fnc_call",
+			_unit
+		];
+	};
+} forEach _proxyCancellationRequests;
 
 {
 	if (!isNull _x) then {
