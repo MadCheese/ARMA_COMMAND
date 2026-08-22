@@ -2391,12 +2391,15 @@ switch (_mode) do {
 			if (_btn == 1) then {
 				// RCLICK
 				{
-					if (!isPlayer _x) then {
+					if (
+						!isPlayer _x
+						&& {!isNull objectParent _x}
+					) then {
 						[_x] spawn A3C_ai_shared_fnc_getOut;
 
-						A3C_BOARD_UNITS pushbackUnique _x;
+						A3C_BOARD_UNITS pushBackUnique _x;
 					};
-				} foreach A3C_RD_UNITS;
+				} forEach A3C_RD_UNITS;
 				player groupradio "SentCmdGetOut"; 
 			} else {
 				//-- Hide all outer ring backgrounds

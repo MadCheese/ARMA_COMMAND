@@ -26,6 +26,20 @@ private _tree = _display displayCtrl IDC_SHARED_UI_TREE_SELECTOR;
 if (isNull _tree) exitWith {};
 
 /*
+	The boarding workaround temporarily moves the player into another group.
+	Keep the displayed squad root tied to the real player group throughout that
+	operation.
+*/
+private _playerTreeGroup = missionNamespace getVariable [
+	"A3C_BOARDING_PLAYER_GROUP",
+	grpNull
+];
+
+if (isNull _playerTreeGroup) then {
+	_playerTreeGroup = group player;
+};
+
+/*
 	Keep a stable HC-group snapshot for this complete tree rebuild. The same
 	array is used by Tree_addItem when assigning HC tree values.
 */
@@ -112,7 +126,7 @@ if ("SQUAD" in _modes) then {
 
 	private _squadRootIndex = _tree tvAdd [
 		[],
-		toUpper (groupID (group player))
+		toUpper (groupID _playerTreeGroup)
 	];
 
 	if (_vehicleEntries isNotEqualTo []) then {
@@ -566,5 +580,15 @@ if (_openTrees isNotEqualTo []) then {
 		] spawn A3C_ui_shared_fnc_Tree_openOrCollapse;
 	};
 };
+
+/*
+	Register this freshly generated tree as the synchronization baseline now,
+	not on the first delayed FSM check. This prevents a redundant rebuild while
+	still allowing any later join, removal, death, or structural change to be
+	detected from the next signature comparison.
+*/
+[
+	true
+] call A3C_ui_shared_fnc_Tree_synchronize;
 
 _tree

@@ -66,6 +66,35 @@ if (isNull _playerGroup) exitWith {
 	[_acceptedUnits, _failedUnits]
 };
 
+//-- Restore saved destinations after each player-group switching transaction.
+private _fnc_restoreOtherSquadUnitDestinations = {
+	params [
+		["_units", [], [[]]]
+	];
+
+	{
+		private _expectedDestination = _x getVariable [
+			"A3C_DEST",
+			[
+				[0, 0, 0],
+				"DoNotPlanFormation",
+				false
+			]
+		];
+
+		private _destinationType = toLower (
+			_expectedDestination param [1, ""]
+		);
+
+		if !(["form", _destinationType] call BIS_fnc_inString) then {
+			[
+				_x,
+				_expectedDestination select 0
+			] call A3C_ai_shared_fnc_doMove;
+		};
+	} forEach _units;
+};
+
 private _validAssignments = [];
 
 {
@@ -168,10 +197,40 @@ if (isNull _tempGroup) exitWith {
 	[_acceptedUnits, _failedUnits]
 };
 
+private _validUnits = _validAssignments apply {
+	_x select 0
+};
+
+private _otherSquadUnits =
+	(units _playerGroup)
+	- _validUnits
+	- [_playerUnit];
+
+private _otherSquadUnitsNotInFormation = _otherSquadUnits select {
+	private _expectedDestination = expectedDestination _x;
+
+	private _destinationType = toLower (
+		_expectedDestination param [1, ""]
+	);
+
+	!(["form", _destinationType] call BIS_fnc_inString)
+	// && {currentCommand _x in ["MOVE", ""]}
+	&& {currentCommand _x == ""}
+};
+
+//-- Store current orders for units unaffected by this boarding request.
+{
+	[_x] call A3C_ai_shared_fnc_setDestination;
+} forEach _otherSquadUnitsNotInFormation;
+
 A3C_BOARDING_TRANSACTION_ACTIVE = true;
 A3C_BOARDING_PLAYER_GROUP = _playerGroup;
 
 [_playerUnit] joinSilent _tempGroup;
+
+[
+	_otherSquadUnitsNotInFormation
+] call _fnc_restoreOtherSquadUnitDestinations;
 
 private _fakeGroupUnits = _playerGroup call A3C_ai_squad_fnc_boarding_createPlayerGroupUIProxy;
 
@@ -468,6 +527,10 @@ A3C_BOARDING_PLAYER_GROUP = grpNull;
 A3C_BOARDING_TRANSACTION_ACTIVE = false;
 
 deleteGroup _tempGroup;
+
+[
+	_otherSquadUnitsNotInFormation
+] call _fnc_restoreOtherSquadUnitDestinations;
 
 if (_debug) then {
 	sleep 0.5;

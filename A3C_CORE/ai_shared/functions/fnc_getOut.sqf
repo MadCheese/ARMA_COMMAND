@@ -5,12 +5,11 @@ params ["_unit"];
 
 // Why the loop? Something can pull the unit back into the vehicle and leave it there
 // with no assigned vehicleRole. Keep retrying until the unit is actually dismounted.
-while { alive _unit } do {
+while {alive _unit} do {
 	if (isNull _unit) exitWith {};
 
 	if (!isNull objectParent _unit) then {
-		[_unit, vehicle _unit] remoteExec ["leaveVehicle", _unit];
-		_unit remoteExec ["unassignVehicle", 0];
+		_unit remoteExec ["unassignVehicle", _unit];
 		_unit remoteExec ["doGetOut", _unit];
 	};
 
