@@ -171,10 +171,14 @@ while {!isNull _unit} do {
 	//-- exit function if required (_abort returns true), delete lines/markers and reset values
 	if (_abort) exitWith {
 		{_unit enableAI _x} foreach ["TARGET","AUTOTARGET","FSM","AUTOCOMBAT"];
-		_unit forcespeed -1;
-		_vehicle forcespeed -1;
-		if !(_vehicle == _unit) then {
-			_vehicle limitspeed 1000;
+		_unit forceSpeed -1;
+
+		if (
+			!isNull objectParent _unit
+			&& {_unit == driver _vehicle}
+		) then {
+			_vehicle forceSpeed -1;
+			_vehicle limitSpeed false;
 		};
 		[_unit] call A3C_ai_shared_fnc_resetUnit;
 	};
@@ -198,7 +202,7 @@ while {!isNull _unit} do {
 
 	//-- help out the helpless guys in stranded boats
 	//-- here we use the GENERAL depth of the ocean at the position. not the depth od the vehicle
-	if (_vehicle isKindOf "SHIP") then {
+	if (_vehicle isKindOf "SHIP" && {_unit == driver _vehicle}) then {
 		private _vicPos = getpos _vehicle;
 		private _refPos = ATLtoASL ((_vicPos select [0,2]) + [0]);
 
@@ -277,7 +281,7 @@ while {!isNull _unit} do {
 	};
 
 	//-- additional data for helicopters (not relevant for ground vehicles)
-	if (_vehicle isKindOf "AIR") then {
+	if (_vehicle isKindOf "AIR" && {_unit == driver _vehicle}) then {
 		if (_vehicle isKindOf "PLANE") then {
 			//-- adjust lower heights for planes
 			if (_wpFlyInHeight == 25) then {_wpFlyInHeight = 150};
@@ -320,7 +324,7 @@ while {!isNull _unit} do {
 	if (_vehicle isKindOf "Man") then {
 		_varidist = 5;
 	} else {
-		if (_vehicle isKindOf "Air") then {
+		if (_vehicle isKindOf "AIR") then {
 			if (_landingdata == "NONE") then {
 				_variDist = if (_wpAction select 0 == "PARADROP") then {50} else {150};
 			} else {
@@ -376,7 +380,7 @@ while {!isNull _unit} do {
 		if (_vehicle == _unit) then {
 			_maxSpeed = 2;
 		} else {
-			_maxSpeed = if (_vehicle iskindof "AIR") then {60} else {15};
+			_maxSpeed = if (_vehicle isKindOf "AIR") then {60} else {15};
 		};
 	} else {
 		if (isnull objectParent _unit) then {
@@ -385,10 +389,12 @@ while {!isNull _unit} do {
 			_maxSpeed = 1000;
 		};
 	};
-	if (isnull objectparent _unit) then {
-		_unit forcespeed _maxSpeed;
+	if (isNull objectParent _unit) then {
+		_unit forceSpeed _maxSpeed;
 	} else {
-		_vehicle limitspeed _maxSpeed;
+		if (_unit == driver _vehicle) then {
+			_vehicle limitSpeed _maxSpeed;
+		};
 	};
 	_unit setvariable ["A3C_PLOT_ACTIVE",true,true];
 
@@ -568,10 +574,12 @@ while {!isNull _unit} do {
 							[_unit,_movePos] call A3C_ai_shared_fnc_doMove;
 
 							_unit setunitpos _unitPosTravel;
-							if (isnull objectparent _unit) then {
-								_unit forcespeed _maxSpeed;
+							if (isNull objectParent _unit) then {
+								_unit forceSpeed _maxSpeed;
 							} else {
-								_vehicle limitspeed _maxSpeed;
+								if (_unit == driver _vehicle) then {
+									_vehicle limitSpeed _maxSpeed;
+								};
 							};
 						};
 
@@ -762,7 +770,7 @@ while {!isNull _unit} do {
 			};
 		};
 
-		if (_vehicle isKindOf "TANK") then {
+		if (_vehicle isKindOf "TANK" && {_unit == driver _vehicle}) then {
 			if ( ((_wpCondition select 0) != "NONE") OR ((_cycle + 1) == count (_unit getVariable ["A3C_PLOT",[]])) ) then {
 				if !(_lookAtPos isEqualTo []) then {
 					waituntil {unitReady _unit && speed _vehicle == 0};
@@ -789,28 +797,30 @@ while {!isNull _unit} do {
 				sleep 2;
 			};
 			case ("SLINGLOAD") : {
-				private _slingMode = if (isnull (getSlingLoad _vehicle)) then {0} else {1};
-				waitUntil {(getPosATL _vehicle select 2) > 5};
-				waitUntil {speed _vehicle < 50};
-				private _spawnBehaviour = {};
-				if (_slingMode == 0) then {
-					_spawnBehaviour = [_slingMode,_vehicle,_wpAction select 1] spawn A3C_ai_squad_fnc_actionHeliSling;
-					waitUntil {scriptDone _spawnBehaviour};
-				} else {
-					private _slingCargo = getSlingLoad _vehicle;
-					if !(isnull _slingCargo) then {
-						private _cargoHeight = (((boundingBoxreal _slingCargo) select 1) select 2) + 10;
-						waitUntil {speed _vehicle < 50};
-						[_unit,position _vehicle] call A3C_ai_shared_fnc_doMove;
-						sleep 1;
-
-						private _slingPos = +(_movePos);
-						_slingPos set [2,_cargoHeight];
-						_spawnBehaviour = [_slingMode,_vehicle, ATLtoASL _slingPos] spawn A3C_ai_squad_fnc_actionHeliSling;
+				if (_unit == driver _vehicle) then {
+					private _slingMode = if (isnull (getSlingLoad _vehicle)) then {0} else {1};
+					waitUntil {(getPosATL _vehicle select 2) > 5};
+					waitUntil {speed _vehicle < 50};
+					private _spawnBehaviour = {};
+					if (_slingMode == 0) then {
+						_spawnBehaviour = [_slingMode,_vehicle,_wpAction select 1] spawn A3C_ai_squad_fnc_actionHeliSling;
 						waitUntil {scriptDone _spawnBehaviour};
-						_unit doMove (position _vehicle); _unit moveTo (position _vehicle);
-						_unit moveTo _movePos;
-						sleep 2;
+					} else {
+						private _slingCargo = getSlingLoad _vehicle;
+						if !(isnull _slingCargo) then {
+							private _cargoHeight = (((boundingBoxreal _slingCargo) select 1) select 2) + 10;
+							waitUntil {speed _vehicle < 50};
+							[_unit,position _vehicle] call A3C_ai_shared_fnc_doMove;
+							sleep 1;
+
+							private _slingPos = +(_movePos);
+							_slingPos set [2,_cargoHeight];
+							_spawnBehaviour = [_slingMode,_vehicle, ATLtoASL _slingPos] spawn A3C_ai_squad_fnc_actionHeliSling;
+							waitUntil {scriptDone _spawnBehaviour};
+							_unit doMove (position _vehicle); _unit moveTo (position _vehicle);
+							_unit moveTo _movePos;
+							sleep 2;
+						};
 					};
 				};
 			};
@@ -821,7 +831,11 @@ while {!isNull _unit} do {
 			};
 		};
 		//-- Spawn Landing Behaviour for choppers
-		if ( !(_vehicle == _unit) && !(_landingdata == "NONE") )then {
+		if (
+			!(_vehicle == _unit)
+			&& {!(_landingdata == "NONE")}
+			&& {_unit == driver _vehicle}
+		) then {
 			_unit setvariable ["A3C_CREWCOUNT",(count crew _vehicle),true];
 			switch (true) do {
 				case (_landingdata in ["PICKUP","DROPOFF"]) : {
@@ -838,20 +852,21 @@ while {!isNull _unit} do {
 				};
 			};
 		};
-		if (_vehicle isKindOf "Helicopter") then {
-			if ((_wpAction select 0) == "NONE") then {
-				if (_cycle == (count _data - 1)) then {
-					private _subBehaviour =
-					[
-						_vehicle,
-						getPosASL _vehicle,
-						ATLtoASL ((_movePos select [0,2]) + [_wpFlyInHeight]),
-						50
-					] spawn A3C_ai_rail_fnc_helicopter;
-					waituntil {scriptDone _subBehaviour};
-					doStop _unit;
-				};
-			};
+		if (
+			_vehicle isKindOf "Helicopter"
+			&& {_unit == driver _vehicle}
+			&& {(_wpAction select 0) == "NONE"}
+			&& {_cycle == (count _data - 1)}
+		) then {
+			private _subBehaviour =
+			[
+				_vehicle,
+				getPosASL _vehicle,
+				ATLtoASL ((_movePos select [0,2]) + [_wpFlyInHeight]),
+				50
+			] spawn A3C_ai_rail_fnc_helicopter;
+			waituntil {scriptDone _subBehaviour};
+			doStop _unit;
 		};
 	};
 
@@ -1046,8 +1061,11 @@ while {!isNull _unit} do {
 				};
 			} foreach _otherUnits;
 			if (_syncComplete) exitWith {
-				if (_pickup) then {
-
+				if (
+					_pickup
+					&& {!isNull objectParent _unit}
+					&& {_unit == driver _vehicle}
+				) then {
 					if (_vehicle isKindOf "HELICOPTER") then {
 						[_unit,position _vehicle] call A3C_ai_shared_fnc_doMove;
 						sleep 0.2;
@@ -1087,7 +1105,7 @@ while {!isNull _unit} do {
 			_unit dowatch objnull;
 			sleep 1;
 		};
-		_vehicle limitSpeed 1000;
+		_vehicle limitSpeed false;
 		[_unit,_movePos] call A3C_ai_shared_fnc_doMove;
 		sleep 1;
 		_vehicle = vehicle _unit; //-- refresh
@@ -1097,7 +1115,14 @@ while {!isNull _unit} do {
 	
 	
 	
-	if ( !(_abort) && {(_wpAction select 0) == "CARGO_OUT" && {{_vehicle isKindOf _x} count ["AIR","MAN"] == 0}} ) then {
+	if (
+		!(_abort)
+		&& {_unit == driver _vehicle}
+		&& {
+			(_wpAction select 0) == "CARGO_OUT"
+			&& {{_vehicle isKindOf _x} count ["AIR","MAN"] == 0}
+		}
+	) then {
 		_vehicle limitSpeed 0;
 		{
 			if ((assignedVehicleRole _x) select 0 == "CARGO") then {
@@ -1122,7 +1147,7 @@ while {!isNull _unit} do {
 			if (_ex) exitWith {sleep 2};
 			sleep 0.1;
 		};
-		_vehicle limitSpeed 1000;
+		_vehicle limitSpeed false;
 		[_unit,_movePos] call A3C_ai_shared_fnc_doMove;
 		_vehicle = vehicle _unit; //-- refresh
 	};
@@ -1169,7 +1194,12 @@ while {!isNull _unit} do {
 
 	private _goCodeConditionSatisfied = false;
 
-	if ( (_vehicle isKindOf "HELICOPTER") && (_landingdata in ["PICKUP","DROPOFF"]) && !(_abort) ) then {
+	if (
+		(_vehicle isKindOf "HELICOPTER")
+		&& {_landingdata in ["PICKUP","DROPOFF"]}
+		&& {!(_abort)}
+		&& {_unit == driver _vehicle}
+	) then {
 		{_x disableAI "MOVE"} foreach [_unit,_vehicle];
 		_vehicle limitSpeed 0;
 		sleep 0.2;
@@ -1245,7 +1275,7 @@ while {!isNull _unit} do {
 			};
 		};
 
-		_vehicle limitspeed 1000;
+		_vehicle limitspeed false;
 		_vehicle flyinheight 3;
 		_vehicle = vehicle _unit; //-- refresh
 	};
@@ -1256,9 +1286,20 @@ while {!isNull _unit} do {
 	(_data select _cycle) set [5,[[0,true]]];
 	_unit setVariable ["A3C_PLOT",_data,true];
 
-	{_x enableAI "MOVE"} foreach [_unit,_vehicle];
+	_unit enableAI "MOVE";
 
-	if ( (_landingdata == "LANDFINAL") && !(_abort) ) then {
+	if (
+		!isNull objectParent _unit
+		&& {_unit == driver _vehicle}
+	) then {
+		_vehicle enableAI "MOVE";
+	};
+
+	if (
+		(_landingdata == "LANDFINAL")
+		&& {!(_abort)}
+		&& {_unit == driver _vehicle}
+	) then {
 		_timenow = (time + 10);
 		while {time < _timenow} do {
 			if (isNull _unit) exitWith {_abort = true};
@@ -1272,9 +1313,17 @@ while {!isNull _unit} do {
 		_vehicle = vehicle _unit; //-- refresh
 	};
 	_exit = false;
-	_unit Setvariable ["A3C_WAITCARGO",false,true];
-	_vehicle setvariable ["A3C_CHOPPER_ASSG_ACTIVE",false,true];
-	if ( (_vehicle iskindof "AIR") && !(_landingdata == "LANDFINAL") && !(_abort) ) then {
+	_unit setvariable ["A3C_WAITCARGO",false,true];
+	if (_unit == driver _vehicle) then {
+		_vehicle setVariable ["A3C_CHOPPER_ASSG_ACTIVE", false, true];
+	};
+
+	if (
+		(_vehicle isKindOf "AIR")
+		&& {!(_landingdata == "LANDFINAL")}
+		&& {!(_abort)}
+		&& {_unit == driver _vehicle}
+	) then {
 		[_unit,_movePos] call A3C_ai_shared_fnc_doMove;
 		sleep 0.5;
 		_vehicle land "NONE";
@@ -1306,9 +1355,7 @@ while {!isNull _unit} do {
 
 				if ([_unit,_origdest,_data,_cycle,1] call A3C_ai_shared_fnc_unitRouteIsBrokenFrom) then {
 					_abort = true;
-					{
-						[_x ,position (vehicle _x)] call A3C_ai_shared_fnc_doMove;
-					} foreach [_unit,effectivecommander _vehicle];
+					[_unit, position (vehicle _unit)] call A3C_ai_shared_fnc_doMove;
 				};
 			};
 			_otherUnits = [];
@@ -1328,7 +1375,7 @@ while {!isNull _unit} do {
 			};
 
 			if (_abort) exitWith {};
-			if (_vehicle isKindOf "AIR") then {
+			if (_vehicle isKindOf "AIR" && {_unit == driver _vehicle}) then {
 				if (_landingdata in ["PICKUP","DROPOFF"]) then {
 					_vehicle setvelocity [0,0,0];
 					_vehicle flyinheight 0;
@@ -1426,7 +1473,10 @@ while {!isNull _unit} do {
 	_vehicle = vehicle _unit; //-- refresh
 
 
-	if (_wpAction select 0 == "PARADROP") then {
+	if (
+		_wpAction select 0 == "PARADROP"
+		&& {_unit == driver _vehicle}
+	) then {
 		private _spawnBehaviour = [getPlayerUID player,_vehicle] call A3C_ai_shared_fnc_paradropManage;
 		waitUntil {scriptDone _spawnBehaviour};
 		sleep 2;
@@ -1488,7 +1538,7 @@ if !(_unitPolygons isEqualTo []) then {
 _unit forcespeed -1;
 _vehicle = vehicle _unit; //-- refresh
 if (!isnull objectparent _unit && {_unit ==  driver vehicle _unit}) then {
-	_vehicle limitSpeed 1000;
+	_vehicle limitSpeed false;
 };
 if !(_unit in A3C_AutoCombatDisabledUnits) then {
 	_unit enableAI "AUTOCOMBAT";

@@ -224,7 +224,7 @@ if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
 			} forEach units _newGroup;
 
 			//-- leadVic speed
-			[_leadVehicle, 10000] remoteExec ["limitSpeed", _leadVehicle];
+			[_leadVehicle, false] remoteExec ["limitSpeed", _leadVehicle];
 
 			private _maxDistance = (count _vehicles) * 70;
 
@@ -235,6 +235,6 @@ if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
 			sleep 5;
 		};
 
-		[_leadVehicle, 10000] remoteExec ["limitSpeed", _leadVehicle];
+		[_leadVehicle, false] remoteExec ["limitSpeed", _leadVehicle];
 	};
 };

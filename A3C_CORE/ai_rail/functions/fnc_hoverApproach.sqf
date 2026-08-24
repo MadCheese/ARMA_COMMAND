@@ -159,7 +159,7 @@ while {alive _vehicle} do {
 	sleep _tickDuration;
 };
 
-[_vehicle, 10000] remoteExec ["limitSpeed", _vehicle];
+[_vehicle, false] remoteExec ["limitSpeed", _vehicle];
 
 {
 	[_x, "ALL"] remoteExec ["enableAI", _x];

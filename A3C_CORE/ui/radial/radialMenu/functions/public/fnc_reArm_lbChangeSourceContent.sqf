@@ -18,5 +18,5 @@ if (_doubleClick && { (count A3C_RD_UNITS) == 1 }) then {
 
 	private _unit = A3C_RD_UNITS select 0;
 
-	[_unit, A3C_TARGETVEH, _item] call A3C_ai_shared_fnc_reArm_plotAddItem;
+	[_unit, A3C_TARGETVEH, _item] spawn A3C_ai_shared_fnc_reArm_plotAddItem;
 };

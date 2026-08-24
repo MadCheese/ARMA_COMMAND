@@ -15,7 +15,7 @@ private _leader = leader _group;
 	} forEach ["MOVE", "PATH"];
 
 	if (!isNull _vehicle && {_unit == driver _vehicle}) then {
-		_vehicle limitSpeed 9999;
+		_vehicle limitSpeed false;
 		if (_vehicle isKindOf "AIR") then {
 			private _flyInHeight = _vehicle getVariable ["A3C_FLYINHEIGHT", 75];
 			_vehicle flyInHeight _flyInHeight;

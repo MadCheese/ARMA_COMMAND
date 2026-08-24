@@ -458,7 +458,7 @@ if (_doConvoyBehaviour) then {
 						[_convoyLeader,20] remoteExec ["limitSpeed",_convoyLeader];
 						(group driver _convoyLeader) setVariable ["A3C_UI_Group_Status",["REGROUP",[1,0,0,1]],true];
 					} else {
-						[_convoyLeader,1000] remoteExec ["limitSpeed",_convoyLeader];
+						[_convoyLeader,false] remoteExec ["limitSpeed",_convoyLeader];
 						(group driver _convoyLeader) setVariable ["A3C_UI_Group_Status",["",[]],true];
 					};
 				};

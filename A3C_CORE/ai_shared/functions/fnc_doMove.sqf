@@ -1,122 +1,161 @@
 // A3C_ai_shared_fnc_doMove
 
-// -- Issues a movement order for an on-foot unit, vehicle driver, or AI-led group.
-// -- Uses doMove for ordinary individual AI movement.
-// -- Uses commandMove plus moveTo when the player is the vehicle's effective commander.
-// -- Uses a group move order for AI-led groups, preserving High Command group movement.
-// -- Called by A3C_ai_shared_fnc_actionExecuteUnitPlot and other movement routines.
+// -- Issues an individual movement order for an AI unit or the vehicle occupied by that unit.
+// -- On foot, movement is issued directly to the unit.
+// -- In a vehicle, movement is issued to the driver and, where applicable,
+// -- also to the vehicle's AI effective commander.
+// -- If a player is the vehicle's effective commander, uses the tested
+// -- commandMove + moveTo combination on the AI driver.
+// -- This function never issues group-level movement orders.
 
 params ["_unit", "_destination"];
 
 if (
-	isNil '_unit'
+	isNil "_unit"
 	|| {isNull _unit}
-	|| {isNil '_destination'}
+	|| {isPlayer _unit}
+	|| {isNil "_destination"}
 ) exitWith {};
 
-// -- Invalid position: issuing this order would send the unit to world origin.
+//-- Invalid position: issuing this order would send the unit to world origin.
 if (_destination distance2D [0, 0, 0] < 0.1) exitWith {};
 
-private _group = group _unit;
-private _leader = leader _group;
+
+//-- Standard individual AI movement push.
+//-- doMove and moveTo target the same destination deliberately so that
+//-- either movement path can reinforce the other if one fails to take effect.
+private _issueMovementOrder = {
+	params ["_moveUnit"];
+
+	_moveUnit doMove _destination;
+	_moveUnit moveTo _destination;
+};
+
+
 private _parentVehicle = objectParent _unit;
 private _isOnFoot = isNull _parentVehicle;
+
+
+
+
+//-- ON FOOT
+if (_isOnFoot) exitWith {
+
+	//-- Defensive initialization for callers that inspect expectedDestination.
+	if (expectedDestination _unit isEqualTo []) then {
+		_unit setDestination [position _unit, "DoNotPlan", true];
+	};
+
+	{_unit enableAI _x} foreach ["MOVE", "PATH"];
+	_unit forceSpeed -1;
+
+	[_unit] call _issueMovementOrder;
+
+	_unit
+};
+
+//-- Remember: Foot soldiers EXIT above!!
+
+//-- MOUNTED 
 private _vehicle = vehicle _unit;
 private _driver = driver _vehicle;
 private _effectiveCommander = effectiveCommander _vehicle;
 
-// -- A driver may ignore movement orders while the vehicle's effective
-// -- commander belongs to another group. Transfer vehicle command to the
-// -- driver before issuing the order.
+//-- A vehicle without an AI driver cannot be moved by this function.
 if (
-	!_isOnFoot
-	&& {!isNull _driver}
-	&& {!(_effectiveCommander in units group _driver)}
+	isNull _driver
+	|| {isPlayer _driver}
+) exitWith {
+	_unit
+};
+
+//-- A mounted unit may move the vehicle only if the movement order was
+//-- issued to the vehicle's driver or its current effective commander.
+//-- Cargo, gunners, and other passengers must never move the vehicle merely
+//-- because they happen to be inside it.
+if !(_unit in [_driver, _effectiveCommander]) exitWith {
+	_unit
+};
+
+
+//-- A driver may ignore movement orders while the vehicle's effective
+//-- commander belongs to another group. Transfer vehicle command to the
+//-- driver before issuing the order.
+if (
+	isNull _effectiveCommander
+	|| {!(_effectiveCommander in units group _driver)}
 ) then {
 	_vehicle setEffectiveCommander _driver;
 	_effectiveCommander = effectiveCommander _vehicle;
 };
 
-// -- AI-led groups use a group-level movement order. This preserves the
-// -- existing High Command behavior; individual doMove orders are not stacked
-// -- on top of the group order.
-if (!isPlayer _leader) exitWith {
-	private _groupDrivers = (units _group) select {
-		private _driverVehicle = objectParent _x;
 
-		!isNull _driverVehicle
-		&& {_x isEqualTo driver _driverVehicle}
-		&& {!isPlayer _x}
-	};
-
-	private _groupVehicles = _groupDrivers apply { objectParent _x };
-
-	{
-		[_x, true] remoteExec ["engineOn", _x];
-
-		if (_x isKindOf "HELICOPTER") then {
-			private _altitude = _x getVariable ["A3C_FLYINHEIGHT", 75];
-
-			_x land "NONE";
-			[_x, _altitude] remoteExec ["flyInHeight", _x];
-		};
-	} forEach _groupVehicles;
-
-	// -- The move command must execute where the AI-led group is local.
-	[
-		[_group, _destination],
-		{
-			params ["_group", "_destination"];
-
-			_group move _destination;
-		}
-	] remoteExec ["BIS_fnc_call", _leader];
-
-	_unit
-};
-
-if (isDedicated) exitWith {};
-if (_leader isNotEqualTo player) exitWith {};
-
-// -- From here onward, movement is exclusively for an AI unit in the
-// -- player's group. Mounted cargo units must not move the vehicle.
+//-- If the local player occupies the vehicle, retain vehicle command.
+//-- Without this protection, issuing movement orders can cause the engine
+//-- to switch vehicle command and potentially eject the player.
 if (
-	!_isOnFoot
-	&& {!(_unit in [_driver, _effectiveCommander])}
-) exitWith {};
-
-// -- Defensive initialization for callers that inspect expectedDestination.
-// -- This does not issue the actual movement order.
-if (expectedDestination _unit isEqualTo []) then {
-	_unit setDestination [position _unit, "DoNotPlan", true];
-};
-
-_unit enableAI "MOVE";
-_unit forceSpeed -1;
-
-if (
-	!_isOnFoot
-	&& {player in _vehicle}
+	player in _vehicle
 	&& {_effectiveCommander isNotEqualTo player}
 ) then {
-	// -- Prevent the player from being ejected as a consequence of issuing a
-	// -- movement order. The engine switches command back after the player exits.
 	_vehicle setEffectiveCommander player;
 	_effectiveCommander = effectiveCommander _vehicle;
 };
 
+
+//-- Prepare this vehicle only for movement.
+_vehicle engineOn true;
+// _vehicle limitSpeed false;
+
+// if (_vehicle isKindOf "HELICOPTER") then {
+// 	_vehicle land "NONE";
+
+// 	private _altitude = _vehicle getVariable ["A3C_FLYINHEIGHT", 75];
+// 	_vehicle flyInHeight _altitude;
+// };
+
+
+//-- Prepare the actual AI movement recipients.
+private _movementUnits = [_driver];
+
 if (
-	!_isOnFoot
-	&& {_effectiveCommander isEqualTo player}
+	!isNull _effectiveCommander
+	&& {!isPlayer _effectiveCommander}
+	&& {_effectiveCommander isNotEqualTo _driver}
 ) then {
-	// -- An AI driver controlled by the player did not reliably obey doMove.
-	// -- The tested commandMove + moveTo combination worked for both ground
-	// -- vehicles and helicopters.
+	_movementUnits pushBack _effectiveCommander;
+};
+
+{
+	private _movementUnit = _x;
+
+	//-- Defensive initialization for callers that inspect expectedDestination.
+	if (expectedDestination _movementUnit isEqualTo []) then {
+		_movementUnit setDestination [position _movementUnit, "DoNotPlan", true];
+	};
+
+	{
+		_movementUnit enableAI _x;
+	} forEach ["MOVE", "PATH"];
+} forEach _movementUnits;
+
+
+//-- Issue movement.
+if (isPlayer _effectiveCommander) then {
+
+	//-- When a player is the vehicle's effective commander, testing showed that
+	//-- the normal doMove path on the AI driver can fail to produce movement.
+	//-- commandMove + moveTo on the driver reliably moved both helicopters and
+	//-- ground vehicles, so this deliberately uses that alternate command pair.
 	_driver commandMove _destination;
 	_driver moveTo _destination;
+
 } else {
-	// -- Default individual AI movement command.
-	_unit doMove _destination;
+
+	//-- Reinforce the same vehicle movement through both valid AI control
+	//-- paths when driver and effective commander are different units.
+	{
+		[_x] call _issueMovementOrder;
+	} forEach _movementUnits;
 };
 
 _unit

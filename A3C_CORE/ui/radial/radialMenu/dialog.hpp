@@ -647,7 +647,7 @@ class A3C_DSP_RadialMenu
 		{
 			idc = IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX; //8054;
 			style = CT_LISTBOX;
-			onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(BV_LB1,(_this select 1),IDD_RADIAL_MENU)] spawn A3C_ui_shared_fnc_onLbChange);
+			onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(BV_LB1,(_this select 1),IDD_RADIAL_MENU)] call A3C_ui_shared_fnc_onLbChange);
 			shadow = 0.75;
 			x = 35 * GUI_GRID_W + GUI_GRID_X;
 			y = 6.5 * GUI_GRID_H + GUI_GRID_Y;
@@ -670,7 +670,7 @@ class A3C_DSP_RadialMenu
 		{
 			idc = IDC_RADIAL_EXTENSIONRIGHT_LBSUBSEL_BOX; //8055;
 			style = CT_LISTBOX;   //CT_LISTNBOX  //ST_GROUP_BOX
-			onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(BV_LB2,(_this select 1),IDD_RADIAL_MENU)] spawn A3C_ui_shared_fnc_onLbChange);
+			onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(BV_LB2,(_this select 1),IDD_RADIAL_MENU)] call A3C_ui_shared_fnc_onLbChange);
 			sizeEx = "(((((safezoneW / safezoneH) min 1.3) / 1.3) / 25) * 1)";
 			x = 35 * GUI_GRID_W + GUI_GRID_X;
 			y = 13 * GUI_GRID_H + GUI_GRID_Y;

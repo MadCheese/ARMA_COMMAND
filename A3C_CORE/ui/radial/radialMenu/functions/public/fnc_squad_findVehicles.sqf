@@ -11,6 +11,18 @@ private _entities = if (count _this > 1) then {
 	[A3C_RADIAL_VEH_KIND]
 };
 
+/*
+	Choose the vehicle before drawing the extension. The old scheduled refresh
+	first rendered index 0 and then, after a delay, could select and render the
+	cursor target. That created a visible double refresh and allowed an older
+	request to overwrite a newer selection.
+*/
+private _previousTarget = missionNamespace getVariable [
+	"A3C_TARGETVEH",
+	objNull
+];
+private _cursorVehicle = cursorTarget;
+
 A3C_VEHSAV = [];
 A3C_BOARD_UNITS = [];
 
@@ -22,8 +34,8 @@ A3C_BOARD_UNITS = [];
 
 		if (canMove _vehicle) then {
 			if (
-				side _vehicle == civilian ||
-				{
+				side _vehicle == civilian
+				|| {
 					(side _vehicle) getFriend (side player) > 0.6
 				}
 			) then {
@@ -37,56 +49,62 @@ A3C_BOARD_UNITS = [];
 	};
 } forEach _units;
 
-if (count A3C_VEHSAV > 0) then {
-	A3C_TARGETVEH = A3C_VEHSAV select 0;
+if (A3C_VEHSAV isNotEqualTo []) then {
+	A3C_TARGETVEH = if (_previousTarget in A3C_VEHSAV) then {
+		_previousTarget
+	} else {
+		if (_cursorVehicle in A3C_VEHSAV) then {
+			_cursorVehicle
+		} else {
+			A3C_VEHSAV select 0
+		}
+	};
 
 	{
-		if (isNull objectParent _x) then {
-			if !(_x in A3C_BOARD_UNITS) then {
-				if !(_x in A3C_BOARD_UNITS_ACTIVE) then {
-					A3C_BOARD_UNITS pushBackUnique _x;
-				};
-			};
+		if (
+			isNull objectParent _x
+			&& {!(_x in A3C_BOARD_UNITS_ACTIVE)}
+		) then {
+			A3C_BOARD_UNITS pushBackUnique _x;
 		};
 	} forEach _units;
 } else {
 	A3C_TARGETVEH = objNull;
 };
 
-if (count A3C_VEHSAV == 0) then {
-	[
-		[
-			"NO VEHICLES",
-			"",
-			objNull,
-			findDisplay IDD_RADIAL_MENU
-				displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX,
-			""
-		]
-	] call A3C_ui_radialMenu_fnc_lbAdd;
-};
-
-//-- Clear right extension listboxes.
+//-- Clear right extension listboxes before their single deterministic render.
 {
 	lbClear _x;
 } forEach (["radial_extensionRightListboxes"] call FUNC(ctrlGroup));
 
-[] spawn {
-	["VEHICLES"] call A3C_ui_radialMenu_fnc_labelListbox;
+["VEHICLES"] call A3C_ui_radialMenu_fnc_labelListbox;
 
-	sleep 0.1;
+private _display = findDisplay IDD_RADIAL_MENU;
 
-	private _display = findDisplay IDD_RADIAL_MENU;
+if (!isNull _display) then {
+	private _sourceBox = _display displayCtrl
+		IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX;
 
-	if (cursorTarget in A3C_VEHSAV) then {
-		[
-			_display displayCtrl IDC_RADIAL_EXTENSIONRIGHT_LBSOURCES_BOX,
-			[cursorTarget, A3C_VEHSAV] call MCSS_fnc_getArrayIndex,
-			true
-		] call A3C_ui_shared_fnc_lbSetCurSel;
-	} else {
-		{
-			[_x, 0] call A3C_ui_shared_fnc_lbSetCurSel;
-		} forEach (["radial_extensionRightListboxes"] call FUNC(ctrlGroup));
+	if (!isNull _sourceBox) then {
+		if (A3C_VEHSAV isNotEqualTo []) then {
+			private _targetIndex = A3C_VEHSAV find A3C_TARGETVEH;
+
+			if (_targetIndex >= 0) then {
+				[
+					_sourceBox,
+					_targetIndex
+				] call A3C_ui_shared_fnc_lbSetCurSel;
+			};
+		} else {
+			[
+				[
+					"NO VEHICLES",
+					"",
+					objNull,
+					_sourceBox,
+					""
+				]
+			] call A3C_ui_radialMenu_fnc_lbAdd;
+		};
 	};
 };

@@ -33,16 +33,27 @@ private _doRefreshGroupSelected = true;
 A3C_LBR_1 = "";
 
 
-//-- Vehicle buttons - idc's are numeric because they are dynamically created with ctrlCreate
-for "_i" from 0 to 45 do {
-	if (ctrlType (findDisplay IDD_RADIAL_MENU displayCtrl (10101 + _i)) != -1) then {
-		ctrlDelete (findDisplay IDD_RADIAL_MENU displayCtrl (10101 + _i));
-		ctrlDelete (findDisplay IDD_RADIAL_MENU displayCtrl (10101 + _i + 1));
-	};
-};
+//-- Delete exactly the controls created by the vehicle-seat renderer. Keeping
+//-- an explicit registry avoids both the old 23-seat cleanup limit and IDC
+//-- collisions with unrelated dashboard controls.
+private _radialDisplay = findDisplay IDD_RADIAL_MENU;
 
-for "_i" from 11101 to 11104 do {
-	ctrlDelete (findDisplay IDD_RADIAL_MENU displayCtrl _i);
+if (!isNull _radialDisplay) then {
+	{
+		if (!isNull _x) then {
+			ctrlDelete _x;
+		};
+	} forEach (
+		_radialDisplay getVariable [
+			"A3C_RADIAL_DYNAMIC_VEHICLE_CONTROLS",
+			[]
+		]
+	);
+
+	_radialDisplay setVariable [
+		"A3C_RADIAL_DYNAMIC_VEHICLE_CONTROLS",
+		[]
+	];
 };
 
 

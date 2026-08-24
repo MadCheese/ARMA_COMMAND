@@ -97,7 +97,7 @@ private _groupVehicles = [
 		);
 	};
 
-	_vehicle limitSpeed 9999;
+	_vehicle limitSpeed false;
 } forEach _groupVehicles;
 
 //-- WAIT FOR ARRIVAL / APPROACH
@@ -209,7 +209,7 @@ _groupVehicles = [
 ] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
-	_x limitSpeed 9999;
+	_x limitSpeed false;
 } forEach _groupVehicles;
 
 private _landingSpacing = _group getVariable [
@@ -688,7 +688,7 @@ if (
 		private _vehicle = _x;
 
 		_vehicle land "NONE";
-		_vehicle limitSpeed 9999;
+		_vehicle limitSpeed false;
 
 		_vehicle flyInHeight (
 			_vehicle getVariable [

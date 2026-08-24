@@ -19,7 +19,8 @@ reverse _waypoints;
 	};
 } foreach _waypoints;
 private _leaderVic = vehicle leader _group;
-private _standByPos = _leaderVic getPos [5, getDir _leaderVic];
+private _standByPos = _leaderVic getPos [10, getDir _leaderVic];
 ((waypoints _group) select 0) setWaypointPosition [_standByPos, 0];
-[leader _group, _standByPos] call A3C_ai_shared_fnc_doMove;
+
+[_group, _standByPos] call A3C_ai_highCommand_fnc_moveGroupToPosition;
 

@@ -96,7 +96,7 @@ private _groupVehicles = [
 		]
 	);
 
-	_x limitSpeed 5000;
+	_x limitSpeed false;
 } forEach _groupVehicles;
 
 //-- WAIT FOR ARRIVAL / APPROACH
@@ -192,7 +192,7 @@ _groupVehicles = [
 ] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
-	_x limitSpeed 9999;
+	_x limitSpeed false;
 } forEach _groupVehicles; //-- reset slowdown
 
 //-- compose pre- and post conditions, wait for pre-condition
@@ -618,7 +618,7 @@ _groupVehicles = [
 ] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
-	_x limitSpeed 9999;
+	_x limitSpeed false;
 } forEach _groupVehicles;
 
 _currentActions = _group getVariable [
@@ -672,7 +672,7 @@ if (
 		private _vehicle = _x;
 
 		_vehicle land "NONE";
-		_vehicle limitSpeed 9999;
+		_vehicle limitSpeed false;
 
 		_vehicle flyInHeight (
 			_vehicle getVariable [

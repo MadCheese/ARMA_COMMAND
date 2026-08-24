@@ -145,27 +145,11 @@ if (_waypointStatements isEqualType []) then {
 	_waypointStatements call A3C_ai_highCommand_fnc_setWaypointStatements;
 };
 
-private _currentGroupLeader = leader _group;
-
-if (_isFirstWaypoint && {!isPlayer _currentGroupLeader}) then {
-
+if (_isFirstWaypoint) then {
 	[
-		[
-			_group,
-			_currentGroupLeader,
-			_waypointPosition
-		],
-		{
-			params ["_group", "_currentGroupLeader", "_waypointPosition"];
-			_group move _waypointPosition;
-			private _effectiveCommander = effectiveCommander (vehicle _currentGroupLeader);
-			private _groupUnits = units _group;
-
-			if (_effectiveCommander in _groupUnits) then {
-				[_effectiveCommander, _waypointPosition] call A3C_ai_shared_fnc_doMove;
-			};
-		}
-	] remoteExec ["bis_fnc_call", _currentGroupLeader];	
+		_group,
+		_waypointPosition
+	] call A3C_ai_highCommand_fnc_moveGroupToPosition;
 };
 
 //-- SHIPS: dynamically set swimInDepth for each waypoint. Has no effect on non-submersible vehicles

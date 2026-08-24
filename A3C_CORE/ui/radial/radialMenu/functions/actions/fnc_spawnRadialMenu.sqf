@@ -96,8 +96,8 @@ BV_STANCES = 0;
 BV_ITEMS = 0;
 BV_VEHS = 0;
 BV_MEDICAL = 0;
-BV_LB1 = 6;
-BV_LB1 = 8;
+BV_LB1 = -1;
+BV_LB2 = -1;
 
 A3C_TARGETVEH = objNull;
 

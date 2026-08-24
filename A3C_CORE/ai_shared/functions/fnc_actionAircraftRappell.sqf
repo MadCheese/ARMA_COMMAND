@@ -404,7 +404,7 @@ sleep 1;
 	} forEach _rapGroupUnits;
 } forEach _rappellGroups;
 
-[_aircraft, 1500] remoteExec ["limitSpeed", _aircraft];
+[_aircraft, false] remoteExec ["limitSpeed", _aircraft];
 
 private _nextWpPos = waypointPosition [_group, currentWaypoint _group];
 
@@ -412,7 +412,7 @@ if (_nextWpPos distance2D [0, 0, 0] > 0) then {
 	while {alive _aircraft && {speed _aircraft < 30}} do {
 		//-- Nudge pilot/controller unit back toward the group's next waypoint after the rappel hold.
 		[_unit, _nextWpPos] remoteExec ["doMove", _unit];
-		[_aircraft, 1500] remoteExec ["limitSpeed", _aircraft];
+		[_aircraft, false] remoteExec ["limitSpeed", _aircraft];
 
 		sleep 3;
 	};

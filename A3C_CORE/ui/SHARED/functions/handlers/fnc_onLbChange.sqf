@@ -25,7 +25,12 @@
 	13: Individual combat-mode selection
 */
 
-if (A3C_CurSel) exitWith {};
+if (
+	missionNamespace getVariable [
+		"A3C_CurSel",
+		false
+	]
+) exitWith {};
 
 params [
 	"_mode",
@@ -486,13 +491,27 @@ switch (_mode) do {
 	};
 
 	case 8: {
-		if (_listBoxIndex >= 0) then {
-			A3C_TARGETVEH = A3C_VEHSAV select _listBoxIndex;
+		if (
+			_listBoxIndex >= 0
+			&& {_listBoxIndex < count A3C_VEHSAV}
+		) then {
+			private _selectedVehicle = A3C_VEHSAV select _listBoxIndex;
+			private _currentVehicle = missionNamespace getVariable [
+				"A3C_TARGETVEH",
+				objNull
+			];
 
-			[
-				"VEHICLES",
-				1
-			] call A3C_ui_radialMenu_fnc_labelListbox;
+			if (
+				!isNull _selectedVehicle
+				&& {_selectedVehicle isNotEqualTo _currentVehicle}
+			) then {
+				A3C_TARGETVEH = _selectedVehicle;
+
+				[
+					"VEHICLES",
+					1
+				] call A3C_ui_radialMenu_fnc_labelListbox;
+			};
 		};
 	};
 

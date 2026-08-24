@@ -61,7 +61,7 @@ while {_leaderVic distance2d _pos >= _closeTo} do { //--_precision
 	_leader setBehaviourStrong "CARELESS";
 	{
 		_v = vehicle _x;
-		_v limitSpeed 1000;
+		_v limitSpeed false;
 		{
 			_x enableAI "PATH";
 			_x enableAI "MOVE";

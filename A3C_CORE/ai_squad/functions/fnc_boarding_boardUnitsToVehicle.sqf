@@ -187,7 +187,7 @@ if (A3C_BOARDING_TRANSACTION_ACTIVE) exitWith {
 	[_acceptedUnits, _failedUnits]
 };
 
-private _tempGroup = createGroup [side _playerGroup, true];
+private _tempGroup = createGroup [side _playerGroup, false];
 
 if (isNull _tempGroup) exitWith {
 	{
@@ -218,6 +218,39 @@ private _otherSquadUnitsNotInFormation = _otherSquadUnits select {
 	&& {currentCommand _x == ""}
 };
 
+private _otherBusySquadUnits = _otherSquadUnits select {
+	private _unit = _x;
+
+	private _isBoarding =
+		currentCommand _unit == "GET IN"
+		|| {
+			(_unit getVariable [
+				"A3C_assignedVehicleSeat",
+				[]
+			]) isNotEqualTo []
+		};
+
+	private _expectedDestination = expectedDestination _unit;
+
+	private _destinationType = toLower (
+		_expectedDestination param [1, ""]
+	);
+
+	private _isMovingOutsideFormation =
+		currentCommand _unit == "MOVE"
+		&& {
+			!(["form", _destinationType] call BIS_fnc_inString)
+		};
+
+	_isBoarding || {_isMovingOutsideFormation}
+};
+
+//-- Current transaction units must appear busy even though their GET IN
+//-- command has not necessarily been issued yet.
+private _proxyBusySourceUnits =
+	_validUnits
+	+ _otherBusySquadUnits;
+
 //-- Store current orders for units unaffected by this boarding request.
 {
 	[_x] call A3C_ai_shared_fnc_setDestination;
@@ -232,7 +265,10 @@ A3C_BOARDING_PLAYER_GROUP = _playerGroup;
 	_otherSquadUnitsNotInFormation
 ] call _fnc_restoreOtherSquadUnitDestinations;
 
-private _fakeGroupUnits = _playerGroup call A3C_ai_squad_fnc_boarding_createPlayerGroupUIProxy;
+private _fakeGroupUnits = [
+	_playerGroup,
+	_proxyBusySourceUnits
+] call A3C_ai_squad_fnc_boarding_createPlayerGroupUIProxy;
 
 if (_debug) then {
 	systemChat format [

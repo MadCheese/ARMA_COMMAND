@@ -89,19 +89,15 @@ deleteWaypoint [_group, _wpIndex];
 
 private _leader = leader _group;
 private _leaderVehicle = vehicle _leader;
-private _effectiveCommander = effectiveCommander _leaderVehicle;
 
-if (_effectiveCommander in units _group) then {
-	if (_isCurrentWaypoint) then {
-		if (_isLastWaypoint) then {
-			private _stopPos = position _leaderVehicle getPos [10, getDir _leaderVehicle];
+if (_isCurrentWaypoint) then {
+    private _movePos = if (_isLastWaypoint) then {
+  	  position _leaderVehicle getPos [10, getDir _leaderVehicle]
+    } else {
+  	  waypointPosition [_group, currentWaypoint _group]
+    };
 
-			[_effectiveCommander, _stopPos] call A3C_ai_shared_fnc_doMove;
-		} else {
-			private _movePos = waypointPosition [_group, currentWaypoint _group]; // -- while the index will be the same, the waypoint position has changed to the new current waypoint (next in line)
-			[_effectiveCommander, _movePos] call A3C_ai_shared_fnc_doMove;
-		};
-	};
+    [_group, _movePos] call A3C_ai_highCommand_fnc_moveGroupToPosition;
 };
 
 // -- refresh gocodes, since deleted waypoint may have been the only one with gocode attached

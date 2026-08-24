@@ -84,22 +84,18 @@ if (A3C_UI_MAP_BOOL_isHCWaypointPosEdit) then {
 			};
 		};	
 	};
-	//-- after moving the current HC waypoint of a group, send the leader to the position and make units follow him
+	//-- After moving the current HC waypoint, re-issue group movement towards its new position.
 	private _currentWP = currentWaypoint A3C_HC_ACTIVEGROUP;
 	if (A3C_HC_ACTIVE_IND == _currentWP) then {
 		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] setwaypointposition [_sPos,0];
 
 		if (waypointType [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] != "SCRIPTED") then {
-			[_sPos] spawn {
-				params ["_sPos"];
+			[A3C_HC_ACTIVEGROUP, _sPos] spawn {
+				params ["_group","_sPos"];
 				sleep 1;
-				// #HCMOVE
-				[leader A3C_HC_ACTIVEGROUP,_sPos] call A3C_ai_shared_fnc_doMove; //~~ #MONITOR
-				//A3C_HC_ACTIVEGROUP move _sPos;
-
+				[_group, _sPos] call A3C_ai_highCommand_fnc_moveGroupToPosition;
 			};
 		};
-
 	};
 	A3C_UI_MAP_BOOL_isHCWaypointPosEdit = false;
 };

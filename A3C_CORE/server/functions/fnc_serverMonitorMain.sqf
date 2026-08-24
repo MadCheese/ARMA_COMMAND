@@ -140,9 +140,7 @@ sleep (0.5 * count _allClients); //-- give timeout to receive update from client
 			_nudgePosition resize 2;
 			_nudgePosition = _nudgePosition getPos [1, random 360];
 			_nudgePosition set [2, 0];
-
-			private _effectiveCommander = effectiveCommander _leaderVehicle;
-			[_effectiveCommander, _nudgePosition] call A3C_ai_shared_fnc_doMove;
+			[_group, _nudgePosition] call A3C_ai_highCommand_fnc_moveGroupToPosition;
 		} else {
 			if (
 				_driverOk

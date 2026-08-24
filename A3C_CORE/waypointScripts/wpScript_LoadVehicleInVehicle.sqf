@@ -25,7 +25,7 @@ private _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
 //-- default enabling all vehicles
 {
 	_x flyInHeight (_x getVariable ["A3C_FLYINHEIGHT", 75]);
-	_x limitSpeed 9999;
+	_x limitSpeed false;
 } forEach _groupVehicles;
 
 while {[_loadVic, _pos, _landingDistance] call _shouldContinueApproach} do {
@@ -69,7 +69,7 @@ while {[_loadVic, _pos, _landingDistance] call _shouldContinueApproach} do {
 _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
-	_x limitSpeed 9999;
+	_x limitSpeed false;
 } forEach _groupVehicles; //-- release slowdown after approach / before landing handling
 
 _loadVic setVariable [
@@ -360,14 +360,15 @@ _wp synchronizeWaypoint [];
 /*
 	Release the landing command and restore the normal cruise settings.
 
-	The VTOL approach helper no longer issues group move, doMove or moveTo
-	orders. No compensating movement nudge should be necessary here.
+	The VTOL approach helper does not issue movement orders itself.
+	After releasing the landing state, explicitly resume group movement
+	towards the next waypoint if one exists.
 */
 {
 	private _vehicle = _x;
 
 	_vehicle land "NONE";
-	_vehicle limitSpeed 9999;
+	_vehicle limitSpeed false;
 
 	_vehicle flyInHeight (
 		_vehicle getVariable [
@@ -377,41 +378,11 @@ _wp synchronizeWaypoint [];
 	);
 } forEach _vehiclesLanding;
 
-
-
-
-/*
-	The legacy engine reset is intentionally disabled for this test.
-
-	It can be restored if later testing proves that a specific VTOL still
-	requires it to leave its grounded flight state.
-*/
-private _groupDrivers = [
-	_group
-] call A3C_main_fnc_getGroupDrivers;
-
 private _currentWP = currentWaypoint _group;
+
 if ({(_x select 1) > _currentWP} count (waypoints _group) > 0) then {
-	private _nextWpPos = waypointPosition [
-		_group,
-		_currentWP + 1
-	];
-
-	{[_x, _nextWpPos] call A3C_ai_shared_fnc_doMove;} forEach _groupDrivers;
-
-
+	[_group, _currentWP + 1] call A3C_ai_highCommand_fnc_moveGroupToPosition;
 };
 
-// [_groupDrivers] call A3C_ai_shared_fnc_actionEngineOff;
-// sleep 0.5;
-// [_groupDrivers] call A3C_ai_shared_fnc_actionEngineOn;
-
-/*
-	Also test without final movement reinitialization.
-
-	The function only restores MOVE/PATH, speed, altitude and land state.
-	It does not need to run if all of those states were restored above.
-*/
-// [_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 true

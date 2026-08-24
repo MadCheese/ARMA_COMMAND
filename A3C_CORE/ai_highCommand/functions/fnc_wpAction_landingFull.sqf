@@ -86,7 +86,7 @@ private _landHelicopterControlled = {
 		_vehicle engineOn false;
 	};
 
-	_vehicle limitSpeed 5000;
+	_vehicle limitSpeed false;
 	_vehicle flyInHeight 100;
 };
 
@@ -154,7 +154,7 @@ private _driverUnits = _units select {
 
 							if (_x == effectiveCommander _vehicle) then {
 								if (!(_vehicle in _vehiclesMoved)) then {
-									[effectiveCommander _x, _waypointPos] call A3C_ai_shared_fnc_doMove;
+									[_x, _waypointPos] call A3C_ai_shared_fnc_doMove;
 									_vehiclesMoved pushBack _vehicle;
 								} else {
 									if !(isTouchingGround _vehicle) then {

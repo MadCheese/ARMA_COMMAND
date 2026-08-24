@@ -133,6 +133,8 @@ A3C_PREP(isWpScriptBlocked);
 
 
 A3C_PREP(moduleCAS);
+A3C_PREP(moveGroupToPosition);
+
 
 A3C_PREP(onWaypointInsertedClient);
 

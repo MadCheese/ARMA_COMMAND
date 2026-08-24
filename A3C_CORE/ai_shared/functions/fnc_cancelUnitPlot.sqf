@@ -74,8 +74,11 @@ if (_shift) then {
 
 			_unit forceSpeed -1;
 
-			if !(isNull objectParent _unit) then {
-				(vehicle _unit) limitSpeed 1000;
+			if (
+				!isNull objectParent _unit
+				&& {_unit == driver vehicle _unit}
+			) then {
+				(vehicle _unit) limitSpeed false;
 			};
 		};
 	} forEach _selectedUnits;

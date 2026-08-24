@@ -247,19 +247,30 @@ switch (_mode) do {
 
 		private _boardingPlayerGroupUnits = units _boardingPlayerGroup;
 
-		//-- idc's stay numeric here as they were created dynamically with ctrlCreate
-		for "_i" from 0 to 45 do {
-			if (ctrlType (findDisplay IDD_RADIAL_MENU displayCtrl (10101 + _i)) != -1) then {
-				ctrlDelete (findDisplay IDD_RADIAL_MENU displayCtrl (10101 + _i));
-				ctrlDelete (findDisplay IDD_RADIAL_MENU displayCtrl (10101 + _i + 1));
-			};
+		//-- Delete exactly the controls created by the previous vehicle render.
+		//-- This supports any seat count without touching unrelated controls whose
+		//-- static IDCs happen to occupy the same broad numeric region.
+		private _radialDisplay = findDisplay IDD_RADIAL_MENU;
+
+		if (!isNull _radialDisplay) then {
+			{
+				if (!isNull _x) then {
+					ctrlDelete _x;
+				};
+			} forEach (
+				_radialDisplay getVariable [
+					"A3C_RADIAL_DYNAMIC_VEHICLE_CONTROLS",
+					[]
+				]
+			);
+
+			_radialDisplay setVariable [
+				"A3C_RADIAL_DYNAMIC_VEHICLE_CONTROLS",
+				[]
+			];
 		};
 
-		for "_i" from 11101 to 11104 do {
-			ctrlDelete (findDisplay IDD_RADIAL_MENU displayCtrl _i);
-		};
-
-		if (!isNil "A3C_TARGETVEH") then {
+		if (!isNil "A3C_TARGETVEH" && {!isNull A3C_TARGETVEH}) then {
 			private _vehicleSeatData = [];
 
 			//-- Re-arrange
@@ -337,6 +348,21 @@ switch (_mode) do {
 				private _btnClicker = findDisplay IDD_RADIAL_MENU ctrlCreate [
 					"A3C_RscButton_Invisible",
 					10101 + (_fei * 2) + 1
+				];
+
+				private _dynamicVehicleControls = _radialDisplay getVariable [
+					"A3C_RADIAL_DYNAMIC_VEHICLE_CONTROLS",
+					[]
+				];
+
+				_dynamicVehicleControls append [
+					_btnImg,
+					_btnClicker
+				];
+
+				_radialDisplay setVariable [
+					"A3C_RADIAL_DYNAMIC_VEHICLE_CONTROLS",
+					_dynamicVehicleControls
 				];
 
 				private _btnIcon = "";
@@ -624,6 +650,21 @@ switch (_mode) do {
 						11101 + (_i * 2) + 1
 					];
 
+					private _dynamicVehicleControls = _radialDisplay getVariable [
+						"A3C_RADIAL_DYNAMIC_VEHICLE_CONTROLS",
+						[]
+					];
+
+					_dynamicVehicleControls append [
+						_btnImg,
+						_btnClicker
+					];
+
+					_radialDisplay setVariable [
+						"A3C_RADIAL_DYNAMIC_VEHICLE_CONTROLS",
+						_dynamicVehicleControls
+					];
+
 					private _btnIcon = switch (_i) do {
 						case (0) : {
 							"\a3\ui_f\data\IGUI\Cfg\Cursors\getIn_ca.paa"
@@ -685,19 +726,20 @@ switch (_mode) do {
 						"MouseButtonDown",
 						compile format [
 							"
+								private _referenceUnits = +A3C_RD_UNITS;
+
 								[
 									A3C_TARGETVEH,
 									'%1',
 									_this select 1,
-									%2
+									_referenceUnits
 								] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro;
 							",
 							if (_i == 0) then {
 								"all"
 							} else {
 								"cargoFFV"
-							},
-							_units
+							}
 						]
 					];
 				};

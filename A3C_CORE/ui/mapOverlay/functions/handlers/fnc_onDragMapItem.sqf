@@ -328,8 +328,7 @@ private _unitArray =
 
 													[
 														_soldier,
-														_screenWorldPos,
-														true
+														_screenWorldPos
 													] call A3C_ai_shared_fnc_doMove;
 												};
 											};

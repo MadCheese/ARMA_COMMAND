@@ -521,7 +521,7 @@ switch (_mode) do {
 		if (_vehicle isKindOf "HELICOPTER") then {
 			[_vehicle, "ALL"] remoteExec ["enableAI", _vehicle];
 			[driver _vehicle, "ALL"] remoteExec ["enableAI", driver _vehicle];
-			[_vehicle, 2000] remoteExec ["limitSpeed", _vehicle];
+			[_vehicle, false] remoteExec ["limitSpeed", _vehicle];
 		};
 	};
 

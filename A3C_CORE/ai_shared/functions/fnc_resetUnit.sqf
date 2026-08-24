@@ -59,6 +59,6 @@ private _parentVehicle = objectParent _unit;
 
 if (!isNull _parentVehicle) then {
 	if (_unit == driver _parentVehicle) then {
-		_parentVehicle limitSpeed 1000;
+		_parentVehicle limitSpeed false;
 	};
 };

@@ -15,18 +15,13 @@ private _leaderVehicle = vehicle _leader;
 if (!alive _leaderVehicle) exitWith {};
 
 private _effectiveCommander = effectiveCommander _leaderVehicle;
-private _driver = driver _leaderVehicle;
+
 
 private _groupVehicles = [_group] call A3C_main_fnc_getGroupDrivenVehicles;
 private _groupHelicopters = _groupVehicles select {
 	_x isKindOf "HELICOPTER"
 };
 
-private _movementControllers = [_effectiveCommander];
-
-if (_driver != _effectiveCommander && {!isNull _driver && {_driver in units _group}}) then {
-	_movementControllers pushBackUnique _driver;
-};
 
 private _distance2D = _leaderVehicle distance2D _movePos;
 private _currentSpeed = abs speed _leaderVehicle; //-- speed returns km/h
@@ -35,9 +30,7 @@ private _approachActive = _distance2D < _approachRadius;
 private _destination = expectedDestination _effectiveCommander select 0;
 
 if (_destination distance2D _movePos > 5 || {_currentSpeed < 5}) then {
-	{
-		[_x, _movePos] call A3C_ai_shared_fnc_doMove;
-	} forEach _movementControllers;
+	[_group, _movePos] call A3C_ai_highCommand_fnc_moveGroupToPosition;
 };
 
 {
@@ -56,7 +49,6 @@ if (_destination distance2D _movePos > 5 || {_currentSpeed < 5}) then {
 /*
 	Altitude / speed / anti-overshoot shaping.
 
-	Only the leader vehicle receives the doMove command above.
 	Every helicopter in the group receives the approach profile once the
 	leader enters the approach envelope:
 	- flyInHeight

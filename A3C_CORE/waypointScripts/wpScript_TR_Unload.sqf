@@ -164,7 +164,7 @@ private _drivenVehicles = [
 ] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
-	_x limitSpeed 9999;
+	_x limitSpeed false;
 } forEach _drivenVehicles; //-- release slowdown after approach / before unload handling
 
 //-- compose pre- and post conditions, wait for pre-condition
@@ -576,7 +576,7 @@ _drivenVehicles = [
 ] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
-	_x limitSpeed 9999;
+	_x limitSpeed false;
 } forEach _drivenVehicles;
 
 private _groupVTOLs = _drivenVehicles select {
@@ -611,7 +611,7 @@ if !(_isFinalWP) then {
 		private _vehicle = _x;
 
 		_vehicle land "NONE";
-		_vehicle limitSpeed 9999;
+		_vehicle limitSpeed false;
 
 		_vehicle flyInHeight (
 			_vehicle getVariable [

@@ -1,18 +1,24 @@
 // A3C_ai_squad_fnc_boarding_createPlayerGroupUIProxy
 
-params ["_group"];
+params [
+	"_group",
+	["_busySourceUnits", [], [[]]]
+];
 
 private _proxyGroup = group player;
 
 private _groupData = (units _group) apply {
+	private _sourceUnit = _x;
+
 	[
-		_x,
-		typeOf _x,
-		name _x,
-		_x getVariable ["A3C_ASSIGNEDTEAM", "MAIN"],
-		primaryWeapon _x,
-		secondaryWeapon _x,
-		magazines _x
+		_sourceUnit,
+		_sourceUnit in _busySourceUnits,
+		typeOf _sourceUnit,
+		name _sourceUnit,
+		_sourceUnit getVariable ["A3C_ASSIGNEDTEAM", "MAIN"],
+		primaryWeapon _sourceUnit,
+		secondaryWeapon _sourceUnit,
+		magazines _sourceUnit
 	]
 };
 
@@ -22,6 +28,7 @@ private _proxyData = [];
 {
 	_x params [
 		"_sourceUnit",
+		"_showBusy",
 		"_type",
 		"_name",
 		"_assignedTeam",
@@ -50,9 +57,17 @@ private _proxyData = [];
 		}
 	] remoteExecCall ["BIS_fnc_call", 2];
 
-	[_unit, [0,100,0]] call A3C_ai_shared_fnc_doMove; //-- just to give 'busy' status instead of 'away'
+
 
 	if (!isNull _unit) then {
+
+		if (_showBusy) then {
+			_unit doFSM ["A3C_CORE\fsm\doMove.fsm", [0, 100, 0],  _unit];
+			// [
+			// 	_unit,
+			// 	[0, 100, 0]
+			// ] call A3C_ai_shared_fnc_doMove;
+		};
 		_units pushBack _unit;
 
 		_proxyData pushBack [

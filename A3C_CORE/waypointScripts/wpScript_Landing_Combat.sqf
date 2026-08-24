@@ -64,7 +64,7 @@ private _groupVehicles =
 		]
 	);
 
-	_x limitSpeed 9999;
+	_x limitSpeed false;
 } forEach _groupVehicles;
 
 //-- wait for arrival / approach
@@ -146,7 +146,7 @@ _groupVehicles =
 	[_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
-	_x limitSpeed 9999;
+	_x limitSpeed false;
 } forEach _groupVehicles; //-- release slowdown after approach / before combat landing handling
 
 //-- compose pre- and post conditions, wait for pre-condition
@@ -390,7 +390,7 @@ _groupVehicles =
 	[_group] call A3C_main_fnc_getGroupDrivenVehicles;
 
 {
-	_x limitSpeed 9999;
+	_x limitSpeed false;
 } forEach _groupVehicles; //-- release slowdown after combat landing handling
 
 private _currentGroupVTOLs = _groupVehicles select {
@@ -417,7 +417,7 @@ if !(_isFinalWP) then {
 	{
 		private _vehicle = _x;
 
-		_vehicle limitSpeed 9999;
+		_vehicle limitSpeed false;
 
 		_vehicle flyInHeight (
 			_vehicle getVariable [

@@ -33,7 +33,6 @@ _data params ["_condition", "_actionType"]; // array: [[condType,condVal],action
 
 private _wp = [];
 private _wpPos = waypointPosition [_group, _wpI];
-private _syncWps = synchronizedWaypoints [_group, currentWaypoint _group];
 
 if (_wpPos isEqualTo [0,0,0]) then {
 	_wpPos = position _leadVic;
@@ -334,11 +333,11 @@ if (!(_actionType == "FULL LANDING") || {count waypoints _group > 0}) then {
 	_group setCurrentWaypoint _wp;
 };
 
-[leader _group, _wpPos] spawn {
-	params ["_leader", "_wpPos"];
+[_group, _wpPos] spawn {
+	params ["_group", "_wpPos"];
 
 	for "_i" from 0 to 1 do {
-		[_leader, _wpPos] call A3C_ai_shared_fnc_doMove;
+		[_group, _wpPos] call A3C_ai_highCommand_fnc_moveGroupToPosition;
 		sleep 1;
 	};
 };
@@ -547,30 +546,18 @@ if (_actionType in ["SUPPRESSION", "AMBUSH"]) then {
 
 			_prms call _statements;
 
-			if (count waypoints _group - 1 > currentWaypoint _group) then {
-				private _wpc = currentWaypoint _group;
-				[_group, currentWaypoint _group] call A3C_ai_highCommand_fnc_removeWaypoint;
+			private _wpc = currentWaypoint _group;
+			if (count waypoints _group - 1 > _wpc) then {
+				
+				[_group, _wpc] call A3C_ai_highCommand_fnc_removeWaypoint;
 			} else {
-				deleteWaypoint [_group, currentWaypoint _group];
+				deleteWaypoint [_group, _wpc];
 			};
 
-			private _leader = leader _group;
-
 			sleep 2;
-
-			{
-				if (!isPlayer _x) then {
-					private _pos = if (_x == leader group _x) then {
-						waypointPosition [_group, currentWaypoint _group]
-					} else {
-						formationPosition _x
-					};
-
-					[_x, _pos] call A3C_ai_shared_fnc_doMove;
-				};
-			} forEach units _group; // - [_leader]
-
-			units _group commandFollow _leader;
+			//-- note - because of the delay, we do not re-use _wpc here
+			[_group, currentWaypoint _group] call A3C_ai_highCommand_fnc_moveGroupToPosition;
+			
 		};
 
 		sleep 0.1;

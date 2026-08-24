@@ -292,6 +292,7 @@ switch (_name) do {
             + (["radial_outerButtons"] call FUNC(ctrlGroup))
             + [
                 ["extensionLeftCtrlsGroup"] call FUNC(ctrl),
+                ["extensionRightBackground"] call FUNC(ctrl),
                 ["dashboardParent"] call FUNC(ctrl)
             ]
         ) select {!isNull _x}
@@ -334,17 +335,6 @@ switch (_name) do {
             ["extensionLeftContinueBtn"] call FUNC(ctrl)
         ] select {!isNull _x}
     };
-
-    case "radial_holdContinueMacros": {
-        [
-            ["extensionLeft_hold_img"] call FUNC(ctrl),
-            ["extensionLeft_hold_btn"] call FUNC(ctrl),
-            ["extensionLeft_continue_img"] call FUNC(ctrl),
-            ["extensionLeft_continue_btn"] call FUNC(ctrl)
-        ] select {!isNull _x}
-    };
-
-    
 
     default { [] };
 };
