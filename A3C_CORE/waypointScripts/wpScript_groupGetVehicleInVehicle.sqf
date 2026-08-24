@@ -5,6 +5,14 @@ if ([_callerUID,_group] call A3C_ai_highCommand_fnc_isWpScriptBlocked) exitWith 
 [_group] call A3C_ai_highCommand_fnc_reInitGroupMovement;
 
 _group setVariable ["A3C_HC_groupVehicleReadyToBoard",false,true]; //-- default for when player moves wp during boarding
+
+//-- Reset ViV result state for this waypoint execution.
+_group setVariable [
+	"A3C_HC_VIV_SKIPPED_VEHICLES",
+	[],
+	true
+];
+
 private _leader = leader _group;
 
 [_group,_pos] call A3C_ai_shared_fnc_approachWaypointRegular;
@@ -189,11 +197,27 @@ private _groupVehicles = [];
 	The hosting VTOL script only observes getVehicleCargo and does not call
 	setVehicleCargo itself.
 */
+private _skippedVehicles = [];
+
 {
-	if ((_hostingVehicle canVehicleCargo _x) select 0) then {
-		_hostingVehicle setVehicleCargo _x;
+	private _cargoVehicle = _x;
+	private _loaded = false;
+
+	if ((_hostingVehicle canVehicleCargo _cargoVehicle) select 0) then {
+		_loaded =
+			_hostingVehicle setVehicleCargo _cargoVehicle;
+	};
+
+	if (!_loaded) then {
+		_skippedVehicles pushBackUnique _cargoVehicle;
 	};
 } forEach _groupVehicles;
+
+_group setVariable [
+	"A3C_HC_VIV_SKIPPED_VEHICLES",
+	_skippedVehicles,
+	true
+];
 
 _group setVariable [
 	"A3C_HC_groupVehicleReadyToBoard",

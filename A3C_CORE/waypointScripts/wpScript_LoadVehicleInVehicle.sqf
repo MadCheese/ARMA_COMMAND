@@ -197,7 +197,7 @@ waitUntil {
 	script completes the transfer and removes its own synchronization link.
 */
 private _syncWps = synchronizedWaypoints _wp;
-private _cargoVehicles = [];
+private _cargoEntries = [];
 
 {
 	_x params [
@@ -217,7 +217,10 @@ private _cargoVehicles = [];
 				_cargoVehicle != _loadVic
 			}
 		) then {
-			_cargoVehicles pushBackUnique _cargoVehicle;
+			_cargoEntries pushBackUnique [
+				_cargoVehicle,
+				_cargoGroup
+			];
 		};
 	} forEach units _cargoGroup;
 } forEach _syncWps;
@@ -227,26 +230,52 @@ sleep 3;
 /*
 	The cargo-side waypoint script owns setVehicleCargo.
 
-	This script only waits until every vehicle identified from the
-	post-landing synchronization snapshot is physically present inside the
-	VTOL.
+	This script waits until every vehicle identified from the post-landing
+	synchronization snapshot has either been loaded successfully or explicitly
+	skipped by its cargo-side waypoint script.
 */
 waitUntil {
-	private _loadedCargo = getVehicleCargo _loadVic;
+	private _loadedCargo =
+		getVehicleCargo _loadVic;
 
 	sleep 1;
 
-	!(_cargoVehicles isEqualTo []) &&
-	{
-		_cargoVehicles findIf {
-			!(_x in _loadedCargo)
-		} == -1
-	}
+	_cargoEntries findIf {
+		_x params [
+			"_cargoVehicle",
+			"_cargoGroup"
+		];
+
+		private _skippedVehicles =
+			_cargoGroup getVariable [
+				"A3C_HC_VIV_SKIPPED_VEHICLES",
+				[]
+			];
+
+		!(_cargoVehicle in _loadedCargo) &&
+		{
+			!(_cargoVehicle in _skippedVehicles)
+		}
+	} == -1
 };
+
+private _cargoGroups = [];
+
+{
+	_cargoGroups pushBackUnique (_x select 1);
+} forEach _cargoEntries;
+
+{
+	_x setVariable [
+		"A3C_HC_VIV_SKIPPED_VEHICLES",
+		nil,
+		true
+	];
+} forEach _cargoGroups;
 
 /*
 	Compile and check the waypoint condition only after all synchronized
-	cargo vehicles have been loaded.
+	cargo vehicles have been resolved as either loaded or skipped.
 */
 private _exitCondition = {};
 

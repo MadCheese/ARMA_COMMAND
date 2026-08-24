@@ -219,8 +219,40 @@ if ({!(_x in A3C_SUPPRESSION_UNITS_SQ)} count A3C_RD_UNITS > 0) then {
 			if (_x == gunner vehicle _x && {[vehicle _x] call A3C_main_fnc_isStaticMissileLauncher}) then {
 				A3C_REMFIRE_StaticShot_Units pushBackUnique _x;
 			} else {
-				if (vehicle _x isKindOf "TANK") then {
-					A3C_REMFIRE_TankShot_Units pushBackUnique _x;
+				if (
+					(getArtilleryAmmo [vehicle _x]) isEqualTo []
+					&& {vehicle _x isKindOf "LAND"}
+				) then {
+					private _isCannonVehicle = false;
+					private _isMissileVehicle = false;
+
+					{
+						private _weaponSound = toLower getText (
+							configFile
+							>> "CfgWeapons"
+							>> _x
+							>> "nameSound"
+						);
+
+						if ("cannon" in _weaponSound) then {
+							_isCannonVehicle = true;
+					} else {
+							if (
+								"missile" in _weaponSound
+								|| {"rocket" in _weaponSound}
+							) exitWith {
+								_isMissileVehicle = true;
+							};
+						};
+					} forEach (weapons vehicle _x);
+
+					if (_isCannonVehicle) then {
+						A3C_REMFIRE_TankShot_Units pushBackUnique _x;
+					} else {
+						if (_isMissileVehicle) then {
+							A3C_REMFIRE_StaticShot_Units pushBackUnique _x;
+						};
+					};
 				};
 			};
 		};

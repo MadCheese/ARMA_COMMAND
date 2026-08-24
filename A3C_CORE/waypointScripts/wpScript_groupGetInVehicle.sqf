@@ -116,6 +116,7 @@ if ({!isNull objectParent _x} count units _group == 0) then {
 			_empty = (fullCrew [_v, "", true]) select 
 			{
 				isNull (_x select 0) &&
+				{isNull (_x select 5)} &&
 				{
 					(_x select 1 == "cargo") OR
 					{
