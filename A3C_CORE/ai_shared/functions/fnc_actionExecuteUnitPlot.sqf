@@ -523,6 +523,27 @@ while {!isNull _unit} do {
 				};
 			};
 
+			//-- DEBUG (REMOVE) #CURRENTBUG
+			if (
+				A3C_DEBUG
+				&& {(_wpAction select 0) == "STATIC"}
+				&& {_unit distance2D _movePos < 20}
+				&& {abs speed _unit < 0.5}
+			) then {
+				diag_log format [
+					"STATIC STOPPED | %1 | dist:%2 | ready:%3 | moveCompleted:%4 | command:%5 | expected:%6 | unitATL:%7 | wpATL:%8 | heightDiff:%9",
+					name _unit,
+					_unit distance2D _movePos,
+					unitReady _unit,
+					moveToCompleted _unit,
+					currentCommand _unit,
+					expectedDestination _unit,
+					getPosATL _unit,
+					_movePos,
+					abs ((getPosATL _unit select 2) - (_movePos param [2,0]))
+				];
+			};
+
 
 			//-- NON NEGOTIOABLE EXIT CONDITIONS
 			//-- check if wp is completed (first because STOPPED and BREAK are subordinate and share conditions).

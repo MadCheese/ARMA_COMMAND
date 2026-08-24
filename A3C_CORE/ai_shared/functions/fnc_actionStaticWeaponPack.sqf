@@ -47,12 +47,16 @@ if ((count _selectedTaskUnits) == 2) then {
 	private _mainMarker = "A3C_SQ_" + str (random 10000000000);
 	private _weaponPos = position _weaponToDisassemble;
 
+	//-- Wait until both units have finished cancelling their previous plots.
+	waitUntil {
+		{
+			count (_x getVariable "A3C_PLOT") == 0
+		} count _selectedTaskUnits == count _selectedTaskUnits
+	};
+
+	//-- Install the shared STATIC waypoint for both units before either route starts.
 	{
 		private _unit = _x;
-
-		waitUntil {
-			count (_unit getVariable "A3C_PLOT") == 0
-		};
 
 		private _plotData = [
 			[
@@ -74,6 +78,12 @@ if ((count _selectedTaskUnits) == 2) then {
 		private _expectedDestination = [_unit] call A3C_ai_shared_fnc_setDestination;
 
 		_unit setVariable ["A3C_PLOT", _plotData, true];
+
+	} forEach _selectedTaskUnits;
+
+	//-- Both hub waypoints now exist. Start the route scripts.
+	{
+		private _unit = _x;
 
 		[_unit] spawn {
 			params ["_unit"];
@@ -115,5 +125,6 @@ if ((count _selectedTaskUnits) == 2) then {
 				[_unit] call A3C_ai_squad_fnc_actionResumeDestination;
 			};
 		};
+
 	} forEach _selectedTaskUnits;
 };
