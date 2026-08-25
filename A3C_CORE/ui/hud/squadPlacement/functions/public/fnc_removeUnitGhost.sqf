@@ -47,9 +47,7 @@ if ((count A3C_UI_squadPlacement_units) == 1) then {
 };
 
 if ((count A3C_UI_squadPlacement_units) == 0) then {
-    {
-        inGameUISetEventHandler [_x, "false"];
-    } forEach ["PrevAction", "NextAction"];
+    "ENABLE" call A3C_ui_shared_fnc_toggleActionMenuAbility;
 
     profileNamespace setVariable ["A3C_UI_squadPlacement_overlayIsOpen", false];
     ("A3C_UI_squadPlacement_overlay" call BIS_fnc_rscLayer) cutText ["", "PLAIN"];

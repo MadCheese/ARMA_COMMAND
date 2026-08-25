@@ -30,6 +30,7 @@ A3C_PREP_SUBDIR(public,releaseMenuKey);
 A3C_PREP_SUBDIR(public,resetPlayerGroup);
 A3C_PREP_SUBDIR(public,resizeTeamColors_XWH);
 A3C_PREP_SUBDIR(public,resizeTeamColors_Y);
+A3C_PREP_SUBDIR(public,toggleActionMenuAbility);
 A3C_PREP_SUBDIR(public,toggleGocodeCtrls);
 A3C_PREP_SUBDIR(public,Tree_addItem);
 A3C_PREP_SUBDIR(public,Tree_adjustTopRow);

@@ -8,6 +8,18 @@
 // -- commandMove + moveTo combination on the AI driver.
 // -- This function never issues group-level movement orders.
 
+
+// -- IMPORTANT:
+// -- Movement issued by this function is monitored with [_unit] call A3C_main_fnc_isEngineMovementComplete.
+//
+// -- moveToCompleted is intentionally not used for this normal scripted
+// -- movement path, except when player is effectiveCommander. A3C testing found it unreliable with the doMove / moveTo
+// -- combination used here, even though BI documentation states that it can
+// -- also work with doMove / commandMove.
+//
+// -- In A3C, moveToCompleted is otherwise reserved for low-level moveTo movement inside
+// -- doFSM / commandFSM FSMs, where its state has been confirmed to behave consistently
+
 params ["_unit", "_destination"];
 
 if (

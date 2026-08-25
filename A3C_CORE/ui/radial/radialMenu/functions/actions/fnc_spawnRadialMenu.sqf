@@ -126,9 +126,7 @@ if (_cursorObjectSelection) then {
 	A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [29];
 };
 
-{
-	inGameUISetEventHandler [_x, "true"];
-} forEach ["PrevAction", "NextAction"];
+"DISABLE" call A3C_ui_shared_fnc_toggleActionMenuAbility;
 
 ["RADIAL"] call A3C_ui_shared_fnc_getBackgroundColor;
 

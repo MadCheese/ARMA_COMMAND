@@ -5,7 +5,7 @@ params [
 	"_unit",
 	"_wpPos",
 	"_variableDistance",
-	["_unusedArg", objNull],
+	["_inBuilding", false],
 	["_radius", 0],
 	["_timeout", false]
 ];
@@ -35,53 +35,69 @@ if (
 	_effectiveDistance = 500;
 };
 
-private _precision = (
-	getNumber (configFile >> "CfgVehicles" >> typeOf _vehicle >> "precision")
-) + _effectiveDistance;
+private _basePrecision = if (_isOnFoot) then {
+	1.5
+} else {
+	getNumber (
+		configFile
+		>> "CfgVehicles"
+		>> typeOf _vehicle
+		>> "precision"
+	)
+};
 
-// -- Movement completion commands report the state of the engine movement
-// -- order; they do not prove that an exact 3D destination was reached.
-// -- On-foot waypoints therefore always retain an independent height check.
+private _precision = _basePrecision + _effectiveDistance;
+
+// -- Movement completion state does not prove that an exact 3D destination
+// -- was reached.
 private _heightIsValid = true;
 
-if (_isOnFoot) then {
+if (_isOnFoot && {_inBuilding}) then {
 	private _unitHeightATL = getPosATL _unit select 2;
 	private _wpHeightATL = _wpPos param [2, 0];
 
 	_heightIsValid = (abs (_unitHeightATL - _wpHeightATL)) < 1;
-	_precision = 1.5;
 };
 
 private _distance2D = _vehicle distance2D _wpPos;
-private _completionFactor = if (_isOnFoot) then {
-	10
+
+private _engineCompletionDistance = if (_isOnFoot) then {
+	_precision max 15
 } else {
-	1.5
+	_precision * 1.5
 };
 
-private _isUnitReady = false;
-private _isMoveToCompleted = false;
 
-// -- These engine states may widen the accepted distance, but they must never
-// -- override the independent height or enemy-clearance checks below.
-if (!isPlayer (effectiveCommander _vehicle)) then {
-	_isUnitReady = unitReady _unit;
-	_isMoveToCompleted = moveToCompleted _unit;
-};
-
+// -- Normal geometric completion is authoritative and does not require an
+// -- engine movement-state query.
 private _isWithinNormalDistance = _distance2D < _precision;
-private _isWithinEngineCompletedDistance = (
-	(_isUnitReady || {_isMoveToCompleted})
-	&& {_distance2D < (_precision * _completionFactor)}
-);
+
+private _isEngineMovementComplete = false;
+private _isWithinEngineCompletedDistance = false;
 
 private _isComplete = (
 	_heightIsValid
-	&& {
-		_isWithinNormalDistance
-		|| {_isWithinEngineCompletedDistance}
-	}
+	&& {_isWithinNormalDistance}
 );
+
+
+// -- Only query the engine movement state when normal geometric completion
+// -- failed and engine completion could actually change the result.
+// -- There is no reason to call A3C_main_fnc_isEngineMovementComplete when
+// -- already within the normal completion radius, when building height is
+// -- invalid, or when outside the wider engine-completion radius.
+if (
+	!_isComplete
+	&& {_heightIsValid}
+	&& {!_isWithinNormalDistance}
+	&& {_distance2D < _engineCompletionDistance}
+) then {
+	_isEngineMovementComplete = [_unit] call A3C_main_fnc_isEngineMovementComplete;
+
+	_isWithinEngineCompletedDistance = _isEngineMovementComplete;
+	_isComplete = _isEngineMovementComplete;
+};
+
 
 // -- Experimental: do not move on unless the destination area is clear.
 // -- Run this after every possible completion path so that an engine-completed
@@ -104,10 +120,9 @@ if (_isComplete && {_isOnFoot}) then {
 
 if (A3C_DEBUG && {_isWithinEngineCompletedDistance}) then {
 	systemChat format [
-		"completion candidate %1 | unitReady: %2 | moveToCompleted: %3 | height valid: %4 | distance2D: %5",
+		"completion candidate %1 | engine movement complete: %2 | height valid: %3 | distance2D: %4",
 		_isComplete,
-		_isUnitReady,
-		_isMoveToCompleted,
+		_isEngineMovementComplete,
 		_heightIsValid,
 		_distance2D
 	];

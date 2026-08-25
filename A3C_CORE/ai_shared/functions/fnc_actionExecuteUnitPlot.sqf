@@ -492,7 +492,14 @@ while {!isNull _unit} do {
 		_wPos = _wpPositions select 0;
 
 		if (A3C_DEBUG) then {
-			private _debugMessage = format ["unitPlot Main Travel Loop (%1 / %2), unitReady: %3, distance: %4", _unit, round time, unitReady _unit, round (_unit distance2d _wpos)];
+			private _debugMessage = format
+			[
+				"unitPlot Main Travel Loop (%1 / time:  %2), movement-complete: %3, distance: %4",
+				_unit,
+				round time,
+				[_unit] call A3C_main_fnc_isEngineMovementComplete,
+				round (_unit distance2d _wpos)
+			];
 			_debugMessage remoteExec ["systemchat", 0];
 		};
 
@@ -516,7 +523,7 @@ while {!isNull _unit} do {
 			if ((_wpAction select 0) in ["CTRL_DET"]) then {
 				(_wpAction select 1) params ["_targetObject","_magType"];
 				if (!isNull _targetObject) then {
-					if (unitReady _unit) then {//-- only if unit is not moving anymore, we want him to get as close as possible
+					if ([_unit] call A3C_main_fnc_isEngineMovementComplete) then {//-- only if unit is not moving anymore, we want him to get as close as possible
 						_variDist = (sizeof typeOf _targetObject);
 					};
 
@@ -531,11 +538,10 @@ while {!isNull _unit} do {
 				&& {abs speed _unit < 0.5}
 			) then {
 				diag_log format [
-					"STATIC STOPPED | %1 | dist:%2 | ready:%3 | moveCompleted:%4 | command:%5 | expected:%6 | unitATL:%7 | wpATL:%8 | heightDiff:%9",
+					"STATIC STOPPED | %1 | dist:%2 | engineMovementComplete:%3 | command:%4 | expected:%5 | unitATL:%6 | wpATL:%7 | heightDiff:%8",
 					name _unit,
 					_unit distance2D _movePos,
-					unitReady _unit,
-					moveToCompleted _unit,
+					[_unit] call A3C_main_fnc_isEngineMovementComplete,
 					currentCommand _unit,
 					expectedDestination _unit,
 					getPosATL _unit,
@@ -730,7 +736,10 @@ while {!isNull _unit} do {
 			if (_unit == driver vehicle _unit) then {
 				if (isNull objectParent _unit) then {
 					sleep 2; //-- allow some time for unit to complete engine dismount-routine
-					waituntil {unitReady _unit};
+					waituntil {
+						sleep 0.3;
+						[_unit] call A3C_main_fnc_isEngineMovementComplete
+					};
 				} else {
 					sleep 3;
 				};
@@ -794,7 +803,11 @@ while {!isNull _unit} do {
 		if (_vehicle isKindOf "TANK" && {_unit == driver _vehicle}) then {
 			if ( ((_wpCondition select 0) != "NONE") OR ((_cycle + 1) == count (_unit getVariable ["A3C_PLOT",[]])) ) then {
 				if !(_lookAtPos isEqualTo []) then {
-					waituntil {unitReady _unit && speed _vehicle == 0};
+					waituntil {
+						sleep 1;
+						speed _vehicle == 0
+						&& {[_unit] call A3C_main_fnc_isEngineMovementComplete}
+					};
 					private _spawnBehaviour = [_vehicle,_lookAtPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
 					waitUntil {scriptDone _spawnBehaviour};
 				};

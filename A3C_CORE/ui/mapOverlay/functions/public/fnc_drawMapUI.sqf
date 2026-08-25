@@ -1165,9 +1165,17 @@ if (
 				'center'
 			];
 
-			// Indicate groups currently boarding.
+			// Indicate groups currently boarding or dismounting.
 
-			if ([_highCommandGroup] call A3C_ai_highCommand_fnc_isGroupBoarding) then {
+			if (
+				[_highCommandGroup] call A3C_ai_highCommand_fnc_isGroupBoarding
+				|| {
+						{
+							isNull assignedVehicle _x
+							&& {!isNull objectParent _x}
+						} count units _highCommandGroup > 0
+					}
+			) then {
 				_mapControl drawIcon
 				[
 					"\a3\ui_f\data\IGUI\RscIngameUI\RscUnitInfo\role_cargo_ca.paa",
@@ -1844,7 +1852,7 @@ if (count A3C_PICKUP_OBJECTS > 0) then {
 	} forEach A3C_PICKUP_OBJECTS;
 };
 
-if (A3C_Boarding_ACTIVE) then {
+if (A3C_Boarding_Mapselection_ACTIVE) then {
 	{
 		private _boardingVehicleIconData = _x;
 		[

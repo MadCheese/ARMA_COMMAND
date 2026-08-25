@@ -3,6 +3,8 @@
 #include "..\..\..\shared_ui_defines.hpp"
 #include "..\..\..\..\mapOverlay\dialog_defines.hpp"
 
+//-- A3C_ui_selectionPromptPanel_fnc_onLBSelChangedShared
+
 params ["_selectedIndex"];
 
 private _displayId = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {
@@ -11,13 +13,55 @@ private _displayId = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {
 	IDD_SELECTION_PROMPT_PANEL
 };
 
-private _doubleClick = false;
-private _tickTime = time - A3C_LB_TICKTIME;
+private _isMapPrompt = _displayId == IDD_MAP_OVERLAY;
 
 private _display = findDisplay _displayId;
 private _parentCtrl = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent;
 private _descriptionCtrl = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Description_TXT;
 private _listBoxCtrl = _display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_ListBox;
+
+/*
+	Close the Selection Prompt Panel according to its current UI context.
+
+	Map:
+	The panel is a controlsGroup inside the map-overlay display, so only
+	hide the panel.
+
+	HUD:
+	The panel owns its display. Close it and restore the commanding-menu
+	input state that was suppressed while the prompt was active.
+*/
+private _closeSelectionPrompt = {
+	params [
+		"_promptDisplay",
+		"_mapPrompt"
+	];
+
+	if (isNull _promptDisplay) exitWith {};
+
+	if (_mapPrompt) then {
+		(
+			_promptDisplay
+				displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent
+		) ctrlShow false;
+	} else {
+		_promptDisplay closeDisplay 0;
+
+		"ENABLE" call A3C_ui_shared_fnc_toggleActionMenuAbility;
+
+		{
+			player groupSelectUnit [
+				_x,
+				false
+			];
+		} forEach units group player;
+
+		showCommandingMenu "";
+	};
+};
+
+private _doubleClick = false;
+private _tickTime = time - A3C_LB_TICKTIME;
 
 if ((_tickTime > 0.07) && {_tickTime < 0.3}) then {
 	_doubleClick = true;
@@ -46,12 +90,10 @@ if (_doubleClick) then {
 				};
 			};
 
-			_parentCtrl ctrlShow false;
-			_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
-
-			with uiNamespace do {
-				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
-			};
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 		};
 
 		case ("CARGO_WAYPOINTS") : {
@@ -137,7 +179,10 @@ if (_doubleClick) then {
 				};
 			};
 
-			_parentCtrl ctrlShow false;
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 		};
 
 		case ("SPEEDLIMIT") : {
@@ -153,7 +198,10 @@ if (_doubleClick) then {
 
 			[_leaderVehicle, _speed] remoteExec ["limitSpeed", _leaderVehicle];
 
-			_parentCtrl ctrlShow false;
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 		};
 
 		case ("CAS") : {
@@ -171,7 +219,10 @@ if (_doubleClick) then {
 
 			private _selectedGroups = +A3C_SELECTED_HC_GROUPS_SETTINGS;
 
-			_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 
 			if (_selectedGroups isEqualTo []) exitWith {};
 
@@ -240,7 +291,10 @@ if (_doubleClick) then {
 
 		case ("MULTIWAYPOINT") : {
 			A3C_MULTIWAYPOINT = if (_selectedIndex == 0) then {true} else {false};
-			_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 		};
 
 		case ("DETONATE_SELECTED_CHARGE_SHARED") : {
@@ -282,6 +336,7 @@ if (_doubleClick) then {
 
 					A3C_UI_RADIAL_Current_Remfire_Units = [];
 				};
+				//-- Note: We do NOT close menu
 			} else {
 				//-- detonate individual charge
 
@@ -373,8 +428,17 @@ if (_doubleClick) then {
 				_listBoxCtrl lbText _selectedIndex
 			);
 
-			with uiNamespace do {
-				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
+			/*
+				HUD prompt completion is immediate.
+
+				The map version has separate delayed-close behavior while an
+				artillery suborder is awaiting completion.
+			*/
+			if (!_isMapPrompt) then {
+				[
+					_display,
+					false
+				] call _closeSelectionPrompt;
 			};
 
 			[
@@ -383,20 +447,35 @@ if (_doubleClick) then {
 			] spawn A3C_ai_shared_fnc_actionFireArtillery;
 
 			if (A3C_isArtyAwaitingSuborder) then {
-				[_display] spawn {
-					params ["_display"];
+				[
+					_isMapPrompt,
+					_parentCtrl
+				] spawn {
+					params [
+						"_mapPrompt",
+						"_parentCtrl"
+					];
 
 					sleep 0.4;
 
-					if (!isNull _display) then {
-						_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
+					if (
+						_mapPrompt
+						&& {!isNull _parentCtrl}
+					) then {
+						_parentCtrl ctrlShow false;
 					};
+
 					if !(29 in A3C_UI_DOWNKEYS) then {
 						A3C_isArtyAwaitingSuborder = false;
 					};
 				};
 			} else {
-				_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
+				if (_isMapPrompt) then {
+					[
+						_display,
+						true
+					] call _closeSelectionPrompt;
+				};
 			};
 		};
 
@@ -404,15 +483,21 @@ if (_doubleClick) then {
 			private _chargeDisplayName = _listBoxCtrl lbText _selectedIndex;
 			private _chargeMagName = "";
 
-			_parentCtrl ctrlShow false;
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 
-			(findDisplay 12 displayCtrl 51) ctrlEnable true;
+			
 
-			_parentCtrl spawn {
-				//-- Preserved: repeated hiding appears to work around display/update timing after dropping on target vehicle.
-				for "_i" from 1 to 10 do {
-					_this ctrlShow false;
-					sleep 0.1;
+			if (_isMapPrompt) then {
+				(findDisplay 12 displayCtrl 51) ctrlEnable true;
+				_parentCtrl spawn {
+					//-- Preserved: repeated hiding appears to work around display/update timing after dropping on target vehicle.
+					for "_i" from 1 to 10 do {
+						_this ctrlShow false;
+						sleep 0.1;
+					};
 				};
 			};
 
@@ -466,7 +551,10 @@ if (_doubleClick) then {
 					[_listBoxCtrl, _lbEntryText] call A3C_ui_shared_fnc_addLbEntry;
 				} forEach _cargoObjects;
 			} else {
-				_parentCtrl ctrlShow false;
+				[
+					_display,
+					_isMapPrompt
+				] call _closeSelectionPrompt;
 			};
 		};
 
@@ -487,7 +575,10 @@ if (_doubleClick) then {
 					[_listBoxCtrl, _lbEntryText] call A3C_ui_shared_fnc_addLbEntry;
 				} forEach _cargoObjects;
 			} else {
-				_parentCtrl ctrlShow false;
+				[
+					_display,
+					_isMapPrompt
+				] call _closeSelectionPrompt;
 			};
 		};
 
@@ -514,7 +605,10 @@ if (_doubleClick) then {
 				};
 			} forEach units _selectedGroup;
 
-			_parentCtrl ctrlShow false;
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 		};
 
 		case ("LOITER_DIR") : {
@@ -560,14 +654,22 @@ if (_doubleClick) then {
 				case (3) : {A3C_LoiterRadius = 2000};
 			};
 
-			_parentCtrl ctrlShow false;
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 		};
 
 		case ("SECU_REJOIN") : {
-			_parentCtrl ctrlShow false;
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 
 			switch (_selectedIndex) do {
-				case (0) : {A3C_LoiterRadius = 100};
+				case (0) : {
+					//-- CANCEL: do nothing.
+				};
 				case (1) : {
 					[A3C_SELECTED_HC_GROUPS_SETTINGS] spawn A3C_ui_mapOverlay_fnc_rejoinDisbandedToPlayerGroup;
 				};
@@ -582,14 +684,6 @@ if (_doubleClick) then {
 			};
 
 			[] call A3C_ui_radialMenu_fnc_closeDisplay;
-
-			{
-				player groupSelectUnit [_x, false];
-			} forEach units player;
-
-			showCommandingMenu "";
-
-
 
 			{
 				private _weaponClass = _x select 1;
@@ -609,11 +703,10 @@ if (_doubleClick) then {
 				};
 			} forEach A3C_STATIC_PACKS;
 
-			_parentCtrl ctrlShow false;
-
-			with uiNamespace do {
-				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
-			};
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 		};
 
 		case ("STATIC_DISASSEMBLE_SQUAD") : {
@@ -630,9 +723,10 @@ if (_doubleClick) then {
 
 			[position _selectedWeapon, ""] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 
-			with uiNamespace do {
-				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
-			};
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 		};
 
 		case ("STATIC_ASSEMBLE_HC") : {
@@ -643,12 +737,6 @@ if (_doubleClick) then {
 			};
 
 			[] call A3C_ui_radialMenu_fnc_closeDisplay;
-
-			{
-				player groupSelectUnit [_x, false];
-			} forEach units player;
-
-			showCommandingMenu "";
 
 			{
 				private _weaponClass = _x select 1;
@@ -668,11 +756,10 @@ if (_doubleClick) then {
 				};
 			} forEach A3C_STATIC_PACKS;
 
-			_parentCtrl ctrlShow false;
-
-			with uiNamespace do {
-				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
-			};
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 		};
 
 		case ("STATIC_DISASSEMBLE_HC") : {
@@ -680,7 +767,10 @@ if (_doubleClick) then {
 
 			[1, _selectedWeapon] spawn A3C_ai_highCommand_fnc_actionUnAssembleWeaponDispatch;
 
-			_parentCtrl ctrlShow false;
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 
 			player commandRadio "SentDisAssemble";
 
@@ -774,11 +864,10 @@ if (_doubleClick) then {
 				]
 			];
 
-			_parentCtrl ctrlShow false;
-
-			with uiNamespace do {
-				(findDisplay IDD_SELECTION_PROMPT_PANEL) closeDisplay 0;
-			};
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 
 			[_demoUnit, _plotData] spawn {
 				params ["_unit", "_data"];
@@ -977,11 +1066,10 @@ if (_doubleClick) then {
 				"STANDARD"
 			] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 
-			with uiNamespace do {
-				(
-					findDisplay IDD_SELECTION_PROMPT_PANEL
-				) closeDisplay 0;
-			};
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 		};
 
 		case ("PLACE_CHARGE_HC_MAP") : {
@@ -1014,7 +1102,10 @@ if (_doubleClick) then {
 			//-- vehicle/waypoint attachment happens via icon click so we predefine it as objNull
 			_plantExplosiveWP waypointAttachVehicle objNull;
 
-			_display displayCtrl IDC_SHARED_UI_SelectionPromptPanel_Parent ctrlShow false;
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
 		};
 
 		case ("HELI_LANDING_HC_TYPE") : {
@@ -1038,17 +1129,30 @@ if (_doubleClick) then {
 			};
 
 			if (_hideParent) then {
-				_parentCtrl ctrlShow false;
-				[_landingRailType, ""] spawn A3C_ai_highCommand_fnc_actionHeliLandingRailed;
+				[
+					_display,
+					_isMapPrompt
+				] call _closeSelectionPrompt;
+
+				[
+					_landingRailType,
+					""
+				] spawn A3C_ai_highCommand_fnc_actionHeliLandingRailed;
 			};
 		};
 
 		case ("HELI_LANDING_GOCODE") : {
-			_parentCtrl ctrlShow false;
-
 			private _condition = _listBoxCtrl lbText _selectedIndex;
 
-			["COMBAT LANDING", _condition] spawn A3C_ai_highCommand_fnc_actionHeliLandingRailed; //-- condition is goCode type a,b,c,d
+			[
+				_display,
+				_isMapPrompt
+			] call _closeSelectionPrompt;
+
+			[
+				"COMBAT LANDING",
+				_condition
+			] spawn A3C_ai_highCommand_fnc_actionHeliLandingRailed; //-- condition is goCode type a,b,c,d
 		};
 	};
 };

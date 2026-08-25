@@ -154,9 +154,7 @@ if (_overrideMode) then {
         };
     } forEach _orderedGhosts;
 
-    {
-        inGameUISetEventHandler [_x, "false"];
-    } forEach ["PrevAction", "NextAction"];
+    "ENABLE" call A3C_ui_shared_fnc_toggleActionMenuAbility;
 
     ("A3C_UI_squadPlacement_overlay" call BIS_fnc_rscLayer) cutText ["", "PLAIN"];
     profileNamespace setVariable ["A3C_UI_squadPlacement_overlayIsOpen", false];

@@ -3,11 +3,11 @@
 /*
 item0[] = {"Start_",0,250,-100.000000,-375.000000,50.000000,-275.000000,0.000000,"Start" \n ""};
 item1[] = {"TRUE___",4,218,-100.000000,-178.647156,50.000000,-128.647156,0.000000,"" \n "" \n "" \n "TRUE" \n "" \n "" \n ""};
-item2[] = {"Exit_",1,250,52.564026,269.337250,152.564026,319.337219,0.000000,"Exit" \n ""};
+item2[] = {"Exit_",1,4346,52.564026,269.337250,152.564026,319.337219,0.000000,"Exit" \n ""};
 item3[] = {"DISPLAY_CLOSED",4,218,14.729614,68.907532,189.448914,142.503235,0.000000,"DISPLAY CLOSED"};
 item4[] = {"LOOP_INIT",2,250,-58.809387,-20.426605,31.190628,29.573395,0.000000,"LOOP INIT"};
 item5[] = {"MAP__map_was_clo",4,218,249.053772,-29.042023,433.271423,41.895264,0.000000,"MAP: map was closed"};
-item6[] = {"close_overlay",2,4346,295.502502,76.964905,385.502502,126.964897,0.000000,"close overlay"};
+item6[] = {"close_overlay",2,250,295.502502,76.964905,385.502502,126.964897,0.000000,"close overlay"};
 item7[] = {"SLEEP",4,218,-141.891525,80.757935,-51.891571,130.757935,0.000000,"SLEEP"};
 item8[] = {"EMPTY",4,218,-308.442444,-21.724945,-218.442368,28.275055,0.000000,"EMPTY"};
 item9[] = {"CHECK_DEAD",2,250,-307.428864,89.083923,-217.428741,139.083923,0.000000,"CHECK DEAD"};
@@ -22,8 +22,8 @@ link7[] = {6,3};
 link8[] = {7,9};
 link9[] = {8,4};
 link10[] = {9,8};
-globals[] = {0.000000,0,0,0,0,640,480,1,186,6316128,1,-440.258179,518.023926,215.105408,-488.916840,897,659,1};
-window[] = {0,-1,-1,-1,-1,1169,338,1942,338,1,915};
+globals[] = {0.000000,0,0,0,0,640,480,1,186,6316128,1,-621.575439,699.339966,529.786499,-433.203430,930,678,1};
+window[] = {0,-1,-1,-1,-1,1110,260,1921,260,1,948};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -83,7 +83,7 @@ class FSM
                          "(findDisplay 12 displayCtrl 51) ctrlEnable true;" \n
                          "" \n
                          "//-- re-activate Action-Menu" \n
-                         "{inGameUISetEventHandler [_x, ""false""]} foreach [""PrevAction"",""NextAction""];" \n
+                         """ENABLE"" call A3C_ui_shared_fnc_toggleActionMenuAbility;" \n
                          "" \n
                          "//-- switch back to regular groupBar/commandBar when HC was used" \n
                          "if (hcShownBar) then {hcShowBar false};" \n
@@ -99,6 +99,7 @@ class FSM
                          "A3C_UI_MAP_BOOL_CT_EDIT_ACTIVE = false;" \n
                          "A3C_BOOL_DISABLEMAPCTRL = false;" \n
                          "A3C_BOOL_MOUSEMOVING = false;" \n
+                         "A3C_Boarding_Mapselection_ACTIVE = false;" \n
                          "" \n
                          "" \n
                          "//player removeEventHandler [""killed"", A3C_HandlerID_KilledPlayer_WIP];" \n

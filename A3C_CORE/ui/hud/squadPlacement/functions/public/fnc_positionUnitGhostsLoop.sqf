@@ -14,9 +14,7 @@ A3C_HUD_POS_NOW = A3C_HUD_POS_PAST;
 A3C_HUD_TRAVEL_DIR = 0;
 A3C_HUD_CHECKPOS = A3C_HUD_POS_PAST;
 
-{
-    inGameUISetEventHandler [_x, "true"];
-} forEach ["PrevAction", "NextAction"];
+"DISABLE" call A3C_ui_shared_fnc_toggleActionMenuAbility;
 
 while {(count A3C_UI_squadPlacement_unitGhosts) > 0} do {
     _useCursorPos = true;

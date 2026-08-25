@@ -40,6 +40,7 @@ A3C_PREP(isAttackHelicopter);
 A3C_PREP(isCargoGroupEjectable);
 A3C_PREP(isCargoUnitEjectable);
 A3C_PREP(isDaytimeCompleted);
+A3C_PREP(isEngineMovementComplete);
 A3C_PREP(isEmptySquareOnSurfaceLevel);
 A3C_PREP(isGroupOnFinalWP);
 A3C_PREP(isIRMagazine);

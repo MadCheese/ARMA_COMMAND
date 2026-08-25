@@ -145,4 +145,4 @@ if (_successfulBoardCount > 0) then {
 	};
 };
 
-A3C_Boarding_ACTIVE = false;
+A3C_Boarding_Mapselection_ACTIVE = false;

@@ -158,7 +158,7 @@ if (A3C_HC_EDIT_ACTION == "SLING LOAD" && {count A3C_PICKUP_OBJECTS > 0}) exitWi
 };
 
 //-- detect click on VEHICLE BOARDING ICONS	
-if (A3C_Boarding_ACTIVE) exitWith {
+if (A3C_Boarding_Mapselection_ACTIVE) exitWith {
 
 	private _vhIcons = [];
 	//-- Boarding HC-units via map-ui pt 2
@@ -172,18 +172,18 @@ if (A3C_Boarding_ACTIVE) exitWith {
 			[A3C_SELECTED_HC_GROUPS_SETTINGS,_selectedVehicle] call A3C_ai_highCommand_fnc_assignGroupToVehicle;
 			_doReset = true;
 		} else {
-			A3C_Boarding_ACTIVE = false; //-- disable boarding interface
+			A3C_Boarding_Mapselection_ACTIVE = false; //-- disable boarding interface
 			_doReset = true;
 		};
 	} else {
 		if (_ctrl) then {
-			A3C_Boarding_ACTIVE = false; //-- disable boarding interface
+			A3C_Boarding_Mapselection_ACTIVE = false; //-- disable boarding interface
 			_doReset = true;
 		};
 	};
 	if (_doReset) then {
 		A3C_UI_MAPICONS_HC_VICS = [];
-		A3C_Boarding_ACTIVE = false;
+		A3C_Boarding_Mapselection_ACTIVE = false;
 		A3C_BOARDING_GROUPS = [];
 		A3C_MMCode = {};
 		A3C_BOOL_MOUSEMOVING = false;

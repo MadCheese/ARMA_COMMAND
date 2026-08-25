@@ -17,12 +17,4 @@ showHUD ([true] + (shownHUD select [1, 10]));
 
 showCommandingMenu "";
 
-{
-	inGameUISetEventHandler [
-		_x,
-		"false"
-	];
-} forEach [
-	"PrevAction",
-	"NextAction"
-];
+"ENABLE" call A3C_ui_shared_fnc_toggleActionMenuAbility;

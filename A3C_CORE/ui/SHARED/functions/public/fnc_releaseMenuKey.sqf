@@ -162,12 +162,4 @@ if (_isSquadPlacementDisplay) then {
 
 showCommandingMenu "";
 
-{
-	inGameUISetEventHandler [
-		_x,
-		"false"
-	];
-} forEach [
-	"PrevAction",
-	"NextAction"
-];
+"ENABLE" call A3C_ui_shared_fnc_toggleActionMenuAbility;

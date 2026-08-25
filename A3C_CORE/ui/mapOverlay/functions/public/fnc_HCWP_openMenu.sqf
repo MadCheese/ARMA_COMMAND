@@ -77,6 +77,8 @@ private _wp = [
 
 private _leaderVic = vehicle _leader;
 
+A3C_Boarding_Mapselection_ACTIVE = false;
+
 A3C_HC_ACTIVE_PRE_COND_MODE = "ARRIVAL";
 A3C_HC_ACTIVE_PRE_COND_VAL = 0;
 A3C_HC_ACTIVE_POST_COND_MODE = "NONE";
@@ -1209,7 +1211,42 @@ _referenceY =
 );
 
 // Apply labels and listbox values.
-if (A3C_HC_EDIT_ACTION != "CAS-STRIKE") then {
+if (A3C_HC_EDIT_ACTION == "CAS-STRIKE") then {
+	_header3Text = "CAS TYPE";
+
+	lbClear _preCondModeCtrl;
+
+	{
+		private _casModeText = switch (true) do {
+			case (_x isEqualTo ["machinegun"]): {
+				"GUN RUN"
+			};
+
+			case (_x isEqualTo ["missilelauncher"]): {
+				"MISSILES"
+			};
+
+			case (_x isEqualTo ["machinegun", "missilelauncher"]): {
+				"GUNS + MISSILES"
+			};
+
+			case (_x isEqualTo ["bomblauncher"]): {
+				"BOMBING RUN"
+			};
+		};
+
+		[
+			_preCondModeCtrl,
+			_casModeText,
+			true
+		] call A3C_ui_shared_fnc_addLbEntry;
+	} forEach A3C_HC_CASMODES;
+
+	[
+		_preCondModeCtrl,
+		_casTypeCurrent
+	] call A3C_ui_shared_fnc_lbSetCurSel;
+} else {
 	lbClear _preCondModeCtrl;
 
 	{

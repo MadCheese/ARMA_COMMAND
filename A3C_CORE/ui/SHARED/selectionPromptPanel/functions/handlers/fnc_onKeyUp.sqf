@@ -1,5 +1,6 @@
 #include "..\..\script_component.hpp"
 
+// A3C_UI_SelectionPromptPanel_fnc_onKeyUp
 
 params ["_display", "_key"];
 A3C_UI_DOWNKEYS = A3C_UI_DOWNKEYS - [_key];

@@ -6,4 +6,8 @@ private _waypointPosition = +(A3C_UI_HUD_3D_TAG_ICON_POS);
 [_group, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
 private _wp = _group addWaypoint [_waypointPosition,0];
 _wp setWaypointType "SCRIPTED";
-_wp setWaypointScript "A3C_CORE\waypointScripts\wpScript_repair.sqf [getPlayerUID player, ['ARRIVAL', 0]]";
+_wp setWaypointScript format [
+	"A3C_CORE\waypointScripts\wpScript_repair.sqf ['%1',%2]",
+	getPlayerUID player,
+	["ARRIVAL", 0]
+];

@@ -67,10 +67,12 @@ if (_button == 0) exitWith {
 		Keep the nested selected-groups array expected by the existing
 		boardable-vehicle helper.
 	*/
+	
 	A3C_UI_MAPICONS_HC_VICS = [
 		_selectedGroups
 	] call A3C_main_fnc_getBoardableVehicles;
 
+	
 	if (_isRadial) then {
 		A3C_UI_HUD_ASSIGNVEHICLE = true;
 
@@ -84,9 +86,12 @@ if (_button == 0) exitWith {
 		] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
 	} else {
 		private _boardingActive = missionNamespace getVariable [
-			"A3C_Boarding_ACTIVE",
+			"A3C_Boarding_Mapselection_ACTIVE",
 			false
 		];
+
+		// systemchat format ["TEST DISPATCH BOARDING %1, %2, %3",_selectedGroups, count A3C_UI_MAPICONS_HC_VICS, _boardingActive];
+
 
 		if (!_boardingActive) then {
 			A3C_BOARDING_GROUPS = +_selectedGroups;
@@ -99,7 +104,7 @@ if (_button == 0) exitWith {
 
 			A3C_BOOL_DRAGLINE = true;
 			A3C_CONNECTING_MODE = "HCBOARD";
-			A3C_Boarding_ACTIVE = true;
+			A3C_Boarding_Mapselection_ACTIVE = true;
 		};
 	};
 };

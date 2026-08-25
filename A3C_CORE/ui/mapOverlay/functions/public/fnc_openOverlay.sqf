@@ -315,15 +315,7 @@ if (A3C_SELECTED_UNITS isEqualTo []) then {
 [] spawn A3C_ui_mapOverlay_fnc_createEnemyForceTracker;
 
 // Disable action-menu scrolling while the overlay is open.
-{
-	inGameUISetEventHandler [
-		_x,
-		"true"
-	];
-} forEach [
-	"PrevAction",
-	"NextAction"
-];
+"DISABLE" call A3C_ui_shared_fnc_toggleActionMenuAbility;
 
 // Synchronize go-code control state on all machines.
 [] remoteExec [
