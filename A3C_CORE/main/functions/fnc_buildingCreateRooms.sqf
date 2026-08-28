@@ -18,7 +18,7 @@ for "_i" from 1 to _buildingPosCount do { //-- SKIP 0 BECAUSE IT'S ENTRY POINT
 
 private _removePositions = [];
 private _buildingType = typeOf _building;
-private _defunctBuildingData = profileNamespace getVariable ["A3C_PROFILEVAR_BUILDINGS_DEFUNCT", []];
+private _defunctBuildingData = (profileNamespace getVariable ["A3C_PROFILEVAR_BUILDINGS_DEFUNCT", []]) select {!isNil '_x'};
 
 {
 	_x params ["_defunctBuildingType", "_defunctPositions"];

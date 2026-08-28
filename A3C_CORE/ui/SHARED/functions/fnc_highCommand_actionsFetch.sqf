@@ -505,13 +505,16 @@ private _fnc_canReboardGroup = {
 	params ["_group"];
 
 	private _groupUnits = units _group;
-	private _hasAssignedUnit = _groupUnits findIf {
-		!isNull (assignedVehicle _x)
-	} >= 0;
 
-	if (_hasAssignedUnit) exitWith {
-		false
-	};
+	// private _hasAssignedUnit = _groupUnits findIf {
+	// 	!isNull (assignedVehicle _x)
+	// } >= 0;
+
+	// if (_hasAssignedUnit) exitWith {
+	// 	false
+	// };
+
+	if ({!isNull objectParent _x} count _groupUnits > 0) exitWith {};
 
 	private _assignedGroupVehicle = _group getVariable [
 		"A3C_AssignedGroupVehicle",
@@ -1000,7 +1003,7 @@ private _actionPriority = [
 	"JOIN GROUP",
 	"UNSTUCK",
 	"REFRESH_HC_GROUP",
-	"OWNERSHIP",
+	// "OWNERSHIP",
 	"DELETEGROUP"
 ];
 

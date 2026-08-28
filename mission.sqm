@@ -8,18 +8,18 @@ class EditorData
 	toggles=1057;
 	class ItemIDProvider
 	{
-		nextID=5186;
+		nextID=5190;
 	};
 	class MarkerIDProvider
 	{
-		nextID=16;
+		nextID=17;
 	};
 	class Camera
 	{
-		pos[]={14439.849,143.25121,16615.836};
-		dir[]={-0.46886092,-0.72884345,0.49895561};
-		up[]={-0.49910325,0.6846804,0.53113908};
-		aside[]={0.72874236,1.4901161e-08,0.68478799};
+		pos[]={14374.149,34.962013,16678.246};
+		dir[]={-0.703264,-0.62298352,0.34251273};
+		up[]={-0.56008834,0.78223276,0.27278179};
+		aside[]={0.43786362,-3.012974e-08,0.89904284};
 	};
 };
 binarizationWanted=0;
@@ -444,7 +444,7 @@ class Mission
 	};
 	class Entities
 	{
-		items=122;
+		items=123;
 		class Item0
 		{
 			dataType="Trigger";
@@ -5066,7 +5066,6 @@ class Mission
 					};
 					id=5169;
 					type="B_Soldier_F";
-					atlOffset=-9.5367432e-07;
 				};
 			};
 			class Attributes
@@ -7097,6 +7096,14 @@ class Mission
 			};
 			id=5184;
 			type="B_CTRG_LSV_01_light_F";
+		};
+		class Item122
+		{
+			dataType="Marker";
+			position[]={22434.715,49.793518,19411.301};
+			name="marker_16";
+			type="mil_dot";
+			id=5186;
 		};
 	};
 	class Connections

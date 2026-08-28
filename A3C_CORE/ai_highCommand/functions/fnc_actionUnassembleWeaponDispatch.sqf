@@ -13,7 +13,7 @@ private _groupHasStaticWeapon = {
 	(vehicle _x) isKindOf "staticweapon"
 } count _groupUnits > 0;
 
-[] call A3C_ui_shared_fnc_mapRadial_actionStandardResponse;
+[] spawn A3C_ui_shared_fnc_mapRadial_actionStandardResponse;
 
 if (
 	_mode == 0 &&

@@ -1,2 +1,4 @@
-[] call A3C_ui_shared_fnc_mapRadial_actionStandardResponse;
+// A3C_ai_highCommand_fnc_actionReboardGroupToVehicleDispatch
+
 [A3C_SELECTED_HC_GROUPS_SETTINGS] spawn A3C_ai_highCommand_fnc_actionReboardGroupToVehicle;
+[] spawn A3C_ui_shared_fnc_mapRadial_actionStandardResponse;

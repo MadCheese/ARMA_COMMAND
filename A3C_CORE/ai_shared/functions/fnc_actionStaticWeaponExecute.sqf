@@ -33,7 +33,7 @@ private _fnc_addBackpackWithMagazineState = {
 
 			_unit addBackpack _backpackClass;
 
-			if ((backpack _unit) isEqualTo _backpackClass) then {
+			if ((backpack _unit) == _backpackClass) then {
 				(unitBackpack _unit) setVariable [
 					"A3C_STATIC_MAGAZINE_STATE",
 					_backpackMagazineState,

@@ -29,6 +29,8 @@ private _subSquadWaypointIconSize = ((0.025 * 10^(abs log _mapScale)) min 40) ma
 private _conditionIconOpacity = 1 - (((_mapScale min 0.02) min A3C_OPACITY) / 0.02);
 private _conditionIconOffset = (_conditionIconOpacity * 3) min 1;
 private _conditionIconSize = ((0.08 * 10^(abs log _mapScale)) min 45) max 20;
+private _waypointSelectionCircleSize = 35;
+private _waypointSelectionCircleVerticalOffsetFactor = 0.3;
 
 A3C_HC_WP_SYNC_ARRAYS = [];
 
@@ -1040,6 +1042,83 @@ if (
 								A3C_HC_WP_SYNC_ARRAYS pushBackUnique [_waypoint,_synchronizedWaypoint];
 							};
 						} forEach _synchronizedWaypoints;
+					};
+					// Highlight waypoints belonging to a selected group or the
+					// current multi-waypoint selection. Multi-waypoint selection
+					// takes visual priority.
+
+					private _isMultiWaypointSelected =
+						_waypoint in A3C_Selection_MultiWaypoint;
+
+					if (
+						_isMultiWaypointSelected
+						|| {_isGroupSelected}
+					) then {
+						private _waypointSelectionCircleColor =
+							if (_isMultiWaypointSelected) then {
+								[1,1,0,1]
+							} else {
+								[
+									A3C_UI_COLOR_BLUE,
+									0.15 min A3C_OPACITY
+								] call A3C_ui_shared_fnc_getColorArrayWithOpacity
+							};
+
+						private _waypointSelectionCircleText =
+							if (_isMultiWaypointSelected) then {
+								format [
+									"%1 (%2)",
+									groupID _highCommandGroup,
+									_waypointIndex
+								]
+							} else {
+								""
+							};
+
+						private _waypointSelectionCirclePosition =
+							_waypointPosition;
+
+						private _waypointSelectionCircleScreenPosition =
+							_mapControl ctrlMapWorldToScreen
+								_waypointSelectionCirclePosition;
+
+						if (
+							_waypointSelectionCircleScreenPosition
+								isNotEqualTo []
+						) then {
+							// Screen Y increases downward, so subtracting moves the circle up.
+							_waypointSelectionCircleScreenPosition set
+							[
+								1,
+								(
+									_waypointSelectionCircleScreenPosition
+										select 1
+								)
+									- (
+										(_waypointSelectionCircleSize / 480)
+										* _waypointSelectionCircleVerticalOffsetFactor
+									)
+							];
+
+							_waypointSelectionCirclePosition =
+								_mapControl ctrlMapScreenToWorld
+									_waypointSelectionCircleScreenPosition;
+						};
+
+						_mapControl drawIcon
+						[
+							"\a3\ui_f\data\Map\GroupIcons\selector_selected_ca.paa",
+							_waypointSelectionCircleColor,
+							_waypointSelectionCirclePosition,
+							_waypointSelectionCircleSize,
+							_waypointSelectionCircleSize,
+							0,
+							_waypointSelectionCircleText,
+							0,
+							0.03,
+							"PuristaLight",
+							"right"
+						];
 					};	
 				};
 			} foreach _groupWaypoints;
@@ -1071,6 +1150,8 @@ if (
 				];
 			};
 
+			
+
 			//-- icon macro group
 			{
 				private _groupIconLayer = _x;
@@ -1094,22 +1175,37 @@ if (
 			];
 
 			
-			//-- draw selection indicator Icon
-			
-			private _groupAuxiliaryOpacity = if (_isGroupSelected) then {_groupOpacity} else {_groupOpacity min 0.3};
+			//-- draw selection and speed-limit state icon
+
+			private _speedLimit =
+				_leaderVehicle getVariable ["A3C_LIMIT_SPEED", false];
+
+			private _groupStateIconPath =
+				[
+					_isGroupSelected,
+					_speedLimit
+				] call A3C_ui_shared_fnc_getGroupStateIconPath;
+
+			private _groupAuxiliaryOpacity =
+				if (_isGroupSelected) then {
+					_groupOpacity
+				} else {
+					_groupOpacity min 0.3
+				};
+
 			_mapControl drawIcon
 			[
-				if (_highCommandGroup in A3C_SELECTED_UNITS) then {"\a3\ui_f\data\IGUI\Cfg\IslandMap\iconSelect_ca.paa"} else {"\a3\ui_f\data\IGUI\Cfg\Cursors\board_ca.paa"},
+				_groupStateIconPath,
 				[1,1,1,_groupAuxiliaryOpacity],
 				_groupIconPosition,
-				_groupIconSize * 1.5,
-				_groupIconSize * 1.5,
+				_groupIconSize * 2.2,
+				_groupIconSize * 2.2,
 				0,
 				"",
 				2,
 				0.03,
-				'PuristaLight',
-				'center'
+				"PuristaLight",
+				"center"
 			];
 
 
@@ -1866,24 +1962,24 @@ if (A3C_Boarding_Mapselection_ACTIVE) then {
 
 };
 
-//-- MultiWaypoint - highlight selected Waypoints
-private _selectedWaypointIconSize = 35;
+// //-- MultiWaypoint - highlight selected Waypoints
+// private _selectedWaypointIconSize = 35;
 
-{
-	private _waypoint = _x;
-	_mapControl drawIcon
-	[
-		"\a3\ui_f\data\Map\GroupIcons\selector_selected_ca.paa",
-		[1,1,0,1],
-		waypointPosition _waypoint,
-		_selectedWaypointIconSize,
-		_selectedWaypointIconSize,
-		0,
-		format ["%1 (%2)", groupID (_waypoint select 0), _waypoint select 1],
-		0,
-		0.03,
-		'PuristaLight',
-		'right'
-	];
+// {
+// 	private _waypoint = _x;
+// 	_mapControl drawIcon
+// 	[
+// 		"\a3\ui_f\data\Map\GroupIcons\selector_selected_ca.paa",
+// 		[1,1,0,1],
+// 		waypointPosition _waypoint,
+// 		_selectedWaypointIconSize,
+// 		_selectedWaypointIconSize,
+// 		0,
+// 		format ["%1 (%2)", groupID (_waypoint select 0), _waypoint select 1],
+// 		0,
+// 		0.03,
+// 		'PuristaLight',
+// 		'right'
+// 	];
 
-} foreach A3C_Selection_MultiWaypoint;
+// } foreach A3C_Selection_MultiWaypoint;

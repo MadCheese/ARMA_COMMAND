@@ -22,6 +22,7 @@ A3C_PREP_SUBDIR(public,createDashBoard);
 A3C_PREP_SUBDIR(public,findBestShooters);
 A3C_PREP_SUBDIR(public,getBackgroundColor);
 A3C_PREP_SUBDIR(public,getColorArrayWithOpacity);
+A3C_PREP_SUBDIR(public,getGroupStateIconPath);
 A3C_PREP_SUBDIR(public,getKeybindTranslation);
 A3C_PREP_SUBDIR(public,getKeyBool);
 A3C_PREP_SUBDIR(public,lbSetCurSel);
@@ -39,6 +40,9 @@ A3C_PREP_SUBDIR(public,Tree_labelItems);
 A3C_PREP_SUBDIR(public,Tree_openOrCollapse);
 A3C_PREP_SUBDIR(public,Tree_squad_getSubParentCount);
 A3C_PREP_SUBDIR(public,Tree_synchronize);
+
+
+
 
 // Responses.
 A3C_PREP_SUBDIR(responses,actionDeleteGroupsUiResponse);

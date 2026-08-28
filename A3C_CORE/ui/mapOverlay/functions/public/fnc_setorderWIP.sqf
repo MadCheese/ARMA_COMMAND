@@ -338,7 +338,7 @@ if ((A3C_TEMP_CONDITION select 0) == "TIMEOUT") then {
 	};
 
 	private _action = +A3C_TEMP_ACTION;
-	private _plotTemp = _unit getVariable "A3C_PLOT_TEMP";
+	private _plotTemp = _unit getVariable ["A3C_PLOT_TEMP", []];
 
 	_unit setVariable [
 		"A3C_PLOT_TEMP",

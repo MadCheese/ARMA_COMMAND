@@ -59,6 +59,9 @@ private _parentVehicle = objectParent _unit;
 
 if (!isNull _parentVehicle) then {
 	if (_unit == driver _parentVehicle) then {
-		_parentVehicle limitSpeed false;
+		private _speedLimit = _parentVehicle getVariable ["A3C_LIMIT_SPEED", false];
+		if !(_speedLimit) then {
+			_parentVehicle limitSpeed false;
+		};
 	};
 };

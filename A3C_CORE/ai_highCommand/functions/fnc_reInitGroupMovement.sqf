@@ -4,6 +4,9 @@
 params ["_group"];
 
 private _leader = leader _group;
+private _leaderVehicle = vehicle _leader;
+
+private _speedLimit = _leaderVehicle getVariable ["A3C_LIMIT_SPEED", false];
 
 {
 	private _unit = _x;
@@ -15,7 +18,14 @@ private _leader = leader _group;
 	} forEach ["MOVE", "PATH"];
 
 	if (!isNull _vehicle && {_unit == driver _vehicle}) then {
-		_vehicle limitSpeed false;
+
+		if (
+			!(_speedLimit)
+			|| {_vehicle != _leaderVehicle}
+		) then {
+			_vehicle limitSpeed false;
+		};
+		
 		if (_vehicle isKindOf "AIR") then {
 			private _flyInHeight = _vehicle getVariable ["A3C_FLYINHEIGHT", 75];
 			_vehicle flyInHeight _flyInHeight;

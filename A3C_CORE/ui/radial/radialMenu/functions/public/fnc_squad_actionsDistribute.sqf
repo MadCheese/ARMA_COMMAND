@@ -2,6 +2,8 @@
 #include "..\..\..\..\SHARED\selectionPromptPanel\dialog_defines.hpp"
 #include "..\..\..\..\SHARED\shared_ui_defines.hpp"
 
+// A3C_ui_radialMenu_fnc_squad_actionsDistribute
+
 params ["_display", "_unitArray"]; // _display is the display IDD.
 
 if (isNull (findDisplay _display)) exitWith {};

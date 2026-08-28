@@ -190,7 +190,7 @@ if (_doubleClick) then {
 			private _leaderVehicle = vehicle leader _selectedGroup;
 
 			private _speed = switch (_selectedIndex) do {
-				case (0) : {1000};
+				case (0) : {false};
 				case (1) : {14};
 				case (2) : {11};
 				case (3) : {5};
@@ -198,6 +198,12 @@ if (_doubleClick) then {
 
 			[_leaderVehicle, _speed] remoteExec ["limitSpeed", _leaderVehicle];
 
+			if (_selectedIndex == 0) then {
+				_leaderVehicle setVariable ["A3C_LIMIT_SPEED", nil, true];
+			} else {
+				_leaderVehicle setVariable ["A3C_LIMIT_SPEED", true, true];
+			};
+			
 			[
 				_display,
 				_isMapPrompt

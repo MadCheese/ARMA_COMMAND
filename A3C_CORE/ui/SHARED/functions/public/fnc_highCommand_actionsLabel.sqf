@@ -217,11 +217,9 @@ private _actions = [
 					};
 				};
 				case ("SPEEDLIMIT") : {
-					_button_IMG = "A3C_CORE\ui\pictures\icon_menu_action_groupSpeed.paa";
+					_button_IMG = "A3C_UI\icons\icon_menu_action_groupSpeed.paa";
 					_buttonFnc = {
 						[] call A3C_ui_selectionPromptPanel_fnc_actionLimitSpeedStartPrompt;
-						
-						
 					};
 					_button_toolTip = "Limit Group Speed";
 				};

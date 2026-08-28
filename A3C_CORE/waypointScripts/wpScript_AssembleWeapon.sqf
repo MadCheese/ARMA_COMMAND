@@ -20,20 +20,39 @@ private _wpIndex = currentWaypoint _group;
 private _wp = [_group,_wpIndex];
 private _leader = leader _group;
 private _leaderVic = vehicle _leader;
-private _precision = (getNumber (configfile >> "CfgVehicles" >> (typeOf _leaderVic) >> "precision")) * 1.3;
+
+private _precision = 15; //-- 15 is a safe allowed distance, but units will continue to move until unitReady == true
 
 
 if !(_group getVariable ["A3C_ASSEMBLING",false]) then {
+
 	//-- WAIT FOR ARRIVAL
-	while {_leaderVic distance2d _pos >= _precision} do { //--_precision
+	private _arrived = false;
+
+	while {!_arrived} do {
+
+		_leader = leader _group;
+		_leaderVic = vehicle _leader;
+
 		_wPos = waypointPosition _wp;
+
 		{_x set [2,0]} foreach [_pos, _wPos];
+
 		if !(_pos isEqualTo _wPos) then {
 			_pos = _wPos;
 		};
-		[_group,_pos] call A3C_ai_shared_fnc_approachWaypointRegular;
-		sleep 5;
+
+		if (_leaderVic distance2d _pos < _precision) then {
+			_arrived = unitReady _leader;
+		} else {
+			[_group,_pos] call A3C_ai_shared_fnc_approachWaypointRegular;
+		};
+
+		if (!_arrived) then {
+			sleep 5;
+		};
 	};
+
 };
 
 

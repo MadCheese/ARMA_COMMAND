@@ -227,6 +227,10 @@ _condition = if (
 	(waypointStatements _wp) select 0
 };
 
+_condition = if (!isNil '_condition') then {_condition} else {"true"}; //-- safety mechanic to avoid script error
+
+
+
 private _wpType = waypointType _wp;
 
 _actionScript = switch (true) do {

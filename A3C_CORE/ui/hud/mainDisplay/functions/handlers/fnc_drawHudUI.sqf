@@ -208,6 +208,10 @@ if (
 				};
 			} forEach _groupUnits;
 
+			private _speedLimit = _leadVehicle getVariable ["A3C_LIMIT_SPEED", false];
+
+			//-- Draw group icon
+
 			drawIcon3D [
 				_iconType,
 				_blueAlpha03,
@@ -219,28 +223,50 @@ if (
 				0
 			];
 
-			if (
-				_group in A3C_RD_UNITS
-				|| {
-					{
-						group _x != _group
-					} count crew _leadVehicle > 0
-				}
-			) then {
-				private _frameColor = if (
-					_group in A3C_RD_UNITS
-				) then {
-					[1, 1, 1, 1]
-				} else {
-					[0.5, 0.2, 0.6, 0.1]
-				};
+			private _isGroupSelected = _group in A3C_RD_UNITS;
 
-				drawIcon3D [
-					"\a3\ui_f\data\IGUI\Cfg\IslandMap\iconSelect_ca.paa",
+			private _hasOtherGroupCrew =
+				{
+					group _x != _group
+				} count crew _leadVehicle > 0;
+
+			if (
+				_isGroupSelected
+				|| {_hasOtherGroupCrew}
+				|| {_speedLimit}
+			) then {
+				// Both an actual selection and the purple cargo state use the
+				// intact/selected hexagon variant.
+				private _useSelectedVariant =
+					_isGroupSelected
+					|| {_hasOtherGroupCrew};
+
+				private _groupStateIconPath =
+					[
+						_useSelectedVariant,
+						_speedLimit
+					] call A3C_ui_shared_fnc_getGroupStateIconPath;
+
+				private _frameColor =
+					if (_isGroupSelected) then {
+						// Selection takes priority over the purple cargo state.
+						[1,1,1,1]
+					} else {
+						if (_hasOtherGroupCrew) then {
+							[0.5,0.2,0.6,0.1]
+						} else {
+							// Unselected, no cargo, but speed-limited.
+							[1,1,1,0.6]
+						};
+					};
+
+				drawIcon3D
+				[
+					_groupStateIconPath,
 					_frameColor,
 					_iconPosition,
-					_iconSize * 1.6,
-					_iconSize * 1.6,
+					_iconSize * 2.2,
+					_iconSize * 2.2,
 					0,
 					"",
 					1,

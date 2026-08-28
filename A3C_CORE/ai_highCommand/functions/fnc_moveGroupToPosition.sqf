@@ -78,16 +78,25 @@ if (
 		//-- NOTE: _groupDrivers includes foot soldiers
 		private _groupDrivers = (units _group) select {_x == driver vehicle _x};
 		private _groupVehicles = (_groupDrivers select {!isNull (objectParent _x)}) apply { objectParent _x };
+		private _leaderVehicle = vehicle _leader;
+		private _speedLimit = _leaderVehicle getVariable ["A3C_LIMIT_SPEED", false];
 
 		//-- Step 1: Vehicle movement security
 		{
-			_x engineOn true;
-			_x limitSpeed false;
+			private _vehicle = _x;
+			_vehicle engineOn true;
 
-			if (_x isKindOf "HELICOPTER") then {
-				_x land "NONE";
-				private _altitude = _x getVariable ["A3C_FLYINHEIGHT", 75];
-				_x flyInHeight _altitude;
+			if (
+				!(_speedLimit)
+				|| {_vehicle != _leaderVehicle}
+			) then {
+				_vehicle limitSpeed false;
+			};
+
+			if (_vehicle isKindOf "HELICOPTER") then {
+				_vehicle land "NONE";
+				private _altitude = _vehicle getVariable ["A3C_FLYINHEIGHT", 75];
+				_vehicle flyInHeight _altitude;
 			};
 		} forEach _groupVehicles;
 

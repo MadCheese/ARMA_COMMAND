@@ -1,6 +1,6 @@
 // A3C_ai_highCommand_fnc_actionGroupHealDispatch
 
-[] call A3C_ui_shared_fnc_mapRadial_actionStandardResponse;
+[] spawn A3C_ui_shared_fnc_mapRadial_actionStandardResponse;
 
 private _group = A3C_SELECTED_HC_GROUPS_SETTINGS param [
 	0,

@@ -159,7 +159,7 @@ private _legacyPatients = [];
 		_unit playMoveNow _resetAnimation;
 		_unit enableAI "ANIM";
 	};
-	
+
 	_unit setUnitPos "AUTO";
 	_unit lookAt objNull;
 } forEach units _group;
@@ -841,7 +841,7 @@ private _fnc_updateRepairAnimations = {
 
 					[_actor, position _patient] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
 					_actor disableAI "ANIM";
-					_actor switchMove _nextAnimation;
+					[_actor, _nextAnimation] remoteExec ["switchMove", 0]; //-- switchmove needs to be executed globally
 
 				};
 			};
