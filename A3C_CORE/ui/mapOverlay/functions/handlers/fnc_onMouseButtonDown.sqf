@@ -96,6 +96,8 @@ A3C_LB_TICKTIME = time;
 A3C_CLICKPOS_1 = (_map1 posscreentoworld [_sx,_sy]);
 
 A3C_HC_TOSWITCH = [grpNull,-1];
+A3C_HC_WP_DRAG_SNAPSHOT = [];
+A3C_HC_WP_DRAG_ROAD_STATE = [];
 
 
 //-- Artillery Shortcut 
@@ -257,26 +259,98 @@ if !(_isHighCommand) then {
 							A3C_Selection_MultiWaypoint set [count A3C_Selection_MultiWaypoint, _wp];
 						};
 					} else {
-						//-- waypoint marker about to be moved
+						//-- Waypoint marker about to be moved
 						A3C_BOOL_MAP_MU = true;
 						A3C_BOOL_MOUSEMOVING = true;
-						A3C_HC_TOSWITCH = [_gp,_wp_Index];
+						A3C_HC_TOSWITCH = [_gp, _wp_Index];
 						A3C_HC_ACTIVEGROUP = _gp;
 						A3C_HC_ACTIVE_IND = _wp_Index;
 						A3C_UI_MAP_BOOL_isHCWaypointPosEdit = true;
 
-						//-- Clear A3C_Selection_MultiWaypoint if the clicked waypoint is not within it
-						//-- otherwise the UX feels weird
-						if !([_gp, _wp_Index] in A3C_Selection_MultiWaypoint) then {
+						private _clickedWaypoint = [
+							_gp,
+							_wp_Index
+						];
+
+						//-- Clear A3C_Selection_MultiWaypoint if the clicked waypoint
+						//-- is not within it; otherwise the UX feels weird.
+						if !(_clickedWaypoint in A3C_Selection_MultiWaypoint) then {
 							A3C_Selection_MultiWaypoint = [];
 						};
-						
-						if ("plantExplosives" in (waypointScript [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND])) then {
+
+						//-- Capture the initial relative positions of the selected portion
+						//-- of a relevant waypoint bundle. The selection may contain any
+						//-- part of the bundle, but no waypoints outside that bundle.
+						A3C_HC_WP_DRAG_SNAPSHOT = [];
+
+						private _relevantBundle = [
+							_clickedWaypoint
+						] call A3C_main_fnc_getRelevantWaypointBundle;
+
+						//-- Preserve the permanent bundle order rather than selection order.
+						private _selectedBundleWaypoints =
+							_relevantBundle select {
+								_x in A3C_Selection_MultiWaypoint
+							};
+
+						private _isBundleOnlySelection =
+							count _selectedBundleWaypoints > 1
+							&& {
+								count _selectedBundleWaypoints
+									== count A3C_Selection_MultiWaypoint
+							}
+							&& {
+								_clickedWaypoint in _selectedBundleWaypoints
+							};
+
+						if (_isBundleOnlySelection) then {
+							private _anchorPosition =
+								waypointPosition _clickedWaypoint;
+
+							private _relativePositions =
+								_selectedBundleWaypoints apply {
+									private _waypointPosition =
+										waypointPosition _x;
+
+									[
+										_x,
+										[
+											(_waypointPosition select 0)
+												- (_anchorPosition select 0),
+											(_waypointPosition select 1)
+												- (_anchorPosition select 1)
+										]
+									]
+								};
+
+							private _anchorIndex =
+								_relevantBundle
+									find _clickedWaypoint;
+
+							A3C_HC_WP_DRAG_SNAPSHOT = [
+								_clickedWaypoint,
+								_anchorIndex,
+								_relativePositions
+							];
+						};
+
+						if (
+							"plantExplosives" in (
+								waypointScript [
+									A3C_HC_ACTIVEGROUP,
+									A3C_HC_ACTIVE_IND
+								]
+							)
+						) then {
 							A3C_HC_DETONATION_BOOL = true;
 						};
-						
+
 						A3C_MMCode = {
-							[A3C_HC_TOSWITCH,_this] spawn A3C_ui_mapOverlay_fnc_onDragMapHCWP;
+							[
+								A3C_HC_TOSWITCH,
+								_this,
+								+A3C_HC_WP_DRAG_SNAPSHOT
+							] call A3C_ui_mapOverlay_fnc_onDragMapHCWP;
 						};
 					};
 						
@@ -831,7 +905,7 @@ if (A3C_MAP_CommandMode == "HC" && !(_ctrl)) exitWith {
 					};
 				} else {
 
-					[_refArray,_clickPos] spawn A3C_ai_highCommand_fnc_convoyMultigroup;
+					[_refArray,_clickPos] call A3C_ai_highCommand_fnc_convoyMultigroup;
 					
 				};
 

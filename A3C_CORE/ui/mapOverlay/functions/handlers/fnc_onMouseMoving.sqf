@@ -2,10 +2,12 @@
 #include "..\..\dialog_defines.hpp"
 #include "..\..\..\SHARED\shared_ui_defines.hpp"
 
-
-
-// player sideChat "A3C_UI_MAP_onOnMouseMoving_Overlay";
-params ["_display","_sX","_sY","_unUsed"];
+params [
+	"_display",
+	"_sX",
+	"_sY",
+	"_unUsed"
+];
 
 A3C_MAP_X = _sX;
 A3C_MAP_Y = _sY;
@@ -23,16 +25,48 @@ private _ctls = [
 	IDC_MAP_HCGP_Parent
 ];
 
-
-if ({[[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl _x] call MCSS_fnc_isClickPosInCtrlArea} count _ctls > 0) then {
-	(findDisplay 12 displayCtrl 51) ctrlEnable false;
+if (
+	{
+		[
+			[_sX, _sY],
+			findDisplay IDD_MAP_OVERLAY
+				displayCtrl _x
+		] call MCSS_fnc_isClickPosInCtrlArea
+	} count _ctls > 0
+) then {
+	(findDisplay 12 displayCtrl 51)
+		ctrlEnable false;
 } else {
-	(findDisplay 12 displayCtrl 51) ctrlEnable true;
-	ctrlSetFocus (findDisplay 12 displayCtrl 51);
+	(findDisplay 12 displayCtrl 51)
+		ctrlEnable true;
+
+	ctrlSetFocus (
+		findDisplay 12 displayCtrl 51
+	);
+
 	if (A3C_MapSel_Field_Active) then {
-		A3C_MapSel_Field_DEST = (findDisplay 12 displayCtrl 51) posscreentoworld [A3C_MAP_X,A3C_MAP_Y];
+		A3C_MapSel_Field_DEST =
+			(findDisplay 12 displayCtrl 51)
+				posScreenToWorld [
+					A3C_MAP_X,
+					A3C_MAP_Y
+				];
 	};
+
 	if (A3C_BOOL_MOUSEMOVING) then {
-		_this spawn A3C_MMCode;
+		/*
+		 * HC waypoint road dragging performs route work and must have
+		 * only one active invocation. Executing it synchronously
+		 * prevents mouse-move events from creating a queue of stale
+		 * scheduled route calculations.
+		 *
+		 * Other map-drag callbacks retain their established scheduled
+		 * execution behaviour.
+		 */
+		if (A3C_UI_MAP_BOOL_isHCWaypointPosEdit) then {
+			_this call A3C_MMCode;
+		} else {
+			_this spawn A3C_MMCode;
+		};
 	};
-};	
+};

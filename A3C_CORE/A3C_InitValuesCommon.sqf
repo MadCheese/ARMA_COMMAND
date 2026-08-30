@@ -58,6 +58,7 @@ A3C_CarrierArray =
 A3C_HUMAN_HITPOINTS = ["HitAbdomen","HitArms","HitChest","HitDiaphragm","HitFace","HitHands","HitHead","HitLegs","HitNeck","HitPelvis"];
 
 
+A3C_WAYPOINT_UID_COUNTER_LOCAL = 0;
 
 
 A3C_UI_COLOR_RED = [0.5,0,0,1];
@@ -328,6 +329,9 @@ if (isDedicated) then {
 
 	A3C_DEDI_allowLocalitySwitch = true;
 };
+
+A3C_WAYPOINT_BUNDLES = [];
+publicVariable "A3C_WAYPOINT_BUNDLES";
 
 A3C_DETO_VIC_INDEX = 0;
 publicVariable 'A3C_DETO_VIC_INDEX';

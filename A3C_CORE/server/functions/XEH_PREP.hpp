@@ -17,6 +17,8 @@ A3C_PREP(pruneTurnOutVehicleRegistry);
 
 
 A3C_PREP(registerTurnOutVehicle);
+A3C_PREP(registerWaypointBundle);
+
 
 A3C_PREP(removeEventhandlerTurnout);
 

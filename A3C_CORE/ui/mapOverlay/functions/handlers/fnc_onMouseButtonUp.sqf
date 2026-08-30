@@ -7,6 +7,15 @@ private ["_exit","_sX","_sY","_sPos","_marker","_veh","_unit","_wpData"];
 A3C_BOOL_MAP_MD = false;
 A3C_BOOL_MOUSEMOVING = false;
 
+/*
+ * Prevent any later mouse-move event from invoking the completed
+ * drag callback.
+ */
+A3C_MMCode = {};
+
+A3C_HC_WP_DRAG_SNAPSHOT = [];
+A3C_HC_WP_DRAG_ROAD_STATE = [];
+
 // #TODO: Optimize
 
 

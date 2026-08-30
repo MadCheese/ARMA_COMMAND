@@ -2,8 +2,6 @@
 
 params ["_inputUnits","_refPos"];
 
-private _wpPositions = [_refPos,_inputUnits,count _inputUnits, (_refPos getDir (leader (_inputUnits select 0))) + 180,20 ] call A3C_main_fnc_generateWpWedgePositions;
-//systemchat str (_inputUnits);
 
 private _lastUnit = grpNull;
 private _convoyArrayIndex = -1;
@@ -18,11 +16,27 @@ private _infantryOnly = true;
 } forEach _inputUnits;
 
 if (_infantryOnly) exitWith {
+	private _wpPositions = [
+		_refPos,
+		_inputUnits,
+		count _inputUnits,
+		(
+			_refPos getDir
+				leader (_inputUnits select 0)
+		) + 180,
+		20
+	] call A3C_main_fnc_generateWpWedgePositions;
+
 	{
-		private _gp = _x;
-		private _wpPos = _wpPositions select _forEachIndex;
-		private _wpParams = [_gp,_wpPos];
-		_wpParams call A3C_ai_highCommand_fnc_addWaypoint;
+		private _group = _x;
+
+		private _waypointPosition =
+			_wpPositions select _forEachIndex;
+
+		[
+			_group,
+			_waypointPosition
+		] call A3C_ai_highCommand_fnc_addWaypoint;
 	} forEach _inputUnits;
 };
 
@@ -100,12 +114,50 @@ _freeGroups =
 	"ASCEND"
 ] call BIS_fnc_sortBy;
 
+/*
+ * This is the permanent convoy order used for position generation,
+ * waypoint assignment and waypoint-bundle registration.
+ *
+ * Existing convoy groups retain their stored order. Newly added
+ * groups are appended in their newly established order.
+ */
+private _orderedGroups =
+	_convoyGroupsActive + _freeGroups;
+
+if (_orderedGroups isEqualTo []) exitWith {};
+
+private _wpPositions = [
+	_refPos,
+	_orderedGroups,
+	count _orderedGroups,
+	(
+		_refPos getDir
+			leader (_orderedGroups select 0)
+	) + 180,
+	20
+] call A3C_main_fnc_generateWpWedgePositions;
+
+private _createdWaypoints = [];
+
 {
-	private _gp = _x;
-	private _wpPos = _wpPositions select _forEachIndex;
-	private _wpParams = [_gp,_wpPos];
-	_wpParams call A3C_ai_highCommand_fnc_addWaypoint;
-} forEach (_convoyGroupsActive + _freeGroups);
+	private _gp =
+		_x;
+
+	private _wpPos =
+		_wpPositions select _forEachIndex;
+
+	private _wpParams = [
+		_gp,
+		_wpPos
+	];
+
+	private _wp =
+		_wpParams call A3C_ai_highCommand_fnc_addWaypoint;
+
+	if !(_wp isEqualTo []) then {
+		_createdWaypoints pushBack _wp;
+	};
+} forEach _orderedGroups;
 
 if (_isAirOnly) exitWith {
 	[] spawn {
@@ -113,6 +165,32 @@ if (_isAirOnly) exitWith {
 		sleep 3;
 		hintSilent "";
 	};
+};
+
+if (count _createdWaypoints > 1) then {
+	private _waypointBundle = [];
+
+	{
+		private _waypointUID = format [
+			"A3C_CONVOY_WP_%1_%2",
+			clientOwner,
+			A3C_WAYPOINT_UID_COUNTER_LOCAL
+		];
+
+		_x setWaypointName _waypointUID;
+
+		_waypointBundle pushBack [
+			_x select 0,
+			_waypointUID
+		];
+
+		A3C_WAYPOINT_UID_COUNTER_LOCAL = A3C_WAYPOINT_UID_COUNTER_LOCAL + 1;
+	} forEach _createdWaypoints;
+
+	[_waypointBundle] remoteExecCall [
+		"A3C_server_fnc_registerWaypointBundle",
+		2
+	];
 };
 
 private _doConvoyBehaviour = count _freeGroups > 0 && {{isNull objectParent (leader _x)} count _freeGroups == 0};
