@@ -92,6 +92,8 @@ _waypoint setWaypointScript _waypointScript;
 private _currentWaypointStatements = waypointStatements _waypoint;
 _currentWaypointStatements params ["_currentCondition", "_currentStatements"];
 
+// hint str  [_currentCondition, _currentStatements + _statements];
+
 _waypoint setWaypointStatements [_currentCondition, _currentStatements + _statements];
 _waypoint setWaypointSpeed _waypointSpeed;
 

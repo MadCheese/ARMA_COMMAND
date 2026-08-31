@@ -126,7 +126,7 @@ private _distributedPositions = [
 				_statements = format [
 					"
 						[['%1',this,[['GoCode','%2'],'COMBATLANDING'],'LINE',(currentWaypoint (group this))],A3C_ai_highCommand_fnc_insertActionWaypoint,nil,false] remoteExec ['bis_fnc_call',0];
-						[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint
+						[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint;
 					",
 					_playerUID,
 					_subCondition

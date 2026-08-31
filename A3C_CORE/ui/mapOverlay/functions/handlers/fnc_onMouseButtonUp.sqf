@@ -339,7 +339,7 @@ if (A3C_BOOL_DRAGLINE && {A3C_CONNECTING_MODE == "HCSYNC"}) exitWith  {
 							_wp setWaypointStatements
 							[
 								"true",
-								"if !(false) then {[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint}; "
+								"if !(false) then {[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint;}; "
 							];
 						};
 						
@@ -809,15 +809,8 @@ if (!isNull _hcGroup) then {
 				_wpToEdit setWaypointType "SCRIPTED";
 				_wpToEdit setWaypointScript (format ["A3C_CORE\waypointScripts\wpScript_CLEARBUILDING.sqf ['%1',['ARRIVAL','']]",getPlayerUID player]);
 
-				_statementsExec = "if !(false) then {[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint};"; //format
-				//[
-				//	"
-				//		if !(false) then {[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint};
-				//		['%1',this,[['NONE','NONE'],'CLEARBUILDING'],'NO CHANGE',%2] call A3C_ai_highCommand_fnc_insertActionWaypoint;
-				//	",
-				//	getPlayerUID player,
-				//	_wpID
-				//];
+				_statementsExec = "if !(false) then {[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint;};"; //format
+
 				_wpToEdit setWaypointStatements ["true",_statementsExec];
 				private _data = _hcGroup getvariable ["A3C_UNIT_POLYS",[]];
 				{
@@ -834,7 +827,7 @@ if (!isNull _hcGroup) then {
 					//systemchat str _wpToEdit;
 					_wpToEdit setWaypointType "MOVE";
 					_wpToEdit setWaypointScript "";
-					_wpToEdit setWaypointStatements ["true","if !(false) then {[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint};"];
+					_wpToEdit setWaypointStatements ["true","if !(false) then {[(group this)] call A3C_ai_highCommand_fnc_completeWaypoint;};"];
 				};
 				if (_wpID == _activeWPindex) then {
 					{

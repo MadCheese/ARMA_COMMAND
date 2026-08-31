@@ -504,12 +504,14 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 	};
 
 	{_funcsCurr pushBack _x} foreach (_statements splitString ";");
+
 	private _funcsFinal = "";
 
 	{
-		_funcsFinal = _funcsFinal + _x;
-		if (_foreachIndex < ((count _funcsCurr)-1) ) then {
-			_funcsFinal = _funcsFinal + "; ";
+		_funcsFinal = _funcsFinal + _x + ";";
+
+		if (_foreachIndex < ((count _funcsCurr) - 1)) then {
+			_funcsFinal = _funcsFinal + " ";
 		};
 
 	} foreach _funcsCurr;
@@ -525,6 +527,8 @@ if !(A3C_HC_EDIT_ACTION in ["DEMOLITION"]) then {
 	};
 	_wp setWaypointScript _wpScript; //-- this has to be here to change to "" when type is not SCRIPTED
 	_timeout = if (_wpScript == "") then {[_timeout,_timeout,_timeout]} else {[0,0,0]};
+
+
 	_wp setWaypointStatements [_condsFinal,_funcsFinal];
 	_wp setWaypointFormation A3C_HC_ACTIVE_FORM_PRE;
 	_wp setWaypointTimeout _timeout;

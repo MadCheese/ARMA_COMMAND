@@ -1,5 +1,7 @@
 // A3C_ai_highCommand_fnc_insertActionWaypoint
 
+
+
 if (isNil "A3C_IsA3CServer") exitWith {};
 
 params [

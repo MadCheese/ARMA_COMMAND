@@ -9,7 +9,11 @@ if !(_mode in ["DISABLE", "ENABLE"]) exitWith {
 	];
 };
 
-private _modeString = if (_mode == "DISABLE") then {"true"} else {""};
+private _modeString = if (_mode == "DISABLE") then {
+	"true"
+} else {
+	""
+};
 
 {
 	inGameUISetEventHandler [
@@ -20,3 +24,7 @@ private _modeString = if (_mode == "DISABLE") then {"true"} else {""};
 	"PrevAction",
 	"NextAction"
 ];
+
+if (_mode == "ENABLE") then {
+	showHUD ([true] + (shownHUD select [1, 10]));
+};

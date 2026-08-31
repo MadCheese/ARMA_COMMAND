@@ -1,6 +1,8 @@
 // A3C_ai_highCommand_fnc_changeWaypointData
 params ["_group","_waypointIndex","_dataType","_dataReplace"];
 
+
+
 private _statements = ["",""];
 
 switch (_dataType) do {

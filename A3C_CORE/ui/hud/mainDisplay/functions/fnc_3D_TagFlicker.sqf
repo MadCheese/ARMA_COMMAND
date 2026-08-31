@@ -77,3 +77,4 @@ A3C_UI_HUD_3D_TAG_ICON_SIZE = 3;
 A3C_UI_HUD_3D_TAG_ICON_POS = [0, 0, 0];
 A3C_UI_HUD_3D_TAG_ICON_MOD = "NONE";
 A3C_UI_HUD_3D_TAGGING = false;
+A3C_UI_HUD_3D_TAG_ICON_TYPE = ""; //-- just for good measure as it kept lingering sometimes

@@ -147,17 +147,40 @@ if (A3C_HC_EDIT_ACTION == "SLING LOAD" && {count A3C_PICKUP_OBJECTS > 0}) exitWi
 	A3C_UI_MAPICONS_PICKUP = [A3C_UI_MAPICONS_PICKUP,[],{(_x select 2) distance2D _sPos},"ASCEND"] call BIS_fnc_sortBy;
 	private _slingIcons =(["SLINGLOAD",_sx,_sy] call A3C_ui_mapOverlay_fnc_getIconsAtMapPos);
 	A3C_PICKUP_OBJECTS = []; //-- remove UI
+
 	if (count _slingIcons > 0) then {
 		private _slingIcon = _slingIcons select 0;
 		private _veh = (_slingIcon select 0);
-		
-		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] setWaypointPosition [(position _veh),0];
-		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] setWayPointType "HOOK";
-		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] waypointAttachVehicle _veh;
-		private _statements = waypointStatements [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND];
-		_statements set [1, (_statements select 1) + " 'SLING LOAD HOOK'; " ]; //-- just to have something for the UI to read
-		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] setWaypointStatements _statements;
-		
+
+		private _group = A3C_HC_ACTIVEGROUP;
+		private _wpIndex = A3C_HC_ACTIVE_IND;
+		private _groupLeader = leader _group;
+
+		[
+			[_group,_wpIndex,_veh],
+			{
+				params ["_group","_wpIndex","_veh"];
+
+				private _groupVehicle = vehicle (leader _group);
+
+				//-- precaution: if group was created with createVehicleCrew, vehicle is not in pool and slingload fails
+				//-- Feedback tracker T121306
+				if !(_groupVehicle in assignedVehicles _group) then {
+					_group addVehicle _groupVehicle;
+				};
+
+				private _wp = [_group,_wpIndex];
+
+				_wp setWaypointPosition [(position _veh),0];
+				_wp setWaypointType "HOOK";
+				_wp waypointAttachVehicle _veh;
+
+				private _statements = waypointStatements _wp;
+				_statements set [1, (_statements select 1) + " 'SLING LOAD HOOK'; " ]; //-- just to have something for the UI to read
+
+				_wp setWaypointStatements _statements;
+			}
+		] remoteExecCall ["BIS_fnc_call",_groupLeader];
 	};
 };
 

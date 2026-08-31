@@ -51,7 +51,7 @@ if (
 	false
 };
 
-hint "CONTROL THE VEHICLE WITH ARROW KEYS. CANCEL REMOTE WITH CTRL+RMB";
+hintSilent "CONTROL THE VEHICLE WITH ARROW KEYS. CANCEL REMOTE WITH CTRL+RMB";
 
 private _speedLimit = if (_shift) then {
 	15
