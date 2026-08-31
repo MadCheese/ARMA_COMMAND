@@ -137,25 +137,55 @@ private _wpPositions = [
 	20
 ] call A3C_main_fnc_generateWpWedgePositions;
 
-private _createdWaypoints = [];
+private _waypointBundle = [];
+
+private _createWaypointBundle =
+	!_isAirOnly
+	&& {count _orderedGroups > 1};
 
 {
-	private _gp =
-		_x;
+	private _gp = _x;
 
 	private _wpPos =
 		_wpPositions select _forEachIndex;
 
+	private _waypointUID = "";
+
+	if (_createWaypointBundle) then {
+		_waypointUID = format [
+			"A3C_CONVOY_WP_%1_%2",
+			clientOwner,
+			A3C_WAYPOINT_UID_COUNTER_LOCAL
+		];
+
+		A3C_WAYPOINT_UID_COUNTER_LOCAL =
+			A3C_WAYPOINT_UID_COUNTER_LOCAL + 1;
+	};
+
 	private _wpParams = [
 		_gp,
-		_wpPos
+		_wpPos,
+		[],
+		"MOVE",
+		nil,
+		false,
+		-1,
+		_waypointUID
 	];
 
 	private _wp =
 		_wpParams call A3C_ai_highCommand_fnc_addWaypoint;
 
-	if !(_wp isEqualTo []) then {
-		_createdWaypoints pushBack _wp;
+	if (
+		_createWaypointBundle
+		&& {!isNil "_wp"}
+		&& {_wp isEqualType []}
+		&& {count _wp == 2}
+	) then {
+		_waypointBundle pushBack [
+			_wp select 0,
+			_waypointUID
+		];
 	};
 } forEach _orderedGroups;
 
@@ -167,26 +197,7 @@ if (_isAirOnly) exitWith {
 	};
 };
 
-if (count _createdWaypoints > 1) then {
-	private _waypointBundle = [];
-
-	{
-		private _waypointUID = format [
-			"A3C_CONVOY_WP_%1_%2",
-			clientOwner,
-			A3C_WAYPOINT_UID_COUNTER_LOCAL
-		];
-
-		_x setWaypointName _waypointUID;
-
-		_waypointBundle pushBack [
-			_x select 0,
-			_waypointUID
-		];
-
-		A3C_WAYPOINT_UID_COUNTER_LOCAL = A3C_WAYPOINT_UID_COUNTER_LOCAL + 1;
-	} forEach _createdWaypoints;
-
+if (count _waypointBundle > 1) then {
 	[_waypointBundle] remoteExecCall [
 		"A3C_server_fnc_registerWaypointBundle",
 		2

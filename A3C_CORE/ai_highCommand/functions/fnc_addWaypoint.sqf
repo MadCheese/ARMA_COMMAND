@@ -22,7 +22,8 @@ params [
 		]
 	],
 	["_isLoopWaypoint", false],
-	["_waypointIndex", -1]
+	["_waypointIndex", -1],
+	["_waypointName", "", [""]]
 ];
 
 
@@ -126,10 +127,29 @@ if (_isFirstWaypoint) then {
 	};
 };
 
-private _groupWaypointPair = if (_waypointIndex == -1 || {_isFirstWaypoint}) then {
-	[_group, _group addWaypoint [_waypointPosition, 0]]
+private _groupWaypointPair = if (
+	_waypointIndex == -1
+	|| {_isFirstWaypoint}
+) then {
+	[
+		_group,
+		_group addWaypoint [
+			_waypointPosition,
+			0,
+			-1,
+			_waypointName
+		]
+	]
 } else {
-	[_group, _group addWaypoint [_waypointPosition, 0, _waypointIndex]]
+	[
+		_group,
+		_group addWaypoint [
+			_waypointPosition,
+			0,
+			_waypointIndex,
+			_waypointName
+		]
+	]
 };
 
 private _waypoint = _groupWaypointPair select 1;
