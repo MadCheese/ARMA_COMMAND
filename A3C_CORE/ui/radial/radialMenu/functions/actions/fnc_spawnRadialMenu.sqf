@@ -2,6 +2,7 @@
 #include "..\..\dialog_defines.hpp"
 #include "..\..\..\settingsMenu\dialog_defines.hpp"
 #include "..\..\..\..\mapOverlay\dialog_defines.hpp"
+#include "..\..\..\..\hud\squadPlacement\dialog_defines.hpp"
 
 
 // A3C_ui_radialMenu_fnc_spawnRadialMenu

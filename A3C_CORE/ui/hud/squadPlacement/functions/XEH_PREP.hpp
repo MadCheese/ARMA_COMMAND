@@ -1,4 +1,5 @@
 // Internal dialog functions.
+A3C_PREP(applyLayout);
 A3C_PREP(cacheGroups);
 A3C_PREP(cacheControls);
 A3C_PREP(ctrl);

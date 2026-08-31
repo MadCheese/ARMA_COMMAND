@@ -40,6 +40,11 @@ switch (_var) do {
     case "A3C_HUD_RES_VAR": {
     };
 
+    case "A3C_HUD_LAYOUT_CORNER": {
+        // Immediately reposition any existing squad-placement HUD controls.
+        [] call A3C_UI_squadPlacement_fnc_applyLayout;
+    };
+
     case "A3C_HUD_OBJECTS": {
     };
 };
