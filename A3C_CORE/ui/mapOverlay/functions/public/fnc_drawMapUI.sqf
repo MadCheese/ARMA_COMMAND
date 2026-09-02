@@ -695,7 +695,17 @@ if (
 		private _canDrawGroup = !captive _groupLeader OR {_highCommandGroup == group player};
 
 		if (_canDrawGroup) then {
-			private _groupColorName = toLower (_highCommandGroup getVariable ["A3C_HC_GroupColor","blue"]);
+			private _groupColorName = toLower (
+				_highCommandGroup getVariable [
+					"A3C_HC_GroupColor",
+					switch (side _highCommandGroup) do {
+						case (west) : {"blue"};
+						case (east) : {"red"};
+						case (resistance) : {"green"};
+						default {"blue"};
+					}
+				]
+			);
 			_groupIconColor = switch (_groupColorName) do {
 				case ("red") : {[A3C_UI_COLOR_RED,_groupOpacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
 				case ("blue") : {[A3C_UI_COLOR_BLUE,_groupOpacity] call A3C_ui_shared_fnc_getColorArrayWithOpacity};
@@ -1083,8 +1093,10 @@ if (
 								_waypointSelectionCirclePosition;
 
 						if (
-							_waypointSelectionCircleScreenPosition
-								isNotEqualTo []
+							_waypointIconPath isEqualTo "\a3c_ui\markers\icon_waypoint_maps.paa"
+							&& {
+								_waypointSelectionCircleScreenPosition isNotEqualTo []
+							}
 						) then {
 							// Screen Y increases downward, so subtracting moves the circle up.
 							_waypointSelectionCircleScreenPosition set

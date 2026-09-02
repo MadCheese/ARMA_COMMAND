@@ -402,7 +402,7 @@ private _originalRooms = +(_roomArrays);
 						_unit setvariable ["A3C_ABORT_Data",[true,false],true];
 					};
 
-					systemchat 'error 1 clearb / or unit is dead';
+					// systemchat 'error 1 clearb / or unit is dead';
 
 					_unit setVariable ["A3C_CLEARING",false,true];
 					_team = _team - [_unit];

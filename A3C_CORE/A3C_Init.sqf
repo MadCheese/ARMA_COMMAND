@@ -117,6 +117,9 @@ call compile preprocessFileLineNumbers "A3C_CORE\ai_highCommand\functions\initFu
 call compile preprocessFileLineNumbers "A3C_CORE\ai_shared\functions\initFunctions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ai_rail\functions\initFunctions.sqf";
 
+//-- Debug
+call compile preprocessFileLineNumbers "A3C_CORE\Debug\initFunctions.sqf";
+
 
 
 if (isDedicated) exitWith {};
@@ -202,8 +205,7 @@ call compile preprocessFileLineNumbers "A3C_CORE\ui\arsenal\functions\initFuncti
 call compile preprocessFileLineNumbers "A3C_CORE\eventhandlers\player\functions\initFunctions.sqf";
 
 
-//-- Debug
-call compile preprocessFileLineNumbers "A3C_CORE\Debug\initFunctions.sqf";
+
 
 
 

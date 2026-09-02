@@ -29,6 +29,10 @@ if (
 	|| {isNil "_destination"}
 ) exitWith {};
 
+if (A3C_Debug) then {
+	(format ["fnc_doMove: %1 (%2 | %3) to %4", _unit, groupID (group _unit), side _unit,  _destination]) call A3C_Debug_fnc_log;
+};
+
 //-- Invalid position: issuing this order would send the unit to world origin.
 if (_destination distance2D [0, 0, 0] < 0.1) exitWith {};
 

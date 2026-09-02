@@ -8,6 +8,8 @@
 
 private _input = _this;
 
+
+
 //-- Ensure the base input is an array with exactly 2 elements
 if (
 	!(_input isEqualType [])
@@ -15,6 +17,10 @@ if (
 ) exitWith {};
 
 _input params ["_group", "_secondaryArgument"];
+
+if (A3C_Debug) then {
+	(format ["fnc_moveGroupToPosition: %1 (%2) - %3", groupID _group, side _group, _secondaryArgument]) call A3C_Debug_fnc_log;
+};
 
 private _secondaryArgIsNumber = _secondaryArgument isEqualType 0;
 
