@@ -149,6 +149,8 @@ if (
 		_x != _playerUnit
 		&& {_x != _temporaryLeader}
 		&& {alive _x}
+		&& {isNull objectParent _x}
+		&& {isNull assignedVehicle _x}
 		&& {_x checkAIFeature "MOVE"}
 		&& {currentCommand _x == ""}
 		&& {
@@ -279,17 +281,16 @@ if (
 	&& {!isNull _playerUnit}
 	&& {_playerUnit in units _playerGroup}
 ) then {
-
-	//-- re-enable sentences
-	if (_sentencesEnabled) then {
-		enableSentences true;
-	};
-
-
 	_playerGroup selectLeader _playerUnit;
-
-	[] call _fnc_hideStandBy;
 };
+
+//-- Always restore the client's original sentence setting, including when
+//-- the player died or changed groups during the transaction.
+if (_sentencesEnabled) then {
+	enableSentences true;
+};
+
+[] call _fnc_hideStandBy;
 
 //-- Only units that never received a boarding order remain in this array.
 {
@@ -297,6 +298,8 @@ if (
 		if (
 			alive _x
 			&& {group _x == _playerGroup}
+			&& {isNull objectParent _x}
+			&& {isNull assignedVehicle _x}
 		) then {
 			_x doFSM [
 				"A3C_CORE\fsm\doMove.fsm",

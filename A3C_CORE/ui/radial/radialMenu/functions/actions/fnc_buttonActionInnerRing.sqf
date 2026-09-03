@@ -1,6 +1,8 @@
 #include "..\..\script_component.hpp"
 #include "..\..\dialog_defines.hpp"
 
+// A3C_ui_radialMenu_fnc_buttonActionInnerRing
+
 private _mode = _this select 0;
 private _btn = if (count _this > 1) then {_this select 1} else {-1};
 private _shift = if (count _this > 2) then {_this select 2} else {false};
@@ -2521,18 +2523,75 @@ switch (_mode) do {
 			BV_LB2 = 9;
 			_bv = "BV_VEHS";
 			if (_btn == 1) then {
-				// RCLICK
-				{
-					if (
-						!isPlayer _x
-						&& {!isNull objectParent _x}
-					) then {
-						[_x] spawn A3C_ai_shared_fnc_getOut;
 
-						A3C_BOARD_UNITS pushBackUnique _x;
+				private _unitsToGetOut = [];
+				private _unitsToUnassign = [];
+
+				// RCLICK
+				// First classify the units without changing their state.
+				{
+					if (!isPlayer _x) then {
+						if (!isNull objectParent _x) then {
+							_unitsToGetOut pushBackUnique _x;
+						} else {
+							if (!isNull assignedVehicle _x) then {
+								_unitsToUnassign pushBackUnique _x;
+							};
+						};
 					};
 				} forEach A3C_RD_UNITS;
-				player groupradio "SentCmdGetOut"; 
+
+				private _doCallOut =
+					_unitsToGetOut isNotEqualTo [];
+
+				private _suppressAbortReplies =
+					_unitsToUnassign isNotEqualTo []
+					&& {sentencesEnabled};
+
+				// Suppress sentences before unassignVehicle can generate
+				// the subordinate "cannot comply" responses.
+				if (_suppressAbortReplies) then {
+					enableSentences false;
+				};
+
+				// Units already inside a vehicle dismount normally.
+				{
+					[_x] spawn A3C_ai_shared_fnc_getOut;
+					A3C_BOARD_UNITS pushBackUnique _x;
+				} forEach _unitsToGetOut;
+
+				// Units currently boarding abort their assignment.
+				{
+					unassignVehicle _x;
+				} forEach _unitsToUnassign;
+
+				if (_suppressAbortReplies) then {
+
+					// Allow the aborted orders and their negative responses
+					// to be processed while sentences are disabled.
+					[_doCallOut] spawn {
+						params ["_doCallOut"];
+
+						sleep 0.5;
+
+						enableSentences true;
+
+						// Issue the player's callout only after sentences have
+						// been restored, so it cannot be suppressed.
+						if (_doCallOut) then {
+							player groupRadio "SentCmdGetOut";
+						};
+					};
+
+				} else {
+
+					// No boarding aborts require suppression, so the normal
+					// player callout can be made immediately.
+					if (_doCallOut) then {
+						player groupRadio "SentCmdGetOut";
+					};
+				};
+
 			} else {
 				//-- Hide all outer ring backgrounds
 				{

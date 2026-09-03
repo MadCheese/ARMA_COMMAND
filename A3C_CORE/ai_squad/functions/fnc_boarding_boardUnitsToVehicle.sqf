@@ -200,6 +200,8 @@ if (_orderedAssignments isEqualTo []) exitWith {
 	]
 };
 
+private _issuedAssignments = [];
+
 {
 	_x params [
 		"_unit",
@@ -250,13 +252,19 @@ if (_orderedAssignments isEqualTo []) exitWith {
 		};
 
 		_issuedUnits pushBackUnique _unit;
+		_issuedAssignments pushBack _x;
 	} else {
 		_failedUnits pushBackUnique _unit;
 	};
 } forEach _orderedAssignments;
 
-private _orderRegistered = false;
-private _allIssuedUnitsDead = false;
+//-- Each assignment remains pending until that individual unit reports
+//-- GET IN once, enters the target vehicle, dies, leaves the group, or its
+//-- request ceases to be current.
+//
+//-- Accepted assignments are permanently removed, so all units do not need
+//-- to report GET IN simultaneously.
+private _pendingAssignments = +_issuedAssignments;
 
 if (_issuedUnits isNotEqualTo []) then {
 	_issuedUnits allowGetIn true;
@@ -266,9 +274,7 @@ if (_issuedUnits isNotEqualTo []) then {
 		diag_tickTime + 10;
 
 	waitUntil {
-		private _currentLivingUnits = [];
-
-		{
+		_pendingAssignments = _pendingAssignments select {
 			private _unit = _x select 0;
 			private _requestId = _x select 3;
 
@@ -281,72 +287,46 @@ if (_issuedUnits isNotEqualTo []) then {
 					] == _requestId
 				};
 
-			if (
-				_assignmentStillCurrent
-				&& {!isNull _unit}
-				&& {alive _unit}
-				&& {group _unit == _playerGroup}
-			) then {
-				_currentLivingUnits pushBack _unit;
-			};
-		} forEach _orderedAssignments;
+			_assignmentStillCurrent
+			&& {!isNull _unit}
+			&& {alive _unit}
+			&& {group _unit == _playerGroup}
+			&& {vehicle _unit != _vehicle}
+			&& {currentCommand _unit != "GET IN"}
+		};
 
-		_orderRegistered =
-			_currentLivingUnits findIf {
-				vehicle _x == _vehicle
-				|| {
-					currentCommand _x == "GET IN"
-				}
-			} != -1;
-
-		_allIssuedUnitsDead =
-			_issuedUnits findIf {
-				!isNull _x
-				&& {alive _x}
-			} == -1;
-
-		_orderRegistered
-		|| {_allIssuedUnitsDead}
-		|| {_currentLivingUnits isEqualTo []}
+		_pendingAssignments isEqualTo []
 		|| {isNull _vehicle}
 		|| {!alive _vehicle}
 		|| {diag_tickTime >= _acceptanceTimeoutAt}
 	};
 };
 
-if (_orderRegistered || {_allIssuedUnitsDead}) then {
-	{
+private _pendingUnits = _pendingAssignments apply {
+	_x select 0
+};
+
+//-- Only issued units that never registered GET IN are failed.
+{
+	_failedUnits pushBackUnique _x;
+} forEach _pendingUnits;
+
+//-- Every issued unit removed from the pending array registered its command
+//-- or otherwise ceased to require acknowledgement.
+{
+	if !(_x in _pendingUnits) then {
 		_acceptedUnits pushBackUnique _x;
-	} forEach _issuedUnits;
-} else {
-	{
-		private _unit = _x select 0;
-		private _requestId = _x select 3;
-
-		private _requestStillCurrent =
-			_requestId < 0
-			|| {
-				_unit getVariable [
-					"A3C_boardingRequestId",
-					-1
-				] == _requestId
-			};
-
-		if (isNull _unit || {!alive _unit}) then {
-			_acceptedUnits pushBackUnique _unit;
-		} else {
-			if (_requestStillCurrent) then {
-				_failedUnits pushBackUnique _unit;
-			};
-		};
-	} forEach _orderedAssignments;
-
-	if (_debug && {_issuedUnits isNotEqualTo []}) then {
-		systemChat format [
-			"GET IN acceptance failed for units: %1",
-			_issuedUnits
-		];
 	};
+} forEach _issuedUnits;
+
+if (
+	_pendingUnits isNotEqualTo []
+	&& {_debug}
+) then {
+	systemChat format [
+		"GET IN acceptance failed for units: %1",
+		_pendingUnits
+	];
 };
 
 [
