@@ -1,5 +1,7 @@
 // A3C_ai_squad_fnc_boarding_createPlayerGroupUIProxy
 
+//-- currently unused - relict of the previous attempt to reach engine boarding with scripting for player group.
+
 params [
 	"_group",
 	["_busySourceUnits", [], [[]]]

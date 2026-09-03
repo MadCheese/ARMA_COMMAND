@@ -53,6 +53,10 @@ A3C_BOARDING_QUEUE pushBack [
 if (!A3C_BOARDING_QUEUE_ACTIVE) then {
 	A3C_BOARDING_QUEUE_ACTIVE = true;
 
+	if (sentencesEnabled) then {
+		player groupRadio "SentCmdGetIn";
+	};
+
 	[] spawn A3C_ai_squad_fnc_boarding_processBoardUnitsToVehicleQueue;
 };
 

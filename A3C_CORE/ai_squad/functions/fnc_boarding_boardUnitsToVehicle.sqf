@@ -1,45 +1,35 @@
 // A3C_ai_squad_fnc_boarding_boardUnitsToVehicle
 
 /*
-	Executes one protected engine-level boarding transaction for units in the
-	player's squad.
+	Validates and issues one queued boarding batch.
 
-	This function must only be called by
-	A3C_ai_squad_fnc_boarding_processBoardUnitsToVehicleQueue. The queue
-	guarantees that two player-group switching transactions cannot overlap.
-
-	Input rows:
-	[
-		_unit,
-		_role,
-		_seatIndexPath
-	]
-
-	_role is case-insensitive:
-	- driver: seatIndexPath is ignored
-	- cargo: seatIndexPath is the cargo index
-	- gunner/commander/turret: seatIndexPath is the turret path
+	Temporary leadership is owned exclusively by
+	A3C_ai_squad_fnc_boarding_processBoardUnitsToVehicleQueue.
 
 	Returns:
 	[
 		_acceptedUnits,
-		_failedUnits
+		_failedUnits,
+		_issuedUnits
 	]
 
-	An accepted unit reported GET IN at least once, entered the target vehicle,
-	died, or ceased to exist before the transaction ended. A failed unit had an
-	invalid assignment, was not in the current player squad, or failed to
-	accept GET IN before the acceptance-stall watchdog expired.
+	_issuedUnits contains every unit whose MOVE AI was enabled and whose
+	assignAs/orderGetIn sequence was issued. The queue worker uses this array
+	to exclude those units from stationary-unit restoration.
 */
 
 params [
 	["_unitsAndRoles", [], [[]]],
-	["_vehicle", objNull, [objNull]]
+	["_vehicle", objNull, [objNull]],
+	["_playerGroup", grpNull, [grpNull]]
 ];
 
-private _debug = missionNamespace getVariable ["a3c_debug", false];
+private _debug =
+	missionNamespace getVariable ["a3c_debug", false];
+
 private _acceptedUnits = [];
 private _failedUnits = [];
+private _issuedUnits = [];
 
 if (
 	isNull _vehicle
@@ -50,49 +40,32 @@ if (
 		if (_x isEqualType [] && {count _x > 0}) then {
 			private _unit = _x select 0;
 
-			if (_unit isEqualType objNull && {!isNull _unit}) then {
+			if (
+				_unit isEqualType objNull
+				&& {!isNull _unit}
+			) then {
 				_failedUnits pushBackUnique _unit;
 			};
 		};
 	} forEach _unitsAndRoles;
 
-	[_acceptedUnits, _failedUnits]
+	[
+		_acceptedUnits,
+		_failedUnits,
+		_issuedUnits
+	]
 };
 
-private _playerUnit = player;
-private _playerGroup = group _playerUnit;
+if (isNull _playerGroup) then {
+	_playerGroup = group player;
+};
 
 if (isNull _playerGroup) exitWith {
-	[_acceptedUnits, _failedUnits]
-};
-
-//-- Restore saved destinations after each player-group switching transaction.
-private _fnc_restoreOtherSquadUnitDestinations = {
-	params [
-		["_units", [], [[]]]
-	];
-
-	{
-		private _expectedDestination = _x getVariable [
-			"A3C_DEST",
-			[
-				[0, 0, 0],
-				"DoNotPlanFormation",
-				false
-			]
-		];
-
-		private _destinationType = toLower (
-			_expectedDestination param [1, ""]
-		);
-
-		if !(["form", _destinationType] call BIS_fnc_inString) then {
-			[
-				_x,
-				_expectedDestination select 0
-			] call A3C_ai_shared_fnc_doMove;
-		};
-	} forEach _units;
+	[
+		_acceptedUnits,
+		_failedUnits,
+		_issuedUnits
+	]
 };
 
 private _validAssignments = [];
@@ -100,7 +73,10 @@ private _validAssignments = [];
 {
 	private _assignment = _x;
 
-	if !(_assignment isEqualType [] && {count _assignment >= 3}) then {
+	if !(
+		_assignment isEqualType []
+		&& {count _assignment >= 3}
+	) then {
 		continue;
 	};
 
@@ -120,6 +96,7 @@ private _validAssignments = [];
 	};
 
 	private _roleLower = toLower _role;
+
 	private _seatDataValid = switch (_roleLower) do {
 		case "driver": {
 			true
@@ -149,7 +126,12 @@ private _validAssignments = [];
 		|| {!_seatDataValid}
 		|| {
 			_requestId >= 0
-			&& {_unit getVariable ["A3C_boardingRequestId", -1] != _requestId}
+			&& {
+				_unit getVariable [
+					"A3C_boardingRequestId",
+					-1
+				] != _requestId
+			}
 		}
 	) then {
 		if (!isNull _unit) then {
@@ -172,112 +154,51 @@ private _validAssignments = [];
 } forEach _unitsAndRoles;
 
 if (_validAssignments isEqualTo []) exitWith {
-	[_acceptedUnits, _failedUnits]
+	[
+		_acceptedUnits,
+		_failedUnits,
+		_issuedUnits
+	]
 };
 
-if (A3C_BOARDING_TRANSACTION_ACTIVE) exitWith {
+private _groupLeader = leader _playerGroup;
+
+if (
+	isNull _groupLeader
+	|| {isPlayer _groupLeader}
+) exitWith {
 	{
 		_failedUnits pushBackUnique (_x select 0);
 	} forEach _validAssignments;
 
-	if (_debug) then {
-		systemChat "Rejected overlapping boardUnitsToVehicle transaction";
-	};
-
-	[_acceptedUnits, _failedUnits]
+	[
+		_acceptedUnits,
+		_failedUnits,
+		_issuedUnits
+	]
 };
 
-private _tempGroup = createGroup [side _playerGroup, false];
+//-- Recheck request ownership immediately before changing engine assignment.
+private _orderedAssignments = _validAssignments select {
+	private _unit = _x select 0;
+	private _requestId = _x select 3;
 
-if (isNull _tempGroup) exitWith {
-	{
-		_failedUnits pushBackUnique (_x select 0);
-	} forEach _validAssignments;
-
-	[_acceptedUnits, _failedUnits]
+	_requestId < 0
+	|| {
+		_unit getVariable [
+			"A3C_boardingRequestId",
+			-1
+		] == _requestId
+	}
 };
 
-private _validUnits = _validAssignments apply {
-	_x select 0
+if (_orderedAssignments isEqualTo []) exitWith {
+	[
+		_acceptedUnits,
+		_failedUnits,
+		_issuedUnits
+	]
 };
-
-private _otherSquadUnits =
-	(units _playerGroup)
-	- _validUnits
-	- [_playerUnit];
-
-private _otherSquadUnitsNotInFormation = _otherSquadUnits select {
-	private _expectedDestination = expectedDestination _x;
-
-	private _destinationType = toLower (
-		_expectedDestination param [1, ""]
-	);
-
-	!(["form", _destinationType] call BIS_fnc_inString)
-	// && {currentCommand _x in ["MOVE", ""]}
-	&& {currentCommand _x == ""}
-};
-
-private _otherBusySquadUnits = _otherSquadUnits select {
-	private _unit = _x;
-
-	private _isBoarding =
-		currentCommand _unit == "GET IN"
-		|| {
-			(_unit getVariable [
-				"A3C_assignedVehicleSeat",
-				[]
-			]) isNotEqualTo []
-		};
-
-	private _expectedDestination = expectedDestination _unit;
-
-	private _destinationType = toLower (
-		_expectedDestination param [1, ""]
-	);
-
-	private _isMovingOutsideFormation =
-		currentCommand _unit == "MOVE"
-		&& {
-			!(["form", _destinationType] call BIS_fnc_inString)
-		};
-
-	_isBoarding || {_isMovingOutsideFormation}
-};
-
-//-- Current transaction units must appear busy even though their GET IN
-//-- command has not necessarily been issued yet.
-private _proxyBusySourceUnits =
-	_validUnits
-	+ _otherBusySquadUnits;
-
-//-- Store current orders for units unaffected by this boarding request.
-{
-	[_x] call A3C_ai_shared_fnc_setDestination;
-} forEach _otherSquadUnitsNotInFormation;
-
-A3C_BOARDING_TRANSACTION_ACTIVE = true;
-A3C_BOARDING_PLAYER_GROUP = _playerGroup;
-
-[_playerUnit] joinSilent _tempGroup;
-
-[
-	_otherSquadUnitsNotInFormation
-] call _fnc_restoreOtherSquadUnitDestinations;
-
-private _fakeGroupUnits = [
-	_playerGroup,
-	_proxyBusySourceUnits
-] call A3C_ai_squad_fnc_boarding_createPlayerGroupUIProxy;
-
-if (_debug) then {
-	systemChat format [
-		"Created boarding UI proxy units: %1",
-		count _fakeGroupUnits
-	];
-};
-
-private _orderedAssignments = [];
 
 {
 	_x params [
@@ -287,294 +208,149 @@ private _orderedAssignments = [];
 		"_requestId"
 	];
 
-	private _assignmentStillCurrent = _requestId < 0 || {
-		_unit getVariable ["A3C_boardingRequestId", -1] == _requestId
-	};
-
-	if (!_assignmentStillCurrent) then {
-		continue;
-	};
-
-	_orderedAssignments pushBack _x;
-} forEach _validAssignments;
-
-private _orderedUnits = _orderedAssignments apply {
-	_x select 0
-};
-
-/*
-	After the player leaves, the original group is AI-led and its ownership can
-	be different in multiplayer. Execute the complete assign+order sequence
-	where that AI leader is local. BIS_fnc_call is already used elsewhere in
-	the project for this locality pattern.
-*/
-if (_orderedAssignments isNotEqualTo []) then {
-	private _orderTarget = leader _playerGroup;
-
-	if (isNull _orderTarget) then {
-		{
-			_failedUnits pushBackUnique _x;
-		} forEach _orderedUnits;
-
-		_orderedAssignments = [];
-		_orderedUnits = [];
-	} else {
-		[
-			[
-				_orderedAssignments,
-				_vehicle
-			],
-			{
-				params [
-					"_orderedAssignments",
-					"_vehicle"
-				];
-
-				private _orderedUnits = [];
-
-				{
-					_x params [
-						"_unit",
-						"_role",
-						"_seatIndexPath",
-						"_requestId"
-					];
-
-					private _assignmentStillCurrent = _requestId < 0 || {
-						_unit getVariable ["A3C_boardingRequestId", -1] == _requestId
-					};
-
-					if (_assignmentStillCurrent) then {
-						switch (_role) do {
-							case "driver": {
-								_unit assignAsDriver _vehicle;
-							};
-
-							case "cargo": {
-								_unit assignAsCargoIndex [
-									_vehicle,
-									_seatIndexPath
-								];
-							};
-
-							case "gunner";
-							case "commander";
-							case "turret": {
-								_unit assignAsTurret [
-									_vehicle,
-									_seatIndexPath
-								];
-							};
-						};
-
-						_orderedUnits pushBackUnique _unit;
-					};
-				} forEach _orderedAssignments;
-
-				if (_orderedUnits isNotEqualTo []) then {
-					_orderedUnits allowGetIn true;
-					_orderedUnits orderGetIn true;
-				};
-			}
-		] remoteExec [
-			"BIS_fnc_call",
-			_orderTarget
-		];
-	};
-};
-
-//-- This is a stall watchdog, not a total boarding timeout. Each newly
-//-- accepted unit resets it.
-private _acceptanceStallTimeout = 10;
-
-private _pendingAssignments = _orderedAssignments select {
-	private _unit = _x select 0;
-
-	!isNull _unit
-	&& {alive _unit}
-	&& {vehicle _unit != _vehicle}
-};
-
-private _previousPendingCount = count _pendingAssignments;
-private _lastProgressAt = diag_tickTime;
-
-waitUntil {
-	_pendingAssignments = _pendingAssignments select {
-		private _unit = _x select 0;
-		private _requestId = _x select 3;
-		private _assignmentStillCurrent = _requestId < 0 || {
-			_unit getVariable ["A3C_boardingRequestId", -1] == _requestId
+	private _assignmentStillCurrent =
+		_requestId < 0
+		|| {
+			_unit getVariable [
+				"A3C_boardingRequestId",
+				-1
+			] == _requestId
 		};
 
+	if (
 		_assignmentStillCurrent
 		&& {!isNull _unit}
 		&& {alive _unit}
-		&& {vehicle _unit != _vehicle}
-		&& {
-			assignedVehicle _unit != _vehicle
-			|| {currentCommand _unit != "GET IN"}
-		}
-	};
+		&& {group _unit == _playerGroup}
+	) then {
+		//-- A unit may currently belong to the worker's protected stationary
+		//-- set. Boarding always requires MOVE to be enabled.
+		_unit enableAI "MOVE";
 
-	private _pendingCount = count _pendingAssignments;
+		switch (_role) do {
+			case "driver": {
+				_unit assignAsDriver _vehicle;
+			};
 
-	if (_pendingCount < _previousPendingCount) then {
-		_previousPendingCount = _pendingCount;
-		_lastProgressAt = diag_tickTime;
-	};
+			case "cargo": {
+				_unit assignAsCargoIndex [
+					_vehicle,
+					_seatIndexPath
+				];
+			};
 
-	_pendingCount == 0
-	|| {isNull _vehicle}
-	|| {!alive _vehicle}
-	|| {
-		diag_tickTime - _lastProgressAt
-			>= _acceptanceStallTimeout
-	}
-};
-
-private _pendingUnits = _pendingAssignments apply {
-	_x select 0
-};
-
-{
-	_failedUnits pushBackUnique _x;
-} forEach _pendingUnits;
-
-_acceptedUnits = _orderedUnits - _failedUnits;
-
-if (_pendingUnits isNotEqualTo [] && {_debug}) then {
-	systemChat format [
-		"GET IN acceptance stalled for units: %1",
-		_pendingUnits
-	];
-};
-
-//-- Capture cancellation commands issued through the proxy group before
-//-- returning the player to the real group.
-private _proxyCancellationRequests = [];
-
-{
-	private _proxyUnit = _x;
-
-	if (!isNull _proxyUnit && {alive _proxyUnit}) then {
-		private _sourceUnit = _proxyUnit getVariable [
-			"A3C_boardingProxySourceUnit",
-			objNull
-		];
-
-		private _assignmentIndex = _orderedAssignments findIf {
-			(_x select 0) == _sourceUnit
-		};
-
-		if (
-			!isNull _sourceUnit
-			&& {_assignmentIndex >= 0}
-		) then {
-			private _expectedDestinationData =
-				expectedDestination _proxyUnit;
-
-			private _planningMode = toLower (
-				_expectedDestinationData param [1, ""]
-			);
-
-			private _proxyCancelledBoarding =
-				currentCommand _proxyUnit == "STOP"
-				|| {(_planningMode find "form") >= 0};
-
-			if (_proxyCancelledBoarding) then {
-				private _assignment =
-					_orderedAssignments select _assignmentIndex;
-
-				_proxyCancellationRequests pushBack [
-					_sourceUnit,
-					_assignment select 3
+			case "gunner";
+			case "commander";
+			case "turret": {
+				_unit assignAsTurret [
+					_vehicle,
+					_seatIndexPath
 				];
 			};
 		};
-	};
-} forEach _fakeGroupUnits;
 
-//-- From this point onward, keep cleanup linear. Do not add exitWith paths
-//-- between the player leaving the original group and this restoration.
-if (!isNull _playerGroup && {!isNull _playerUnit}) then {
-	[_playerUnit] joinSilent _playerGroup;
+		_issuedUnits pushBackUnique _unit;
+	} else {
+		_failedUnits pushBackUnique _unit;
+	};
+} forEach _orderedAssignments;
+
+private _orderRegistered = false;
+private _allIssuedUnitsDead = false;
+
+if (_issuedUnits isNotEqualTo []) then {
+	_issuedUnits allowGetIn true;
+	_issuedUnits orderGetIn true;
+
+	private _acceptanceTimeoutAt =
+		diag_tickTime + 10;
+
+	waitUntil {
+		private _currentLivingUnits = [];
+
+		{
+			private _unit = _x select 0;
+			private _requestId = _x select 3;
+
+			private _assignmentStillCurrent =
+				_requestId < 0
+				|| {
+					_unit getVariable [
+						"A3C_boardingRequestId",
+						-1
+					] == _requestId
+				};
+
+			if (
+				_assignmentStillCurrent
+				&& {!isNull _unit}
+				&& {alive _unit}
+				&& {group _unit == _playerGroup}
+			) then {
+				_currentLivingUnits pushBack _unit;
+			};
+		} forEach _orderedAssignments;
+
+		_orderRegistered =
+			_currentLivingUnits findIf {
+				vehicle _x == _vehicle
+				|| {
+					currentCommand _x == "GET IN"
+				}
+			} != -1;
+
+		_allIssuedUnitsDead =
+			_issuedUnits findIf {
+				!isNull _x
+				&& {alive _x}
+			} == -1;
+
+		_orderRegistered
+		|| {_allIssuedUnitsDead}
+		|| {_currentLivingUnits isEqualTo []}
+		|| {isNull _vehicle}
+		|| {!alive _vehicle}
+		|| {diag_tickTime >= _acceptanceTimeoutAt}
+	};
 };
 
-//-- Transfer proxy cancellation requests to the corresponding real units.
-//-- Request IDs prevent delayed requests from cancelling newer assignments.
-{
-	_x params [
-		"_unit",
-		"_requestId"
-	];
+if (_orderRegistered || {_allIssuedUnitsDead}) then {
+	{
+		_acceptedUnits pushBackUnique _x;
+	} forEach _issuedUnits;
+} else {
+	{
+		private _unit = _x select 0;
+		private _requestId = _x select 3;
 
-	if (!isNull _unit) then {
-		[
-			[
-				_unit,
-				_vehicle,
-				_requestId
-			],
-			{
-				params [
-					"_unit",
-					"_vehicle",
-					"_requestId"
-				];
+		private _requestStillCurrent =
+			_requestId < 0
+			|| {
+				_unit getVariable [
+					"A3C_boardingRequestId",
+					-1
+				] == _requestId
+			};
 
-				if (
-					!isNull _unit
-					&& {alive _unit}
-					&& {!isNull _vehicle}
-					&& {vehicle _unit != _vehicle}
-					&& {assignedVehicle _unit == _vehicle}
-					&& {
-						_unit getVariable [
-							"A3C_boardingRequestId",
-							-1
-						] == _requestId
-					}
-				) then {
-					unassignVehicle _unit;
-				};
-			}
-		] remoteExecCall [
-			"BIS_fnc_call",
-			_unit
+		if (isNull _unit || {!alive _unit}) then {
+			_acceptedUnits pushBackUnique _unit;
+		} else {
+			if (_requestStillCurrent) then {
+				_failedUnits pushBackUnique _unit;
+			};
+		};
+	} forEach _orderedAssignments;
+
+	if (_debug && {_issuedUnits isNotEqualTo []}) then {
+		systemChat format [
+			"GET IN acceptance failed for units: %1",
+			_issuedUnits
 		];
 	};
-} forEach _proxyCancellationRequests;
-
-{
-	if (!isNull _x) then {
-		deleteVehicle _x;
-	};
-} forEach _fakeGroupUnits;
-
-if (
-	!isNull _playerGroup
-	&& {!isNull _playerUnit}
-	&& {_playerUnit in units _playerGroup}
-) then {
-	_playerGroup selectLeader _playerUnit;
 };
-
-A3C_BOARDING_PLAYER_GROUP = grpNull;
-A3C_BOARDING_TRANSACTION_ACTIVE = false;
-
-deleteGroup _tempGroup;
 
 [
-	_otherSquadUnitsNotInFormation
-] call _fnc_restoreOtherSquadUnitDestinations;
-
-if (_debug) then {
-	sleep 0.5;
-
-	systemChat format [
-		"Remaining boarding UI proxy units: %1",
-		{!isNull _x} count _fakeGroupUnits
-	];
-};
-
-[_acceptedUnits, _failedUnits]
+	_acceptedUnits,
+	_failedUnits,
+	_issuedUnits
+]
