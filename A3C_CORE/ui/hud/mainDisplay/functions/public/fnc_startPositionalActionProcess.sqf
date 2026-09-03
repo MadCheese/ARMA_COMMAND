@@ -1,3 +1,5 @@
+// A3C_UI_mainDisplay_fnc_startPositionalActionProcess
+
 //---------------------------- SHARED POSITIONAL STARTUP FUNCTION
 
 params [
@@ -9,8 +11,17 @@ params [
 	["_objectPlacerColorString", "", [""]]
 ];
 
+
+
 if (_isBusy) exitWith {
 	systemChat "A3C: Please wait for your last order to complete";
+};
+
+
+[] spawn {
+	//-- disable action menu again since objectPLacer vehicle can be rotated which would trigger the action menu again.
+	sleep 0.1; //-- delay needed to not compete with the enabling via closing radial etc
+	"DISABLE" call A3C_ui_shared_fnc_toggleActionMenuAbility;
 };
 
 //-- UI reaction

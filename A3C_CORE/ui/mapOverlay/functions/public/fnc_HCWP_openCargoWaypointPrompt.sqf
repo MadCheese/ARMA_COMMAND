@@ -17,6 +17,7 @@ private _cargoGroups = [];
 
 		if (
 			!isNull _cargoGroup
+			&& {!isPlayer (leader _cargoGroup)}
 			&& {
 				(
 					waypointPosition [

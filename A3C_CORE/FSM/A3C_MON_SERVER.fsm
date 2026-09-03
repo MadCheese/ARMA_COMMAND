@@ -43,7 +43,7 @@ link19[] = {17,4};
 link20[] = {17,18};
 link21[] = {18,7};
 globals[] = {0.000000,0,0,0,0,640,480,1,181,6316128,1,-1055.625977,1040.948364,766.296143,-376.471924,1398,762,1};
-window[] = {0,-1,-1,-32000,-32000,1220,286,2866,286,1,1416};
+window[] = {0,-1,-1,-1,-1,960,26,2606,26,1,1416};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -158,15 +158,14 @@ class FSM
                          "	A3C_MON_SERVER_checkGroups = _A3C_MON_SERVER_checkGroups;" \n
                          "	publicVariable'A3C_MON_SERVER_checkGroups';" \n
                          "} else {" \n
-                         "	//-- client on server without A3C - only allow reserve that is local to client" \n
+                         "	//-- client on server without A3C - only allow reserve that is local to client #UNCLEAR: WOULD THIS EVER RUN???" \n
                          "	{" \n
                          "		if ((side _x in _sides) ) then { //&& {local (leader _x)} ////isPlayer leader _x" \n
                          "			_A3C_MON_SERVER_checkGroups pushBackUnique _x;			" \n
                          "		};" \n
-                         "	} foreach allGroups;" \n
-                         "	A3C_MON_SERVER_checkGroups = _A3C_MON_SERVER_checkGroups;" \n
-                         "};" \n
-                         ""/*%FSM</STATEINIT""">*/;
+                         "	} foreach ((allGroups) select {side _x != civilian});" \n
+                         "	A3C_MON_SERVER_checkGroups = _A3C_MON_SERVER_checkGroups;	" \n
+                         "};"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {

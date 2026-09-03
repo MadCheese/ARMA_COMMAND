@@ -128,49 +128,51 @@ if (_doubleClick) then {
 						}
 					};
 
-					[_cargoGroups] spawn {
-						params ["_cargoGroups"];
+					if (_cargoGroups isNotEqualTo []) then {
+						[_cargoGroups] spawn {
+							params ["_cargoGroups"];
 
-						
+							
 
-						private _storedSelection = +A3C_SELECTED_UNITS;
-						private _storedCommandMode = A3C_MAP_CommandMode;
-						private _doExit = false;
+							private _storedSelection = +A3C_SELECTED_UNITS;
+							private _storedCommandMode = A3C_MAP_CommandMode;
+							private _doExit = false;
 
-						{
-							private _cargoGroup = _x;
+							{
+								private _cargoGroup = _x;
 
-							A3C_MAP_CommandMode = "HC";
-							A3C_SELECTED_HC_GROUPS_SETTINGS = [_cargoGroup];
-							A3C_SELECTED_UNITS = [_cargoGroup];
+								A3C_MAP_CommandMode = "HC";
+								A3C_SELECTED_HC_GROUPS_SETTINGS = [_cargoGroup];
+								A3C_SELECTED_UNITS = [_cargoGroup];
 
-							private _hintText = format ["PLACE WAYPOINT FOR %1  %2", groupID _cargoGroup, A3C_SELECTED_HC_GROUPS_SETTINGS];
+								private _hintText = format ["PLACE WAYPOINT FOR %1  %2", groupID _cargoGroup, A3C_SELECTED_HC_GROUPS_SETTINGS];
 
-							hint _hintText;
-							waitUntil {
-								hintSilent _hintText;
-								!visibleMap || {
-									(waypointPosition [_cargoGroup, currentWaypoint _cargoGroup]) distance2D [0,0,0] > 0
-								}
-							};
+								hint _hintText;
+								waitUntil {
+									hintSilent _hintText;
+									!visibleMap || {
+										(waypointPosition [_cargoGroup, currentWaypoint _cargoGroup]) distance2D [0,0,0] > 0
+									}
+								};
 
-							if (!visibleMap) exitWith {
-								// systemChat "MAP CLOSED";
-								_doExit = true;
+								if (!visibleMap) exitWith {
+									// systemChat "MAP CLOSED";
+									_doExit = true;
+									hintSilent "";
+								};
+							} forEach _cargoGroups;
+
+							if !(_doExit) then {
+								A3C_SELECTED_UNITS = _storedSelection; //-- only override if map was not closed
+								A3C_SELECTED_HC_GROUPS_SETTINGS = _storedSelection; //-- only override if map was not closed
+								A3C_MAP_CommandMode = _storedCommandMode;
+
+								hint "Done!";
+								sleep 2;
 								hintSilent "";
 							};
-						} forEach _cargoGroups;
-
-						if !(_doExit) then {
-							A3C_SELECTED_UNITS = _storedSelection; //-- only override if map was not closed
-							A3C_SELECTED_HC_GROUPS_SETTINGS = _storedSelection; //-- only override if map was not closed
-							A3C_MAP_CommandMode = _storedCommandMode;
-
-							hint "Done!";
-							sleep 2;
-							hintSilent "";
+							A3C_isIssuingCargoWPs = false;
 						};
-						A3C_isIssuingCargoWPs = false;
 					};
 				};
 

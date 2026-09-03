@@ -348,6 +348,7 @@ _fnc_tilt = {
 
 		//-- rotate chopper
 		private _targetPos = _vehicle getPos [1000,_direction];
+		[_vehicle,_targetPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
 		_vehicle domove _targetPos;
 		_vehicle setVariable ["A3C_Freeze_helicopter",[true,_direction],true];
 		_heliHeight = (getPosVisual _vehicle) select 2;

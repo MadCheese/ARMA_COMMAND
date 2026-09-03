@@ -109,9 +109,13 @@ if (
 //-- If the local player occupies the vehicle, retain vehicle command.
 //-- Without this protection, issuing movement orders can cause the engine
 //-- to switch vehicle command and potentially eject the player.
+
+
+
 if (
-	player in _vehicle
-	&& {_effectiveCommander isNotEqualTo player}
+	isPlayer (leader (group _unit))
+	&& {player in _vehicle}
+	&& {!isPlayer _effectiveCommander}
 ) then {
 	_vehicle setEffectiveCommander player;
 	_effectiveCommander = effectiveCommander _vehicle;

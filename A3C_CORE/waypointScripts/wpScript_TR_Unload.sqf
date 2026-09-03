@@ -36,7 +36,7 @@ private _isHoverCapableAircraft = [
 private _addRadius = if (_leaderVehicle isKindOf "AIR") then {
 	50
 } else {
-	0
+	20
 };
 
 private _vehicleConfig =

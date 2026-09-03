@@ -756,6 +756,8 @@ private _actions = [
 									_vehicleType, //-- placer class
 									_colorString //-- placer color-params
 								] call A3C_UI_mainDisplay_fnc_startPositionalActionProcess;
+
+								
 							} else {
 								//-- specify mapclick
 							};
