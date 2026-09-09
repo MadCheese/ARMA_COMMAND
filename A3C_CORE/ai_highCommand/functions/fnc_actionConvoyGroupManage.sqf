@@ -1,3 +1,8 @@
+
+// a3c_ai_highcommand_fnc_actionconvoygroupmanage
+
+
+
 if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
 	//-- rejoin Convoy to former groups
 	{

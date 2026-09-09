@@ -2501,7 +2501,7 @@ class FSM
                          "" \n
                          "{" \n
                          "	_x disableAI ""PATH"";" \n
-                         "	_x forceSpeed 0;" \n
+                         "	_x enableSimulation false;" \n
                          "} foreach units _testGroup;" \n
                          ""/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
@@ -2887,7 +2887,7 @@ class FSM
                          "" \n
                          "{" \n
                          "	_x enableAI ""PATH"";" \n
-                         "	_x forceSpeed -1;" \n
+                         "	_x enableSimulation true;" \n
                          "} foreach units _testGroup;" \n
                          "" \n
                          "" \n
@@ -3900,7 +3900,7 @@ class FSM
                          "" \n
                          "{" \n
                          "	_x disableAI ""PATH"";" \n
-                         "	_x forceSpeed 0;" \n
+                         "	_x enableSimulation false;" \n
                          "} foreach units _testGroup;" \n
                          "" \n
                          "" \n
@@ -5415,7 +5415,7 @@ class FSM
                          "" \n
                          "{" \n
                          "	_x enableAI ""PATH"";" \n
-                         "	_x forceSpeed -1;" \n
+                         "	_x enableSimulation true;" \n
                          "} foreach units _testGroup;"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
@@ -8559,7 +8559,7 @@ class FSM
                          "" \n
                          "{" \n
                          "	_x disableAI ""PATH"";" \n
-                         "	_x forceSpeed 0;" \n
+                         "	_x enableSimulation false;" \n
                          "} foreach ((units r1) + (units r2));" \n
                          "" \n
                          ""/*%FSM</STATEINIT""">*/;
@@ -8821,7 +8821,7 @@ class FSM
                          "" \n
                          "{" \n
                          "	_x enableAI ""PATH"";" \n
-                         "	_x forceSpeed -1;" \n
+                         "	_x enableSimulation true;" \n
                          "} foreach ((units r1) + (units r2));"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links

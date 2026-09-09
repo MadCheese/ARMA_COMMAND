@@ -231,7 +231,9 @@ while {A3C_BOARDING_QUEUE isNotEqualTo []} do {
 		[
 			_unitsAndRoles,
 			_vehicle,
-			_playerGroup
+			_playerGroup,
+			_playerUnit,
+			_temporaryLeader
 		] call A3C_ai_squad_fnc_boarding_boardUnitsToVehicle
 	} else {
 		[

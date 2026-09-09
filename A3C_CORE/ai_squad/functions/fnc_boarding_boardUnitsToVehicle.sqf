@@ -3,8 +3,12 @@
 /*
 	Validates and issues one queued boarding batch.
 
-	Temporary leadership is owned exclusively by
+	The temporary-leadership period is owned by
 	A3C_ai_squad_fnc_boarding_processBoardUnitsToVehicleQueue.
+
+	If external mission code restores player leadership while this batch is
+	awaiting acceptance, this function restores the worker-supplied AI leader
+	and reissues only the still-pending boarding orders.
 
 	Returns:
 	[
@@ -21,7 +25,9 @@
 params [
 	["_unitsAndRoles", [], [[]]],
 	["_vehicle", objNull, [objNull]],
-	["_playerGroup", grpNull, [grpNull]]
+	["_playerGroup", grpNull, [grpNull]],
+	["_playerUnit", objNull, [objNull]],
+	["_temporaryLeader", objNull, [objNull]]
 ];
 
 private _debug =
@@ -66,6 +72,10 @@ if (isNull _playerGroup) exitWith {
 		_failedUnits,
 		_issuedUnits
 	]
+};
+
+if (isNull _playerUnit) then {
+	_playerUnit = player;
 };
 
 private _validAssignments = [];
@@ -161,7 +171,24 @@ if (_validAssignments isEqualTo []) exitWith {
 	]
 };
 
+private _temporaryLeaderIsValid =
+	!isNull _temporaryLeader
+	&& {alive _temporaryLeader}
+	&& {!isPlayer _temporaryLeader}
+	&& {group _temporaryLeader == _playerGroup};
+
 private _groupLeader = leader _playerGroup;
+
+//-- Mission code may restore player leadership between the worker's
+//-- validation and this function beginning execution.
+if (
+	_groupLeader == _playerUnit
+	&& {_temporaryLeaderIsValid}
+) then {
+	_playerGroup selectLeader _temporaryLeader;
+
+	_groupLeader = leader _playerGroup;
+};
 
 if (
 	isNull _groupLeader
@@ -176,6 +203,12 @@ if (
 		_failedUnits,
 		_issuedUnits
 	]
+};
+
+//-- Preserve compatibility with callers that did not explicitly supply
+//-- the temporary leader.
+if (!_temporaryLeaderIsValid) then {
+	_temporaryLeader = _groupLeader;
 };
 
 //-- Recheck request ownership immediately before changing engine assignment.
@@ -265,6 +298,7 @@ private _issuedAssignments = [];
 //-- Accepted assignments are permanently removed, so all units do not need
 //-- to report GET IN simultaneously.
 private _pendingAssignments = +_issuedAssignments;
+private _leadershipInterrupted = false;
 
 if (_issuedUnits isNotEqualTo []) then {
 	_issuedUnits allowGetIn true;
@@ -274,6 +308,25 @@ if (_issuedUnits isNotEqualTo []) then {
 		diag_tickTime + 10;
 
 	waitUntil {
+		//-- Detect only the original player reclaiming leadership of the
+		//-- original group. Do not interfere with a group the player has left.
+		if (
+			!isNull _playerUnit
+			&& {_playerUnit in units _playerGroup}
+			&& {leader _playerGroup == _playerUnit}
+		) then {
+			_leadershipInterrupted = true;
+
+			if (
+				!isNull _temporaryLeader
+				&& {alive _temporaryLeader}
+				&& {!isPlayer _temporaryLeader}
+				&& {group _temporaryLeader == _playerGroup}
+			) then {
+				_playerGroup selectLeader _temporaryLeader;
+			};
+		};
+
 		_pendingAssignments = _pendingAssignments select {
 			private _unit = _x select 0;
 			private _requestId = _x select 3;
@@ -293,6 +346,27 @@ if (_issuedUnits isNotEqualTo []) then {
 			&& {group _unit == _playerGroup}
 			&& {vehicle _unit != _vehicle}
 			&& {currentCommand _unit != "GET IN"}
+		};
+
+		//-- Seat assignments remain valid across the leadership interruption.
+		//-- Only the engine boarding order needs to be reissued.
+		if (
+			_leadershipInterrupted
+			&& {_pendingAssignments isNotEqualTo []}
+			&& {!isNull _temporaryLeader}
+			&& {alive _temporaryLeader}
+			&& {group _temporaryLeader == _playerGroup}
+			&& {leader _playerGroup == _temporaryLeader}
+		) then {
+			private _pendingUnitsToReissue =
+				_pendingAssignments apply {
+					_x select 0
+				};
+
+			_pendingUnitsToReissue allowGetIn true;
+			_pendingUnitsToReissue orderGetIn true;
+
+			_leadershipInterrupted = false;
 		};
 
 		_pendingAssignments isEqualTo []

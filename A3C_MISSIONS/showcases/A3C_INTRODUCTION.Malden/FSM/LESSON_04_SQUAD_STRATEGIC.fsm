@@ -4789,7 +4789,7 @@ class FSM
                          "" \n
                          "[] spawn {" \n
                          "	sleep 2;" \n
-                         "	[(units player - [player]),""SUPPRESSION""] call A3C_POLY_ACTION_OFF;" \n
+                         "	[(units player - [player]),""SUPPRESSION""] call A3C_ai_shared_fnc_polygonAreaActionOff;" \n
                          "	sleep 2;" \n
                          "	A3C_ALL_POLYS = [];" \n
                          "};" \n
@@ -7480,7 +7480,7 @@ class FSM
                          "	sleep 0.5;" \n
                          "	[(units player - [player]),true,false] call A3C_ai_shared_fnc_cancelUnitPlot;" \n
                          "	sleep 2;" \n
-                         "	[(units player - [player]),""SUPPRESSION""] call A3C_POLY_ACTION_OFF;" \n
+                         "	[(units player - [player]),""SUPPRESSION""] call A3C_ai_shared_fnc_polygonAreaActionOff;" \n
                          "	sleep 1;" \n
                          "	A3C_ALL_POLYS = [];" \n
                          "};" \n
