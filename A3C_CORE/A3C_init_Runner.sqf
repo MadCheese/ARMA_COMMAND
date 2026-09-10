@@ -188,6 +188,7 @@ A3C_is_Initialized = true;
 		(
 			A3C_isPlayerLeader 
 			&& {currentCommand player != ""}
+			&& {player == driver (vehicle player)}
 		) then
 		{
 			player commandFollow player;
