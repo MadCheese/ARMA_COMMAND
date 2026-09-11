@@ -20,26 +20,37 @@ A3C_UI_HUD_3D_TAG_ICON_POS = +(position _weaponToDisassemble);
 	""
 ] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 
-if (({ group _x == group player } count crew _weaponToDisassemble) > 0) then {
-	{
-		[[_x], A3C_ai_shared_fnc_unitGetOut] remoteExec ["BIS_fnc_call", _x];
-	} forEach crew _weaponToDisassemble;
+private _disassemblyData = [
+	_assemblingUnitSelection,
+	[],
+	["DISASSEMBLE", _weaponToDisassemble],
+	position _weaponToDisassemble,
+	0,
+	500
+] call A3C_ai_shared_fnc_staticWeaponPrepareDisassembly;
 
-	sleep 1;
-};
+_disassemblyData params [
+	"_selectedTaskUnits",
+	"_requiredUnitCount",
+	"_needsMoreUnits"
+];
 
-private _selectedTaskUnits = (
-	[
-		_assemblingUnitSelection,
-		[],
-		["DISASSEMBLE", _weaponToDisassemble],
-		position _weaponToDisassemble,
-		0,
-		500
-	] call A3C_ai_shared_fnc_staticWeaponPrepareDisassembly
-) select 0;
+if (
+	!_needsMoreUnits
+	&& {count _selectedTaskUnits == _requiredUnitCount}
+) then {
+	/*
+		Select workers while the static is still manned so the selector can
+		prefer the current gunner when equipment suitability is otherwise equal.
+	*/
+	if (({ group _x == group player } count crew _weaponToDisassemble) > 0) then {
+		{
+			[[_x], A3C_ai_shared_fnc_unitGetOut] remoteExec ["BIS_fnc_call", _x];
+		} forEach crew _weaponToDisassemble;
 
-if ((count _selectedTaskUnits) == 2) then {
+		sleep 1;
+	};
+
 	player groupRadio "SentDisAssemble";
 
 	[_selectedTaskUnits, true, false] call A3C_ai_shared_fnc_cancelUnitPlot;
@@ -47,14 +58,14 @@ if ((count _selectedTaskUnits) == 2) then {
 	private _mainMarker = "A3C_SQ_" + str (random 10000000000);
 	private _weaponPos = position _weaponToDisassemble;
 
-	//-- Wait until both units have finished cancelling their previous plots.
+	//-- Wait until all selected units have finished cancelling their previous plots.
 	waitUntil {
 		{
 			count (_x getVariable "A3C_PLOT") == 0
 		} count _selectedTaskUnits == count _selectedTaskUnits
 	};
 
-	//-- Install the shared STATIC waypoint for both units before either route starts.
+	//-- Install the shared STATIC waypoint for all selected units before any route starts.
 	{
 		private _unit = _x;
 
@@ -81,7 +92,7 @@ if ((count _selectedTaskUnits) == 2) then {
 
 	} forEach _selectedTaskUnits;
 
-	//-- Both hub waypoints now exist. Start the route scripts.
+	//-- All hub waypoints now exist. Start the route scripts.
 	{
 		private _unit = _x;
 

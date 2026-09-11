@@ -105,22 +105,11 @@ switch (_mode) do {
 			};
 
 			case "STATIC": {
-				[
-					A3C_SELECTED_UNITS,
-					"PLANNING"
-				] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons;
+				private _staticMode = [
+					A3C_SELECTED_UNITS
+				] call A3C_ai_shared_fnc_getWeaponAssemblyMode;
 
-				private _canDeployStatic = (
-					{
-						isNull objectParent _x
-						&& {backpack _x == ""}
-					} count A3C_SELECTED_UNITS >= 2
-				);
-
-				private _hasPackedStatic =
-					count A3C_STATIC_PACKS > 0;
-
-				if (_canDeployStatic || _hasPackedStatic) then {
+				if (_staticMode != "NONE") then {
 					A3C_TEMP_ACTION = ["STATIC", []];
 
 					_waypointActionImage ctrlSetText

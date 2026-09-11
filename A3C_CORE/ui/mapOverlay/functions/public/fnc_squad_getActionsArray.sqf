@@ -17,21 +17,11 @@ if (
 	];
 };
 
-private _staticData = [
-	_units,
-	"PLANNING"
-] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons;
+private _staticMode = [
+	_units
+] call A3C_ai_shared_fnc_getWeaponAssemblyMode;
 
-if (count _staticData > 0) then {
-	_actions pushBackUnique "STATIC";
-};
-
-if (
-	{
-		isNull objectParent _x
-			&& {backpack _x == ""}
-	} count _units >= 2
-) then {
+if (_staticMode != "NONE") then {
 	_actions pushBackUnique "STATIC";
 };
 

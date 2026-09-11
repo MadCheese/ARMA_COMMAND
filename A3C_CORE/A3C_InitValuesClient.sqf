@@ -329,7 +329,7 @@ A3C_HUD_SPEED_ICON_SIZE = 0.8;
 
 profileNameSpace setVariable ["A3C_HUD_OBJECTS",profileNameSpace getVariable ["A3C_HUD_OBJECTS",true]];
 
-profilenamespace setvariable ["A3C_NUM_VAR",profileNameSpace getVariable ["A3C_NUM_VAR", true]];
+profilenamespace setvariable ["A3C_NUM_VAR",profileNameSpace getVariable ["A3C_NUM_VAR", false]];
 profilenamespace setvariable ["A3C_SKILL_VAR",profileNameSpace getVariable ["A3C_SKILL_VAR", true]];
 profilenamespace setvariable ["A3C_MAP_OVERLAY_SHOWN",profileNameSpace getVariable ["A3C_MAP_OVERLAY_SHOWN", true]];
 

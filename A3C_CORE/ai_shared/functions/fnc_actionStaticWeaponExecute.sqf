@@ -54,12 +54,32 @@ if (_action == "ASSEMBLE") then {
 	[_units, "EXECUTING"] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons;
 
 	{
-		_x params ["_assemblyUnits","_staticClassToCreate"];
-		
+		_x params [
+			"_assemblyUnits",
+			"_staticClassToCreate",
+			["_assemblyProvider", "LEGACY"],
+			["_assemblyComponents", []]
+		];
+
+		/*
+			Legacy vanilla/SOG/IFA behavior requires two array entries.
+
+			ACE CSW uses unique physical workers, so a unit carrying the weapon
+			in its primary slot and the mount in its secondary slot requires
+			only one worker.
+		*/
+		private _requiredWorkerCount = if (_assemblyProvider == "ACE_CSW") then {
+			count _assemblyUnits
+		} else {
+			2
+		};
 
 		private _canAssemble = (
-			_staticClassToCreate == _requestedStaticClass &&
-			{{alive _x} count _assemblyUnits == 2}
+			_staticClassToCreate == _requestedStaticClass
+			&& {_requiredWorkerCount > 0}
+			&& {
+				{alive _x} count _assemblyUnits == _requiredWorkerCount
+			}
 		);
 
 		if (_canAssemble) exitWith {
@@ -81,44 +101,77 @@ if (_action == "ASSEMBLE") then {
 			private _storedStaticMagazineState = [];
 			private _hasStoredStaticMagazineState = false;
 			private _removeGunnerMagazines = false;
-			private _usesIFAWeaponParts = count _ifaAssemblyWeaponParts > 0;
+
+			private _usesACECSW = _assemblyProvider == "ACE_CSW";
+
+			private _usesIFAWeaponParts = (
+				!_usesACECSW
+				&& {count _ifaAssemblyWeaponParts > 0}
+			);
+
+			//-- ACE CSW components are CfgWeapons items rather than static backpacks.
+			if (_usesACECSW) then {
+				{
+					_x params [
+						"_componentUnit",
+						"_componentClass",
+						"_componentSlot",
+						"_componentRole"
+					];
+
+					if (
+						!isNull _componentUnit
+						&& {_componentClass != ""}
+					) then {
+						[
+							_componentUnit,
+							_componentClass
+						] remoteExec [
+							"removeWeapon",
+							_componentUnit
+						];
+					};
+				} forEach _assemblyComponents;
+			};
 
 			{
 				private _unit = _x;
 
-				if (_usesIFAWeaponParts) then {
-					private _weaponPartClass = _ifaAssemblyWeaponParts select _forEachIndex;
+				if (!_usesACECSW) then {
+					if (_usesIFAWeaponParts) then {
+						private _weaponPartClass = _ifaAssemblyWeaponParts select _forEachIndex;
 
-					if (primaryWeapon (_assemblyUnits select 0) == _weaponPartClass) then {
-						_removeGunnerMagazines = true;
-					};
+						if (primaryWeapon (_assemblyUnits select 0) == _weaponPartClass) then {
+							_removeGunnerMagazines = true;
+						};
 
-					[_unit, _weaponPartClass] remoteExec ["removeWeapon", _unit];
-				} else {
-					private _backpackObject = unitBackpack _unit;
-
-					private _backpackMagazineState = if (isNull _backpackObject) then {
-						[]
+						[_unit, _weaponPartClass] remoteExec ["removeWeapon", _unit];
 					} else {
-						_backpackObject getVariable [
-							"A3C_STATIC_MAGAZINE_STATE",
+						private _backpackObject = unitBackpack _unit;
+
+						private _backpackMagazineState = if (isNull _backpackObject) then {
 							[]
-						]
+						} else {
+							_backpackObject getVariable [
+								"A3C_STATIC_MAGAZINE_STATE",
+								[]
+							]
+						};
+
+						_removedBackpacks pushBack (backpack _unit);
+						_removedBackpackMagazineStates pushBack _backpackMagazineState;
+
+						if (
+							!_hasStoredStaticMagazineState
+							&& {count _backpackMagazineState == 2}
+							&& {(_backpackMagazineState select 0) == _staticClassToCreate}
+						) then {
+							_hasStoredStaticMagazineState = true;
+							_storedStaticMagazineState = _backpackMagazineState select 1;
+						};
+
+						[_unit] remoteExec ["removeBackpack", _unit];
 					};
-
-					_removedBackpacks pushBack (backpack _unit);
-					_removedBackpackMagazineStates pushBack _backpackMagazineState;
-
-					if (
-						!_hasStoredStaticMagazineState
-						&& {count _backpackMagazineState == 2}
-						&& {(_backpackMagazineState select 0) == _staticClassToCreate}
-					) then {
-						_hasStoredStaticMagazineState = true;
-						_storedStaticMagazineState = _backpackMagazineState select 1;
-					};
-
-					[_unit] remoteExec ["removeBackpack", _unit];
 				};
 
 				[_unit, "amovpknlmstpslowwrfldnon"] call _fnc_playStaticWeaponWorkAnimation;
@@ -130,44 +183,70 @@ if (_action == "ASSEMBLE") then {
 
 			while {true} do {
 				//-- Abort: restore removed equipment if one of the builders dies before completion.
-				if ({alive _x} count _assemblyUnits != 2) exitWith {
-					if (_usesIFAWeaponParts) then {
+				if (
+					{alive _x} count _assemblyUnits != _requiredWorkerCount
+				) exitWith {
+					if (_usesACECSW) then {
 						{
-							if (_forEachIndex < count _ifaAssemblyWeaponParts) then {
-								private _weaponPartClass = _ifaAssemblyWeaponParts select _forEachIndex;
+							_x params [
+								"_componentUnit",
+								"_componentClass",
+								"_componentSlot",
+								"_componentRole"
+							];
 
-								if (_weaponPartClass != "") then {
-									[_x, _weaponPartClass] remoteExec ["addWeapon", _x];
-								};
+							if (
+								!isNull _componentUnit
+								&& {_componentClass != ""}
+							) then {
+								[
+									_componentUnit,
+									_componentClass
+								] remoteExec [
+									"addWeapon",
+									_componentUnit
+								];
 							};
-						} forEach _assemblyUnits;
+						} forEach _assemblyComponents;
 					} else {
-						{
-							if (_forEachIndex < count _removedBackpacks) then {
-								private _backpackClass = _removedBackpacks select _forEachIndex;
+						if (_usesIFAWeaponParts) then {
+							{
+								if (_forEachIndex < count _ifaAssemblyWeaponParts) then {
+									private _weaponPartClass = _ifaAssemblyWeaponParts select _forEachIndex;
 
-								if (_backpackClass != "") then {
-									private _backpackMagazineState = _removedBackpackMagazineStates param [
-										_forEachIndex,
-										[]
-									];
-
-									if (_backpackMagazineState isEqualTo []) then {
-										[_x, _backpackClass] remoteExec ["addBackpack", _x];
-									} else {
-										[
-											_x,
-											_backpackClass,
-											_backpackMagazineState
-										] call _fnc_addBackpackWithMagazineState;
+									if (_weaponPartClass != "") then {
+										[_x, _weaponPartClass] remoteExec ["addWeapon", _x];
 									};
 								};
-							};
-						} forEach _assemblyUnits;
+							} forEach _assemblyUnits;
+						} else {
+							{
+								if (_forEachIndex < count _removedBackpacks) then {
+									private _backpackClass = _removedBackpacks select _forEachIndex;
+
+									if (_backpackClass != "") then {
+										private _backpackMagazineState = _removedBackpackMagazineStates param [
+											_forEachIndex,
+											[]
+										];
+
+										if (_backpackMagazineState isEqualTo []) then {
+											[_x, _backpackClass] remoteExec ["addBackpack", _x];
+										} else {
+											[
+												_x,
+												_backpackClass,
+												_backpackMagazineState
+											] call _fnc_addBackpackWithMagazineState;
+										};
+									};
+								};
+							} forEach _assemblyUnits;
+						};
 					};
 				};
 
-				//-- Assembly completed once both units have left the work animation.
+				//-- Assembly completed once all workers have left the work animation.
 				if ({animationState _x == "ainvpknlmstpslaywrfldnon_medic"} count _assemblyUnits == 0) exitWith {
 					if (_usesIFAWeaponParts && {_removeGunnerMagazines}) then {
 						private _gunner = _assemblyUnits select 0;
@@ -222,24 +301,29 @@ if (_action == "ASSEMBLE") then {
 					_createdStatic enableSimulationGlobal true;
 
 					private _gunner = _assemblyUnits select 0;
-					private _assistant = _assemblyUnits select 1;
 
 					[_gunner, _createdStatic] remoteExec ["assignAsGunner", _gunner];
 					[_gunner, ["getInGunner", _createdStatic]] remoteExec ["action", _gunner];
 
-					private _assistantAngleOffset = floor random 31;
+					if (count _assemblyUnits > 1) then {
+						private _assistant = _assemblyUnits select 1;
+						private _assistantAngleOffset = floor random 31;
 
-					if (floor random 2 == 0) then {
-						_assistantAngleOffset = _assistantAngleOffset * -1;
+						if (floor random 2 == 0) then {
+							_assistantAngleOffset = _assistantAngleOffset * -1;
+						};
+
+						private _assistantPos = _weaponPos getPos [
+							(random 4) max 1,
+							(getDir _createdStatic) + 180 + _assistantAngleOffset
+						];
+
+						[_assistant, _assistantPos] call A3C_ai_shared_fnc_doMove;
+						[
+							_assistant,
+							_weaponPos getPos [50, getDir _createdStatic]
+						] remoteExec ["lookAt", _assistant];
 					};
-
-					private _assistantPos = _weaponPos getPos [
-						(random 4) max 1,
-						(getDir _createdStatic) + 180 + _assistantAngleOffset
-					];
-
-					[_assistant, _assistantPos] call A3C_ai_shared_fnc_doMove;
-					[_assistant, _weaponPos getPos [50, getDir _createdStatic]] remoteExec ["lookAt", _assistant];
 
 					//-- Some static weapons slide/tilt after creation. This tries small center-of-mass offsets until stable.
 					private _needsCorrection = false;
@@ -312,7 +396,9 @@ if (_action == "ASSEMBLE") then {
 		"_requiredUnitCount",
 		"_needsMoreUnits",
 		"_ifaDisassemblyItems",
-		"_staticMagazineCount"
+		"_staticMagazineCount",
+		["_disassemblyProvider", "LEGACY"],
+		["_disassemblyProviderData", []]
 	];
 
 	if (_needsMoreUnits) exitWith {
@@ -325,11 +411,60 @@ if (_action == "ASSEMBLE") then {
 	if (count _disassemblyUnits != _requiredUnitCount) exitWith {};
 
 	private _staticWeaponType = typeOf _staticWeapon;
+	private _staticWeaponCfg = configOf _staticWeapon;
+
+	private _usesACECSW = _disassemblyProvider == "ACE_CSW";
+
+	private _aceWeaponClass = "";
+	private _aceMountClass = "";
+	private _aceWeaponSlot = "";
+	private _aceMountVehicleClass = "";
+	private _aceDisassembleFunc = "";
+
+	if (_usesACECSW) then {
+		_aceWeaponClass = _disassemblyProviderData param [0, ""];
+		_aceMountClass = _disassemblyProviderData param [1, ""];
+		_aceWeaponSlot = _disassemblyProviderData param [2, ""];
+
+		_aceMountVehicleClass = getText (
+			_staticWeaponCfg
+				>> "ACE_CSW"
+				>> "disassembleTurret"
+		);
+
+		_aceDisassembleFunc = getText (
+			_staticWeaponCfg
+				>> "ACE_CSW"
+				>> "disassembleFunc"
+		);
+	};
+
 
 	//-- Standard statics disassemble into backpacks.
 	private _disassemblyBackpacks = getArray (
-		configFile >> "CfgVehicles" >> _staticWeaponType >> "assembleInfo" >> "dissasembleTo"
+		_staticWeaponCfg >> "assembleInfo" >> "dissasembleTo"
 	);
+
+	// _test = str [
+	// 	"ACE EXEC DEBUG",
+	// 	_usesACECSW,
+	// 	_disassemblyProvider,
+	// 	_disassemblyProviderData,
+	// 	_aceWeaponClass,
+	// 	_aceMountClass,
+	// 	_aceWeaponSlot,
+	// 	_disassemblyUnits apply {
+	// 		[
+	// 			_x,
+	// 			primaryWeapon _x,
+	// 			secondaryWeapon _x
+	// 		]
+	// 	}
+	// ];
+	// systemchat str _test;
+	// copyToClipboard str _test;
+
+	
 
 	//-- Store magazine state only on the primary weapon backpack, never on the pod.
 	private _weaponBackpackIndex = _disassemblyBackpacks findIf {
@@ -363,159 +498,375 @@ if (_action == "ASSEMBLE") then {
 		if ({animationState _x == "ainvpknlmstpslaywrfldnon_medic"} count _disassemblyUnits == 0) exitWith {
 			private _staticMagazineState = magazinesAllTurrets _staticWeapon;
 
+			/*
+				ACE optionally defines a callback for disassembly.
+
+				ACE calls it with:
+					[tripod, staticWeapon]
+
+				A3C ultimately packs the tripod directly onto a worker, so create
+				the configured deployed tripod only for the duration of the callback.
+			*/
+			private _aceCallbackTripod = objNull;
+
+			if (
+				_usesACECSW
+				&& {_aceDisassembleFunc != ""}
+				&& {_aceMountVehicleClass != ""}
+			) then {
+				_aceCallbackTripod = _aceMountVehicleClass createVehicle [0,0,0];
+
+				_aceCallbackTripod setVectorDirAndUp [
+					vectorDir _staticWeapon,
+					vectorUp _staticWeapon
+				];
+
+				_aceCallbackTripod setPosASL (getPosASL _staticWeapon);
+
+				private _aceDisassembleCode = missionNamespace getVariable [
+					_aceDisassembleFunc,
+					{}
+				];
+
+				if (_aceDisassembleCode isEqualType {}) then {
+					[
+						_aceCallbackTripod,
+						_staticWeapon
+					] call _aceDisassembleCode;
+				};
+			};
+
 			deleteVehicle _staticWeapon;
 
-			//-- If only one unit is ever allowed for a special case, duplicate it so indexed assignment does not fail.
-			if (count _disassemblyUnits == 1) then {
-				_disassemblyUnits = _disassemblyUnits + _disassemblyUnits;
+			if (!isNull _aceCallbackTripod) then {
+				deleteVehicle _aceCallbackTripod;
 			};
 
-			if (count _disassemblyBackpacks > 0) then {
-				{
-					if (_forEachIndex < count _disassemblyBackpacks) then {
-						private _backpackClass = _disassemblyBackpacks select _forEachIndex;
 
-						if (_backpackClass != "") then {
-							if (_forEachIndex == _weaponBackpackIndex) then {
-								private _backpackMagazineState = [
-									_staticWeaponType,
-									_staticMagazineState
-								];
+			if (_usesACECSW) then {
+				private _aceWeaponUnit = _disassemblyUnits select 0;
 
-								[
-									_x,
-									_backpackClass,
-									_backpackMagazineState
-								] call _fnc_addBackpackWithMagazineState;
-							} else {
-								[_x, _backpackClass] remoteExec ["addBackpack", _x];
-							};
-						};
-					};
-				} forEach _disassemblyUnits;
-			};
+				private _aceMountUnit = if (count _disassemblyUnits == 1) then {
+					_aceWeaponUnit
+				} else {
+					_disassemblyUnits select 1
+				};
 
-			if (count _ifaDisassemblyItems > 0) then {
 				private _pickupPos = (
-					(_disassemblyUnits select 0) modelToWorld (
-						(_disassemblyUnits select 0) selectionPosition "weapon"
+					_aceWeaponUnit modelToWorld (
+						_aceWeaponUnit selectionPosition "weapon"
 					)
 				);
 
-				private _weaponHolder = "GroundWeaponHolder" createVehicle _pickupPos;
-				private _turretAssigned = false;
-				private _ifaTurretWeaponClass = _ifaDisassemblyItems select 0;
-				private _ifaTurretIsRifle = _ifaTurretWeaponClass isKindOf ["Rifle", configFile >> "CfgWeapons"];
+				private _hasPrimaryWeaponToPreserve = (
+					_aceWeaponSlot == "PRIMARY"
+					&& {primaryWeapon _aceWeaponUnit != ""}
+				);
 
-				//-- Assign turret first. If needed, preserve the unit's replaced primary weapon in a ground holder.
-				{
-					private _unit = _x;
+				private _needsWeaponHolder = (
+					_hasPrimaryWeaponToPreserve
+					|| {count _staticMagazineState > 0}
+				);
 
-					if (!_turretAssigned) then {
-						if (_ifaTurretIsRifle) then {
-							if (primaryWeapon _unit != "") then {
-								private _oldPrimaryWeapon = [primaryWeapon _unit] call A3C_main_fnc_getBaseWeapon;
-								private _oldPrimaryMagazines = [currentMagazine _unit];
-								private _oldPrimaryItems = primaryWeaponItems _unit;
-								private _oldPrimaryMagazineTypes = getArray (
-									configFile >> "CfgWeapons" >> _oldPrimaryWeapon >> "magazines"
+				private _weaponHolder = if (_needsWeaponHolder) then {
+					"GroundWeaponHolder" createVehicle _pickupPos
+				} else {
+					objNull
+				};
+
+
+				//-- Preserve an existing rifle before giving this unit a primary-slot CSW.
+				if (_hasPrimaryWeaponToPreserve) then {
+					private _oldPrimaryWeapon = [
+						primaryWeapon _aceWeaponUnit
+					] call A3C_main_fnc_getBaseWeapon;
+
+					private _oldPrimaryMagazines = [
+						currentMagazine _aceWeaponUnit
+					];
+
+					private _oldPrimaryItems = primaryWeaponItems _aceWeaponUnit;
+
+					private _oldPrimaryMagazineTypes = getArray (
+						configFile
+							>> "CfgWeapons"
+							>> _oldPrimaryWeapon
+							>> "magazines"
+					);
+
+					{
+						if (_x in _oldPrimaryMagazineTypes) then {
+							_oldPrimaryMagazines pushBack _x;
+
+							[
+								_aceWeaponUnit,
+								_x
+							] remoteExec [
+								"removeMagazine",
+								_aceWeaponUnit
+							];
+						};
+					} forEach magazines _aceWeaponUnit;
+
+					_weaponHolder addWeaponCargoGlobal [
+						_oldPrimaryWeapon,
+						1
+					];
+
+					{
+						if (_x != "") then {
+							_weaponHolder addMagazineCargoGlobal [
+								_x,
+								1
+							];
+						};
+					} forEach _oldPrimaryMagazines;
+
+					{
+						_weaponHolder addItemCargoGlobal [
+							_x,
+							1
+						];
+					} forEach _oldPrimaryItems;
+
+					[
+						_aceWeaponUnit,
+						_oldPrimaryWeapon
+					] remoteExec [
+						"removeWeapon",
+						_aceWeaponUnit
+					];
+				};
+
+
+				//-- Give the carried CSW weapon to its selected worker.
+				if (_aceWeaponClass != "") then {
+					_aceWeaponUnit addWeaponGlobal _aceWeaponClass;
+
+					if (_aceWeaponSlot == "PRIMARY") then {
+						[
+							_aceWeaponUnit,
+							_aceWeaponClass
+						] remoteExec [
+							"selectWeapon",
+							_aceWeaponUnit
+						];
+					};
+				};
+
+
+				//-- Give the carried tripod/mount to its selected worker.
+				if (_aceMountClass != "") then {
+					_aceMountUnit addWeaponGlobal _aceMountClass;
+				};
+
+
+				/*
+					Return loaded ACE CSW ammunition to the ground.
+
+					ACE_CSW_Groups maps a carryable magazine class to the vehicle
+					magazine class used by the assembled static.
+				*/
+				if (!isNull _weaponHolder) then {
+					{
+						_x params [
+							"_vehicleMagazineClass",
+							"_turretPath",
+							"_ammoCount"
+						];
+
+						if (_ammoCount > 0) then {
+							private _carryMagazineClass = "";
+
+							{
+								private _carryMagazineCfg = _x;
+
+								private _vehicleMagazineMapping = (
+									_carryMagazineCfg
+										>> _vehicleMagazineClass
 								);
 
-								{
-									if (_x in _oldPrimaryMagazineTypes) then {
-										_oldPrimaryMagazines pushBack _x;
-										[_unit, _x] remoteExec ["removeMagazine", _unit];
-									};
-								} forEach magazines _unit;
+								if (
+									isNumber _vehicleMagazineMapping
+									&& {
+										getNumber _vehicleMagazineMapping > 0
+									}
+								) exitWith {
+									_carryMagazineClass = configName _carryMagazineCfg;
+								};
 
-								_weaponHolder addWeaponCargoGlobal [_oldPrimaryWeapon, 1];
+							} forEach (
+								"true" configClasses (
+									configFile >> "ACE_CSW_Groups"
+								)
+							);
 
-								{
-									_weaponHolder addMagazineCargoGlobal [_x, 1];
-								} forEach _oldPrimaryMagazines;
-
-								{
-									_weaponHolder addItemCargoGlobal [_x, 1];
-								} forEach _oldPrimaryItems;
-
-								[_unit, _oldPrimaryWeapon] remoteExec ["removeWeapon", _unit];
+							/*
+								Fallback to the original magazine class rather than
+								silently destroying ammunition if a third-party CSW
+								omits an ACE_CSW_Groups mapping.
+							*/
+							if (_carryMagazineClass == "") then {
+								_carryMagazineClass = _vehicleMagazineClass;
 							};
 
-							_turretAssigned = true;
-						} else {
-							if ([_unit] call A3C_main_fnc_canUnitCarryIFAstatic) then {
-								_turretAssigned = true;
-							};
+							_weaponHolder addMagazineAmmoCargo [
+								_carryMagazineClass,
+								1,
+								_ammoCount
+							];
 						};
 
-						if (_turretAssigned) then {
-							[_unit, _ifaTurretWeaponClass] remoteExec ["addWeapon", _unit];
-							[_unit, _ifaTurretWeaponClass] remoteExec ["selectWeapon", _unit];
+					} forEach _staticMagazineState;
+				};
 
+			} else {
+				if (count _disassemblyBackpacks > 0) then {
+					{
+						if (_forEachIndex < count _disassemblyBackpacks) then {
+							private _backpackClass = _disassemblyBackpacks select _forEachIndex;
+
+							if (_backpackClass != "") then {
+								if (_forEachIndex == _weaponBackpackIndex) then {
+									private _backpackMagazineState = [
+										_staticWeaponType,
+										_staticMagazineState
+									];
+
+									[
+										_x,
+										_backpackClass,
+										_backpackMagazineState
+									] call _fnc_addBackpackWithMagazineState;
+								} else {
+									[_x, _backpackClass] remoteExec ["addBackpack", _x];
+								};
+							};
+						};
+					} forEach _disassemblyUnits;
+				};
+
+				if (count _ifaDisassemblyItems > 0) then {
+					private _pickupPos = (
+						(_disassemblyUnits select 0) modelToWorld (
+							(_disassemblyUnits select 0) selectionPosition "weapon"
+						)
+					);
+
+					private _weaponHolder = "GroundWeaponHolder" createVehicle _pickupPos;
+					private _turretAssigned = false;
+					private _ifaTurretWeaponClass = _ifaDisassemblyItems select 0;
+					private _ifaTurretIsRifle = _ifaTurretWeaponClass isKindOf ["Rifle", configFile >> "CfgWeapons"];
+
+					//-- Assign turret first. If needed, preserve the unit's replaced primary weapon in a ground holder.
+					{
+						private _unit = _x;
+
+						if (!_turretAssigned) then {
 							if (_ifaTurretIsRifle) then {
-								private _newMagazineTypes = getArray (
-									configFile >> "CfgWeapons" >> _ifaTurretWeaponClass >> "magazines"
-								);
+								if (primaryWeapon _unit != "") then {
+									private _oldPrimaryWeapon = [primaryWeapon _unit] call A3C_main_fnc_getBaseWeapon;
+									private _oldPrimaryMagazines = [currentMagazine _unit];
+									private _oldPrimaryItems = primaryWeaponItems _unit;
+									private _oldPrimaryMagazineTypes = getArray (
+										configFile >> "CfgWeapons" >> _oldPrimaryWeapon >> "magazines"
+									);
 
-								if (count _newMagazineTypes > 0 && {_staticMagazineCount > 0}) then {
-									private _newMagazineType = _newMagazineTypes select 0;
+									{
+										if (_x in _oldPrimaryMagazineTypes) then {
+											_oldPrimaryMagazines pushBack _x;
+											[_unit, _x] remoteExec ["removeMagazine", _unit];
+										};
+									} forEach magazines _unit;
 
-									for "_i" from 1 to _staticMagazineCount do {
-										[_unit, _newMagazineType] remoteExec ["addMagazine", _unit];
+									_weaponHolder addWeaponCargoGlobal [_oldPrimaryWeapon, 1];
+
+									{
+										_weaponHolder addMagazineCargoGlobal [_x, 1];
+									} forEach _oldPrimaryMagazines;
+
+									{
+										_weaponHolder addItemCargoGlobal [_x, 1];
+									} forEach _oldPrimaryItems;
+
+									[_unit, _oldPrimaryWeapon] remoteExec ["removeWeapon", _unit];
+								};
+
+								_turretAssigned = true;
+							} else {
+								if ([_unit] call A3C_main_fnc_canUnitCarryIFAstatic) then {
+									_turretAssigned = true;
+								};
+							};
+
+							if (_turretAssigned) then {
+								[_unit, _ifaTurretWeaponClass] remoteExec ["addWeapon", _unit];
+								[_unit, _ifaTurretWeaponClass] remoteExec ["selectWeapon", _unit];
+
+								if (_ifaTurretIsRifle) then {
+									private _newMagazineTypes = getArray (
+										configFile >> "CfgWeapons" >> _ifaTurretWeaponClass >> "magazines"
+									);
+
+									if (count _newMagazineTypes > 0 && {_staticMagazineCount > 0}) then {
+										private _newMagazineType = _newMagazineTypes select 0;
+
+										for "_i" from 1 to _staticMagazineCount do {
+											[_unit, _newMagazineType] remoteExec ["addMagazine", _unit];
+										};
 									};
 								};
 							};
 						};
-					};
-				} forEach _disassemblyUnits;
+					} forEach _disassemblyUnits;
 
-				//-- Assign pod/tripod second. If needed, preserve replaced secondary weapon in the ground holder.
-				{
-					private _unit = _x;
+					//-- Assign pod/tripod second. If needed, preserve replaced secondary weapon in the ground holder.
+					{
+						private _unit = _x;
 
-					if !(_forEachIndex == 0 && {count _disassemblyUnits > 1}) then {
-						if ([_unit] call A3C_main_fnc_canUnitCarryIFAstatic) exitWith {
-							if (secondaryWeapon _unit != "") then {
-								private _oldSecondaryWeapon = [secondaryWeapon _unit] call A3C_main_fnc_getBaseWeapon;
-								private _oldSecondaryMagazines = secondaryWeaponMagazine _unit;
-								private _oldSecondaryItems = secondaryWeaponItems _unit;
-								private _oldSecondaryMagazineTypes = getArray (
-									configFile >> "CfgWeapons" >> _oldSecondaryWeapon >> "magazines"
-								);
+						if !(_forEachIndex == 0 && {count _disassemblyUnits > 1}) then {
+							if ([_unit] call A3C_main_fnc_canUnitCarryIFAstatic) exitWith {
+								if (secondaryWeapon _unit != "") then {
+									private _oldSecondaryWeapon = [secondaryWeapon _unit] call A3C_main_fnc_getBaseWeapon;
+									private _oldSecondaryMagazines = secondaryWeaponMagazine _unit;
+									private _oldSecondaryItems = secondaryWeaponItems _unit;
+									private _oldSecondaryMagazineTypes = getArray (
+										configFile >> "CfgWeapons" >> _oldSecondaryWeapon >> "magazines"
+									);
 
-								{
-									if (_x in _oldSecondaryMagazineTypes) then {
-										_oldSecondaryMagazines pushBack _x;
-										[_unit, _x] remoteExec ["removeMagazine", _unit];
-									};
-								} forEach magazines _unit;
+									{
+										if (_x in _oldSecondaryMagazineTypes) then {
+											_oldSecondaryMagazines pushBack _x;
+											[_unit, _x] remoteExec ["removeMagazine", _unit];
+										};
+									} forEach magazines _unit;
 
-								_weaponHolder addWeaponCargoGlobal [_oldSecondaryWeapon, 1];
+									_weaponHolder addWeaponCargoGlobal [_oldSecondaryWeapon, 1];
 
-								{
-									_weaponHolder addMagazineCargoGlobal [_x, 1];
-								} forEach _oldSecondaryMagazines;
+									{
+										_weaponHolder addMagazineCargoGlobal [_x, 1];
+									} forEach _oldSecondaryMagazines;
 
-								{
-									_weaponHolder addItemCargoGlobal [_x, 1];
-								} forEach _oldSecondaryItems;
+									{
+										_weaponHolder addItemCargoGlobal [_x, 1];
+									} forEach _oldSecondaryItems;
 
-								[_unit, _oldSecondaryWeapon] remoteExec ["removeWeapon", _unit];
-							};
+									[_unit, _oldSecondaryWeapon] remoteExec ["removeWeapon", _unit];
+								};
 
-							if (_ifaPodWeaponClass != "") then {
-								[_unit, _ifaPodWeaponClass] remoteExec ["addWeapon", _unit];
+								if (_ifaPodWeaponClass != "") then {
+									[_unit, _ifaPodWeaponClass] remoteExec ["addWeapon", _unit];
+								};
 							};
 						};
-					};
-				} forEach _disassemblyUnits;
+					} forEach _disassemblyUnits;
 
-				if (count weaponCargo _weaponHolder == 0) then {
-					deleteVehicle _weaponHolder;
+					if (count weaponCargo _weaponHolder == 0) then {
+						deleteVehicle _weaponHolder;
+					};
 				};
 			};
 		};
-
 		sleep 0.2;
 	};
 };

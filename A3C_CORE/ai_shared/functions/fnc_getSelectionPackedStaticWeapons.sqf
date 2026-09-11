@@ -1,3 +1,6 @@
+// A3C_ai_shared_fnc_getSelectionPackedStaticWeapons
+
+
 //-- Find the weapons that a unit selection can possibly assemble.
 
 params ["_units", "_mode"];
@@ -95,6 +98,133 @@ private _fnc_isUnitAlreadyAssigned = {
 	};
 } forEach _units;
 
+//-- ACE CSW APPROACH: weapon + mount components
+{
+	private _weaponUnit = _x;
+
+	private _carriedWeaponData = [
+		[primaryWeapon _weaponUnit, "PRIMARY"],
+		[secondaryWeapon _weaponUnit, "SECONDARY"]
+	];
+
+	{
+		_x params ["_weaponClass", "_weaponSlot"];
+
+		if (_weaponClass != "") then {
+			private _weaponACEcfg = (
+				configFile
+				>> "CfgWeapons"
+				>> _weaponClass
+				>> "ACE_CSW"
+			);
+
+			if (
+				isClass _weaponACEcfg
+				&& {
+					toLower (getText (_weaponACEcfg >> "type")) == "weapon"
+				}
+			) then {
+				private _assembleToCfg = _weaponACEcfg >> "assembleTo";
+
+				if (isClass _assembleToCfg) then {
+					private _assembleToEntries = configProperties [
+						_assembleToCfg,
+						"isText _x",
+						true
+					];
+
+					{
+						private _requiredMountVehicleClass = configName _x;
+						private _staticClass = getText _x;
+
+						if (
+							_staticClass != ""
+							&& {
+								_staticClass isKindOf [
+									"StaticWeapon",
+									configFile >> "CfgVehicles"
+								]
+							}
+						) then {
+							private _candidateUnits = [
+								_weaponUnit
+							] + (
+								_units - [_weaponUnit]
+							);
+
+							{
+								private _mountUnit = _x;
+								private _mountWeaponClass = secondaryWeapon _mountUnit;
+
+								if (_mountWeaponClass != "") then {
+									private _mountACEcfg = (
+										configFile
+											>> "CfgWeapons"
+											>> _mountWeaponClass
+											>> "ACE_CSW"
+									);
+
+									if (
+										isClass _mountACEcfg
+										&& {
+											toLower (getText (_mountACEcfg >> "type")) == "mount"
+										}
+										&& {
+											toLower (getText (_mountACEcfg >> "deploy"))
+											==
+											toLower _requiredMountVehicleClass
+										}
+									) then {
+										private _weaponUnitAlreadyAssigned = [
+											_weaponUnit
+										] call _fnc_isUnitAlreadyAssigned;
+
+										private _mountUnitAlreadyAssigned = [
+											_mountUnit
+										] call _fnc_isUnitAlreadyAssigned;
+
+										if (
+											!_weaponUnitAlreadyAssigned
+											&& {!_mountUnitAlreadyAssigned}
+										) then {
+											private _workerUnits = [_weaponUnit];
+
+											if (_mountUnit != _weaponUnit) then {
+												_workerUnits pushBack _mountUnit;
+											};
+
+											private _components = [
+												[
+													_weaponUnit,
+													_weaponClass,
+													_weaponSlot,
+													"WEAPON"
+												],
+												[
+													_mountUnit,
+													_mountWeaponClass,
+													"SECONDARY",
+													"MOUNT"
+												]
+											];
+
+											A3C_STATIC_PACKS pushBack [
+												_workerUnits,
+												_staticClass,
+												"ACE_CSW",
+												_components
+											];
+										};
+									};
+								};
+							} forEach _candidateUnits;
+						};
+					} forEach _assembleToEntries;
+				};
+			};
+		};
+	} forEach _carriedWeaponData;
+} forEach _units;
 
 //-- IFA APPROACH: weapon-part-based static weapons
 {

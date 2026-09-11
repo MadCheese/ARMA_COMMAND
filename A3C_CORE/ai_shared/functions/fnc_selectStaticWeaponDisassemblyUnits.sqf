@@ -1,27 +1,35 @@
-/*
-	Function:
-		A3C_ai_shared_fnc_selectStaticWeaponDisassemblyUnits
+// A3C_ai_shared_fnc_selectStaticWeaponDisassemblyUnits
 
+/*
 	Params:
 		0: ARRAY  - _units
 		1: OBJECT - _weapon
 		2: NUMBER - _maxDistance, optional, default 30
+		3: STRING - _disassemblyProvider, optional, default "LEGACY"
+		4: ARRAY  - _disassemblyProviderData, optional, default []
 
 	Returns:
-		ARRAY - [_unitA, _unitB] or []
+		ARRAY - selected physical worker units or []
 
 	Purpose:
-		Selects the two most suitable units from _units to disassemble _weapon.
+		Selects suitable units from _units to disassemble _weapon.
 
 	Notes:
-		- Non-IFA statics use backpack-based disassembly.
-		- IFA statics use secondaryWeapon-based disassembly.
+		- Vanilla/SOG statics use backpack-based disassembly.
+		- IFA statics use weapon-part-based disassembly.
+		- ACE CSW statics use ACE_CSW configuration data.
+		- Legacy vanilla/SOG/IFA paths require two workers.
+		- ACE PRIMARY-slot CSWs may use one or two physical workers depending
+		on the selected weapon carrier's available secondary slot.
+		- ACE SECONDARY-slot CSWs require two physical workers.
 */
 
 params [
 	["_units", [], [[]]],
 	["_weapon", objNull, [objNull]],
-	["_maxDistance", 30, [0]]
+	["_maxDistance", 30, [0]],
+	["_disassemblyProvider", "LEGACY", [""]],
+	["_disassemblyProviderData", [], [[]]]
 ];
 
 if (isNull _weapon) exitWith {[]};
@@ -38,7 +46,6 @@ _units = _units select {
 	{isNull objectParent _x || {vehicle _x == _weapon}}
 };
 
-if (count _units < 2) exitWith {[]};
 
 private _crew = crew _weapon;
 
@@ -53,6 +60,159 @@ if (
 	[]
 };
 
+
+//-- ACE CSW disassembly
+if (_disassemblyProvider == "ACE_CSW") exitWith {
+	if (count _disassemblyProviderData < 3) exitWith {
+		[]
+	};
+
+	_disassemblyProviderData params [
+		"_aceWeaponClass",
+		"_aceMountClass",
+		"_aceWeaponSlot"
+	];
+
+	if (
+		_aceWeaponClass == ""
+		|| {_aceMountClass == ""}
+	) exitWith {
+		[]
+	};
+
+	/*
+		Select actual component roles rather than selecting a worker count first.
+
+		Weapon carrier priority:
+		1. no primary weapon
+		2. free secondary slot
+		3. current static crew
+
+		For PRIMARY-slot ACE weapons, one worker is used when the preferred
+		weapon carrier also has a free secondary slot. Otherwise a separate
+		mount carrier is selected.
+
+		For SECONDARY-slot ACE weapons, weapon and mount always require
+		two different workers.
+	*/
+	private _bestUnits = [];
+	private _bestScore = -1;
+
+	{
+		private _weaponUnit = _x;
+		private _currentPrimaryWeapon = primaryWeapon _weaponUnit;
+		private _weaponCanCarry = true;
+
+		/*
+			A PRIMARY-slot ACE weapon may replace a normal rifle, which the
+			executor preserves. Do not replace another ACE CSW component.
+		*/
+		if (
+			_aceWeaponSlot == "PRIMARY"
+			&& {_currentPrimaryWeapon != ""}
+		) then {
+			private _currentPrimaryACEcfg = (
+				configFile
+					>> "CfgWeapons"
+					>> _currentPrimaryWeapon
+					>> "ACE_CSW"
+			);
+
+			if (
+				isClass _currentPrimaryACEcfg
+				&& {
+					toLower (getText (_currentPrimaryACEcfg >> "type"))
+					in ["weapon", "mount"]
+				}
+			) then {
+				_weaponCanCarry = false;
+			};
+		};
+
+		//-- SECONDARY-slot ACE weapons require the secondary slot themselves.
+		if (
+			_aceWeaponSlot == "SECONDARY"
+			&& {secondaryWeapon _weaponUnit != ""}
+		) then {
+			_weaponCanCarry = false;
+		};
+
+		if (_weaponCanCarry) then {
+			private _weaponScore = 0;
+
+			//-- Strongly prefer designated/static-style units with no primary.
+			if (_currentPrimaryWeapon == "") then {
+				_weaponScore = _weaponScore + 100;
+			};
+
+			//-- Prefer a worker who could also carry the tripod.
+			if (secondaryWeapon _weaponUnit == "") then {
+				_weaponScore = _weaponScore + 10;
+			};
+
+			//-- Crew is a useful tie-breaker, but equipment suitability wins.
+			if (_weaponUnit == gunner _weapon) then {
+				_weaponScore = _weaponScore + 2;
+			} else {
+				if (_weaponUnit in _crew) then {
+					_weaponScore = _weaponScore + 1;
+				};
+			};
+
+			/*
+				PRIMARY weapon + free SECONDARY:
+				this worker can carry both components.
+			*/
+			if (
+				_aceWeaponSlot == "PRIMARY"
+				&& {secondaryWeapon _weaponUnit == ""}
+			) then {
+				private _score = (_weaponScore * 1000) + 999;
+
+				if (_score > _bestScore) then {
+					_bestScore = _score;
+					_bestUnits = [_weaponUnit];
+				};
+			} else {
+				/*
+					Otherwise find a separate tripod carrier.
+					The tripod always occupies SECONDARY.
+				*/
+				{
+					private _mountUnit = _x;
+
+					if (
+						_mountUnit != _weaponUnit
+						&& {secondaryWeapon _mountUnit == ""}
+					) then {
+						private _mountScore = 0;
+
+						if (_mountUnit in _crew) then {
+							_mountScore = _mountScore + 1;
+						};
+
+						private _score = (
+							_weaponScore * 1000
+						) + _mountScore;
+
+						if (_score > _bestScore) then {
+							_bestScore = _score;
+							_bestUnits = [
+								_weaponUnit,
+								_mountUnit
+							];
+						};
+					};
+
+				} forEach _units;
+			};
+		};
+
+	} forEach _units;
+
+	_bestUnits
+};
+
 private _IFA_items = getArray (
 	configFile >> "CfgVehicles" >> typeOf _weapon >> "assembleInfo" >> "LIB_dissasembleTo"
 );
@@ -60,50 +220,95 @@ private _IFA_items = getArray (
 private _isIFAStatic = count _IFA_items > 0;
 
 if (_isIFAStatic) exitWith {
-	/*
-		IFA method:
-		- prefer current static gunner / crew
-		- otherwise prefer units with no secondaryWeapon
-		- require secondary slot to be free
-		- return the best two units
+	private _ifaTurretWeaponClass = _IFA_items param [0, ""];
 
-		This intentionally does not mutate inventory.
+	private _ifaTurretIsRifle = _ifaTurretWeaponClass isKindOf [
+		"Rifle",
+		configFile >> "CfgWeapons"
+	];
+
+	/*
+		IFA always uses two physical workers.
+
+		Returned order is important:
+			0 = turret carrier
+			1 = pod/tripod carrier
+
+		For rifle-based turrets, prefer a worker with no primary weapon.
+		For all roles, prefer a free secondary slot where applicable.
 	*/
-	private _scored = [];
+	private _bestUnits = [];
+	private _bestScore = -1;
 
 	{
-		private _unit = _x;
-		private _score = 0;
-		private _disqualified = false;
+		private _turretUnit = _x;
 
-		if (_unit in _crew) then {
-			_score = _score + 1000;
-		};
-
-		/*
-			Per current design:
-			IFA disassembly needs secondaryWeapon capacity.
-		*/
-		if (secondaryWeapon _unit == "") then {
-			_score = _score + 500;
+		private _turretCanCarry = if (_ifaTurretIsRifle) then {
+			true
 		} else {
-			_disqualified = true;
+			secondaryWeapon _turretUnit == ""
 		};
 
-		if (!_disqualified) then {
-			_scored pushBack [_score, _unit];
+		if (_turretCanCarry) then {
+			private _turretScore = 0;
+
+			if (
+				_ifaTurretIsRifle
+				&& {primaryWeapon _turretUnit == ""}
+			) then {
+				_turretScore = _turretScore + 100;
+			};
+
+			if (secondaryWeapon _turretUnit == "") then {
+				_turretScore = _turretScore + 10;
+			};
+
+			if (_turretUnit == gunner _weapon) then {
+				_turretScore = _turretScore + 2;
+			} else {
+				if (_turretUnit in _crew) then {
+					_turretScore = _turretScore + 1;
+				};
+			};
+			{
+				private _podUnit = _x;
+
+				if (
+					_podUnit != _turretUnit
+					&& {
+						[_podUnit] call A3C_main_fnc_canUnitCarryIFAstatic
+					}
+				) then {
+					private _podScore = 0;
+
+					//-- Prefer not having to replace an existing secondary weapon.
+					if (secondaryWeapon _podUnit == "") then {
+						_podScore = _podScore + 10;
+					};
+
+					if (_podUnit in _crew) then {
+						_podScore = _podScore + 1;
+					};
+
+					private _score = (
+						_turretScore * 1000
+					) + _podScore;
+
+					if (_score > _bestScore) then {
+						_bestScore = _score;
+						_bestUnits = [
+							_turretUnit,
+							_podUnit
+						];
+					};
+				};
+
+			} forEach _units;
 		};
 
 	} forEach _units;
 
-	if (count _scored < 2) exitWith {[]};
-
-	_scored sort false;
-
-	[
-		(_scored select 0) select 1,
-		(_scored select 1) select 1
-	]
+	_bestUnits
 };
 
 /*
@@ -209,11 +414,15 @@ private _scored = [];
 	private _isStaticBackpack = [_bp] call _fnc_isStaticWeaponBackpack;
 
 	/*
-		Highest preference:
-		current weapon crew, because they likely assembled/manned the static.
+		Prefer the current gunner when candidates are otherwise similarly
+		suitable, but equipment suitability remains more important.
 	*/
-	if (_unit in _crew) then {
-		_score = _score + 1000;
+	if (_unit == gunner _weapon) then {
+		_score = _score + 2;
+	} else {
+		if (_unit in _crew) then {
+			_score = _score + 1;
+		};
 	};
 
 	if (!_hasBackpack) then {

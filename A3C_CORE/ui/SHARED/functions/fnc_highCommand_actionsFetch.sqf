@@ -376,15 +376,13 @@ if (count _selectedGroups == 1) then {
 				isNull objectParent _x
 			};
 
-			if (count _groupUnits > 1) then {
-				A3C_STATIC_PACKS = [
-					_testedUnits,
-					"PLANNING"
-				] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons;
+			A3C_STATIC_PACKS = [
+				_testedUnits,
+				"PLANNING"
+			] call A3C_ai_shared_fnc_getSelectionPackedStaticWeapons;
 
-				if (A3C_STATIC_PACKS isNotEqualTo []) then {
-					_actions pushBackUnique "STATIC_ASSEMBLE_HC";
-				};
+			if (A3C_STATIC_PACKS isNotEqualTo []) then {
+				_actions pushBackUnique "STATIC_ASSEMBLE_HC";
 			};
 
 			private _allExplosiveTypes = [];
@@ -409,40 +407,51 @@ if (count _selectedGroups == 1) then {
 	*/
 	if (!isPlayer _groupLeader) then {
 		if !(_leaderVehicle isKindOf "AIR") then {
-			if (count _groupUnits > 1) then {
-				private _hasCrewedStaticWeapon = _groupUnits findIf {
-					private _vehicle = vehicle _x;
+			private _crewedStaticWeapon = objNull;
+			{
+				private _vehicle = vehicle _x;
 
+				if (
 					_x == gunner _vehicle
 					&& {_vehicle isKindOf "StaticWeapon"}
 					&& {typeOf _vehicle != "A3C_Supression_Target_F"}
-				} >= 0;
+				) exitWith {
+					_crewedStaticWeapon = _vehicle;
+				};
+			} forEach _groupUnits;
 
-				if (_hasCrewedStaticWeapon) then {
+			if (!isNull _crewedStaticWeapon) then {
+				if (
+					[
+						_groupUnits,
+						_crewedStaticWeapon,
+						true
+					] call A3C_ai_highCommand_fnc_canSelectionPickUpStatic
+				) then {
 					_actions pushBackUnique "STATIC_DISASSEMBLE_HC";
-				} else {
-					A3C_HC_NearStatics = (
-						position _groupLeader
-					) nearObjects [
-						"StaticWeapon",
-						50
-					];
+				};
+			} else {
+				A3C_HC_NearStatics = (
+					position _groupLeader
+				) nearObjects [
+					"StaticWeapon",
+					50
+				];
 
-					A3C_HC_NearStatics = A3C_HC_NearStatics select {
-						(crew _x) isEqualTo []
-						&& {typeOf _x != "A3C_Supression_Target_F"}
-						&& {
-							[
-								_groupUnits,
-								_x,
-								true
-							] call A3C_ai_highCommand_fnc_canSelectionPickUpStatic
-						}
-					};
+				A3C_HC_NearStatics = A3C_HC_NearStatics select {
+					(crew _x) isEqualTo []
+					&& {typeOf _x != "A3C_Supression_Target_F"}
+					&& {
+						[
+							_groupUnits,
+							_x,
+							true
+						] call A3C_ai_highCommand_fnc_canSelectionPickUpStatic
+					}
+				};
 
-					if (A3C_HC_NearStatics isNotEqualTo []) then {
-						_actions pushBackUnique "STATIC_DISASSEMBLE_HC";
-					};
+				if (A3C_HC_NearStatics isNotEqualTo []) then {
+					_actions pushBackUnique "STATIC_DISASSEMBLE_HC";
 				};
 			};
 		} else {

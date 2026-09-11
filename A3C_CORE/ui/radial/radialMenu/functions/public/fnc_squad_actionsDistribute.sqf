@@ -117,7 +117,17 @@ if (_canDisassemble) then {
 
 		//-- check for empty statics closeby
 		{
-			if (count crew _x == 0 && {(typeOf _x) != "A3C_Supression_Target_F"}) then {
+			if (
+				count crew _x == 0
+				&& {(typeOf _x) != "A3C_Supression_Target_F"}
+				&& {
+					[
+						_unitArray,
+						_x,
+						false
+					] call A3C_ai_highCommand_fnc_canSelectionPickUpStatic
+				}
+			) then {
 				A3C_REMFIRE_nearEmptyStatics pushBackUnique _x;
 				_cond = true;
 			};
