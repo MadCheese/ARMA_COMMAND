@@ -163,7 +163,7 @@ switch (_mode) do {
 			if (_hasToolkit) then {
 				_tree tvSetPictureRight [
 					_treePath,
-					"A3C_CORE\ui\pictures\icon_menu_action_repair_noBG.paa"
+					"A3C_UI\menu\icon_menu_action_repair.paa"
 				];
 
 				_tree tvSetPictureRightColor [

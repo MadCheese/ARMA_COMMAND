@@ -172,9 +172,19 @@ switch (_actionType) do {
 							};
 						} forEach _turretMags;
 
-						if ((count (getArtilleryAmmo [_vehicle])) > 0) then {
+						if (
+							getNumber (
+								(configOf _vehicle)
+								>> "artilleryScanner"
+							) > 0
+						) then {
+							// Artillery platforms are never used for generic suppression.
 							_addUnit = false;
-							_artyFireUnits pushBack _unit;
+
+							// Only recommend ARTILLERY if the weapon can currently fire artillery.
+							if ((getArtilleryAmmo [_vehicle]) isNotEqualTo []) then {
+								_artyFireUnits pushBack _unit;
+							};
 						};
 					};
 

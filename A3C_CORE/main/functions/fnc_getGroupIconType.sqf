@@ -45,7 +45,14 @@ private _operatedVehicles = [];
 
 // Artillery has highest vehicle/platform priority.
 // Uses operated vehicles so static mortars/artillery are included.
-if !((getArtilleryAmmo _operatedVehicles) isEqualTo []) exitWith {
+if (
+	_operatedVehicles findIf {
+		getNumber (
+			(configOf _x)
+			>> "artilleryScanner"
+		) > 0
+	} >= 0
+) exitWith {
 	_defaultRoot + "b_artillery_ca.paa"
 };
 

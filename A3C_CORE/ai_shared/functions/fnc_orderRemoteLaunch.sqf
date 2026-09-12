@@ -36,10 +36,22 @@ if (_weaponGroup == "FIND") then {
         case ([_unit] call A3C_main_fnc_unitHasAT): {
             "ATSHOT"
         };
-        case ((_vehicle isKindOf "TANK") && { _unit == gunner _vehicle }): {
+        case (
+            (_vehicle isKindOf "TANK")
+            && {_unit == gunner _vehicle}
+            && {
+                getNumber (
+                    (configOf _vehicle)
+                    >> "artilleryScanner"
+                ) == 0
+            }
+        ): {
             "TANKSHOT"
         };
-        case ((count (getArtilleryAmmo [_vehicle])) > 0): {
+        case (
+            _unit == gunner _vehicle
+            && {(getArtilleryAmmo [_vehicle]) isNotEqualTo []}
+        ): {
             "ARTY"
         };
         case ([_vehicle] call A3C_main_fnc_isStaticMissileLauncher): {

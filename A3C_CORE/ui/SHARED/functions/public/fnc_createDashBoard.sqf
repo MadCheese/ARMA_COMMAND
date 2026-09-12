@@ -1552,7 +1552,7 @@ _parentControl ctrlShow true;
 		_repairIcon ctrlSetPosition _supportPosition;
 
 		_repairIcon ctrlSetText (
-			"A3C_CORE\ui\pictures\icon_menu_action_repair_noBG.paa"
+			"A3C_UI\menu\icon_menu_action_repair.paa"
 		);
 
 		_repairIcon ctrlSetTextColor [1, 1, 1, 0.6];

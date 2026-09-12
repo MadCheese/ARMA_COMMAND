@@ -84,7 +84,10 @@ private _activeSuppressionUnits = (
 		if (
 			_unit == gunner _vehicle
 			&& {
-				(getArtilleryAmmo [_vehicle]) isEqualTo []
+				getNumber (
+					(configOf _vehicle)
+					>> "artilleryScanner"
+				) == 0
 			}
 		) then {
 			private _canSuppress = true;

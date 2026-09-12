@@ -101,6 +101,7 @@ if (_action == "ASSEMBLE") then {
 			private _storedStaticMagazineState = [];
 			private _hasStoredStaticMagazineState = false;
 			private _removeGunnerMagazines = false;
+			private _aceMagazineStateOwner = objNull;
 
 			private _usesACECSW = _assemblyProvider == "ACE_CSW";
 
@@ -111,6 +112,79 @@ if (_action == "ASSEMBLE") then {
 
 			//-- ACE CSW components are CfgWeapons items rather than static backpacks.
 			if (_usesACECSW) then {
+				private _aceWeaponComponentIndex = _assemblyComponents findIf {
+					(_x param [3, ""]) == "WEAPON"
+				};
+
+				if (_aceWeaponComponentIndex >= 0) then {
+					private _aceWeaponComponent = (
+						_assemblyComponents select _aceWeaponComponentIndex
+					);
+
+					private _aceWeaponUnit = _aceWeaponComponent param [
+						0,
+						objNull
+					];
+
+					private _acePackedWeaponClass = _aceWeaponComponent param [
+						1,
+						""
+					];
+
+					if (
+						!isNull _aceWeaponUnit
+						&& {_acePackedWeaponClass != ""}
+					) then {
+						private _aceMagazineStateSources = [];
+
+						/*
+							The hidden ACE ammunition state belongs conceptually to the
+							ammo-carrying equipment, not necessarily to the worker who
+							currently carries the CSW weapon.
+
+							Check all participating workers and their backpacks so that
+							rearranging the weapon/mount between the workers does not lose
+							the stored ammunition state.
+						*/
+						{
+							private _aceWorkerBackpack = unitBackpack _x;
+
+							if (!isNull _aceWorkerBackpack) then {
+								_aceMagazineStateSources pushBackUnique _aceWorkerBackpack;
+							};
+
+							_aceMagazineStateSources pushBackUnique _x;
+
+						} forEach _assemblyUnits;
+
+						{
+							private _aceStoredMagazineState = _x getVariable [
+								"A3C_ACE_CSW_MAGAZINE_STATE",
+								[]
+							];
+
+							if (
+								count _aceStoredMagazineState == 3
+								&& {
+									(_aceStoredMagazineState select 0)
+									== _staticClassToCreate
+								}
+								&& {
+									(_aceStoredMagazineState select 1)
+									== _acePackedWeaponClass
+								}
+							) exitWith {
+								_hasStoredStaticMagazineState = true;
+								_storedStaticMagazineState = +(
+									_aceStoredMagazineState select 2
+								);
+
+								_aceMagazineStateOwner = _x;
+							};
+
+						} forEach _aceMagazineStateSources;
+					};
+				};
 				{
 					_x params [
 						"_componentUnit",
@@ -266,22 +340,46 @@ if (_action == "ASSEMBLE") then {
 					private _terrainVectors = [_weaponPos, _weaponDir] call MCSS_fnc_getTerrainTilt;
 					private _createdStatic = _staticClassToCreate createVehicle _weaponPos;
 
-					if (_hasStoredStaticMagazineState) then {
+					private _aceForceAutofire = (
+						_usesACECSW
+						&& {
+							getNumber (
+								configOf _createdStatic
+								>> "ACE_CSW"
+								>> "allowFireOnLoad"
+							) == 2
+						}
+					);
+
+					/*
+						ACE CSWs assembled by A3C start empty.
+
+						Legacy backpack-based statics restore their saved ammunition immediately
+						after creation. This preserves the original A3C behavior and prevents
+						delayed ACE StaticWeapon initialization from reacting to A3C's magazine
+						restoration on otherwise non-ACE statics such as the RHS M252.
+					*/
+					if (_usesACECSW) then {
 						_createdStatic removeAllMagazinesTurret [];
+					} else {
+						if (_hasStoredStaticMagazineState) then {
+							_createdStatic removeAllMagazinesTurret [];
 
-						{
-							_x params [
-								"_magazineClass",
-								"_turretPath",
-								"_ammoCount"
-							];
+							{
+								_x params [
+									"_magazineClass",
+									"_turretPath",
+									"_ammoCount"
+								];
 
-							_createdStatic addMagazineTurret [
-								_magazineClass,
-								_turretPath,
-								_ammoCount
-							];
-						} forEach _storedStaticMagazineState;
+								_createdStatic addMagazineTurret [
+									_magazineClass,
+									_turretPath,
+									_ammoCount
+								];
+
+							} forEach _storedStaticMagazineState;
+						};
 					};
 
 					[_createdStatic, ATLToASL _weaponPos] remoteExec ["setPosASL", _createdStatic];
@@ -298,7 +396,81 @@ if (_action == "ASSEMBLE") then {
 
 					sleep 1.5;
 
+					/*
+						ACE CSWs with allowFireOnLoad = 2 force-fire whenever a round is loaded.
+
+						Restore their saved ammunition while simulation is still disabled and
+						before ACE's delayed CSW initialization installs its Reloaded/autofire
+						handler.
+					*/
+					if (
+						_aceForceAutofire
+						&& {_hasStoredStaticMagazineState}
+					) then {
+						_createdStatic removeAllMagazinesTurret [];
+
+						{
+							_x params [
+								"_magazineClass",
+								"_turretPath",
+								"_ammoCount"
+							];
+
+							_createdStatic addMagazineTurret [
+								_magazineClass,
+								_turretPath,
+								_ammoCount
+							];
+
+						} forEach _storedStaticMagazineState;
+					};
+
 					_createdStatic enableSimulationGlobal true;
+
+					/*
+						ACE initializes new static weapons with a delayed class event handler.
+
+						A3C has already kept the weapon simulation-disabled long enough for
+						that delayed initialization to become due. Give ACE another short
+						window after simulation is enabled before restoring A3C's exact ammo
+						state.
+					*/
+					if (_usesACECSW) then {
+						sleep 0.2;
+
+						if (
+							!_aceForceAutofire
+							&& {_hasStoredStaticMagazineState}
+						) then {
+							_createdStatic removeAllMagazinesTurret [];
+
+							{
+								_x params [
+									"_magazineClass",
+									"_turretPath",
+									"_ammoCount"
+								];
+
+								_createdStatic addMagazineTurret [
+									_magazineClass,
+									_turretPath,
+									_ammoCount
+								];
+
+							} forEach _storedStaticMagazineState;
+						};
+					};
+					//-- Stored ACE ammunition has now been restored successfully.
+					if (
+						_usesACECSW
+						&& {!isNull _aceMagazineStateOwner}
+					) then {
+						_aceMagazineStateOwner setVariable [
+							"A3C_ACE_CSW_MAGAZINE_STATE",
+							nil,
+							true
+						];
+					};
 
 					private _gunner = _assemblyUnits select 0;
 
@@ -552,6 +724,30 @@ if (_action == "ASSEMBLE") then {
 					_disassemblyUnits select 1
 				};
 
+				//-- Store exact loaded-ammunition state with the packed ACE weapon.
+				private _aceMagazineStateOwner = unitBackpack _aceWeaponUnit;
+
+				//-- Clear a possible old unit fallback when a backpack is available now.
+				if (!isNull _aceMagazineStateOwner) then {
+					_aceWeaponUnit setVariable [
+						"A3C_ACE_CSW_MAGAZINE_STATE",
+						nil,
+						true
+					];
+				} else {
+					_aceMagazineStateOwner = _aceWeaponUnit;
+				};
+
+				_aceMagazineStateOwner setVariable [
+					"A3C_ACE_CSW_MAGAZINE_STATE",
+					[
+						_staticWeaponType,
+						_aceWeaponClass,
+						+_staticMagazineState
+					],
+					true
+				];
+
 				private _pickupPos = (
 					_aceWeaponUnit modelToWorld (
 						_aceWeaponUnit selectionPosition "weapon"
@@ -563,10 +759,7 @@ if (_action == "ASSEMBLE") then {
 					&& {primaryWeapon _aceWeaponUnit != ""}
 				);
 
-				private _needsWeaponHolder = (
-					_hasPrimaryWeaponToPreserve
-					|| {count _staticMagazineState > 0}
-				);
+				private _needsWeaponHolder = _hasPrimaryWeaponToPreserve;
 
 				private _weaponHolder = if (_needsWeaponHolder) then {
 					"GroundWeaponHolder" createVehicle _pickupPos
@@ -658,66 +851,6 @@ if (_action == "ASSEMBLE") then {
 				//-- Give the carried tripod/mount to its selected worker.
 				if (_aceMountClass != "") then {
 					_aceMountUnit addWeaponGlobal _aceMountClass;
-				};
-
-
-				/*
-					Return loaded ACE CSW ammunition to the ground.
-
-					ACE_CSW_Groups maps a carryable magazine class to the vehicle
-					magazine class used by the assembled static.
-				*/
-				if (!isNull _weaponHolder) then {
-					{
-						_x params [
-							"_vehicleMagazineClass",
-							"_turretPath",
-							"_ammoCount"
-						];
-
-						if (_ammoCount > 0) then {
-							private _carryMagazineClass = "";
-
-							{
-								private _carryMagazineCfg = _x;
-
-								private _vehicleMagazineMapping = (
-									_carryMagazineCfg
-										>> _vehicleMagazineClass
-								);
-
-								if (
-									isNumber _vehicleMagazineMapping
-									&& {
-										getNumber _vehicleMagazineMapping > 0
-									}
-								) exitWith {
-									_carryMagazineClass = configName _carryMagazineCfg;
-								};
-
-							} forEach (
-								"true" configClasses (
-									configFile >> "ACE_CSW_Groups"
-								)
-							);
-
-							/*
-								Fallback to the original magazine class rather than
-								silently destroying ammunition if a third-party CSW
-								omits an ACE_CSW_Groups mapping.
-							*/
-							if (_carryMagazineClass == "") then {
-								_carryMagazineClass = _vehicleMagazineClass;
-							};
-
-							_weaponHolder addMagazineAmmoCargo [
-								_carryMagazineClass,
-								1,
-								_ammoCount
-							];
-						};
-
-					} forEach _staticMagazineState;
 				};
 
 			} else {

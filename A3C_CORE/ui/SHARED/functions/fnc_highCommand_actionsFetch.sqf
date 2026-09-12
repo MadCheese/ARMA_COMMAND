@@ -586,7 +586,12 @@ private _suppressionCondition =
 				private _vehicle = vehicle _x;
 
 				_x == gunner _vehicle
-				&& {getArtilleryAmmo [_vehicle] isEqualTo []}
+				&& {
+					getNumber (
+						(configOf _vehicle)
+						>> "artilleryScanner"
+					) == 0
+				}
 				&& {!(_vehicle isKindOf "PLANE")}
 			} >= 0
 		} >= 0
@@ -869,8 +874,14 @@ if (count _actions < 13) then {
 							A3C_REMFIRE_StaticShot_Units pushBackUnique _unit;
 						} else {
 							if (
-								(getArtilleryAmmo [_vehicle]) isEqualTo []
-								&& {_vehicle isKindOf "LAND"}
+								_vehicle isKindOf "LAND"
+								&& {
+									getNumber (
+										_cfgVehicles
+										>> typeOf _vehicle
+										>> "artilleryScanner"
+									) == 0
+								}
 							) then {
 								private _isCannonVehicle = false;
 								private _isMissileVehicle = false;

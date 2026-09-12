@@ -38,10 +38,32 @@ while {_fireCount > 0} do {
 
 		if (_fireCount == 0) exitWith {};
 
-		private _availableMags = (magazinesAmmoFull _artyPiece) select {
-			_x params ["_magType", "_magAmount"];
-			(_magType in A3C_HC_FOCUS_ARTY_AMMO_ARRAY) && {_pos inRangeOfArtillery [[_artyPiece], _magType]}
-		};
+		private _availableMags = [];
+
+		{
+			_x params ["_magType", "_turretPath", "_magAmount"];
+
+			if (
+				_magAmount > 0
+				&& {_magType in A3C_HC_FOCUS_ARTY_AMMO_ARRAY}
+				&& {_pos inRangeOfArtillery [[_artyPiece], _magType]}
+			) then {
+				private _existingIndex = _availableMags findIf {
+					_x select 0 == _magType
+				};
+
+				if (_existingIndex == -1) then {
+					_availableMags pushBack [_magType, _magAmount];
+				} else {
+					private _availableMagData = _availableMags select _existingIndex;
+					_availableMagData set [
+						1,
+						(_availableMagData select 1) + _magAmount
+					];
+				};
+			};
+
+		} forEach magazinesAllTurrets _artyPiece;
 
 		private _artyOrdersPlanned = _artyPiece getVariable ["A3C_ARTY_ORDERS", []];
 

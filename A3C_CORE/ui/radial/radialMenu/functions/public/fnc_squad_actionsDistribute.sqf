@@ -232,8 +232,13 @@ if ({!(_x in A3C_SUPPRESSION_UNITS_SQ)} count A3C_RD_UNITS > 0) then {
 				A3C_REMFIRE_StaticShot_Units pushBackUnique _x;
 			} else {
 				if (
-					(getArtilleryAmmo [vehicle _x]) isEqualTo []
-					&& {vehicle _x isKindOf "LAND"}
+					vehicle _x isKindOf "LAND"
+					&& {
+						getNumber (
+							(configOf (vehicle _x))
+							>> "artilleryScanner"
+						) == 0
+					}
 				) then {
 					private _isCannonVehicle = false;
 					private _isMissileVehicle = false;

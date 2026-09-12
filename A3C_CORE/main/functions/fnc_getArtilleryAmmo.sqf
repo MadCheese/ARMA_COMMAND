@@ -16,8 +16,8 @@ private _availableMagsAll = [];
 	private _artyPiece = _x;
 	private _artyMagTypes = getArtilleryAmmo [_artyPiece];
 
-	private _availableMagsVehicle = magazinesAmmoFull _artyPiece select {
-		_x params ["_magType", "_magAmount"];
+	private _availableMagsVehicle = magazinesAllTurrets _artyPiece select {
+		_x params ["_magType", "_turretPath", "_magAmount"];
 
 		private _inRange = if (_targetPos isEqualTo []) then {
 			true
@@ -29,7 +29,7 @@ private _availableMagsAll = [];
 	};
 
 	{
-		_x params ["_magType", "_magAmount"];
+		_x params ["_magType", "_turretPath", "_magAmount"];
 
 		private _existingIndex = _availableMagsAll findIf {
 			_x select 0 == _magType
