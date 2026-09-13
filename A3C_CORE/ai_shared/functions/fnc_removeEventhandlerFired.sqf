@@ -1,15 +1,54 @@
 // A3C_ai_shared_fnc_removeEventhandlerFired
 
-params ["_vehicle"];
+params [
+	["_vehicle", objNull, [objNull]],
+	["_cycleToken", "", [""]]
+];
 
-if !(local _vehicle) exitWith {};
+if (isNull _vehicle) exitWith {};
 
-private _handlerData = _vehicle getvariable ["A3C_REMOTE_HANDLE",[-1,objNull]];
+if (!local _vehicle) exitWith {};
 
+private _handlerData =
+	_vehicle getVariable [
+		"A3C_SUPPRESSION_FIRED_EH",
+		[]
+	];
+
+if (_handlerData isEqualTo []) exitWith {};
+
+private _handlerId =
+	_handlerData param [
+		0,
+		-1,
+		[0]
+	];
+
+private _storedCycleToken =
+	_handlerData param [
+		4,
+		"",
+		[""]
+	];
+
+/*
+	A completed older cycle must not remove a handler belonging to a
+	newer suppression cycle.
+*/
 if (
-	count _handlerData == 0
-	|| {_handlerData select 0 == -1}
+	_cycleToken != ""
+	&& {_storedCycleToken != _cycleToken}
 ) exitWith {};
 
-_vehicle removeEventhandler ["FIRED",_handlerData select 0];
-_vehicle setvariable ["A3C_REMOTE_HANDLE",[-1,objNull]];
+if (_handlerId >= 0) then {
+	_vehicle removeEventHandler [
+		"Fired",
+		_handlerId
+	];
+};
+
+_vehicle setVariable [
+	"A3C_SUPPRESSION_FIRED_EH",
+	[],
+	false
+];

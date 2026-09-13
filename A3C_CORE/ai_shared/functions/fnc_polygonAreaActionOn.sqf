@@ -195,6 +195,22 @@ switch (_actionType) do {
 			};
 		} forEach _units;
 
+		/*
+			Publish the exact controller-participation state before spawning
+			the controller scripts. This prevents the HC completion monitor
+			from observing an all-false startup window.
+
+			Rejected drivers, cargo units, players and unsupported units remain
+			inactive.
+		*/
+		{
+			_x setVariable [
+				"A3C_POLY_ACTION_ACTIVE",
+				_x in _suppressionUnits,
+				true
+			];
+		} forEach _units;
+
 		if (_suppressionUnits isEqualTo []) then {
 			if (!((_remoteFireUnits + _artyFireUnits) isEqualTo [])) then {
 				private _remoteString = if !(_remoteFireUnits isEqualTo []) then {
@@ -299,6 +315,12 @@ switch (_actionType) do {
 	case "AMBUSH": {
 		{
 			private _unit = _x;
+
+			_unit setVariable [
+				"A3C_POLY_ACTION_ACTIVE",
+				true,
+				true
+			];
 
 			if (_unit in (units player)) then {
 				[_unit, ["COMBATMODE", "BLUE"]] call A3C_ai_shared_fnc_orderbhvCbmIndividual;

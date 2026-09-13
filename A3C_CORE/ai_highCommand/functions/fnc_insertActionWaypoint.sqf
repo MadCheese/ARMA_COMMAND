@@ -480,7 +480,17 @@ if (_actionType in ["SUPPRESSION", "AMBUSH"]) then {
 		};
 
 		if (_actionType in ["SUPPRESSION", "AMBUSH"]) then {
-			if ({_x getVariable "A3C_POLY_ACTION_ACTIVE"} count units _group == 0) then {
+			private _activePolygonActionUnits = {
+				alive _x
+				&& {
+					_x getVariable [
+						"A3C_POLY_ACTION_ACTIVE",
+						false
+					]
+				}
+			} count units _group;
+
+			if (_activePolygonActionUnits == 0) then {
 				_exit = true;
 			};
 		};

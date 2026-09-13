@@ -1,6 +1,10 @@
 // A3C_ai_shared_fnc_rotateVehicleTowardsPos
 
-params ["_unit", "_destination"];
+params [
+	"_unit",
+	"_destination",
+	["_retainSpeedLimit", false]
+];
 
 if (isNull _unit) exitWith {};
 
@@ -8,28 +12,35 @@ if (isNull _unit) exitWith {};
 // If this function is not whitelisted for remoteExec in your mission,
 // remove this guard and keep the direct setDir logic local to caller.
 if (!local _unit) exitWith {
-	[_unit, _destination] remoteExecCall ["A3C_ai_shared_fnc_rotateVehicleTowardsPos", _unit];
+	[
+		_unit,
+		_destination,
+		_retainSpeedLimit
+	] remoteExec [
+		"A3C_ai_shared_fnc_rotateVehicleTowardsPos",
+		_unit
+	];
 };
 
 private _timeout = 10;
 private _startTime = time;
 
-// Helicopters: preserve original concept.
-// Do not force setDir; order forward movement and wait until aligned.
-if (_unit isKindOf "Helicopter") exitWith {
-	private _vehicle = vehicle _unit;
-	private _movePos = _vehicle getPos [100, _vehicle getDir _destination];
+/*
+	Helicopters use the normal direct rotation loop below.
+	Suppression retains ownership of the temporary zero-speed limit.
+*/
+private _rotationOwnsSpeedLimit = false;
 
-	[driver _vehicle, _movePos] call A3C_ai_shared_fnc_doMove;
+if (_unit isKindOf "Helicopter") then {
+	_rotationOwnsSpeedLimit = !(
+		_unit getVariable [
+			"A3C_LIMIT_SPEED",
+			false
+		]
+	);
 
-	while { canMove _vehicle } do {
-		private _relDir = _vehicle getRelDir _destination;
-		private _angleDiff = _relDir min (360 - _relDir);
-
-		if (_angleDiff <= 30) exitWith {};
-		if (time > _startTime + _timeout) exitWith {};
-
-		sleep 0.05;
+	if (_rotationOwnsSpeedLimit) then {
+		_unit limitSpeed 0;
 	};
 };
 
@@ -101,4 +112,11 @@ while { true } do {
 	};
 
 	sleep _sleepTime;
+};
+
+if (
+	_rotationOwnsSpeedLimit
+	&& {!_retainSpeedLimit}
+) then {
+	_unit limitSpeed false;
 };

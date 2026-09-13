@@ -9,7 +9,10 @@ if (isPlayer _unit) exitWith {};
 
 private _exit = false;
 
-while { alive _unit } do {
+while {
+	alive _unit
+	&& {_unit getVariable ["A3C_POLY_ACTION_ACTIVE", false]}
+} do {
 	if (!isNull objectParent _unit) then {
 		_exit = true;
 	} else {
@@ -27,9 +30,27 @@ while { alive _unit } do {
 	sleep 0.1;
 };
 
-if (_vehicle isKindOf "PLANE") exitWith {};
+/*
+	The action may have been cancelled while an infantry unit was waiting
+	to reach its formation position.
+*/
+if !(_unit getVariable ["A3C_POLY_ACTION_ACTIVE", false]) exitWith {};
 
-if !(alive _unit) exitWith {};
+if (_vehicle isKindOf "PLANE") exitWith {
+	_unit setVariable [
+		"A3C_POLY_ACTION_ACTIVE",
+		false,
+		true
+	];
+};
+
+if !(alive _unit) exitWith {
+	_unit setVariable [
+		"A3C_POLY_ACTION_ACTIVE",
+		false,
+		true
+	];
+};
 
 private _mode = _this select 1;
 private _polyMarker = _this select 2;
@@ -69,6 +90,33 @@ private _getCurrentPolygon = {
 	};
 
 	+(_currentPolygons select _polygonIndex)
+};
+
+private _getPolygonGeometrySignature = {
+	params [
+		["_polygon", [], [[]]]
+	];
+
+	if ((count _polygon) < 2) exitWith {
+		""
+	};
+
+	private _metadata = _polygon select 0;
+	private _corners = _polygon select 1;
+
+	if (
+		_metadata isEqualTo []
+		|| {_corners isEqualTo []}
+	) exitWith {
+		""
+	};
+
+	str [
+		+(_metadata select 0),
+		_corners apply {
+			+_x
+		}
+	]
 };
 
 private _polys = [];
@@ -149,7 +197,30 @@ private _exitRestrictive = false;
 
 switch (_mode) do {
 	case "SUPPRESSION": {
-		_unit setVariable ["A3C_POLY_ACTION_ACTIVE", true, true];
+		private _suppressionDisabledAI = [];
+		private _suppressionOwnsSpeedLimit = false;
+
+		private _disableSuppressionAIFeature = {
+			params ["_entity", "_feature"];
+
+			if (isNull _entity) exitWith {};
+
+			/*
+				Record only features that suppression actually disables.
+				Pre-existing disabled states must remain disabled afterward.
+			*/
+			if (_entity checkAIFeature _feature) then {
+				[
+					_entity,
+					_feature
+				] remoteExecCall ["disableAI", _entity];
+
+				_suppressionDisabledAI pushBackUnique [
+					_entity,
+					_feature
+				];
+			};
+		};
 
 		// Put in AWARE.
 		if !(isPlayer leader group _unit) then {
@@ -163,16 +234,74 @@ switch (_mode) do {
 		private _targetFnc = {
 			params ["_unit", "_target"];
 
+			if (
+				isNull _unit
+				|| {isNull _target}
+			) exitWith {};
+
 			private _targetPos = position _target;
 
-			[_unit, [_target, 4]] remoteExec ["reveal", _unit];
-			[_unit, _target] remoteExec ["doTarget", _unit];
+			[
+				[
+					_unit,
+					_target,
+					_targetPos
+				],
+				{
+					params [
+						"_unit",
+						"_target",
+						"_targetPos"
+					];
 
-			[_unit, objNull] remoteExec ["lookAt", _unit];
-			[_unit, _targetPos] remoteExec ["lookAt", _unit];
+					if (
+						isNull _unit
+						|| {isNull _target}
+					) exitWith {};
+
+					_unit reveal [_target, 4];
+					_unit doTarget _target;
+
+					if (isNull objectParent _unit) then {
+						_unit doWatch _target;
+					} else {
+						_unit lookAt objNull;
+						_unit lookAt _targetPos;
+					};
+				}
+			] remoteExecCall [
+				"BIS_fnc_call",
+				_unit
+			];
 		};
 
-		while { !isNull _target } do {
+		private _canContinueSuppression = {
+			!_exitRestrictive
+			&& {!isNull _target}
+			&& {alive _unit}
+			&& {
+				_unit getVariable [
+					"A3C_POLY_ACTION_ACTIVE",
+					false
+				]
+			}
+			&& {
+				(
+					[
+						_actual,
+						_polyMarker
+					] call _getCurrentPolygon
+				) isNotEqualTo []
+			}
+		};
+
+		private _lastAcceptedPolygonGeometrySignature = "";
+
+		while {
+			!isNull _target
+			&& {alive _unit}
+			&& {_unit getVariable ["A3C_POLY_ACTION_ACTIVE", false]}
+		} do {
 			if (isNull _unit) exitWith {};
 			if (!alive _unit) exitWith {};
 
@@ -213,6 +342,8 @@ switch (_mode) do {
 
 			if (_exitMain) exitWith {};
 
+			private _polygonGeometrySignature = [_polygon] call _getPolygonGeometrySignature;
+
 			private _center = (_polygon select 0) select 0;
 			_polyID = if ((count (_polygon select 0)) > 2) then {
 				(_polygon select 0) select 2
@@ -227,13 +358,6 @@ switch (_mode) do {
 
 			private _heightASL = ((ATLToASL _center) select 2) + 0.7;
 			private _radius = 0;
-			private _mainDest = (expectedDestination _unit) select 0;
-
-			if (isNull objectParent _unit) then {
-				[_unit, _target] remoteExec ["doTarget", _unit];
-			};
-
-			sleep 1;
 
 			{
 				private _distance = _x distance2D _center;
@@ -249,7 +373,11 @@ switch (_mode) do {
 				};
 			};
 
-			while { !isNull _target } do {
+			while {
+				!isNull _target
+				&& {alive _unit}
+				&& {_unit getVariable ["A3C_POLY_ACTION_ACTIVE", false]}
+			} do {
 				if ([_usedMagazine, _restrictiveOrigin, _restrictiveValue] call _restrictiveFnc) exitWith {
 					_exitRestrictive = true;
 				};
@@ -264,9 +392,7 @@ switch (_mode) do {
 				_exit = false;
 				_cycle = _cycle + 1;
 
-				if (_cycle > 300) exitWith {
-					_exitMain = true;
-				};
+				if (_cycle > 300) exitWith {};
 
 				_polys = _actual getVariable ["A3C_UNIT_POLYS", []];
 
@@ -288,9 +414,9 @@ switch (_mode) do {
 						_exit = true;
 
 						if (_height >= 1) then {
-							[_target, _pos] remoteExec ["setPosASL", _target];
+							_target setPosASL _pos;
 						} else {
-							[_target, ((_pos select [0, 2]) + [0])] remoteExec ["setPos", _target];
+							_target setPos ((_pos select [0, 2]) + [0]);
 						};
 					} else {
 						private _lineIntersections = lineIntersectsSurfaces [
@@ -320,27 +446,158 @@ switch (_mode) do {
 				if (_exit) exitWith {};
 			};
 
-			if (_vehicle isKindOf "HELICOPTER") then {
-				if (!isPlayer driver _vehicle) then {
-					[_vehicle, 0] remoteExec ["limitSpeed", _vehicle];
+			/*
+				Arma can retain the original targeting solution when the same invisible
+				target object is teleported. Give every suppressor a fresh target identity
+				when a new polygon geometry is accepted.
+			*/
+			if (
+				_exit
+				&& {call _canContinueSuppression}
+			) then {
+				if (
+					_polygonGeometrySignature
+						isNotEqualTo
+					_lastAcceptedPolygonGeometrySignature
+				) then {
+					private _oldTarget = _target;
+					private _targetPositionASL = getPosASL _oldTarget;
 
-					while { canMove _vehicle } do {
-						if (speed _vehicle < 2) exitWith {};
+					private _newTarget =
+						"A3C_Supression_Target_F"
+							createVehicle
+						(ASLToAGL _targetPositionASL);
+
+					_newTarget setPosASL _targetPositionASL;
+					_newTarget enableSimulation false;
+
+					private _targetData = +(
+						_unit getVariable [
+							"A3C_SUPPRESSION_TARGET",
+							[
+								_oldTarget,
+								true,
+								_polyMarker,
+								-1
+							]
+						]
+					);
+
+					_targetData set [0, _newTarget];
+					_targetData set [1, true];
+
+					_unit setVariable [
+						"A3C_SUPPRESSION_TARGET",
+						_targetData,
+						true
+					];
+
+					_target = _newTarget;
+
+					deleteVehicle _oldTarget;
+				};
+
+				_lastAcceptedPolygonGeometrySignature =
+					_polygonGeometrySignature;
+			};
+
+			if (
+				!_exitMain
+				&& {_exit}
+				&& {call _canContinueSuppression}
+				&& {_vehicle isKindOf "HELICOPTER"}
+			) then {
+				private _driver = driver _vehicle;
+
+				if (
+					!isNull _driver
+					&& {!isPlayer _driver}
+				) then {
+					/*
+						Do not overwrite a speed limit assigned through A3C.
+						If no such limit exists, suppression temporarily owns
+						the zero-speed limit.
+					*/
+					if (
+						!_suppressionOwnsSpeedLimit
+						&& {
+							!(_vehicle getVariable [
+								"A3C_LIMIT_SPEED",
+								false
+							])
+						}
+					) then {
+						[
+							_vehicle,
+							0
+						] remoteExecCall ["limitSpeed", _vehicle];
+
+						_suppressionOwnsSpeedLimit = true;
 					};
 
-					[_vehicle, "ALL"] remoteExec ["disableAI", _vehicle];
-					[driver _vehicle, "ALL"] remoteExec ["disableAI", driver _vehicle];
+					/*
+						Prevent autonomous combat decisions from competing
+						with the scripted orientation and target orders.
 
-					sleep 1;
+						TARGET, MOVE, PATH, FSM and ANIM remain available.
+					*/
+					[
+						_vehicle,
+						"AUTOCOMBAT"
+					] call _disableSuppressionAIFeature;
 
-					if (speed _vehicle < 1) then {
+					[
+						_vehicle,
+						"AUTOTARGET"
+					] call _disableSuppressionAIFeature;
+
+					[
+						_driver,
+						"AUTOCOMBAT"
+					] call _disableSuppressionAIFeature;
+
+					
+
+					private _currentPolygon = [
+						_actual,
+						_polyMarker
+					] call _getCurrentPolygon;
+
+					if (
+						isNull _target
+						|| {!alive _unit}
+						|| {_currentPolygon isEqualTo []}
+						|| {
+							!(_unit getVariable [
+								"A3C_POLY_ACTION_ACTIVE",
+								false
+							])
+						}
+					) then {
+						_exitMain = true;
+					} else {
 						private _orientPos = position _target;
-						private _rotateScript = [_vehicle, _orientPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
+
+						private _rotateScript = [
+							_vehicle,
+							_orientPos,
+							true
+						] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
 
 						waitUntil {
-							scriptDone _rotateScript ||
-							{ !canMove _vehicle } ||
-							{
+							sleep 0.05;
+
+							scriptDone _rotateScript
+							|| {!canMove _vehicle}
+							|| {isNull _target}
+							|| {!alive _unit}
+							|| {
+								!(_unit getVariable [
+									"A3C_POLY_ACTION_ACTIVE",
+									false
+								])
+							}
+							|| {
 								([
 									_actual,
 									_polyMarker
@@ -349,15 +606,22 @@ switch (_mode) do {
 						};
 
 						if (
-							([
-								_actual,
-								_polyMarker
-							] call _getCurrentPolygon) isEqualTo []
+							isNull _target
+							|| {
+								([
+									_actual,
+									_polyMarker
+								] call _getCurrentPolygon) isEqualTo []
+							}
+							|| {
+								!(_unit getVariable [
+									"A3C_POLY_ACTION_ACTIVE",
+									false
+								])
+							}
 						) then {
 							_exitMain = true;
 						};
-					} else {
-						_exitMain = true;
 					};
 				};
 			};
@@ -374,123 +638,503 @@ switch (_mode) do {
 				[[_unit], "SUPPRESSION"] call A3C_ai_shared_fnc_polygonAreaActionOff;
 			};
 
-			// Refresh order.
-			[_unit, [_target, 4]] remoteExec ["reveal", _unit];
+			if (
+				!_exitMain
+				&& {!_exit}
+				&& {call _canContinueSuppression}
+			) then {
+				sleep 0.1;
+			};
 
-			if (isNull objectParent _unit) then {
-				[_unit, _target] remoteExec ["doTarget", _unit];
-			} else {
+			if (
+				!_exitMain
+				&& {_exit}
+				&& {call _canContinueSuppression}
+			) then {
+				private _isMounted = !isNull objectParent _unit;
+
+				// The target has a fresh identity after polygon relocation.
 				[_unit, _target] call _targetFnc;
-			};
-
-			sleep 1;
-
-			if (isNull objectParent _unit) then {
-				[_unit, _target] remoteExec ["doSuppressiveFire", _unit];
-			} else {
-				[[vehicle _unit, _target], A3C_ai_shared_fnc_addEventhandlerFired] remoteExec ["BIS_fnc_call", 0];
-
-				private _handle = {};
-
-				[
-					_unit,
-					_vehicle,
-					_target,
-					_handle,
-					_targetFnc
-				] spawn {
-					params ["_unit", "_vehicle", "_target", "_handle", "_targetFnc"];
-
-					for "_i" from 1 to 3 do {
-						for "_l" from 1 to 10 do {
-							if (!isNull _target) then {
-								if (
-									(_vehicle isKindOf "HELICOPTER") ||
-									{ [position _target, _unit, 10] call MCSS_fnc_lineOfSightVehicle }
-								) then {
-									private _magType = currentMagazine vehicle _unit;
-									private _currentAmmo = getText (
-										configFile >> "CfgMagazines" >> _magType >> "ammo"
-									);
-
-									private _lock = getNumber (
-										configFile >> "CfgAmmo" >> _currentAmmo >> "weaponLockSystem"
-									);
-
-									if (_lock == 0) then {
-										[vehicle _unit, [_target]] remoteExec ["fireAtTarget", vehicle _unit];
-										sleep 0.1;
-									};
-								};
-							};
-						};
-
-						sleep 2;
-					};
-
-					[[vehicle _unit], A3C_ai_shared_fnc_removeEventhandlerFired] remoteExec ["BIS_fnc_call", 0];
-				};
-			};
-
-			private _count = 0;
-			private _origPos = position _unit;
-
-			// Firing cycle - units are already firing.
-			// This loop waits for the suppression cycle to complete.
-			while { alive _unit } do {
-				if ([_usedMagazine, _restrictiveOrigin, _restrictiveValue] call _restrictiveFnc) exitWith {
-					_exitRestrictive = true;
-				};
-
-				// Exit if poly no longer exists.
-				private _currentPolygon = [
-					_actual,
-					_polyMarker
-				] call _getCurrentPolygon;
-
-				if (_currentPolygon isEqualTo []) exitWith {};
-
-				// Exit and reset loop if polygon was dragged.
-				private _currentCenter =
-					(_currentPolygon select 0) select 0;
-
-				if (
-					_currentCenter distance2D _center > 1
-				) exitWith {
-					sleep 1;
-				};
-
-				_count = _count + 1;
 
 				sleep 1;
 
-				_polys = _actual getVariable ["A3C_UNIT_POLYS", []];
+				private _firingObject = if (_isMounted) then {
+					vehicle _unit
+				} else {
+					_unit
+				};
 
-				if !(_polygon in _polys) exitWith {
+				private _fireWeapon = "";
+				private _fireMuzzle = "";
+				private _fireMode = "";
+				private _fireMagazine = "";
+				private _fireAmmoCount = 0;
+				private _turretPath = [];
+				private _canFireCycle = false;
+
+				/*
+					Accept a weapon state only when it has loaded, damaging,
+					non-locking ammunition.
+
+					A3C_SUPPRESSION_FORBIDDEN remains deliberately unused.
+				*/
+				private _tryUseWeaponState = {
+					params ["_weaponState"];
+
+					if ((count _weaponState) < 5) exitWith {
+						false
+					};
+
+					_weaponState params [
+						["_stateWeapon", "", [""]],
+						["_stateMuzzle", "", [""]],
+						["_stateMode", "", [""]],
+						["_stateMagazine", "", [""]],
+						["_stateAmmoCount", 0, [0]]
+					];
+
+					if (
+						_stateWeapon isEqualTo ""
+						|| {_stateMuzzle isEqualTo ""}
+						|| {_stateMagazine isEqualTo ""}
+						|| {_stateAmmoCount <= 0}
+					) exitWith {
+						false
+					};
+
+					private _stateAmmoType = getText (
+						configFile
+						>> "CfgMagazines"
+						>> _stateMagazine
+						>> "ammo"
+					);
+
+					if (_stateAmmoType isEqualTo "") exitWith {
+						false
+					};
+
+					private _ammoConfig =
+						configFile >> "CfgAmmo" >> _stateAmmoType;
+
+					private _lockSystem = getNumber (
+						_ammoConfig >> "weaponLockSystem"
+					);
+
+					private _damageValue =
+						(getNumber (_ammoConfig >> "hit"))
+						max
+						(getNumber (_ammoConfig >> "indirectHit"));
+
+					if (
+						_lockSystem != 0
+						|| {_damageValue <= 0}
+					) exitWith {
+						false
+					};
+
+					_fireWeapon = _stateWeapon;
+					_fireMuzzle = _stateMuzzle;
+					_fireMode = _stateMode;
+					_fireMagazine = _stateMagazine;
+					_fireAmmoCount = _stateAmmoCount;
+					_canFireCycle = true;
+
+					true
+				};
+
+				if (_isMounted) then {
+					/*
+						ActionOn currently accepts only the vehicle's primary
+						gunner. unitTurret nevertheless obtains the actual
+						turret path instead of assuming [0].
+					*/
+					_turretPath = _firingObject unitTurret _unit;
+
+					private _candidateWeapons = [];
+					private _currentTurretWeapon = _firingObject currentWeaponTurret _turretPath;
+
+					if (_currentTurretWeapon isNotEqualTo "") then {
+						_candidateWeapons pushBack _currentTurretWeapon;
+					};
+
 					{
-						if (((_x select 0) select 1) == _polyMarker) then {
-							_target setPos ((_x select 0) select 0);
+						if (_x isNotEqualTo "") then {
+							_candidateWeapons pushBackUnique _x;
 						};
-					} forEach _polys;
+					} forEach (
+						_firingObject weaponsTurret _turretPath
+					);
+
+					/*
+						Prefer the selected weapon if suitable. If the selected
+						weapon is a guided missile, continue through the same
+						turret's weapons until an unlocked weapon with live
+						ammunition is found.
+					*/
+					{
+						private _candidateState = weaponState [
+							_firingObject,
+							_turretPath,
+							_x
+						];
+
+						if (
+							[_candidateState]
+								call _tryUseWeaponState
+						) exitWith {};
+					} forEach _candidateWeapons;
+				} else {
+					/*
+						Infantry suppression uses only the primary weapon or
+						handgun. Launchers, throwables and binocular-type
+						weapons are not suppression candidates.
+					*/
+					private _candidateWeapons = [];
+					private _primaryWeapon = primaryWeapon _unit;
+					private _handgunWeapon = handgunWeapon _unit;
+					private _currentInfantryWeapon = currentWeapon _unit;
+
+					if (
+						_currentInfantryWeapon in [
+							_primaryWeapon,
+							_handgunWeapon
+						]
+						&& {
+							_currentInfantryWeapon isNotEqualTo ""
+						}
+					) then {
+						_candidateWeapons pushBack
+							_currentInfantryWeapon;
+					};
+
+					{
+						if (_x isNotEqualTo "") then {
+							_candidateWeapons pushBackUnique _x;
+						};
+					} forEach [
+						_primaryWeapon,
+						_handgunWeapon
+					];
+
+					{
+						private _candidateWeapon = _x;
+						private _weaponConfig =
+							configFile
+							>> "CfgWeapons"
+							>> _candidateWeapon;
+
+						private _weaponMuzzles = getArray (
+							_weaponConfig >> "muzzles"
+						);
+
+						private _queryMuzzle =
+							_weaponMuzzles param [
+								0,
+								_candidateWeapon
+							];
+
+						if (_queryMuzzle isEqualTo "this") then {
+							_queryMuzzle = _candidateWeapon;
+						};
+
+						private _candidateState =
+							_unit weaponState _queryMuzzle;
+
+						if (
+							[_candidateState]
+								call _tryUseWeaponState
+						) exitWith {};
+					} forEach _candidateWeapons;
 				};
 
-				private _expectedDestination = expectedDestination _unit;
+				/*
+					Some modded weapons return an empty fire mode even though
+					the weapon and magazine state are otherwise usable.
+				*/
+				if (
+					_canFireCycle
+					&& {_fireMode isEqualTo ""}
+				) then {
+					private _weaponConfig =
+						configFile >> "CfgWeapons" >> _fireWeapon;
 
-				if !((toLower currentCommand _unit) in ["attack", "suppress", "", "scripted"]) exitWith {
-					_exitMain = true;
-				};
+					private _muzzleConfig = _weaponConfig;
 
-				if !(_unit getVariable "A3C_POLY_ACTION_ACTIVE") exitWith {
-					_exitMain = true;
-				};
+					if (
+						_fireMuzzle isNotEqualTo _fireWeapon
+						&& {
+							isClass (
+								_weaponConfig >> _fireMuzzle
+							)
+						}
+					) then {
+						_muzzleConfig =
+							_weaponConfig >> _fireMuzzle;
+					};
 
-				if ((_mainDest distance2D (_expectedDestination select 0)) > 5) then {
-					if (_unit distance2D _origPos > 2) then {
-						_exitMain = true;
+					private _modes =
+						getArray (_muzzleConfig >> "modes");
+
+					_fireMode = _modes param [0, "Single"];
+
+					if (_fireMode isEqualTo "this") then {
+						_fireMode = _fireWeapon;
 					};
 				};
 
-				if (_exitMain) exitWith {};
+				private _aimReady = true;
+
+				private _polygonChangedWhileAiming = false;
+
+				if (
+					_canFireCycle
+					&& {!_isMounted}
+				) then {
+					private _isWeaponPointedAtTarget = {
+						if (isNull _target) exitWith {
+							false
+						};
+
+						private _weaponVector =
+							_unit weaponDirection _fireWeapon;
+
+						private _targetVector =
+							(getPosASL _target) vectorDiff (eyePos _unit);
+
+						if (
+							vectorMagnitude _weaponVector <= 0
+							|| {vectorMagnitude _targetVector <= 0}
+						) exitWith {
+							false
+						};
+
+						_weaponVector = vectorNormalized _weaponVector;
+						_targetVector = vectorNormalized _targetVector;
+
+						/*
+							0.8 corresponds to approximately 37 degrees.
+							This confirms broad suppression aim rather than precision aim.
+						*/
+						(_weaponVector vectorDotProduct _targetVector) >= 0.8
+					};
+
+					private _aimTimeout = time + 5;
+
+					waitUntil {
+						sleep 0.05;
+
+						private _latestPolygon = [
+							_actual,
+							_polyMarker
+						] call _getCurrentPolygon;
+
+						_polygonChangedWhileAiming =
+							_latestPolygon isNotEqualTo []
+							&& {
+								(
+									[_latestPolygon]
+										call _getPolygonGeometrySignature
+								) isNotEqualTo
+								_polygonGeometrySignature
+							};
+
+						!call _canContinueSuppression
+						|| {_polygonChangedWhileAiming}
+						|| {call _isWeaponPointedAtTarget}
+						|| {time >= _aimTimeout}
+					};
+
+					_aimReady =
+						!_polygonChangedWhileAiming
+						&& {call _canContinueSuppression}
+						&& {call _isWeaponPointedAtTarget};
+				};
+
+				if (
+					_canFireCycle
+					&& {_aimReady}
+					&& {call _canContinueSuppression}
+				) then {
+					private _cycleToken = format [
+						"%1_%2_%3",
+						netId _unit,
+						diag_tickTime,
+						_cycle
+					];
+
+					/*
+						For infantry the handler is attached directly to the
+						shooter, so no gunner filter is necessary.
+
+						For vehicles it is essential to filter for the selected
+						primary gunner. Otherwise shots from another turret could
+						be redirected into this suppression area.
+					*/
+					private _expectedGunner = if (_isMounted) then {
+						_unit
+					} else {
+						objNull
+					};
+
+					[
+						[
+							_firingObject,
+							_target,
+							_expectedGunner,
+							_fireWeapon,
+							_cycleToken
+						],
+						A3C_ai_shared_fnc_addEventhandlerFired
+					] remoteExecCall ["BIS_fnc_call", _firingObject];
+
+					// Allow the handler installation to reach the object's owner.
+					sleep 0.1;
+
+					private _abortFireCycle = false;
+
+					for "_burst" from 1 to 3 do {
+						for "_shot" from 1 to 10 do {
+							if (
+								isNull _target
+								|| {!alive _unit}
+								|| {
+									!(_unit getVariable [
+										"A3C_POLY_ACTION_ACTIVE",
+										false
+									])
+								}
+							) exitWith {
+								_abortFireCycle = true;
+							};
+
+							if (
+								[
+									_usedMagazine,
+									_restrictiveOrigin,
+									_restrictiveValue
+								] call _restrictiveFnc
+							) exitWith {
+								_exitRestrictive = true;
+								_abortFireCycle = true;
+							};
+
+							private _cyclePolygon = [
+								_actual,
+								_polyMarker
+							] call _getCurrentPolygon;
+
+							if (_cyclePolygon isEqualTo []) exitWith {
+								_abortFireCycle = true;
+							};
+
+							/*
+								Dragging the polygon ends only this firing cycle.
+								The outer loop will obtain the new polygon and
+								select a new target position.
+							*/
+							private _cyclePolygonGeometrySignature =
+								[_cyclePolygon] call _getPolygonGeometrySignature;
+
+							if (
+								_cyclePolygonGeometrySignature
+									isNotEqualTo
+								_polygonGeometrySignature
+							) exitWith {
+								_abortFireCycle = true;
+							};
+
+							if (_isMounted) then {
+								if (
+									(_firingObject isKindOf "HELICOPTER")
+									|| {
+										[
+											position _target,
+											_unit,
+											10
+										] call MCSS_fnc_lineOfSightVehicle
+									}
+								) then {
+									[
+										_firingObject,
+										[
+											_target,
+											_fireWeapon
+										]
+									] remoteExecCall [
+										"fireAtTarget",
+										_firingObject
+									];
+								};
+							} else {
+								[
+									_unit,
+									[_fireMuzzle, _fireMode]
+								] remoteExecCall [
+									"forceWeaponFire",
+									_unit
+								];
+							};
+
+							sleep 0.1;
+						};
+
+						// End an automatic infantry burst explicitly.
+						if (!_isMounted) then {
+							[
+								_unit,
+								["", ""]
+							] remoteExecCall [
+								"forceWeaponFire",
+								_unit
+							];
+						};
+
+						if (_abortFireCycle) exitWith {};
+
+						if (_burst < 3) then {
+							sleep 2;
+						};
+					};
+
+					// Ensure no forced firing remains active after cancellation.
+					if (_isMounted) then {
+						[
+							_firingObject,
+							[objNull]
+						] remoteExecCall [
+							"fireAtTarget",
+							_firingObject
+						];
+					} else {
+						[
+							_unit,
+							["", ""]
+						] remoteExecCall [
+							"forceWeaponFire",
+							_unit
+						];
+					};
+
+					/*
+						The token prevents an older cycle from removing a handler
+						that belongs to a newer cycle.
+					*/
+					[
+						[
+							_firingObject,
+							_cycleToken
+						],
+						A3C_ai_shared_fnc_removeEventhandlerFired
+					] remoteExecCall ["BIS_fnc_call", _firingObject];
+				} else {
+					/*
+						If suppression remains active but no suitable weapon is available
+						or infantry aim is not ready, wait before trying again.
+					*/
+					if (call _canContinueSuppression) then {
+						sleep 1;
+					};
+				};
 			};
 
 			if (_exitMain && { _groupPlayer }) exitWith {
@@ -499,6 +1143,8 @@ switch (_mode) do {
 				};
 			};
 		};
+
+		
 
 		if (!isPlayer _unit) then {
 			if !(isPlayer leader group _unit) then {
@@ -518,16 +1164,37 @@ switch (_mode) do {
 
 		_unit setVariable ["A3C_POLY_ACTION_ACTIVE", false, true];
 
-		if (_vehicle isKindOf "HELICOPTER") then {
-			[_vehicle, "ALL"] remoteExec ["enableAI", _vehicle];
-			[driver _vehicle, "ALL"] remoteExec ["enableAI", driver _vehicle];
-			[_vehicle, false] remoteExec ["limitSpeed", _vehicle];
+		/*
+			Restore only AI features that this suppression controller disabled.
+		*/
+		{
+			_x params ["_entity", "_feature"];
+
+			if (!isNull _entity) then {
+				[
+					_entity,
+					_feature
+				] remoteExecCall ["enableAI", _entity];
+			};
+		} forEach _suppressionDisabledAI;
+
+		if (
+			_suppressionOwnsSpeedLimit
+			&& {
+				!(_vehicle getVariable [
+					"A3C_LIMIT_SPEED",
+					false
+				])
+			}
+		) then {
+			[
+				_vehicle,
+				false
+			] remoteExecCall ["limitSpeed", _vehicle];
 		};
 	};
 
 	case "AMBUSH": {
-		_unit setVariable ["A3C_POLY_ACTION_ACTIVE", true, true];
-
 		while { alive _unit } do {
 			_polys = _actual getVariable ["A3C_UNIT_POLYS", []];
 

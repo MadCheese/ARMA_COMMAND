@@ -21,18 +21,93 @@ switch (_mode) do {
 			private _unit = _x;
 			private _isPlayerGroup = _unit in (units player);
 
-			private _target = ((_unit getVariable ["A3C_SUPPRESSION_TARGET", [objNull]]) select 0);
+			/*
+				Signal the controller first. This prevents another shot from
+				being issued while the remaining cleanup is performed.
+			*/
+			_unit setVariable [
+				"A3C_POLY_ACTION_ACTIVE",
+				false,
+				true
+			];
 
-			if !(typeName _target == "SCALAR") then {
-				if (!isNull _target) then {
-					deleteVehicle _target;
-				};
+			private _isMounted = !isNull objectParent _unit;
+			private _firingObject = if (_isMounted) then {
+				vehicle _unit
+			} else {
+				_unit
 			};
 
-			doStop _unit;
-			_unit doWatch objNull;
+			/*
+				Stop the forced firing command before removing its handler.
+			*/
+			if (!isNull _firingObject) then {
+				if (_isMounted) then {
+					[
+						_firingObject,
+						[objNull]
+					] remoteExecCall [
+						"fireAtTarget",
+						_firingObject
+					];
+				} else {
+					[
+						_unit,
+						["", ""]
+					] remoteExecCall [
+						"forceWeaponFire",
+						_unit
+					];
+				};
 
-			_unit setVariable ["A3C_SUPPRESSION_TARGET", [0, false, -1], true];
+				/*
+					No token is passed deliberately. Manual cancellation owns
+					the complete suppression state and may remove whichever
+					suppression handler is currently installed.
+				*/
+				[
+					[_firingObject],
+					A3C_ai_shared_fnc_removeEventhandlerFired
+				] remoteExecCall [
+					"BIS_fnc_call",
+					_firingObject
+				];
+			};
+
+			[
+				_unit,
+				objNull
+			] remoteExecCall ["doTarget", _unit];
+
+			[
+				_unit,
+				objNull
+			] remoteExecCall ["doWatch", _unit];
+
+			[
+				_unit,
+				objNull
+			] remoteExecCall ["lookAt", _unit];
+
+			private _targetData = _unit getVariable [
+				"A3C_SUPPRESSION_TARGET",
+				[objNull]
+			];
+
+			private _target = _targetData param [0, objNull];
+
+			if (
+				_target isEqualType objNull
+				&& {!isNull _target}
+			) then {
+				deleteVehicle _target;
+			};
+
+			_unit setVariable [
+				"A3C_SUPPRESSION_TARGET",
+				[0, false, -1],
+				true
+			];
 
 			private _polyOwner = if (_isPlayerGroup) then {
 				_unit
@@ -40,15 +115,31 @@ switch (_mode) do {
 				group _unit
 			};
 
-			_poly = _polyOwner getVariable "A3C_POLY_ACTIVE";
-			_polyOwner setVariable ["A3C_POLY_ACTIVE", [], true];
+			_poly = _polyOwner getVariable [
+				"A3C_POLY_ACTIVE",
+				[]
+			];
 
-			[_unit, _poly] call A3C_ai_shared_fnc_polygonAreaRemove;
+			_polyOwner setVariable [
+				"A3C_POLY_ACTIVE",
+				[],
+				true
+			];
 
-			[_unit] call A3C_ai_squad_fnc_actionResumeDestination;
+			[
+				_unit,
+				_poly
+			] call A3C_ai_shared_fnc_polygonAreaRemove;
 
-			A3C_SUPPRESSION_UNITS_SQ = A3C_SUPPRESSION_UNITS_SQ - [_unit];
-			A3C_SUPPRESSION_UNITS_AI = A3C_SUPPRESSION_UNITS_AI - [_unit];
+			[
+				_unit
+			] call A3C_ai_squad_fnc_actionResumeDestination;
+
+			A3C_SUPPRESSION_UNITS_SQ =
+				A3C_SUPPRESSION_UNITS_SQ - [_unit];
+
+			A3C_SUPPRESSION_UNITS_AI =
+				A3C_SUPPRESSION_UNITS_AI - [_unit];
 		} forEach _units;
 
 		if !(_refAIUnits isEqualTo A3C_SUPPRESSION_UNITS_AI) then {

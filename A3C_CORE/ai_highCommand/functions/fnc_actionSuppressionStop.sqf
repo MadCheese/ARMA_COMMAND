@@ -1,3 +1,5 @@
+// A3C_ai_highCommand_fnc_actionSuppressionStop
+
 {
 	private _group = _x;
 	{

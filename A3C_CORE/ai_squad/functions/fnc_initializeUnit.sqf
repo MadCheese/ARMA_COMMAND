@@ -76,6 +76,7 @@ _unit setVariable ["A3C_SYNC_WPINDEX", 0, true];
 _unit setVariable ["A3C_SYNC_ITEMS", [], true];
 _unit setVariable ["A3C_WP_LINES", [], true];
 _unit setVariable ["A3C_SUPPRESSION_TARGET", [0, false, -1], true];
+_unit setVariable ["A3C_POLY_ACTION_ACTIVE", false, true];
 _unit setVariable ["A3C_UNIT_POLYS", [], true];
 _unit setVariable ["A3C_UNIT_EXPLOSIVES", [], false];
 _unit setVariable ["A3C_POLY_ACTIVE", [], true];
