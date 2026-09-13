@@ -72,6 +72,9 @@ A3C_PREP(resolveWaypointUID);
 A3C_PREP(revealCursorPos);
 A3C_PREP(setVehicleVarname);
 A3C_PREP(shouldEjectFromHeli);
+A3C_PREP(shouldMaxHCSkill);
+A3C_PREP(shouldMaxPlayerGroupSkill);
+
 A3C_PREP(storeTeamColors);
 A3C_PREP(unitHasAT);
 A3C_PREP(unitHasUGL);

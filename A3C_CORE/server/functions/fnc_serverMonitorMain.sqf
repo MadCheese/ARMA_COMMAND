@@ -23,6 +23,8 @@ private _gunnerSwitchFnc = {
 
 private _targetDistance = 2500;
 
+private _shouldMaxHCSkill = [] call A3C_main_fnc_shouldMaxHCSkill;
+
 KNOWSABOUT_ARRAY = [];
 
 private _allClients = allPlayers apply {
@@ -216,7 +218,12 @@ sleep (0.5 * count _allClients); //-- give timeout to receive update from client
 			};
 
 			//-- Skill Reset
-			if (A3C_isHCSkillMaxed) then {
+			if (
+				_shouldMaxHCSkill
+				&& {
+					!isPlayer _x
+				}
+			) then {
 				[_x, 1] remoteExec ["setSkill", _x];
 			};
 
@@ -260,7 +267,11 @@ sleep (0.5 * count _allClients); //-- give timeout to receive update from client
 			};
 		};
 	};
-} forEach A3C_MON_SERVER_checkGroups;
+} forEach (
+	A3C_MON_SERVER_checkGroups select {
+		!(_x getVariable ["A3C_HC_BLACKLIST", false])
+	}
+);
 
 //-- Blacklist WPs
 {

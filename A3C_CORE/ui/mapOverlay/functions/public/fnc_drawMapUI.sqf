@@ -655,6 +655,48 @@ if (
 //////////////////////////////////
 //-- UI-ICONS HIGHCOMMAND LEVEL //
 //////////////////////////////////
+
+// Determine whether the current multi-waypoint selection contains
+// only waypoints from one convoy bundle and includes its first
+// still-relevant waypoint.
+private _convoyBundleDragLeaderWaypoint = [];
+
+private _multiWaypointSelection =
+	+A3C_Selection_MultiWaypoint;
+
+if (count _multiWaypointSelection > 1) then {
+	private _relevantBundle = [
+		_multiWaypointSelection select 0
+	] call A3C_main_fnc_getRelevantWaypointBundle;
+
+	if !(_relevantBundle isEqualTo []) then {
+		private _selectedBundleWaypoints =
+			_relevantBundle select {
+				_x in _multiWaypointSelection
+			};
+
+		private _isBundleOnlySelection =
+			count _selectedBundleWaypoints > 1
+			&& {
+				count _selectedBundleWaypoints
+					== count _multiWaypointSelection
+			};
+
+		if (_isBundleOnlySelection) then {
+			private _leadingRelevantWaypoint =
+				_relevantBundle select 0;
+
+			if (
+				_leadingRelevantWaypoint
+					in _multiWaypointSelection
+			) then {
+				_convoyBundleDragLeaderWaypoint =
+					_leadingRelevantWaypoint;
+			};
+		};
+	};
+};
+
 {
 	private _highCommandGroup = _x;
 	private _groupLeader = leader _highCommandGroup;
@@ -1054,9 +1096,8 @@ if (
 						} forEach _synchronizedWaypoints;
 					};
 					// Highlight waypoints belonging to a selected group or the
-					// current multi-waypoint selection. Multi-waypoint selection
-					// takes visual priority.
-
+					// current multi-waypoint selection. The leading waypoint
+					// of an eligible convoy-bundle selection is orange.
 					private _isMultiWaypointSelected =
 						_waypoint in A3C_Selection_MultiWaypoint;
 
@@ -1064,14 +1105,25 @@ if (
 						_isMultiWaypointSelected
 						|| {_isGroupSelected}
 					) then {
+						private _isConvoyBundleDragLeader =
+							_isMultiWaypointSelected
+							&& {
+								_waypoint isEqualTo
+									_convoyBundleDragLeaderWaypoint
+							};
+
 						private _waypointSelectionCircleColor =
-							if (_isMultiWaypointSelected) then {
+							if (_isConvoyBundleDragLeader) then {
 								[1,1,0,1]
 							} else {
-								[
-									A3C_UI_COLOR_BLUE,
-									0.15 min A3C_OPACITY
-								] call A3C_ui_shared_fnc_getColorArrayWithOpacity
+								if (_isMultiWaypointSelected) then {
+									[1,1,1,1]
+								} else {
+									[
+										A3C_UI_COLOR_BLUE,
+										0.15 min A3C_OPACITY
+									] call A3C_ui_shared_fnc_getColorArrayWithOpacity
+								}
 							};
 
 						private _waypointSelectionCircleText =

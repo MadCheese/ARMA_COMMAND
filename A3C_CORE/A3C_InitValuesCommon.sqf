@@ -324,9 +324,6 @@ if (!isServer) exitWith {};
 
 
 if (isDedicated) then {
-	A3C_isHCSkillMaxed = if (!isNil 'A3C_isHCSkillMaxed') then {A3C_isHCSkillMaxed} else {true}; //-- can obe overRidden in Server's in server mission init.sqf
-	//-- #TODO: if a3c not running on server, this needs to still be declared!!!
-
 	A3C_DEDI_allowLocalitySwitch = true;
 };
 

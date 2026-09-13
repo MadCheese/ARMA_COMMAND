@@ -24,7 +24,12 @@ private _irType = switch (side _unit) do {
 	};
 };
 
-if (profileNamespace getVariable ["A3C_SKILL_VAR", false]) then {
+if (
+	!isPlayer _unit
+	&& {
+		[] call A3C_main_fnc_shouldMaxPlayerGroupSkill
+	}
+) then {
 	_unit setSkill 1;
 };
 

@@ -338,19 +338,8 @@ A3C_DISABLE_RADIAL = false;
 	[_unit] call A3C_main_fnc_setVehicleVarname;
 } forEach _units;
 
-private _setMaximumSkill = profileNamespace getVariable [
-	"A3C_SKILL_VAR",
-	false
-];
-
 {
-	private _unit = _x;
-
-	[_unit] call A3C_ai_squad_fnc_initializeUnit;
-
-	if (_setMaximumSkill) then {
-		_unit setSkill 1;
-	};
+	[_x] call A3C_ai_squad_fnc_initializeUnit;
 } forEach units group player;
 
 profileNamespace setVariable [

@@ -330,7 +330,16 @@ A3C_HUD_SPEED_ICON_SIZE = 0.8;
 profileNameSpace setVariable ["A3C_HUD_OBJECTS",profileNameSpace getVariable ["A3C_HUD_OBJECTS",true]];
 
 profilenamespace setvariable ["A3C_NUM_VAR",profileNameSpace getVariable ["A3C_NUM_VAR", false]];
-profilenamespace setvariable ["A3C_SKILL_VAR",profileNameSpace getVariable ["A3C_SKILL_VAR", true]];
+
+//-- SKill reset variable: False by default
+profileNamespace setVariable [
+	"A3C_SKILL_VAR",
+	profileNamespace getVariable [
+		"A3C_SKILL_VAR",
+		false
+	]
+];
+
 profilenamespace setvariable ["A3C_MAP_OVERLAY_SHOWN",profileNameSpace getVariable ["A3C_MAP_OVERLAY_SHOWN", true]];
 
 profilenamespace setvariable ["A3C_MAP_KEY_ID",profileNameSpace getVariable ["A3C_MAP_KEY_ID", [46,[false,false,false]]]];
@@ -362,12 +371,6 @@ profilenamespace setvariable ["A3C_HUD_LAYOUT_CORNER",profileNameSpace getVariab
 profilenamespace setvariable ["HC_GROUP_RESPONSE",profileNameSpace getVariable ["HC_GROUP_RESPONSE", false]];
 
 profilenamespace setvariable ["A3C_AUTOMEDIC",profileNameSpace getVariable ["A3C_AUTOMEDIC", false]];
-
-if (isServer) then { //-- ONLY RELEVANT FOR HOSTING MACHINE - DEDICATED EXITED EARLIER IN SCRIPT. Variable is only tested by server monitor
-	A3C_isHCSkillMaxed = if (!isNil 'A3C_isHCSkillMaxed') then {A3C_isHCSkillMaxed} else {profileNameSpace getVariable ["A3C_SKILL_VAR",true]}; //-- SKILL MP
-};
-
-
 
 A3C_HUD_SPEED_ICON = if ( (profilenamespace getvariable "A3C_HUD_SPEED_VAR") == -1) then {"A3C_CORE\ui\pictures\icon_menu_speed_full.paa"} else {"A3C_CORE\ui\pictures\icon_menu_speed_diminished.paa"};
 
