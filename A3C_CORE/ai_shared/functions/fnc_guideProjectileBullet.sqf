@@ -11,6 +11,8 @@ params [
     ["_gunner", objNull, [objNull]]
 ];
 
+
+
 if (isNull _veh) exitWith {};
 if (isNull _projectile) exitWith {};
 

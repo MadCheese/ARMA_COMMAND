@@ -317,21 +317,22 @@ private _availableActions = [
 	"SEARCH / DESTROY"
 ];
 
-private _allGroupsCanTransportUnload = true;
-private _allGroupsCanCombatLand = true;
-private _allGroupsCanLand = true;
+private _anyGroupCanTransportUnload = false;
+private _anyGroupCanCombatLand = false;
+private _anyGroupCanLand = false;
 
 {
 	private _group = _x;
 	private _leader = leader _group;
 	private _leaderVehicle = vehicle _leader;
+
 	private _groupControlsLeaderVehicle =
 		!isNull objectParent _leader
 		&& {
 			driver _leaderVehicle in units _group
 		};
 
-	if !(
+	if (
 		_groupControlsLeaderVehicle
 		&& {
 			count fullCrew [
@@ -341,10 +342,10 @@ private _allGroupsCanLand = true;
 			] > 0
 		}
 	) then {
-		_allGroupsCanTransportUnload = false;
+		_anyGroupCanTransportUnload = true;
 	};
 
-	if !(
+	if (
 		_groupControlsLeaderVehicle
 		&& {
 			[
@@ -352,26 +353,28 @@ private _allGroupsCanLand = true;
 			] call A3C_main_fnc_canHoverAircraft
 		}
 	) then {
-		_allGroupsCanCombatLand = false;
+		_anyGroupCanCombatLand = true;
 	};
 
-	if !(
+	if (
 		_groupControlsLeaderVehicle
-		&& {_leaderVehicle isKindOf "AIR"}
+		&& {
+			_leaderVehicle isKindOf "AIR"
+		}
 	) then {
-		_allGroupsCanLand = false;
+		_anyGroupCanLand = true;
 	};
 } forEach _groups;
 
-if (_allGroupsCanTransportUnload) then {
+if (_anyGroupCanTransportUnload) then {
 	_availableActions pushBack "TRANSPORT UNLOAD";
 };
 
-if (_allGroupsCanCombatLand) then {
+if (_anyGroupCanCombatLand) then {
 	_availableActions pushBack "COMBAT LAND";
 };
 
-if (_allGroupsCanLand) then {
+if (_anyGroupCanLand) then {
 	_availableActions pushBack "LAND";
 };
 

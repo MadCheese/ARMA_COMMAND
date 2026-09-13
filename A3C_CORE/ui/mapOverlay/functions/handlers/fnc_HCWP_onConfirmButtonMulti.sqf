@@ -259,6 +259,60 @@ if (_action == "COMBAT LAND") then {
 	};
 };
 
+private _fncActionApplicable = {
+	params [
+		"_group",
+		"_action"
+	];
+
+	if (
+		_action in [
+			"NO CHANGE",
+			"MOVE",
+			"SEARCH / DESTROY"
+		]
+	) exitWith {
+		true
+	};
+
+	private _leader = leader _group;
+	private _leaderVehicle = vehicle _leader;
+
+	private _groupControlsLeaderVehicle =
+		!isNull objectParent _leader
+		&& {
+			driver _leaderVehicle in units _group
+		};
+
+	if !(_groupControlsLeaderVehicle) exitWith {
+		false
+	};
+
+	switch (_action) do {
+		case "TRANSPORT UNLOAD": {
+			count fullCrew [
+				_leaderVehicle,
+				"cargo",
+				true
+			] > 0
+		};
+
+		case "COMBAT LAND": {
+			[
+				_leaderVehicle
+			] call A3C_main_fnc_canHoverAircraft
+		};
+
+		case "LAND": {
+			_leaderVehicle isKindOf "AIR"
+		};
+
+		default {
+			false
+		};
+	}
+};
+
 private _fncScriptData = {
 	params ["_waypoint"];
 
@@ -305,34 +359,62 @@ private _fncScriptData = {
 	]
 };
 
-private _needsScriptConditionAccess =
-	(
-		_requestedPreCondition isEqualTo []
-		&& {_action != "NO CHANGE"}
-	)
-	|| {
-		_requestedPreCondition isNotEqualTo []
-		&& {_action == "NO CHANGE"}
-	};
+private _unsupported = _selection findIf {
+	_x params [
+		"_group",
+		"_waypointIndex"
+	];
 
-if (_needsScriptConditionAccess) then {
-	private _unsupported =
-		_selection findIf {
-			waypointType _x == "SCRIPTED"
-			&& {
-				!(
-					(
-						[
-							_x
-						] call _fncScriptData
-					) select 0
-				)
-			}
-		};
+	private _waypoint = [
+		_group,
+		_waypointIndex
+	];
 
-	if (_unsupported > -1) exitWith {
-		hint "A selected scripted waypoint does not expose an editable completion condition";
-	};
+	waypointType _waypoint == "SCRIPTED"
+	&& {
+		private _actionApplicable = [
+			_group,
+			_action
+		] call _fncActionApplicable;
+
+		/*
+		 * Existing scripted condition data is needed when:
+		 *
+		 * 1. This waypoint will receive a new action, but completion is
+		 *    KEEP CURRENT, so its current completion must be carried over.
+		 *
+		 * 2. This waypoint will keep its current action, but completion
+		 *    itself is being changed.
+		 */
+		private _needsScriptConditionAccess =
+			(
+				_action != "NO CHANGE"
+				&& {_actionApplicable}
+				&& {_requestedPreCondition isEqualTo []}
+			)
+			|| {
+				_requestedPreCondition isNotEqualTo []
+				&& {
+					_action == "NO CHANGE"
+					|| {!_actionApplicable}
+				}
+			};
+
+		_needsScriptConditionAccess
+		&& {
+			!(
+				(
+					[
+						_waypoint
+					] call _fncScriptData
+				) select 0
+			)
+		}
+	}
+};
+
+if (_unsupported > -1) exitWith {
+	hint "A selected scripted waypoint does not expose an editable completion condition";
 };
 
 private _fncPreConditionExpression = {
@@ -573,13 +655,14 @@ private _fncSetScriptPreCondition = {
 	];
 };
 
-private _hasAnyChange =
+private _hasCommonChange =
 	_behaviour != "KEEP CURRENT"
 	|| {_combatMode != "KEEP CURRENT"}
 	|| {_speed != "KEEP CURRENT"}
 	|| {_formation != "KEEP CURRENT"}
-	|| {_requestedPreCondition isNotEqualTo []}
-	|| {_action != "NO CHANGE"};
+	|| {_requestedPreCondition isNotEqualTo []};
+
+private _transportUnloadGroups = [];
 
 {
 	_x params [
@@ -592,10 +675,25 @@ private _hasAnyChange =
 		_waypointIndex
 	];
 
+	private _actionApplicable = [
+		_group,
+		_action
+	] call _fncActionApplicable;
+
+	private _waypointChanged =
+		_hasCommonChange
+		|| {
+			_action != "NO CHANGE"
+			&& {_actionApplicable}
+		};
+
 	private _preCondition = [];
 
 	if (
-		_action != "NO CHANGE"
+		(
+			_action != "NO CHANGE"
+			&& {_actionApplicable}
+		)
 		|| {_requestedPreCondition isNotEqualTo []}
 	) then {
 		_preCondition = if (
@@ -609,7 +707,10 @@ private _hasAnyChange =
 		};
 	};
 
-	if (_action != "NO CHANGE") then {
+	if (
+		_action != "NO CHANGE"
+		&& {_actionApplicable}
+	) then {
 		[
 			_group,
 			_waypointIndex
@@ -639,6 +740,8 @@ private _hasAnyChange =
 						"NONE"
 					]
 				];
+
+				_transportUnloadGroups pushBackUnique _group;
 			};
 
 			case "COMBAT LAND": {
@@ -833,7 +936,7 @@ private _hasAnyChange =
 	};
 
 	if (
-		_hasAnyChange
+		_waypointChanged
 		&& {
 			_waypointIndex
 				== currentWaypoint _group
@@ -907,9 +1010,9 @@ _display setVariable [
 	[]
 ];
 
-if (_action == "TRANSPORT UNLOAD") then {
+if (_transportUnloadGroups isNotEqualTo []) then {
 	[
-		_groups
+		_transportUnloadGroups
 	] call A3C_ui_mapOverlay_fnc_HCWP_openCargoWaypointPrompt;
 };
 

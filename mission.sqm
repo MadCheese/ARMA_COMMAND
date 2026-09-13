@@ -1942,6 +1942,7 @@ class Mission
 			};
 			class Attributes
 			{
+				name="testgroup";
 			};
 			id=4870;
 			atlOffset=-9.5367432e-07;
