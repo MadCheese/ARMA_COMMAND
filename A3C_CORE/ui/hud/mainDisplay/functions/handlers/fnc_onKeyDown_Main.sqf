@@ -123,10 +123,13 @@ if (
 			};
 
 			case "PLACE_CHARGE_SQUAD": {
+				_flickerMode = "";
+				A3C_UI_HUD_3D_TAG_ICON_MOD = "ON";
 				[] call A3C_UI_selectionPromptPanel_fnc_actionChargeSelectSquad;
 			};
 
 			case "STATIC_ASSEMBLE_SQUAD": {
+				_flickerMode = "";
 				[] spawn A3C_ai_squad_fnc_actionAssembleWeapon;
 			};
 
@@ -222,14 +225,14 @@ if (
 
 			case "PLACE_CHARGE_HC": {
 				[] call A3C_UI_selectionPromptPanel_fnc_actionChargeSelectHighCommand;
-
-				_flickerMode = "DEMOLITION";
+				A3C_UI_HUD_3D_TAG_ICON_MOD = "ON";
+				_flickerMode = "";
 			};
 
 			case "STATIC_ASSEMBLE_HC": {
 				[] call A3C_ai_highCommand_fnc_actionAssembleWeapon;
-
-				_flickerMode = "DEMOLITION";
+				A3C_UI_HUD_3D_TAG_ICON_MOD = "ON";
+				_flickerMode = "";
 			};
 
 			case "BoardVehicle_HC": {

@@ -52,12 +52,7 @@ private _objectPlacerType = typeOf A3C_OBJECTPLACER;
 			[_unit, _unit getVariable ["A3C_PLOT", []]] spawn A3C_ai_shared_fnc_actionExecuteUnitPlot;
 		} forEach _units;
 
-		A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configFile >> "CfgVehicles" >> _weapon >> "picture");
-		A3C_UI_HUD_3D_TAG_ICON_MOD = "ON";
-
-		private _tagPos = +position A3C_OBJECTPLACER;
-		[_tagPos, ""] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
+	
 	};
 } forEach A3C_STATIC_PACKS;
 
-deleteVehicle A3C_OBJECTPLACER;

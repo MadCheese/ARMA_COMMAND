@@ -145,9 +145,13 @@ if (_isSquadPlacementDisplay) then {
 		deleteVehicle _objectPlacer;
 	};
 
-	A3C_UI_RADIAL_Current_Remfire_Units = [];
-	A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
-	A3C_UI_HUD_3D_TAG_reposition = false;
+	//-- reset any tag icons unless flicker is active
+	if !(A3C_UI_HUD_3D_TAGGING) then {
+		A3C_UI_RADIAL_Current_Remfire_Units = [];
+		A3C_UI_HUD_3D_TAG_ICON_TYPE = "";
+		A3C_UI_HUD_3D_TAG_reposition = false;
+	};
+	
 };
 
 /*

@@ -726,10 +726,11 @@ if (_doubleClick) then {
 				_selectedWeapon
 			] spawn A3C_ai_shared_fnc_actionStaticWeaponPack;
 
+			//-- SelectionPrompt disassembly flicker
 			A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (configFile >> "CfgVehicles" >> typeOf _selectedWeapon >> "picture");
 			A3C_UI_HUD_3D_TAG_ICON_MOD = "OFF";
-
-			[position _selectedWeapon, ""] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
+			private _tagPos = +position _selectedWeapon;
+			[_tagPos, ""] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 
 			[
 				_display,
@@ -917,6 +918,7 @@ if (_doubleClick) then {
 				};
 			};
 
+			//-- get magtype icon
 			private _magPic = getText (configFile >> "CfgMagazines" >> _magName >> "picture");
 
 			A3C_UI_HUD_3D_TAG_ICON_TYPE = if (_magPic == "") then {
@@ -925,7 +927,7 @@ if (_doubleClick) then {
 				_magPic
 			};
 
-			[_detoPosition, "STANDARD"] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
+
 		};
 
 		case ("PLACE_CHARGE_HC") : {
@@ -1058,6 +1060,7 @@ if (_doubleClick) then {
 
 			player groupRadio "SentCmdPlaceCharge";
 
+			//-- get magtype icon
 			private _magPic = getText (
 				configFile >>
 					"CfgMagazines" >>
@@ -1069,10 +1072,7 @@ if (_doubleClick) then {
 				A3C_UI_HUD_3D_TAG_ICON_TYPE = _magPic;
 			};
 
-			[
-				A3C_UI_HUD_3D_TAG_ICON_POS,
-				"STANDARD"
-			] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
+
 
 			[
 				_display,

@@ -3,6 +3,9 @@
 params ["_pos", "_mode"];
 
 A3C_UI_HUD_3D_TAGGING = true;
+A3C_isHud3dTag = true; //-- are both bools the same?!
+
+A3C_UI_HUD_3D_TAG_reposition = false;
 
 private _iconType = A3C_UI_HUD_3D_TAG_ICON_TYPE;
 
@@ -42,7 +45,11 @@ if (
 	
 };
 
+
+
 A3C_UI_HUD_3D_TAG_ICON_POS = +_pos;
+
+
 
 // Animate icon zoom.
 if !(_mode in ["HC_WP", "SUPPRESSION"]) then {
@@ -62,6 +69,7 @@ if !(_mode in ["HC_WP", "SUPPRESSION"]) then {
 	};
 };
 
+
 // End flicker.
 for "_i" from 1 to 4 do {
 	A3C_UI_HUD_3D_TAG_ICON_TYPE = _iconType;
@@ -76,5 +84,7 @@ A3C_UI_HUD_3D_TAG_ICON_COL = [1, 1, 1, 0.7];
 A3C_UI_HUD_3D_TAG_ICON_SIZE = 3;
 A3C_UI_HUD_3D_TAG_ICON_POS = [0, 0, 0];
 A3C_UI_HUD_3D_TAG_ICON_MOD = "NONE";
-A3C_UI_HUD_3D_TAGGING = false;
 A3C_UI_HUD_3D_TAG_ICON_TYPE = ""; //-- just for good measure as it kept lingering sometimes
+
+A3C_UI_HUD_3D_TAGGING = false;
+A3C_isHud3dTag = false;

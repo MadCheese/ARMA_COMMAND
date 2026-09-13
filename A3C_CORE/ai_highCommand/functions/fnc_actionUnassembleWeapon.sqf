@@ -1,14 +1,10 @@
+// A3C_ai_highCommand_fnc_actionUnassembleWeapon
+
 params ["_mode", "_group", ["_wpn", objNull]];
 
 private _groupUnits = units _group;
 
-if (isNull _wpn) then {
-	{
-		if ((vehicle _x) isKindOf "staticweapon") exitWith {
-			_wpn = vehicle _x;
-		};
-	} forEach _groupUnits;
-};
+
 
 if (isNull _wpn) exitWith {};
 

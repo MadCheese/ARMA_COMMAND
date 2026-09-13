@@ -8,17 +8,6 @@ params ["_assemblingUnitSelection", "_weaponToDisassemble"];
 
 showCommandingMenu "";
 
-A3C_UI_HUD_3D_TAG_ICON_TYPE = getText (
-	configFile >> "CfgVehicles" >> typeOf _weaponToDisassemble >> "picture"
-);
-
-A3C_UI_HUD_3D_TAG_ICON_MOD = "OFF";
-A3C_UI_HUD_3D_TAG_ICON_POS = +(position _weaponToDisassemble);
-
-[
-	+(position _weaponToDisassemble),
-	""
-] spawn A3C_ui_mainDisplay_fnc_3D_TagFlicker;
 
 private _disassemblyData = [
 	_assemblingUnitSelection,
