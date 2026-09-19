@@ -73,14 +73,7 @@ private _isBoardable = {
 		false
 	};
 
-	private _hasEmptySeat = {
-		_vehicle emptyPositions _x > 0
-	} count [
-		"driver",
-		"gunner",
-		"commander",
-		"cargo"
-	] > 0;
+	private _hasEmptySeat = _vehicle emptyPositions "" > 0;
 
 	if (!_hasEmptySeat) exitWith {
 		false

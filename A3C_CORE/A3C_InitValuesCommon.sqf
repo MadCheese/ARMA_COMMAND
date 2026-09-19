@@ -1,3 +1,15 @@
+//-- Server A3C presence.
+//-- Value always exists; Resolved tells us whether that value is authoritative yet.
+if (isNil "A3C_IsA3CServer") then {
+	A3C_IsA3CServer = false;
+};
+
+if (isNil "A3C_IsA3CServerResolved") then {
+	A3C_IsA3CServerResolved = false;
+};
+
+diag_log "[A3C]: Starting A3C initvalues common";
+
 //---------------------------  S H A R E D  V A L U E S   A N D   A R R A Y S  ------------------------
 //------------------------------------------------------------------------------------------------------
 
@@ -22,7 +34,13 @@ A3C_checkserverAddon = { //-- this works but is sloppy. we need a way to return 
 	switch _inputString do {
 		case ("AR_AdvancedRappelling") : {A3C_IsRappel = _isClass; publicVariable 'A3C_IsRappel'};
 		case ("AICommand") : {A3C_IsAICommand = _isClass; publicVariable 'A3C_IsAICommand'};
-		case ("A3C_UI") : {A3C_IsA3CServer = _isClass; publicVariable 'A3C_IsA3CServer'};
+		case ("A3C_UI") : {
+			A3C_IsA3CServer = _isClass;
+			A3C_IsA3CServerResolved = true;
+
+			publicVariable "A3C_IsA3CServer";
+			publicVariable "A3C_IsA3CServerResolved";
+		};
 	};
 };
 publicVariable 'A3C_checkserverAddon';
@@ -357,6 +375,9 @@ publicVariable 'A3C_SUPPRESSION_UNITS_AI';
 
 RHS_ENGINE_STARTUP_OFF = true;
 publicVariable 'RHS_ENGINE_STARTUP_OFF';
+
+
+diag_log "[A3C]: FINISHED A3C initvalues common";
 
 
 

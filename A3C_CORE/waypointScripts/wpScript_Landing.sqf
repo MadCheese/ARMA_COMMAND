@@ -387,11 +387,8 @@ private _landingScript = if (_useVerticalLanding) then {
 				The VTOL receives this immediately after the dedicated approach
 				loop hands control over to the landing phase.
 			*/
-			_vehicle landAt [
-				_landingPosWorld,
-				"Land",
-				99999
-			];
+
+			[_vehicle, _landingPosWorld, "Land"] call A3C_ai_shared_fnc_landAt;
 		} forEach _groupLandingAircraft;
 
 		waitUntil {
@@ -717,5 +714,7 @@ A3C_BLACKLIST_WAYPOINT_EDIT =
 A3C_BLACKLIST_WAYPOINT_EDIT - [_wp];
 
 publicVariable "A3C_BLACKLIST_WAYPOINT_EDIT";
+
+// systemchat "LANDING WP SCRIPT COMPLETE";
 
 true

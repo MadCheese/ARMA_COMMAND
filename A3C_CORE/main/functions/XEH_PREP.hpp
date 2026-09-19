@@ -1,3 +1,4 @@
+A3C_PREP(buildConvoyVehicleOrder);
 A3C_PREP(buildingCreateRooms);
 A3C_PREP(buildingFindRoomDoors);
 A3C_PREP(buildingGetDoorDirection);
@@ -66,6 +67,7 @@ A3C_PREP(numberToPhonetic);
 A3C_PREP(orderIndividualMacro);
 A3C_PREP(playerConnectToUAV);
 A3C_PREP(playerTakeUAVControl);
+A3C_PREP(projectPositionOntoRoadRoute);
 A3C_PREP(reAssignTeamColors);
 A3C_PREP(resetDifficulty);
 A3C_PREP(resolveWaypointUID);

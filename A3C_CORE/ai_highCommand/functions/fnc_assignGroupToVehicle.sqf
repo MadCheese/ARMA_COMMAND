@@ -21,6 +21,11 @@ private _successfulBoardGroups = [];
 
 	private _emptyPositions = [_selectedVehicle] call A3C_ai_highCommand_fnc_getFullCrew;
 
+	// Static weapons may be manned by only part of the group.
+	if (_selectedVehicle isKindOf "StaticWeapon") then {
+		_boardUnits = _boardUnits select [0, count _emptyPositions];
+	};
+
 	if (count _boardUnits > 0 && {count _boardUnits <= count _emptyPositions}) then {
 		{
 			private _unit = _x;

@@ -188,16 +188,7 @@ if (_isMap) exitWith {
 
 	A3C_HC_GroupMenu_SuppressionRequested = true;
 
-	{
-		private _control = _mapDisplay displayCtrl _x;
-
-		if (!isNull _control) then {
-			_control ctrlShow false;
-		};
-	} forEach [
-		IDC_MAP_HCGP_Parent,
-		IDC_SHARED_UI_DASHBOARD_PARENT
-	];
+	[] call A3C_ui_mapOverlay_fnc_close_HCGP_Parent;
 
 	private _mainMapDisplay = findDisplay 12;
 

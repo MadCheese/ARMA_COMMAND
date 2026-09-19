@@ -223,19 +223,6 @@ if (_doConvoyBehaviour) then {
 		+(A3C_GROUP_CONVOYS select _convoyArrayIndex)
 	};
 
-	/*
-		Register or extend the server-authoritative convoy runtime.
-		_managedGroups is the complete permanent group order.
-		_freeGroups contains only newly added groups.
-	*/
-	[
-		_managedGroups,
-		_freeGroups
-	] remoteExecCall [
-		"A3C_server_fnc_registerConvoyRuntime",
-		2
-	];
-
 	
 
 	[_freeGroups,_lastUnit,_managedGroups] spawn {
@@ -369,11 +356,7 @@ if (_doConvoyBehaviour) then {
 			
 			while {[_group] call _aliveFnc} do {
 
-				private _useRuntimeControl =
-					missionNamespace getVariable [
-						"A3C_USE_RUNTIME_CONVOY_CONTROL",
-						false
-					];
+				
 
 				if (isNull _leadByGroup) exitWith {};
 
@@ -470,13 +453,13 @@ if (_doConvoyBehaviour) then {
 				};
 
 				private _maxSpeed = if (_doExit) then {
-					false
+					1000
 				} else {
 					if (_doStandBy) then {
 						_stopSpeed
 					} else {
 						if (_mustCatchUp) then {
-							false
+							1000
 						} else {
 							if (_leaderSpeed < 10 && {_closestDistance < 30}) then {
 								_stopSpeed
@@ -484,221 +467,86 @@ if (_doConvoyBehaviour) then {
 								if (_closestDistance < 50) then {
 									_leaderSpeed
 								} else {
-									false
+									1000
 								};
 							};
 						};
 					}
 				};
 
-				private _hasSpeedLimit =
-					_maxSpeed isEqualType 0;
-
-				private _isStopped =
-					_hasSpeedLimit
-					&& {
-						_maxSpeed == _stopSpeed
-					};
-
-				private _isFollowingLeaderSpeed =
-					_hasSpeedLimit
-					&& {
-						round _maxSpeed
-							== round _leaderSpeed
-					};
-
-				if (!_useRuntimeControl) then {
-					if (_isStopped) then {
+				if (_maxSpeed == _stopSpeed) then {
+					_group setVariable
+					[
+						"A3C_UI_Group_Status",
+						[
+							format ["WAITING FOR %1",groupID _leadByGroup],
+							[1,0.25,0.3,1]
+						],
+						true
+					];
+					[_group, "disableAI"] call _abilityFnc;
+				} else {
+					[_group, "enableAI"] call _abilityFnc;
+					if (round _maxSpeed == round _leaderSpeed) then {
 						_group setVariable
+						[
+							"A3C_UI_Group_Status",
 							[
-								"A3C_UI_Group_Status",
-								[
-									format [
-										"WAITING FOR %1",
-										groupID _leadByGroup
-									],
-									[1,0.25,0.3,1]
-								],
-								true
-							];
+								format ["SPEED LIMIT: %1",round _leaderSpeed],
+								A3C_UI_COLOR_YELLOW
+							],
+							true
+						];
 					} else {
-						if (_isFollowingLeaderSpeed) then {
-							_group setVariable
-								[
-									"A3C_UI_Group_Status",
-									[
-										format [
-											"SPEED LIMIT: %1",
-											round _leaderSpeed
-										],
-										A3C_UI_COLOR_YELLOW
-									],
-									true
-								];
-						} else {
-							private _d =
-								_group getVariable [
-									"A3C_UI_Group_Status",
-									["",[]]
-								];
-
-							if (
-								{
-									_x in (_d select 0)
-								} count [
-									"WAITING",
-									"LIMIT"
-								] > 0
-							) then {
-								_group setVariable [
-									"A3C_UI_Group_Status",
-									["",[]],
-									true
-								];
-							};
+						private _d = _group getVariable ["A3C_UI_Group_Status",["",[]]];
+						if ({_x in (_d select 0)} count ["WAITING","LIMIT"] > 0) then {
+							_group setVariable ["A3C_UI_Group_Status",["",[]],true];
 						};
 					};
 				};
 
 				if (_doExit) exitWith {
-					{
-						private _vic = _x;
-
-						if (!isNull _vic) then {
-							[
-								_vic,
-								false
-							] remoteExec [
-								"limitSpeed",
-								_vic
-							];
-						};
-					} forEach _allVehicles;
-
 					[_group, "enableAI"] call _abilityFnc;
 					_group setVariable ["A3C_UI_Group_Status",["FOLLOW COMPLETE",[1,1,1,1]],true];
 					sleep 3;
 				};
 
-				/*
-					* Stored vehicle references can become null if a vehicle is deleted,
-					* or if an invalid vehicle reference entered the initial snapshot.
-				*/
-				_allVehicles =
-					_allVehicles select {
-						!isNull _x
-					};
+				{
+					private _vic = _x;
+					[_x,_maxSpeed] remoteExec ["limitSpeed",_x];
 
-				if (!_useRuntimeControl) then {
-					{
-						private _vic = _x;
+					if (_maxSpeed == _stopSpeed) then {
+						if (!(_vic in A3C_CONVOY_SLOWDOWN_VICS) && {speed _vic > 10}) then {
+							[_vic] spawn {
+								params ["_vic"];
+								A3C_CONVOY_SLOWDOWN_VICS set [count A3C_CONVOY_SLOWDOWN_VICS,_vic];
 
-						[
-							_vic,
-							_maxSpeed
-						] remoteExec [
-							"limitSpeed",
-							_vic
-						];
-
-						if (_isStopped) then {
-							if (
-								!(_vic in A3C_CONVOY_SLOWDOWN_VICS)
-								&& {speed _vic > 10}
-							) then {
-								[_vic] spawn {
-									params ["_vic"];
-
-									A3C_CONVOY_SLOWDOWN_VICS pushBackUnique
-										_vic;
-
-									while {
-										!isNull _vic
-										&& {speed _vic > 10}
-									} do {
-										private _vlm =
-											velocityModelSpace _vic;
-
-										private _frontalSpeed =
-											((_vlm select 1) - 1) max 0;
-
-										_vlm set [
-											1,
-											_frontalSpeed
-										];
-
-										[
-											_vic,
-											_vlm
-										] remoteExec [
-											"setVelocityModelSpace",
-											_vic
-										];
-
-										sleep 0.05;
-									};
-
-									A3C_CONVOY_SLOWDOWN_VICS =
-										A3C_CONVOY_SLOWDOWN_VICS
-											- [_vic];
+								while {speed _vic > 10} do {
+									private _vlm = velocityModelSpace _vic;
+									private _frontalSpeed = ((_vlm select 1) - 1) max 0;
+									_vlm set [1, _frontalSpeed];
+									[_vic, _vlm] remoteExec ["setVelocityModelSpace",_vic];
+									sleep 0.05;
 								};
+								A3C_CONVOY_SLOWDOWN_VICS = A3C_CONVOY_SLOWDOWN_VICS - [_vic];
 							};
 						};
-					} forEach _allVehicles;
-
-					if (_isStopped) then {
-						[_group, "disableAI"] call _abilityFnc;
-					} else {
-						[_group, "enableAI"] call _abilityFnc;
 					};
+				} forEach _allVehicles;
 
-					if (
-						_isLastVehicle
-						&& {!isNull _convoyLeader}
-						&& {!isNull _followingVic}
-					) then {
-						private _convoyLeaderGroup =
-							group driver _convoyLeader;
+				if (_maxSpeed == _stopSpeed) then {
+					[_group, "disableAI"] call _abilityFnc;
+				} else {
+					[_group, "enableAI"] call _abilityFnc;
+				};
 
-						if (
-							_convoyLeader distance2D _followingVic
-								> (_vehicleCountAhead * 75)
-						) then {
-							[
-								_convoyLeader,
-								20
-							] remoteExec [
-								"limitSpeed",
-								_convoyLeader
-							];
-
-							if (!isNull _convoyLeaderGroup) then {
-								_convoyLeaderGroup setVariable [
-									"A3C_UI_Group_Status",
-									[
-										"REGROUP",
-										[1,0,0,1]
-									],
-									true
-								];
-							};
-						} else {
-							[
-								_convoyLeader,
-								false
-							] remoteExec [
-								"limitSpeed",
-								_convoyLeader
-							];
-
-							if (!isNull _convoyLeaderGroup) then {
-								_convoyLeaderGroup setVariable [
-									"A3C_UI_Group_Status",
-									["",[]],
-									true
-								];
-							};
-						};
+				if (_isLastVehicle) then {
+					if (_convoyLeader distance2D _followingVic > (_vehicleCountAhead * 75)) then {
+						[_convoyLeader,20] remoteExec ["limitSpeed",_convoyLeader];
+						(group driver _convoyLeader) setVariable ["A3C_UI_Group_Status",["REGROUP",[1,0,0,1]],true];
+					} else {
+						[_convoyLeader,false] remoteExec ["limitSpeed",_convoyLeader];
+						(group driver _convoyLeader) setVariable ["A3C_UI_Group_Status",["",[]],true];
 					};
 				};
 
@@ -768,20 +616,7 @@ if (_doConvoyBehaviour) then {
 							_allVehicles pushBackUnique _v;
 							_allVehicleCount = _allVehicleCount + 1;
 
-							if !(
-								missionNamespace getVariable [
-									"A3C_USE_RUNTIME_CONVOY_CONTROL",
-									false
-								]
-							) then {
-								[
-									_v,
-									speed vehicle leader _leadByGroup
-								] remoteExec [
-									"limitSpeed",
-									_v
-								];
-							};
+							[_v,(speed vehicle leader _leadByGroup)] remoteExec ["limitSpeed",_v];
 						};
 					};
 				} forEach (units _x);

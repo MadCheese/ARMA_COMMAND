@@ -1,3 +1,7 @@
+// A3C_ai_highCommand_fnc_wpAction_landingFull
+
+
+
 if (isNil "A3C_IsA3CServer") exitWith {};
 
 params ["_leader", "_waypointPos", "_caller", "_vectorDir", "_forceDefaultLanding"];
@@ -37,57 +41,62 @@ private _landHelicopterControlled = {
 	private _landingPosATL = +_landingPos;
 	_landingPosATL set [2, 0];
 
-	private _helipad = "Land_HelipadEmpty_F" createVehicle _landingPosATL;
-	private _landCommandIssued = false;
+	private _landingPosWorld =
+		AGLToASL _landingPosATL;
 
-	waitUntil {
-		if (!alive _vehicle || {!canMove _vehicle}) exitWith {
-			true
-		};
+	[_vehicle, _landingPosWorld, "Land"] call A3C_ai_shared_fnc_landAt;
 
-		private _distance2D = _vehicle distance2D _landingPosATL;
+	// private _helipad = "Land_HelipadEmpty_F" createVehicle _landingPosATL;
+	// private _landCommandIssued = false;
 
-		// private _finalAltitude = switch (true) do {
-		// 	case (_distance2D > 150): {20};
-		// 	case (_distance2D > 75): {12};
-		// 	case (_distance2D > 35): {7};
-		// 	default {4};
-		// };
+	// waitUntil {
+	// 	if (!alive _vehicle || {!canMove _vehicle}) exitWith {
+	// 		true
+	// 	};
 
-		// private _finalSpeed = switch (true) do {
-		// 	case (_distance2D > 150): {35};
-		// 	case (_distance2D > 75): {25};
-		// 	case (_distance2D > 35): {15};
-		// 	default {8};
-		// };
+	// 	private _distance2D = _vehicle distance2D _landingPosATL;
 
-		// [
-		// 	_group,
-		// 	_landingPosATL,
-		// 	_finalSpeed,
-		// 	_finalAltitude,
-		// 	500,
-		// 	150
-		// ] call A3C_ai_shared_fnc_approachWaypointHelicopter;
+	// 	// private _finalAltitude = switch (true) do {
+	// 	// 	case (_distance2D > 150): {20};
+	// 	// 	case (_distance2D > 75): {12};
+	// 	// 	case (_distance2D > 35): {7};
+	// 	// 	default {4};
+	// 	// };
 
-		if (!_landCommandIssued && {_distance2D < 120}) then {
-			_vehicle land "LAND";
-			_landCommandIssued = true;
-		};
+	// 	// private _finalSpeed = switch (true) do {
+	// 	// 	case (_distance2D > 150): {35};
+	// 	// 	case (_distance2D > 75): {25};
+	// 	// 	case (_distance2D > 35): {15};
+	// 	// 	default {8};
+	// 	// };
 
-		sleep 0.5;
+	// 	// [
+	// 	// 	_group,
+	// 	// 	_landingPosATL,
+	// 	// 	_finalSpeed,
+	// 	// 	_finalAltitude,
+	// 	// 	500,
+	// 	// 	150
+	// 	// ] call A3C_ai_shared_fnc_approachWaypointHelicopter;
 
-		isTouchingGround _vehicle
-	};
+	// 	if (!_landCommandIssued && {_distance2D < 120}) then {
+	// 		_vehicle land "LAND";
+	// 		_landCommandIssued = true;
+	// 	};
 
-	deleteVehicle _helipad;
+	// 	sleep 0.5;
 
-	if (alive _vehicle) then {
-		_vehicle engineOn false;
-	};
+	// 	isTouchingGround _vehicle
+	// };
 
-	_vehicle limitSpeed false;
-	_vehicle flyInHeight 100;
+	// deleteVehicle _helipad;
+
+	// if (alive _vehicle) then {
+	// 	_vehicle engineOn false;
+	// };
+
+	// _vehicle limitSpeed false;
+	// _vehicle flyInHeight 100;
 };
 
 private _units = units _group;
@@ -221,5 +230,6 @@ waitUntil {
 };
 
 _group setVariable ["A3C_ISwpLANDING", false, true];
+
 
 true

@@ -1407,7 +1407,7 @@ class A3C_DSP_MapOverlay
 				{
 					idc = IDC_MAP_HCGP_CANCEL_BTN; //800712;
 					text = "X";
-					action = EXPAND_AND_QUOTE((findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_HCGP_Parent) ctrlShow false; A3C_SELECTED_HC_GROUPS_SETTINGS = []; (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false);
+					action = EXPAND_AND_QUOTE([] call A3C_ui_mapOverlay_fnc_close_HCGP_Parent; A3C_SELECTED_HC_GROUPS_SETTINGS = []);
 					x = GRIDX( 8 ); 
 					y = GRIDY( 0 );
 					w = GRIDX( 2 );

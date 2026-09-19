@@ -1,5 +1,7 @@
 #include "ui\mapOverlay\dialog_defines.hpp"
 
+diag_log "[A3C]: EXECUTING initValuesClient";
+
 //----------------------------- playerVariables
 A3C_CurrentPlayerObject = player;
 A3C_UNITCOUNTER =  (count (units group player));
@@ -20,11 +22,11 @@ with profilenamespace do {
 	_giveHint = false;
 	if (isnil "A3C_CHECKVERSION") then {
 		_giveHint = true;
-		profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD 1.0.0.02"];
+		profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD 1.0.0.03"];
 	} else {
-		if !( (profileNameSpace getvariable "A3C_CHECKVERSION") == "BUILD 1.0.0.02") then {
+		if !( (profileNameSpace getvariable "A3C_CHECKVERSION") == "BUILD 1.0.0.03") then {
 			_giveHint = true;
-			profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD 1.0.0.02"];
+			profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD 1.0.0.03"];
 		};
 	};
 
@@ -32,10 +34,10 @@ with profilenamespace do {
 		[] spawn {
 			waituntil {alive player};
 			"ARMA COMMAND DLC" hintC [
-				"You are playing a new build (#1.0.0.02) for the first time!",
+				"You are playing a new build (#1.0.0.03) for the first time!",
 				"Please refer to the changelog (STEAM or DISCORD)        ",
 				">>>>>>>   NEWS:   <<<<<<<                               ",
-				"1.0.0.02"
+				"1.0.0.03"
 			];		
 		};	
 	};
@@ -56,17 +58,14 @@ A3C_UI_HUD_3D_TAGGING = false;
 
 
 
-//-- #TODO: MESSY STUFF TO OVERHAUL 
-if (A3C_IsAICommand) then {
-	["AICommand",player] remoteExec ["A3C_checkserverAddon",2];
+//-- Check supported server-side addon
+["AR_AdvancedRappelling", player] remoteExec ["A3C_checkserverAddon", 2];
+
+//-- Only query A3C server presence when it has not already been
+//-- authoritatively announced by an A3C-enabled server.
+if (!A3C_IsA3CServerResolved) then {
+	["A3C_UI", player] remoteExec ["A3C_checkserverAddon", 2];
 };
-
-//-- check for supported serverSide Addons
-{
-	[_x,player] remoteExec ["A3C_checkserverAddon",2];
-} foreach ["AR_AdvancedRappelling","A3C_UI"];
-
-
 
 
 
@@ -376,19 +375,8 @@ A3C_HUD_SPEED_ICON = if ( (profilenamespace getvariable "A3C_HUD_SPEED_VAR") == 
 
 
 A3C_DATA_REMOTE_AMMO = [];
-{
-	//A3C_DATA_REMOTE_AMMO pushBack (configname _x);
-	_ammo = getText (configfile >> "CfgVehicles" >> configName _x >> "ammo");
-	_trigger = getText (configfile >> "CfgAmmo" >> _ammo >> "mineTrigger");
-	if (_trigger == "RemoteTrigger") then {
-		A3C_DATA_REMOTE_AMMO pushBack
-		[
-			configName _x,
-			getText (configfile >> "CfgVehicles" >> configName _x >> "displayName"),
-			_ammo
-		];
-	};
-} foreach ("true" configClasses (configFile >> "CfgVehicles"));
+
+
 
 
 //---------------------------  R A D I A L   V A L U E S   A N D   A R R A Y S  ------------------------
@@ -657,21 +645,6 @@ profilenamespace setvariable ["A3C_PROFILEVAR_BUILDINGS_DEFUNCT",profileNameSpac
 profilenamespace setvariable ["A3C_PROFILEVAR_BUILDINGS_CLEAR",profileNameSpace getVariable ["A3C_PROFILEVAR_BUILDINGS_CLEAR", []]];
 
 
-private _data = profilenamespace getvariable ["A3C_PROFILEVAR_BUILDINGS_DEFUNCT",[]];
-{
-	_x params ["_buildingType","_pgs"];
-
-	private _execute = true;
-	{
-		if (_x select 0 == _buildingType) exitWith {
-			_execute = false;
-		};
-	} foreach _data;
-	if (_execute) then {
-		_data pushBack _x;
-	};
-} foreach A3C_DATA_bPosNoAccess;
-profilenamespace setvariable ["A3C_PROFILEVAR_BUILDINGS_DEFUNCT", _data];
 //----------------------------- 
 
 //-----------------------------  SUPPRESSION AND OTHER POLYGON VARIABLES
@@ -736,6 +709,7 @@ A3C_ZEUSMISSION = if (!isNil 'A3C_ZEUSMISSION') then {A3C_ZEUSMISSION} else {fal
 
 //-- fetch reference game-controls once they exist
 [] spawn {
+	diag_log "[A3C]: EXECUTING initValuesClient async";
 	sleep 1;
 	A3C_SHOWNHUD = shownHud; //-- shownHud select 6 is false if this fires earlier
 
@@ -794,13 +768,24 @@ A3C_ZEUSMISSION = if (!isNil 'A3C_ZEUSMISSION') then {A3C_ZEUSMISSION} else {fal
 
 	A3C_MAP_GAMEUI_Upper_buttonH = 0.04 * safezoneH; 
 
+	diag_log "[A3C]: FINISHED initValuesClient async";
+
 };
 
 
 
 if ("antistasi" in (toLower missionName)) then {
 	[] spawn {
-		waituntil {!isNil 'A3C_IsA3CServer'};
+		waitUntil {
+			uiSleep 0.05;
+
+			(missionNamespace getVariable ["A3C_InitAborted", false])
+			|| {
+				A3C_IsA3CServerResolved
+			}
+		};
+
+		if (missionNamespace getVariable ["A3C_InitAborted", false]) exitWith {};
 		//-- ANTISTASI - give tablet to commander
 		if (
 			A3C_IsA3CServer
@@ -823,4 +808,116 @@ if ("antistasi" in (toLower missionName)) then {
 
 	};
 };
+
+diag_log "[A3C]: initValuesClient: spawning Remote Ammo loop";
+
+[] spawn {
+
+	private ["_ammo", "_trigger"];
+
+	{
+		_ammo = getText (
+			configFile >> "CfgVehicles" >> configName _x >> "ammo"
+		);
+
+		_trigger = getText (
+			configFile >> "CfgAmmo" >> _ammo >> "mineTrigger"
+		);
+
+		if (_trigger == "RemoteTrigger") then {
+			A3C_DATA_REMOTE_AMMO pushBack [
+				configName _x,
+				getText (
+					configFile >> "CfgVehicles" >> configName _x >> "displayName"
+				),
+				_ammo
+			];
+		};
+	} forEach ("true" configClasses (configFile >> "CfgVehicles"));
+
+	diag_log "[A3C]: initValuesClient: finished spawned Remote Ammo loop";
+};
+
+[] spawn {
+
+	diag_log "[A3C]: initValuesClient: starting spawned building data merge";
+
+	private _storedData = profileNamespace getVariable [
+		"A3C_PROFILEVAR_BUILDINGS_DEFUNCT",
+		[]
+	];
+
+	if !(_storedData isEqualType []) then {
+		_storedData = [];
+	};
+
+	private _data = [];
+
+	private _fnc_mergeBuildingData = {
+		params [
+			["_entry", [], [[]]]
+		];
+
+		if (count _entry < 2) exitWith {};
+
+		private _buildingType = _entry param [0, "", [""]];
+		private _pgs = _entry param [1, [], [[]]];
+
+		if (_buildingType == "") exitWith {};
+
+		private _cleanPgs = [];
+
+		{
+			if (
+				!isNil {_x}
+				&& {_x isEqualType 0}
+			) then {
+				_cleanPgs pushBackUnique _x;
+			};
+		} forEach _pgs;
+
+		private _index = _data findIf {
+			(_x select 0) isEqualTo _buildingType
+		};
+
+		if (_index == -1) then {
+
+			_data pushBack [
+				_buildingType,
+				_cleanPgs
+			];
+
+		} else {
+
+			private _existingPgs = (_data select _index) select 1;
+
+			{
+				_existingPgs pushBackUnique _x;
+			} forEach _cleanPgs;
+		};
+	};
+
+	{
+		if (
+			!isNil {_x}
+			&& {_x isEqualType []}
+		) then {
+			[_x] call _fnc_mergeBuildingData;
+		};
+	} forEach _storedData;
+
+	{
+		[_x] call _fnc_mergeBuildingData;
+	} forEach A3C_DATA_bPosNoAccess;
+
+	profileNamespace setVariable [
+		"A3C_PROFILEVAR_BUILDINGS_DEFUNCT",
+		_data
+	];
+
+	diag_log "[A3C]: initValuesClient: finished spawned building data merge";
+};
+
+
+diag_log "[A3C]: FINISHED initValuesClient";
 

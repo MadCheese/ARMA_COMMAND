@@ -287,11 +287,7 @@ if (_groupVTOLs isEqualTo []) then {
 	private _landingPosWorld =
 		AGLToASL _landingPos;
 
-	_vehicle landAt [
-		_landingPosWorld,
-		"GET IN",
-		99999
-	];
+	[_vehicle, _landingPosWorld, "GET IN"] call A3C_ai_shared_fnc_landAt;
 } forEach _groupVTOLs;
 
 /*

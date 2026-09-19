@@ -51,16 +51,20 @@ if (_selectedGroups isEqualTo []) exitWith {};
 	Hide the group-action panel and dashboard while the boarding or
 	dismount interaction is being processed.
 */
-{
-	private _control = _display displayCtrl _x;
+if (_isMap) then {
+	[] call A3C_ui_mapOverlay_fnc_close_HCGP_Parent;
+} else {
+	{
+		private _control = _display displayCtrl _x;
 
-	if (!isNull _control) then {
-		_control ctrlShow false;
-	};
-} forEach [
-	IDC_MAP_HCGP_Parent,
-	IDC_SHARED_UI_DASHBOARD_PARENT
-];
+		if (!isNull _control) then {
+			_control ctrlShow false;
+		};
+	} forEach [
+		// IDC_MAP_HCGP_Parent,
+		IDC_SHARED_UI_DASHBOARD_PARENT
+	];
+};
 
 if (_button == 0) exitWith {
 	/*
@@ -71,7 +75,6 @@ if (_button == 0) exitWith {
 	A3C_UI_MAPICONS_HC_VICS = [
 		_selectedGroups
 	] call A3C_main_fnc_getBoardableVehicles;
-
 	
 	if (_isRadial) then {
 		A3C_UI_HUD_ASSIGNVEHICLE = true;
@@ -126,12 +129,31 @@ private _dismountFunction = {
 	private _affectedVehicles = [];
 
 	{
-		private _vehicle = [
-			_x
-		] call A3C_ai_shared_fnc_unitGetOut;
+		private _unit = _x;
+		private _parentVehicle = objectParent _unit;
+		private _assignedVehicle = assignedVehicle _unit;
 
-		if (!isNull _vehicle) then {
-			_affectedVehicles pushBackUnique _vehicle;
+		if (!isNull _parentVehicle) then {
+			// Unit has already boarded - dismount normally.
+			_affectedVehicles pushBackUnique _parentVehicle;
+
+			[
+				_unit
+			] call A3C_ai_shared_fnc_unitGetOut;
+		} else {
+			if (!isNull _assignedVehicle) then {
+				// Unit is still boarding - cancel the pending assignment.
+				_affectedVehicles pushBackUnique _assignedVehicle;
+
+				_unit remoteExec [
+					"unassignVehicle",
+					0
+				];
+
+				[
+					_unit
+				] orderGetIn false;
+			};
 		};
 	} forEach _groupUnits;
 
@@ -154,7 +176,8 @@ private _dismountFunction = {
 
 		_vehicle setVariable [
 			"A3C_AssignedVehicleCrew",
-			_assignedCrew
+			_assignedCrew,
+			true
 		];
 	} forEach _affectedVehicles;
 };
@@ -173,26 +196,59 @@ private _aiGroups = _selectedGroups select {
 		[_selectedGroup]
 	};
 
-if (_ctrl) then {
+	if (_ctrl) then {
 		/*
-			CTRL+dismount targets other groups sharing a vehicle with the
-			selected group. The selected group itself is intentionally not
-			added here.
+			CTRL+dismount only targets groups carried by vehicles that are
+			actually driven by members of the selected group.
+
+			This prevents selecting a cargo group from dismounting the vehicle's
+			driver group.
+
+			Pending A3C boarding assignments are included as well.
 		*/
+		private _drivenVehicles = [
+			_selectedGroup
+		] call A3C_main_fnc_getGroupDrivenVehicles;
+
 		{
-			private _unit = _x;
-			private _vehicle = objectParent _unit;
+			private _vehicle = _x;
 
-			if (!isNull _vehicle) then {
-				{
-					private _crewGroup = group _x;
+			// Groups already inside the vehicle.
+			{
+				private _cargoGroup = group _x;
 
-					if (_crewGroup != group _unit) then {
-						_groupsToDismount pushBackUnique _crewGroup;
+				if (
+					_cargoGroup != _selectedGroup
+					&& {!isPlayer leader _cargoGroup}
+				) then {
+					_groupsToDismount pushBackUnique _cargoGroup;
+				};
+			} forEach crew _vehicle;
+
+			// Groups currently boarding the vehicle.
+			private _assignedCrew = _vehicle getVariable [
+				"A3C_AssignedVehicleCrew",
+				[]
+			];
+
+			{
+				private _assignedUnit = _x param [
+					0,
+					objNull
+				];
+
+				if (!isNull _assignedUnit) then {
+					private _cargoGroup = group _assignedUnit;
+
+					if (
+						_cargoGroup != _selectedGroup
+						&& {!isPlayer leader _cargoGroup}
+					) then {
+						_groupsToDismount pushBackUnique _cargoGroup;
 					};
-				} forEach crew _vehicle;
-			};
-		} forEach _selectedGroupUnits;
+				};
+			} forEach _assignedCrew;
+		} forEach _drivenVehicles;
 	};
 
 

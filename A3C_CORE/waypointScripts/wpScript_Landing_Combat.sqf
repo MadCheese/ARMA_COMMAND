@@ -304,11 +304,7 @@ private _groupHelicopters = _currentDrivenVehicles select {
 	private _landingPosWorld =
 		AGLToASL _landingPos;
 
-	_vehicle landAt [
-		_landingPosWorld,
-		"Get Out",
-		99999
-	];
+	[_vehicle, _landingPosWorld, "Get Out"] call A3C_ai_shared_fnc_landAt;
 
 	if !(_vehicle in _vehiclesLanding) then {
 		_vehiclesLanding pushBack _vehicle;
@@ -334,11 +330,7 @@ private _groupHelicopters = _currentDrivenVehicles select {
 	private _landingPosWorld =
 		AGLToASL _landingPos;
 
-	_vehicle landAt [
-		_landingPosWorld,
-		"Get Out",
-		99999
-	];
+	[_vehicle, _landingPosWorld, "Get Out"] call A3C_ai_shared_fnc_landAt;
 
 	if !(_vehicle in _vehiclesLanding) then {
 		_vehiclesLanding pushBack _vehicle;

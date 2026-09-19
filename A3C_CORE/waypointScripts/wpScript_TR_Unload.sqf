@@ -442,11 +442,9 @@ waitUntil {
 								AGLToASL _landingPos;
 
 							if !(_vehicle in _vehiclesLanding) then {
-								_vehicle landAt [
-									_landingPosWorld,
-									"Get Out",
-									99999
-								];
+
+								[_vehicle, _landingPosWorld, "Get Out"] call A3C_ai_shared_fnc_landAt;
+								
 
 								_vehiclesLanding pushBack _vehicle;
 							};
@@ -489,12 +487,8 @@ waitUntil {
 
 							if !(_vehicle in _vehiclesLanding) then {
 								commandStop (driver _vehicle);
-								
-								_vehicle landAt [
-									_landingPosWorld,
-									"Get Out",
-									99999
-								];
+							
+								[_vehicle, _landingPosWorld, "Get Out"] call A3C_ai_shared_fnc_landAt;
 
 								_vehiclesLanding pushBack _vehicle;
 							};

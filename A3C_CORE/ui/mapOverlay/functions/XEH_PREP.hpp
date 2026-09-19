@@ -53,6 +53,7 @@ A3C_PREP_SUBDIR(handlers,UFSB_onWaypointSpeedButton);
 A3C_PREP_SUBDIR(public,adjustPolygonEdge);
 A3C_PREP_SUBDIR(public,adjustPolygonMain);
 A3C_PREP_SUBDIR(public,buttonFncContext);
+A3C_PREP_SUBDIR(public,close_HCGP_Parent);
 A3C_PREP_SUBDIR(public,closeMapOverlay);
 A3C_PREP_SUBDIR(public,closeSyncCircleMenu);
 A3C_PREP_SUBDIR(public,createEnemyForceTracker);

@@ -4,11 +4,11 @@
 item0[] = {"Start_",0,250,-125.000000,-475.000000,25.000000,-375.000000,0.000000,"Start" \n ""};
 item1[] = {"",7,210,-416.500000,396.000000,-408.500000,404.000000,0.000000,""};
 item2[] = {"run_cleanup_",2,250,-125.000000,575.000000,25.000000,675.000000,0.000000,"run cleanup" \n ""};
-item3[] = {"Exit_",1,250,100.000000,875.000000,250.000000,975.000000,0.000000,"Exit" \n ""};
+item3[] = {"Exit_",1,4346,100.000000,875.000000,250.000000,975.000000,0.000000,"Exit" \n ""};
 item4[] = {"Arrays_do_not_match",4,218,-125.000000,425.000000,25.000000,525.000000,0.000000,"" \n "" \n "Arrays do not match" \n "" \n "" \n ""};
 item5[] = {"",7,210,171.000000,-103.999992,179.000000,-96.000015,0.000000,""};
 item6[] = {"Player_Left",4,218,100.000000,700.000000,250.000000,800.000000,0.000000,"Player Left"};
-item7[] = {"wait",2,4346,-100.000000,-150.000000,0.000000,-50.000000,0.000000,"wait"};
+item7[] = {"wait",2,250,-100.000000,-150.000000,0.000000,-50.000000,0.000000,"wait"};
 item8[] = {"start_conditions",4,218,-125.000000,-325.000000,25.000000,-250.000000,0.000000,"" \n "" \n "" \n "start conditions" \n "" \n "" \n ""};
 item9[] = {"",7,210,171.000000,621.000000,179.000000,629.000000,0.000000,""};
 item10[] = {"",7,210,-954.000000,-229.000000,-946.000000,-220.999985,0.000000,""};
@@ -71,7 +71,7 @@ link34[] = {29,14};
 link35[] = {30,31};
 link36[] = {31,26};
 globals[] = {0.000000,0,0,0,0,640,480,1,194,6316128,1,-925.673828,374.547363,907.121277,-529.413452,992,1096,1};
-window[] = {0,-1,-1,-1,-1,1398,130,1815,130,1,1010};
+window[] = {0,-1,-1,-1,-1,1294,26,1711,26,1,1010};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -91,7 +91,7 @@ class FSM
                          "		player == leader group player;" \n
                          "};" \n
                          "" \n
-                         "//diag_log ""A3C: STARTING MON_PLAYERGROUP"";"/*%FSM</STATEINIT""">*/;
+                         "//diag_log A3C: STARTING MON_PLAYERGROUP"";"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {
@@ -118,7 +118,7 @@ class FSM
                          "[] call A3C_ai_squad_fnc_joinUnitToPlayerGroup;" \n
                          "_time = time;" \n
                          "" \n
-                         "//diag_log ""PLAYERMON: GROUP ARRAY CLEANUP"";" \n
+                         "//diag_log PLAYERMON: GROUP ARRAY CLEANUP"";" \n
                          "" \n
                          ""/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
@@ -154,7 +154,7 @@ class FSM
                 {
                         name = "Exit_";
                         itemno = 3;
-                        init = /*%FSM<STATEINIT""">*/"//diag_log ""EXIT PLAYERMON"";"/*%FSM</STATEINIT""">*/;
+                        init = /*%FSM<STATEINIT""">*/"//diag_log '[A3C]: EXIT PLAYERMON';"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {
@@ -258,7 +258,7 @@ class FSM
                         itemno = 12;
                         init = /*%FSM<STATEINIT""">*/"[] call A3C_main_fnc_reAssignTeamColors;" \n
                          "" \n
-                         "//diag_log ""PLAYERMON: EXIT REMOTE"";"/*%FSM</STATEINIT""">*/;
+                         "//diag_log PLAYERMON: EXIT REMOTE"";"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {
@@ -289,7 +289,7 @@ class FSM
                          "	A3C_isPlayerLeader = false;" \n
                          "};" \n
                          "" \n
-                         "//diag_log ""PLAYERMON: PLAYER LOST LEAD"";"/*%FSM</STATEINIT""">*/;
+                         "//diag_log PLAYERMON: PLAYER LOST LEAD"";"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {
@@ -326,7 +326,7 @@ class FSM
                         init = /*%FSM<STATEINIT""">*/"[(units group player) - [player]] call A3C_ui_shared_fnc_resetPlayerGroup;" \n
                          "A3C_isPlayerLeader = true;" \n
                          "" \n
-                         "//diag_log ""PLAYERMON: PLAYER TOOK LEAD"";"/*%FSM</STATEINIT""">*/;
+                         "//diag_log PLAYERMON: PLAYER TOOK LEAD"";"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {
@@ -351,7 +351,7 @@ class FSM
                         itemno = 24;
                         init = /*%FSM<STATEINIT""">*/"[] call A3C_main_fnc_reAssignTeamColors;" \n
                          "" \n
-                         "//diag_log ""PLAYERMON: ENTERED REMOTE"";"/*%FSM</STATEINIT""">*/;
+                         "//diag_log PLAYERMON: ENTERED REMOTE"";"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {
@@ -385,7 +385,7 @@ class FSM
                 {
                         name = "Exit__1";
                         itemno = 25;
-                        init = /*%FSM<STATEINIT""">*/"//diag_log ""EXIT PLAYERMON"";"/*%FSM</STATEINIT""">*/;
+                        init = /*%FSM<STATEINIT""">*/"//diag_log EXIT PLAYERMON"";"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {

@@ -31,11 +31,6 @@
 
 #include "A3C_CORE\ui\hud\hudDynamic\dialog.hpp"
 
-
-
-
-
-
 class CfgModSettings {
 	class A3C_CORE {
 		name = "A3C";
@@ -50,7 +45,6 @@ class CfgModSettings {
 	};
 };
 
-
 class CfgSounds
 {
 	sounds[] = {};
@@ -61,9 +55,31 @@ class CfgSounds
 		// start path to sound file in AddOn with @
 		sound[] = {"@A3\missions_f\data\sounds\click.wss", 1, 1};
 		titles[] = {0,""};
-	};
-			
+	};			
 };
+
+class CfgFunctions
+{
+    class A3C_DEV
+    {
+        class Init
+        {
+            class preInit
+            {
+                preInit = 1;
+                file = "A3C_CORE\DEV\fn_preInit.sqf";
+            };
+
+            class postInit
+            {
+                postInit = 1;
+                file = "A3C_CORE\DEV\fn_postInit.sqf";
+            };
+        };
+    };
+};
+
+
 
 
 

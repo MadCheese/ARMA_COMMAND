@@ -256,7 +256,7 @@ switch (_actionType) do {
 					" instead!"
 				);
 			} else {
-				systemChat "A3C: Suppression not possible with ciurrent selection";
+				systemChat "A3C: Suppression not possible with current selection";
 			};
 		};
 

@@ -20,9 +20,6 @@ private _showPlayerHint = false;
 		&& {_leader != player}
 	) then {
 		_showPlayerHint = true;
-
-		// () remoteExec [];
-		// #TODO: Implement structured-text hint solution.
 	} else {
 		if (
 			A3C_Map_HC_groupContext_Behaviour
@@ -193,12 +190,12 @@ if (_showPlayerHint) then {
 	};
 };
 
+[] call A3C_ui_mapOverlay_fnc_close_HCGP_Parent;
 {
 	(
 		_display displayCtrl _x
 	) ctrlShow false;
 } forEach [
-	IDC_MAP_HCGP_Parent,
 	IDC_SHARED_UI_DASHBOARD_PARENT
 ];
 

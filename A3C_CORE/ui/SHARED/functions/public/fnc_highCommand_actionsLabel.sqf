@@ -904,8 +904,7 @@ private _actions = [
 						} else {
 							[_a3c_dsp] spawn {
 								params ["_a3c_dsp"];
-								(findDisplay _a3c_dsp displayCtrl IDC_MAP_HCGP_Parent) ctrlShow false;
-								(findDisplay _a3c_dsp displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
+								[] call A3C_ui_mapOverlay_fnc_close_HCGP_Parent;
 								hintSilent "A3C: Please relay map-coordinates via mapclick!";
 								playsound "TacticalPing4";
 								sleep 0.5;

@@ -25,14 +25,7 @@ private _displayId = if (
 private _mapOverlayDisplay =
 	findDisplay IDD_MAP_OVERLAY;
 
-{
-	(
-		_mapOverlayDisplay displayCtrl _x
-	) ctrlShow false;
-} forEach [
-	IDC_MAP_HCGP_Parent,
-	IDC_SHARED_UI_DASHBOARD_PARENT
-];
+[] call A3C_ui_mapOverlay_fnc_close_HCGP_Parent;
 
 (
 	findDisplay 12 displayCtrl 51

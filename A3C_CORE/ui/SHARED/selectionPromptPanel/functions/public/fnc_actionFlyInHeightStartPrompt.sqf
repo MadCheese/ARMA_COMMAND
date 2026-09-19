@@ -22,12 +22,7 @@ if (_displayId == IDD_SELECTION_PROMPT_PANEL) then {
 } else {
 	private _mapOverlayDisplay = findDisplay IDD_MAP_OVERLAY;
 
-	{
-		(_mapOverlayDisplay displayCtrl _x) ctrlShow false;
-	} forEach [
-		IDC_MAP_HCGP_Parent,
-		IDC_SHARED_UI_DASHBOARD_PARENT
-	];
+	[] call A3C_ui_mapOverlay_fnc_close_HCGP_Parent;
 
 	private _mapDisplay = findDisplay 12;
 	(_mapDisplay displayCtrl 51) ctrlEnable true;

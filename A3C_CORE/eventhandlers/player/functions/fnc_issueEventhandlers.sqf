@@ -1,5 +1,7 @@
 #include "..\script_component.hpp"
 
+// A3C_playerEventhandler_fnc_issueEventhandlers
+
 params [["_unit", objNull], ["_oldUnit", objNull]];
 
 if (isNull _unit) exitWith {};

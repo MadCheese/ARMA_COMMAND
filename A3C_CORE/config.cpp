@@ -50,6 +50,15 @@ class Extended_PreInit_EventHandlers
 	A3C_init = "call compile preprocessFileLineNumbers '\A3C_CORE\A3C_Init.sqf';";
 };
 
+class Extended_PostInit_EventHandlers
+{
+	class A3C_postInit
+	{
+		serverInit = "call compile preprocessFileLineNumbers '\A3C_CORE\A3C_PostInit_Server.sqf';";
+		clientInit = "[] execVM '\A3C_CORE\A3C_PostInit_Client.sqf';";
+	};
+};
+
 class CfgRemoteExec
 {
 	// List of script functions allowed to be sent from client via remoteExec

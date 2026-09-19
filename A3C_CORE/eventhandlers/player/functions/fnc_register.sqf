@@ -1,5 +1,7 @@
 #include "..\script_component.hpp"
 
+// A3C_playerEventhandler_fnc_register
+
 if (!hasInterface) exitWith {};
 
 if (isNil "A3C_PLAYER_UNIT_MONITOR_EH") then {

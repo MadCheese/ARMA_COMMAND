@@ -18,7 +18,7 @@ if (_isRadial) then {
 	};
 	
 } else {
-	{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+	[] call A3C_ui_mapOverlay_fnc_close_HCGP_Parent;
 };
 
 

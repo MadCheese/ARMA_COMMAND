@@ -50,6 +50,7 @@ A3C_PREP(gtiGrenade_getRelativePos);
 A3C_PREP(gtiGrenade_onEachFrameTick);
 A3C_PREP(gtiGrenade_setGrenadeData);
 A3C_PREP(gtiGrenade_throwPlayer);
+A3C_PREP(landAt);
 A3C_PREP(loadVehicleCargo);
 A3C_PREP(medical_actionHealUnit);
 A3C_PREP(medical_applyHealing);

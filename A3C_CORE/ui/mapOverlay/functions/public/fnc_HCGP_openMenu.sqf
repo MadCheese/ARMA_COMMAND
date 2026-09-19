@@ -34,7 +34,7 @@ _startupBar progressSetPosition 0.1;
 private _groupMenuControlsGroup =
 	_display displayCtrl IDC_MAP_HCGP_Parent;
 
-// Hide the controls group until the dashboard has been initialized.
+// Hide the controls group until the dashboard has been initialized. DO NOT use the external function here
 _groupMenuControlsGroup ctrlShow false;
 
 _groupMenuControlsGroup ctrlSetPosition [

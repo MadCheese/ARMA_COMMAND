@@ -1,7 +1,12 @@
 
 if (isDedicated) exitWith {};
 if (is3den) exitWith {};
-waituntil {alive player};
+
+diag_log "[A3C]: Starting A3C Init Runner";
+
+waituntil {alive player}; //-- might not be necessary because arc_init now handles this for client/host
+
+diag_log "[A3C]: alive player true";
 
 if (isNil 'A3C_CLIENT_IDS') then {
 	//-- client / A3C is not running on server - keep variable local (var would be defined on hosting client or dedi)
@@ -81,8 +86,7 @@ if (profileNameSpace getVariable "A3C_AUTOMEDIC") then {
 	};
 };
 
-sleep 2;
-//systemchat 'now';
+
 {[_x] call A3C_ai_squad_fnc_initializeUnit} foreach (units group player);
 {_x setvariable ["A3C_FORMATION_INDEX", [_x] call A3C_main_fnc_getUnitIndex, true]} foreach units group player;
 
@@ -98,6 +102,18 @@ NOTE - THIS IS A HUGE SHITTY MESS AND NEEDS A FULL OVERHAUL. CURRENT VERSION IS 
 
 A3C_is_Initialized = true;
 
+diag_log "[A3C]: Init Runner: A3C_is_Initialized set to true";
+
+if (hasInterface) then {
+
+	"A3C_INIT_IMAGE" cutFadeOut 0;
+
+	"A3C_INIT_BLACK" cutText [
+		"",
+		"BLACK IN",
+		2
+	];
+};
 // // ATTEMPT AT AN OPTIMIZED LOOP
 // 0 spawn {
 // 	//-- mission init
@@ -109,7 +125,7 @@ A3C_is_Initialized = true;
 // 	[] call A3C_UI_FNC_ADD_KEYBINDS;
 // 	A3C_LOADED_EVH = addMissionEventHandler ["Loaded",
 // 	{
-// 		//diag_log "loaded 1";
+// 		//diag_log "[A3C]: loaded 1";
 // 		[] spawn {
 // 			waitUntil {!isNull (findDisplay 46) && !isNull player};
 // 			sleep 1;
@@ -118,7 +134,7 @@ A3C_is_Initialized = true;
 // 			A3C_UI_DOWNKEYS = [];
 // 			[] call A3C_UI_FNC_ADD_KEYBINDS;
 // 			sleep 1;
-// 			//diag_log "LOADED";
+// 			//diag_log "[A3C]: LOADED";
 // 		};
 // 	}];
 
@@ -216,7 +232,7 @@ A3C_is_Initialized = true;
 		[] call A3C_UI_FNC_ADD_KEYBINDS;
 		A3C_LOADED_EVH = addMissionEventHandler ["Loaded",
 		{
-			//diag_log "loaded 1";
+			//diag_log "[A3C]: loaded 1";
 			[] spawn {
 				waitUntil {!isNull (findDisplay 46) && !isNull player};
 				sleep 1;
@@ -225,7 +241,7 @@ A3C_is_Initialized = true;
 				A3C_UI_DOWNKEYS = [];
 				[] call A3C_UI_FNC_ADD_KEYBINDS;
 				sleep 1;
-				//diag_log "LOADED";
+				//diag_log "[A3C]: LOADED";
 			};
 		}];
 
@@ -233,14 +249,16 @@ A3C_is_Initialized = true;
 		[] call A3C_UI_mainDisplay_fnc_refreshHudUiDrawHandler;
 
 		waitUntil {isNull (findDisplay 46)};
-		//diag_log "ENDED1";
+		//diag_log "[A3C]: ENDED1";
 		waituntil {!alive player};
-		//diag_log "ENDED 2";
+		//diag_log "[A3C]: ENDED 2";
 
 		[] call A3C_main_fnc_leaveServer;
 	};
 
 };
 
+
+diag_log "[A3C]: FINISHED init_runner, async loops spawned";
 
 

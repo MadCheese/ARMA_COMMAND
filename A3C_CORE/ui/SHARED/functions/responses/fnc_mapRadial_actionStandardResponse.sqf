@@ -16,6 +16,6 @@ if (_isRadial) then {
 	[] call A3C_ui_radialMenu_fnc_closeDisplay;
 } else {
 	sleep 0.1;
-	{(findDisplay IDD_MAP_OVERLAY displayCtrl _x) ctrlShow false} foreach [IDC_MAP_HCGP_Parent,IDC_SHARED_UI_DASHBOARD_PARENT];
+	[] call A3C_ui_mapOverlay_fnc_close_HCGP_Parent;
 	(findDisplay 12 displayCtrl 51) ctrlEnable true;
 };
