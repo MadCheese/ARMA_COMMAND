@@ -10,6 +10,138 @@
 
 params ["_pos", "_shift"];
 
+private _aceCSWFamilies = [];
+
+if (
+	missionNamespace getVariable [
+		"A3C_IsAce3",
+		false
+	]
+) then {
+	_aceCSWFamilies =
+		A3C_HC_FOCUS_ARTY_AMMO_ARRAY select {
+			isClass (
+				configFile
+				>> "ACE_CSW_Groups"
+				>> _x
+			)
+		};
+};
+
+
+if (_aceCSWFamilies isNotEqualTo []) exitWith {
+	private _aceVehicles =
+		MCSS_REMOTE_ARTILLERY_ARRAY select {
+			!isNull _x
+			&& {alive _x}
+			&& {!isNull gunner _x}
+			&& {
+				isClass (
+					configOf _x
+					>> "ACE_CSW"
+				)
+			}
+		};
+
+	if (_aceVehicles isEqualTo []) exitWith {
+		systemChat "A3C: No artillery available";
+	};
+
+
+	private _requestedCount =
+		A3C_HC_FOCUS_ARTY_AmmoCount;
+
+	private _reservation = [
+		_aceVehicles,
+		_pos,
+		_aceCSWFamilies,
+		_requestedCount
+	] call A3C_ai_shared_fnc_reserveACECSWArtilleryOrder;
+
+	_reservation params [
+		"_orderId",
+		"_reservedCount",
+		"_orderSummary"
+	];
+
+	if (
+		_orderId == ""
+		|| {
+			_reservedCount
+				!= _requestedCount
+		}
+	) exitWith {
+		hint "ARTILLERY PROBLEM: REQUESTED AMMUNITION IS NO LONGER AVAILABLE";
+	};
+
+
+	hint "";
+
+	private _usedVehicles = [];
+
+	{
+		private _vehicle =
+			_x select 0;
+
+		_usedVehicles pushBackUnique
+			_vehicle;
+
+		[
+			_vehicle
+		] call A3C_ai_highCommand_fnc_addArtyToRadioChannel;
+
+	} forEach _orderSummary;
+
+
+	if (_usedVehicles isNotEqualTo []) then {
+		private _artyLeader =
+			gunner (
+				_usedVehicles select 0
+			);
+
+		player customRadio [
+			A3C_CUSTOMRADIO_ID,
+			"SentARTYFireAtWithAmmo"
+		];
+
+		if (!isNull _artyLeader) then {
+			[_artyLeader] spawn {
+				params [
+					"_artyLeader"
+				];
+
+				sleep (
+					3 + random 2
+				);
+
+				if (!isNull _artyLeader) then {
+					_artyLeader customRadio [
+						A3C_CUSTOMRADIO_ID,
+						"SentRequestAcknowledgedSGArty"
+					];
+				};
+			};
+		};
+	};
+
+
+	{
+		private _vehicle = _x;
+
+		[
+			[_vehicle],
+			{
+				_this spawn
+					A3C_ai_shared_fnc_executeACECSWArtilleryQueue;
+			}
+		] remoteExec [
+			"BIS_fnc_call",
+			_vehicle
+		];
+
+	} forEach _usedVehicles;
+};
+
 MCSS_REMOTE_ARTILLERY_ARRAY = MCSS_REMOTE_ARTILLERY_ARRAY select {
 	private _artyAmmo = getArtilleryAmmo [_x];
 	{_x in A3C_HC_FOCUS_ARTY_AMMO_ARRAY} count _artyAmmo > 0

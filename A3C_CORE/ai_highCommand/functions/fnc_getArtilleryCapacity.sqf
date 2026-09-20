@@ -6,13 +6,38 @@ private _return = false;
 
 {
 	private _vehicle = objectParent _x;
+
 	if (
 		!isNull _vehicle
 		&& {_x == gunner _vehicle}
-		&& {count (getArtilleryAmmo [_vehicle]) > 0}
-	) exitWith {
-		_return = true;
+	) then {
+		private _isACECSW = (
+			missionNamespace getVariable ["A3C_IsAce3", false]
+			&& {
+				isClass (
+					configOf _vehicle
+					>> "ACE_CSW"
+				)
+			}
+		);
+
+		private _hasArtilleryAmmo = if (_isACECSW) then {
+			private _availability = [
+				[_vehicle],
+				[]
+			] call A3C_main_fnc_getACECSWArtilleryAvailability;
+
+			_availability findIf {
+				(_x select 4) > 0
+			} >= 0
+		} else {
+			count (getArtilleryAmmo [_vehicle]) > 0
+		};
+
+		if (_hasArtilleryAmmo) exitWith {
+			_return = true;
+		};
 	};
-} foreach (units _group);
+} forEach units _group;
 
 _return

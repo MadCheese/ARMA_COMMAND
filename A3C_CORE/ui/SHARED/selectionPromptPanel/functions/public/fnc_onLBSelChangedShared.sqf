@@ -386,49 +386,114 @@ if (_doubleClick) then {
 		};
 
 		case ("ARTY_0") : {
-			A3C_SelectionPromptPanel_MODE = "ARTY_1";
+			private _selectedOption =
+				A3C_HC_ARTY_AMMO_OPTIONS param [
+					_selectedIndex,
+					[]
+				];
 
-			private _selectedLbText = _listBoxCtrl lbText _selectedIndex;
-
-			A3C_HC_FOCUS_ARTY_AMMO_ARRAY = (getArtilleryAmmo MCSS_REMOTE_ARTILLERY_ARRAY) select {
-				private _displayName = getText (configFile >> "CfgMagazines" >> _x >> "displayName");
-				_displayName == _selectedLbText
+			if (_selectedOption isEqualTo []) exitWith {
+				[
+					_display,
+					_isMapPrompt
+				] call _closeSelectionPrompt;
 			};
+
+			_selectedOption params [
+				"_selectedLbText",
+				"_initialAmmoAmount",
+				"_selectedAmmoClasses"
+			];
+
+			A3C_HC_FOCUS_ARTY_AMMO_ARRAY =
+				+_selectedAmmoClasses;
+
+			private _currentAmmo = [
+				true,
+				false,
+				A3C_HC_FOCUS_ARTY_POS
+			] call A3C_main_fnc_getArtilleryAmmo;
+
+			private _ammoAmount = 0;
+
+			{
+				_x params [
+					"_magClass",
+					"_magAmount"
+				];
+
+				if (_magClass in _selectedAmmoClasses) then {
+					_ammoAmount =
+						_ammoAmount
+						+ _magAmount;
+				};
+
+			} forEach _currentAmmo;
+
+
+			if (_ammoAmount <= 0) exitWith {
+				hint "SELECTED AMMUNITION IS NO LONGER AVAILABLE";
+				playSound "TacticalPing";
+
+				[
+					_display,
+					_isMapPrompt
+				] call _closeSelectionPrompt;
+			};
+
+
+			A3C_SelectionPromptPanel_MODE = "ARTY_1";
 
 			lbClear _listBoxCtrl;
 
 			_descriptionCtrl ctrlSetText "Select amount of shells";
 			ctrlSetFocus _listBoxCtrl;
 
-			private _ammoAmount = 0;
-			private _shellDisplays = ([true, true, A3C_HC_FOCUS_ARTY_POS] call A3C_main_fnc_getArtilleryAmmo) select {
-				_x select 0 == _selectedLbText
-			};
+			_ammoAmount = _ammoAmount min 100;
 
-			if !(_shellDisplays isEqualTo []) then {
-				private _selectedShell = _shellDisplays select 0;
-				_ammoAmount = (_selectedShell select 1) min 100;
+			private _candidates = [
+				1,
+				2,
+				3,
+				4,
+				8,
+				10,
+				20,
+				30,
+				40,
+				50,
+				75,
+				100
+			];
 
-				private _candidates = [1,2,3,4,8,10,20,30,40,50,75,100];
-				private _lbEntries = [];
+			private _lbEntries = [];
 
-				{
-					if (_x <= _ammoAmount) then {
-						_lbEntries pushBack _x;
-					};
-				} forEach _candidates;
-
-				// Always ensure the full available amount is the last option.
-				if (_ammoAmount > 0 && {!(_ammoAmount in _lbEntries)}) then {
-					_lbEntries pushBack _ammoAmount;
+			{
+				if (_x <= _ammoAmount) then {
+					_lbEntries pushBack _x;
 				};
+			} forEach _candidates;
 
-				{
-					[_listBoxCtrl, str _x] call A3C_ui_shared_fnc_addLbEntry;
-				} forEach _lbEntries;
-
-				[_parentCtrl, _listBoxCtrl, count _lbEntries] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
+			if (
+				_ammoAmount > 0
+				&& {!(_ammoAmount in _lbEntries)}
+			) then {
+				_lbEntries pushBack _ammoAmount;
 			};
+
+			{
+				[
+					_listBoxCtrl,
+					str _x
+				] call A3C_ui_shared_fnc_addLbEntry;
+
+			} forEach _lbEntries;
+
+			[
+				_parentCtrl,
+				_listBoxCtrl,
+				count _lbEntries
+			] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
 		};
 
 		case ("ARTY_1") : {

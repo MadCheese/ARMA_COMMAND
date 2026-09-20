@@ -68,6 +68,12 @@ switch (_mode) do {
 		private _selectedGroups = A3C_SELECTED_HC_GROUPS_SETTINGS;
 
 		MCSS_REMOTE_ARTILLERY_ARRAY = [];
+		A3C_HC_ARTY_AMMO_OPTIONS = [];
+
+		private _aceEnabled = missionNamespace getVariable [
+			"A3C_IsAce3",
+			false
+		];
 
 		{
 			private _group = _x;
@@ -77,39 +83,121 @@ switch (_mode) do {
 				private _unit = _x;
 				private _vehicle = objectParent _unit;
 
-				if (!isNull _vehicle) then {
-					if (_unit == gunner _vehicle) then {
-						private _artyAmmo = getArtilleryAmmo [_vehicle];
+				if (
+					!isNull _vehicle
+					&& {_unit == gunner _vehicle}
+				) then {
+					private _isACECSW = (
+						_aceEnabled
+						&& {
+							isClass (
+								configOf _vehicle
+									>> "ACE_CSW"
+							)
+						}
+					);
+
+					private _hasAmmoInRange = if (_isACECSW) then {
+						private _availability = [
+							[_vehicle],
+							_focusPos
+						] call A3C_main_fnc_getACECSWArtilleryAvailability;
+
+						_availability findIf {
+							(_x select 4) > 0
+						} >= 0
+					} else {
+						private _artyAmmo =
+							getArtilleryAmmo [_vehicle];
+
 						private _ammoInRange = _artyAmmo select {
-							_focusPos inRangeOfArtillery [[_vehicle], _x]
+							_focusPos inRangeOfArtillery [
+								[_vehicle],
+								_x
+							]
 						};
 
-						if !(_ammoInRange isEqualTo []) then {
-							MCSS_REMOTE_ARTILLERY_ARRAY pushBack _vehicle;
-						};
+						_ammoInRange isNotEqualTo []
+					};
+
+					if (_hasAmmoInRange) then {
+						MCSS_REMOTE_ARTILLERY_ARRAY
+							pushBackUnique _vehicle;
 					};
 				};
+
 			} forEach _units;
+
 		} forEach _selectedGroups;
 
-		private _shellDSPs = [true, true, _focusPos] call A3C_main_fnc_getArtilleryAmmo;
 
-		if (_shellDSPs isEqualTo []) then {
+		private _shellClasses = [
+			true,
+			false,
+			_focusPos
+		] call A3C_main_fnc_getArtilleryAmmo;
+
+		{
+			_x params [
+				"_magClass",
+				"_magAmount"
+			];
+
+			private _displayName = getText (
+				configFile
+					>> "CfgMagazines"
+					>> _magClass
+					>> "displayName"
+			);
+
+			private _optionIndex =
+				A3C_HC_ARTY_AMMO_OPTIONS findIf {
+					(_x select 0) == _displayName
+				};
+
+			if (_optionIndex < 0) then {
+				A3C_HC_ARTY_AMMO_OPTIONS pushBack [
+					_displayName,
+					_magAmount,
+					[_magClass]
+				];
+			} else {
+				private _option =
+					A3C_HC_ARTY_AMMO_OPTIONS
+						select _optionIndex;
+
+				_option set [
+					1,
+					(_option select 1)
+					+ _magAmount
+				];
+
+				(_option select 2)
+					pushBackUnique _magClass;
+			};
+
+		} forEach _shellClasses;
+
+
+		if (A3C_HC_ARTY_AMMO_OPTIONS isEqualTo []) then {
 			_ctrlShow = false;
 
 			hint "SELECTED POSITION IS OUT OF RANGE FOR ALL AMMO-TYPES";
 			playSound "TacticalPing";
 		} else {
 			{
-				private _shellData = _x;
-				private _shellName = _shellData select 0;
+				[
+					_listBox,
+					_x select 0
+				] call A3C_ui_shared_fnc_addLbEntry;
 
-				[_listBox, _shellName] call A3C_ui_shared_fnc_addLbEntry;
-			} forEach _shellDSPs;
+			} forEach A3C_HC_ARTY_AMMO_OPTIONS;
 
-			private _shellCount = count _shellDSPs;
-
-			[_parent, _listBox, _shellCount] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
+			[
+				_parent,
+				_listBox,
+				count A3C_HC_ARTY_AMMO_OPTIONS
+			] call A3C_ui_selectionPromptPanel_fnc_resizeBox;
 		};
 	};
 

@@ -1,3 +1,5 @@
+// A3C_ui_selectionPromptPanel_fnc_actionArtilleryPromptStart
+
 //-- This dispatcher is only for the RADIAL artillery action. 
 //-- A3C_ui_selectionPromptPanel_fnc_openSelectionPromptPanel is shared by RADIAL and mapOverlay
 
@@ -10,4 +12,4 @@ with uiNamespace do {
 };
 
 
-["ARTY"] call A3C_ui_selectionPromptPanel_fnc_openSelectionPromptPanel;
+["ARTY"] call A3C_ui_selectionPromptPanel_fnc_openSelectionPromptPanel; 
