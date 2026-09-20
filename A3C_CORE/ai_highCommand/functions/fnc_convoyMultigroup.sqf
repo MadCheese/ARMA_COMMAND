@@ -1,5 +1,11 @@
 // A3C_ai_highCommand_fnc_convoyMultigroup
 
+
+/*
+	#TODO:
+	Unify naming so that every function starts with 'convoy' or 'roadRoute' or at least 'road'
+*/
+
 params ["_inputUnits","_refPos"];
 
 

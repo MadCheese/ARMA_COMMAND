@@ -33,11 +33,30 @@ private _aceWeaponClass = "";
 private _aceMountVehicleClass = "";
 private _aceMountClass = "";
 private _aceWeaponSlot = "";
+private _aceAssemblyMode = false;
 
 if (
 	isClass _aceCSWcfg
 	&& {getNumber (_aceCSWcfg >> "enabled") == 1}
 ) then {
+
+	private _aceAssemblyModeIndex = _staticWeapon getVariable [
+		"ace_csw_assemblyMode",
+		3
+	];
+
+	private _aceDefaultAssemblyMode = missionNamespace getVariable [
+		"ace_csw_defaultAssemblyMode",
+		false
+	];
+
+	_aceAssemblyMode = [
+		false,
+		true,
+		true,
+		_aceDefaultAssemblyMode
+	] select _aceAssemblyModeIndex;
+
 	_aceWeaponClass = getText (
 		_aceCSWcfg >> "disassembleWeapon"
 	);
@@ -88,7 +107,8 @@ if (
 */
 private _disassemblyProvider = switch (true) do {
 	case (
-		_aceWeaponClass != ""
+		_aceAssemblyMode
+		&& {_aceWeaponClass != ""}
 		&& {_aceMountClass != ""}
 		&& {_aceWeaponSlot != ""}
 	) : {

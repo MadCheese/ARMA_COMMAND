@@ -44,6 +44,508 @@ private _fnc_addBackpackWithMagazineState = {
 	] remoteExec ["bis_fnc_call", _unit];
 };
 
+private _aceCSWStoreDistance = 10;
+
+private _fnc_getACECSWCarryMappings = {
+	params ["_static"];
+
+	if (isNull _static) exitWith {[]};
+
+	private _vehicleMags = [];
+	private _turretPaths = [[-1]] + ([typeOf _static, true] call BIS_fnc_allTurrets);
+
+	{
+		private _turretPath = _x;
+
+		{
+			_vehicleMags append ([_x, true] call CBA_fnc_compatibleMagazines);
+		} forEach (_static weaponsTurret _turretPath);
+
+	} forEach _turretPaths;
+
+	_vehicleMags = _vehicleMags arrayIntersect _vehicleMags;
+
+	private _mappings = [];
+
+	{
+		private _groupCfg = _x;
+
+		private _groupMembers = (
+			configProperties [
+				_groupCfg,
+				"isNumber _x && {getNumber _x > 0}",
+				true
+			]
+		) apply {
+			configName _x
+		};
+
+		private _matches = _groupMembers arrayIntersect _vehicleMags;
+
+		if (_matches isNotEqualTo []) then {
+			_mappings pushBack [
+				configName _groupCfg,
+				_matches
+			];
+		};
+
+	} forEach (
+		"true" configClasses (
+			configFile >> "ACE_CSW_Groups"
+		)
+	);
+
+	_mappings
+};
+
+private _fnc_getACECSWStoreClass = {
+	switch (
+		missionNamespace getVariable [
+			"ace_csw_handleExtraMagazinesType",
+			-1
+		]
+	) do {
+		case 0: {
+			"GroundWeaponHolder"
+		};
+
+		case 1: {
+			"ace_csw_ammo_holder"
+		};
+
+		default {
+			""
+		};
+	};
+};
+
+private _fnc_isEffectiveACECSW = {
+	params ["_static"];
+
+	if (isNull _static) exitWith {false};
+
+	private _aceCfg = configOf _static >> "ACE_CSW";
+
+	if (
+		!isClass _aceCfg
+		|| {getNumber (_aceCfg >> "enabled") != 1}
+	) exitWith {
+		false
+	};
+
+	private _modeIndex = _static getVariable [
+		"ace_csw_assemblyMode",
+		3
+	];
+
+	private _defaultMode = missionNamespace getVariable [
+		"ace_csw_defaultAssemblyMode",
+		false
+	];
+
+	[
+		false,
+		true,
+		true,
+		_defaultMode
+	] param [
+		_modeIndex,
+		false
+	]
+};
+
+private _fnc_findACECSWStore = {
+	params ["_static"];
+
+	if (isNull _static) exitWith {objNull};
+
+	if !(
+		missionNamespace getVariable [
+			"ace_csw_handleExtraMagazines",
+			false
+		]
+	) exitWith {
+		objNull
+	};
+
+	private _storeClass = call _fnc_getACECSWStoreClass;
+
+	if (_storeClass == "") exitWith {
+		objNull
+	};
+
+	private _fnc_validStore = {
+		params ["_store"];
+
+		!isNull _store
+		&& {_store isKindOf _storeClass}
+		&& {_store distance _static <= _aceCSWStoreDistance}
+	};
+
+	private _cachedStore = _static getVariable [
+		"ace_csw_container",
+		objNull
+	];
+
+	if ([_cachedStore] call _fnc_validStore) exitWith {
+		_cachedStore
+	};
+
+	private _bestStore = objNull;
+	private _bestDistance = 1e10;
+
+	{
+		private _candidateStore = _x getVariable [
+			"ace_csw_container",
+			objNull
+		];
+
+		if (
+			[_candidateStore] call _fnc_validStore
+			&& {_candidateStore distance _static < _bestDistance}
+		) then {
+			_bestStore = _candidateStore;
+			_bestDistance = _candidateStore distance _static;
+		};
+
+	} forEach (
+		nearestObjects [
+			_static,
+			["StaticWeapon"],
+			_aceCSWStoreDistance
+		]
+	);
+
+	if (!isNull _bestStore) exitWith {
+		_bestStore
+	};
+
+	private _stores = nearestObjects [
+		_static,
+		[_storeClass],
+		_aceCSWStoreDistance
+	];
+
+	{
+		if (
+			_x getVariable [
+				"A3C_ACE_CSW_STORE",
+				false
+			]
+		) then {
+			private _distance = _x distance _static;
+
+			if (_distance < _bestDistance) then {
+				_bestStore = _x;
+				_bestDistance = _distance;
+			};
+		};
+
+	} forEach _stores;
+
+	if (!isNull _bestStore) exitWith {
+		_bestStore
+	};
+
+	private _carryMagazineClasses = (
+		[
+			_static
+		] call _fnc_getACECSWCarryMappings
+	) apply {
+		_x select 0
+	};
+
+	_carryMagazineClasses =
+		_carryMagazineClasses arrayIntersect _carryMagazineClasses;
+
+	{
+		private _cargoClasses = (
+			getMagazineCargo _x
+		) select 0;
+
+		if (
+			(
+				_cargoClasses arrayIntersect _carryMagazineClasses
+			) isNotEqualTo []
+		) then {
+			private _distance = _x distance _static;
+
+			if (_distance < _bestDistance) then {
+				_bestStore = _x;
+				_bestDistance = _distance;
+			};
+		};
+
+	} forEach _stores;
+
+	_bestStore
+};
+
+private _fnc_createACECSWStore = {
+	params ["_static"];
+
+	private _storeClass = call _fnc_getACECSWStoreClass;
+
+	if (_storeClass == "") exitWith {
+		objNull
+	};
+
+	private _storePos = _static getPos [
+		1.5,
+		(getDir _static) + 180
+	];
+
+	_storePos set [2, 0];
+
+	private _store = _storeClass createVehicle _storePos;
+
+	_store setPosATL _storePos;
+
+	_store setVariable [
+		"A3C_ACE_CSW_STORE",
+		true,
+		true
+	];
+
+	_store
+};
+
+private _fnc_mergeMagazineCounts = {
+	params [
+		"_array",
+		"_magazineClass",
+		"_count"
+	];
+
+	if (_count <= 0) exitWith {
+		_array
+	};
+
+	private _index = _array findIf {
+		(_x select 0) == _magazineClass
+	};
+
+	if (_index == -1) then {
+		_array pushBack [
+			_magazineClass,
+			_count
+		];
+	} else {
+		private _data = _array select _index;
+
+		_data set [
+			1,
+			(_data select 1) + _count
+		];
+	};
+
+	_array
+};
+
+private _fnc_countACECSWStoreUsers = {
+	params [
+		"_store",
+		"_carryMagazine"
+	];
+
+	if (isNull _store) exitWith {
+		1
+	};
+
+	private _count = 0;
+
+	private _nearStatics = nearestObjects [
+		_store,
+		["StaticWeapon"],
+		_aceCSWStoreDistance
+	];
+
+	{
+		private _candidate = _x;
+
+		if ([_candidate] call _fnc_isEffectiveACECSW) then {
+			private _candidateStore = [
+				_candidate
+			] call _fnc_findACECSWStore;
+
+			if (_candidateStore isEqualTo _store) then {
+				private _candidateCarryMags = (
+					[
+						_candidate
+					] call _fnc_getACECSWCarryMappings
+				) apply {
+					_x select 0
+				};
+
+				if (_carryMagazine in _candidateCarryMags) then {
+					_count = _count + 1;
+				};
+			};
+		};
+
+	} forEach _nearStatics;
+
+	_count max 1
+};
+
+private _fnc_collectACECSWGroupAmmo = {
+	params [
+		"_static",
+		"_group"
+	];
+
+	if (
+		isNull _static
+		|| {isNull _group}
+		|| {
+			!(
+				missionNamespace getVariable [
+					"ace_csw_handleExtraMagazines",
+					false
+				]
+			)
+		}
+	) exitWith {
+		objNull
+	};
+
+	private _carryMagazineClasses = (
+		[
+			_static
+		] call _fnc_getACECSWCarryMappings
+	) apply {
+		_x select 0
+	};
+
+	_carryMagazineClasses =
+		_carryMagazineClasses arrayIntersect _carryMagazineClasses;
+
+	if (_carryMagazineClasses isEqualTo []) exitWith {
+		objNull
+	};
+
+	private _transferPlan = [];
+
+	{
+		private _unit = _x;
+
+		if (
+			alive _unit
+			&& {!isPlayer _unit}
+		) then {
+			{
+				private _container = _x;
+
+				if (!isNull _container) then {
+					private _containerMagazines = magazinesAmmoCargo _container;
+
+					{
+						private _carryMagazine = _x;
+
+						private _matchingMagazines = _containerMagazines select {
+							(_x select 0) == _carryMagazine
+						};
+
+						if (_matchingMagazines isNotEqualTo []) then {
+							private _fullAmmoCount = getNumber (
+								configFile
+								>> "CfgMagazines"
+								>> _carryMagazine
+								>> "count"
+							);
+
+							if (
+								_fullAmmoCount > 0
+								&& {
+									{
+										(_x select 1) != _fullAmmoCount
+									} count _matchingMagazines == 0
+								}
+							) then {
+								_transferPlan pushBack [
+									_container,
+									_carryMagazine,
+									count _matchingMagazines
+								];
+							};
+						};
+
+					} forEach _carryMagazineClasses;
+				};
+
+			} forEach [
+				uniformContainer _unit,
+				vestContainer _unit,
+				backpackContainer _unit
+			];
+		};
+
+	} forEach units _group;
+
+	if (_transferPlan isEqualTo []) exitWith {
+		objNull
+	};
+
+	private _store = [
+		_static
+	] call _fnc_findACECSWStore;
+
+	if (isNull _store) then {
+		_store = [
+			_static
+		] call _fnc_createACECSWStore;
+	};
+
+	if (isNull _store) exitWith {
+		objNull
+	};
+
+	{
+		_x params [
+			"_container",
+			"_magazineClass",
+			"_plannedCount"
+		];
+
+		private _beforeCount = {
+			(_x select 0) == _magazineClass
+		} count magazinesAmmoCargo _container;
+
+		private _amountToRemove = _plannedCount min _beforeCount;
+
+		if (_amountToRemove > 0) then {
+			_container addMagazineCargoGlobal [
+				_magazineClass,
+				-_amountToRemove
+			];
+
+			private _afterCount = {
+				(_x select 0) == _magazineClass
+			} count magazinesAmmoCargo _container;
+
+			private _removedCount = (
+				_beforeCount - _afterCount
+			) max 0;
+
+			if (_removedCount > 0) then {
+				_store addMagazineCargoGlobal [
+					_magazineClass,
+					_removedCount
+				];
+			};
+		};
+
+	} forEach _transferPlan;
+
+	_static setVariable [
+		"ace_csw_container",
+		_store,
+		true
+	];
+
+	_store
+};
+
 if (_action == "ASSEMBLE") then {
 	private _requestedStaticClass = _staticData select 1;
 
@@ -99,6 +601,7 @@ if (_action == "ASSEMBLE") then {
 			private _removedBackpacks = [];
 			private _removedBackpackMagazineStates = [];
 			private _storedStaticMagazineState = [];
+			private _storedACETransportReserve = [];
 			private _hasStoredStaticMagazineState = false;
 			private _removeGunnerMagazines = false;
 			private _aceMagazineStateOwner = objNull;
@@ -164,7 +667,7 @@ if (_action == "ASSEMBLE") then {
 							];
 
 							if (
-								count _aceStoredMagazineState == 3
+								count _aceStoredMagazineState >= 3
 								&& {
 									(_aceStoredMagazineState select 0)
 									== _staticClassToCreate
@@ -175,8 +678,16 @@ if (_action == "ASSEMBLE") then {
 								}
 							) exitWith {
 								_hasStoredStaticMagazineState = true;
+
 								_storedStaticMagazineState = +(
 									_aceStoredMagazineState select 2
+								);
+
+								_storedACETransportReserve = +(
+									_aceStoredMagazineState param [
+										3,
+										[]
+									]
 								);
 
 								_aceMagazineStateOwner = _x;
@@ -340,24 +851,26 @@ if (_action == "ASSEMBLE") then {
 					private _terrainVectors = [_weaponPos, _weaponDir] call MCSS_fnc_getTerrainTilt;
 					private _createdStatic = _staticClassToCreate createVehicle _weaponPos;
 
-					private _aceForceAutofire = (
-						_usesACECSW
-						&& {
-							getNumber (
-								configOf _createdStatic
-								>> "ACE_CSW"
-								>> "allowFireOnLoad"
-							) == 2
-						}
-					);
+					/*
+						ACE CSWs assembled by A3C must use assembly mode 2.
+
+						This tells ACE that the weapon was created as the result of assembly,
+						so any default ammunition supplied by createVehicle is removed without
+						being turned into free external CSW ammunition.
+					*/
+					if (_usesACECSW) then {
+						_createdStatic setVariable [
+							"ace_csw_assemblyMode",
+							2,
+							true
+						];
+					};
 
 					/*
-						ACE CSWs assembled by A3C start empty.
+						Legacy backpack-based statics restore their saved ammunition immediately.
 
-						Legacy backpack-based statics restore their saved ammunition immediately
-						after creation. This preserves the original A3C behavior and prevents
-						delayed ACE StaticWeapon initialization from reacting to A3C's magazine
-						restoration on otherwise non-ACE statics such as the RHS M252.
+						ACE CSWs are left empty here. Their legitimate saved ammunition is restored
+						only after ACE has initialized the newly-created static.
 					*/
 					if (_usesACECSW) then {
 						_createdStatic removeAllMagazinesTurret [];
@@ -396,52 +909,40 @@ if (_action == "ASSEMBLE") then {
 
 					sleep 1.5;
 
-					/*
-						ACE CSWs with allowFireOnLoad = 2 force-fire whenever a round is loaded.
-
-						Restore their saved ammunition while simulation is still disabled and
-						before ACE's delayed CSW initialization installs its Reloaded/autofire
-						handler.
-					*/
-					if (
-						_aceForceAutofire
-						&& {_hasStoredStaticMagazineState}
-					) then {
-						_createdStatic removeAllMagazinesTurret [];
-
-						{
-							_x params [
-								"_magazineClass",
-								"_turretPath",
-								"_ammoCount"
-							];
-
-							_createdStatic addMagazineTurret [
-								_magazineClass,
-								_turretPath,
-								_ammoCount
-							];
-
-						} forEach _storedStaticMagazineState;
-					};
-
 					_createdStatic enableSimulationGlobal true;
 
 					/*
-						ACE initializes new static weapons with a delayed class event handler.
+						ACE initializes new static weapons after simulation becomes available.
 
-						A3C has already kept the weapon simulation-disabled long enough for
-						that delayed initialization to become due. Give ACE another short
-						window after simulation is enabled before restoring A3C's exact ammo
-						state.
+						Mode 2 makes ACE discard the createVehicle ammunition first. Afterwards,
+						restore only the exact ammunition that A3C preserved during disassembly.
+
+						ACE fixed-firing-pin weapons can fire immediately when a magazine is
+						loaded. Temporarily suppress ACE autofire while A3C restores state, then
+						restore ACE's resolved autofire state.
 					*/
+					private _aceAutofireRestoreState = false;
+					private _aceAutofireSuppressed = false;
+
 					if (_usesACECSW) then {
 						sleep 0.2;
 
-						if (
-							!_aceForceAutofire
-							&& {_hasStoredStaticMagazineState}
-						) then {
+						if (_hasStoredStaticMagazineState) then {
+							_aceAutofireRestoreState = _createdStatic getVariable [
+								"ace_csw_autofire",
+								false
+							];
+
+							_aceAutofireSuppressed = _aceAutofireRestoreState;
+
+							if (_aceAutofireSuppressed) then {
+								_createdStatic setVariable [
+									"ace_csw_autofire",
+									false,
+									true
+								];
+							};
+
 							_createdStatic removeAllMagazinesTurret [];
 
 							{
@@ -460,10 +961,78 @@ if (_action == "ASSEMBLE") then {
 							} forEach _storedStaticMagazineState;
 						};
 					};
+
+					private _aceSaveExtraMagazines = missionNamespace getVariable [
+						"ace_csw_handleExtraMagazines",
+						false
+					];
+
+					private _aceTransportReserveRestored = (
+						_storedACETransportReserve isEqualTo []
+						|| {!_aceSaveExtraMagazines}
+					);
+
+					if (
+						_usesACECSW
+						&& {_storedACETransportReserve isNotEqualTo []}
+						&& {_aceSaveExtraMagazines}
+					) then {
+						private _aceStore = [
+							_createdStatic
+						] call _fnc_findACECSWStore;
+
+						if (isNull _aceStore) then {
+							_aceStore = [
+								_createdStatic
+							] call _fnc_createACECSWStore;
+						};
+
+						if (!isNull _aceStore) then {
+							{
+								_x params [
+									"_magazineClass",
+									"_magazineCount"
+								];
+
+								if (_magazineCount > 0) then {
+									_aceStore addMagazineCargoGlobal [
+										_magazineClass,
+										_magazineCount
+									];
+								};
+
+							} forEach _storedACETransportReserve;
+
+							_createdStatic setVariable [
+								"ace_csw_container",
+								_aceStore,
+								true
+							];
+
+							_aceTransportReserveRestored = true;
+						};
+					};
+
+					if (
+						_usesACECSW
+						&& {
+							missionNamespace getVariable [
+								"ace_csw_handleExtraMagazines",
+								false
+							]
+						}
+					) then {
+						[
+							_createdStatic,
+							group (_assemblyUnits select 0)
+						] call _fnc_collectACECSWGroupAmmo;
+					};
+
 					//-- Stored ACE ammunition has now been restored successfully.
 					if (
 						_usesACECSW
 						&& {!isNull _aceMagazineStateOwner}
+						&& {_aceTransportReserveRestored}
 					) then {
 						_aceMagazineStateOwner setVariable [
 							"A3C_ACE_CSW_MAGAZINE_STATE",
@@ -476,6 +1045,45 @@ if (_action == "ASSEMBLE") then {
 
 					[_gunner, _createdStatic] remoteExec ["assignAsGunner", _gunner];
 					[_gunner, ["getInGunner", _createdStatic]] remoteExec ["action", _gunner];
+
+					if (_aceAutofireSuppressed) then {
+						private _aceAmmoLoadTime = getNumber (
+							configOf _createdStatic
+							>> "ACE_CSW"
+							>> "ammoLoadTime"
+						);
+
+						[
+							_createdStatic,
+							_aceAutofireRestoreState,
+							_aceAmmoLoadTime
+						] spawn {
+							params [
+								"_createdStatic",
+								"_aceAutofireRestoreState",
+								"_aceAmmoLoadTime"
+							];
+
+							waitUntil {
+								sleep 0.05;
+
+								!alive _createdStatic
+								|| {!isNull gunner _createdStatic}
+							};
+
+							if (!alive _createdStatic) exitWith {};
+
+							sleep ((_aceAmmoLoadTime max 0) + 0.5);
+
+							if (alive _createdStatic) then {
+								_createdStatic setVariable [
+									"ace_csw_autofire",
+									_aceAutofireRestoreState,
+									true
+								];
+							};
+						};
+					};
 
 					if (count _assemblyUnits > 1) then {
 						private _assistant = _assemblyUnits select 1;
@@ -668,7 +1276,112 @@ if (_action == "ASSEMBLE") then {
 		if ({alive _x} count _disassemblyUnits != _requiredUnitCount) exitWith {};
 
 		if ({animationState _x == "ainvpknlmstpslaywrfldnon_medic"} count _disassemblyUnits == 0) exitWith {
+
 			private _staticMagazineState = magazinesAllTurrets _staticWeapon;
+
+			private _aceTransportReserve = [];
+
+			if (
+				_usesACECSW
+				&& {
+					missionNamespace getVariable [
+						"ace_csw_handleExtraMagazines",
+						false
+					]
+				}
+			) then {
+				private _aceStore = [
+					_staticWeapon
+				] call _fnc_findACECSWStore;
+
+				if (!isNull _aceStore) then {
+					private _carryMagazineClasses = (
+						[
+							_staticWeapon
+						] call _fnc_getACECSWCarryMappings
+					) apply {
+						_x select 0
+					};
+
+					_carryMagazineClasses =
+						_carryMagazineClasses arrayIntersect _carryMagazineClasses;
+
+					(getMagazineCargo _aceStore) params [
+						"_storeMagazineClasses",
+						"_storeMagazineCounts"
+					];
+
+					{
+						private _carryMagazine = _x;
+						private _storeIndex = _storeMagazineClasses find _carryMagazine;
+
+						if (_storeIndex >= 0) then {
+							private _storeAmount = _storeMagazineCounts param [
+								_storeIndex,
+								0
+							];
+
+							if (_storeAmount > 0) then {
+								private _userCount = [
+									_aceStore,
+									_carryMagazine
+								] call _fnc_countACECSWStoreUsers;
+
+								private _share = floor (
+									_storeAmount / (_userCount max 1)
+								);
+
+								if (_share > 0) then {
+									_aceStore addMagazineCargoGlobal [
+										_carryMagazine,
+										-_share
+									];
+
+									_aceTransportReserve = [
+										_aceTransportReserve,
+										_carryMagazine,
+										_share
+									] call _fnc_mergeMagazineCounts;
+								};
+							};
+						};
+
+					} forEach _carryMagazineClasses;
+
+					private _storeIsEmpty = (
+						((getMagazineCargo _aceStore) select 0) isEqualTo []
+						&& {((getWeaponCargo _aceStore) select 0) isEqualTo []}
+						&& {((getItemCargo _aceStore) select 0) isEqualTo []}
+						&& {((getBackpackCargo _aceStore) select 0) isEqualTo []}
+					);
+
+					if (_storeIsEmpty) then {
+						private _hasOtherStoreUser = (
+							nearestObjects [
+								_aceStore,
+								["StaticWeapon"],
+								_aceCSWStoreDistance
+							]
+						) findIf {
+							private _candidate = _x;
+
+							_candidate != _staticWeapon
+							&& {
+								[_candidate] call _fnc_isEffectiveACECSW
+							}
+							&& {
+								(
+									[_candidate] call _fnc_findACECSWStore
+								) isEqualTo _aceStore
+							}
+						} >= 0;
+
+						if (!_hasOtherStoreUser) then {
+							deleteVehicle _aceStore;
+						};
+					};
+				};
+			};
 
 			/*
 				ACE optionally defines a callback for disassembly.
@@ -743,7 +1456,8 @@ if (_action == "ASSEMBLE") then {
 					[
 						_staticWeaponType,
 						_aceWeaponClass,
-						+_staticMagazineState
+						+_staticMagazineState,
+						+_aceTransportReserve
 					],
 					true
 				];
