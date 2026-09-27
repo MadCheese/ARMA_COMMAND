@@ -28,19 +28,423 @@ params [
 	"_endPosition",
 	["_maxExpandedRoads", 2000],
 	["_roadSearchRadius", 50],
-	["_maximumInferredRoadGap", 18]
+	["_maximumInferredRoadGap", 18],
+	["_debugBuildMode", "FULL"],
+	["_debugState", createHashMap]
 ];
+
+private _collectRoadDebug =
+	missionNamespace getVariable [
+		"A3C_DEBUG_CONVOY_ROADS",
+		false
+	]
+	&& {
+		_debugState getOrDefault [
+			"enabled",
+			false
+		]
+	};
+
+private _debugBuildStartedAt =
+	diag_tickTime;
+
+private _debugSearchDirection = "";
+
+private _debugInferredEdges = [];
+
+private _routeToPositions = {
+	params ["_route"];
+
+	if (_route isEqualTo []) exitWith {
+		[]
+	};
+
+	+(_route select 1)
+};
+
+/*
+ * Returns the configured vehicle-road neighbours.
+ *
+ * Normal connections remain untouched. The extended connection query
+ * supplements missing junction links, while pedestrian roads and
+ * trails discovered only by that extended query are excluded.
+ */
+private _getConfiguredRoadConnections = {
+	params ["_road"];
+
+	if (isNull _road) exitWith {
+		[]
+	};
+
+	private _connectedRoads =
+		+(roadsConnectedTo _road);
+
+	private _extendedRoads =
+		roadsConnectedTo [
+			_road,
+			true
+		];
+
+	{
+		private _candidateRoad =
+			_x;
+
+		if (
+			!isNull _candidateRoad
+			&& {
+				!(_candidateRoad isEqualTo _road)
+			}
+			&& {
+				!(_candidateRoad in _connectedRoads)
+			}
+		) then {
+			private _roadInfo =
+				getRoadInfo _candidateRoad;
+
+			private _mapType =
+				toUpper (
+					_roadInfo param [
+						0,
+						""
+					]
+				);
+
+			private _isPedestrian =
+				_roadInfo param [
+					2,
+					false
+				];
+
+			if (
+				!_isPedestrian
+				&& {_mapType != "TRAIL"}
+			) then {
+				_connectedRoads pushBack
+					_candidateRoad;
+			};
+		};
+	} forEach _extendedRoads;
+
+	_connectedRoads
+};
+
+private _recordBuildDebug = {
+	params [
+		"_resultCode",
+		["_startRoad", objNull],
+		["_targetRoad", objNull],
+		["_forwardRoute", []],
+		["_reverseRoute", []],
+		["_selectedRoute", []],
+		["_selectedSource", "NONE"]
+	];
+
+	if (!_collectRoadDebug) exitWith {};
+
+	private _startRoadPosition =
+		if (isNull _startRoad) then {
+			[]
+		} else {
+			position _startRoad
+		};
+
+	private _targetRoadPosition =
+		if (isNull _targetRoad) then {
+			[]
+		} else {
+			position _targetRoad
+		};
+
+	private _startConnections =
+		if (isNull _startRoad) then {
+			[]
+		} else {
+			([_startRoad] call _getConfiguredRoadConnections) apply {
+				[
+					position _startRoad,
+					position _x
+				]
+			}
+		};
+
+	private _targetConnections =
+		if (isNull _targetRoad) then {
+			[]
+		} else {
+			([_targetRoad] call _getConfiguredRoadConnections) apply {
+				[
+					position _targetRoad,
+					position _x
+				]
+			}
+		};
+
+	/*
+	* Capture the road graph surrounding the selected path while the
+	* route is being calculated. The map drawing handler must only
+	* consume this prepared data.
+	*
+	* Edge types:
+	*
+	* - outgoing: reported by roadsConnectedTo from the selected road;
+	* - incoming-only: another nearby road reports a connection to the
+	*   selected road, but the selected road does not report it back;
+	* - endpoint candidate: physically nearby but unconnected road that
+	*   the inferred-connection mechanic could potentially select.
+	*/
+	private _selectedOutgoingEdges = [];
+	private _selectedIncomingOnlyEdges = [];
+	private _selectedEndpointCandidateEdges = [];
+	private _selectedNodePositions = [];
+
+	private _selectedRoadObjects = [];
+
+	if (
+		_selectedRoute isEqualType []
+		&& {count _selectedRoute == 4}
+	) then {
+		_selectedRoadObjects =
+			+(_selectedRoute select 0);
+	};
+
+	{
+		private _selectedRoad =
+			_x;
+
+		if (!isNull _selectedRoad) then {
+			private _selectedRoadPosition =
+				position _selectedRoad;
+
+			_selectedNodePositions pushBack
+				_selectedRoadPosition;
+
+			private _outgoingRoads = [
+				_selectedRoad
+			] call _getConfiguredRoadConnections;
+
+			{
+				if (!isNull _x) then {
+					_selectedOutgoingEdges pushBackUnique [
+						_selectedRoadPosition,
+						position _x
+					];
+				};
+			} forEach _outgoingRoads;
+
+			private _nearbyRoads =
+				_selectedRoadPosition nearRoads
+					(30 max _maximumInferredRoadGap);
+
+			/*
+			* Find connections that exist only in the opposite direction.
+			*/
+			{
+				private _candidateRoad =
+					_x;
+
+				if (
+					!isNull _candidateRoad
+					&& {
+						!(_candidateRoad isEqualTo _selectedRoad)
+					}
+					&& {
+						!(_candidateRoad in _outgoingRoads)
+					}
+					&& {
+						_selectedRoad in (
+							[
+								_candidateRoad
+							] call _getConfiguredRoadConnections
+						)
+					}
+				) then {
+					_selectedIncomingOnlyEdges pushBackUnique [
+						position _candidateRoad,
+						_selectedRoadPosition
+					];
+				};
+			} forEach _nearbyRoads;
+
+			/*
+			* Mirror the current inferred-edge eligibility closely enough
+			* to show every road that competed with the ultimately chosen
+			* inferred road.
+			*/
+			if (
+				count _outgoingRoads <= 1
+				&& {_maximumInferredRoadGap > 0}
+			) then {
+				{
+					private _candidateRoad =
+						_x;
+
+					private _candidatePosition =
+						position _candidateRoad;
+
+					if (
+						!isNull _candidateRoad
+						&& {
+							!(_candidateRoad isEqualTo _selectedRoad)
+						}
+						&& {
+							!(_candidateRoad in _outgoingRoads)
+						}
+						&& {
+							abs (
+								(_selectedRoadPosition select 2)
+									- (_candidatePosition select 2)
+							) <= 2
+						}
+					) then {
+						_selectedEndpointCandidateEdges
+							pushBackUnique [
+								_selectedRoadPosition,
+								_candidatePosition
+							];
+					};
+				} forEach (
+					_selectedRoadPosition nearRoads
+						_maximumInferredRoadGap
+				);
+			};
+		};
+	} forEach _selectedRoadObjects;
+
+	private _directDistance =
+		_startPosition distance2D
+			_endPosition;
+
+	private _selectedDistance =
+		if (_selectedRoute isEqualTo []) then {
+			-1
+		} else {
+			_selectedRoute select 3
+		};
+
+	private _routeDistanceRatio =
+		if (
+			_directDistance > 0.1
+			&& {_selectedDistance >= 0}
+		) then {
+			_selectedDistance
+				/ _directDistance
+		} else {
+			-1
+		};
+
+	private _routeBuilds =
+		+(
+			_debugState getOrDefault [
+				"routeBuilds",
+				[]
+			]
+		);
+
+	_routeBuilds pushBack (
+		createHashMapFromArray [
+			["buildMode", _debugBuildMode],
+			["result", _resultCode],
+			["startPosition", +_startPosition],
+			["targetPosition", +_endPosition],
+			["startRoadPosition", _startRoadPosition],
+			["targetRoadPosition", _targetRoadPosition],
+			["startConnections", _startConnections],
+			["targetConnections", _targetConnections],
+			[
+				"forwardRoute",
+				[_forwardRoute] call _routeToPositions
+			],
+			[
+				"reverseRoute",
+				[_reverseRoute] call _routeToPositions
+			],
+			[
+				"selectedRoute",
+				[_selectedRoute] call _routeToPositions
+			],
+			["selectedSource", _selectedSource],
+			[
+				"selectedDistance",
+				if (_selectedRoute isEqualTo []) then {
+					-1
+				} else {
+					_selectedRoute select 3
+				}
+			],
+			["inferredEdges", +_debugInferredEdges],
+			[
+				"selectedNodePositions",
+				+_selectedNodePositions
+			],
+			[
+				"selectedOutgoingEdges",
+				+_selectedOutgoingEdges
+			],
+			[
+				"selectedIncomingOnlyEdges",
+				+_selectedIncomingOnlyEdges
+			],
+			[
+				"selectedEndpointCandidateEdges",
+				+_selectedEndpointCandidateEdges
+			],
+			["directDistance", _directDistance],
+			["routeDistanceRatio", _routeDistanceRatio],
+			[
+				"selectedNodeCount",
+				count _selectedRoadObjects
+			],
+			[
+				"forwardNodeCount",
+				if (_forwardRoute isEqualTo []) then {
+					0
+				} else {
+					count (_forwardRoute select 0)
+				}
+			],
+			[
+				"reverseNodeCount",
+				if (_reverseRoute isEqualTo []) then {
+					0
+				} else {
+					count (_reverseRoute select 0)
+				}
+			],
+			[
+				"inferredEdgeCount",
+				count _debugInferredEdges
+			],
+			[
+				"calculationTime",
+				diag_tickTime - _debugBuildStartedAt
+			]
+		]
+	);
+
+	_debugState set [
+		"routeBuilds",
+		_routeBuilds
+	];
+};
 
 if (
 	count _startPosition < 2
 	|| {count _endPosition < 2}
 	|| {_maxExpandedRoads < 1}
 ) exitWith {
+	[
+		"INVALID_INPUT"
+	] call _recordBuildDebug;
+
 	[]
 };
 
 /*
- * Resolves the road containing a position.
+ * Resolves the road containing a horizontal map position.
+ *
+ * Waypoint positions may deliberately carry a large Z value, such
+ * as 1000, after waypoint-bundle placement or dragging. Road lookup
+ * must therefore operate on normalized terrain-level coordinates.
  *
  * If the position is not directly on a road, the nearest road inside
  * _roadSearchRadius is used instead.
@@ -51,15 +455,22 @@ private _resolveRoad = {
 		"_searchRadius"
 	];
 
+	private _roadLookupPosition = [
+		_position select 0,
+		_position select 1,
+		0
+	];
+
 	private _road =
-		roadAt _position;
+		roadAt _roadLookupPosition;
 
 	if (!isNull _road) exitWith {
 		_road
 	};
 
 	private _nearRoads =
-		_position nearRoads _searchRadius;
+		_roadLookupPosition nearRoads
+			_searchRadius;
 
 	if (_nearRoads isEqualTo []) exitWith {
 		objNull
@@ -69,7 +480,8 @@ private _resolveRoad = {
 		_nearRoads,
 		[],
 		{
-			_x distance2D _position
+			_x distance2D
+				_roadLookupPosition
 		},
 		"ASCEND"
 	] call BIS_fnc_sortBy;
@@ -90,9 +502,9 @@ private _getRoadNeighbours = {
 		"_maximumGap"
 	];
 
-	private _connectedRoads =
-		roadsConnectedTo _road;
-
+	private _connectedRoads = [
+		_road
+	] call _getConfiguredRoadConnections;
 	/*
 	 * Only graph endpoints may initiate an inferred connection.
 	 * This prevents ordinary road segments from connecting to nearby
@@ -152,6 +564,15 @@ private _getRoadNeighbours = {
 
 	_connectedRoads pushBackUnique
 		_inferredRoad;
+	
+	if (_collectRoadDebug) then {
+		_debugInferredEdges pushBackUnique [
+			_debugSearchDirection,
+			_roadPosition,
+			position _inferredRoad,
+			_road distance2D _inferredRoad
+		];
+	};
 
 	if (
 		missionNamespace getVariable [
@@ -166,13 +587,23 @@ private _getRoadNeighbours = {
 			_inferredRoad,
 			position _inferredRoad,
 			_road distance2D _inferredRoad,
-			count roadsConnectedTo _road,
-			count roadsConnectedTo _inferredRoad
+			count (
+				[
+					_road
+				] call _getConfiguredRoadConnections
+			),
+			count (
+				[
+					_inferredRoad
+				] call _getConfiguredRoadConnections
+			)
 		];
 	};
 
 	_connectedRoads
 };
+
+
 
 /*
  * Performs bounded A* between two already resolved road objects.
@@ -180,6 +611,8 @@ private _getRoadNeighbours = {
  * Returns an ordered array beginning at _startRoad and ending at
  * _targetRoad, or [] on failure.
  */
+
+
 private _findRoadPath = {
 	params [
 		"_startRoad",
@@ -430,8 +863,15 @@ if (
 	isNull _startRoad
 	|| {isNull _targetRoad}
 ) exitWith {
+	[
+		"ROAD_RESOLUTION_FAILED",
+		_startRoad,
+		_targetRoad
+	] call _recordBuildDebug;
+
 	[]
 };
+
 
 /*
  * Search the graph in both directions.
@@ -440,12 +880,15 @@ if (
  * may therefore be discoverable only by searching from the target
  * road back toward the start road.
  */
+_debugSearchDirection = "FORWARD";
 private _forwardRoadPath = [
 	_startRoad,
 	_targetRoad,
 	_maxExpandedRoads
 ] call _findRoadPath;
 
+
+_debugSearchDirection = "REVERSE";
 private _reverseRoadPath = [
 	_targetRoad,
 	_startRoad,
@@ -514,22 +957,59 @@ if (
 /*
  * Prefer the physically shorter successful route.
  */
-private _selectedRoute =
-	if (_forwardRoute isEqualTo []) then {
-		_reverseRoute
-	} else {
-		if (_reverseRoute isEqualTo []) then {
-			_forwardRoute
-		} else {
-			if (
-				(_forwardRoute select 3)
-					<= (_reverseRoute select 3)
-			) then {
-				_forwardRoute
-			} else {
-				_reverseRoute
-			}
-		}
+private _selectedRoute = [];
+private _selectedSource = "NONE";
+
+if (_forwardRoute isEqualTo []) then {
+	if !(_reverseRoute isEqualTo []) then {
+		_selectedRoute =
+			_reverseRoute;
+
+		_selectedSource =
+			"REVERSE_DERIVED";
 	};
+} else {
+	if (_reverseRoute isEqualTo []) then {
+		_selectedRoute =
+			_forwardRoute;
+
+		_selectedSource =
+			"FORWARD";
+	} else {
+		if (
+			(_forwardRoute select 3)
+				<= (_reverseRoute select 3)
+		) then {
+			_selectedRoute =
+				_forwardRoute;
+
+			_selectedSource =
+				"FORWARD";
+		} else {
+			_selectedRoute =
+				_reverseRoute;
+
+			_selectedSource =
+				"REVERSE_DERIVED";
+		};
+	};
+};
+
+private _resultCode =
+	if (_selectedRoute isEqualTo []) then {
+		"ROUTE_BUILD_FAILED"
+	} else {
+		"ROUTE_BUILD_SUCCESS"
+	};
+
+[
+	_resultCode,
+	_startRoad,
+	_targetRoad,
+	_forwardRoute,
+	_reverseRoute,
+	_selectedRoute,
+	_selectedSource
+] call _recordBuildDebug;
 
 _selectedRoute

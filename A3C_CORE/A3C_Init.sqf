@@ -1,20 +1,6 @@
 if (is3DEN) exitWith {};
 
-if (hasInterface) then {
 
-	"A3C_INIT_BLACK" cutText [
-		"",
-		"BLACK FADED",
-		999
-	];
-
-	"A3C_INIT_IMAGE" cutRsc [
-		"A3C_InitScreen",
-		"PLAIN",
-		0,
-		false
-	];
-};
 
 diag_log "[A3C]: //////////////////////////////////////////////////////////////////////////////////////";
 diag_log "[A3C]: STARTING A3C_init";
@@ -27,6 +13,9 @@ diag_log "[A3C]: STARTING A3C_init";
 if (isNil "A3C_InitAborted") then {
 	A3C_InitAborted = false;
 };
+
+A3C_InitScreenShown = false;
+A3C_InitializationAbortHandled = false;
 
 
 //--------------------------------------------------------------------------------------------------
@@ -46,6 +35,8 @@ call compile preprocessFileLineNumbers "A3C_CORE\A3C_InitValuesCommon.sqf";
 
 call compile preprocessFileLineNumbers "A3C_CORE\MCSS\initFunctions.sqf";
 
+call compile preprocessFileLineNumbers "A3C_CORE\main\functions\initFunctions.sqf";
+
 
 //--------------------------------------------------------------------------------------------------
 // INCOMPATIBLE ADDONS
@@ -55,19 +46,38 @@ if (A3C_IsAICommand) exitWith {
 
 	A3C_InitAborted = true;
 
-	//-- If the conflict exists on the server, make the abort state available to clients as well.
 	if (isServer) then {
 		publicVariable "A3C_InitAborted";
 	};
 
-	if (hasInterface) then {
-		"ARMA COMMAND DLC" hintC [
-			"Unfortunately, ARMA COMMAND is not compatible with ADVANCED AI COMMAND",
-			"Initialization aborted                                "
-		];
-	};
+	[] call A3C_main_fnc_handleInitializationAbort;
 };
 
+if (missionNamespace getVariable ["A3C_InitAborted", false]) exitWith {
+	[] call A3C_main_fnc_handleInitializationAbort;
+};
+
+//--------------------------------------------------------------------------------------------------
+// INITIALIZATION SCREEN
+//--------------------------------------------------------------------------------------------------
+
+if (hasInterface) then {
+
+	"A3C_INIT_BLACK" cutText [
+		"",
+		"BLACK FADED",
+		999
+	];
+
+	"A3C_INIT_IMAGE" cutRsc [
+		"A3C_InitScreen",
+		"PLAIN",
+		0,
+		false
+	];
+
+	A3C_InitScreenShown = true;
+};
 
 //--------------------------------------------------------------------------------------------------
 // COMMON DATA
@@ -80,7 +90,6 @@ call compile preprocessFileLineNumbers "A3C_CORE\data\A3C_data_bPosNoAccess.sqf"
 // SHARED FUNCTION LIBRARIES
 //--------------------------------------------------------------------------------------------------
 
-call compile preprocessFileLineNumbers "A3C_CORE\main\functions\initFunctions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ai_highCommand\functions\initFunctions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ai_shared\functions\initFunctions.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\ai_rail\functions\initFunctions.sqf";

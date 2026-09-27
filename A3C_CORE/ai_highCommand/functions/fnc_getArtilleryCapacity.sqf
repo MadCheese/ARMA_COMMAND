@@ -11,15 +11,7 @@ private _return = false;
 		!isNull _vehicle
 		&& {_x == gunner _vehicle}
 	) then {
-		private _isACECSW = (
-			missionNamespace getVariable ["A3C_IsAce3", false]
-			&& {
-				isClass (
-					configOf _vehicle
-					>> "ACE_CSW"
-				)
-			}
-		);
+		private _isACECSW = [_vehicle] call A3C_main_fnc_isEffectiveACECSW;
 
 		private _hasArtilleryAmmo = if (_isACECSW) then {
 			private _availability = [

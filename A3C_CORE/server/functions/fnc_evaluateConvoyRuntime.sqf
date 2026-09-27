@@ -25,7 +25,10 @@
  *         _timeToCollision,
  *         _modelAcceleration,
  *         _convoyCruiseSpeedKmh,
- *         _freeSpeedTargetKmh
+ *         _freeSpeedTargetKmh,
+ *         _gapReferenceValid,
+ *         _gapReferenceMode,
+ *         _gapReferenceReason
  *     ],
  *     ...
  * ]
@@ -67,6 +70,27 @@ private _vehicleStates =
 		[]
 	];
 
+private _runtimeRoute =
+	_runtimeState getOrDefault [
+		"route",
+		[]
+	];
+
+private _masterRouteAvailable =
+	_runtimeRoute isEqualType []
+	&& {
+		count _runtimeRoute == 4
+	}
+	&& {
+		!((_runtimeRoute select 0) isEqualTo [])
+	};
+
+private _gapResolutionAllowed =
+	_runtimeState getOrDefault [
+		"gapResolutionAllowed",
+		_masterRouteAvailable
+	];
+
 /*
  * Model parameters.
  *
@@ -81,6 +105,18 @@ private _emergencyDeceleration = 5;
 private _evaluationInterval = 1;
 private _convoyFastSpeedFraction = 0.8;
 private _followerCatchUpMultiplier = 1.25;
+
+/*
+ * A recently confirmed gap may be conservatively extrapolated while
+ * route references are being reacquired.
+ */
+private _lastGapFallbackDuration = 3;
+
+/*
+ * If no usable longitudinal gap remains, the follower must not be
+ * allowed to travel faster than its predecessor.
+ */
+private _uncertainReferenceSpeedMargin = 2;
 
 private _getVehicleLength = {
 	params [
@@ -293,11 +329,32 @@ private _convoyCruiseSpeedMs =
 		)
 	};
 
+private _firstActiveIndex =
+	_vehicleStates findIf {
+		private _vehicleState = _x;
+
+		private _vehicle =
+			_vehicleState getOrDefault [
+				"vehicle",
+				objNull
+			];
+
+		!isNull _vehicle
+		&& {alive _vehicle}
+		&& {
+			!(
+				_vehicleState getOrDefault [
+					"retired",
+					false
+				]
+			)
+		}
+	};
+
 private _evaluations = [];
 
 {
-	private _vehicleState =
-		_x;
+	private _vehicleState = _x;
 
 	private _vehicle =
 		_vehicleState getOrDefault [
@@ -317,6 +374,12 @@ private _evaluations = [];
 			"INITIALIZING"
 		];
 
+	private _retired =
+		_vehicleState getOrDefault [
+			"retired",
+			false
+		];
+
 	private _routeProgress =
 		_vehicleState getOrDefault [
 			"routeProgress",
@@ -327,6 +390,24 @@ private _evaluations = [];
 		_vehicleState getOrDefault [
 			"gapToVehicleAhead",
 			-1
+		];
+
+	private _gapReferenceValid =
+		_vehicleState getOrDefault [
+			"gapReferenceValid",
+			false
+		];
+
+	private _gapReferenceMode =
+		_vehicleState getOrDefault [
+			"gapReferenceMode",
+			"NONE"
+		];
+
+	private _gapReferenceReason =
+		_vehicleState getOrDefault [
+			"gapReferenceReason",
+			"NOT_EVALUATED"
 		];
 
 	private _vehicleLength = [
@@ -354,15 +435,21 @@ private _evaluations = [];
 		"_fastSpeedMs"
 	];
 
+	private _isLeader =
+		_firstActiveIndex >= 0
+		&& {
+			_forEachIndex
+				== _firstActiveIndex
+		};
+
 	private _freeSpeedMs =
-		if (_forEachIndex == 0) then {
+		if (_isLeader) then {
 			_convoyCruiseSpeedMs
 		} else {
-			_fastSpeedMs
-				min (
-					_convoyCruiseSpeedMs
-						* _followerCatchUpMultiplier
-				)
+			_fastSpeedMs min (
+				_convoyCruiseSpeedMs
+					* _followerCatchUpMultiplier
+			)
 		};
 
 	_freeSpeedMs =
@@ -373,195 +460,346 @@ private _evaluations = [];
 	private _desiredGap = -1;
 	private _timeToCollision = -1;
 	private _modelAcceleration = 0;
-	private _recommendedSpeedKmh = 0;
+	private _recommendedSpeedKmh = -1;
 	private _controlMode = "INITIALIZING";
 
-	if (_trackingMode != "TRACKED") then {
+	private _vehicleOperational =
+		!_retired
+		&& {!isNull _vehicle}
+		&& {alive _vehicle}
+		&& {
+			_trackingMode
+				isNotEqualTo "INOPERABLE"
+		};
+
+	if (!_gapResolutionAllowed) then {
 		_controlMode =
-			_trackingMode;
-
-		/*
-			* A negative recommendation means that route-based control does
-			* not currently have sufficient information to issue a safe
-			* speed command.
-		*/
-		_recommendedSpeedKmh = -1;
+			"NO_ROUTE";
 	} else {
-		if (_forEachIndex == 0) then {
-			_controlMode = "LEADER";
-
-			_recommendedSpeedKmh =
-				_freeSpeedMs * 3.6;
+		if (!_vehicleOperational) then {
+			_controlMode =
+				_trackingMode;
 		} else {
-			private _vehicleAheadState =
-				_vehicleStates select (
-					_forEachIndex - 1
-				);
-
-			private _vehicleAhead =
-				_vehicleAheadState getOrDefault [
-					"vehicle",
-					objNull
-				];
-
-			private _progressAhead =
-				_vehicleAheadState getOrDefault [
-					"routeProgress",
-					-1
-				];
-
-			private _trackingModeAhead =
-				_vehicleAheadState getOrDefault [
-					"mode",
-					"INITIALIZING"
-				];
-
 			if (
-				isNull _vehicleAhead
-				|| {_progressAhead < 0}
-				|| {_trackingModeAhead != "TRACKED"}
+				_trackingMode
+					== "WAITING_FOR_DRIVER"
 			) then {
 				_controlMode =
-					"NO_REFERENCE";
-
-				_recommendedSpeedKmh = -1;
+					"WAITING_FOR_DRIVER";
 			} else {
-				_speedAheadKmh =
-					0 max speed _vehicleAhead;
-
-				private _speedAheadMs =
-					_speedAheadKmh / 3.6;
-
-				private _vehicleAheadLength = [
-					_vehicleAhead,
-					_vehicleAheadState
-				] call _getVehicleLength;
-
-				_bumperGap =
-					_centreGap
-						- (
-							(
-								_vehicleLength
-									+ _vehicleAheadLength
-							) / 2
-						);
-
-				private _relativeSpeedMs =
-					_currentSpeedMs
-						- _speedAheadMs;
-
-				if (
-					_relativeSpeedMs > 0
-					&& {_bumperGap > 0}
-				) then {
-					_timeToCollision =
-						_bumperGap
-							/ _relativeSpeedMs;
-				};
-
-				private _closingGapComponent =
-					(
-						_currentSpeedMs
-							* _relativeSpeedMs
-					)
-					/ (
-						2
-						* sqrt (
-							_maximumAcceleration
-								* _comfortableDeceleration
-						)
-					);
-
-				_desiredGap =
-					_minimumGap
-						+ (
-							0 max (
-								(
-									_currentSpeedMs
-										* _timeHeadway
-								)
-								+ _closingGapComponent
-							)
-						);
-
-				private _safeBumperGap =
-					0.5 max _bumperGap;
-
-				private _freeSpeedRatio =
-					_currentSpeedMs
-						/ _freeSpeedMs;
-
-				private _interactionRatio =
-					_desiredGap
-						/ _safeBumperGap;
-
-				_modelAcceleration =
-					_maximumAcceleration
-						* (
-							1
-							- (_freeSpeedRatio ^ 4)
-							- (_interactionRatio ^ 2)
-						);
-
-				_modelAcceleration =
-					(-_emergencyDeceleration)
-						max (
-							_maximumAcceleration
-								min _modelAcceleration
-						);
-
-				private _recommendedSpeedMs =
-					0 max (
-						_currentSpeedMs
-							+ (
-								_modelAcceleration
-									* _evaluationInterval
-							)
-					);
-
-				if (_currentSpeedMs <= _freeSpeedMs) then {
-					_recommendedSpeedMs =
-						_recommendedSpeedMs
-							min _freeSpeedMs;
-				};
-
-				_recommendedSpeedKmh =
-					_recommendedSpeedMs * 3.6;
-
-				if (
-					_centreGap < -2
-					|| {_bumperGap <= 1}
-					|| {
-						_timeToCollision >= 0
-						&& {_timeToCollision < 1.5}
-					}
-				) then {
+				if (_isLeader) then {
 					_controlMode =
-						"STOPPED";
+						"LEADER";
 
 					_recommendedSpeedKmh =
-						0.001;
+						_freeSpeedMs * 3.6;
 				} else {
-					if (_modelAcceleration < -0.75) then {
-						_controlMode =
-							"BRAKE";
-					} else {
+					private _vehicleAheadStateIndex =
+						_vehicleState getOrDefault [
+							"vehicleAheadStateIndex",
+							-1
+						];
+
+					private _vehicleAheadState =
 						if (
-							_bumperGap
-								> (_desiredGap * 1.35)
+							_vehicleAheadStateIndex >= 0
 							&& {
-								_recommendedSpeedKmh
-									> (
-										_currentSpeedKmh
-											+ 1
+								_vehicleAheadStateIndex
+									< count _vehicleStates
+							}
+						) then {
+							_vehicleStates select
+								_vehicleAheadStateIndex
+						} else {
+							createHashMap
+						};
+
+					private _vehicleAhead =
+						_vehicleAheadState getOrDefault [
+							"vehicle",
+							objNull
+						];
+
+					private _storedVehicleAhead =
+						_vehicleState getOrDefault [
+							"vehicleAhead",
+							objNull
+						];
+
+					private _predecessorIdentityValid =
+						_vehicleAheadStateIndex >= 0
+						&& {
+							_vehicleAheadStateIndex
+								< count _vehicleStates
+						}
+						&& {
+							!isNull _vehicleAhead
+						}
+						&& {
+							_vehicleAhead
+								isEqualTo _storedVehicleAhead
+						};
+
+					private _vehicleAheadAvailable =
+						_predecessorIdentityValid
+						&& {alive _vehicleAhead};
+
+					if (_vehicleAheadAvailable) then {
+						_speedAheadKmh =
+							0 max speed _vehicleAhead;
+					};
+
+					private _referenceUsable =
+						_gapReferenceValid
+						&& {
+							_vehicleAheadAvailable
+						};
+
+					private _usingLastValidGap =
+						false;
+
+					/*
+					 * A very short reference interruption uses the
+					 * last confirmed gap, reduced by the distance
+					 * the follower could have closed since then.
+					 *
+					 * The estimate never assumes that the gap grew.
+					 */
+					if (
+						!_referenceUsable
+						&& {_vehicleAheadAvailable}
+					) then {
+						private _lastValidGap =
+							_vehicleState getOrDefault [
+								"lastValidGapToVehicleAhead",
+								-1
+							];
+
+						private _lastValidGapTime =
+							_vehicleState getOrDefault [
+								"lastValidGapTime",
+								-1
+							];
+
+						private _lastGapAge =
+							if (_lastValidGapTime >= 0) then {
+								serverTime
+									- _lastValidGapTime
+							} else {
+								-1
+							};
+
+						if (
+							_lastValidGapTime >= 0
+							&& {_lastGapAge >= 0}
+							&& {
+								_lastGapAge
+									<= _lastGapFallbackDuration
+							}
+						) then {
+							private _closingSpeedMs =
+								0 max (
+									_currentSpeedMs
+										- (
+											_speedAheadKmh
+												/ 3.6
+										)
+								);
+
+							_centreGap =
+								_lastValidGap
+									- (
+										_closingSpeedMs
+											* _lastGapAge
+									);
+
+							_referenceUsable = true;
+							_usingLastValidGap = true;
+						};
+					};
+
+					if (_referenceUsable) then {
+						private _speedAheadMs =
+							_speedAheadKmh / 3.6;
+
+						private _vehicleAheadLength = [
+							_vehicleAhead,
+							_vehicleAheadState
+						] call _getVehicleLength;
+
+						_bumperGap =
+							_centreGap
+								- (
+									(
+										_vehicleLength
+											+ _vehicleAheadLength
+									) / 2
+								);
+
+						private _relativeSpeedMs =
+							_currentSpeedMs
+								- _speedAheadMs;
+
+						if (
+							_relativeSpeedMs > 0
+							&& {_bumperGap > 0}
+						) then {
+							_timeToCollision =
+								_bumperGap
+									/ _relativeSpeedMs;
+						};
+
+						private _closingGapComponent =
+							(
+								_currentSpeedMs
+									* _relativeSpeedMs
+							)
+							/ (
+								2
+								* sqrt (
+									_maximumAcceleration
+										* _comfortableDeceleration
+								)
+							);
+
+						_desiredGap =
+							_minimumGap
+								+ (
+									0 max (
+										(
+											_currentSpeedMs
+												* _timeHeadway
+										)
+										+ _closingGapComponent
 									)
+								);
+
+						private _safeBumperGap =
+							0.5 max _bumperGap;
+
+						private _freeSpeedRatio =
+							_currentSpeedMs
+								/ _freeSpeedMs;
+
+						private _interactionRatio =
+							_desiredGap
+								/ _safeBumperGap;
+
+						_modelAcceleration =
+							_maximumAcceleration
+								* (
+									1
+									- (_freeSpeedRatio ^ 4)
+									- (_interactionRatio ^ 2)
+								);
+
+						_modelAcceleration =
+							(-_emergencyDeceleration) max (
+								_maximumAcceleration min
+									_modelAcceleration
+							);
+
+						private _recommendedSpeedMs =
+							0 max (
+								_currentSpeedMs
+									+ (
+										_modelAcceleration
+											* _evaluationInterval
+									)
+							);
+
+						if (
+							_currentSpeedMs
+								<= _freeSpeedMs
+						) then {
+							_recommendedSpeedMs =
+								_recommendedSpeedMs min
+									_freeSpeedMs;
+						};
+
+						_recommendedSpeedKmh =
+							_recommendedSpeedMs * 3.6;
+
+						if (
+							_centreGap < -2
+							|| {_bumperGap <= 1}
+							|| {
+								_timeToCollision >= 0
+								&& {
+									_timeToCollision < 1.5
+								}
 							}
 						) then {
 							_controlMode =
-								"CATCHUP";
+								"STOPPED";
+
+							_recommendedSpeedKmh =
+								0.001;
+						} else {
+							if (
+								_modelAcceleration
+									< -0.75
+							) then {
+								_controlMode =
+									"BRAKE";
+							} else {
+								if (
+									_usingLastValidGap
+								) then {
+									_controlMode =
+										"REFERENCE_FALLBACK";
+								} else {
+									if (
+										_bumperGap
+											> (
+												_desiredGap
+													* 1.35
+											)
+										&& {
+											_recommendedSpeedKmh
+												> (
+													_currentSpeedKmh
+														+ 1
+												)
+										}
+									) then {
+										_controlMode =
+											"CATCHUP";
+									} else {
+										_controlMode =
+											"NORMAL";
+									};
+								};
+							};
+						};
+					} else {
+						/*
+						 * Losing the predecessor reference must not
+						 * remove all control and grant permission to
+						 * overtake.
+						 *
+						 * If the predecessor still exists, the
+						 * follower is capped slightly below its predecessor's speed.
+						 * If the predecessor itself
+						 * is unavailable, the safe response is a
+						 * temporary hold until convoy membership is
+						 * resolved.
+						 */
+						if (_vehicleAheadAvailable) then {
+							_controlMode =
+								"REFERENCE_UNCERTAIN";
+
+							_recommendedSpeedKmh =
+								0.001 max (
+									_speedAheadKmh
+										- _uncertainReferenceSpeedMargin
+								);
 						} else {
 							_controlMode =
-								"NORMAL";
+								"REFERENCE_LOST";
+
+							_recommendedSpeedKmh =
+								0.001;
 						};
 					};
 				};
@@ -634,7 +872,10 @@ private _evaluations = [];
 		_timeToCollision,
 		_modelAcceleration,
 		_convoyCruiseSpeedMs * 3.6,
-		_freeSpeedMs * 3.6
+		_freeSpeedMs * 3.6,
+		_gapReferenceValid,
+		_gapReferenceMode,
+		_gapReferenceReason
 	];
 } forEach _vehicleStates;
 

@@ -829,6 +829,8 @@ while {_keepRunning} do {
 							random 360
 						];
 
+					_gunner lookAt _shotPos;
+
 					private _eta =
 						_vehicle getArtilleryETA [
 							_shotPos,

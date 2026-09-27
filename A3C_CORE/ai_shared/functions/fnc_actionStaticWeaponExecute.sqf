@@ -619,9 +619,20 @@ if (_action == "ASSEMBLE") then {
 					(_x param [3, ""]) == "WEAPON"
 				};
 
-				if (_aceWeaponComponentIndex >= 0) then {
+				private _aceMountComponentIndex = _assemblyComponents findIf {
+					(_x param [3, ""]) == "MOUNT"
+				};
+
+				if (
+					_aceWeaponComponentIndex >= 0
+					&& {_aceMountComponentIndex >= 0}
+				) then {
 					private _aceWeaponComponent = (
 						_assemblyComponents select _aceWeaponComponentIndex
+					);
+
+					private _aceMountComponent = (
+						_assemblyComponents select _aceMountComponentIndex
 					);
 
 					private _aceWeaponUnit = _aceWeaponComponent param [
@@ -634,16 +645,24 @@ if (_action == "ASSEMBLE") then {
 						""
 					];
 
+					private _acePackedMountClass = _aceMountComponent param [
+						1,
+						""
+					];
+
 					if (
 						!isNull _aceWeaponUnit
 						&& {_acePackedWeaponClass != ""}
+						&& {_acePackedMountClass != ""}
 					) then {
 						private _aceMagazineStateSources = [];
 
 						/*
 							The hidden ACE ammunition state belongs conceptually to the
-							ammo-carrying equipment, not necessarily to the worker who
-							currently carries the CSW weapon.
+							packed CSW components, not to a particular deployed vehicle class.
+
+							ACE may canonicalize faction, camouflage, or other deployed
+							variants when the same weapon + mount components are reassembled.
 
 							Check all participating workers and their backpacks so that
 							rearranging the weapon/mount between the workers does not lose
@@ -666,31 +685,62 @@ if (_action == "ASSEMBLE") then {
 								[]
 							];
 
-							if (
-								count _aceStoredMagazineState >= 3
-								&& {
-									(_aceStoredMagazineState select 0)
-									== _staticClassToCreate
-								}
-								&& {
-									(_aceStoredMagazineState select 1)
-									== _acePackedWeaponClass
-								}
-							) exitWith {
-								_hasStoredStaticMagazineState = true;
+							if (count _aceStoredMagazineState >= 3) then {
+								private _storedStaticClass =
+									_aceStoredMagazineState select 0;
 
-								_storedStaticMagazineState = +(
-									_aceStoredMagazineState select 2
-								);
+								private _storedPackedWeaponClass =
+									_aceStoredMagazineState select 1;
 
-								_storedACETransportReserve = +(
-									_aceStoredMagazineState param [
-										3,
-										[]
-									]
-								);
+								private _storedACEcfg =
+									configFile
+									>> "CfgVehicles"
+									>> _storedStaticClass
+									>> "ACE_CSW";
 
-								_aceMagazineStateOwner = _x;
+								private _storedMountVehicleClass =
+									getText (
+										_storedACEcfg
+										>> "disassembleTurret"
+									);
+
+								private _storedPackedMountClass = if (
+									_storedMountVehicleClass != ""
+								) then {
+									getText (
+										configFile
+										>> "CfgVehicles"
+										>> _storedMountVehicleClass
+										>> "ACE_CSW"
+										>> "disassembleTo"
+									)
+								} else {
+									""
+								};
+
+								if (
+									_storedPackedWeaponClass
+										== _acePackedWeaponClass
+									&& {
+										_storedPackedMountClass
+											== _acePackedMountClass
+									}
+								) exitWith {
+									_hasStoredStaticMagazineState = true;
+
+									_storedStaticMagazineState = +(
+										_aceStoredMagazineState select 2
+									);
+
+									_storedACETransportReserve = +(
+										_aceStoredMagazineState param [
+											3,
+											[]
+										]
+									);
+
+									_aceMagazineStateOwner = _x;
+								};
 							};
 
 						} forEach _aceMagazineStateSources;

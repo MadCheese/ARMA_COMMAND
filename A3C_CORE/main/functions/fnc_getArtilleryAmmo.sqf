@@ -12,23 +12,14 @@ params [
 
 private _availableMagsAll = [];
 
-private _aceEnabled = missionNamespace getVariable ["A3C_IsAce3", false];
-
 private _aceArtilleryPieces = [];
 private _regularArtilleryPieces = [];
 
 {
 	private _artyPiece = _x;
 
-	private _isACECSW = (
-		_aceEnabled
-		&& {
-			isClass (
-				configOf _artyPiece
-				>> "ACE_CSW"
-			)
-		}
-	);
+	private _isACECSW =
+		[_artyPiece] call A3C_main_fnc_isEffectiveACECSW;
 
 	if (_isACECSW) then {
 		_aceArtilleryPieces pushBack _artyPiece;

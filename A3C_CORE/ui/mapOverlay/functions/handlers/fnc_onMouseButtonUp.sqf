@@ -7,29 +7,211 @@ private ["_exit","_sX","_sY","_sPos","_marker","_veh","_unit","_wpData"];
 A3C_BOOL_MAP_MD = false;
 A3C_BOOL_MOUSEMOVING = false;
 
+_sX = _this select 2;
+_sY = _this select 3;
+
+private _shift =
+	_this select 4;
+
+private _ctrl =
+	_this select 5;
+
+disableSerialization;
+
+private _map1 =
+	findDisplay 12 displayCtrl 51;
+
+private _sPos =
+	_map1 posScreenToWorld [
+		_sX,
+		_sY
+	];
+
 /*
- * Prevent any later mouse-move event from invoking the completed
- * drag callback.
+ * Perform one final synchronous drag calculation at the exact
+ * mouse-release position before clearing any drag state.
+ */
+private _completedDragSnapshot = [];
+private _completedDragResult =
+	createHashMap;
+
+if (
+	A3C_UI_MAP_BOOL_isHCWaypointPosEdit
+) then {
+	private _finalDragCallback =
+		A3C_MMCode;
+
+	[
+		_this select 0,
+		_sX,
+		_sY
+	] call _finalDragCallback;
+
+	_completedDragSnapshot =
+		+A3C_HC_WP_DRAG_SNAPSHOT;
+
+	_completedDragResult =
+		missionNamespace getVariable [
+			"A3C_HC_WP_DRAG_RESULT",
+			createHashMap
+		];
+
+	private _bundleDrag =
+		_completedDragResult getOrDefault [
+			"bundleDrag",
+			false
+		];
+
+	private _roadAlignmentAttempted =
+		_completedDragResult getOrDefault [
+			"roadAlignmentAttempted",
+			false
+		];
+
+	private _dragResultValid =
+		_completedDragResult getOrDefault [
+			"valid",
+			true
+		];
+
+	private _rejectDrag =
+		_bundleDrag
+		&& {_roadAlignmentAttempted}
+		&& {!_dragResultValid};
+
+	if (_rejectDrag) then {
+		private _snapshotEntries =
+			if (
+				count _completedDragSnapshot
+					== 3
+			) then {
+				_completedDragSnapshot select 2
+			} else {
+				[]
+			};
+
+		private _draggedWaypoint =
+			if (
+				count _completedDragSnapshot
+					== 3
+			) then {
+				_completedDragSnapshot select 0
+			} else {
+				[]
+			};
+
+		/*
+		 * Restore every waypoint from the immutable absolute-position
+		 * snapshot captured on mouse-down.
+		 */
+		{
+			if (count _x >= 3) then {
+				private _snapshotWaypoint =
+					_x select 0;
+
+				private _originalPosition =
+					+(_x select 2);
+
+				private _snapshotGroup =
+					_snapshotWaypoint select 0;
+
+				if (
+					!isNull _snapshotGroup
+					&& {
+						_snapshotWaypoint
+							in waypoints _snapshotGroup
+					}
+					&& {
+						count _originalPosition >= 2
+					}
+				) then {
+					if (
+						_snapshotWaypoint
+							isEqualTo _draggedWaypoint
+					) then {
+						_snapshotWaypoint setWaypointPosition [
+							_originalPosition,
+							0
+						];
+					} else {
+						_originalPosition set [
+							2,
+							1000
+						];
+
+						_snapshotWaypoint setWaypointPosition [
+							_originalPosition,
+							-1
+						];
+					};
+				};
+			};
+		} forEach _snapshotEntries;
+
+		private _failureReason =
+			_completedDragResult getOrDefault [
+				"result",
+				"UNKNOWN_FAILURE"
+			];
+
+		private _failureText =
+			switch (_failureReason) do {
+				case "ROAD_CORRIDOR_INSUFFICIENT": {
+					"Convoy waypoint was not moved: there is not enough connected road behind this position to place every convoy group. Try placing it farther along the intended road."
+				};
+
+				case "REFERENCE_INVALID": {
+					"Convoy waypoint was not moved: its approach reference is no longer valid. Select the waypoint bundle again and retry."
+				};
+
+				case "ROUTE_INVALID": {
+					"Convoy waypoint was not moved: no connected road route could be resolved to this position. Try a nearby position on the intended road."
+				};
+
+				case "ROUTE_BUILD_FAILED": {
+					"Convoy waypoint was not moved: no connected road route could be resolved to this position. Try a nearby position on the intended road."
+				};
+
+				case "ROAD_RESOLUTION_FAILED": {
+					"Convoy waypoint was not moved: the intended road could not be resolved. Try a nearby position on the road."
+				};
+
+				case "ROUTE_ROAD_OBJECTS_EMPTY": {
+					"Convoy waypoint was not moved: the resolved road route contained no usable road sections."
+				};
+
+				case "ROUTE_COMPILE_FAILED": {
+					"Convoy waypoint was not moved: the connected road route could not be compiled."
+				};
+
+				case "ROUTE_POSITIONS_EMPTY": {
+					"Convoy waypoint was not moved: the connected road route contained no usable positions."
+				};
+
+				default {
+					format [
+						"Convoy waypoint was not moved because road alignment failed (%1). Try a nearby position on the intended road.",
+						_failureReason
+					]
+				};
+			};
+
+		hintSilent _failureText;
+	};
+};
+
+/*
+ * The final calculation and any required restoration are complete.
+ * The drag callback and temporary state may now be cleared safely.
  */
 A3C_MMCode = {};
 
 A3C_HC_WP_DRAG_SNAPSHOT = [];
 A3C_HC_WP_DRAG_ROAD_STATE = [];
+A3C_HC_WP_DRAG_RESULT =
+	createHashMap;
 
 // #TODO: Optimize
-
-
-
-_sX = _this select 2;
-_sY = _this select 3;
-private _shift = _this select 4;
-private _ctrl = _this select 5;
-disableserialization;
-
-
-
-private _map1 = findDisplay 12 displayCtrl 51;
-private _sPos = (_map1 posscreentoworld [_sx,_sy]);
 
 private _isHighCommand = ({typeof _x in ["HighCommand","AdvancedAICommand_Commanders"]} count (synchronizedObjects player) > 0) && {hcShownBar};
 
@@ -93,16 +275,48 @@ if (A3C_UI_MAP_BOOL_isHCWaypointPosEdit) then {
 			};
 		};	
 	};
-	//-- After moving the current HC waypoint, re-issue group movement towards its new position.
-	private _currentWP = currentWaypoint A3C_HC_ACTIVEGROUP;
-	if (A3C_HC_ACTIVE_IND == _currentWP) then {
-		[A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] setwaypointposition [_sPos,0];
+	/*
+	 * After moving the current HC waypoint, re-issue movement toward
+	 * its actual committed position.
+	 *
+	 * Do not overwrite it with the raw mouse position here. The drag
+	 * handler has already committed either the exact leading position,
+	 * a regular translated position, or the restored original position.
+	*/
+	private _currentWP =
+		currentWaypoint A3C_HC_ACTIVEGROUP;
 
-		if (waypointType [A3C_HC_ACTIVEGROUP,A3C_HC_ACTIVE_IND] != "SCRIPTED") then {
-			[A3C_HC_ACTIVEGROUP, _sPos] spawn {
-				params ["_group","_sPos"];
+	if (
+		A3C_HC_ACTIVE_IND
+			== _currentWP
+	) then {
+		private _committedWaypointPosition =
+			waypointPosition [
+				A3C_HC_ACTIVEGROUP,
+				A3C_HC_ACTIVE_IND
+			];
+
+		if (
+			waypointType [
+				A3C_HC_ACTIVEGROUP,
+				A3C_HC_ACTIVE_IND
+			] != "SCRIPTED"
+		) then {
+			[
+				A3C_HC_ACTIVEGROUP,
+				_committedWaypointPosition
+			] spawn {
+				params [
+					"_group",
+					"_waypointPosition"
+				];
+
 				sleep 1;
-				[_group, _sPos] call A3C_ai_highCommand_fnc_moveGroupToPosition;
+
+				[
+					_group,
+					_waypointPosition
+				] call A3C_ai_highCommand_fnc_moveGroupToPosition;
 			};
 		};
 	};

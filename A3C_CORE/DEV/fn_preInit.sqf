@@ -3,6 +3,14 @@ diag_log "[A3C]: EXECUTING preInit";
 //-- Dev-only settings that A3C may need during PreInit
 A3C_DEBUG = false;
 
+A3C_DEBUG_CONVOY_ROADS = false;
+A3C_CONVOY_ROAD_DEBUG_DRAW = createHashMap;
+A3C_CONVOY_ROAD_DEBUG_ATTEMPT_COUNTER = 0;
+A3C_CONVOY_ROAD_DEBUG_LATEST_ISSUED = 0;
+A3C_CONVOY_ROAD_DEBUG_LATEST_ROUTE_COMMIT = 0;
+A3C_CONVOY_ROAD_DEBUG_LATEST_WAYPOINT_COMMIT = 0;
+A3C_CONVOY_ROAD_DEBUG_LAST_LOG_SIGNATURE = [];
+
 //-- Match addon Extended_PreInit_EventHandlers order
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_init_KeyBinds_CBA.sqf";
 call compile preprocessFileLineNumbers "A3C_CORE\A3C_Init.sqf";

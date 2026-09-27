@@ -114,7 +114,17 @@ private _createVehicleState = {
 	createHashMapFromArray [
 		["vehicle", _vehicle],
 		["group", _group],
+
+		/*
+		 * Projection onto the runtime's shared master route.
+		 *
+		 * "mode" retains the existing operational/tracking state.
+		 * projectionValid separately states whether the stored route
+		 * coordinate can safely participate in longitudinal control.
+		 */
 		["mode", "INITIALIZING"],
+		["projectionValid", false],
+		["projectionReason", "NOT_EVALUATED"],
 		["routeGeneration", -1],
 		["routeCoordinateGeneration", -1],
 		["segmentIndex", -1],
@@ -122,29 +132,83 @@ private _createVehicleState = {
 		["distanceFromRoute", -1],
 		["projectedPosition", []],
 		["segmentFraction", -1],
+		["usedFullRouteSearch", false],
+		["lastProjectionTime", -1],
+		["nextFullRouteSearchTime", 0],
+
+		/*
+		* Longitudinal relationship to the nearest preceding living,
+		* non-retired vehicle in the permanent convoy order.
+		*
+		* The predecessor is resolved once by the projection updater.
+		* The evaluator and UI must consume this exact stored identity
+		* instead of independently selecting another array entry.
+		*/
+		["vehicleAheadStateIndex", -1],
+		["vehicleAhead", objNull],
+		["vehicleAheadGroup", grpNull],
+
+		/*
+		* gapToVehicleAhead is the authoritative resolved centre gap
+		* consumed by the evaluator. The two source-specific values
+		* remain available for diagnostics.
+		*/
 		["gapToVehicleAhead", -1],
+		["masterRouteGapToVehicleAhead", -1],
+		["commonAnchorGapToVehicleAhead", -1],
+		["gapReferenceValid", false],
+		["gapReferenceMode", "NONE"],
+		["gapReferenceReason", "NOT_EVALUATED"],
+		["gapReferenceAnchor", []],
+		["distanceToGapReference", -1],
+		["distanceAheadToGapReference", -1],
+		["gapReferenceUpdatedAt", -1],
+		["gapReferenceMissingSince", -1],
+
+		/*
+		 * The last confirmed pair relationship may be used only as
+		 * a short fail-safe while a new common reference is being
+		 * resolved. It must never become an indefinitely stale gap.
+		 */
+		["lastValidGapToVehicleAhead", -1],
+		["lastValidGapTime", -1],
+
+		/*
+		 * Server-local common-anchor route cache. It belongs to this
+		 * follower because every follower has exactly one active
+		 * predecessor at a time.
+		 */
+		["pairRouteCache", createHashMap],
+
+		/*
+		 * Evaluated physical and control state.
+		 */
 		["centreGapToVehicleAhead", -1],
 		["bumperGapToVehicleAhead", -1],
 		["desiredGap", -1],
+		["currentSpeed", 0],
 		["speedAhead", -1],
 		["recommendedSpeed", -1],
 		["timeToCollision", -1],
 		["modelAcceleration", 0],
 		["freeSpeedTarget", -1],
 		["controlMode", "INITIALIZING"],
-		["usedFullRouteSearch", false],
-		["lastProjectionTime", -1],
 		["lastEvaluationTime", -1],
-		["nextFullRouteSearchTime", 0],
+
+		/*
+		 * Applied command state.
+		 */
 		["lastLimitSpeed", -1],
 		["lastLimitCommandTime", -1],
 		["appliedSpeedLimit", -1],
 		["requestedSpeedLimit", -1],
+		["speedControlActive", false],
 		["hardHoldActive", false],
 		["hardHoldReason", ""],
 		["movementSuppressed", false],
 		["movementSuppressedDriver", objNull],
 		["driverMissingSince", -1],
+
 		["retired", false]
 	]
 };
@@ -187,6 +251,10 @@ if (_runtimeIDs isEqualTo []) then {
 		["routeCoordinateGeneration", 0],
 		["routeBuildMode", "NONE"],
 		["routeRetryAfter", 0],
+		["routeOrderValid", false],
+		["gapResolutionAllowed", false],
+		["temporaryRouteFailure", false],
+		["gapResolutionUpdatedAt", -1],
 		["destinationGroup", grpNull],
 		["destinationIndex", -1],
 		["destinationName", ""],
@@ -243,9 +311,32 @@ if (_runtimeIDs isEqualTo []) then {
 		};
 	} forEach _newVehicleEntries;
 
+	/*
+	* Existing runtime order is frozen. Registration may append genuinely
+	* new groups, but supplied external order must never reorder groups
+	* already belonging to this runtime.
+	*/
+	private _frozenGroups =
+		+(
+			_runtimeState getOrDefault [
+				"groups",
+				[]
+			]
+		);
+
+	{
+		if (
+			!isNull _x
+			&& {!(_x in _frozenGroups)}
+		) then {
+			_frozenGroups pushBack
+				_x;
+		};
+	} forEach _validNewGroups;
+
 	_runtimeState set [
 		"groups",
-		+_validOrderedGroups
+		_frozenGroups
 	];
 
 	_runtimeState set [

@@ -8,6 +8,127 @@
 
 params ["_inputUnits","_refPos"];
 
+private _showWaypointDistributionFailure = {
+	params [
+		"_resultCode"
+	];
+
+	private _message =
+		switch (true) do {
+			case (
+				_resultCode
+					== "ROAD_CORRIDOR_INSUFFICIENT"
+			): {
+				"Convoy waypoint not created: there is not enough connected road behind this destination to place every group. Move the waypoint farther forward along the road."
+			};
+
+			case (
+				_resultCode in [
+					"ROUTE_INVALID",
+					"ROUTE_ROAD_OBJECTS_EMPTY",
+					"ROUTE_COMPILE_FAILED",
+					"ROUTE_POSITIONS_EMPTY",
+					"ROUTE_BUILD_FAILED",
+					"ROAD_ALIGNMENT_FAILED"
+				]
+			): {
+				"Convoy waypoint not created: no continuous road route could be found between the convoy and this destination. Move the waypoint farther along the intended connected road."
+			};
+
+			case (
+				_resultCode in [
+					"NO_GROUPS",
+					"NO_REFERENCE_GROUPS"
+				]
+			): {
+				"Convoy waypoint not created: no valid reference groups were available for road alignment."
+			};
+
+			case (
+				_resultCode in [
+					"ROAD_POSITION_COUNT_MISMATCH",
+					"WEDGE_POSITION_COUNT_MISMATCH"
+				]
+			): {
+				"Convoy waypoint not created: positions could not be generated for every selected group. Try placing the waypoint again."
+			};
+
+			default {
+				"Convoy waypoint not created because a complete waypoint formation could not be generated. Try moving the destination and placing it again."
+			};
+		};
+
+	hintSilent _message;
+
+	diag_log format [
+		"[A3C CONVOY WAYPOINT] Operation rejected | Reason: %1",
+		_resultCode
+	];
+};
+
+private _validateWaypointPositions = {
+	params [
+		"_positions",
+		"_expectedCount"
+	];
+
+	private _resultState =
+		missionNamespace getVariable [
+			"A3C_CONVOY_WP_POSITION_RESULT_LOCAL",
+			createHashMap
+		];
+
+	private _hasResultState =
+		_resultState isEqualType
+			createHashMap;
+
+	private _resultCode =
+		if (_hasResultState) then {
+			_resultState getOrDefault [
+				"result",
+				"RESULT_STATE_MISSING"
+			]
+		} else {
+			"RESULT_STATE_MISSING"
+		};
+
+	private _valid =
+		_hasResultState
+		&& {
+			_resultState getOrDefault [
+				"valid",
+				false
+			]
+		}
+		&& {
+			_positions isEqualType []
+		}
+		&& {
+			count _positions
+				== _expectedCount
+		}
+		&& {
+			_resultState getOrDefault [
+				"generatedPositionCount",
+				-1
+			] == count _positions
+		}
+		&& {
+			_resultState getOrDefault [
+				"expectedPositionCount",
+				-1
+			] == _expectedCount
+		};
+
+	if (!_valid) then {
+		[
+			_resultCode
+		] call _showWaypointDistributionFailure;
+	};
+
+	_valid
+};
+
 
 private _lastUnit = grpNull;
 private _convoyArrayIndex = -1;
@@ -33,6 +154,13 @@ if (_infantryOnly) exitWith {
 		20
 	] call A3C_main_fnc_generateWpWedgePositions;
 
+	if !(
+		[
+			_wpPositions,
+			count _inputUnits
+		] call _validateWaypointPositions
+	) exitWith {};
+
 	{
 		private _group = _x;
 
@@ -52,6 +180,8 @@ _inputUnits = _inputUnits select {
 };
 
 private _isAirOnly = true;
+
+//-- to do: plane check here, as cheap as possible. one plane should disqualify the entire array for convoy as plane will crash when limiting speed
 
 {
 	private _lVic = objectParent (leader _x);
@@ -142,6 +272,13 @@ private _wpPositions = [
 	) + 180,
 	20
 ] call A3C_main_fnc_generateWpWedgePositions;
+
+if !(
+	[
+		_wpPositions,
+		count _orderedGroups
+	] call _validateWaypointPositions
+) exitWith {};
 
 private _waypointBundle = [];
 
@@ -383,33 +520,54 @@ if (_doConvoyBehaviour) then {
 
 				if (isNull _leadByGroup) exitWith {};
 
-				if ({alive _x} count (units _leadByGroup) == 0) exitWith {
-					{
-						private _convoySubArray = _x;
-						private _indexMain = _forEachIndex;
-						if (_group in _convoySubArray) exitWith {
-							{
-								if (_x == _leadByGroup) exitWith {
-									private _newIndex = _forEachIndex - 1;
-									if (_newIndex < 0) then {
-										_leadByGroup = _group;
-									} else {
-										_leadByGroup = _convoySubArray select _newIndex;
-									};
-									_convoySubArray = _convoySubArray - [_x];
-									A3C_GROUP_CONVOYS set [_indexMain, _convoySubArray];
-								};
-								if (_x == _group) exitWith {
-									private _newIndex = _forEachIndex - 1;
-									if (_newIndex < 0) then {
-										_leadByGroup = _group;
-									} else {
-										_leadByGroup = _convoySubArray select _newIndex;
-									};
-								};
-							} forEach _convoySubArray;
+				/*
+				* A dead predecessor must not alter the permanent convoy order.
+				* Find the nearest preceding living group locally instead.
+				*/
+				if ({alive _x} count (units _leadByGroup) == 0) then {
+					private _convoyIndex =
+						A3C_GROUP_CONVOYS findIf {
+							_group in _x
 						};
-					} forEach A3C_GROUP_CONVOYS;
+
+					if (_convoyIndex >= 0) then {
+						private _registeredGroups =
+							A3C_GROUP_CONVOYS select _convoyIndex;
+
+						private _groupIndex =
+							_registeredGroups find _group;
+
+						private _replacementGroup =
+							grpNull;
+
+						if (_groupIndex > 0) then {
+							for "_i" from (_groupIndex - 1) to 0 step -1 do {
+								private _candidateGroup =
+									_registeredGroups select _i;
+
+								if (
+									!isNull _candidateGroup
+									&& {
+										{alive _x} count
+											(units _candidateGroup) > 0
+									}
+								) exitWith {
+									_replacementGroup =
+										_candidateGroup;
+								};
+							};
+						};
+
+						_leadByGroup =
+							if (isNull _replacementGroup) then {
+								_group
+							} else {
+								_replacementGroup
+							};
+					} else {
+						_leadByGroup =
+							_group;
+					};
 				};
 
 				private _leaderVic = vehicle leader _leadByGroup;
@@ -567,23 +725,67 @@ if (_doConvoyBehaviour) then {
 				};
 
 				if (_doExit) exitWith {
-					{
-						private _vic = _x;
+					/*
+					 * Runtime control owns speed commands, movement
+					 * suppression and convoy UI while active.
+					 */
+					if (!_useRuntimeControl) then {
+						{
+							private _vic = _x;
 
-						if (!isNull _vic) then {
-							[
-								_vic,
-								false
-							] remoteExec [
-								"limitSpeed",
-								_vic
+							if (!isNull _vic) then {
+								[
+									_vic,
+									false
+								] remoteExec [
+									"limitSpeed",
+									_vic
+								];
+							};
+						} forEach _allVehicles;
+
+						[
+							_group,
+							"enableAI"
+						] call _abilityFnc;
+
+						private _followCompleteStatus = [
+							"FOLLOW COMPLETE",
+							[1, 1, 1, 1]
+						];
+
+						_group setVariable [
+							"A3C_UI_Group_Status",
+							_followCompleteStatus,
+							true
+						];
+
+						sleep 3;
+
+						if (
+							(
+								_group getVariable [
+									"A3C_UI_Group_Status",
+									["", []]
+								]
+							) isEqualTo
+								_followCompleteStatus
+							&& {
+								(
+									_group getVariable [
+										"A3C_RuntimeConvoyUIOwner",
+										""
+									]
+								) == ""
+							}
+						) then {
+							_group setVariable [
+								"A3C_UI_Group_Status",
+								["", []],
+								true
 							];
 						};
-					} forEach _allVehicles;
-
-					[_group, "enableAI"] call _abilityFnc;
-					_group setVariable ["A3C_UI_Group_Status",["FOLLOW COMPLETE",[1,1,1,1]],true];
-					sleep 3;
+					};
 				};
 
 				/*
@@ -711,44 +913,220 @@ if (_doConvoyBehaviour) then {
 				sleep 1;
 			};
 
-			private _checkGroups = if (_leadByGroup == _group) then {[_group]} else {[_leadByGroup,_group]};
+			/*
+			* Individual follower workers must never remove themselves or their
+			* predecessors from the permanent convoy order.
+			*
+			* Only the group currently occupying the final convoy position may
+			* retire the convoy. If its worker stopped because the predecessor
+			* completed first, wait until the final group itself completes.
+			*/
+			private _cleanupGroups = [];
 
-			if ({alive _x} count (units _group) == 0) then {
-				_checkGroups = [_group];
+			private _convoyIndex =
+				A3C_GROUP_CONVOYS findIf {
+					_group in _x
+				};
+
+			private _isCurrentTail = false;
+
+			if (_convoyIndex >= 0) then {
+				private _registeredGroups =
+					A3C_GROUP_CONVOYS select _convoyIndex;
+
+				_isCurrentTail =
+					!(_registeredGroups isEqualTo [])
+					&& {
+						(
+							_registeredGroups select (
+								(count _registeredGroups) - 1
+							)
+						) isEqualTo _group
+					};
 			};
 
-			if (_leadByGroup == _group) then {
-				// diag_log format ["%1 is now the new convoy leader",_group];
-			} else {
-				{
-					private _gp = _x;
+			if (_isCurrentTail) then {
+				/*
+				* The PID may have stopped because the preceding group reached
+				* its destination. That is not sufficient to retire the convoy.
+				*/
+				waitUntil {
+					sleep 0.5;
 
-					{
-						private _convoyIndex = _forEachIndex;
-						private _groupArray = _x;
-						if (_gp in _groupArray) exitWith {
-							private _newArray = _groupArray - [_gp];
-							if (count _newArray <= 1) then {
-								A3C_GROUP_CONVOYS = A3C_GROUP_CONVOYS - [_groupArray];
-							} else {
-								A3C_GROUP_CONVOYS set [_convoyIndex, _newArray];
-							};
+					private _currentConvoyIndex =
+						A3C_GROUP_CONVOYS findIf {
+							_group in _x
 						};
-					} forEach A3C_GROUP_CONVOYS;
 
-				} forEach _checkGroups;
-				publicVariable "A3C_GROUP_CONVOYS";
+					if (_currentConvoyIndex < 0) then {
+						true
+					} else {
+						private _currentGroups =
+							A3C_GROUP_CONVOYS select
+								_currentConvoyIndex;
+
+						private _stillCurrentTail =
+							!(_currentGroups isEqualTo [])
+							&& {
+								(
+									_currentGroups select (
+										(count _currentGroups) - 1
+									)
+								) isEqualTo _group
+							};
+
+						private _groupAlive =
+							{alive _x} count
+								(units _group) > 0;
+
+						private _groupFinished =
+							currentWaypoint _group
+								>= count waypoints _group;
+
+						!_stillCurrentTail
+						|| {!_groupAlive}
+						|| {_groupFinished}
+					}
+				};
+
+				/*
+				* Re-read the registration after waiting. A new group may have
+				* been appended, in which case this group is no longer allowed
+				* to perform cleanup.
+				*/
+				_convoyIndex =
+					A3C_GROUP_CONVOYS findIf {
+						_group in _x
+					};
+
+				if (_convoyIndex >= 0) then {
+					private _registeredGroups =
+						A3C_GROUP_CONVOYS select
+							_convoyIndex;
+
+					private _stillCurrentTail =
+						!(_registeredGroups isEqualTo [])
+						&& {
+							(
+								_registeredGroups select (
+									(count _registeredGroups) - 1
+								)
+							) isEqualTo _group
+						};
+
+					private _groupAlive =
+						{alive _x} count
+							(units _group) > 0;
+
+					private _groupFinished =
+						currentWaypoint _group
+							>= count waypoints _group;
+
+					if (
+						_stillCurrentTail
+						&& {
+							!_groupAlive
+							|| {_groupFinished}
+						}
+					) then {
+						_cleanupGroups =
+							+_registeredGroups;
+
+						A3C_GROUP_CONVOYS deleteAt
+							_convoyIndex;
+
+						publicVariable
+							"A3C_GROUP_CONVOYS";
+					};
+				};
 			};
+
+			/*
+			* Cleanup applies to the complete convoy only after its registration
+			* has been removed atomically.
+			*/
+			private _runtimeControlActive =
+				missionNamespace getVariable [
+					"A3C_USE_RUNTIME_CONVOY_CONTROL",
+					false
+				];
 
 			{
-				private _gp = _x;
+				private _cleanupGroup = _x;
 
-				if !([_gp] call _groupStillInAnyConvoy) then {
-					_gp setVariable ["A3C_UI_Group_Status",nil,true];
-					[[_gp], A3C_ai_highCommand_fnc_reInitGroupMovement] remoteExec ["bis_fnc_call", leader _gp];
-					[_gp] call _convoyRestoreBehaviour;
+				if (!isNull _cleanupGroup) then {
+					/*
+					 * Runtime control releases its own limits,
+					 * movement suppression and UI ownership when
+					 * the runtime terminates.
+					 */
+					if (!_runtimeControlActive) then {
+						private _cleanupVehicles = [];
+
+						{
+							private _vehicle =
+								vehicle _x;
+
+							if (
+								!isNull objectParent _x
+								&& {
+									_x == driver _vehicle
+								}
+							) then {
+								_cleanupVehicles pushBackUnique
+									_vehicle;
+							};
+						} forEach units _cleanupGroup;
+
+						{
+							[
+								_x,
+								false
+							] remoteExec [
+								"limitSpeed",
+								_x
+							];
+						} forEach _cleanupVehicles;
+
+						[
+							_cleanupGroup,
+							"enableAI"
+						] call _abilityFnc;
+
+						if (
+							(
+								_cleanupGroup getVariable [
+									"A3C_RuntimeConvoyUIOwner",
+									""
+								]
+							) == ""
+						) then {
+							_cleanupGroup setVariable [
+								"A3C_UI_Group_Status",
+								["", []],
+								true
+							];
+						};
+					};
+
+					private _cleanupLeader =
+						leader _cleanupGroup;
+
+					if (!isNull _cleanupLeader) then {
+						[
+							[_cleanupGroup],
+							A3C_ai_highCommand_fnc_reInitGroupMovement
+						] remoteExec [
+							"bis_fnc_call",
+							_cleanupLeader
+						];
+					};
+
+					[
+						_cleanupGroup
+					] call _convoyRestoreBehaviour;
 				};
-			} forEach _checkGroups;
+			} forEach _cleanupGroups;
 		};
 
 		
@@ -794,24 +1172,100 @@ if (_doConvoyBehaviour) then {
 
 				[[_group,_allVehicles,[_leadByGroup,_convoyLeader],_allVehicleCount,_isLastVehicle],_pidFnc] remoteExec ["bis_fnc_spawn", leader _group];
 			} else {
-				_convoyLeader = vehicle leader _group;
-				_group setVariable ["A3C_UI_Group_Status",["STARTING ENGINE",A3C_UI_COLOR_RED],true];
+				_convoyLeader =
+					vehicle leader _group;
+
+				private _runtimeControlActive =
+					missionNamespace getVariable [
+						"A3C_USE_RUNTIME_CONVOY_CONTROL",
+						false
+					];
+
+				if (!_runtimeControlActive) then {
+					private _startingStatus = [
+						"STARTING ENGINE",
+						A3C_UI_COLOR_RED
+					];
+
+					_group setVariable [
+						"A3C_UI_Group_Status",
+						_startingStatus,
+						true
+					];
+
+					[
+						_group,
+						_startingStatus
+					] spawn {
+						params [
+							"_group",
+							"_startingStatus"
+						];
+
+						waitUntil {
+							sleep 0.1;
+
+							private _currentStatus =
+								_group getVariable [
+									"A3C_UI_Group_Status",
+									["", []]
+								];
+
+							!(
+								_currentStatus
+									isEqualTo
+								_startingStatus
+							)
+							|| {
+								speed vehicle leader _group
+									> 1
+							}
+							|| {
+								missionNamespace getVariable [
+									"A3C_USE_RUNTIME_CONVOY_CONTROL",
+									false
+								]
+							}
+						};
+
+						if (
+							(
+								_group getVariable [
+									"A3C_UI_Group_Status",
+									["", []]
+								]
+							) isEqualTo
+								_startingStatus
+							&& {
+								(
+									_group getVariable [
+										"A3C_RuntimeConvoyUIOwner",
+										""
+									]
+								) == ""
+							}
+						) then {
+							_group setVariable [
+								"A3C_UI_Group_Status",
+								["", []],
+								true
+							];
+						};
+					};
+				};
 
 				{
-					private _v = vehicle _x;
-					if (!isNull objectParent _x && {_x == driver _v}) then {
-						_allVehicleCount = _allVehicleCount + 1;
-					};
-				} forEach (units _x);
+					private _v =
+						vehicle _x;
 
-				_group spawn {
-					waitUntil {
-						private _l = vehicle leader _this;
-						private _d = _this getVariable ["A3C_UI_Group_Status",["",[]]];
-						_d select 0 != "STARTING ENGINE" OR {speed _l > 1}
+					if (
+						!isNull objectParent _x
+						&& {_x == driver _v}
+					) then {
+						_allVehicleCount =
+							_allVehicleCount + 1;
 					};
-					_this setVariable ["A3C_UI_Group_Status",["",[]],true];
-				};
+				} forEach units _group;
 			};
 		} forEach _freeGroups;
 	};

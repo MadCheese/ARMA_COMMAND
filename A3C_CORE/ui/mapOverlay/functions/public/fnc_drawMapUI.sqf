@@ -2047,3 +2047,917 @@ if (A3C_Boarding_Mapselection_ACTIVE) then {
 // 	];
 
 // } foreach A3C_Selection_MultiWaypoint;
+
+///////////////////////////////////
+//-- CONVOY ROAD DEBUG DRAWING --//
+///////////////////////////////////
+
+if (
+	missionNamespace getVariable [
+		"A3C_DEBUG_CONVOY_ROADS",
+		false
+	]
+) then {
+	private _roadDebug =
+		missionNamespace getVariable [
+			"A3C_CONVOY_ROAD_DEBUG_DRAW",
+			createHashMap
+		];
+
+	if (
+		_roadDebug isEqualType createHashMap
+		&& {count _roadDebug > 0}
+	) then {
+		private _debugDotIcon =
+			"\a3\ui_f\data\Map\Markers\Military\dot_CA.paa";
+
+		private _fnc_drawDebugPolyline = {
+			params [
+				"_positions",
+				"_color",
+				["_drawDirection", false]
+			];
+
+			if (count _positions > 1) then {
+				for "_i" from 1 to ((count _positions) - 1) do {
+					_mapControl drawLine [
+						_positions select (_i - 1),
+						_positions select _i,
+						_color
+					];
+				};
+
+				if (_drawDirection) then {
+					private _lastIndex =
+						(count _positions) - 1;
+
+					_mapControl drawArrow [
+						_positions select (_lastIndex - 1),
+						_positions select _lastIndex,
+						_color
+					];
+				};
+			};
+		};
+
+		private _fnc_drawDebugLinePairs = {
+			params [
+				"_linePairs",
+				"_color"
+			];
+
+			{
+				if (
+					_x isEqualType []
+					&& {count _x >= 2}
+				) then {
+					_mapControl drawLine [
+						_x select 0,
+						_x select 1,
+						_color
+					];
+				};
+			} forEach _linePairs;
+		};
+
+		private _fnc_drawDebugArrowPairs = {
+			params [
+				"_linePairs",
+				"_color"
+			];
+
+			{
+				if (
+					_x isEqualType []
+					&& {count _x >= 2}
+				) then {
+					_mapControl drawArrow [
+						_x select 0,
+						_x select 1,
+						_color
+					];
+				};
+			} forEach _linePairs;
+		};
+
+		private _fnc_drawDebugPoint = {
+			params [
+				"_position",
+				"_color",
+				["_label", ""],
+				["_size", 14]
+			];
+
+			if (
+				_position isEqualType []
+				&& {count _position >= 2}
+			) then {
+				_mapControl drawIcon [
+					_debugDotIcon,
+					_color,
+					_position,
+					_size,
+					_size,
+					0,
+					_label,
+					2,
+					0.03,
+					"PuristaBold",
+					"right"
+				];
+			};
+		};
+
+		private _greyColor =
+			[0.65, 0.65, 0.65, 0.55];
+
+		private _greenColor =
+			[0.2, 1, 0.2, 1];
+
+		private _redColor =
+			[1, 0.15, 0.15, 1];
+
+		private _blueColor =
+			[0.1, 0.4, 1, 0.75];
+
+		private _orangeColor =
+			[1, 0.45, 0, 0.75];
+
+		private _cyanColor =
+			[0, 1, 1, 0.95];
+
+		private _magentaColor =
+			[1, 0, 1, 0.95];
+
+		private _yellowColor =
+			[1, 1, 0, 0.9];
+
+		private _whiteColor =
+			[1, 1, 1, 1];
+
+		/*
+		 * Prepared road-graph diagnostics:
+		 *
+		 * - grey arrows: normal outgoing connections;
+		 * - lime arrows: connections reported only in the opposite
+		 *   direction;
+		 * - violet lines: physically nearby unconnected endpoint
+		 *   candidates;
+		 * - magenta arrows: inferred connections actually considered
+		 *   by the route builder.
+		 */
+		private _graphOutgoingColor =
+			[0.7, 0.7, 0.7, 0.45];
+
+		private _graphIncomingOnlyColor =
+			[0.35, 1, 0.15, 0.9];
+
+		private _graphEndpointCandidateColor =
+			[0.65, 0.25, 1, 0.65];
+
+		private _graphNodeColor =
+			[1, 1, 1, 0.75];
+
+		private _routeBuilds =
+			_roadDebug getOrDefault [
+				"routeBuilds",
+				[]
+			];
+
+		{
+			private _routeBuild =
+				_x;
+
+			if (
+				_routeBuild
+					isEqualType createHashMap
+			) then {
+				private _startConnections =
+					_routeBuild getOrDefault [
+						"startConnections",
+						[]
+					];
+
+				private _targetConnections =
+					_routeBuild getOrDefault [
+						"targetConnections",
+						[]
+					];
+
+				[
+					_startConnections,
+					_greyColor
+				] call _fnc_drawDebugLinePairs;
+
+				[
+					_targetConnections,
+					_greyColor
+				] call _fnc_drawDebugLinePairs;
+
+				/*
+				 * Draw the prepared graph surrounding the selected
+				 * route. Candidate lines are drawn first so actual
+				 * graph connections and the selected route remain
+				 * visible above them.
+				 */
+				[
+					_routeBuild getOrDefault [
+						"selectedEndpointCandidateEdges",
+						[]
+					],
+					_graphEndpointCandidateColor
+				] call _fnc_drawDebugLinePairs;
+
+				[
+					_routeBuild getOrDefault [
+						"selectedOutgoingEdges",
+						[]
+					],
+					_graphOutgoingColor
+				] call _fnc_drawDebugArrowPairs;
+
+				[
+					_routeBuild getOrDefault [
+						"selectedIncomingOnlyEdges",
+						[]
+					],
+					_graphIncomingOnlyColor
+				] call _fnc_drawDebugArrowPairs;
+
+				private _selectedNodePositions =
+					_routeBuild getOrDefault [
+						"selectedNodePositions",
+						[]
+					];
+
+				{
+					[
+						_x,
+						_graphNodeColor,
+						"",
+						6
+					] call _fnc_drawDebugPoint;
+				} forEach _selectedNodePositions;
+
+				private _forwardRoute =
+					_routeBuild getOrDefault [
+						"forwardRoute",
+						[]
+					];
+
+				private _reverseRoute =
+					_routeBuild getOrDefault [
+						"reverseRoute",
+						[]
+					];
+
+				private _selectedRoute =
+					_routeBuild getOrDefault [
+						"selectedRoute",
+						[]
+					];
+
+				[
+					_forwardRoute,
+					_blueColor
+				] call _fnc_drawDebugPolyline;
+
+				[
+					_reverseRoute,
+					_orangeColor
+				] call _fnc_drawDebugPolyline;
+
+				[
+					_selectedRoute,
+					_cyanColor,
+					true
+				] call _fnc_drawDebugPolyline;
+
+				private _inferredEdges =
+					_routeBuild getOrDefault [
+						"inferredEdges",
+						[]
+					];
+
+				{
+					if (
+						_x isEqualType []
+						&& {count _x >= 3}
+					) then {
+						_mapControl drawArrow [
+							_x select 1,
+							_x select 2,
+							_magentaColor
+						];
+					};
+				} forEach _inferredEdges;
+
+				private _startRoadPosition =
+					_routeBuild getOrDefault [
+						"startRoadPosition",
+						[]
+					];
+
+				private _targetRoadPosition =
+					_routeBuild getOrDefault [
+						"targetRoadPosition",
+						[]
+					];
+
+				[
+					_startRoadPosition,
+					_greenColor,
+					format [
+						"S%1",
+						_forEachIndex + 1
+					],
+					16
+				] call _fnc_drawDebugPoint;
+
+				[
+					_targetRoadPosition,
+					_redColor,
+					format [
+						"T%1",
+						_forEachIndex + 1
+					],
+					16
+				] call _fnc_drawDebugPoint;
+			};
+		} forEach _routeBuilds;
+
+		private _routeUpdate =
+			_roadDebug getOrDefault [
+				"routeUpdate",
+				createHashMap
+			];
+
+		if (
+			_routeUpdate
+				isEqualType createHashMap
+			&& {count _routeUpdate > 0}
+		) then {
+			[
+				_routeUpdate getOrDefault [
+					"targetConnections",
+					[]
+				],
+				_greyColor
+			] call _fnc_drawDebugLinePairs;
+
+			/*
+			 * Cached drag updates may not invoke the full route
+			 * builder. Draw the graph context captured from the final
+			 * part of the resulting cached route.
+			 */
+			[
+				_routeUpdate getOrDefault [
+					"resultContextEndpointCandidateEdges",
+					[]
+				],
+				_graphEndpointCandidateColor
+			] call _fnc_drawDebugLinePairs;
+
+			[
+				_routeUpdate getOrDefault [
+					"resultContextOutgoingEdges",
+					[]
+				],
+				_graphOutgoingColor
+			] call _fnc_drawDebugArrowPairs;
+
+			[
+				_routeUpdate getOrDefault [
+					"resultContextIncomingOnlyEdges",
+					[]
+				],
+				_graphIncomingOnlyColor
+			] call _fnc_drawDebugArrowPairs;
+
+			private _resultContextNodePositions =
+				_routeUpdate getOrDefault [
+					"resultContextNodePositions",
+					[]
+				];
+
+			{
+				[
+					_x,
+					_graphNodeColor,
+					"",
+					6
+				] call _fnc_drawDebugPoint;
+			} forEach _resultContextNodePositions;
+
+			[
+				_routeUpdate getOrDefault [
+					"previousRoute",
+					[]
+				],
+				[0.5, 0.5, 0.5, 0.65]
+			] call _fnc_drawDebugPolyline;
+
+			[
+				_routeUpdate getOrDefault [
+					"resultRoute",
+					[]
+				],
+				_cyanColor,
+				true
+			] call _fnc_drawDebugPolyline;
+
+			private _targetCandidates =
+				_routeUpdate getOrDefault [
+					"targetCandidates",
+					[]
+				];
+
+			{
+				[
+					_x,
+					[0.8, 0.4, 1, 0.8],
+					format [
+						"C%1",
+						_forEachIndex + 1
+					],
+					10
+				] call _fnc_drawDebugPoint;
+			} forEach _targetCandidates;
+
+			[
+				_routeUpdate getOrDefault [
+					"lastCachedRoadPosition",
+					[]
+				],
+				_greenColor,
+				"CACHE",
+				13
+			] call _fnc_drawDebugPoint;
+
+			[
+				_routeUpdate getOrDefault [
+					"targetRoadPosition",
+					[]
+				],
+				_redColor,
+				"TARGET",
+				17
+			] call _fnc_drawDebugPoint;
+		};
+
+		private _distribution =
+			_roadDebug getOrDefault [
+				"distribution",
+				createHashMap
+			];
+
+		if (
+			_distribution
+				isEqualType createHashMap
+			&& {count _distribution > 0}
+		) then {
+			/*
+			 * Travel route:
+			 *
+			 *     reference -> target
+			 */
+			[
+				_distribution getOrDefault [
+					"travelRoute",
+					[]
+				],
+				_cyanColor,
+				true
+			] call _fnc_drawDebugPolyline;
+
+			/*
+			 * Distribution route:
+			 *
+			 *     target -> reference
+			 */
+			[
+				_distribution getOrDefault [
+					"distributionRoute",
+					[]
+				],
+				_yellowColor,
+				true
+			] call _fnc_drawDebugPolyline;
+
+			private _generatedPositions =
+				_distribution getOrDefault [
+					"generatedPositions",
+					[]
+				];
+
+			{
+				[
+					_x,
+					_whiteColor,
+					format [
+						"R%1",
+						_forEachIndex + 1
+					],
+					15
+				] call _fnc_drawDebugPoint;
+			} forEach _generatedPositions;
+
+			[
+				_distribution getOrDefault [
+					"referencePosition",
+					[]
+				],
+				_greenColor,
+				"REFERENCE",
+				17
+			] call _fnc_drawDebugPoint;
+
+			[
+				_distribution getOrDefault [
+					"targetPosition",
+					[]
+				],
+				_redColor,
+				"DESTINATION",
+				17
+			] call _fnc_drawDebugPoint;
+		};
+
+		private _operationResult =
+			_roadDebug getOrDefault [
+				"operationResult",
+				createHashMap
+			];
+
+		private _operationCategory =
+			_operationResult getOrDefault [
+				"category",
+				""
+			];
+
+		private _operationResultCode =
+			_operationResult getOrDefault [
+				"result",
+				""
+			];
+
+		private _usedSnapshotFallback =
+			_operationResult getOrDefault [
+				"usedSnapshotFallback",
+				false
+			];
+
+		private _usedWedge =
+			_operationResult getOrDefault [
+				"usedWedge",
+				false
+			];
+
+		private _calculatedRoadPositions =
+			_operationResult getOrDefault [
+				"calculatedRoadPositions",
+				[]
+			];
+
+		{
+			[
+				_x,
+				_whiteColor,
+				format [
+					"CALC %1",
+					_forEachIndex + 1
+				],
+				13
+			] call _fnc_drawDebugPoint;
+		} forEach _calculatedRoadPositions;
+
+		private _snapshotFallbackPositions =
+			_operationResult getOrDefault [
+				"snapshotFallbackPositions",
+				[]
+			];
+
+		if (_usedSnapshotFallback) then {
+			{
+				[
+					_x,
+					_redColor,
+					format [
+						"F%1",
+						_forEachIndex + 1
+					],
+					15
+				] call _fnc_drawDebugPoint;
+			} forEach _snapshotFallbackPositions;
+		};
+
+		private _finalPositions =
+			_operationResult getOrDefault [
+				"finalWaypointPositions",
+				_operationResult getOrDefault [
+					"finalPositions",
+					[]
+				]
+			];
+
+		private _finalPositionColor =
+			if (
+				_usedSnapshotFallback
+				|| {_usedWedge}
+			) then {
+				_redColor
+			} else {
+				_greenColor
+			};
+
+		{
+			[
+				_x,
+				_finalPositionColor,
+				format [
+					"P%1",
+					_forEachIndex + 1
+				],
+				12
+			] call _fnc_drawDebugPoint;
+		} forEach _finalPositions;
+
+		private _operation =
+			_roadDebug getOrDefault [
+				"operation",
+				"UNKNOWN"
+			];
+
+		private _attemptID =
+			_roadDebug getOrDefault [
+				"attemptID",
+				-1
+			];
+
+		private _routeBranch =
+			_routeUpdate getOrDefault [
+				"branch",
+				"NONE"
+			];
+
+		private _targetResolution =
+			_routeUpdate getOrDefault [
+				"targetResolution",
+				"NONE"
+			];
+
+		private _selectedSource = "NONE";
+		private _routeDistance = -1;
+		private _directDistance = -1;
+		private _routeDistanceRatio = -1;
+		private _routeNodeCount = 0;
+		private _contextNodeCount = 0;
+
+		/*
+		 * Start with the most recent full-build information.
+		 */
+		if !(_routeBuilds isEqualTo []) then {
+			private _lastRouteBuild =
+				_routeBuilds select (
+					(count _routeBuilds) - 1
+				);
+
+			if (
+				_lastRouteBuild
+					isEqualType createHashMap
+			) then {
+				_selectedSource =
+					_lastRouteBuild getOrDefault [
+						"selectedSource",
+						"NONE"
+					];
+
+				_routeDistance =
+					_lastRouteBuild getOrDefault [
+						"selectedDistance",
+						-1
+					];
+
+				_directDistance =
+					_lastRouteBuild getOrDefault [
+						"directDistance",
+						-1
+					];
+
+				_routeDistanceRatio =
+					_lastRouteBuild getOrDefault [
+						"routeDistanceRatio",
+						-1
+					];
+
+				_routeNodeCount =
+					_lastRouteBuild getOrDefault [
+						"selectedNodeCount",
+						0
+					];
+
+				_contextNodeCount =
+					_routeNodeCount;
+			};
+		};
+
+		/*
+		 * Prefer final cached-update metrics when available. A bridge
+		 * build may describe only the short extension, whereas the
+		 * route-update state describes the complete resulting route.
+		 */
+		if (
+			_routeUpdate isEqualType createHashMap
+			&& {count _routeUpdate > 0}
+		) then {
+			private _updatedRouteDistance =
+				_routeUpdate getOrDefault [
+					"resultDistance",
+					-1
+				];
+
+			private _updatedDirectDistance =
+				_routeUpdate getOrDefault [
+					"directDistance",
+					-1
+				];
+
+			private _updatedRouteDistanceRatio =
+				_routeUpdate getOrDefault [
+					"routeDistanceRatio",
+					-1
+				];
+
+			if (_updatedRouteDistance >= 0) then {
+				_routeDistance =
+					_updatedRouteDistance;
+			};
+
+			if (_updatedDirectDistance >= 0) then {
+				_directDistance =
+					_updatedDirectDistance;
+			};
+
+			if (_updatedRouteDistanceRatio >= 0) then {
+				_routeDistanceRatio =
+					_updatedRouteDistanceRatio;
+			};
+
+			_routeNodeCount =
+				_routeUpdate getOrDefault [
+					"resultRouteNodeCount",
+					_routeNodeCount
+				];
+
+			_contextNodeCount =
+				_routeUpdate getOrDefault [
+					"resultContextNodeCount",
+					_contextNodeCount
+				];
+		};
+
+		private _requiredDistance =
+			_distribution getOrDefault [
+				"requiredDistance",
+				-1
+			];
+
+		private _availableDistance =
+			_distribution getOrDefault [
+				"availableDistance",
+				-1
+			];
+
+		private _staleRouteCommit =
+			_operationResult getOrDefault [
+				"staleRouteCommit",
+				false
+			];
+
+		private _staleWaypointCommit =
+			_operationResult getOrDefault [
+				"staleWaypointCommit",
+				false
+			];
+
+		private _statusColor =
+			if (
+				_staleRouteCommit
+				|| {_staleWaypointCommit}
+				|| {
+					_operationCategory
+						== "ALIGNMENT_FAILURE"
+				}
+			) then {
+				_redColor
+			} else {
+				if (
+					_operationCategory
+						== "ROAD_ALIGNMENT_SUCCESS"
+				) then {
+					_greenColor
+				} else {
+					_yellowColor
+				}
+			};
+
+		private _labelPosition =
+			_roadDebug getOrDefault [
+				"targetPosition",
+				[]
+			];
+
+		if (
+			!(_labelPosition isEqualType [])
+			|| {count _labelPosition < 2}
+		) then {
+			_labelPosition =
+				getPos player;
+		};
+
+		_labelPosition = [
+			_labelPosition select 0,
+			_labelPosition select 1,
+			0
+		];
+
+		private _labelLines = [
+			format [
+				"A3C ROAD %1 #%2 | %3 | %4",
+				_operation,
+				_attemptID,
+				_operationCategory,
+				_operationResultCode
+			],
+			format [
+				"Branch: %1 | Target: %2 | Selected: %3",
+				_routeBranch,
+				_targetResolution,
+				_selectedSource
+			],
+			format [
+				"Route/direct: %1/%2 m | Ratio: %3 | Nodes/context: %4/%5",
+				round _routeDistance,
+				round _directDistance,
+				round (
+					_routeDistanceRatio * 100
+				) / 100,
+				_routeNodeCount,
+				_contextNodeCount
+			],
+			format [
+				"Required/available: %1/%2 m",
+				round _requiredDistance,
+				round _availableDistance
+			],
+			format [
+				"Stale route/WP: %1/%2 | Snapshot: %3 | Wedge: %4",
+				_staleRouteCommit,
+				_staleWaypointCommit,
+				_usedSnapshotFallback,
+				_usedWedge
+			],
+			"Routes: blue forward | Orange reverse | Cyan selected | Yellow distribution",
+			"Graph: grey outgoing | Lime incoming-only | Violet endpoint candidate | Magenta inferred"
+		];
+
+		{
+			private _linePosition =
+				_labelPosition vectorAdd [
+					0,
+					-(_forEachIndex * 12),
+					0
+				];
+
+			_mapControl drawIcon [
+				_debugDotIcon,
+				_statusColor,
+				_linePosition,
+				if (_forEachIndex == 0) then {
+					12
+				} else {
+					0
+				},
+				if (_forEachIndex == 0) then {
+					12
+				} else {
+					0
+				},
+				0,
+				_x,
+				2,
+				if (_forEachIndex == 0) then {
+					0.035
+				} else {
+					0.028
+				},
+				if (_forEachIndex == 0) then {
+					"PuristaBold"
+				} else {
+					"PuristaLight"
+				},
+				"left"
+			];
+		} forEach _labelLines;
+	};
+};

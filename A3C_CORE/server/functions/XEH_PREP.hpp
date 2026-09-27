@@ -25,8 +25,12 @@ A3C_PREP(registerWaypointBundle);
 
 
 A3C_PREP(removeEventhandlerTurnout);
+A3C_PREP(resolveConvoyPairGap);
+
 
 A3C_PREP(serverMonitorMain);
+A3C_PREP(serverMonitorRadius);
+
 A3C_PREP(startConvoyRuntimeController);
 
 

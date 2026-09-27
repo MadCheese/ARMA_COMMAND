@@ -605,10 +605,32 @@ private _controllerHandle = [
 					_isActiveVehicle
 					&& {!_isLeader};
 
+				/*
+				* Tracking mode and control eligibility are deliberately separate.
+				*
+				* OFF_ROUTE and NO_PROJECTION vehicles may still have a valid
+				* common-anchor or fail-safe recommendation.
+				*/
+				private _controlUnavailable =
+					_controlMode in [
+						"NO_ROUTE",
+						"INOPERABLE",
+						"RETIRED",
+						"WAITING_FOR_DRIVER",
+						"INITIALIZING"
+					];
+
 				private _hasValidRecommendation =
 					_isActiveVehicle
-					&& {_trackingMode == "TRACKED"}
-					&& {_recommendedSpeed >= 0};
+					&& {_recommendedSpeed >= 0}
+					&& {!_controlUnavailable};
+
+				private _referenceFailSafeControl =
+					_controlMode in [
+						"REFERENCE_FALLBACK",
+						"REFERENCE_UNCERTAIN",
+						"REFERENCE_LOST"
+					];
 
 				private _hardHoldWasActive =
 					_vehicleState getOrDefault [
@@ -639,6 +661,10 @@ private _controllerHandle = [
 
 					private _hardHoldRequested =
 						_controlMode == "STOPPED"
+						|| {
+							_controlMode
+								== "REFERENCE_LOST"
+						}
 						|| {_recommendedSpeed <= 0.001}
 						|| {_criticalGap}
 						|| {_stoppedAheadHold}
@@ -646,19 +672,29 @@ private _controllerHandle = [
 
 					if (_hardHoldRequested) then {
 						_hardHoldReason =
-							if (_controlMode == "STOPPED") then {
-								"MODEL_STOPPED"
+							if (
+								_controlMode
+									== "REFERENCE_LOST"
+							) then {
+								"REFERENCE_LOST"
 							} else {
-								if (_stoppedAheadHold) then {
-									"STOPPED_AHEAD"
+								if (
+									_controlMode
+										== "STOPPED"
+								) then {
+									"MODEL_STOPPED"
 								} else {
-									if (_imminentCollision) then {
-										"TTC"
+									if (_stoppedAheadHold) then {
+										"STOPPED_AHEAD"
 									} else {
-										if (_criticalGap) then {
-											"CRITICAL_GAP"
+										if (_imminentCollision) then {
+											"TTC"
 										} else {
-											"ZERO_TARGET"
+											if (_criticalGap) then {
+												"CRITICAL_GAP"
+											} else {
+												"ZERO_TARGET"
+											}
 										}
 									}
 								}
@@ -669,24 +705,43 @@ private _controllerHandle = [
 						if (_hardHoldRequested) then {
 							_hardHoldActive = true;
 						} else {
-							private _releaseGap =
-								12 max (
-									_desiredGap * 1.15
+							if (
+								_controlMode
+									== "REFERENCE_UNCERTAIN"
+							) then {
+								/*
+								 * The predecessor exists again, but a
+								 * common longitudinal reference is not
+								 * yet available. Release the stationary
+								 * hold and apply the evaluator's
+								 * predecessor-speed fail-safe instead.
+								 */
+								_hardHoldActive = false;
+							} else {
+								private _releaseGap =
+									12 max (
+										_desiredGap * 1.15
+									);
+
+								private _aheadMovingOrGapLarge =
+									_speedAhead > 5
+									|| {_bumperGap > 30};
+
+								_hardHoldActive = !(
+									_recommendedSpeed > 2
+									&& {
+										_bumperGap
+											> _releaseGap
+									}
+									&& {
+										_aheadMovingOrGapLarge
+									}
 								);
 
-							private _aheadMovingOrGapLarge =
-								_speedAhead > 5
-								|| {_bumperGap > 30};
-
-							_hardHoldActive = !(
-								_recommendedSpeed > 2
-								&& {_bumperGap > _releaseGap}
-								&& {_aheadMovingOrGapLarge}
-							);
-
-							if (_hardHoldActive) then {
-								_hardHoldReason =
-									"HYSTERESIS";
+								if (_hardHoldActive) then {
+									_hardHoldReason =
+										"HYSTERESIS";
+								};
 							};
 						};
 					} else {
@@ -706,16 +761,27 @@ private _controllerHandle = [
 				if (
 					_isFollower
 					&& {_hasValidRecommendation}
-					&& {_bumperGap >= 0}
 				) then {
-					_speedControlActive =
-						if (_speedControlWasActive) then {
-							_bumperGap
-								< _followerSpeedControlReleaseGap
-						} else {
-							_bumperGap
-								<= _followerSpeedControlEngageGap
+					if (_referenceFailSafeControl) then {
+						/*
+						 * A common-reference fallback already produced
+						 * a deliberate safe recommendation. It must be
+						 * applied even when no current bumper gap is
+						 * available.
+						 */
+						_speedControlActive = true;
+					} else {
+						if (_bumperGap >= 0) then {
+							_speedControlActive =
+								if (_speedControlWasActive) then {
+									_bumperGap
+										< _followerSpeedControlReleaseGap
+								} else {
+									_bumperGap
+										<= _followerSpeedControlEngageGap
+								};
 						};
+					};
 				};
 
 				if (_hardHoldActive) then {
@@ -1051,40 +1117,41 @@ private _controllerHandle = [
 				};
 
 				if (_hardHoldActive) then {
-					private _referenceGroup = grpNull;
+					/*
+					 * Display the exact predecessor used by the
+					 * longitudinal controller. Do not independently
+					 * infer another group from the frozen array.
+					 */
+					private _referenceGroup =
+						_vehicleState getOrDefault [
+							"vehicleAheadGroup",
+							grpNull
+						];
 
-					for "_i" from (
-						_forEachIndex - 1
-					) to 0 step -1 do {
-						private _candidateState =
-							_vehicleStates select _i;
-
-						private _candidateGroup =
-							_candidateState getOrDefault [
-								"group",
-								grpNull
-							];
-
-						if (
-							!isNull _candidateGroup
-							&& {
-								_candidateGroup
-									isNotEqualTo _group
-							}
-						) exitWith {
-							_referenceGroup =
-								_candidateGroup;
-						};
-					};
+					private _referenceVehicle =
+						_vehicleState getOrDefault [
+							"vehicleAhead",
+							objNull
+						];
 
 					private _waitingText =
-						if (isNull _referenceGroup) then {
+						if (
+							isNull _referenceVehicle
+							|| {isNull _referenceGroup}
+						) then {
 							"WAITING"
 						} else {
-							format [
-								"WAITING FOR %1",
-								groupID _referenceGroup
-							]
+							if (
+								_referenceGroup
+									isEqualTo _group
+							) then {
+								"WAITING FOR CONVOY VEHICLE"
+							} else {
+								format [
+									"WAITING FOR %1",
+									groupID _referenceGroup
+								]
+							}
 						};
 
 					[
@@ -1333,7 +1400,7 @@ private _controllerHandle = [
 					|| {_heartbeat}
 				) then {
 					diag_log format [
-						"[A3C CONVOY CONTROLLER] Runtime: %1 | Mode: %2 | Order: %3 | Vehicle: %4 | Tracking: %5 | Control: %6 | Progress: %7 | Bumper gap: %8 | Desired gap: %9 | Speed: %10 | Ahead speed: %11 | Recommended: %12 | Applied: %13 | Free target: %14 | Hard hold: %15 | Hold reason: %16 | TTC: %17 | Regroup: %18 | Route generation: %19",
+						"[A3C CONVOY CONTROLLER] Runtime: %1 | Mode: %2 | Order: %3 | Vehicle: %4 | Tracking: %5 | Control: %6 | Progress: %7 | Bumper gap: %8 | Desired gap: %9 | Speed: %10 | Ahead speed: %11 | Recommended: %12 | Applied: %13 | Free target: %14 | Hard hold: %15 | Hold reason: %16 | TTC: %17 | Regroup: %18 | Route generation: %19 | Gap reference valid: %20 | Gap reference mode: %21 | Gap reference reason: %22",
 						_runtimeID,
 						if (_useRuntimeControl) then {
 							"ACTIVE"
@@ -1362,7 +1429,13 @@ private _controllerHandle = [
 						],
 						_x param [11, -1],
 						_regroupActive,
-						_routeGeneration
+						_routeGeneration,
+						_x param [15, false],
+						_x param [16, "NONE"],
+						_x param [
+							17,
+							"NOT_EVALUATED"
+						]
 					];
 				};
 
@@ -1470,6 +1543,87 @@ private _controllerHandle = [
 			];
 		};
 	} forEach _knownGroups;
+
+	/*
+	 * A normally completed active runtime briefly reports that
+	 * convoy following has ended. Abnormal runtime termination does
+	 * not display a successful completion message.
+	 */
+	if (
+		_stopReason
+			== "NO_CONVOY_REGISTRATION"
+		&& {_runtimeControlWasActive}
+	) then {
+		private _followCompleteStatus = [
+			"FOLLOW COMPLETE",
+			[1, 1, 1, 1]
+		];
+
+		private _followCompleteGroups =
+			_knownGroups select {
+				!isNull _x
+			};
+
+		{
+			_x setVariable [
+				"A3C_UI_Group_Status",
+				_followCompleteStatus,
+				true
+			];
+		} forEach _followCompleteGroups;
+
+		[
+			_followCompleteGroups,
+			_followCompleteStatus
+		] spawn {
+			params [
+				"_groups",
+				"_followCompleteStatus"
+			];
+
+			sleep 3;
+
+			{
+				private _group = _x;
+
+				if (
+					!isNull _group
+					&& {
+						(
+							_group getVariable [
+								"A3C_UI_Group_Status",
+								["", []]
+							]
+						) isEqualTo
+							_followCompleteStatus
+					}
+					&& {
+						(
+							_group getVariable [
+								"A3C_RuntimeConvoyUIOwner",
+								""
+							]
+						) == ""
+					}
+					&& {
+						(
+							_group getVariable [
+								"A3C_Convoy_RuntimeID",
+								""
+							]
+						) == ""
+					}
+				) then {
+					_group setVariable [
+						"A3C_UI_Group_Status",
+						["", []],
+						true
+					];
+				};
+			} forEach _groups;
+		};
+	};
+
 
 	if (
 		!isNil "A3C_CONVOY_RUNTIME_STATES"

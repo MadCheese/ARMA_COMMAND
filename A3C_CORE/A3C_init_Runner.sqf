@@ -104,16 +104,9 @@ A3C_is_Initialized = true;
 
 diag_log "[A3C]: Init Runner: A3C_is_Initialized set to true";
 
-if (hasInterface) then {
+[2] call A3C_main_fnc_closeInitializationScreen;
 
-	"A3C_INIT_IMAGE" cutFadeOut 0;
 
-	"A3C_INIT_BLACK" cutText [
-		"",
-		"BLACK IN",
-		2
-	];
-};
 // // ATTEMPT AT AN OPTIMIZED LOOP
 // 0 spawn {
 // 	//-- mission init

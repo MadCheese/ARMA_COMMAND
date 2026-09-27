@@ -99,6 +99,15 @@ A3C_HC_TOSWITCH = [grpNull,-1];
 A3C_HC_WP_DRAG_SNAPSHOT = [];
 A3C_HC_WP_DRAG_ROAD_STATE = [];
 
+A3C_HC_WP_DRAG_RESULT =
+	createHashMapFromArray [
+		["bundleDrag", false],
+		["roadAlignmentAttempted", false],
+		["valid", true],
+		["result", "NOT_EVALUATED"],
+		["targetPosition", []]
+	];
+
 
 //-- Artillery Shortcut 
 private _artilleryShortcutCondition = (count A3C_SELECTED_UNITS > 0 && {
@@ -342,7 +351,8 @@ if !(_isHighCommand) then {
 												- (_anchorPosition select 0),
 											(_waypointPosition select 1)
 												- (_anchorPosition select 1)
-										]
+										],
+										+_waypointPosition
 									]
 								};
 
@@ -354,6 +364,11 @@ if !(_isHighCommand) then {
 								_clickedWaypoint,
 								_anchorIndex,
 								_relativePositions
+							];
+
+							A3C_HC_WP_DRAG_RESULT set [
+								"bundleDrag",
+								true
 							];
 						};
 

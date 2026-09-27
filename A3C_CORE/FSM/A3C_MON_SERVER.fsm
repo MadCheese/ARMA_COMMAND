@@ -3,13 +3,13 @@
 /*
 item0[] = {"Start_",0,250,-100.000000,-375.000000,50.000000,-275.000000,0.000000,"Start" \n ""};
 item1[] = {"",7,210,-454.000000,-78.999992,-446.000000,-71.000015,0.000000,""};
-item2[] = {"Exit_",1,4346,425.000000,475.000000,525.000000,525.000000,0.000000,"Exit" \n ""};
+item2[] = {"Exit_",1,250,425.000000,475.000000,525.000000,525.000000,0.000000,"Exit" \n ""};
 item3[] = {"wait_5s_",4,218,350.000000,50.000000,450.000000,125.000000,0.000000,"wait" \n "5s" \n ""};
 item4[] = {"game_quit___",4,218,425.000000,350.000000,525.000000,450.000000,0.000000,"" \n "" \n "game quit" \n "" \n "" \n ""};
 item5[] = {"NEW_CYCLE",2,250,-100.000000,-125.000000,50.000000,-25.000000,0.000000,"NEW CYCLE"};
 item6[] = {"start_conditions",4,218,-100.000000,-250.000000,50.000000,-150.000000,0.000000,"" \n "" \n "" \n "start conditions" \n "" \n "" \n ""};
 item7[] = {"STATE_",2,250,100.000000,350.000000,200.000000,450.000000,0.000000,"STATE" \n ""};
-item8[] = {"HC_ACTIONS__relay",2,250,-275.000000,200.000000,-150.000000,250.000000,0.000000,"HC ACTIONS:" \n "relay target info" \n "prevent dismounts" \n ""};
+item8[] = {"HC_ACTIONS__relay",2,4346,-275.000000,200.000000,-150.000000,250.000000,0.000000,"HC ACTIONS:" \n "relay target info" \n "prevent dismounts" \n ""};
 item9[] = {"wait_10s_",4,218,-275.000000,50.000000,-150.000000,125.000000,0.000000,"wait" \n "10s" \n ""};
 item10[] = {"nothing_",4,218,-75.000000,350.000000,25.000000,450.000000,0.000000,"nothing" \n ""};
 item11[] = {"",7,210,-28.147552,-6.260452,-20.147552,1.739563,0.000000,""};
@@ -43,7 +43,7 @@ link19[] = {17,4};
 link20[] = {17,18};
 link21[] = {18,7};
 globals[] = {0.000000,0,0,0,0,640,480,1,181,6316128,1,-1055.625977,1040.948364,766.296143,-376.471924,1398,762,1};
-window[] = {0,-1,-1,-1,-1,1218,171,2751,284,1,1416};
+window[] = {0,-1,-1,-1,-1,1106,1007,3587,172,1,1416};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -64,7 +64,7 @@ class FSM
                          "_time3 = time;" \n
                          "_time4 = time;" \n
                          "" \n
-                         "_slingEvents = [];" \n
+                         "private _slingEvents = [];" \n
                          "" \n
                          "A3C_TCL_GROUPS = [];" \n
                          "//if (!isServer) exitWith {};" \n
@@ -149,16 +149,22 @@ class FSM
                          "" \n
                          "if (isServer) then {" \n
                          "	{" \n
-                         "		_groupSide = side _x;" \n
-                         "		//if ((side _x in _sides) && {(owner (leader _x)) in _playerClientIDs}) then { //isPlayer leader _x" \n
-                         "		if (({_x getFriend _groupSide < 0.6} count _sides == 0) && {(owner (leader _x)) in _playerClientIDs}) then { " \n
-                         "			_A3C_MON_SERVER_checkGroups pushBackUnique _x;			" \n
+                         "		private _group = _x;" \n
+                         "		private _groupSide = side _group;" \n
+                         "		private _leader = leader _group;" \n
+                         "" \n
+                         "		if (" \n
+                         "			!isNull _leader" \n
+                         "			&& {{_x getFriend _groupSide < 0.6} count _sides == 0}" \n
+                         "			&& {(owner _leader) in _playerClientIDs}" \n
+                         "		) then {" \n
+                         "			_A3C_MON_SERVER_checkGroups pushBackUnique _group;" \n
                          "		};" \n
-                         "	} foreach (" \n
+                         "	} forEach (" \n
                          "		(allGroups) select {" \n
                          "			side _x != civilian" \n
                          "		}" \n
-                         ");" \n
+                         "	);" \n
                          "	A3C_MON_SERVER_checkGroups = _A3C_MON_SERVER_checkGroups;" \n
                          "	publicVariable'A3C_MON_SERVER_checkGroups';" \n
                          "} else {" \n
@@ -259,9 +265,15 @@ class FSM
                          "" \n
                          "//-- make all groups ready their launchers for RHS" \n
                          "{" \n
-                         "	[[_x], A3C_ai_shared_fnc_readyLaunchers] remoteExec [""bis_fnc_call"", leader _x];" \n
-                         "} foreach A3C_MON_SERVER_checkGroups;" \n
-                         ""/*%FSM</STATEINIT""">*/;
+                         "	private _leader = leader _x;" \n
+                         "" \n
+                         "	if (!isNull _leader) then {" \n
+                         "		[[_x], A3C_ai_shared_fnc_readyLaunchers] remoteExec [" \n
+                         "			""bis_fnc_call""," \n
+                         "			_leader" \n
+                         "		];" \n
+                         "	};" \n
+                         "} forEach A3C_MON_SERVER_checkGroups;"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links
                         {
@@ -334,131 +346,7 @@ class FSM
                 {
                         name = "WP_RADIUS";
                         itemno = 15;
-                        init = /*%FSM<STATEINIT""">*/"" \n
-                         "_slingEvents = _slingEvents select {!isNull (getSlingLoad _x)};" \n
-                         "" \n
-                         "{" \n
-                         "	private _gp = _x;" \n
-                         "	private _leader = leader _gp;" \n
-                         "	private _vehicle = vehicle _leader;" \n
-                         "	private _currentWaypoint = -1;" \n
-                         "	private _statements = """";" \n
-                         "	private _actionScript = """";" \n
-                         "	private _currentWpType = """";" \n
-                         "	private _currentWpPos = [];" \n
-                         "	private _currentWpIndex = -1;" \n
-                         "	private _actionType = """";" \n
-                         "	private _condition = """";" \n
-                         "" \n
-                         "	_currentWpIndex = currentWaypoint _gp;" \n
-                         "	_currentWaypoint = [_gp,_currentWpIndex];" \n
-                         "	_currentWpType = waypointType _currentWaypoint;" \n
-                         "	_currentWpPos = waypointPosition _currentWaypoint;" \n
-                         "	_statements = waypointStatements _currentWaypoint;" \n
-                         "	_actionScript = _statements select 1;" \n
-                         "	_condition = _statements select 0;" \n
-                         "" \n
-                         "	_actionscript = if (!isNil ""_actionScript"") then {_actionscript} else {""""};" \n
-                         "	if ([""CASdistribute"",_actionscript] call BIS_fnc_instring) then {" \n
-                         "		if !([""CAS-STRIKE_ACTIVE"",_actionscript] call BIS_fnc_instring) then {" \n
-                         "			if (_currentWpPos distance2D _vehicle < 3000 && {(getPosVisual _vehicle) select 2 > 50}) then {" \n
-                         "				_actionType = ""ActionCas"";" \n
-                         "			} else {" \n
-                         "				//-- vehicle approaching the target: make him fly high enough" \n
-                         "				private _flyInHeight = (getterrainheightasl _currentWPpos) + 1000;" \n
-                         "				[_vehicle, _flyInHeight] remoteExec [""flyInHeight"",_vehicle];" \n
-                         "			};" \n
-                         "		};" \n
-                         "	};" \n
-                         "	_isRotor = ((getNumber (configfile >> ""CfgVehicles"" >> typeOf _vehicle >> ""landingSpeed"")) < 10);" \n
-                         "	if (_isRotor && { !( _x in _vehicle) } count (assignedCargo _vehicle) == 0) then {" \n
-                         "		" \n
-                         "		if ([""RAPPEL"",_actionscript] call BIS_fnc_instring) then { //-- looking for FNC name, not wp landing type		" \n
-                         "			_slowDownDistance = if (_vehicle isKindOf ""HELICOPTER"") then {1200} else {2500};" \n
-                         "			if !([""RAPPELL_ACTIVE"",_actionscript] call BIS_fnc_instring) then {" \n
-                         "				if (_currentWpPos distance2D _vehicle < _slowDownDistance) then {" \n
-                         "					_actionType = ""HeliRappell"";" \n
-                         "				};" \n
-                         "			};" \n
-                         "		};" \n
-                         "	};" \n
-                         "	" \n
-                         "	//-- give leader a varname so we can convert the actionscript later " \n
-                         "	if (_actionType != """") then {" \n
-                         "		if ((vehicleVarName _leader) == """") then {" \n
-                         "			while {(vehicleVarName _leader) == """"} do {" \n
-                         "				//systemchat 'varname loop';" \n
-                         "				call compile format" \n
-                         "				[" \n
-                         "					""" \n
-                         "						_leader setvehicleVarName 'A3C_MEMBER_%1_%2';" \n
-                         "						A3C_MEMBER_%1_%2 = _leader;" \n
-                         "					""," \n
-                         "					""Server_UID""," \n
-                         "					A3C_VARNAME_INDEX_HC" \n
-                         "				];" \n
-                         "			};			" \n
-                         "		} else {" \n
-                         "			call compile format " \n
-                         "			[" \n
-                         "				""" \n
-                         "					%1 = _leader;" \n
-                         "					publicVariable '%1';" \n
-                         "				""," \n
-                         "				(vehiclevarname _leader)" \n
-                         "			];" \n
-                         "		};" \n
-                         "		A3C_VARNAME_INDEX_HC = A3C_VARNAME_INDEX_HC + 1;" \n
-                         "		publicVariable 'A3C_VARNAME_INDEX_HC';" \n
-                         "	};" \n
-                         "	switch _actionType do {" \n
-                         "		case (""ActionCas"") : {" \n
-                         "			_actionScript = [_actionScript,""this"",str _leader] call A3C_main_fnc_editString; ////-- convert to something we can execute " \n
-                         "			call (compile _actionScript);" \n
-                         "			[_gp,_currentWpIndex,""ACTIONSCRIPT"",""'CAS_STRIKE_ACTIVE'; ""] call A3C_ai_highCommand_fnc_changeWaypointData;" \n
-                         "		};" \n
-                         "		case (""PlaneLand"") : {" \n
-                         "			_actionScript = [_actionScript,""this"",str _leader] call A3C_main_fnc_editString; //-- convert to something we can execute " \n
-                         "			call (compile _actionScript);" \n
-                         "			[_gp,_currentWpIndex,""ACTIONSCRIPT"",""'FULL LANDING ACTIVE'; ""] call A3C_ai_highCommand_fnc_changeWaypointData;" \n
-                         "		};" \n
-                         "		case (""HeliRappell"") : {" \n
-                         "			_actionScript = [_actionScript,""this"",str _leader] call A3C_main_fnc_editString; //-- convert to something we can execute " \n
-                         "			call (compile _actionScript);	" \n
-                         "			[_gp,_currentWpIndex,""ACTIONSCRIPT"",""'A3C_RAPPELL_ACTIVE'; ""] call A3C_ai_highCommand_fnc_changeWaypointData;" \n
-                         "		};" \n
-                         "	};" \n
-                         "	if (_currentWpType == ""LOITER"") then {" \n
-                         "		[_currentWaypoint] call A3C_main_fnc_isLoiterCompleted;" \n
-                         "	};" \n
-                         "	if (_currentWpType != ""HOOK"") then {" \n
-                         "		{" \n
-                         "			private _v = objectParent _x;" \n
-                         "			if (!isNull _v && {_x == driver _v}) then {" \n
-                         "				private _slingCargo = getSlingLoad _v;" \n
-                         "				if (!isNull _slingCargo && {!(_v in _slingEvents)}) then {" \n
-                         "					_slingEvents set [count _slingEvents,_v];" \n
-                         "					[_v,_slingCargo] spawn {" \n
-                         "						params [""_v"",""_slingCargo""];" \n
-                         "						private _originalMass = getMass _slingCargo;" \n
-                         "						[_slingCargo,2000] remoteExec [""setMass"",_slingCargo];" \n
-                         "						while {!isNull (getSlingLoad _v) && {canMove _v}} do {" \n
-                         "							sleep 2;" \n
-                         "						};" \n
-                         "						[_slingCargo,_originalMass] remoteExec [""setMass"",_slingCargo];" \n
-                         "					};" \n
-                         "				};" \n
-                         "			};" \n
-                         "		} foreach units _gp;" \n
-                         "	};" \n
-                         "" \n
-                         "	//-- Since currentCommand only works where unit is local, we need this nasty workaround to be able to show boarding processes" \n
-                         "	[_gp] remoteExecCall [" \n
-                         "		""A3C_ai_highCommand_fnc_updateGroupBoardingState""," \n
-                         "		leader _gp" \n
-                         "	];" \n
-                         "" \n
-                         "} foreach A3C_MON_SERVER_checkGroups;" \n
+                        init = /*%FSM<STATEINIT""">*/"_slingEvents = [_slingEvents] call A3C_server_fnc_serverMonitorRadius;" \n
                          "" \n
                          "_time3 = time;"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;

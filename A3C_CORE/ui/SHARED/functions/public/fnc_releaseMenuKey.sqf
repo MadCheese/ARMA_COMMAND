@@ -34,6 +34,10 @@ private _isRadialDisplay = _display isEqualTo _radialDisplay;
 private _isSquadPlacementDisplay = _display isEqualTo _squadPlacementDisplay;
 private _isMainDisplay = _display isEqualTo _mainDisplay;
 
+
+//-- HC-boarding abortion in HUD
+A3C_UI_MAPICONS_HC_VICS = [];
+
 /*
 	Close or clean up the input display.
 

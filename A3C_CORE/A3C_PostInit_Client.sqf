@@ -3,7 +3,9 @@ if (is3DEN) exitWith {};
 
 diag_log "[A3C]: STARTING A3C Postinit Client";
 
-if (missionNamespace getVariable ["A3C_InitAborted", false]) exitWith {};
+if (missionNamespace getVariable ["A3C_InitAborted", false]) exitWith {
+	[] call A3C_main_fnc_handleInitializationAbort;
+};
 
 //--------------------------------------------------------------------------------------------------
 // PLAYER
@@ -20,7 +22,9 @@ waitUntil {
 	}
 };
 
-if (missionNamespace getVariable ["A3C_InitAborted", false]) exitWith {};
+if (missionNamespace getVariable ["A3C_InitAborted", false]) exitWith {
+	[] call A3C_main_fnc_handleInitializationAbort;
+};
 
 
 //--------------------------------------------------------------------------------------------------
@@ -92,7 +96,9 @@ waitUntil {
 	}
 };
 
-if (missionNamespace getVariable ["A3C_InitAborted", false]) exitWith {};
+if (missionNamespace getVariable ["A3C_InitAborted", false]) exitWith {
+	[] call A3C_main_fnc_handleInitializationAbort;
+};
 
 //--------------------------------------------------------------------------------------------------
 // SERVER-SIDE A3C
@@ -113,41 +119,60 @@ if (A3C_IsA3CServer) then {
 		}
 	};
 
-	if (missionNamespace getVariable ["A3C_InitAborted", false]) exitWith {};
+	if !(missionNamespace getVariable ["A3C_InitAborted", false]) then {
 
-	//-- Server readiness guarantees that the radio channel has already been created.
-	waitUntil {
-		uiSleep 0.05;
-		!isNil "A3C_CUSTOMRADIO_ID"
+		//-- Server readiness guarantees that the radio channel has already been created.
+		waitUntil {
+			uiSleep 0.05;
+
+			(missionNamespace getVariable ["A3C_InitAborted", false])
+			|| {
+				!isNil "A3C_CUSTOMRADIO_ID"
+			}
+		};
+
+		if !(missionNamespace getVariable ["A3C_InitAborted", false]) then {
+			A3C_CUSTOMRADIO_ID radioChannelAdd [player];
+		};
 	};
-
-	A3C_CUSTOMRADIO_ID radioChannelAdd [player];
 
 } else {
 
 
-//--------------------------------------------------------------------------------------------------
-// CLIENT-ONLY A3C FALLBACK
-//--------------------------------------------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------
+	// CLIENT-ONLY A3C FALLBACK
+	//--------------------------------------------------------------------------------------------------
 
 	//-- The fallback server monitor uses Display 46 as its client-side
 	//-- mission lifetime condition. Make sure the display exists before
 	//-- starting the FSM.
 	waitUntil {
 		uiSleep 0.05;
-		!isNull (findDisplay 46)
+
+		(missionNamespace getVariable ["A3C_InitAborted", false])
+		|| {
+			!isNull (findDisplay 46)
+		}
 	};
 
-	[] execFSM "A3C_CORE\FSM\A3C_MON_SERVER.fsm";
+	if !(missionNamespace getVariable ["A3C_InitAborted", false]) then {
+
+		[] execFSM "A3C_CORE\FSM\A3C_MON_SERVER.fsm";
+
+		//-- Local custom radio channel
+		A3C_CUSTOMRADIO_ID = radioChannelCreate [
+			[0.96, 0.34, 0.13, 0.8],
+			"A3C_RADIO",
+			"%UNIT_NAME",
+			[player]
+		];
+	};
+};
 
 
-	//-- Local custom radio channel
-	A3C_CUSTOMRADIO_ID = radioChannelCreate [
-		[0.96, 0.34, 0.13, 0.8],
-		"A3C_RADIO",
-		"%UNIT_NAME",
-		[player]
-	];
+//-- Abort from either server/client synchronization branch must stop this script here.
+if (missionNamespace getVariable ["A3C_InitAborted", false]) exitWith {
+	[] call A3C_main_fnc_handleInitializationAbort;
 };
 
 

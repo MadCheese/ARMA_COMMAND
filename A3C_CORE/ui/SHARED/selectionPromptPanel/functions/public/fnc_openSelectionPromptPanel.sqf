@@ -70,11 +70,6 @@ switch (_mode) do {
 		MCSS_REMOTE_ARTILLERY_ARRAY = [];
 		A3C_HC_ARTY_AMMO_OPTIONS = [];
 
-		private _aceEnabled = missionNamespace getVariable [
-			"A3C_IsAce3",
-			false
-		];
-
 		{
 			private _group = _x;
 			private _units = units _group;
@@ -87,15 +82,7 @@ switch (_mode) do {
 					!isNull _vehicle
 					&& {_unit == gunner _vehicle}
 				) then {
-					private _isACECSW = (
-						_aceEnabled
-						&& {
-							isClass (
-								configOf _vehicle
-									>> "ACE_CSW"
-							)
-						}
-					);
+					private _isACECSW = [_vehicle] call A3C_main_fnc_isEffectiveACECSW;
 
 					private _hasAmmoInRange = if (_isACECSW) then {
 						private _availability = [

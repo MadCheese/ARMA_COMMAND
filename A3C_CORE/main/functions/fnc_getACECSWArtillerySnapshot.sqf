@@ -90,10 +90,7 @@ private _aceAmmoHandling = missionNamespace getVariable [
 			) > 0
 		}
 		&& {
-			isClass (
-				configOf _vehicle
-					>> "ACE_CSW"
-			)
+			[_x] call A3C_main_fnc_isEffectiveACECSW
 		}
 	) then {
 		private _gunner = gunner _vehicle;

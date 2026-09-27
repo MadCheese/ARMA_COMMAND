@@ -65,7 +65,7 @@ item60[] = {"open",4,218,1600.000000,1600.000000,1675.000000,1650.000000,0.00000
 item61[] = {"add_waypoint",2,250,1525.000000,1825.000000,1625.000000,1875.000000,0.000000,"add waypoint"};
 item62[] = {"added",4,218,1525.000000,2350.000000,1625.000000,2400.000000,0.000000,"added"};
 item63[] = {"exc_plan",2,250,1525.000000,2425.000000,1625.000000,2475.000000,0.000000,"exc plan"};
-item64[] = {"plan_exists",4,218,1525.000000,2500.000000,1625.000000,2550.000000,0.000000,"plan exists"};
+item64[] = {"plan_exists",4,218,1525.000000,2500.000000,1625.000000,2550.000000,1.000000,"plan exists"};
 item65[] = {"STAND_BY",2,250,2250.000000,-1000.000000,2350.000000,-950.000000,0.000000,"STAND BY"};
 item66[] = {"suppressing",4,218,2250.000000,-925.000000,2350.000000,-875.000000,0.000000,"suppressing"};
 item67[] = {"GoCode_D",2,250,2250.000000,-850.000000,2350.000000,-800.000000,0.000000,"GoCode D"};
@@ -145,8 +145,8 @@ item140[] = {"",7,210,246.000000,-1079.000000,254.000000,-1071.000000,0.000000,"
 item141[] = {"",7,210,696.000000,-429.000000,704.000000,-421.000000,0.000000,""};
 item142[] = {"",7,210,696.000000,-1079.000000,704.000000,-1071.000000,0.000000,""};
 item143[] = {"",7,210,821.000000,-1079.000000,829.000000,-1071.000000,0.000000,""};
-item144[] = {"",7,210,1083.500000,-304.000000,1091.500000,-296.000000,0.000000,""};
-item145[] = {"",7,210,1083.500000,-1079.000000,1091.500000,-1071.000122,0.000000,""};
+item144[] = {"",7,210,1046.000000,-304.000000,1054.000000,-296.000000,0.000000,""};
+item145[] = {"",7,210,1046.000000,-1079.000000,1054.000000,-1071.000122,0.000000,""};
 item146[] = {"",7,210,1170.999878,-1079.000000,1179.000122,-1071.000000,0.000000,""};
 item147[] = {"map_closed",4,218,525.000000,-925.000000,625.000000,-875.000000,0.000000,"map closed"};
 item148[] = {"",7,210,571.000000,-829.000000,579.000000,-821.000000,0.000000,""};
@@ -408,7 +408,7 @@ item403[] = {"map_open",4,218,100.000000,-575.000000,200.000000,-525.000000,0.00
 item404[] = {"no_units_selecte",4,218,5325.000000,-1025.000000,5425.000000,-975.000000,0.000000,"no units" \n "selected"};
 item405[] = {"map_open",4,218,1662.665894,-1346.354858,1762.666016,-1296.354858,0.000000,"map open"};
 item406[] = {"killed",4,218,5050.000000,-875.000000,5150.000000,-825.000000,0.000000,"killed"};
-item407[] = {"INTRO_SYNC",2,4346,5050.000000,-800.000000,5150.000000,-750.000000,0.000000,"INTRO SYNC"};
+item407[] = {"INTRO_SYNC",2,250,5050.000000,-800.000000,5150.000000,-750.000000,0.000000,"INTRO SYNC"};
 item408[] = {"spoken",4,218,5050.000000,-725.000000,5150.000000,-675.000000,0.000000,"spoken"};
 item409[] = {"select_unit_2",2,250,5050.000000,-650.000000,5150.000000,-600.000000,0.000000,"select unit 2"};
 item410[] = {"unit_selected",4,218,5050.000000,-575.000000,5150.000000,-525.000000,0.000000,"unit selected"};
@@ -482,7 +482,9 @@ item477[] = {"",7,210,1971.000000,1996.000000,1979.000000,2003.999878,0.000000,"
 item478[] = {"",7,210,1971.000000,2146.000000,1979.000000,2154.000000,0.000000,""};
 item479[] = {"",7,210,1971.000000,2296.000000,1979.000000,2304.000000,0.000000,""};
 item480[] = {"",7,210,1971.000000,2446.000000,1979.000000,2454.000000,0.000000,""};
-item481[] = {"____FAKE____",9,0,0.000000,0.000000,0.000000,0.000000,0.000000,"____FAKE____"};
+item481[] = {"nothing_1",2,4346,1000.000000,-400.000000,1100.000000,-350.000000,0.000000,"nothing"};
+item482[] = {"spoken___complet",4,218,1000.000000,-650.000000,1100.000000,-600.000000,0.000000,"spoken /" \n "completed"};
+item483[] = {"____FAKE____",9,2008760054,0.000000,0.000000,0.000000,0.000000,0.000000,"____FAKE____"};
 link0[] = {1,3};
 link1[] = {2,1};
 link2[] = {3,4};
@@ -689,7 +691,7 @@ link202[] = {140,139};
 link203[] = {141,142};
 link204[] = {142,143};
 link205[] = {143,26};
-link206[] = {144,145};
+link206[] = {144,481};
 link207[] = {145,146};
 link208[] = {146,37};
 link209[] = {147,149};
@@ -1125,12 +1127,14 @@ link638[] = {479,267};
 link639[] = {479,478};
 link640[] = {480,268};
 link641[] = {480,479};
-link642[] = {72,481};
-link643[] = {481,72};
-link644[] = {405,481};
-link645[] = {481,405};
-globals[] = {0.000000,0,0,0,0,640,480,5,854,6316128,1,4099.663574,5807.705566,66.624817,-1280.589722,942,743,1};
-window[] = {0,-1,-1,-1,-1,1045,130,2066,130,1,960};
+link642[] = {481,482};
+link643[] = {482,145};
+link644[] = {72,483};
+link645[] = {483,72};
+link646[] = {405,483};
+link647[] = {483,405};
+globals[] = {0.000000,0,0,0,0,640,480,5,856,6316128,1,639.483887,2176.202881,-33.808594,-1245.891846,942,743,1};
+window[] = {0,-1,-1,-1,-1,1175,260,2196,260,1,960};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -2055,16 +2059,18 @@ class FSM
                                 {
                                         itemno = 36;
                                         priority = 0.000000;
-                                        to="select_U2";
+                                        to="nothing_1";
                                         precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-                                        condition=/*%FSM<CONDITION""">*/"count A3C_SELECTED_UNITS > 0 &&" \n
+                                        condition=/*%FSM<CONDITION""">*/"//count A3C_SELECTED_UNITS > 0" \n
+                                         "//&& {" \n
+                                         "//	{" \n
+                                         "//		count (_x getVariable [""A3C_PLOT"",[]]) > 0" \n
+                                         "//	} count units player == 0" \n
+                                         "//}" \n
+                                         "" \n
                                          "{" \n
-                                         "	//o1 kbWasSaid [p1, ""Lesson1"", ""L3112"",99999999999] &&" \n
-                                         "	//{" \n
-                                         "		_u = A3C_SELECTED_UNITS select 0;" \n
-                                         "		count (_u getVariable [""A3C_PLOT"",[]]) > 0" \n
-                                         "	//}" \n
-                                         "}"/*%FSM</CONDITION""">*/;
+                                         "	count (_x getVariable [""A3C_PLOT"",[]]) > 0" \n
+                                         "} count units player > 0"/*%FSM</CONDITION""">*/;
                                         action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
                                 };
                                 /*%FSM</LINK>*/
@@ -2076,7 +2082,7 @@ class FSM
                 {
                         name = "select_U2";
                         itemno = 37;
-                        init = /*%FSM<STATEINIT""">*/"o1 kbTell [p1, ""Lesson1"", ""L31DRAG""];" \n
+                        init = /*%FSM<STATEINIT""">*/"" \n
                          "o1 kbTell [p1, ""Lesson1"", ""L3113""];" \n
                          "((uiNamespace getVariable ""TutorialHint"") displayCtrl 50001) ctrlSetText ""SELECT UNIT-2"";" \n
                          "" \n
@@ -2276,7 +2282,8 @@ class FSM
                                         priority = 0.000000;
                                         to="open_actions";
                                         precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-                                        condition=/*%FSM<CONDITION""">*/"o1 kbWasSaid [p1, ""Lesson1"", ""L3116"",1]"/*%FSM</CONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"o1 kbWasSaid [p1, ""Lesson1"", ""L3116"",1]" \n
+                                         ""/*%FSM</CONDITION""">*/;
                                         action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
                                 };
                                 /*%FSM</LINK>*/
@@ -2979,6 +2986,25 @@ class FSM
                                         action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
                                 };
                                 /*%FSM</LINK>*/
+                                /*%FSM<LINK "plan_exists">*/
+                                class plan_exists
+                                {
+                                        itemno = 64;
+                                        priority = 1.000000;
+                                        to="STAND_BY";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"private _var = ((A3C_Selected_Units select 0) getVariable [""A3C_PLOT"",[]]);" \n
+                                         "private _hasNade = false;" \n
+                                         "{" \n
+                                         "	private _actionType = (_x select 2) select 0;" \n
+                                         "	if (_actionType == ""SUPPRESSION"") then {" \n
+                                         "		_hasNade = true;" \n
+                                         "	};" \n
+                                         "} foreach _var;" \n
+                                         "_hasNade"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
                                 /*%FSM<LINK "user_error">*/
                                 class user_error
                                 {
@@ -2992,25 +3018,6 @@ class FSM
                                          "		count (_x getVariable [""A3C_PLOT"",[]]) > 0" \n
                                          "	} count units player > 0" \n
                                          "}"/*%FSM</CONDITION""">*/;
-                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
-                                };
-                                /*%FSM</LINK>*/
-                                /*%FSM<LINK "plan_exists">*/
-                                class plan_exists
-                                {
-                                        itemno = 64;
-                                        priority = 0.000000;
-                                        to="STAND_BY";
-                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
-                                        condition=/*%FSM<CONDITION""">*/"private _var = ((A3C_Selected_Units select 0) getVariable [""A3C_PLOT"",[]]);" \n
-                                         "private _hasNade = false;" \n
-                                         "{" \n
-                                         "	private _actionType = (_x select 2) select 0;" \n
-                                         "	if (_actionType == ""SUPPRESSION"") then {" \n
-                                         "		_hasNade = true;" \n
-                                         "	};" \n
-                                         "} foreach _var;" \n
-                                         "_hasNade"/*%FSM</CONDITION""">*/;
                                         action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
                                 };
                                 /*%FSM</LINK>*/
@@ -7478,7 +7485,7 @@ class FSM
                          "" \n
                          "[] spawn {" \n
                          "	sleep 0.5;" \n
-                         "	[(units player - [player]),true,false] call A3C_ai_shared_fnc_cancelUnitPlot;" \n
+                         "	[(units player - [player]),true,true] call A3C_ai_shared_fnc_cancelUnitPlot;" \n
                          "	sleep 2;" \n
                          "	[(units player - [player]),""SUPPRESSION""] call A3C_ai_shared_fnc_polygonAreaActionOff;" \n
                          "	sleep 1;" \n
@@ -7516,11 +7523,39 @@ class FSM
                         };
                 };
                 /*%FSM</STATE>*/
+                /*%FSM<STATE "nothing_1">*/
+                class nothing_1
+                {
+                        name = "nothing_1";
+                        itemno = 481;
+                        init = /*%FSM<STATEINIT""">*/"o1 kbTell [p1, ""Lesson1"", ""L31DRAG""];"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "spoken___complet">*/
+                                class spoken___complet
+                                {
+                                        itemno = 482;
+                                        priority = 0.000000;
+                                        to="select_U2";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"//o1 kbWasSaid [p1, ""Lesson1"", ""L3112"",1]" \n
+                                         "//&& {" \n
+                                         "{" \n
+                                         "	count (_x getVariable [""A3C_PLOT"",[]]) > 0" \n
+                                         "} count units player == 0" \n
+                                         "//}"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
                 /*%FSM<STATE "____FAKE____">*/
                 class ____FAKE____
                 {
                         name = "____FAKE____";
-                        itemno = 481;
+                        itemno = 483;
                         init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
                         class Links

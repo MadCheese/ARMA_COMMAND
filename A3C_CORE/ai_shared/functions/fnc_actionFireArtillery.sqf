@@ -28,24 +28,25 @@ if (
 		};
 };
 
+private _aceVehicles = [];
 
-if (_aceCSWFamilies isNotEqualTo []) exitWith {
-	private _aceVehicles =
+if (_aceCSWFamilies isNotEqualTo []) then {
+	_aceVehicles =
 		MCSS_REMOTE_ARTILLERY_ARRAY select {
 			!isNull _x
 			&& {alive _x}
 			&& {!isNull gunner _x}
 			&& {
-				isClass (
-					configOf _x
-					>> "ACE_CSW"
-				)
+				[_x] call A3C_main_fnc_isEffectiveACECSW
 			}
 		};
+};
 
-	if (_aceVehicles isEqualTo []) exitWith {
-		systemChat "A3C: No artillery available";
-	};
+
+if (
+	_aceCSWFamilies isNotEqualTo []
+	&& {_aceVehicles isNotEqualTo []}
+) exitWith {
 
 
 	private _requestedCount =
@@ -128,16 +129,23 @@ if (_aceCSWFamilies isNotEqualTo []) exitWith {
 	{
 		private _vehicle = _x;
 
-		[
-			[_vehicle],
-			{
-				_this spawn
-					A3C_ai_shared_fnc_executeACECSWArtilleryQueue;
-			}
-		] remoteExec [
-			"BIS_fnc_call",
-			_vehicle
-		];
+		if !(
+			_vehicle getVariable [
+				"A3C_ARTY_CSW_WORKER_ACTIVE",
+				false
+			]
+		) then {
+			[
+				[_vehicle],
+				{
+					_this spawn
+						A3C_ai_shared_fnc_executeACECSWArtilleryQueue;
+				}
+			] remoteExec [
+				"BIS_fnc_call",
+				_vehicle
+			];
+		};
 
 	} forEach _usedVehicles;
 };

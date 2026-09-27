@@ -12,6 +12,11 @@ params [
 A3C_MAP_X = _sX;
 A3C_MAP_Y = _sY;
 
+// ////////////////////////////////////// DEBUG
+// private _mapPos = (findDisplay 12 displayCtrl 51) posScreenToWorld [A3C_MAP_X,A3C_MAP_Y];
+// hintSilent format ["MapMouseMoving: %1, isOnRoad: %2", _mapPos, isOnRoad _mapPos];
+// //////////////////////////////////////
+
 private _ctls = [
 	IDC_MAP_UFSB_FRAME,
 	IDC_MAP_TOP_EXTRAS_BACKGROUND,

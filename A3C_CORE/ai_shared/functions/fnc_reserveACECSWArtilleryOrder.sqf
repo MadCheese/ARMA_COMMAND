@@ -30,10 +30,7 @@ _vehicles = (
 	&& {alive _x}
 	&& {!isNull gunner _x}
 	&& {
-		isClass (
-			configOf _x
-			>> "ACE_CSW"
-		)
+		[_x] call A3C_main_fnc_isEffectiveACECSW
 	}
 };
 
