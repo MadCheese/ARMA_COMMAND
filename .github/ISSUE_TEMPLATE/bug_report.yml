@@ -21,13 +21,10 @@ body:
   - type: input
     id: reporter
     attributes:
-      label: Reporter
+      label: Discord Username / Preferred Contact Name
       description: |
-        Enter a name or handle I can use to identify you.
-        If you are a member of the A3C Discord, using your Discord username is preferred.
-      placeholder: "Username / Discord name"
-    validations:
-      required: true
+        Optional. If you are a member of the A3C Discord, you can enter your Discord username here so I can identify or contact you there.
+      placeholder: "Optional"
 
   - type: dropdown
     id: arma_branch
