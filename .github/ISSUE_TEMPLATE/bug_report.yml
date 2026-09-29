@@ -205,7 +205,7 @@ body:
       description: |
         Screenshots and videos are strongly encouraged when they help demonstrate the problem.
 
-        You can paste links or drag files/images into this field.
+        Please use common and trusted hosting platforms such as YouTube, Medal.tv, Imgur, or direct GitHub attachments. Links to unknown or suspicious file-hosting services may be ignored for security reasons.
       placeholder: "Optional additional evidence or information"
 
   # ---------------------------------------------------------------------------
