@@ -6,6 +6,7 @@ Documentation for **Arma 3 Command (A3C)**.
 
 - [Squad Level / HUD](squad-level-hud.md)
 - [Tactical High Command](tactical-high-command.md)
+- [Strategic Mode](strategic.md)
 
 ## Support
 
