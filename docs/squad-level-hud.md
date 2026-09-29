@@ -153,7 +153,7 @@ There are two kinds of indicators available:
 
 |  |
 | --- |
-| 1. VR units 2. Circular discs |
+| 1. VR units<br>2. Circular discs |
 
 The VR unit indicators deliver a more visual representation of the resulting move, while the stylized circular indicators are less obtrusive.
 
@@ -165,7 +165,7 @@ That is done through pressing the number keys 4-9:
 
 |  |
 | --- |
-| 4-key: all units 5-key: red team 6-key: green team 7-key: blue team 8-key: yellow team 9-key: white team |
+| 4-key: all units<br>5-key: red team<br>6-key: green team<br>7-key: blue team<br>8-key: yellow team<br>9-key: white team |
 
 Note: You can switch between the visual indicators in A3C preferences.
 
@@ -225,7 +225,7 @@ By holding down ‘shift’ and clicking the Control Bar center icon it is possi
 
 |  |
 | --- |
-| 1. Line formation right (180 degree firing sector) 2. Line formation left (180 degree firing sector) 3. Line formation front (all units facing front, as indicated by arrow) 4. L formation (275 degree firing sector) 5. Staggered column 6. Circle formation 7. Been Enhanced Movement (currently addon-dependent) |
+| 1. Line formation right (180 degree firing sector)<br>2. Line formation left (180 degree firing sector)<br>3. Line formation front (all units facing front, as indicated by arrow)<br>4. L formation (275 degree firing sector)<br>5. Staggered column<br>6. Circle formation<br>7. Been Enhanced Movement (currently addon-dependent) |
 
 ![](assets/squad-level-hud/image5.png)
 
@@ -348,7 +348,7 @@ There are four elements available in this function:
 
 |  |
 | --- |
-| 1. Fire at will (FAW) 2. Fire only at designated targets (FOADT) 3. Fire on my lead (FOML) 4. Engage/Disengage Auto-Combat (EDAC) |
+| 1. Fire at will (FAW)<br>2. Fire only at designated targets (FOADT)<br>3. Fire on my lead (FOML)<br>4. Engage/Disengage Auto-Combat (EDAC) |
 
 ![](assets/squad-level-hud/image43.png)
 
@@ -447,7 +447,7 @@ Only vehicles available to the squad show up as icons representing a vehicle cla
 
 |  |
 | --- |
-| 1. Cars 2. Tanks 3. Helicopters 4. Planes 5. Boats 6. Static weapons |
+| 1. Cars<br>2. Tanks<br>3. Helicopters<br>4. Planes<br>5. Boats<br>6. Static weapons |
 
 Clicking on the vehicle class (1) opens a window to the right, showing you a selection of vehicles that are close enough to your selected AI.
 
@@ -495,7 +495,7 @@ This menu section provides a range of actions that can be performed by the AI:
 
 |  |
 | --- |
-| 1. Find cover 2. Suppression position 3. Assemble static weapon 4. Fire AT-rocket 5. Fire UGL grenade 6. Place explosives 7. Open inventory 8. Unstuck unit(s) |
+| 1. Find cover<br>2. Suppression position<br>3. Assemble static weapon<br>4. Fire AT-rocket<br>5. Fire UGL grenade<br>6. Place explosives<br>7. Open inventory<br>8. Unstuck unit(s) |
 
 
 #### IMAGE NEEDED
@@ -528,7 +528,7 @@ There is a secondary suppression menu - activate it by pressing Alt +T. Here you
 
 |  |
 | --- |
-| 1. Unlimited 2. Used Ammo 3. Used MAgazines 4. Time Elapsed |
+| 1. Unlimited<br>2. Used Ammo<br>3. Used MAgazines<br>4. Time Elapsed |
 
 
 ![](assets/squad-level-hud/image11.png)
