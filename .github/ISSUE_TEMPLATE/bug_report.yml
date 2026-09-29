@@ -1,0 +1,141 @@
+name: Bug Report
+description: Report a reproducible problem with Arma 3 Command
+title: "[BUG] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting an issue.
+
+        Please provide as much information as possible. In particular, testing without unrelated addons helps determine whether the issue is caused by A3C itself or by an addon conflict.
+
+  - type: input
+    id: a3c_version
+    attributes:
+      label: A3C Version
+      description: Enter the version of Arma 3 Command you are using.
+      placeholder: "Example: 1.0.0.03.1"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Issue Category
+      description: Select the area that best matches the issue.
+      options:
+        - Squad Command
+        - High Command
+        - Waypoints
+        - Vehicles
+        - Aircraft
+        - Convoys
+        - Static Weapons
+        - UI / Controls
+        - Multiplayer
+        - Initialization
+        - Compatibility with another addon
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: Where does the issue occur?
+      options:
+        - Singleplayer
+        - Hosted Multiplayer
+        - Dedicated Server
+        - Multiple / all of the above
+    validations:
+      required: true
+
+  - type: dropdown
+    id: clean_test
+    attributes:
+      label: Tested Without Other Addons
+      description: Have you reproduced the issue with A3C and only its required dependencies?
+      options:
+        - "Yes - the issue also occurs without unrelated addons"
+        - "No - I have not tested without other addons"
+        - "No - the issue only occurs together with another addon"
+    validations:
+      required: true
+
+  - type: textarea
+    id: other_addons
+    attributes:
+      label: Other Addons
+      description: List other addons that were active when the issue occurred. Write "None" if applicable.
+      placeholder: |
+        Example:
+        - ACE3
+        - RHS
+        - CBA_A3
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem Description
+      description: Describe what is happening.
+      placeholder: Explain the issue clearly and concisely.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Describe the exact steps needed to reproduce the issue.
+      placeholder: |
+        1. Place...
+        2. Select...
+        3. Order...
+        4. Observe...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: rpt
+    attributes:
+      label: RPT / Error Messages
+      description: Paste relevant RPT errors, script errors, or other diagnostic information here.
+      render: text
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Screenshots / Video / Additional Information
+      description: Add screenshots, video links, mission files, or any other useful context.
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Final Checklist
+      options:
+        - label: I have searched existing issues to make sure this has not already been reported.
+          required: true
+        - label: I have provided enough information to reproduce or investigate the issue.
+          required: true
