@@ -1,36 +1,3 @@
-DEMO VID FOR REFERENCE, just to have it handy: <https://youtu.be/gQSRHcGn7Kg>
-
-R42: <https://youtu.be/ACsVLpOJUwc>
-
-7
-
-A3C drive
-
-NON PITCH FEATURES (TEASE  ONLY):
-
-- CUSTOM FORMATIONS
-- ENHANCED MOVEMENT
-- RAILED ROOFTOP LANDINGS (unless we get that right)
-- ZEUS (unless we get that right - testing required)
-
-(Question - what are the two main elements mentioned in the video?)
-
->> Element 1: INDICATORS
-
->> Element 2: HUD-UI
-
-Note to self: ALL pictures should be considered placeholders until the final doc/website is done. No need for me to comment on each picture to say it’s placeholder //woofer
-
-# TODO-list:
-
-- Add the player grenade action to some appropriate section. It didn’t quite fit into the radial menu section on the subject.  
-  “(Note, to use this function as a player, simply select using the ‘h’ key). You can cycle the type of grenade using the right mouse button. To cancel, simply let go of Tab. Pressing ‘space’ will confirm and activate the throw.”
-- Convert .paa’s to png if necessary. >> all these icons are in the ui\pictures folder of unpacked A3C addon and can be converted to png using texview2 - just saying, not to say anybody has to do that
-- Find some way to bridge the gap between High Command and squad level HUD texts.
-- Describe syncing of waypoints in some appropriate section for either high command or squad command.
-
----
-
 Contents
 
 Part 1 - Core controls and system overview
