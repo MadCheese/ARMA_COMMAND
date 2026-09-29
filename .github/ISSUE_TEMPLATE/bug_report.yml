@@ -1,90 +1,164 @@
 name: Bug Report
 description: Report a reproducible problem with Arma 3 Command
 title: "[BUG] "
-labels:
-  - bug
+
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for reporting an issue.
+        # Arma 3 Command Bug Report
 
-        Please provide as much information as possible. In particular, testing without unrelated addons helps determine whether the issue is caused by A3C itself or by an addon conflict.
+        Please use this form for **bugs and unintended behavior only**.
+
+        The most useful bug reports are issues that can be reproduced consistently. Before reporting, please try to determine whether the issue also occurs with **only Arma 3 Command and CBA_A3 loaded**.
+
+        Feature requests will have a separate form.
+
+  # ---------------------------------------------------------------------------
+  # REPORTER / VERSION
+  # ---------------------------------------------------------------------------
+
+  - type: input
+    id: reporter
+    attributes:
+      label: Reporter
+      description: |
+        Enter a name or handle I can use to identify you.
+        If you are a member of the A3C Discord, using your Discord username is preferred.
+      placeholder: "Username / Discord name"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: arma_branch
+    attributes:
+      label: Arma 3 Version
+      description: Which Arma 3 branch/version are you using?
+      options:
+        - Current Release
+        - Development Branch
+        - Legacy Version
+    validations:
+      required: true
+
+  - type: input
+    id: arma_legacy_version
+    attributes:
+      label: Legacy Arma 3 Version
+      description: |
+        Only fill this out if you selected "Legacy Version" above.
+        Legacy Arma 3 versions are not officially supported, but this information may still help identify the issue.
+      placeholder: "Leave blank unless using a legacy version"
 
   - type: input
     id: a3c_version
     attributes:
       label: A3C Version
-      description: Enter the version of Arma 3 Command you are using.
-      placeholder: "Example: 1.0.0.03.1"
-    validations:
-      required: true
+      description: |
+        The current public release is entered automatically.
+        Change this only if you are using a different A3C version or development build.
+      value: "1.0.0.03.1"
 
-  - type: dropdown
-    id: category
-    attributes:
-      label: Issue Category
-      description: Select the area that best matches the issue.
-      options:
-        - Squad Command
-        - High Command
-        - Waypoints
-        - Vehicles
-        - Aircraft
-        - Convoys
-        - Static Weapons
-        - UI / Controls
-        - Multiplayer
-        - Initialization
-        - Compatibility with another addon
-        - Other
-    validations:
-      required: true
+  # ---------------------------------------------------------------------------
+  # ENVIRONMENT
+  # ---------------------------------------------------------------------------
 
   - type: dropdown
     id: environment
     attributes:
       label: Environment
-      description: Where does the issue occur?
+      description: In which environment did you reproduce the issue?
       options:
         - Singleplayer
         - Hosted Multiplayer
         - Dedicated Server
-        - Multiple / all of the above
     validations:
       required: true
 
   - type: dropdown
+    id: command_scope
+    attributes:
+      label: Where does the issue occur?
+      description: Select the command context in which you can reproduce the problem.
+      options:
+        - Squad Command
+        - High Command
+        - Both Squad and High Command
+        - General / UI / not tied to a command level
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How consistently does the issue occur?
+      options:
+        - Every time
+        - Most of the time
+        - Sometimes
+        - Happened once
+    validations:
+      required: true
+
+  # ---------------------------------------------------------------------------
+  # ADDON ISOLATION
+  # ---------------------------------------------------------------------------
+
+  - type: dropdown
     id: clean_test
     attributes:
-      label: Tested Without Other Addons
-      description: Have you reproduced the issue with A3C and only its required dependencies?
+      label: A3C + CBA_A3 Only Test
+      description: |
+        Have you tested whether the problem occurs with only Arma 3 Command and CBA_A3 loaded?
+
+        This is important because it distinguishes an A3C bug from a conflict with another addon.
       options:
-        - "Yes - the issue also occurs without unrelated addons"
-        - "No - I have not tested without other addons"
-        - "No - the issue only occurs together with another addon"
+        - Yes - the issue occurs with only A3C + CBA_A3
+        - No - I have not tested with only A3C + CBA_A3
+        - No - the issue disappears when only A3C + CBA_A3 are loaded
     validations:
       required: true
 
   - type: textarea
     id: other_addons
     attributes:
-      label: Other Addons
-      description: List other addons that were active when the issue occurred. Write "None" if applicable.
+      label: Other Addons Used
+      description: |
+        List the other addons that were active when the problem occurred.
+
+        If you reproduced the issue with only A3C + CBA_A3, leave "None".
+      value: "None"
       placeholder: |
         Example:
-        - ACE3
-        - RHS
-        - CBA_A3
+        ACE3
+        RHSUSAF
+        LAMBS_Danger.fsm
     validations:
       required: true
+
+  - type: input
+    id: suspected_conflict
+    attributes:
+      label: Suspected Conflicting Addon
+      description: |
+        If the issue disappears when testing with only A3C + CBA_A3, enter the addon you believe causes the conflict if you have identified it.
+      placeholder: "Optional"
+
+  # ---------------------------------------------------------------------------
+  # BUG DESCRIPTION
+  # ---------------------------------------------------------------------------
 
   - type: textarea
     id: description
     attributes:
-      label: Problem Description
-      description: Describe what is happening.
-      placeholder: Explain the issue clearly and concisely.
+      label: What is the problem?
+      description: |
+        Describe what you were trying to do and what went wrong.
+
+        Please describe unintended behavior here rather than requesting different or additional functionality.
+      placeholder: |
+        Describe the problem clearly enough that someone unfamiliar with your mission can understand what happened.
     validations:
       required: true
 
@@ -92,12 +166,13 @@ body:
     id: reproduction
     attributes:
       label: Steps to Reproduce
-      description: Describe the exact steps needed to reproduce the issue.
-      placeholder: |
-        1. Place...
-        2. Select...
-        3. Order...
-        4. Observe...
+      description: |
+        Describe the exact steps needed to reproduce the problem.
+        Please start from a state that another user could reasonably recreate.
+      value: |
+        1.
+        2.
+        3.
     validations:
       required: true
 
@@ -105,37 +180,44 @@ body:
     id: expected
     attributes:
       label: Expected Behavior
-      description: What did you expect to happen?
+      description: What should have happened instead?
+      placeholder: "Describe the behavior you expected."
     validations:
       required: true
 
-  - type: textarea
-    id: actual
-    attributes:
-      label: Actual Behavior
-      description: What happened instead?
-    validations:
-      required: true
+  # ---------------------------------------------------------------------------
+  # DIAGNOSTICS / MEDIA
+  # ---------------------------------------------------------------------------
 
   - type: textarea
     id: rpt
     attributes:
-      label: RPT / Error Messages
-      description: Paste relevant RPT errors, script errors, or other diagnostic information here.
+      label: RPT / Script Errors
+      description: |
+        Paste any relevant RPT entries, script errors, or other diagnostic output here.
+        Leave this blank if you did not observe any relevant errors.
       render: text
 
   - type: textarea
     id: media
     attributes:
-      label: Screenshots / Video / Additional Information
-      description: Add screenshots, video links, mission files, or any other useful context.
+      label: Screenshots / Video / Additional Files
+      description: |
+        Screenshots and videos are strongly encouraged when they help demonstrate the problem.
+
+        You can paste links or drag files/images into this field.
+      placeholder: "Optional additional evidence or information"
+
+  # ---------------------------------------------------------------------------
+  # FINAL CHECK
+  # ---------------------------------------------------------------------------
 
   - type: checkboxes
-    id: checklist
+    id: confirmation
     attributes:
-      label: Final Checklist
+      label: Before Submitting
       options:
-        - label: I have searched existing issues to make sure this has not already been reported.
+        - label: I have searched existing issues to check whether this problem has already been reported.
           required: true
-        - label: I have provided enough information to reproduce or investigate the issue.
+        - label: I have provided enough information and reproduction steps to investigate this issue.
           required: true
