@@ -327,7 +327,7 @@ Every available team is represented in the segmented color bar at the top of the
 
 Left clicking a colour segment will select the team in vanilla mode.
 
-Right clicking a color segment will select the team in A3C mode with visual indicators.
+Right clicking a color segment will make that team fall back into to formation.
 
 ## Radial Menu Actions
 
