@@ -804,35 +804,39 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 						};
 					} foreach _groupsToAssign;
 					{
-						//if () then {
-							[_x,vehicle leader _gp] call A3C_ai_highCommand_fnc_assignGroupToVehicle;
-						//};
+						[_x,vehicle leader _gp] call A3C_ai_highCommand_fnc_assignGroupToVehicle;
 					} foreach _groupsToAssign;
-					//systemchat format ["A3C: %1 is connected to %2",A3C_SELECTED_UNITS,_gp];
 				} else {
 					//-- Not dragged on vehicle icon: check for vehicle drag
 					if (A3C_UI_MAPICONS_BOARDING_DRAW isEqualTo []) then {
 						//-- dragged without vehicle modifier: delete all waypoints
-						private _gp = A3C_SELECTED_UNITS select 0;
+						if (A3C_SELECTED_UNITS isNotEqualTo []) then {
+							private _gp = A3C_SELECTED_UNITS select 0;
 
-						//-- add actual waypoint
-						//-- clear all waypoints
-						{
+							//-- clear all waypoints
 							{
-								_x setVariable ["A3C_CLEARING",false,true];
-							} foreach (units _x);
-						} foreach A3C_SELECTED_UNITS;
-						
-						{
-							_gp = _x;
-							[_gp, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
+								{
+									_x setVariable ["A3C_CLEARING", false, true];
+								} forEach (units _x);
+							} forEach A3C_SELECTED_UNITS;
+
 							{
-								_x remoteExec ["unassignVehicle",0];
-								moveOut _x;
-							} foreach (units _gp);
-						} foreach A3C_SELECTED_UNITS;
-						publicVariable 'A3C_BLACKLIST_WAYPOINT_EDIT';
-						[_gp, _sPos] call A3C_ai_highCommand_fnc_addWaypoint;
+								private _gpRef = _x;
+
+								if (!isNull _gpRef) then {
+									[_gpRef, "ALL"] call A3C_ai_highCommand_fnc_deleteAllWaypoints;
+
+									{
+										//-- both these commands have global effect
+										unassignVehicle _x;
+										moveOut _x;
+									} forEach (units _gpRef);
+								};
+							} forEach A3C_SELECTED_UNITS;
+
+							publicVariable "A3C_BLACKLIST_WAYPOINT_EDIT";
+							[_gp, _sPos] call A3C_ai_highCommand_fnc_addWaypoint;
+						};
 					};
 					
 					
