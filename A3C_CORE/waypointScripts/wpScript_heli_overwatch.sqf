@@ -253,7 +253,12 @@ _doFire = {
 	_gunner doTarget objNull;
 	_gunner reveal [_activeTarget,4];
 	_gunner lookAt _activeTarget;
-	_vehicle setVariable ["A3C_fireComplete",[_weapon,false],true];
+	isNil {
+		private _engagement = (_vehicle getVariable ["A3C_Fire_Engagement", 0]) + 1;
+		_vehicle setVariable ["A3C_Fire_Engagement", _engagement];
+		_vehicle setVariable ["A3C_Guided_Projectile", [_engagement, objNull, 0, []], true];
+		_vehicle setVariable ["A3C_fireComplete",[_weapon,false,_engagement],true];
+	};
 	{_x doWatch _activeTarget; _x lookat _activeTarget; _x doTarget _activeTarget} foreach [_gunner,_vehicle];
 	if (_enemyVehicle isKindOf "AIR") then {
 		{_x doFire _activeTarget} foreach [_gunner,_vehicle];
@@ -372,33 +377,37 @@ _fnc_tilt = {
 		private _weaponAmmo = [];
 		private _updateWeaponAmmo = true;
 		
-		_vehicle setVariable ["A3C_Replacement_Projectile",nil,true]; //-- for missile guide
+		_vehicle setVariable ["A3C_Guided_Projectile",nil,true]; //-- original Fired projectile
 		private _handle = _vehicle addEventHandler
 		[
 			"FIRED",
 			{
 				params ["_vehicle", "_weapon", "_muzzle", "_mode", "_ammo", "_magazine", "_projectile", "_gunner"];
-				_data = _vehicle getVariable ["A3C_fireComplete",["",false]];
-				_data params ["_assignedWeapon","_isComplete"];
-				private _missiletarget =  assignedTarget _gunner;
+				private _data = _vehicle getVariable ["A3C_fireComplete",["",false,-1]];
+				_data params ["_assignedWeapon","_isComplete",["_engagement",-1]];
+				private _missiletarget = assignedTarget _gunner;
+				private _shot = _vehicle getVariable ["A3C_Guided_Projectile",[-1,objNull,0,[]]];
 
-				if (_weapon == _assignedWeapon) then {
-					[_vehicle,_weapon,_projectile,_missiletarget] spawn {
-						params ["_vehicle","_weapon","_projectile","_missiletarget"];
-						//-- currently guiding all rockets due to targetting issues
-						//if (speed _missiletarget > 0 OR {"rhs_" in toLower _weapon}) then {
-							sleep 1;
-							//systemchat 'exacto';
-							_vehicle setVariable ["A3C_fireComplete",[_weapon,true],true];
-							[[_vehicle,_projectile,2,_missiletarget,_missiletarget],A3C_ai_shared_fnc_guideProjectileMissile] remoteExec ["bis_fnc_spawn",_vehicle]; //--0 did not work.
-						//} else {
-						//	waitUntil {isNull _projectile Or {!alive _projectile}};
-						//};
-						
-						_vehicle setVariable ["A3C_fireComplete",[_weapon,true], true];
-						
+				if (_weapon == _assignedWeapon && {_engagement >= 0} && {(_shot select 0) == _engagement}) then {
+					// Track each original shot; delayed workers never overwrite the reference.
+					private _shotIndex = (_shot select 2) + 1;
+					private _projectiles = +(_shot select 3);
+					_projectiles pushBack _projectile;
+					_vehicle setVariable ["A3C_Guided_Projectile",[_engagement,_projectile,_shotIndex,_projectiles],true];
+					[_vehicle,_weapon,_projectile,_missiletarget,_engagement,_shotIndex] spawn {
+						params ["_vehicle","_weapon","_projectile","_missiletarget","_engagement","_shotIndex"];
+						sleep 1;
+						// Preserve owner routing/pacing without completing a newer engagement.
+						isNil {
+							private _current = _vehicle getVariable ["A3C_fireComplete",["",false,-1]];
+							if ((_current param [2,-1]) != _engagement) exitWith {};
+							[[_projectile,_missiletarget,"MISSILE"],A3C_ai_shared_fnc_guideProjectileMissile] remoteExec ["bis_fnc_spawn",_vehicle];
+							private _latestShot = _vehicle getVariable ["A3C_Guided_Projectile",[-1,objNull,0,[]]];
+							if ((_latestShot select 0) == _engagement && {(_latestShot select 2) == _shotIndex}) then {
+								_vehicle setVariable ["A3C_fireComplete",[_weapon,true,_engagement],true];
+							};
+						};
 					};
-
 				};
 			}
 		];
@@ -408,7 +417,7 @@ _fnc_tilt = {
 			private _isCompleted = [] call _exitCondition;
 			_leaderVar = _leaderVic getVariable ["A3C_Freeze_helicopter",[false,0]];
 			if (_isCompleted OR {!(_leaderVar select 0) OR {(_waypointPos distance (waypointPosition [_group, currentWaypoint _group])) > 1}}) exitWith {
-				_vehicle setVariable ["A3C_Replacement_Projectile",nil,true];
+				_vehicle setVariable ["A3C_Guided_Projectile",nil,true];
 				_vehicle setVariable ["A3C_fireComplete",nil,true];
 				_vehicle setVariable ["A3C_Freeze_helicopter",nil,true];
 			};
@@ -635,11 +644,17 @@ _fnc_tilt = {
 								//systemchat str ["FIRE", _weapon,typeOf _enemyVehicle, typeOf _activeTarget, assignedTarget _gunner];
 								waituntil {(_vehicle getVariable ["A3C_fireComplete",["",true]]) select 1};
 								sleep 0.5;
-								_m = _vehicle getVariable ["A3C_Replacement_Projectile",objNull];
-								//systemchat str [_m];
-								waituntil {isNull _m OR {!alive _m}};
-								//systemchat "cont";
-								_vehicle setVariable ["A3C_Replacement_Projectile",nil,true];
+								private _shot = _vehicle getVariable ["A3C_Guided_Projectile",[-1,objNull,0,[]]];
+								private _engagement = _shot select 0;
+								// Keep the owned laser target until every captured original shot completes.
+								waituntil {
+									private _currentShot = _vehicle getVariable ["A3C_Guided_Projectile",_shot];
+									if ((_currentShot select 0) == _engagement) then {_shot = _currentShot;};
+									({!isNull _x && {alive _x}} count (_shot select 3)) == 0
+								};
+								if (((_vehicle getVariable ["A3C_Guided_Projectile",[-1,objNull,0,[]]]) select 0) == _engagement) then {
+									_vehicle setVariable ["A3C_Guided_Projectile",nil,true];
+								};
 								[format ["A3C_EH_TILT_%1",str _vehicle], "onEachFrame"] call BIS_fnc_removeStackedEventHandler;
 
 								/*

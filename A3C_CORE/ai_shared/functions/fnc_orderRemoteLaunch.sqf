@@ -77,12 +77,11 @@ _unit setVariable ["A3C_unit_is_Remote_Firing", true, true];
 private _dir = _unit getDir _targetPos;
 _refPos = _unit getRelPos [((_unit distance _targetPos) - 10), _dir];
 
-private _delete = true;
 private _snapObjectStored = A3C_SNAP_OBJECT;
 
 // Function to make sure EH is added on correct machine.
 private _addEHFunc = {
-    params ["_object", "_func", "_target", "_target1", "_snapObject"];
+    params ["_object", "_func", "_target", "_target1", "_snapObject", ["_scheduled", true]];
 
     if !(local _object) exitWith {};
     if (isNil "_func") exitWith {};
@@ -91,9 +90,10 @@ private _addEHFunc = {
         "Fired",
         compile format [
             "
-                _this spawn %1;
+                _this %2 %1;
             ",
-            _func
+            _func,
+            if (_scheduled) then {"spawn"} else {"call"}
         ]
     ];
 
@@ -166,7 +166,6 @@ switch (_weaponGroup) do {
             private _handlerFunc = {
                 params ["_unit"];
 
-                private _ammoType = _this select 4;
                 private _missile = _this select 6;
                 private _var = _unit getVariable ["A3C_REMOTE_HANDLE", []];
 
@@ -174,14 +173,10 @@ switch (_weaponGroup) do {
 
                 _var params ["_handle", "_target", "_target1", "_snapObject", "_behaviour"];
 
-                if (isNull _missile) then {
-                    _missile = nearestObject [position _unit, _ammoType];
-                };
-
                 _unit removeEventHandler ["Fired", _handle];
                 _unit setVariable ["A3C_unit_is_Remote_Firing", false, true];
 
-                private _lock = getNumber (configFile >> "CfgAmmo" >> (_this select 4) >> "weaponLockSystem");
+                [_missile, _target, "MISSILE"] call A3C_ai_shared_fnc_guideProjectileMissile;
 
                 private _weaponType = if (_unit isKindOf "STATICWEAPON") then {
                     (getArray (configFile >> "CfgVehicles" >> typeOf _unit >> "Turrets" >> "MainTurret" >> "weapons")) select 0
@@ -207,9 +202,11 @@ switch (_weaponGroup) do {
                     publicVariable "A3C_REMFIRE_UNITS_ACTIVE";
                 };
 
-                sleep 0.001;
-
-                [_unit, _missile, _lock, _target, _target1] spawn A3C_ai_shared_fnc_guideProjectileMissile;
+                [_missile, _target, _target1] spawn {
+                    params ["_missile", "_target", "_target1"];
+                    waitUntil {sleep 0.01; isNull _missile || {!alive _missile}};
+                    {if (!isNull _x) then {deleteVehicle _x;};} forEach [_target, _target1];
+                };
             };
 
             while { alive _unit } do {
@@ -220,7 +217,7 @@ switch (_weaponGroup) do {
                 sleep 1;
             };
 
-            [_staticVehicle, _handlerFunc, _target, _target1, _snapObjectStored] call _addEHFunc;
+            [_staticVehicle, _handlerFunc, _target, _target1, _snapObjectStored, false] call _addEHFunc;
 
             sleep 2;
 
@@ -293,95 +290,56 @@ switch (_weaponGroup) do {
         if (_counter < 100) then {
             private _handlerFunc = {
                 private _tank = _this select 0;
-                private _ammo = _this select 4;
                 private _projectile = _this select 6;
-                private _effect = getText (configFile >> "CfgAmmo" >> _ammo >> "ExplosionEffects");
                 private _var = _tank getVariable ["A3C_REMOTE_HANDLE", []];
 
                 if (_var isEqualTo []) exitWith {};
 
-                _var params ["_handle", "_target", "_newMag", "_snapObject", "_behaviour"];
+                _var params ["_handle", "_target", "_target1", "_snapObject", "_behaviour"];
 
                 _tank removeEventHandler ["Fired", _handle];
                 (gunner _tank) setVariable ["A3C_unit_is_Remote_Firing", false, true];
+                _target setVariable ["A3C_Remote_Projectile_Captured", !isNull _projectile];
 
-                private _magType = _ammo;
-
-                if (_newMag != "") then {
-                    if (
-                        !(_effect == "ExplosionEffects") &&
-                        { { _snapObject isKindOf _x } count ["TANK", "CAR"] == 0 }
-                    ) then {
-                        _magType = _newMag;
-                    };
+                [_projectile, _target, "DIRECT"] call A3C_ai_shared_fnc_guideProjectileMissile;
+                [_projectile, _target] spawn {
+                    params ["_projectile", "_target"];
+                    waitUntil {sleep 0.01; isNull _projectile || {!alive _projectile}};
+                    if (!isNull _target) then {deleteVehicle _target;};
                 };
-
-                private _guideFnc = {
-                    params ["_projectile", "_magType", "_target"];
-
-                    if (!local _projectile) exitWith {};
-
-                    private _vectorDir = vectorDir _projectile;
-                    private _vectorUp = vectorUp _projectile;
-                    private _posi = getPosASL _projectile;
-                    private _vel = velocity _projectile;
-
-                    deleteVehicle _projectile;
-
-                    private _newProjectile = _magType createVehicle _posi;
-                    _newProjectile setVectorDirAndUp [_vectorDir, _vectorUp];
-                    _newProjectile setPosASL _posi;
-                    _newProjectile setVelocity _vel;
-
-                    private _length = sqrt (
-                        (_vel select 0) * (_vel select 0) +
-                        (_vel select 1) * (_vel select 1) +
-                        (_vel select 2) * (_vel select 2)
-                    );
-
-                    while { alive _newProjectile && alive _target } do {
-                        private _tPos = getPosATL _target;
-                        private _dir = (getPosATL _newProjectile) vectorFromTo _tPos;
-                        private _vel = [
-                            (_dir select 0) * _length,
-                            (_dir select 1) * _length,
-                            (_dir select 2) * _length
-                        ];
-
-                        _newProjectile setVelocity _vel;
-
-                        sleep 0.1;
-                    };
-
-                    deleteVehicle _target;
-                };
-
-                [_tank, _projectile, 0, _target, _target] spawn A3C_ai_shared_fnc_guideProjectileMissile;
-
-                // Preserved from original:
-                // [[_projectile, _magType, _target], _guideFnc] remoteExec ["BIS_fnc_spawn", 0];
             };
 
             [
                 _tank,
                 _handlerFunc,
                 _tankTarget,
-                _tank call A3C_main_fnc_getTankAmmoHE,
-                _snapObjectStored
+                objNull,
+                _snapObjectStored,
+                false
             ] call _addEHFunc;
 
+            private _handlerDeadline = time + 10;
             waitUntil {
                 count (_tank getVariable ["A3C_REMOTE_HANDLE", []]) > 0
+                || {!alive _tank}
+                || {time >= _handlerDeadline}
             };
 
-            [_tank, ["UseWeapon", _tank, _unit, 0]] remoteExec ["action", _tank];
+            if (count (_tank getVariable ["A3C_REMOTE_HANDLE", []]) > 0 && {alive _tank}) then {
+                [_tank, ["UseWeapon", _tank, _unit, 0]] remoteExec ["action", _tank];
+            };
 
             sleep (2 + random 2);
         };
 
         sleep 1;
 
-        if (_delete) then {
+        // Close the capture window before cleaning an unfired shot's proxy.
+        private _tankHandle = _tank getVariable ["A3C_REMOTE_HANDLE", []];
+        if !(_tankHandle isEqualTo []) then {
+            _tank removeEventHandler ["Fired", _tankHandle select 0];
+        };
+        if !(_tankTarget getVariable ["A3C_Remote_Projectile_Captured", false]) then {
             deleteVehicle _tankTarget;
         };
 
@@ -461,13 +419,13 @@ switch (_weaponGroup) do {
         private _spawnBehaviour = [_unit,_targetPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
         waitUntil {sleep 0.1; scriptDone _spawnBehaviour};
 
-        private _wm = (getArray (_cfgWeapons >> secondaryWeapon _unit >> "modes")) select 0;
+        private _primeMode = (getArray (_cfgWeapons >> secondaryWeapon _unit >> "modes")) select 0;
 
-        if (_wm == "this") then {
-            _wm = secondaryWeapon _unit;
+        if (_primeMode == "this") then {
+            _primeMode = secondaryWeapon _unit;
         };
 
-        _unit forceWeaponFire [secondaryWeapon _unit, _wm];
+        _unit forceWeaponFire [secondaryWeapon _unit, _primeMode];
 
         sleep 2;
 
@@ -494,6 +452,21 @@ switch (_weaponGroup) do {
 
             A3C_REMFIRE_UNITS_ACTIVE = A3C_REMFIRE_UNITS_ACTIVE - [_unit];
             publicVariable "A3C_REMFIRE_UNITS_ACTIVE";
+
+            private _policy = "MISSILE";
+            private _aimObject = attachedTo _target;
+            private _attackProfile = getText (
+                configFile >> "CfgWeapons" >> (_this select 1) >> (_this select 3)
+                >> "ace_missileguidance_attackProfile"
+            );
+            if (
+                _attackProfile == "ace_nlaw_overflyTopAttack"
+                && {{_aimObject isKindOf _x} count ["Tank", "Car", "Air"] > 0}
+            ) then {
+                _policy = "OVERFLY";
+            };
+
+            [_missile, _target, _policy] call A3C_ai_shared_fnc_guideProjectileMissile;
 
             [_unit] call A3C_ai_squad_fnc_actionResumeDestination;
 
@@ -529,15 +502,7 @@ switch (_weaponGroup) do {
                         configFile >> "CfgWeapons" >> secondaryWeapon _unit >> "magazines"
                     );
 
-                    waitUntil {
-                        !isNull (_unit getVariable ["A3C_Replacement_Projectile", objNull])
-                    };
-
-                    private _newMissile = _unit getVariable ["A3C_Replacement_Projectile", objNull];
-
-                    waitUntil {
-                        !alive _newMissile
-                    };
+                    waitUntil {sleep 0.01; isNull _missile || {!alive _missile}};
 
                     _unit removeEventHandler ["HandleDamage", _hitHandle];
                 };
@@ -545,14 +510,16 @@ switch (_weaponGroup) do {
                 {
                     _unit enableAI _x;
                 } forEach ["MOVE", "PATH", "ANIM"];
-
-                _unit setVariable ["A3C_Replacement_Projectile", objNull, true];
             };
 
-            [_unit, _missile, _lock, _target, _target1] spawn A3C_ai_shared_fnc_guideProjectileMissile;
+            [_missile, _target, _target1] spawn {
+                params ["_missile", "_target", "_target1"];
+                waitUntil {sleep 0.01; isNull _missile || {!alive _missile}};
+                {if (!isNull _x) then {deleteVehicle _x;};} forEach [_target, _target1];
+            };
         };
 
-        [_unit, _handlerFunc, _target, _target1, _snapObjectStored] call _addEHFunc;
+        [_unit, _handlerFunc, _target, _target1, _snapObjectStored, false] call _addEHFunc;
 
         sleep 2;
 
@@ -563,7 +530,22 @@ switch (_weaponGroup) do {
         private _vari = _unit getVariable ["A3C_REMOTE_HANDLE", []];
         _vari params ["_handle", "_targett", "_target1", "_snapObject", "_behaviour"];
 
-        _unit forceWeaponFire [secondaryWeapon _unit, _wm];
+        // Keep default-mode preparation; choose the actual mode from the ready launcher.
+        private _fireMode = _primeMode;
+        private _aimObject = attachedTo _target;
+        if ({_aimObject isKindOf _x} count ["Tank", "Car", "Air"] > 0) then {
+            private _weaponCfg = _cfgWeapons >> secondaryWeapon _unit;
+            private _modes = getArray (_weaponCfg >> "modes");
+            private _overflyIndex = _modes findIf {
+                getText (_weaponCfg >> _x >> "ace_missileguidance_attackProfile")
+                == "ace_nlaw_overflyTopAttack"
+            };
+            if (_overflyIndex >= 0) then {
+                _fireMode = _modes select _overflyIndex;
+            };
+        };
+
+        _unit forceWeaponFire [secondaryWeapon _unit, _fireMode];
     };
 
     case "UGLSHOT": {
