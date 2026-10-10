@@ -379,6 +379,10 @@ switch (_weaponGroup) do {
         private _targetingChanged = false;
         private _atHandle = -1;
         private _atRemoteHandle = [];
+        private _aceTarget = objNull;
+        private _aceTargetChanged = false;
+        private _aceTargetDefined = false;
+        private _aceTargetPrevious = objNull;
         private _valid = {
             !isNull _unit && {alive _unit} && {local _unit}
             && {((_unit getVariable ["A3C_AT_SHOT", []]) param [0, ""]) == _token}
@@ -546,20 +550,25 @@ switch (_weaponGroup) do {
                     configFile >> "CfgAmmo" >> (_this select 4) >> "weaponLockSystem"
                 );
 
-                private _policy = "MISSILE";
-                private _aimObject = attachedTo _target;
-                private _attackProfile = getText (
-                    configFile >> "CfgWeapons" >> (_this select 1) >> (_this select 3)
-                    >> "ace_missileguidance_attackProfile"
-                );
-                if (
-                    _attackProfile == "ace_nlaw_overflyTopAttack"
-                    && {{_aimObject isKindOf _x} count ["Tank", "Car", "Air"] > 0}
-                ) then {
-                    _policy = "OVERFLY";
-                };
+                // The local proxy is already token-checked above. Compiled handlers
+                // cannot capture preparation's private variables. Freeze the owner
+                // before firing; never start A3C steering during an ACE flight.
+                if !(_target getVariable ["A3C_AT_SHOT_ACE_GUIDANCE", false]) then {
+                    private _policy = "MISSILE";
+                    private _aimObject = attachedTo _target;
+                    private _attackProfile = getText (
+                        configFile >> "CfgWeapons" >> (_this select 1) >> (_this select 3)
+                        >> "ace_missileguidance_attackProfile"
+                    );
+                    if (
+                        _attackProfile == "ace_nlaw_overflyTopAttack"
+                        && {{_aimObject isKindOf _x} count ["Tank", "Car", "Air"] > 0}
+                    ) then {
+                        _policy = "OVERFLY";
+                    };
 
-                [_missile, _target, _policy] call A3C_ai_shared_fnc_guideProjectileMissile;
+                    [_missile, _target, _policy] call A3C_ai_shared_fnc_guideProjectileMissile;
+                };
 
                 // Protection and proxy lifetime belong to this projectile. Neither
                 // worker restores unit AI, so an old missile cannot alter a new order.
@@ -647,6 +656,61 @@ switch (_weaponGroup) do {
             isNil {
                 if !(call _valid) exitWith {};
                 if !((_unit getVariable ["A3C_REMOTE_HANDLE", []]) isEqualTo _atRemoteHandle) exitWith {};
+                // Query the loaded launcher, even when currentWeapon reports a rifle.
+                private _launcherState = _unit weaponState _launcher;
+                private _magazine = _launcherState param [3, ""];
+                private _ammo = getText (configFile >> "CfgMagazines" >> _magazine >> "ammo");
+                private _ammoCfg = _cfgAmmo >> _ammo;
+                private _guidanceCfg = _ammoCfg >> "ace_missileguidance";
+                _aceTarget = attachedTo _target;
+                private _aceGuidance = !isNil "ace_missileguidance_fnc_onFired"
+                    && {!isNil "ace_missileguidance_fnc_onFiredGetArgs"}
+                    && {!isNil "ace_missileguidance_fnc_guidancePFH"}
+                    && {!isNil "CBA_fnc_addPerFrameHandler"}
+                    && {(missionNamespace getVariable ["ace_missileguidance_enabled", 0]) == 2}
+                    && {(_launcherState param [0, ""]) == _launcher}
+                    && {(_launcherState param [4, 0]) > 0}
+                    && {isClass _guidanceCfg}
+                    && {getNumber (_guidanceCfg >> "enabled") == 1}
+                    // ACE onFired requires an explicit subclass, not just inheritance.
+                    && {!(("configName _x == 'ace_missileguidance'" configClasses _ammoCfg) isEqualTo [])}
+                    // Do not promote the legacy nearby-object search to an ACE lock.
+                    && {!isNull _snapObjectStored && {_aceTarget isEqualTo _snapObjectStored}}
+                    && {!isNull _aceTarget && {alive _aceTarget} && {_aceTarget != _unit}}
+                    && {_aceTarget isKindOf "AllVehicles"}
+                    && {!(_aceTarget isKindOf "A3C_Invisible_Man_F")}
+                    && {!(_aceTarget isKindOf "A3C_Supression_Target_F")}
+                    && {!(_aceTarget isKindOf "LaserTarget")};
+                if (_aceGuidance) then {
+                    // Honor configured target restrictions and the effective seeker.
+                    // Laser, GPS and sight/manual seekers need a different workflow;
+                    // ATSHOT recovers the shooter before a long missile flight ends.
+                    private _lockableTypes = getArray (_guidanceCfg >> "lockableTypes");
+                    private _seeker = _unit getVariable ["ace_missileguidance_seekerType", ""];
+                    if !(_seeker in getArray (_guidanceCfg >> "seekerTypes")) then {
+                        _seeker = getText (_guidanceCfg >> "defaultSeekerType");
+                    };
+                    _aceGuidance = _seeker != "" && {!(_seeker in ["SALH", "GPS", "SACLOS", "MCLOS"])}
+                        && {_lockableTypes isEqualTo [] || {{_aceTarget isKindOf _x} count _lockableTypes > 0}};
+                };
+                if (_aceGuidance) then {
+                    if (getNumber (_guidanceCfg >> "useModeForAttackProfile") == 1
+                        && {"JAV_TOP" in getArray (_guidanceCfg >> "attackProfiles")}
+                        && {{_aceTarget isKindOf _x} count ["Tank", "Wheeled_APC_F"] > 0}) then {
+                        private _topDownIndex = _modes findIf {
+                            isClass (_weaponCfg >> _x)
+                            && {getText (_weaponCfg >> _x >> "ace_missileguidance_attackProfile") == "JAV_TOP"}
+                        };
+                        if (_topDownIndex >= 0) then {_fireMode = _modes select _topDownIndex;};
+                    };
+                    _aceTargetDefined = !isNil {_unit getVariable "ace_missileguidance_target"};
+                    if (_aceTargetDefined) then {
+                        _aceTargetPrevious = _unit getVariable "ace_missileguidance_target";
+                    };
+                    _aceTargetChanged = true;
+                    _unit setVariable ["ace_missileguidance_target", _aceTarget, false];
+                };
+                _target setVariable ["A3C_AT_SHOT_ACE_GUIDANCE", _aceGuidance];
                 private _context = _unit getVariable ["A3C_AT_SHOT", []];
                 _context set [2, true];
                 _unit setVariable ["A3C_AT_SHOT", _context, true];
@@ -676,6 +740,21 @@ switch (_weaponGroup) do {
             // with recovery, and never remove twice after the handler ran.
             if (!_fired && {_atHandle >= 0}) then {_unit removeEventHandler ["Fired", _atHandle];};
             _unit setVariable [_firedKey, nil];
+            // Preparation always yields in the Fired wait before reaching cleanup.
+            // All synchronous Fired initializers, including ACE's, have returned.
+            // Restore on the installing machine even after locality loss: the ACE
+            // designation was local, so forwarding this write would affect another
+            // machine's independent designation. Preserve intervening replacements.
+            if (_aceTargetChanged && {!isNull _unit}
+                && {!isNil {_unit getVariable "ace_missileguidance_target"}}
+                && {(_unit getVariable ["ace_missileguidance_target", objNull]) isEqualTo _aceTarget}) then {
+                if (_aceTargetDefined) then {
+                    _unit setVariable ["ace_missileguidance_target", _aceTargetPrevious, false];
+                } else {
+                    _unit setVariable ["ace_missileguidance_target", nil, false];
+                };
+            };
+            if (!isNull _target) then {_target setVariable ["A3C_AT_SHOT_ACE_GUIDANCE", nil];};
         };
         if (_fired) then {sleep 1;}; // Short recovery, independent of missile impact.
         if (!_fired) then {
