@@ -118,7 +118,7 @@ if ({_snapObject isKindOf _x} count ["Tank", "Car"] > 0) then {
 };
 _tankTarget enableSimulation false;
 if (_debug) then {
-    diag_log format ["[A3C] TANKSHOT %1: claimed; proxy=%2, designationASL=%3, proxyASL=%4, attachedTo=%5", _token, _tankTarget, _targetPos, getPosASL _tankTarget, attachedTo _tankTarget];
+    diag_log format ["[A3C] TANKSHOT %1: claimed; proxy=%2, designationASL=%3, proxyASL=%4, attachedTo=%5, proxyATL=%6, proxyAimASL=%7", _token, _tankTarget, _targetPos, getPosASL _tankTarget, attachedTo _tankTarget, getPosATL _tankTarget, aimPos _tankTarget];
 };
 
 private _handle = -1;
@@ -126,6 +126,7 @@ private _remoteHandle = [];
 private _firedKey = format ["A3C_TANK_SHOT_FIRED_%1", _token];
 private _removedKey = format ["A3C_TANK_SHOT_REMOVED_%1", _token];
 private _result = "UNEXPECTED";
+private _aimSummary = [];
 private _invalidReason = {
     switch (true) do {
         case (isNull _unit || {!alive _unit} || {isNull _tank} || {!alive _tank}): {"DESTROYED"};
@@ -187,6 +188,29 @@ private _prepare = {
         if (attachedTo _tankTarget == _snapObject) then {_tankTarget} else {_snapObject}
     } else {objNull};
     private _watchPosAGL = ASLToAGL _targetPos;
+    private _aimStarted = time;
+    // Sample both tests independently. The MCSS alternative is only a 13-degree
+    // horizontal arc, not cannon alignment, visibility or a ballistic solution.
+    private _sampleAim = {
+        private _quality = _tank aimedAtTarget [_tankTarget, _cannon];
+        private _arc = [getPosATL _tankTarget, _unit] call MCSS_fnc_lineOfSightVehicle;
+        private _direction = _tank weaponDirection _cannon;
+        private _errors = [-1, -1, -1];
+        if (_direction isEqualTypeArray [0, 0, 0] && {{finite _x} count _direction == 3}
+            && {vectorMagnitude _direction > 0.01}) then {
+            _direction = vectorNormalized _direction;
+            // Primary-gunner weaponDirection is supported here. eyePos is an
+            // approximate origin; these angles do not measure ballistic zeroing.
+            private _origin = eyePos _unit;
+            _errors = [_targetPos, getPosASL _tankTarget, if (isNull _watchObject) then {_targetPos} else {getPosASL _watchObject}] apply {
+                private _delta = _x vectorDiff _origin;
+                if (vectorMagnitude _delta > 0.01) then {
+                    acos (((_direction vectorDotProduct (vectorNormalized _delta)) max -1) min 1)
+                } else {-1}
+            };
+        } else {_direction = [];};
+        [_quality, _arc, _quality == 1 || {_arc}, _direction, _errors select 0, _errors select 1, _errors select 2]
+    };
     private _aimInstructions = 0;
     private _issueAim = {
         params ["_phase", ["_log", true]];
@@ -200,7 +224,7 @@ private _prepare = {
         } else {_unit doWatch _watchPosAGL;};
         _aimInstructions = _aimInstructions + 1;
         if (_debug && {_log}) then {
-            diag_log format ["[A3C] TANKSHOT %1: aim instruction %2 (%3), watchObject=%4, watchPosAGL=%5, selected=%6, AUTOTARGET=%7, WEAPONAIM=%8, TARGET=%9", _token, _aimInstructions, _phase, _watchObject, _watchPosAGL, weaponState [_tank, _turret], _unit checkAIFeature "AUTOTARGET", _unit checkAIFeature "WEAPONAIM", _unit checkAIFeature "TARGET"];
+            diag_log format ["[A3C] TANKSHOT %1: aim instruction %2 (%3), watchObject=%4, watchPosAGL=%5, selected=%6, AUTOTARGET=%7, WEAPONAIM=%8, TARGET=%9, sample=[quality,arc,accepted,direction,designationDeg,proxyDeg,watchDeg] %10", _token, _aimInstructions, _phase, _watchObject, _watchPosAGL, weaponState [_tank, _turret], _unit checkAIFeature "AUTOTARGET", _unit checkAIFeature "WEAPONAIM", _unit checkAIFeature "TARGET", call _sampleAim];
         };
         true
     };
@@ -287,10 +311,11 @@ private _prepare = {
         max (getNumber (_magCfg >> "magazineReloadTime")) max (getNumber (_magCfg >> "reloadTime"));
     private _reloadTimeout = ((_reloadTime * 2 + 5) max 15) min 60;
     private _reloadDeadline = time + _reloadTimeout;
-    // Loading may suppress/reset the initial watch instruction. Reserve the
-    // bounded reload budget before the ten-second aim allowance in that case.
-    private _aimDeadline = if (_loadRequested || {(_state param [5, 0]) > 0}
-        || {(_state param [6, 0]) > 0}) then {_reloadDeadline + 10} else {time + 10};
+    // Start the independent aim clock on observed physical readiness, rather
+    // than charging unused predicted reload time. Keep the existing hard bound.
+    private _aimDeadline = -1;
+    private _readyAt = -1;
+    private _traverseExtended = false;
     private _waitDeadline = _reloadDeadline + 10 + 3;
     private _ready = {
         params ["_state"];
@@ -301,10 +326,23 @@ private _prepare = {
         && {([_state select 3, _core] call A3C_ai_shared_fnc_classifyTankShell) select 0}
     };
     private _aimed = {
-        (_tank aimedAtTarget [_tankTarget, _cannon]) == 1
-        || {[getPosATL _tankTarget, _unit] call MCSS_fnc_lineOfSightVehicle}
+        private _sample = call _sampleAim;
+        _aimSummary set [9, _sample];
+        if !(_sample select 2) then {_aimSummary set [4, true];};
+        if (_previousCannonAim && {(_sample select 0) != 1}) then {_aimSummary set [5, true];};
+        _sample select 2
     };
     private _aimSince = -1;
+    private _firstAim = -1;
+    private _firstCannonAim = -1;
+    private _aimEstablished = false;
+    private _aimLost = false;
+    private _cannonAimLost = false;
+    private _previousAim = false;
+    private _previousCannonAim = false;
+    private _progressError = -1;
+    private _progressDirection = [];
+    private _lastProgress = -1;
     private _final = [];
     private _reloadOutcome = if (_loadRequested) then {"waiting for preferred reload"} else {"waiting for loaded shell readiness"};
     private _reloadFinished = false;
@@ -312,16 +350,16 @@ private _prepare = {
     private _reloadWasBusy = false;
     private _nextAimRefresh = time + 2;
     private _nextAimLog = time;
-    if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: loadMagazine requested=%2, muzzle=%3, state=%4, reloadTimeout=%5 s, aimAllowance=%6 s, waitBound=%7 s", _token, _loadRequested, _fireMuzzle, _state, _reloadTimeout, _aimDeadline - time, _waitDeadline - time];};
+    private _lastAimFlags = [];
+    private _nextTransitionLog = time;
+    if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: loadMagazine requested=%2, muzzle=%3, state=%4, reloadTimeout=%5 s, aimAllowance=10 s after readiness (+10 s once for recent traversal, capped), waitBound=%6 s; tankASL=%7, eyeASL=%8, designationATL=%9, proxyAGL=%10, turretLimits=%11", _token, _loadRequested, _fireMuzzle, _state, _reloadTimeout, _waitDeadline - time, getPosASL _tank, eyePos _unit, ASLToATL _targetPos, ASLToAGL getPosASL _tankTarget, _tank getTurretLimits _turret];};
     _result = "INVALID_STATE";
-    // Aim and reload progress together. A subsequently observed reload can use
-    // the same fixed reload budget; watch refreshes never extend the wait bound.
+    // Aim and reload progress together; refreshes never restart either clock.
     while {call _valid} do {
         _state = weaponState [_tank, _turret, _cannon, _fireMuzzle];
         if ((_state param [6, -1]) > 0) then {
             _reloadWasBusy = true;
             _reloadAimPending = true;
-            _aimDeadline = _reloadDeadline + 10;
         };
         if (_reloadAimPending && {(_state param [6, -1]) == 0}
             && {_reloadWasBusy || {(_state param [3, ""]) == _preferred && {(_state param [4, 0]) > 0}}}) then {
@@ -331,22 +369,22 @@ private _prepare = {
             _aimSince = -1;
             _nextAimRefresh = time + 2;
         };
-        private _isAimed = call _aimed;
+        private _sample = call _sampleAim;
+        _sample params ["_quality", "_arc", "_isAimed", "_direction", "_designationError", "_proxyError", "_error"];
         if (!_isAimed && {time >= _nextAimRefresh}) then {
             ["recover lost aim", false] call _issueAim;
             _nextAimRefresh = time + 2;
         };
         if (_isAimed) then {
             if (_aimSince < 0) then {_aimSince = time;};
+            if (_firstAim < 0) then {_firstAim = time - _aimStarted;};
+            if (time - _aimSince >= 3) then {_aimEstablished = true;};
         } else {_aimSince = -1;};
-        if (_debug && {time >= _nextAimLog}) then {
-            diag_log format ["[A3C] TANKSHOT %1: aim wait: aimed=%2, settle=%3 s, state=%4, selected=%5, watchRequests=%6, aimRemaining=%7 s, reloadRemaining=%8 s", _token, _isAimed, if (_aimSince < 0) then {0} else {time - _aimSince}, _state, weaponState [_tank, _turret], _aimInstructions, _aimDeadline - time, _reloadDeadline - time];
-            _nextAimLog = time + 5;
-        };
-        if (_aimSince < 0 && {time >= _aimDeadline}) exitWith {
-            _result = if (!([_state] call _ready) && {(_state param [6, -1]) > 0}) then {"RELOAD_TIMEOUT"} else {"AIM_TIMEOUT"};
-            if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: %2; last state=%3, watchRequests=%4", _token, _result, _state, _aimInstructions];};
-        };
+        if (_previousAim && {!_isAimed}) then {_aimLost = true;};
+        if (_quality == 1 && {_firstCannonAim < 0}) then {_firstCannonAim = time - _aimStarted;};
+        if (_previousCannonAim && {_quality != 1}) then {_cannonAimLost = true;};
+        _previousAim = _isAimed;
+        _previousCannonAim = _quality == 1;
         private _preferredReady = ([_state] call _ready)
             && {_preferred == "" || {(_state select 3) == _preferred}};
         if (_preferredReady) then {
@@ -368,14 +406,53 @@ private _prepare = {
                 _reloadFinished = true;
             };
         };
+        if (!(_final isEqualTo []) && {_readyAt < 0}) then {
+            _readyAt = time;
+            _aimDeadline = (time + 10) min (_waitDeadline - 3);
+            if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: physical ammo ready at time=%2, elapsed=%3 s, phases=[%4,%5], magazine=%6, aimRemaining=%7 s", _token, _readyAt, _readyAt - _aimStarted, _final select 5, _final select 6, _final select 3, _aimDeadline - time];};
+        };
+        // Significant decreasing angular error is evidence of traversal toward
+        // the watch point. Unknown direction earns no extension; never gate fire
+        // on this approximate angle or treat horizontal fallback as cannon aim.
+        if (_error >= 0) then {
+            if (_progressError < 0 || {_error > _progressError + 1}) then {
+                _progressError = _error;
+                _progressDirection = +_direction;
+            };
+            if (_error <= _progressError - 1
+                && {acos (((_direction vectorDotProduct _progressDirection) max -1) min 1) >= 0.5}) then {
+                _lastProgress = time;
+                _progressError = _error;
+                _progressDirection = +_direction;
+            };
+        };
+        if (_readyAt >= 0 && {!_traverseExtended} && {time >= _aimDeadline}
+            && {_lastProgress >= _readyAt && {time - _lastProgress <= 3}}
+            && {_aimDeadline < _waitDeadline - 3}) then {
+            _aimDeadline = (_aimDeadline + 10) min (_waitDeadline - 3);
+            _traverseExtended = true;
+            if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: bounded traversal extension; lastProgress=%2, errorDeg=%3, aimRemaining=%4 s", _token, _lastProgress - _aimStarted, _error, _aimDeadline - time];};
+        };
+        private _flags = [_quality == 1, _arc, !(_final isEqualTo []), (_state param [5, -1]) > 0, (_state param [6, -1]) > 0, (weaponState [_tank, _turret]) param [0, ""]];
+        if (_debug && {time >= _nextAimLog || {!(_flags isEqualTo _lastAimFlags) && {time >= _nextTransitionLog}}}) then {
+            diag_log format ["[A3C] TANKSHOT %1: aim sample elapsed=%2 s, aimedAtTarget=%3, horizontalArc=%4, accepted=%5, settle=%6 s, firstAccepted=%7 s, firstCannon=%8 s, settledEver=%9, acceptedLost=%10, cannonLost=%11, direction=%12, designationDeg=%13, proxyDeg=%14, state=%15, selected=%16, aimRemaining=%17 s, reloadRemaining=%18 s, proxyASL=%19, attachedTo=%20", _token, time - _aimStarted, _quality, _arc, _isAimed, if (_aimSince < 0) then {0} else {time - _aimSince}, _firstAim, _firstCannonAim, _aimEstablished, _aimLost, _cannonAimLost, _direction, _designationError, _proxyError, _state, weaponState [_tank, _turret], if (_readyAt < 0) then {-1} else {_aimDeadline - time}, _reloadDeadline - time, getPosASL _tankTarget, attachedTo _tankTarget];
+            _lastAimFlags = _flags;
+            _nextTransitionLog = time + 1;
+            _nextAimLog = time + 5;
+        };
         if (time >= _reloadDeadline && {_final isEqualTo []}) exitWith {_result = "RELOAD_TIMEOUT";};
-        if (_reloadFinished && {!(_final isEqualTo [])} && {_aimSince >= 0} && {time - _aimSince >= 3}) exitWith {};
-        if (time >= _waitDeadline) exitWith {_result = "AIM_TIMEOUT";};
+        if (_reloadFinished && {!(_final isEqualTo [])} && {_aimSince >= 0} && {time - _aimSince >= 3}) exitWith {_result = "AIM_READY";};
+        if (!(_final isEqualTo []) && {_readyAt >= 0} && {time >= _aimDeadline}
+            && {_aimSince < 0 || {time >= _aimDeadline + 3}}) exitWith {
+            _result = if (_aimEstablished && {_aimLost}) then {"AIM_LOST"} else {"AIM_TIMEOUT"};
+        };
+        if (time >= _waitDeadline) exitWith {_result = if (_aimEstablished && {_aimLost}) then {"AIM_LOST"} else {"AIM_TIMEOUT"};};
         sleep 0.1;
     };
+    _aimSummary = [time - _aimStarted, _firstAim, _firstCannonAim, _aimEstablished, _aimLost, _cannonAimLost, if (_readyAt < 0) then {-1} else {_readyAt - _aimStarted}, _traverseExtended, _aimInstructions, call _sampleAim];
     if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: reload=%2, candidate=%3", _token, _reloadOutcome, _final];};
     if (_final isEqualTo []) exitWith {
-        if (_result in ["RELOAD_TIMEOUT", "AIM_TIMEOUT"]) then {
+        if (_result == "RELOAD_TIMEOUT") then {
             // Report current availability; inventory can change during preparation.
             private _available = (magazinesAllTurrets _tank) findIf {
                 _x params ["_magazine", "_path", "_rounds"];
@@ -387,6 +464,9 @@ private _prepare = {
             if (_available < 0 && {!_loadedUsable}) then {_result = "NO_AMMO";};
         };
     };
+    // A retained ready candidate does not mean the loop succeeded. In particular,
+    // preserve its AIM_TIMEOUT/AIM_LOST rather than replacing it in the final guard.
+    if (_result != "AIM_READY") exitWith {};
     if !(call _valid) exitWith {_result = "INVALID_STATE";};
     if (_aimSince < 0 || {time - _aimSince < 3} || {!(call _aimed)}) exitWith {_result = "AIM_LOST";};
 
@@ -478,9 +558,10 @@ call _prepare;
 private _captured = _unit getVariable [_firedKey, false];
 private _matchingFired = _unit getVariable [_removedKey, false];
 private _payload = [_unit, _tank, _token, _autoTarget, _tankTarget, _handle, _remoteHandle, clientOwner];
-if (!_captured && {!_matchingFired} && {!(call _valid)}) then {_result = call _invalidReason;};
+if (!_captured && {!_matchingFired} && {_result in ["INVALID_STATE", "NO_PROJECTILE"]}
+    && {!(call _valid)}) then {_result = call _invalidReason;};
 if (!_captured && {_result == "INVALID_STATE"}) then {_result = call _invalidReason;};
-if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: completion requested reason=%2; installer cleanup started", _token, _result];};
+if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: completion requested reason=%2; aim summary=[elapsed,firstAccepted,firstCannon,settledEver,acceptedLost,cannonLost,readyElapsed,traverseExtended,watchRequests,lastSample] %3; installer cleanup started", _token, _result, _aimSummary];};
 ["INSTALL", _payload] call A3C_ai_shared_fnc_recoverTankShot;
 [if (_captured) then {"FIRED"} else {if (_result == "CANCELLED") then {"CANCELLED"} else {"FAILED"}},
     if (_captured) then {"CONFIRMED_PROJECTILE"} else {_result}] call _finish;
