@@ -8,6 +8,7 @@ params [
 if (_units isEqualTo []) exitWith {};
 
 private _aimPos = ATLToASL A3C_UI_HUD_3D_TAG_ICON_POS;
+private _snapObject = A3C_SNAP_OBJECT;
 private _unitsByGroups = [];
 
 if ((count _units) > 1) then {
@@ -45,7 +46,9 @@ if !(_unitsByGroups isEqualTo []) then {
 if (_shooters isEqualTo []) exitWith {};
 
 {
-    [[_x, _aimPos, _remFireType], A3C_ai_shared_fnc_orderRemoteLaunch] remoteExec [
+    private _launchArgs = [_x, _aimPos, _remFireType];
+    if (_remFireType in ["ATSHOT", "FIND"]) then {_launchArgs pushBack _snapObject;};
+    [_launchArgs, A3C_ai_shared_fnc_orderRemoteLaunch] remoteExec [
         "BIS_fnc_spawn",
         _x
     ];

@@ -1,11 +1,13 @@
 // A3C_ai_shared_fnc_orderRemoteLaunch
 
-params ["_unit", "_targetPos", "_weaponGroup"];
+params ["_unit", "_targetPos", "_weaponGroup", ["_snapObject", A3C_SNAP_OBJECT, [objNull]]];
 
 if (!isDedicated && { !alive player }) exitWith {};
 if (isNull _unit || { !alive _unit }) exitWith {};
 
 if (_unit in A3C_REMFIRE_UNITS_ACTIVE) exitWith {};
+// The replicated list can lag after migration; the unit's token also reserves recovery.
+if !((_unit getVariable ["A3C_AT_SHOT", []]) isEqualTo []) exitWith {};
 
 if (_unit in (A3C_SUPPRESSION_UNITS_SQ + A3C_SUPPRESSION_UNITS_AI)) exitWith {
     systemChat format [
@@ -63,6 +65,12 @@ if (_weaponGroup == "FIND") then {
     };
 };
 
+// The normal caller already dispatches to the owner. Handle a stale locality
+// decision before changing any AT state or sampling local AI feature ownership.
+if (_weaponGroup == "ATSHOT" && {!local _unit}) exitWith {
+    [[_unit, _targetPos, _weaponGroup, _snapObject], A3C_ai_shared_fnc_orderRemoteLaunch] remoteExec ["BIS_fnc_spawn", _unit];
+};
+
 A3C_REMFIRE_UNITS_ACTIVE pushBackUnique _unit;
 publicVariable "A3C_REMFIRE_UNITS_ACTIVE";
 
@@ -77,7 +85,13 @@ _unit setVariable ["A3C_unit_is_Remote_Firing", true, true];
 private _dir = _unit getDir _targetPos;
 _refPos = _unit getRelPos [((_unit distance _targetPos) - 10), _dir];
 
-private _snapObjectStored = A3C_SNAP_OBJECT;
+private _snapObjectStored = if (_weaponGroup == "ATSHOT") then {_snapObject} else {A3C_SNAP_OBJECT};
+
+// ATSHOT owns its restoration; other branches retain their existing cleanup.
+private _atAIState = [];
+if (_weaponGroup == "ATSHOT") then {
+    _atAIState = ["MOVE", "PATH", "ANIM", "AUTOTARGET"] apply {_unit checkAIFeature _x};
+};
 
 // Function to make sure EH is added on correct machine.
 private _addEHFunc = {
@@ -350,6 +364,30 @@ switch (_weaponGroup) do {
     };
 
     case "ATSHOT": {
+        private _originalStance = stance _unit;
+        private _originalUnitPos = unitPos _unit;
+        private _originalPause = _unit getVariable ["A3C_PAUSE_PLAN", false];
+        private _launcher = secondaryWeapon _unit;
+        private _token = format ["%1:%2:%3", clientOwner, diag_tickTime, _unit];
+        private _firedKey = format ["A3C_AT_SHOT_FIRED_%1", _token];
+        // Separate context leaves the public five-element A3C_REMOTE_HANDLE intact.
+        // Reserve the unit until recovery finishes, not just until Fired arrives.
+        _unit setVariable ["A3C_AT_SHOT", [_token, _launcher, false, false], true];
+        private _destinationSaved = false;
+        private _savedDestination = [];
+        private _stanceChanged = false;
+        private _targetingChanged = false;
+        private _atHandle = -1;
+        private _atRemoteHandle = [];
+        private _valid = {
+            !isNull _unit && {alive _unit} && {local _unit}
+            && {((_unit getVariable ["A3C_AT_SHOT", []]) param [0, ""]) == _token}
+            && {_unit getVariable ["A3C_unit_is_Remote_Firing", false]}
+            && {_unit in A3C_REMFIRE_UNITS_ACTIVE}
+            && {secondaryWeapon _unit == _launcher}
+            && {!isNull _target}
+        };
+
         private _lT = switch (true) do {
             case ((side _unit) getFriend WEST < 0.6): {
                 "LaserTargetW"
@@ -364,6 +402,7 @@ switch (_weaponGroup) do {
 
         private _target = "A3C_Invisible_Man_F" createVehicleLocal [0, 0, 0];
         private _target1 = _lT createVehicle _targetPos;
+        _target setVariable ["A3C_AT_SHOT_TOKEN", _token];
 
         _target enableSimulation false;
         _target setPosASL _targetPos;
@@ -381,171 +420,389 @@ switch (_weaponGroup) do {
             ]
         };
 
-        _unit doTarget _target;
-        _unit lookAt _target;
-        _unit reveal [_target, 4];
+        // All preparation failures return to the single restoration path below.
+        private _prepare = {
+            if !(call _valid) exitWith {};
+            if (_launcher == "" || {!(_atAIState select 2)}) exitWith {};
+            if (_unit ammo _launcher <= 0) exitWith {};
 
-        sleep 1;
+            private _crouchReady = _originalStance != "PRONE";
+            if (_originalStance == "PRONE") then {
+                // Direct prone shouldering caused standing/prone transitions and failed
+                // shots in testing. Finish an actual crouched idle before shouldering.
+                _stanceChanged = true;
+                _unit setUnitPos "MIDDLE";
+                private _deadline = time + 10;
+                private _stableSince = -1;
+                waitUntil {
+                    sleep 0.1;
+                    private _anim = toLower animationState _unit;
+                    private _idle = stance _unit == "CROUCH"
+                        && {((_anim find "aidlpknl") == 0 || {(_anim find "amovpknlmstp") == 0})}
+                        && {(_anim find "_amov") < 0} && {(_anim find "_end") < 0};
+                    if (_idle) then {
+                        if (_stableSince < 0) then {_stableSince = time;};
+                    } else {_stableSince = -1;};
+                    !(call _valid) || {time >= _deadline}
+                        || {_stableSince >= 0 && {time - _stableSince >= 0.3}}
+                };
+                _crouchReady = (call _valid) && {_stableSince >= 0} && {time - _stableSince >= 0.3};
+            };
+            if (!_crouchReady) exitWith {};
 
-        if ((count _list) > 0) then {
-            private _h = 0;
+            _targetingChanged = true;
+            _unit doTarget _target;
+            _unit lookAt _target;
+            _unit reveal [_target, 4];
 
-            {
-                _x attachTo [(_list select 0), [0, 0, _h]];
-            } forEach [_target, _target1];
-        } else {
-            {
-                _x setPosASL _targetPos;
-                _x enableSimulation false;
-            } forEach [_target, _target1];
-        };
+            sleep 1;
 
-        [_unit] call A3C_ai_shared_fnc_setDestination;
-
-        private _unitPos = position vehicle _unit;
-
-        _unit doMove _unitPos;
-        _unit moveTo _unitPos;
-
-        {
-            _unit disableAI _x;
-        } forEach ["MOVE", "PATH"];
-
-        sleep 2;
-
-        // private _setDir = (_unit modelToWorld (_unit selectionPosition "lefthand")) getDir _targetPos;
-        // _unit setDir _setDir;
-
-        private _spawnBehaviour = [_unit,_targetPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
-        waitUntil {sleep 0.1; scriptDone _spawnBehaviour};
-
-        private _primeMode = (getArray (_cfgWeapons >> secondaryWeapon _unit >> "modes")) select 0;
-
-        if (_primeMode == "this") then {
-            _primeMode = secondaryWeapon _unit;
-        };
-
-        _unit forceWeaponFire [secondaryWeapon _unit, _primeMode];
-
-        sleep 2;
-
-        _unit disableAI "ANIM";
-        _unit doTarget _target;
-        _unit setVariable ["A3C_PAUSE_PLAN", true, true];
-
-        private _handlerFunc = {
-            params ["_unit"];
-
-            private _missile = _this select 6;
-            private _var = _unit getVariable ["A3C_REMOTE_HANDLE", []];
-
-            if (_var isEqualTo []) exitWith {};
-
-            _var params ["_handle", "_target", "_target1", "_snapObject", "_behaviour"];
-
-            _unit removeEventHandler ["Fired", _handle];
-            _unit setVariable ["A3C_unit_is_Remote_Firing", false, true];
-
-            private _lock = getNumber (
-                configFile >> "CfgAmmo" >> (_this select 4) >> "weaponLockSystem"
-            );
-
-            A3C_REMFIRE_UNITS_ACTIVE = A3C_REMFIRE_UNITS_ACTIVE - [_unit];
-            publicVariable "A3C_REMFIRE_UNITS_ACTIVE";
-
-            private _policy = "MISSILE";
-            private _aimObject = attachedTo _target;
-            private _attackProfile = getText (
-                configFile >> "CfgWeapons" >> (_this select 1) >> (_this select 3)
-                >> "ace_missileguidance_attackProfile"
-            );
-            if (
-                _attackProfile == "ace_nlaw_overflyTopAttack"
-                && {{_aimObject isKindOf _x} count ["Tank", "Car", "Air"] > 0}
-            ) then {
-                _policy = "OVERFLY";
+            if ((count _list) > 0) then {
+                {
+                    if (!isNull _x) then {_x attachTo [(_list select 0), [0, 0, 0]];};
+                } forEach [_target, _target1];
+            } else {
+                {
+                    if (!isNull _x) then {
+                        _x setPosASL _targetPos;
+                        _x enableSimulation false;
+                    };
+                } forEach [_target, _target1];
             };
 
-            [_missile, _target, _policy] call A3C_ai_shared_fnc_guideProjectileMissile;
+            if !(call _valid) exitWith {};
+            _savedDestination = [_unit] call A3C_ai_shared_fnc_setDestination;
+            _destinationSaved = count _savedDestination > 1;
 
-            [_unit] call A3C_ai_squad_fnc_actionResumeDestination;
+            private _unitPos = position vehicle _unit;
 
-            [_unit, _missile, _lock] spawn {
-                params ["_unit", "_missile", "_lock"];
+            _unit doMove _unitPos;
+            _unit moveTo _unitPos;
 
-                if (_lock > 0) then {
-                    private _hitHandle = _unit addEventHandler [
-                        "HandleDamage",
-                        {
-                            private _unit = _this select 0;
-                            private _damage = _this select 2;
+            {
+                _unit disableAI _x;
+            } forEach ["MOVE", "PATH"];
 
-                            if ((damage _unit) + _damage >= 0.9) then {
-                                [_unit] spawn {
-                                    params ["_unit"];
+            sleep 2;
 
-                                    sleep 1;
-                                    _unit setDamage 1;
-                                };
+            if !(call _valid) exitWith {};
+            private _spawnBehaviour = scriptNull;
+            private _rotationHandle = -1;
+            private _rotationKey = format ["A3C_AT_ROTATION_%1", _token];
+            isNil {
+                if !(call _valid) exitWith {};
+                // Stop on the installing machine before the shared rotation helper
+                // can forward itself and outlive this order on a different owner.
+                _spawnBehaviour = [_unit,_targetPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
+                _unit setVariable [_rotationKey, _spawnBehaviour];
+                _rotationHandle = _unit addEventHandler ["Local", compile format [
+                    "if !(_this select 1) then {private _worker = (_this select 0) getVariable [%1, scriptNull]; if (!scriptDone _worker) then {terminate _worker;};};",
+                    str _rotationKey
+                ]];
+            };
+            private _rotationDeadline = time + 11;
+            waitUntil {sleep 0.1; scriptDone _spawnBehaviour || {!(call _valid)} || {time >= _rotationDeadline}};
+            if (!scriptDone _spawnBehaviour) then {terminate _spawnBehaviour;};
+            if (_rotationHandle >= 0) then {_unit removeEventHandler ["Local", _rotationHandle];};
+            _unit setVariable [_rotationKey, nil];
+            // The helper already owns its rotation tolerance and timeout. Its
+            // completion was sufficient in the validated sequence.
+            if (!(call _valid) || {stance _unit == "PRONE"}) exitWith {};
 
-                                _damage = 0;
-                            };
+            // Explicitly shoulder without consuming ammo or producing a projectile.
+            _unit playAction "SecondaryWeapon";
+            // Retain the tested 2 seconds. Freezing at final AnimDone failed in tests.
+            sleep 2;
+            if !(call _valid) exitWith {};
+            // Without this hold the AI tends to put the launcher away again.
+            _unit disableAI "ANIM";
+            _unit doTarget _target;
+            _unit setVariable ["A3C_PAUSE_PLAN", true, true];
 
-                            _damage
-                        }
-                    ];
+            private _handlerFunc = {
+                params ["_unit", "_weapon"];
 
-                    _unit setVariable ["A3C_Hit_Handler", _hitHandle, true];
-                    _unit setVariable ["A3C_Hit_Value", damage _unit, true];
+                private _missile = _this select 6;
+                private _var = _unit getVariable ["A3C_REMOTE_HANDLE", []];
+                private _context = _unit getVariable ["A3C_AT_SHOT", []];
 
-                    private _launcherAmmo = getArray (
-                        configFile >> "CfgWeapons" >> secondaryWeapon _unit >> "magazines"
-                    );
+                if (count _context != 4 || {count _var != 5}) exitWith {};
+                // Ignore rifle fire, premature events and duplicate launcher events.
+                if (_weapon != (_context select 1) || {!(_context select 2)} || {_context select 3}) exitWith {};
 
-                    waitUntil {sleep 0.01; isNull _missile || {!alive _missile}};
+                _var params ["_handle", "_target", "_target1"];
 
-                    _unit removeEventHandler ["HandleDamage", _hitHandle];
+                if (!local _unit || {_handle != _thisEventHandler}
+                    || {(_target getVariable ["A3C_AT_SHOT_TOKEN", ""]) != (_context select 0)}) exitWith {};
+                _unit removeEventHandler ["Fired", _thisEventHandler];
+                // Local, token-specific evidence survives proxy deletion and a
+                // later order replacing the public context before cleanup runs.
+                _unit setVariable [format ["A3C_AT_SHOT_FIRED_%1", _context select 0], true];
+                _context set [3, true];
+                _unit setVariable ["A3C_AT_SHOT", _context, true];
+                _unit setVariable ["A3C_unit_is_Remote_Firing", false, true];
+
+                private _lock = getNumber (
+                    configFile >> "CfgAmmo" >> (_this select 4) >> "weaponLockSystem"
+                );
+
+                private _policy = "MISSILE";
+                private _aimObject = attachedTo _target;
+                private _attackProfile = getText (
+                    configFile >> "CfgWeapons" >> (_this select 1) >> (_this select 3)
+                    >> "ace_missileguidance_attackProfile"
+                );
+                if (
+                    _attackProfile == "ace_nlaw_overflyTopAttack"
+                    && {{_aimObject isKindOf _x} count ["Tank", "Car", "Air"] > 0}
+                ) then {
+                    _policy = "OVERFLY";
                 };
 
-                {
-                    _unit enableAI _x;
-                } forEach ["MOVE", "PATH", "ANIM"];
+                [_missile, _target, _policy] call A3C_ai_shared_fnc_guideProjectileMissile;
+
+                // Protection and proxy lifetime belong to this projectile. Neither
+                // worker restores unit AI, so an old missile cannot alter a new order.
+                [_unit, _missile, _lock] spawn {
+                    params ["_unit", "_missile", "_lock"];
+
+                    if (_lock > 0) then {
+                        private _hitHandle = _unit addEventHandler [
+                            "HandleDamage",
+                            {
+                                private _unit = _this select 0;
+                                private _damage = _this select 2;
+
+                                if ((damage _unit) + _damage >= 0.9) then {
+                                    [_unit] spawn {
+                                        params ["_unit"];
+
+                                        sleep 1;
+                                        _unit setDamage 1;
+                                    };
+
+                                    _damage = 0;
+                                };
+
+                                _damage
+                            }
+                        ];
+
+                        _unit setVariable ["A3C_Hit_Handler", _hitHandle, true];
+                        _unit setVariable ["A3C_Hit_Value", damage _unit, true];
+
+                        waitUntil {sleep 0.01; isNull _missile || {!alive _missile}};
+
+                        _unit removeEventHandler ["HandleDamage", _hitHandle];
+                    };
+                };
+
+                [_missile, _target, _target1] spawn {
+                    params ["_missile", "_target", "_target1"];
+                    waitUntil {sleep 0.01; isNull _missile || {!alive _missile}};
+                    {if (!isNull _x) then {deleteVehicle _x;};} forEach [_target, _target1];
+                };
             };
 
-            [_missile, _target, _target1] spawn {
-                params ["_missile", "_target", "_target1"];
-                waitUntil {sleep 0.01; isNull _missile || {!alive _missile}};
-                {if (!isNull _x) then {deleteVehicle _x;};} forEach [_target, _target1];
+            // Bind this order's token into the installed code, rather than letting an
+            // old handler read a later order's context after cancellation/reentrancy.
+            _handlerFunc = compile format [
+                "if ((((_this select 0) getVariable ['A3C_AT_SHOT', []]) param [0, '']) != %1) exitWith {}; _this call %2;",
+                str _token, _handlerFunc
+            ];
+            // Synchronous capture must be ready before the only firing invocation.
+            isNil {
+                if !(call _valid) exitWith {};
+                [_unit, _handlerFunc, _target, _target1, _snapObjectStored, false] call _addEHFunc;
+                _atRemoteHandle = +(_unit getVariable ["A3C_REMOTE_HANDLE", []]);
+                _atHandle = _atRemoteHandle param [0, -1];
             };
-        };
 
-        [_unit, _handlerFunc, _target, _target1, _snapObjectStored, false] call _addEHFunc;
+            // Retain the second tested 2-second hold; do not gate on currentWeapon:
+            // successful tests still reported the rifle immediately before firing.
+            sleep 2;
 
-        sleep 2;
-
-        waitUntil {
-            count (_unit getVariable ["A3C_REMOTE_HANDLE", []]) > 0
-        };
-
-        private _vari = _unit getVariable ["A3C_REMOTE_HANDLE", []];
-        _vari params ["_handle", "_targett", "_target1", "_snapObject", "_behaviour"];
-
-        // Keep default-mode preparation; choose the actual mode from the ready launcher.
-        private _fireMode = _primeMode;
-        private _aimObject = attachedTo _target;
-        if ({_aimObject isKindOf _x} count ["Tank", "Car", "Air"] > 0) then {
-            private _weaponCfg = _cfgWeapons >> secondaryWeapon _unit;
+            if !(call _valid) exitWith {};
+            private _vari = _unit getVariable ["A3C_REMOTE_HANDLE", []];
+            if !(_vari isEqualTo _atRemoteHandle) exitWith {};
+            if (_atHandle < 0) exitWith {};
+            private _weaponCfg = _cfgWeapons >> _launcher;
             private _modes = getArray (_weaponCfg >> "modes");
-            private _overflyIndex = _modes findIf {
-                getText (_weaponCfg >> _x >> "ace_missileguidance_attackProfile")
-                == "ace_nlaw_overflyTopAttack"
+            if (_modes isEqualTo [] || {_unit ammo _launcher <= 0}) exitWith {};
+            private _fireMode = _modes select 0;
+            private _aimObject = attachedTo _target;
+            if ({_aimObject isKindOf _x} count ["Tank", "Car", "Air"] > 0) then {
+                private _overflyIndex = _modes findIf {
+                    getText (_weaponCfg >> _x >> "ace_missileguidance_attackProfile")
+                    == "ace_nlaw_overflyTopAttack"
+                };
+                if (_overflyIndex >= 0) then {
+                    _fireMode = _modes select _overflyIndex;
+                };
             };
-            if (_overflyIndex >= 0) then {
-                _fireMode = _modes select _overflyIndex;
+
+            if (_fireMode == "this") then {_fireMode = _launcher;};
+            if (_fireMode != _launcher && {!isClass (_weaponCfg >> _fireMode)}) exitWith {};
+            // Open the capture window and issue the command without a scheduler yield.
+            isNil {
+                if !(call _valid) exitWith {};
+                if !((_unit getVariable ["A3C_REMOTE_HANDLE", []]) isEqualTo _atRemoteHandle) exitWith {};
+                private _context = _unit getVariable ["A3C_AT_SHOT", []];
+                _context set [2, true];
+                _unit setVariable ["A3C_AT_SHOT", _context, true];
+                _unit forceWeaponFire [_launcher, _fireMode];
+            };
+            // Issuing a command is not success. Only our matching Fired event is.
+            private _shotDeadline = time + 10;
+            waitUntil {
+                sleep 0.1;
+                (_unit getVariable ["A3C_AT_SHOT", []]) param [3, false]
+                    || {!(call _valid)} || {time >= _shotDeadline}
             };
         };
+        call _prepare;
 
-        _unit forceWeaponFire [secondaryWeapon _unit, _fireMode];
+        private _fired = false;
+        // Close the capture window atomically before deciding whether proxies
+        // belong to a projectile or to an unsuccessful order.
+        isNil {
+            _fired = _unit getVariable [_firedKey, false];
+            private _context = _unit getVariable ["A3C_AT_SHOT", []];
+            if ((_context param [0, ""]) == _token) then {
+                _context set [2, false];
+                _unit setVariable ["A3C_AT_SHOT", _context, true];
+            };
+            // IDs belong to the installing machine. Never forward this removal
+            // with recovery, and never remove twice after the handler ran.
+            if (!_fired && {_atHandle >= 0}) then {_unit removeEventHandler ["Fired", _atHandle];};
+            _unit setVariable [_firedKey, nil];
+        };
+        if (_fired) then {sleep 1;}; // Short recovery, independent of missile impact.
+        if (!_fired) then {
+            {if (!isNull _x) then {deleteVehicle _x;};} forEach [_target, _target1];
+        };
+
+        private _restore = {
+            params ["_unit", "_token", "_aiState", "_stance", "_unitPos", "_pause", "_destinationSaved", "_stanceChanged", "_savedDestination", "_remoteHandle", "_targetingChanged", "_restoreFunc"];
+            // A spawned/remote worker has no access to the caller's private scope.
+            // Keep explicit arguments for further ownership transfers.
+            private _restoreArgs = +_this;
+            private _ownsOrder = {
+                !isNull _unit
+                && {((_unit getVariable ["A3C_AT_SHOT", []]) param [0, ""]) == _token}
+            };
+            if (isNull _unit) exitWith {
+                A3C_REMFIRE_UNITS_ACTIVE = A3C_REMFIRE_UNITS_ACTIVE - [_unit];
+                publicVariable "A3C_REMFIRE_UNITS_ACTIVE";
+            };
+            if !(call _ownsOrder) exitWith {};
+            if (!local _unit) exitWith {
+                [_restoreArgs, _restoreFunc] remoteExec ["BIS_fnc_spawn", _unit];
+            };
+            // ANIM must be enabled before setUnitPos; disabling it prevented
+            // stance transitions in tests. Previously disabled ANIM never enters prep.
+            isNil {
+                if (!(call _ownsOrder) || {!local _unit}) exitWith {};
+                if (_aiState select 2) then {_unit enableAI "ANIM";};
+            };
+            if (alive _unit && {_destinationSaved} && {_aiState select 0} && {_aiState select 1}
+                && {(_unit getVariable ["A3C_DEST", []]) isEqualTo _savedDestination}) then {
+                // Resume locally: the general helper can queue unguarded movement,
+                // lookAt and AUTO stance writes after this order has released the unit.
+                private _expected = expectedDestination _unit;
+                if (!((_expected param [1, ""]) in ["DoNotPlanFormation", "FORMATION PLANNED"])
+                    && {currentCommand _unit != "STOP"}) then {
+                    if ((_savedDestination select 1) in ["DoNotPlanFormation", "FORMATION PLANNED"]) then {
+                        isNil {
+                            if (!(call _ownsOrder) || {!local _unit}) exitWith {};
+                            if !((_unit getVariable ["A3C_DEST", []]) isEqualTo _savedDestination) exitWith {};
+                            _restoreArgs set [6, false];
+                            _unit doFollow leader group _unit;
+                        };
+                    } else {
+                        private _position = _savedDestination select 0;
+                        private _customFormation = player == leader group _unit
+                            && {missionNamespace getVariable ["A3C_UI_CustomFormation_BOOL_formationActive", false]};
+                        if (_customFormation) then {
+                            isNil {
+                                if (!(call _ownsOrder) || {!local _unit}) exitWith {};
+                                if !((_unit getVariable ["A3C_DEST", []]) isEqualTo _savedDestination) exitWith {};
+                                doStop _unit;
+                            };
+                            sleep 0.2;
+                        };
+                        isNil {
+                            if (!(call _ownsOrder) || {!local _unit}
+                                || {!((_unit getVariable ["A3C_DEST", []]) isEqualTo _savedDestination)}) exitWith {};
+                            private _formationData = _unit getVariable ["A3C_FORM", []];
+                            if (_customFormation && {count _formationData < 2}) exitWith {};
+                            if (_customFormation) then {
+                                _position = player getPos [
+                                    _formationData select 0,
+                                    getDir player + (_formationData select 1)
+                                ];
+                                _unit setVariable ["A3C_FORM_MEMBER", true, false];
+                            };
+                            _restoreArgs set [6, false];
+                            if (_position distance2D [0, 0, 0] > 0) then {
+                                [_unit, _position] call A3C_ai_shared_fnc_doMove;
+                                if (_customFormation && {!isMultiplayer}) then {
+                                    _unit doFSM ["A3C_CORE\fsm\doFormation.fsm", position _unit, _unit];
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+            if !(call _ownsOrder) exitWith {};
+            if (!local _unit) exitWith {
+                [_restoreArgs, _restoreFunc] remoteExec ["BIS_fnc_spawn", _unit];
+            };
+            isNil {
+                if (!(call _ownsOrder) || {!local _unit}) exitWith {};
+                if (_targetingChanged) then {
+                    _unit doTarget objNull;
+                    _unit lookAt objNull;
+                };
+            };
+            if (alive _unit && {_aiState select 2}) then {
+                if (_stance == "PRONE" && {_stanceChanged}) then {
+                    isNil {
+                        if (!(call _ownsOrder) || {!local _unit}) exitWith {};
+                        _unit setUnitPos "DOWN";
+                    };
+                    private _deadline = time + 10;
+                    waitUntil {sleep 0.1; stance _unit == "PRONE" || {!alive _unit} || {!local _unit} || {!(call _ownsOrder)} || {time >= _deadline}};
+                };
+            };
+            if !(call _ownsOrder) exitWith {};
+            if (!local _unit && {!isNull _unit}) exitWith {
+                [_restoreArgs, _restoreFunc] remoteExec ["BIS_fnc_spawn", _unit];
+            };
+            isNil {
+                if !(call _ownsOrder) exitWith {};
+                if (!local _unit) exitWith {
+                    [_restoreArgs, _restoreFunc] remoteExec ["BIS_fnc_spawn", _unit];
+                };
+                // AUTO remains AUTO, even if the unit originally happened to be prone.
+                if (alive _unit && {_aiState select 2}) then {_unit setUnitPos _unitPos;};
+                {
+                    if (_aiState select _forEachIndex) then {_unit enableAI _x;} else {_unit disableAI _x;};
+                } forEach ["MOVE", "PATH", "ANIM", "AUTOTARGET"];
+                _unit setVariable ["A3C_PAUSE_PLAN", _pause, true];
+                _unit setVariable ["A3C_unit_is_Remote_Firing", false, true];
+                if ((_unit getVariable ["A3C_REMOTE_HANDLE", []]) isEqualTo _remoteHandle) then {
+                    _unit setVariable ["A3C_REMOTE_HANDLE", [], true];
+                };
+                _unit setVariable ["A3C_AT_SHOT", [], true];
+                A3C_REMFIRE_UNITS_ACTIVE = A3C_REMFIRE_UNITS_ACTIVE - [_unit];
+                publicVariable "A3C_REMFIRE_UNITS_ACTIVE";
+            };
+        };
+        private _restoreArgs = [_unit, _token, _atAIState, _originalStance, _originalUnitPos, _originalPause, _destinationSaved, _stanceChanged, _savedDestination, _atRemoteHandle, _targetingChanged, _restore];
+        // Also call for a deleted unit so recovery can release its active-list entry.
+        // The worker forwards live nonlocal units to their current owner itself.
+        _restoreArgs call _restore;
     };
 
     case "UGLSHOT": {
@@ -643,7 +900,7 @@ switch (_weaponGroup) do {
     };
 };
 
-if (_weaponGroup in ["UGLSHOT", "ATSHOT"]) then {
+if (_weaponGroup == "UGLSHOT") then {
     // Security: if unit does not fire within 10 sec.
     for "_i" from 1 to 10 do {
         sleep 1;
@@ -672,4 +929,4 @@ if (_weaponGroup in ["UGLSHOT", "ATSHOT"]) then {
     };
 };
 
-_unit enableAI "AUTOTARGET";
+if (_weaponGroup != "ATSHOT") then {_unit enableAI "AUTOTARGET";};
