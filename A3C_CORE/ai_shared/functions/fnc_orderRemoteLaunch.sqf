@@ -554,20 +554,74 @@ switch (_weaponGroup) do {
                 // cannot capture preparation's private variables. Freeze the owner
                 // before firing; never start A3C steering during an ACE flight.
                 if !(_target getVariable ["A3C_AT_SHOT_ACE_GUIDANCE", false]) then {
-                    private _policy = "MISSILE";
-                    private _aimObject = attachedTo _target;
-                    private _attackProfile = getText (
-                        configFile >> "CfgWeapons" >> (_this select 1) >> (_this select 3)
-                        >> "ace_missileguidance_attackProfile"
-                    );
-                    if (
-                        _attackProfile == "ace_nlaw_overflyTopAttack"
-                        && {{_aimObject isKindOf _x} count ["Tank", "Car", "Air"] > 0}
-                    ) then {
-                        _policy = "OVERFLY";
+                    private _nativeAccepted = false;
+                    // Gate on loaded ACE, not its AI setting or the medical-only
+                    // A3C_IsAce3 flag. All ACE-loaded guidance paths stay unchanged.
+                    private _aceLoaded = isClass (configFile >> "CfgPatches" >> "ace_main")
+                        || {isClass (configFile >> "CfgPatches" >> "ace_missileguidance")}
+                        || {!isNil "ace_missileguidance_fnc_onFired"};
+                    if (!_aceLoaded) then {
+                        private _realTarget = attachedTo _target;
+                        private _snapObject = _var select 3;
+                        private _ammo = _this select 4;
+                        private _ammoCfg = configFile >> "CfgAmmo" >> _ammo;
+                        private _sensors = _ammoCfg >> "Components" >> "SensorsManagerComponent" >> "Components";
+                        // Require configured object guidance, not just MissileBase
+                        // ancestry, weaponLockSystem or manualControl. Sensor config
+                        // can supersede legacy irLock; laser/manual-only ammo falls back.
+                        private _objectSensor = (configProperties [_sensors, "isClass _x", true]) findIf {
+                            getText (_x >> "componentType") in [
+                                "IRSensorComponent", "VisualSensorComponent",
+                                "ActiveRadarSensorComponent", "PassiveRadarSensorComponent"
+                            ]
+                        };
+                        private _objectGuidance = if (isClass _sensors) then {
+                            _objectSensor >= 0
+                        } else {getNumber (_ammoCfg >> "irLock") == 1};
+                        private _nativeEligible = !isNull _missile && {alive _missile} && {local _missile}
+                            && {isClass _ammoCfg && {typeOf _missile == _ammo}}
+                            && {toLower getText (_ammoCfg >> "simulation") == "shotmissile"}
+                            && {getNumber (_ammoCfg >> "maneuvrability") > 0}
+                            && {_objectGuidance}
+                            && {!isNull _snapObject && {_realTarget isEqualTo _snapObject}}
+                            && {!isNull _realTarget && {alive _realTarget} && {_realTarget != _unit}}
+                            && {!(_realTarget isKindOf "A3C_Invisible_Man_F")}
+                            && {!(_realTarget isKindOf "A3C_Supression_Target_F")}
+                            && {!(_realTarget isKindOf "LaserTarget")};
+                        private _nativeStatus = "ineligible";
+                        if (_nativeEligible) then {
+                            // One synchronous attempt, with no worker or trajectory writes.
+                            private _assigned = _missile setMissileTarget [_realTarget, true];
+                            _nativeAccepted = _assigned && {!isNull _realTarget}
+                                && {(missileTarget _missile) isEqualTo _realTarget};
+                            _nativeStatus = if (_nativeAccepted) then {"accepted"} else {"rejected"};
+                        };
+                        if (missionNamespace getVariable ["A3C_DEBUG", false]) then {
+                            diag_log format [
+                                "[A3C] ATSHOT %1: native targeting %2; %3 (ammo=%4, target=%5)",
+                                _context select 0, _nativeStatus,
+                                if (_nativeAccepted) then {"engine guidance owns projectile"} else {"A3C fallback used"},
+                                _ammo, _realTarget
+                            ];
+                        };
                     };
 
-                    [_missile, _target, _policy] call A3C_ai_shared_fnc_guideProjectileMissile;
+                    if (!_nativeAccepted) then {
+                        private _policy = "MISSILE";
+                        private _aimObject = attachedTo _target;
+                        private _attackProfile = getText (
+                            configFile >> "CfgWeapons" >> (_this select 1) >> (_this select 3)
+                            >> "ace_missileguidance_attackProfile"
+                        );
+                        if (
+                            _attackProfile == "ace_nlaw_overflyTopAttack"
+                            && {{_aimObject isKindOf _x} count ["Tank", "Car", "Air"] > 0}
+                        ) then {
+                            _policy = "OVERFLY";
+                        };
+
+                        [_missile, _target, _policy] call A3C_ai_shared_fnc_guideProjectileMissile;
+                    };
                 };
 
                 // Protection and proxy lifetime belong to this projectile. Neither
@@ -709,6 +763,66 @@ switch (_weaponGroup) do {
                     };
                     _aceTargetChanged = true;
                     _unit setVariable ["ace_missileguidance_target", _aceTarget, false];
+                };
+                // Native mode selection is predictive only. Fired still validates
+                // the actual projectile and lock, and owns the unchanged fallback.
+                private _aceLoaded = isClass (configFile >> "CfgPatches" >> "ace_main")
+                    || {isClass (configFile >> "CfgPatches" >> "ace_missileguidance")}
+                    || {!isNil "ace_missileguidance_fnc_onFired"};
+                if (!_aceLoaded && {!_aceGuidance}) then {
+                    private _realTarget = attachedTo _target;
+                    private _nativeSnapObject = _atRemoteHandle select 3;
+                    // Mirror Fired's config/target checks without moving its logic:
+                    // no projectile exists yet to check its identity or locality.
+                    private _sensors = _ammoCfg >> "Components" >> "SensorsManagerComponent" >> "Components";
+                    private _objectSensor = (configProperties [_sensors, "isClass _x", true]) findIf {
+                        getText (_x >> "componentType") in [
+                            "IRSensorComponent", "VisualSensorComponent",
+                            "ActiveRadarSensorComponent", "PassiveRadarSensorComponent"
+                        ]
+                    };
+                    private _objectGuidance = if (isClass _sensors) then {
+                        _objectSensor >= 0
+                    } else {getNumber (_ammoCfg >> "irLock") == 1};
+                    private _nativePrefireEligible = (_launcherState param [0, ""]) == _launcher
+                        && {(_launcherState param [4, 0]) > 0}
+                        && {isClass _ammoCfg}
+                        && {toLower getText (_ammoCfg >> "simulation") == "shotmissile"}
+                        && {getNumber (_ammoCfg >> "maneuvrability") > 0}
+                        && {_objectGuidance}
+                        && {!isNull _nativeSnapObject && {_realTarget isEqualTo _nativeSnapObject}}
+                        && {!isNull _realTarget && {alive _realTarget} && {_realTarget != _unit}}
+                        && {!(_realTarget isKindOf "A3C_Invisible_Man_F")}
+                        && {!(_realTarget isKindOf "A3C_Supression_Target_F")}
+                        && {!(_realTarget isKindOf "LaserTarget")};
+                    private _profiles = getArray (_ammoCfg >> "flightProfiles");
+                    private _topDownCfg = _ammoCfg >> "TopDown";
+                    private _topDownMin = if (isNumber (_topDownCfg >> "minDistance")) then {
+                        getNumber (_topDownCfg >> "minDistance")
+                    } else {-1};
+                    private _engagementDistance = if (!isNull _realTarget
+                        && {_realTarget isEqualTo _nativeSnapObject}) then {_unit distance _realTarget} else {-1};
+                    private _automaticApplied = false;
+                    // Only the established Single/default-Direct and named Direct
+                    // pairs are mapped. Additional modes/profiles or ACE profile
+                    // annotations may have special semantics: preserve those choices.
+                    if (_nativePrefireEligible
+                        && {_modes isEqualTo ["Single", "TopDown"] || {_modes isEqualTo ["Direct", "TopDown"]}}
+                        && {_fireMode == (_modes select 0)}
+                        && {isClass (_weaponCfg >> (_modes select 0)) && {isClass (_weaponCfg >> "TopDown")}}
+                        && {getText (_weaponCfg >> (_modes select 0) >> "ace_missileguidance_attackProfile") == ""}
+                        && {getText (_weaponCfg >> "TopDown" >> "ace_missileguidance_attackProfile") == ""}
+                        && {count _profiles == 2 && {"Direct" in _profiles} && {"TopDown" in _profiles}}
+                        && {isClass _topDownCfg && {_topDownMin > 0}}) then {
+                        _automaticApplied = true;
+                        if (_engagementDistance >= _topDownMin + 50) then {_fireMode = _modes select 1;};
+                    };
+                    if (missionNamespace getVariable ["A3C_DEBUG", false]) then {
+                        diag_log format [
+                            "[A3C] ATSHOT %1: mode=%2, distance=%3 m, TopDown.minDistance=%4 m, margin=50 m, automatic=%5, nativePrefireEligible=%6",
+                            _token, _fireMode, _engagementDistance, _topDownMin, _automaticApplied, _nativePrefireEligible
+                        ];
+                    };
                 };
                 _target setVariable ["A3C_AT_SHOT_ACE_GUIDANCE", _aceGuidance];
                 private _context = _unit getVariable ["A3C_AT_SHOT", []];
