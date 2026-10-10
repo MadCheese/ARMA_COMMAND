@@ -1,14 +1,61 @@
 // A3C_ai_shared_fnc_executeTankShot
 // Scheduled, gunner-owner execution. Vehicle ownership may belong to the driver.
-params ["_unit", "_targetPos", ["_snapObject", objNull, [objNull]], ["_dispatches", 0, [0]]];
+params ["_unit", "_targetPos", ["_snapObject", objNull, [objNull]], ["_dispatches", 0, [0]], ["_orderContext", [], [[]]], ["_worker", false]];
+// Legacy/direct callers also register before touching a reservation.
+if (_orderContext isEqualTo []) exitWith {
+    private _commander = if (isRemoteExecuted) then {remoteExecutedOwner} else {clientOwner};
+    private _sequence = 0;
+    isNil {
+        _sequence = 1 + (missionNamespace getVariable ["A3C_TANK_SHOT_SEQUENCE", 0]);
+        missionNamespace setVariable ["A3C_TANK_SHOT_SEQUENCE", _sequence];
+    };
+    private _context = [format ["TANK:%1:%2:%3:%4", _commander, clientOwner, diag_tickTime, _sequence], _commander, format ["%1 / %2", groupId group _unit, name _unit]];
+    ["DISPATCH", [_unit, _targetPos, _snapObject, _context]] call A3C_ai_shared_fnc_manageTankShot;
+};
+private _token = _orderContext select 0;
+if (!_worker) exitWith {
+    // A separate observer detects a stopped/terminated execution script. The
+    // server deadline also survives loss of this entire installing machine.
+    private _args = +_this;
+    _args set [5, true];
+    private _script = _args spawn A3C_ai_shared_fnc_executeTankShot;
+    private _key = format ["A3C_TANK_SHOT_WORKER_%1", _token];
+    _unit setVariable [_key, _script];
+    private _observerDeadline = time + 105;
+    waitUntil {sleep 0.25; scriptDone _script || {time >= _observerDeadline}};
+    if !(_unit getVariable [format ["A3C_TANK_SHOT_DONE_%1", _token], false]) then {
+        ["FINISH", [_token, "FAILED", if (scriptDone _script) then {"UNEXPECTED"} else {"EXECUTION_TIMEOUT"}, true]] call A3C_ai_shared_fnc_manageTankShot;
+        private _payload = _unit getVariable [format ["A3C_TANK_SHOT_RECOVERY_%1", _token], []];
+        if !(_payload isEqualTo []) then {
+            ["INSTALL", _payload, true] call A3C_ai_shared_fnc_recoverTankShot;
+            ["OWNER", _payload] call A3C_ai_shared_fnc_recoverTankShot;
+        };
+    };
+    _unit setVariable [_key, nil];
+    _unit setVariable [format ["A3C_TANK_SHOT_DONE_%1", _token], nil];
+    _unit setVariable [format ["A3C_TANK_SHOT_RECOVERY_%1", _token], nil, true];
+    _unit setVariable [format ["A3C_TANK_SHOT_STOP_%1", _token], nil];
+};
+private _finish = {
+    params ["_outcome", "_reason"];
+    _unit setVariable [format ["A3C_TANK_SHOT_DONE_%1", _token], true];
+    ["FINISH", [_token, _outcome, _reason]] call A3C_ai_shared_fnc_manageTankShot;
+};
 private _debug = missionNamespace getVariable ["A3C_DEBUG", false];
-if (isNull _unit || {!alive _unit}) exitWith {};
+if (time > (_orderContext param [3, time + 100])) exitWith {["FAILED", "DISPATCH_TIMEOUT"] call _finish;};
+if (isNull _unit || {!alive _unit}) exitWith {
+    ["FAILED", "DESTROYED"] call _finish;
+    if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: rejected before claim: invalid/dead gunner %2", _token, _unit];};
+};
 if (!local _unit) exitWith {
     if (_dispatches < 2) then {
-        [[_unit, _targetPos, _snapObject, _dispatches + 1], A3C_ai_shared_fnc_executeTankShot]
+        _unit setVariable [format ["A3C_TANK_SHOT_DONE_%1", _token], true];
+        if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: forwarding before claim: gunner=%2, owner=%3, dispatch=%4", _token, _unit, owner _unit, _dispatches + 1];};
+        [[_unit, _targetPos, _snapObject, _dispatches + 1, _orderContext], A3C_ai_shared_fnc_executeTankShot]
             remoteExec ["BIS_fnc_spawn", _unit];
     } else {
-        if (_debug) then {diag_log "[A3C] TANKSHOT abort: gunner ownership did not stabilize";};
+        ["FAILED", "LOCALITY_CHANGED"] call _finish;
+        if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: rejected before claim: gunner ownership did not stabilize", _token];};
     };
 };
 
@@ -16,17 +63,32 @@ private _tank = vehicle _unit;
 private _turret = _tank unitTurret _unit;
 if (_tank == _unit || {_unit != gunner _tank} || {_turret isEqualTo []}
     || {!(_tank turretLocal _turret)}) exitWith {
-    if (_debug) then {diag_log format ["[A3C] TANKSHOT abort: invalid/nonlocal gunner turret (vehicle=%1, gunner=%2, turret=%3)", _tank, _unit, _turret];};
+    ["FAILED", if (_tank == _unit || {_unit != gunner _tank} || {_turret isEqualTo []}) then {"UNAVAILABLE"} else {"LOCALITY_CHANGED"}] call _finish;
+    if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: rejected before claim: invalid/nonlocal gunner turret (vehicle=%2, gunner=%3, turret=%4)", _token, _tank, _unit, _turret];};
 };
 
-private _token = format ["TANK:%1:%2:%3", clientOwner, diag_tickTime, _unit];
+if (_unit in (A3C_SUPPRESSION_UNITS_SQ + A3C_SUPPRESSION_UNITS_AI)) exitWith {["FAILED", "SUPPRESSING"] call _finish;};
+if (!((_unit getVariable ["A3C_AT_SHOT", []]) isEqualTo [])
+    || {_unit getVariable ["A3C_unit_is_Remote_Firing", false]}) exitWith {["FAILED", "BUSY"] call _finish;};
 private _autoTarget = _unit checkAIFeature "AUTOTARGET";
+private _checkpoint = {
+    params ["_proxy", ["_eventHandle", -1], ["_remote", []]];
+    private _payload = [_unit, _tank, _token, _autoTarget, _proxy, _eventHandle, _remote, clientOwner];
+    _unit setVariable [format ["A3C_TANK_SHOT_RECOVERY_%1", _token], _payload, true];
+    ["CLAIM", [_token, _payload]] call A3C_ai_shared_fnc_manageTankShot;
+};
 private _claimed = false;
+private _claimReason = "LOCALITY_CHANGED";
 isNil {
     if (!local _unit || {!(_tank turretLocal _turret)}) exitWith {};
     if (_unit in A3C_REMFIRE_UNITS_ACTIVE
         || {!((_tank getVariable ["A3C_TANK_SHOT", []]) isEqualTo [])}
-        || {(_unit getVariable ["A3C_TANK_SHOT_TOKEN", ""]) != ""}) exitWith {};
+        || {(_unit getVariable ["A3C_TANK_SHOT_TOKEN", ""]) != ""}) exitWith {
+        _claimReason = "BUSY";
+    };
+    // Save recovery before the first owned-state mutation, without yielding.
+    [objNull] call _checkpoint;
+    if (_unit getVariable [format ["A3C_TANK_SHOT_STOP_%1", _token], false]) exitWith {_claimReason = "EXECUTION_TIMEOUT";};
     _tank setVariable ["A3C_TANK_SHOT", [_token, _unit], true];
     _unit setVariable ["A3C_TANK_SHOT_TOKEN", _token, true];
     [_unit, _token, true] call A3C_ai_shared_fnc_setTankShotActive;
@@ -35,10 +97,17 @@ isNil {
     _unit disableAI "AUTOTARGET";
     _claimed = true;
 };
-if (!_claimed) exitWith {};
+if (!_claimed) exitWith {
+    ["FAILED", _claimReason] call _finish;
+    if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: rejected before claim: %2", _token, _claimReason];};
+};
 A3C_HC_FOCUS_ARTY_POS = ASLToATL _targetPos;
 
-private _tankTarget = "A3C_Supression_Target_F" createVehicle (ASLToATL _targetPos);
+private _tankTarget = objNull;
+isNil {
+    _tankTarget = "A3C_Supression_Target_F" createVehicle (ASLToATL _targetPos);
+    [_tankTarget] call _checkpoint;
+};
 private _proxyPos = +_targetPos;
 _proxyPos set [2, (_proxyPos select 2) - 0.5];
 _tankTarget setPosASL _proxyPos;
@@ -48,12 +117,27 @@ if ({_snapObject isKindOf _x} count ["Tank", "Car"] > 0) then {
     _tankTarget attachTo [_snapObject, [0, 0, 0]];
 };
 _tankTarget enableSimulation false;
+if (_debug) then {
+    diag_log format ["[A3C] TANKSHOT %1: claimed; proxy=%2, designationASL=%3, proxyASL=%4, attachedTo=%5", _token, _tankTarget, _targetPos, getPosASL _tankTarget, attachedTo _tankTarget];
+};
 
 private _handle = -1;
 private _remoteHandle = [];
 private _firedKey = format ["A3C_TANK_SHOT_FIRED_%1", _token];
 private _removedKey = format ["A3C_TANK_SHOT_REMOVED_%1", _token];
-private _result = "aborted before preparation";
+private _result = "UNEXPECTED";
+private _invalidReason = {
+    switch (true) do {
+        case (isNull _unit || {!alive _unit} || {isNull _tank} || {!alive _tank}): {"DESTROYED"};
+        case (!local _unit || {!(_tank turretLocal _turret)}): {"LOCALITY_CHANGED"};
+        case (_unit getVariable [format ["A3C_TANK_SHOT_STOP_%1", _token], false]): {"EXECUTION_TIMEOUT"};
+        case (vehicle _unit != _tank || {_tank turretUnit _turret != _unit} || {_unit != gunner _tank}): {"CREW_CHANGED"};
+        case (!(_unit getVariable ["A3C_unit_is_Remote_Firing", false])
+            || {(_unit getVariable ["A3C_TANK_SHOT_TOKEN", ""]) != _token}
+            || {!((_tank getVariable ["A3C_TANK_SHOT", []]) isEqualTo [_token, _unit])}): {"CANCELLED"};
+        default {"UNEXPECTED"};
+    }
+};
 private _valid = {
     !isNull _unit && {alive _unit} && {!isNull _tank} && {alive _tank}
     && {local _unit} && {_tank turretLocal _turret}
@@ -62,14 +146,11 @@ private _valid = {
     && {(_tank getVariable ["A3C_TANK_SHOT", []]) isEqualTo [_token, _unit]}
     && {(_unit getVariable ["A3C_TANK_SHOT_TOKEN", ""]) == _token}
     && {_unit getVariable ["A3C_unit_is_Remote_Firing", false]}
+    && {!(_unit getVariable [format ["A3C_TANK_SHOT_STOP_%1", _token], false])}
 };
 private _prepare = {
-    _result = "gunner/turret locality, crew, cancellation or ownership changed";
+    _result = "INVALID_STATE";
     if !(call _valid) exitWith {};
-    // Start aiming before inspecting inventory or requesting any physical reload.
-    _unit lookAt _tankTarget;
-    _unit doTarget _tankTarget;
-    private _aimDeadline = time + 10;
     private _isVehicleTarget = !isNull _snapObject
         && {{_snapObject isKindOf _x} count ["LandVehicle", "Air", "Ship"] > 0};
     private _category = if (_isVehicleTarget) then {"AP"} else {"HE"};
@@ -95,8 +176,35 @@ private _prepare = {
     if (_debug) then {
         diag_log format ["[A3C] TANKSHOT %1: category=%2, snap=%3, vehicle=%4, gunner=%5, turret=%6, cannon=%7, automatic=%8", _token, _category, _snapObject, _tank, _unit, _turret, _cannon, _automatic];
     };
-    _result = "no compatible cannon identified safely";
+    _result = "NO_CANNON";
     if (_cannon == "") exitWith {};
+    if !(call _valid) exitWith {_result = "INVALID_STATE";};
+    // Select the validated cannon before the first aim request, including on a
+    // fresh tank whose initially selected weapon may be empty or a coax.
+    if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: initial selected turret state=%2; selecting cannon=%3", _token, weaponState [_tank, _turret], _cannon];};
+    _tank selectWeaponTurret [_cannon, _turret];
+    private _watchObject = if (_isVehicleTarget) then {
+        if (attachedTo _tankTarget == _snapObject) then {_tankTarget} else {_snapObject}
+    } else {objNull};
+    private _watchPosAGL = ASLToAGL _targetPos;
+    private _aimInstructions = 0;
+    private _issueAim = {
+        params ["_phase", ["_log", true]];
+        if !(call _valid) exitWith {false};
+        _unit lookAt _tankTarget;
+        _unit doTarget _tankTarget;
+        // Position orders must not depend on an invisible static proxy being
+        // accepted as a combat target. doWatch also controls gunner turret aim.
+        if (!isNull _watchObject) then {
+            _unit doWatch _watchObject;
+        } else {_unit doWatch _watchPosAGL;};
+        _aimInstructions = _aimInstructions + 1;
+        if (_debug && {_log}) then {
+            diag_log format ["[A3C] TANKSHOT %1: aim instruction %2 (%3), watchObject=%4, watchPosAGL=%5, selected=%6, AUTOTARGET=%7, WEAPONAIM=%8, TARGET=%9", _token, _aimInstructions, _phase, _watchObject, _watchPosAGL, weaponState [_tank, _turret], _unit checkAIFeature "AUTOTARGET", _unit checkAIFeature "WEAPONAIM", _unit checkAIFeature "TARGET"];
+        };
+        true
+    };
+    if !(["cannon selected; first aim"] call _issueAim) exitWith {_result = "INVALID_STATE";};
     private _core = _cannon isKindOf ["CannonCore", configFile >> "CfgWeapons"];
     private _weaponCfg = configFile >> "CfgWeapons" >> _cannon;
     private _compatible = compatibleMagazines _cannon;
@@ -158,10 +266,9 @@ private _prepare = {
     if (_debug) then {
         diag_log format ["[A3C] TANKSHOT %1: stock=[magazine,rounds,type,reason,ammo] %2; initial=%3, preferred=%4, muzzle=%5, reason=%6", _token, _stock, _initial, _preferred, _fireMuzzle, _reason];
     };
-    _result = "preferred shell has no compatible cannon muzzle";
+    _result = "AMMO_MAPPING";
     if (_fireMuzzle == "") exitWith {};
-    if !(call _valid) exitWith {_result = "ownership/cancellation changed before loading";};
-    _tank selectWeaponTurret [_cannon, _turret];
+    if !(call _valid) exitWith {_result = "INVALID_STATE";};
     private _loadRequested = false;
     isNil {
         if !(call _valid) exitWith {};
@@ -172,6 +279,7 @@ private _prepare = {
             _loadRequested = true;
         };
     };
+    if (_loadRequested) then {["magazine reload requested"] call _issueAim;};
     private _state = weaponState [_tank, _turret, _cannon, _fireMuzzle];
     private _modeCfg = if ((_state param [2, ""]) == _cannon) then {_weaponCfg} else {_weaponCfg >> (_state param [2, ""])};
     private _magCfg = configFile >> "CfgMagazines" >> (if (_preferred != "") then {_preferred} else {_initialMag});
@@ -179,6 +287,11 @@ private _prepare = {
         max (getNumber (_magCfg >> "magazineReloadTime")) max (getNumber (_magCfg >> "reloadTime"));
     private _reloadTimeout = ((_reloadTime * 2 + 5) max 15) min 60;
     private _reloadDeadline = time + _reloadTimeout;
+    // Loading may suppress/reset the initial watch instruction. Reserve the
+    // bounded reload budget before the ten-second aim allowance in that case.
+    private _aimDeadline = if (_loadRequested || {(_state param [5, 0]) > 0}
+        || {(_state param [6, 0]) > 0}) then {_reloadDeadline + 10} else {time + 10};
+    private _waitDeadline = _reloadDeadline + 10 + 3;
     private _ready = {
         params ["_state"];
         count _state >= 7 && {(_state select 0) == _cannon}
@@ -193,18 +306,47 @@ private _prepare = {
     };
     private _aimSince = -1;
     private _final = [];
-    private _reloadOutcome = "ready without magazine switch";
+    private _reloadOutcome = if (_loadRequested) then {"waiting for preferred reload"} else {"waiting for loaded shell readiness"};
     private _reloadFinished = false;
-    if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: loadMagazine requested=%2, timeout=%3 s", _token, _loadRequested, _reloadTimeout];};
-    _result = "gunner/turret ownership or cancellation changed while waiting";
-    // The original ten-second aim allowance and three-second settle run alongside
-    // the reload. Recheck the current aim instead of trusting an earlier position.
+    private _reloadAimPending = _loadRequested;
+    private _reloadWasBusy = false;
+    private _nextAimRefresh = time + 2;
+    private _nextAimLog = time;
+    if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: loadMagazine requested=%2, muzzle=%3, state=%4, reloadTimeout=%5 s, aimAllowance=%6 s, waitBound=%7 s", _token, _loadRequested, _fireMuzzle, _state, _reloadTimeout, _aimDeadline - time, _waitDeadline - time];};
+    _result = "INVALID_STATE";
+    // Aim and reload progress together. A subsequently observed reload can use
+    // the same fixed reload budget; watch refreshes never extend the wait bound.
     while {call _valid} do {
-        if (call _aimed) then {
+        _state = weaponState [_tank, _turret, _cannon, _fireMuzzle];
+        if ((_state param [6, -1]) > 0) then {
+            _reloadWasBusy = true;
+            _reloadAimPending = true;
+            _aimDeadline = _reloadDeadline + 10;
+        };
+        if (_reloadAimPending && {(_state param [6, -1]) == 0}
+            && {_reloadWasBusy || {(_state param [3, ""]) == _preferred && {(_state param [4, 0]) > 0}}}) then {
+            ["magazine reload phase completed"] call _issueAim;
+            _reloadAimPending = false;
+            _reloadWasBusy = false;
+            _aimSince = -1;
+            _nextAimRefresh = time + 2;
+        };
+        private _isAimed = call _aimed;
+        if (!_isAimed && {time >= _nextAimRefresh}) then {
+            ["recover lost aim", false] call _issueAim;
+            _nextAimRefresh = time + 2;
+        };
+        if (_isAimed) then {
             if (_aimSince < 0) then {_aimSince = time;};
         } else {_aimSince = -1;};
-        if (_aimSince < 0 && {time >= _aimDeadline}) exitWith {_result = "turret aiming timed out";};
-        _state = weaponState [_tank, _turret, _cannon, _fireMuzzle];
+        if (_debug && {time >= _nextAimLog}) then {
+            diag_log format ["[A3C] TANKSHOT %1: aim wait: aimed=%2, settle=%3 s, state=%4, selected=%5, watchRequests=%6, aimRemaining=%7 s, reloadRemaining=%8 s", _token, _isAimed, if (_aimSince < 0) then {0} else {time - _aimSince}, _state, weaponState [_tank, _turret], _aimInstructions, _aimDeadline - time, _reloadDeadline - time];
+            _nextAimLog = time + 5;
+        };
+        if (_aimSince < 0 && {time >= _aimDeadline}) exitWith {
+            _result = if (!([_state] call _ready) && {(_state param [6, -1]) > 0}) then {"RELOAD_TIMEOUT"} else {"AIM_TIMEOUT"};
+            if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: %2; last state=%3, watchRequests=%4", _token, _result, _state, _aimInstructions];};
+        };
         private _preferredReady = ([_state] call _ready)
             && {_preferred == "" || {(_state select 3) == _preferred}};
         if (_preferredReady) then {
@@ -226,24 +368,38 @@ private _prepare = {
                 _reloadFinished = true;
             };
         };
-        if (time >= _reloadDeadline && {_final isEqualTo []}) exitWith {_result = "reload timeout: no loaded shell fully ready";};
+        if (time >= _reloadDeadline && {_final isEqualTo []}) exitWith {_result = "RELOAD_TIMEOUT";};
         if (_reloadFinished && {!(_final isEqualTo [])} && {_aimSince >= 0} && {time - _aimSince >= 3}) exitWith {};
-        if (time >= _reloadDeadline + 10) exitWith {_result = "aim/reload readiness did not stabilize";};
+        if (time >= _waitDeadline) exitWith {_result = "AIM_TIMEOUT";};
         sleep 0.1;
     };
     if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: reload=%2, candidate=%3", _token, _reloadOutcome, _final];};
-    if (_final isEqualTo [] || {!(call _valid)}) exitWith {};
-    if (_aimSince < 0 || {time - _aimSince < 3} || {!(call _aimed)}) exitWith {};
+    if (_final isEqualTo []) exitWith {
+        if (_result in ["RELOAD_TIMEOUT", "AIM_TIMEOUT"]) then {
+            // Report current availability; inventory can change during preparation.
+            private _available = (magazinesAllTurrets _tank) findIf {
+                _x params ["_magazine", "_path", "_rounds"];
+                _path isEqualTo _turret && {_rounds > 0} && {_magazine in _compatible}
+                    && {([_magazine, _core] call A3C_ai_shared_fnc_classifyTankShell) select 0}
+            };
+            private _loadedUsable = (_state param [4, 0]) > 0
+                && {([_state param [3, ""], _core] call A3C_ai_shared_fnc_classifyTankShell) select 0};
+            if (_available < 0 && {!_loadedUsable}) then {_result = "NO_AMMO";};
+        };
+    };
+    if !(call _valid) exitWith {_result = "INVALID_STATE";};
+    if (_aimSince < 0 || {time - _aimSince < 3} || {!(call _aimed)}) exitWith {_result = "AIM_LOST";};
 
     // Install on the local gunner: remote vehicle Fired handlers can be camera-
     // range limited when the driver owns the vehicle on another machine.
     isNil {
-        if (!(call _valid) || {!(call _aimed)}) exitWith {};
+        if !(call _valid) exitWith {_result = "INVALID_STATE";};
+        if !(call _aimed) exitWith {_result = "AIM_LOST";};
         private _expectedMagazine = _final select 3;
         _final = weaponState [_tank, _turret, _cannon, _final select 1, _final select 2];
-        if !([_final] call _ready) exitWith {_result = "cannon readiness changed before firing";};
-        if ((_final select 3) != _expectedMagazine) exitWith {_result = "validated magazine changed before firing";};
-        if (((weaponState [_tank, _turret, _cannon, _fireMuzzle]) param [6, -1]) != 0) exitWith {_result = "magazine reload still in progress";};
+        if !([_final] call _ready) exitWith {_result = "NOT_READY";};
+        if ((_final select 3) != _expectedMagazine) exitWith {_result = "AMMO_CHANGED";};
+        if (((weaponState [_tank, _turret, _cannon, _fireMuzzle]) param [6, -1]) != 0) exitWith {_result = "RELOAD_TIMEOUT";};
         // BIS_fnc_fire uses UseMagazine for vehicle weapons. Additionally prove
         // that the instance is loaded in this muzzle, rather than choosing a spare
         // of the same class/count. Cross-check its ID/creator against our turret.
@@ -257,9 +413,9 @@ private _prepare = {
             _path isEqualTo _turret && {_mag == (_final select 3)} && {_rounds == (_final select 4)}
             && {_loaded findIf {(_x select 5) == _id && {(_x select 6) == _creator}} >= 0}
         };
-        if (count _instances != 1) exitWith {_result = "no unique loaded magazine instance in cannon turret";};
+        if (count _instances != 1) exitWith {_result = "AMMO_MAPPING";};
         if (_weapons findIf {_x != _cannon && {(_final select 3) in compatibleMagazines _x}} >= 0)
-            exitWith {_result = "loaded magazine also fits another turret weapon; ambiguous firing action";};
+            exitWith {_result = "AMMO_MAPPING";};
         private _instance = _instances select 0;
         _unit setVariable ["A3C_TANK_SHOT_CAPTURE", [_tank, _token, _turret, _cannon, _final select 1, _final select 3, _tankTarget]];
         _handle = _unit addEventHandler ["FiredMan", {
@@ -274,15 +430,17 @@ private _prepare = {
                 || {!((_tank getVariable ["A3C_TANK_SHOT", []]) isEqualTo [_token, _gunner])}) exitWith {};
             private _matching = _weapon == _cannon && {_muzzle == _expectedMuzzle} && {_magazine == _expectedMagazine};
             if (missionNamespace getVariable ["A3C_DEBUG", false]) then {
-                diag_log format ["[A3C] TANKSHOT %1: FIRED weapon=%2, muzzle=%3, mode=%4, magazine=%5, ammo=%6, projectileLocal=%7, matching=%8", _token, _weapon, _muzzle, _mode, _magazine, _ammo, local _projectile, _matching];
+                diag_log format ["[A3C] TANKSHOT %1: FiredMan event weapon=%2, muzzle=%3, mode=%4, magazine=%5, ammo=%6, projectileLocal=%7, matching=%8", _token, _weapon, _muzzle, _mode, _magazine, _ammo, local _projectile, _matching];
             };
             if (!_matching) exitWith {};
             _target setVariable ["A3C_TANK_SHOT_CAPTURE_OPEN", false];
             _gunner removeEventHandler ["FiredMan", _thisEventHandler];
             _gunner setVariable [format ["A3C_TANK_SHOT_REMOVED_%1", _token], true];
             // Receipt survives a close shot deleting its proxy before the wait polls.
-            _gunner setVariable [format ["A3C_TANK_SHOT_FIRED_%1", _token], !isNull _projectile];
-            _target setVariable ["A3C_Remote_Projectile_Captured", !isNull _projectile];
+            _gunner setVariable [format ["A3C_TANK_SHOT_FIRED_%1", _token], !isNull _projectile, true];
+            _target setVariable ["A3C_Remote_Projectile_Captured", !isNull _projectile, true];
+            _target setVariable ["A3C_TANK_SHOT_PROJECTILE", _projectile, true];
+            if (!isNull _projectile) then {["CAPTURED", [_token, _projectile]] call A3C_ai_shared_fnc_manageTankShot;};
             _gunner setVariable ["A3C_unit_is_Remote_Firing", false, true];
             [_projectile, _target, "DIRECT"] call A3C_ai_shared_fnc_guideProjectileMissile;
             [_projectile, _target] spawn {
@@ -291,11 +449,16 @@ private _prepare = {
                 if (!isNull _target) then {deleteVehicle _target;};
             };
         }];
+        private _handlers = missionNamespace getVariable ["A3C_TANK_SHOT_HANDLERS", createHashMap];
+        _handlers set [_token, [_unit, _handle]];
+        missionNamespace setVariable ["A3C_TANK_SHOT_HANDLERS", _handlers];
         _remoteHandle = [_handle, _tankTarget, objNull, _snapObject, behaviour _tank];
         _tank setVariable ["A3C_REMOTE_HANDLE", _remoteHandle, true];
-        _tankTarget setVariable ["A3C_TANK_SHOT_CAPTURE_OPEN", true];
+        _tankTarget setVariable ["A3C_TANK_SHOT_CAPTURE_OPEN", true, true];
+        [_tankTarget, _handle, _remoteHandle] call _checkpoint;
+        if !(call _valid) exitWith {_result = "INVALID_STATE";};
         if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: final=%2, ready=true, aimed=true, UseMagazine instance=%3", _token, _final, _instance];};
-        _result = "firing action issued once; awaiting capture";
+        _result = "NO_PROJECTILE";
         // Execute here on the gunner/turret owner, never queue a fire on driver owner.
         _tank action ["UseMagazine", _tank, _unit, _instance select 4, _instance select 3];
     };
@@ -306,50 +469,18 @@ private _prepare = {
         _unit getVariable [_firedKey, false]
         || {!(call _valid)} || {time >= _captureDeadline}
     };
-    _result = if (_unit getVariable [_firedKey, false]) then {"shot captured"} else {"no matching Fired capture; no retry"};
+    _result = if (_unit getVariable [_firedKey, false]) then {"CONFIRMED_PROJECTILE"} else {"NO_PROJECTILE"};
 };
 call _prepare;
 
-// Event IDs belong to the installing machine, even after gunner locality changes.
+// The server owns completion and retries owner-local restoration independently.
+// Remove local capture immediately, even if this unit has already migrated.
 private _captured = _unit getVariable [_firedKey, false];
-isNil {
-    _tankTarget setVariable ["A3C_TANK_SHOT_CAPTURE_OPEN", false];
-    if (_handle >= 0 && {!(_unit getVariable [_removedKey, false])}) then {
-        _unit removeEventHandler ["FiredMan", _handle];
-    };
-    _unit setVariable ["A3C_TANK_SHOT_CAPTURE", nil];
-    _unit setVariable [_firedKey, nil];
-    _unit setVariable [_removedKey, nil];
-    if (!(_remoteHandle isEqualTo []) && {(_tank getVariable ["A3C_REMOTE_HANDLE", []]) isEqualTo _remoteHandle}) then {
-        _tank setVariable ["A3C_REMOTE_HANDLE", [], true];
-    };
-};
-if (!_captured) then {deleteVehicle _tankTarget;};
-if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: %2; capture closed, restoring order", _token, _result];};
-
-// Only recovery forwards after migration. No reload or firing worker survives it.
-private _restore = {
-    params ["_unit", "_tank", "_token", "_autoTarget", "_restoreFunc"];
-    if (!isNull _unit && {(_unit getVariable ["A3C_TANK_SHOT_TOKEN", ""]) != _token}) exitWith {};
-    if (!isNull _unit && {!local _unit}) exitWith {
-        [_this, _restoreFunc] remoteExec ["BIS_fnc_spawn", _unit];
-    };
-    isNil {
-        if (!isNull _unit && {(_unit getVariable ["A3C_TANK_SHOT_TOKEN", ""]) != _token}) exitWith {};
-        if (!isNull _unit && {!local _unit}) exitWith {
-            [_this, _restoreFunc] remoteExec ["BIS_fnc_spawn", _unit];
-        };
-        if (!isNull _unit) then {
-            _unit doTarget objNull;
-            _unit lookAt objNull;
-            if (_autoTarget) then {_unit enableAI "AUTOTARGET";} else {_unit disableAI "AUTOTARGET";};
-            _unit setVariable ["A3C_unit_is_Remote_Firing", false, true];
-            _unit setVariable ["A3C_TANK_SHOT_TOKEN", nil, true];
-        };
-        if ((_tank getVariable ["A3C_TANK_SHOT", []]) isEqualTo [_token, _unit]) then {
-            _tank setVariable ["A3C_TANK_SHOT", [], true];
-        };
-        [_unit, _token, false] call A3C_ai_shared_fnc_setTankShotActive;
-    };
-};
-[_unit, _tank, _token, _autoTarget, _restore] call _restore;
+private _matchingFired = _unit getVariable [_removedKey, false];
+private _payload = [_unit, _tank, _token, _autoTarget, _tankTarget, _handle, _remoteHandle, clientOwner];
+if (!_captured && {!_matchingFired} && {!(call _valid)}) then {_result = call _invalidReason;};
+if (!_captured && {_result == "INVALID_STATE"}) then {_result = call _invalidReason;};
+if (_debug) then {diag_log format ["[A3C] TANKSHOT %1: completion requested reason=%2; installer cleanup started", _token, _result];};
+["INSTALL", _payload] call A3C_ai_shared_fnc_recoverTankShot;
+[if (_captured) then {"FIRED"} else {if (_result == "CANCELLED") then {"CANCELLED"} else {"FAILED"}},
+    if (_captured) then {"CONFIRMED_PROJECTILE"} else {_result}] call _finish;

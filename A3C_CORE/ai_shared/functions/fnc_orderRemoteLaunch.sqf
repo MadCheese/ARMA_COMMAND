@@ -1,6 +1,18 @@
 // A3C_ai_shared_fnc_orderRemoteLaunch
 
-params ["_unit", "_targetPos", "_weaponGroup", ["_snapObject", A3C_SNAP_OBJECT, [objNull]]];
+params ["_unit", "_targetPos", "_weaponGroup", ["_snapObject", A3C_SNAP_OBJECT, [objNull]], ["_tankOrderContext", [], [[]]]];
+
+// Registered tank orders have their own validation/reporting/recovery lifecycle.
+// Resolve only FIND's tank case here; all other firing paths keep their guards.
+private _tankRequest = _weaponGroup == "TANKSHOT" || {
+    _weaponGroup == "FIND" && {!isNull _unit} && {alive _unit}
+    && {!([_unit] call A3C_main_fnc_unitHasUGL)} && {!([_unit] call A3C_main_fnc_unitHasAT)}
+    && {vehicle _unit isKindOf "Tank"} && {_unit == gunner vehicle _unit}
+    && {getNumber (configOf (vehicle _unit) >> "artilleryScanner") == 0}
+};
+if (_tankRequest) exitWith {
+    [_unit, _targetPos, _snapObject, 0, _tankOrderContext] call A3C_ai_shared_fnc_executeTankShot;
+};
 
 if (!isDedicated && { !alive player }) exitWith {};
 if (isNull _unit || { !alive _unit }) exitWith {};
@@ -70,7 +82,7 @@ if (_weaponGroup == "FIND") then {
 // TANKSHOT owns turret-local selection, readiness, capture and recovery.
 // Pass the explicit order target through; never resample the receiving globals.
 if (_weaponGroup == "TANKSHOT") exitWith {
-    [_unit, _targetPos, _snapObject] call A3C_ai_shared_fnc_executeTankShot;
+    [_unit, _targetPos, _snapObject, 0, _tankOrderContext] call A3C_ai_shared_fnc_executeTankShot;
 };
 
 // The normal caller already dispatches to the owner. Handle a stale locality
