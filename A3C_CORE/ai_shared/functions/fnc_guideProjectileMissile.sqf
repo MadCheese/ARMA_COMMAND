@@ -38,14 +38,21 @@ isNil {
             if (_projectile getVariable ["A3C_Guidance_Released", true]) exitWith {};
             if (isNull _target) exitWith {};
 
-            private _aimObject = attachedTo _target;
-            if (isNull _aimObject) then {
-                _aimObject = _target;
-            };
+            private _fixedAimASL = _projectile getVariable ["A3C_Guidance_FixedAimASL", []];
+            private _targetPosASL = [];
+            if (_fixedAimASL isEqualTypeArray [0, 0, 0]
+                && {{finite _x} count _fixedAimASL == 3}) then {
+                _targetPosASL = +_fixedAimASL;
+            } else {
+                private _aimObject = attachedTo _target;
+                if (isNull _aimObject) then {
+                    _aimObject = _target;
+                };
 
-            private _targetPosASL = aimPos _aimObject;
-            if (_targetPosASL isEqualTo [0, 0, 0]) then {
-                _targetPosASL = getPosASL _aimObject;
+                _targetPosASL = aimPos _aimObject;
+                if (_targetPosASL isEqualTo [0, 0, 0]) then {
+                    _targetPosASL = getPosASL _aimObject;
+                };
             };
             if (_policy == "OVERFLY") then {
                 _targetPosASL = _targetPosASL vectorAdd [0, 0, 3.5];

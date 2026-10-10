@@ -407,6 +407,8 @@ switch (_weaponGroup) do {
         private _target = "A3C_Invisible_Man_F" createVehicleLocal [0, 0, 0];
         private _target1 = _lT createVehicle _targetPos;
         _target setVariable ["A3C_AT_SHOT_TOKEN", _token];
+        // Preserve the designated ASL point even if preparation attaches the proxy.
+        _target setVariable ["A3C_AT_SHOT_AIM_ASL", +_targetPos];
 
         _target enableSimulation false;
         _target setPosASL _targetPos;
@@ -618,6 +620,54 @@ switch (_weaponGroup) do {
                             && {{_aimObject isKindOf _x} count ["Tank", "Car", "Air"] > 0}
                         ) then {
                             _policy = "OVERFLY";
+                        };
+
+                        private _ammo = _this select 4;
+                        private _ammoCfg = configFile >> "CfgAmmo" >> _ammo;
+                        private _sensors = _ammoCfg >> "Components" >> "SensorsManagerComponent" >> "Components";
+                        // Native acquisition failure is not evidence of unguided ammo.
+                        // Only plain shotRocket configurations without any advertised
+                        // control, seeker, flight profile or ACE guidance qualify.
+                        private _unguided = !isNull _missile && {alive _missile} && {local _missile}
+                            && {isClass _ammoCfg && {typeOf _missile == _ammo}}
+                            && {toLower getText (_ammoCfg >> "simulation") == "shotrocket"}
+                            && {([
+                                "maneuvrability", "maxControlRange", "manualControl", "autoSeekTarget",
+                                "weaponLockSystem", "irLock", "laserLock", "nvLock", "artilleryLock", "airLock"
+                            ] findIf {getNumber (_ammoCfg >> _x) != 0}) < 0}
+                            && {(configProperties [_sensors, "isClass _x", true]) isEqualTo []}
+                            && {(getArray (_ammoCfg >> "flightProfiles")) isEqualTo []}
+                            && {getNumber (_ammoCfg >> "ace_missileguidance" >> "enabled") == 0}
+                            && {_attackProfile == ""};
+                        private _fixedAimASL = [];
+                        if (_unguided) then {
+                            _fixedAimASL = +(_target getVariable ["A3C_AT_SHOT_AIM_ASL", []]);
+                            private _snapObject = _var select 3;
+                            // Nearby-object auto-attachment must not turn a position
+                            // order into a vehicle lock. Sample explicit vehicles now.
+                            if (!isNull _snapObject && {_aimObject isEqualTo _snapObject}
+                                && {_snapObject != _unit}
+                                && {{_snapObject isKindOf _x} count ["LandVehicle", "Air", "Ship"] > 0}) then {
+                                _fixedAimASL = aimPos _snapObject;
+                                if (!(_fixedAimASL isEqualTypeArray [0, 0, 0])
+                                    || {{finite _x} count _fixedAimASL != 3}
+                                    || {_fixedAimASL isEqualTo [0, 0, 0]}) then {
+                                    _fixedAimASL = getPosASL _snapObject;
+                                };
+                            };
+                            if (_fixedAimASL isEqualTypeArray [0, 0, 0]
+                                && {{finite _x} count _fixedAimASL == 3}) then {
+                                // Local to this Fired projectile; never rewritten in flight.
+                                _missile setVariable ["A3C_Guidance_FixedAimASL", +_fixedAimASL];
+                            } else {_fixedAimASL = [];};
+                        };
+                        if (missionNamespace getVariable ["A3C_DEBUG", false]) then {
+                            diag_log format [
+                                "[A3C] ATSHOT %1: fallback guidance %2 (ammo=%3, fixedAimASL=%4)",
+                                _context select 0,
+                                if (_fixedAimASL isEqualTo []) then {"TRACKING"} else {"FIXED_POSITION"},
+                                _ammo, _fixedAimASL
+                            ];
                         };
 
                         [_missile, _target, _policy] call A3C_ai_shared_fnc_guideProjectileMissile;
