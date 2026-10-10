@@ -8,6 +8,8 @@ if (isNull _unit || { !alive _unit }) exitWith {};
 if (_unit in A3C_REMFIRE_UNITS_ACTIVE) exitWith {};
 // The replicated list can lag after migration; the unit's token also reserves recovery.
 if !((_unit getVariable ["A3C_AT_SHOT", []]) isEqualTo []) exitWith {};
+// TANKSHOT's server-side list update can lag its per-gunner reservation.
+if ((_unit getVariable ["A3C_TANK_SHOT_TOKEN", ""]) != "") exitWith {};
 
 if (_unit in (A3C_SUPPRESSION_UNITS_SQ + A3C_SUPPRESSION_UNITS_AI)) exitWith {
     systemChat format [
@@ -63,6 +65,12 @@ if (_weaponGroup == "FIND") then {
             "EXIT"
         };
     };
+};
+
+// TANKSHOT owns turret-local selection, readiness, capture and recovery.
+// Pass the explicit order target through; never resample the receiving globals.
+if (_weaponGroup == "TANKSHOT") exitWith {
+    [_unit, _targetPos, _snapObject] call A3C_ai_shared_fnc_executeTankShot;
 };
 
 // The normal caller already dispatches to the owner. Handle a stale locality
@@ -262,105 +270,6 @@ switch (_weaponGroup) do {
         };
 
         ["ARTY"] call A3C_ui_selectionPromptPanel_fnc_openSelectionPromptPanel;
-    };
-
-    case "TANKSHOT": {
-        private _tankTarget = "A3C_Supression_Target_F" createVehicle (ASLToATL _targetPos);
-
-        _targetPos set [2, (_targetPos select 2) - 0.5];
-        _tankTarget setPosASL _targetPos;
-
-        if ({ _snapObjectStored isKindOf _x } count ["TANK", "CAR"] > 0) then {
-            [_tankTarget, _snapObjectStored] remoteExec ["disableCollisionWith", _tankTarget];
-            [_snapObjectStored, _tankTarget] remoteExec ["disableCollisionWith", _snapObjectStored];
-
-            _tankTarget attachTo [_snapObjectStored, [0, 0, 0]];
-        };
-
-        _tankTarget enableSimulation false;
-
-        private _tank = vehicle _unit;
-
-        [_unit, _tankTarget] remoteExec ["lookAt", _unit];
-        [_unit, _tankTarget] remoteExec ["doTarget", _unit];
-
-        private _counter = 0;
-
-        while { alive _tank } do {
-            if (_tank aimedAtTarget [_tankTarget] == 1) exitWith {
-                sleep 3;
-            };
-
-            if ([getPosATL _tankTarget, _unit] call MCSS_fnc_lineOfSightVehicle) exitWith {
-                sleep 3;
-            };
-
-            if (_counter >= 100) exitWith {};
-
-            sleep 0.1;
-            _counter = _counter + 1;
-        };
-
-        if (_counter < 100) then {
-            private _handlerFunc = {
-                private _tank = _this select 0;
-                private _projectile = _this select 6;
-                private _var = _tank getVariable ["A3C_REMOTE_HANDLE", []];
-
-                if (_var isEqualTo []) exitWith {};
-
-                _var params ["_handle", "_target", "_target1", "_snapObject", "_behaviour"];
-
-                _tank removeEventHandler ["Fired", _handle];
-                (gunner _tank) setVariable ["A3C_unit_is_Remote_Firing", false, true];
-                _target setVariable ["A3C_Remote_Projectile_Captured", !isNull _projectile];
-
-                [_projectile, _target, "DIRECT"] call A3C_ai_shared_fnc_guideProjectileMissile;
-                [_projectile, _target] spawn {
-                    params ["_projectile", "_target"];
-                    waitUntil {sleep 0.01; isNull _projectile || {!alive _projectile}};
-                    if (!isNull _target) then {deleteVehicle _target;};
-                };
-            };
-
-            [
-                _tank,
-                _handlerFunc,
-                _tankTarget,
-                objNull,
-                _snapObjectStored,
-                false
-            ] call _addEHFunc;
-
-            private _handlerDeadline = time + 10;
-            waitUntil {
-                count (_tank getVariable ["A3C_REMOTE_HANDLE", []]) > 0
-                || {!alive _tank}
-                || {time >= _handlerDeadline}
-            };
-
-            if (count (_tank getVariable ["A3C_REMOTE_HANDLE", []]) > 0 && {alive _tank}) then {
-                [_tank, ["UseWeapon", _tank, _unit, 0]] remoteExec ["action", _tank];
-            };
-
-            sleep (2 + random 2);
-        };
-
-        sleep 1;
-
-        // Close the capture window before cleaning an unfired shot's proxy.
-        private _tankHandle = _tank getVariable ["A3C_REMOTE_HANDLE", []];
-        if !(_tankHandle isEqualTo []) then {
-            _tank removeEventHandler ["Fired", _tankHandle select 0];
-        };
-        if !(_tankTarget getVariable ["A3C_Remote_Projectile_Captured", false]) then {
-            deleteVehicle _tankTarget;
-        };
-
-        [_unit, objNull] remoteExec ["lookAt", _unit];
-
-        A3C_REMFIRE_UNITS_ACTIVE = A3C_REMFIRE_UNITS_ACTIVE - [_unit];
-        publicVariable "A3C_REMFIRE_UNITS_ACTIVE";
     };
 
     case "ATSHOT": {
