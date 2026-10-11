@@ -32,6 +32,8 @@ A3C_PREP(getGroupDrivenVehicles);
 A3C_PREP(getGroupIconType);
 A3C_PREP(getGroupOperatedVehicles);
 A3C_PREP(getHeliOverwatchCapabilities);
+A3C_PREP(getHeliOverwatchAmmoInfo);
+A3C_PREP(selectHeliOverwatchTarget);
 A3C_PREP(getItemContainer);
 A3C_PREP(getMuzzleSwitchGesture);
 A3C_PREP(getNearCargoLoadObjects);
