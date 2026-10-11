@@ -2,7 +2,6 @@
 
 
 params ["_group"];
-["releaseGroup", _group, "delete waypoints"] call A3C_main_fnc_heliOverwatchLifecycle;
 private _mode = if (count _this > 1) then {_this select 1} else {"ALL"};
 private _waypoints = waypoints _group;
 

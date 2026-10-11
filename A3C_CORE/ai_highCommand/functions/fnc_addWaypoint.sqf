@@ -60,8 +60,7 @@ if (_isFirstWaypoint) then {
 		_waypointIndex = 1;
 
 		[
-			// Preserve explicitly disabled helicopter PATH until its action owns it.
-			[_group, true],
+			[_group],
 			A3C_ai_highCommand_fnc_reInitGroupMovement
 		] remoteExec ["bis_fnc_call", leader _group];
 
