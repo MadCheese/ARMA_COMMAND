@@ -86,6 +86,7 @@ A3C_BLACKLIST_WAYPOINT_EDIT = A3C_BLACKLIST_WAYPOINT_EDIT - [_group, _wpIndex];
 publicVariable "A3C_BLACKLIST_WAYPOINT_EDIT";
 
 deleteWaypoint [_group, _wpIndex];
+["releaseInvalidGroup", _group] call A3C_main_fnc_heliOverwatchLifecycle;
 
 private _leader = leader _group;
 private _leaderVehicle = vehicle _leader;

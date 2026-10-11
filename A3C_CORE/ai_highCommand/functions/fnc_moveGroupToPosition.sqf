@@ -10,13 +10,14 @@ private _input = _this;
 
 
 
-//-- Ensure the base input is an array with exactly 2 elements
+// Optional third argument identifies an Overwatch travel order. A queued order
+// from an obsolete run must not change a newer helicopter's height or movement.
 if (
 	!(_input isEqualType [])
-	|| {count _input != 2}
+	|| {!(count _input in [2,3])}
 ) exitWith {};
 
-_input params ["_group", "_secondaryArgument"];
+_input params ["_group", "_secondaryArgument", ["_owRunID", []]];
 
 if (A3C_Debug) then {
 	(format ["fnc_moveGroupToPosition: %1 (%2) - %3", groupID _group, side _group, _secondaryArgument]) call A3C_Debug_fnc_log;
@@ -77,9 +78,25 @@ if (
 
 //-- Issue orders where the group leader is local
 [
-	[_leader, _group, _movePos],
+	[_leader, _group, _movePos, _owRunID],
 	{
-		params ["_leader", "_group", "_movePos"];
+		params ["_leader", "_group", "_movePos", "_owRunID"];
+		isNil {
+		private _admitted = true;
+		if (_owRunID isNotEqualTo []) then {
+			private _run = _group getVariable ["A3C_OW_Run", createHashMap];
+			_admitted = (_run getOrDefault ["id", []]) isEqualTo _owRunID;
+			if (_admitted) then {
+				private _session = (vehicle _leader) getVariable ["A3C_OW_Session", createHashMap];
+				_admitted = (["reason", _run] call A3C_main_fnc_heliOverwatchLifecycle) == ""
+					&& {count _session > 0} && {(_session get "id") isEqualTo _owRunID}
+					&& {["current", _session] call A3C_main_fnc_heliOverwatchLifecycle}
+					&& {(_session get "phase") in ["TRAVEL","BRAKING"]};
+			};
+		} else {
+			["releaseInvalidGroup", _group] call A3C_main_fnc_heliOverwatchLifecycle;
+		};
+		if (!_admitted) exitWith {};
 
 		//-- NOTE: _groupDrivers includes foot soldiers
 		private _groupDrivers = (units _group) select {_x == driver vehicle _x};
@@ -133,5 +150,6 @@ if (
 		{
 			_x doFollow _leader;
 		} forEach (_groupDrivers - [_leader, _leaderVehicleDriver]);
+		};
 	}
 ] remoteExec ["BIS_fnc_call", _leader];
