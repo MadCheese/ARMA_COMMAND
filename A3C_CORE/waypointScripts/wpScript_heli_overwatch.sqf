@@ -393,6 +393,58 @@ _fnc_tilt = {
 		private _weapon = "";
 		private _weaponAmmo = [];
 		private _updateWeaponAmmo = true;
+		private _capabilities = createHashMap;
+		// Read live stock for classifier-approved gun/muzzle/magazine combinations.
+		// Entries: [weapon, muzzle, magazine, range]; loaded ammunition comes first.
+		private _getAvailableGuns = {
+			params ["_vehicle","_capabilities"];
+			if !(_capabilities getOrDefault ["hasTraversableGun",false]) exitWith {[]};
+			private _turret = _capabilities get "primaryGunnerTurret";
+			private _operator = _vehicle turretUnit _turret;
+			if (isNull _operator || {!alive _operator} || {isPlayer _operator}
+				|| {!local _operator} || {!(_vehicle turretLocal _turret)}
+				|| {!((_vehicle unitTurret _operator) isEqualTo _turret)}) exitWith {[]};
+			private _installed = (_vehicle weaponsTurret _turret) apply {toLower _x};
+			private _qualified = (_capabilities get "gunWeapons") apply {toLower _x};
+			private _stock = magazinesAllTurrets [_vehicle,true];
+			private _loaded = [];
+			private _reserve = [];
+			{
+				private _gun = _x get "weapon";
+				if (toLower _gun in _qualified && {toLower _gun in _installed}) then {
+					private _weaponCfg = configFile >> "CfgWeapons" >> _gun;
+					{
+						private _ammo = _x;
+						private _magazine = _ammo get "magazine";
+						if (_ammo getOrDefault ["gunAmmoQualifies",false] && {
+							_stock findIf {(_x select 1) isEqualTo _turret && {(_x select 2) > 0}
+								&& {toLower (_x select 0) == toLower _magazine}} >= 0
+						}) then {
+							private _muzzleName = _ammo get "muzzle";
+							private _muzzle = if (_muzzleName == "this") then {_gun} else {_muzzleName};
+							private _muzzleCfg = if (_muzzleName == "this") then {_weaponCfg} else {_weaponCfg >> _muzzleName};
+							private _range = getNumber (_muzzleCfg >> "maxRange");
+							{
+								private _modeCfg = if (_x == "this") then {_muzzleCfg} else {_muzzleCfg >> _x};
+								_range = _range max getNumber (_modeCfg >> "maxRange");
+							} forEach getArray (_muzzleCfg >> "modes");
+							// Retain the old search ceiling, while honouring shorter gun ranges.
+							_range = _range min 3000;
+							if (_range > 0) then {
+								private _entry = [_gun,_muzzle,_magazine,_range];
+								private _state = weaponState [_vehicle,_turret,_gun,_muzzle];
+								if (toLower (_state param [3,""]) == toLower _magazine && {(_state param [4,0]) > 0}) then {
+									_loaded pushBackUnique _entry;
+								} else {
+									_reserve pushBackUnique _entry;
+								};
+							};
+						};
+					} forEach (_x get "ammunition");
+				};
+			} forEach (_capabilities get "candidates");
+			_loaded + _reserve
+		};
 		
 		_vehicle setVariable ["A3C_Guided_Projectile",nil,true]; //-- original Fired projectile
 		private _handle = _vehicle addEventHandler
@@ -484,6 +536,7 @@ _fnc_tilt = {
 
 			_entitiesAIR = [];
 			_entitiesGroundAndWater = [];
+			private _missileTargetSelected = false;
 			if (count _weaponAmmo > 0) then {		
 				//-- only check for air entities if unit can target those 
 				if (_canEngageAir) then {
@@ -577,30 +630,10 @@ _fnc_tilt = {
 						};
 						_activeTarget attachTo [_enemyVehicle,_attachArray];
 						_updateWeaponAmmo = true;
-					} else {
-						//-- no targets - search for Infantry
-						_weapon =( weapons _vehicle select 0);
-						_vehicle selectWeapon _weapon;
-						_maxRange = getNumber (configfile >> "CfgWeapons" >> _weapon >> "maxRange");
-						_entitiesMan = ([side _vehicle,3000,"ENEMY",position _vehicle,["MAN"]] call MCSS_fnc_NearEntities); //_maxRange
-						_entitiesMan = [_entitiesMan,[],{getNumber (configfile >> "CfgWeapons" >> secondaryWeapon _x >> "canLock")},"DESCEND"] call BIS_fnc_sortBy; //-- go for AA- and AT-units first
-						if (count _entitiesMan > 0) then {
-							
-							_target = _entitiesMan select 0;
-							//player globalchat str _target;
-							_gunner reveal [_target,4];
-							_gunner doTarget _target;
-							_gunner doFIre _target;
-							_timer = time;
-							while {(time - _timer) < 7} do {
-								if (!alive _target) exitWith {};
-								sleep 1;
-							};
-						};
-						_weapon = ""; //-- to prevent missile fnc from firing
 					};
 				};
 
+				_missileTargetSelected = !isNull _activeTarget;
 				if (_weapon != "" && {!isNull _activeTarget} && {alive _activeTarget}) then {
 					private _orientPos = position _activeTarget;
 					private _rotation = [_vehicle,_orientPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
@@ -695,12 +728,99 @@ _fnc_tilt = {
 						// Only the ground-target branch creates a temporary laser target.
 						if !(_activeTarget isKindOf "AIR") then {deleteVehicle _activeTarget;};
 					};
-					_vehicle selectWeapon (weapons _vehicle select 0);
 				};
 			};
 			if (_doExit) exitWith {};
 
-			if (count _weaponAmmo == 0) exitWith {
+			// Infantry is a fallback independent of missile ammunition availability.
+			if (!_missileTargetSelected) then {
+				_capabilities = [_vehicle] call A3C_main_fnc_getHeliOverwatchCapabilities;
+				private _usableGuns = [_vehicle,_capabilities] call _getAvailableGuns;
+				if (_usableGuns isNotEqualTo []) then {
+					private _gunTurret = _capabilities get "primaryGunnerTurret";
+					private _primaryGunner = _vehicle turretUnit _gunTurret;
+					private _gunRange = 0;
+					{_gunRange = _gunRange max (_x select 3);} forEach _usableGuns;
+					private _entitiesMan = ([side _vehicle,_gunRange,"ENEMY",position _vehicle,["MAN"]] call MCSS_fnc_NearEntities) select {
+						alive _x && {vehicle _x == _x} && {_vehicle distance _x <= _gunRange}
+					};
+					_entitiesMan = [_entitiesMan,[],{getNumber (configfile >> "CfgWeapons" >> secondaryWeapon _x >> "canLock")},"DESCEND"] call BIS_fnc_sortBy; //-- existing infantry ordering
+					if (_entitiesMan isNotEqualTo []) then {
+						private _target = _entitiesMan select 0;
+						private _gunIndex = _usableGuns findIf {
+							_vehicle distance _target <= (_x select 3)
+						};
+
+						if (_gunIndex < 0) exitWith {};
+
+						(_usableGuns select _gunIndex) params [
+							"_gunWeapon",
+							"_gunMuzzle",
+							"_gunMagazine",
+							"_effectiveRange"
+						];
+						
+						_doExit = [_vehicle,_pilot,_waypointPos] call _exitFnc;
+						_doExit = _doExit || {!canMove _vehicle} || {[] call _exitCondition}
+							|| {!((_leaderVic getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)}
+							|| {!((_vehicle getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)};
+						if (!_doExit && {_vehicle turretUnit _gunTurret == _primaryGunner} && {!isPlayer _primaryGunner} && {alive _primaryGunner}
+							&& {local _primaryGunner} && {_vehicle turretLocal _gunTurret}) then {
+							_vehicle selectWeaponTurret [_gunWeapon,_gunTurret,_gunMuzzle];
+							private _state = weaponState [_vehicle,_gunTurret,_gunWeapon,_gunMuzzle];
+							if (((_state param [4,0]) <= 0 || {toLower (_state param [3,""]) != toLower _gunMagazine})
+								&& {(_state param [6,0]) == 0}) then {
+								// One ordinary load request; readiness is checked during the window.
+								_vehicle loadMagazine [_gunTurret,_gunWeapon,_gunMagazine];
+							};
+							_primaryGunner reveal [_target,4];
+							_primaryGunner doTarget _target;
+							_primaryGunner doWatch _target;
+							private _gunTimer = time;
+							private _fireOrdered = false;
+							while {time - _gunTimer < 7} do {
+								_doExit = _doExit || {[_vehicle,_pilot,_waypointPos] call _exitFnc}
+									|| {!canMove _vehicle} || {[] call _exitCondition}
+									|| {!((_leaderVic getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)}
+									|| {!((_vehicle getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)};
+								if (_doExit || {!alive _target} || {vehicle _target != _target}
+									|| {_vehicle distance _target > _effectiveRange}
+									|| {_vehicle turretUnit _gunTurret != _primaryGunner}) exitWith {};
+								_usableGuns = [_vehicle,_capabilities] call _getAvailableGuns;
+								if (_usableGuns isEqualTo []) exitWith {};
+								private _selected = weaponState [_vehicle,_gunTurret];
+								private _selectionChanged = toLower (_vehicle currentWeaponTurret _gunTurret) != toLower _gunWeapon
+									|| {toLower (_selected param [1,""]) != toLower _gunMuzzle};
+								if (_selectionChanged && {_fireOrdered}) exitWith {};
+								if (_selectionChanged) then {
+									_vehicle selectWeaponTurret [_gunWeapon,_gunTurret,_gunMuzzle];
+								};
+								_state = weaponState [_vehicle,_gunTurret];
+								private _loadedGun = _usableGuns findIf {
+									toLower (_x select 0) == toLower _gunWeapon && {toLower (_x select 1) == toLower _gunMuzzle}
+									&& {toLower (_x select 2) == toLower (_state param [3,""])}
+								};
+								if (!_fireOrdered && {_loadedGun >= 0} && {(_state param [4,0]) > 0}
+									&& {toLower (_state param [0,""]) == toLower _gunWeapon}
+									&& {toLower (_state param [1,""]) == toLower _gunMuzzle}
+									&& {(_state param [5,-1]) == 0} && {(_state param [6,-1]) == 0}) then {
+									_primaryGunner doFire _target;
+									_fireOrdered = true;
+								};
+								sleep 0.5;
+							};
+							if (_vehicle turretUnit _gunTurret == _primaryGunner && {alive _primaryGunner} && {!isPlayer _primaryGunner}
+								&& {local _primaryGunner} && {_vehicle turretLocal _gunTurret}) then {
+								_primaryGunner doWatch objNull;
+							};
+						};
+					};
+					// Pace gun fallback, including no-target and failed-selection attempts.
+					sleep 1;
+				};
+			};
+			if (_doExit) exitWith {};
+			if (count _weaponAmmo == 0 && {([_vehicle,_capabilities] call _getAvailableGuns) isEqualTo []}) exitWith {
 				//-- message goes here
 			};
 			sleep 0.1;
