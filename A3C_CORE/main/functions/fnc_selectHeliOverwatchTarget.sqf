@@ -1,10 +1,11 @@
 /*
     Shared discovery, feasibility, threat tiers and hysteresis; no firing commands.
-    missiles: legacy-supported [weapon,targetTypes,rounds,maxRange,minRange].
-    guns: live classifier-approved [weapon,muzzle,magazine,maxRange].
+    missiles: [weapon,targetTypes,rounds,maxRange,minRange,fireSpec].
+    guns: [weapon,muzzle,magazine,maxRange,fireSpec].
+    fireSpec: [weapon,muzzle,magazine,turret,operator,mode,reloadTime,minRange,maxRange].
     state: worker-private HashMap, retained/acquired/priority plus stable object IDs.
     Returns [selected candidate HashMap (empty if none), diagnostic snapshot].
-    Air is discovered for diagnostics but has no executable engagement path in 2A.
+    Only installed, live, locally executable firing options compete for priority.
 */
 params ["_heli", "_direction", "_missiles", "_guns", "_state", "_cache"];
 private _radius = 0;
@@ -20,9 +21,22 @@ private _ids = _state getOrDefault ["ids", []];
 _ids = _ids select {!isNull (_x select 0)};
 private _nextId = _state getOrDefault ["nextId", 0];
 private _selfTargets = [_heli] + crew _heli;
-private _gunner = gunner _heli;
-private _missileOperator = !isNull _gunner && {alive _gunner} && {!isPlayer _gunner}
-    && {local _gunner} && {local _heli} && {_heli turretLocal (_heli unitTurret _gunner)};
+private _stock = magazinesAllTurrets [_heli,true];
+private _executable = {
+    params ["_option"];
+    private _spec = _option select (count _option - 1);
+    _spec params ["_weapon","_muzzle","_magazine","_turret","_operator","_mode"];
+    !isNull _operator && {alive _operator} && {!isPlayer _operator}
+        && {lifeState _operator != "INCAPACITATED"} && {local _operator} && {local _heli}
+        && {_heli turretLocal _turret} && {_heli turretUnit _turret == _operator}
+        && {(_heli unitTurret _operator) isEqualTo _turret}
+        && {toLower _weapon in ((_heli weaponsTurret _turret) apply {toLower _x})}
+        && {_mode != ""} && {_muzzle != ""}
+        && {_stock findIf {(_x select 1) isEqualTo _turret && {(_x select 2) > 0}
+            && {toLower (_x select 0) == toLower _magazine}} >= 0}
+};
+_missiles = _missiles select {[_x] call _executable};
+_guns = _guns select {[_x] call _executable};
 
 // Live threat readiness. Cached weapon/mag config; stock, crew and range are live.
 private _threat = {
@@ -61,8 +75,7 @@ private _threat = {
                         if (_stockHere && {toLower _mag in _compatible || {_pylonMatch}}) then {
                             private _info = [_weapon, _muzzle, _mag, _cache] call A3C_main_fnc_getHeliOverwatchAmmoInfo;
                             private _aa = _info get "aa";
-                            // Armed aircraft must have a real damaging system in range;
-                            // their engagement remains deferred irrespective of this label.
+                            // Enemy threat evidence does not establish our AA compatibility.
                             if (_isAir && {_info get "damaging"}
                                 && {(_info get "simulation") in ["shotbullet", "shotshell", "shotmissile", "shotrocket"]}) then {_aa = 1;};
                             if (_aa > 0) then {
@@ -114,19 +127,35 @@ private _threat = {
     private _method = "";
     private _option = [];
     if (_valid && {_isMan}) then {
-        private _index = _guns findIf {_distance <= (_x select 3)};
+        private _index = _guns findIf {
+            _distance <= (_x select 3) && {_distance >= ((_x select 4) select 7)}
+        };
         if (_index >= 0) then {_method = "GUN"; _option = _guns select _index;};
         if (_method == "") then {_reason = "No usable classified primary-gunner gun in range.";};
     };
-    if (_valid && {!_isMan} && {!_isAir}) then {
+    if (_valid && {!_isMan}) then {
+        private _type = switch (true) do {
+            case (_isAir): {"AIR"};
+            case (_target isKindOf "Tank"): {"TANK"};
+            case (_target isKindOf "Ship"): {"SHIP"};
+            default {"CAR"};
+        };
         private _index = _missiles findIf {
-            !("AIR" in (_x select 1)) && {(_x select 2) > 0}
+            _type in (_x select 1) && {(_x select 2) > 0}
                 && {_distance <= (_x select 3)} && {_distance >= (_x select 4)}
         };
-        if (_index >= 0 && {_missileOperator}) then {_method = "MISSILE"; _option = _missiles select _index;};
-        if (_method == "") then {_reason = "No legacy-supported ground missile in range / local AI gunner.";};
+        if (_index >= 0) then {_method = "MISSILE"; _option = _missiles select _index;};
+        if (_method == "" && {!_isAir}) then {
+            _index = _guns findIf {
+                _distance <= (_x select 3) && {_distance >= ((_x select 4) select 7)}
+            };
+            if (_index >= 0) then {_method = "GUN"; _option = _guns select _index;};
+        };
+        if (_method == "") then {
+            _reason = if (_isAir) then {"No executable compatible AA missile in range."}
+                else {"No executable ground missile or classified primary-gunner gun in range."};
+        };
     };
-    if (_isAir) then {_reason = "AIR execution deferred to 2B; never blocks an executable ground target.";};
     private _assessment = [_target, _distance, _isMan, _isAir] call _threat;
     _assessment params ["_aa", "_evidence"];
     // Attack orders are evidence only for candidates returned by nearEntities.

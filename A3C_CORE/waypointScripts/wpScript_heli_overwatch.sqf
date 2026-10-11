@@ -61,6 +61,8 @@ private _owReleaseSession = {
 	params ["_session","_reason",["_self",scriptNull]];
 	if (_session get "closed") exitWith {};
 	_session set ["closed",true]; // Invalidate first; handover/release is unscheduled.
+	_session set ["fireRequest",createHashMap];
+	_session set ["missileFlight",createHashMap]; // Launched projectiles keep their captured guidance target.
 	private _v = _session get "vehicle";
 	private _p = _session get "pilot";
 	private _owned = ((_v getVariable ["A3C_OW_Session",createHashMap]) getOrDefault ["id",[]])
@@ -228,7 +230,8 @@ isNil {
 			["phase","TRAVEL"],["closed",false],["pathBefore",_path],["fireBefore",_fire],
 			["savedFeatures",_saved],["fireOwned",false],["freezeOwned",false],
 			["worker",scriptNull],["workerStarted",false],["rotation",scriptNull],
-			["rotationSpeedOwned",false],["firedEH",-1],["lasers",[]],["targetOrders",[]]
+			["rotationSpeedOwned",false],["firedEH",-1],["lasers",[]],["targetOrders",[]],
+			["fireRequest",createHashMap],["missileFlight",createHashMap],["lastFire",[]]
 		];
 		(_owRun get "sessions") pushBack _session;
 		_v setVariable ["A3C_OW_Session",_session];
@@ -499,62 +502,99 @@ if (_retriggered || {!(call _owMainCurrent)}) exitWith {
 
 ///////////////  _fncs for CAS
 
-// Keep the legacy lock-system/magazine gate; only live stock/ranges are tightened.
+// Config-only mode cache. Require single-round modes, including their random
+// burst ceiling and ammo multiplier; prefer a nonautomatic mode when available.
+// "this" is the actual muzzle classname when passed to forceWeaponFire.
+private _fireModes = {
+	params ["_weapon","_muzzleName","_cache"];
+	private _key = format ["fireModes:%1:%2",toLower _weapon,toLower _muzzleName];
+	if (_key in _cache) exitWith {_cache get _key};
+	private _weaponCfg = configFile >> "CfgWeapons" >> _weapon;
+	private _cfg = if (_muzzleName == "this") then {_weaponCfg} else {_weaponCfg >> _muzzleName};
+	private _muzzle = if (_muzzleName == "this") then {_weapon} else {_muzzleName};
+	private _modes = getArray (_cfg >> "modes");
+	if (_modes isEqualTo []) then {_modes = ["this"];};
+	private _single = [];
+	private _automatic = [];
+	{
+		private _modeCfg = if (_x == "this") then {_cfg} else {_cfg >> _x};
+		private _burst = if (isNumber (_modeCfg >> "burst")) then {getNumber (_modeCfg >> "burst")} else {1};
+		private _multiplier = if (isNumber (_modeCfg >> "multiplier")) then {getNumber (_modeCfg >> "multiplier")} else {1};
+		private _range = getNumber (_modeCfg >> "maxRange");
+		if (isClass _modeCfg && {_burst == 1} && {_multiplier == 1}
+			&& {getNumber (_modeCfg >> "burstRangeMax") <= 1} && {_range > 0}) then {
+			private _mode = if (_x == "this") then {_muzzle} else {_x};
+			private _entry = [_mode,(getNumber (_modeCfg >> "reloadTime")) max 0.05,
+				getNumber (_modeCfg >> "minRange"),_range];
+			if (getNumber (_modeCfg >> "autoFire") == 0) then {_single pushBack _entry;}
+			else {_automatic pushBack _entry;};
+		};
+	} forEach _modes;
+	private _result = _single + _automatic;
+	_cache set [_key,_result];
+	_result
+};
+
+// Classifier-approved primary-gunner missiles only. AA threat labels are never
+// used to infer friendly compatibility. Live stock includes actual turret/pylon
+// magazines; guidance configuration replaces the old lock-bit-only inference.
 _fnc_vehicleWeaponAmmo = {
-	params ["_vehicle", "_cache"];
-	private _operator = gunner _vehicle;
+	params ["_vehicle","_cache","_capabilities","_fireModes"];
+	private _turret = _capabilities getOrDefault ["primaryGunnerTurret",[]];
+	if (_turret isEqualTo []) exitWith {[]};
+	private _operator = _vehicle turretUnit _turret;
+	private _lease = _operator getVariable ["A3C_OW_FeatureSession",createHashMap];
+	private _session = _vehicle getVariable ["A3C_OW_Session",createHashMap];
 	if (isNull _operator || {!alive _operator} || {isPlayer _operator}
-		|| {!local _operator} || {!local _vehicle}) exitWith {[]};
-	private _turret = _vehicle unitTurret _operator;
-	if !(_vehicle turretLocal _turret) exitWith {[]};
+		|| {lifeState _operator == "INCAPACITATED"} || {!local _operator} || {!local _vehicle}
+		|| {!(_vehicle turretLocal _turret)}
+		|| {!((_vehicle unitTurret _operator) isEqualTo _turret)}
+		|| {(_lease getOrDefault ["vehicle",objNull]) != _vehicle}
+		|| {!((_lease getOrDefault ["id",[]]) isEqualTo (_session getOrDefault ["id",[]]))}) exitWith {[]};
 	private _return = [];
 	private _stock = magazinesAllTurrets [_vehicle,true];
+	private _installed = (_vehicle weaponsTurret _turret) apply {toLower _x};
 	{
-		private _weapon = _x;
-		private _cfg = configFile >> "CfgWeapons" >> _weapon;
-		// Deliberately not expanded to new RHS / other missile systems in 2A.
-		if (getNumber (_cfg >> "weaponLockSystem") in [2,4]) then {
+		private _evidence = _x;
+		private _weapon = _evidence get "weapon";
+		private _mag = _evidence get "magazine";
+		private _muzzleName = _evidence get "muzzle";
+		private _muzzle = if (_muzzleName == "this") then {_weapon} else {_muzzleName};
+		if (_evidence get "qualifies" && {toLower _weapon in _installed}) then {
+			private _rounds = 0;
 			{
-				private _mag = _x;
-				private _rounds = 0;
-				{
-					if ((_x select 1) isEqualTo _turret && {toLower (_x select 0) == toLower _mag}) then {
-						_rounds = _rounds + ((_x select 2) max 0);
-					};
-				} forEach _stock;
-				if (_rounds > 0) then {
-					private _info = [_weapon,"this",_mag,_cache] call A3C_main_fnc_getHeliOverwatchAmmoInfo;
-					private _types = if (_info get "airAmmo") then {["AIR"]} else {["CAR","TANK","SHIP"]};
-					if ((_info get "range") > 0 && {_info get "damaging"}
-						&& {(_info get "simulation") == "shotmissile"}) then {
-						_return pushBack [_weapon,_types,_rounds,_info get "range",_info get "minRange"];
-					};
+				if ((_x select 1) isEqualTo _turret && {toLower (_x select 0) == toLower _mag}) then {
+					_rounds = _rounds + ((_x select 2) max 0);
 				};
-			} forEach getArray (_cfg >> "magazines");
+			} forEach _stock;
+			private _info = [_weapon,_muzzleName,_mag,_cache] call A3C_main_fnc_getHeliOverwatchAmmoInfo;
+			if (_rounds > 0 && {_info get "damaging"} && {(_info get "simulation") == "shotmissile"}) then {
+				private _types = if (_info get "airAmmo") then {["AIR"]} else {["CAR","TANK","SHIP"]};
+				{
+					_x params ["_mode","_reload","_minRange","_range"];
+					private _spec = [_weapon,_muzzle,_mag,+_turret,_operator,_mode,_reload,_minRange,_range];
+					_return pushBackUnique [_weapon,_types,_rounds,_range,_minRange,_spec];
+				} forEach ([_weapon,_muzzleName,_cache] call _fireModes);
+			};
 		};
-	} forEach (_vehicle weaponsTurret _turret);
+	} forEach (_capabilities getOrDefault ["guidedMagazines",[]]);
 	_return
 };
 
 
-_doFire = {
-	params ["_gunner","_vehicle","_activeTarget","_weapon","_enemyVehicle","_session"];
+private _aimTarget = {
+	params ["_gunner","_vehicle","_activeTarget","_session","_turret"];
 	isNil {
 		private _run = _session get "run";
 		if !([_run,_session] call (_run get "valid")) exitWith {};
+		if (!alive _gunner || {isPlayer _gunner} || {!local _gunner}
+			|| {_vehicle turretUnit _turret != _gunner} || {!(_vehicle turretLocal _turret)}) exitWith {};
 		_session set ["targetOrders",[[_gunner,_activeTarget],[_vehicle,_activeTarget]]];
 		_gunner forgetTarget (assignedtarget _gunner);
 		_gunner doTarget objNull;
 		_gunner reveal [_activeTarget,4];
 		_gunner lookAt _activeTarget;
-		private _engagement = (_vehicle getVariable ["A3C_Fire_Engagement", 0]) + 1;
-		_vehicle setVariable ["A3C_Fire_Engagement", _engagement];
-		_vehicle setVariable ["A3C_Guided_Projectile", [_engagement, objNull, 0, []], true];
-		_vehicle setVariable ["A3C_fireComplete",[_weapon,false,_engagement],true];
 		{_x doWatch _activeTarget; _x lookat _activeTarget; _x doTarget _activeTarget} foreach [_gunner,_vehicle];
-		if (_enemyVehicle isKindOf "AIR") then {
-			{_x doFire _activeTarget} foreach [_gunner,_vehicle];
-		};
 	};
 };
 
@@ -616,8 +656,8 @@ isNil {
 	{
 	private _session = _x;
 	private _pilot = _session get "pilot";
-	private _worker = [_pilot,_group,_leaderVic,+_pos,_direction,_overwatch_height,_fnc_vehicleWeaponAmmo,_doFire,_exitCondition,_t,_session] spawn {
-		params ["_pilot","_group","_leaderVic","_waypointPos","_direction","_overwatch_height","_fnc_vehicleWeaponAmmo","_doFire","_exitCondition","_t","_session"];
+	private _worker = [_pilot,_group,_leaderVic,+_pos,_direction,_overwatch_height,_fnc_vehicleWeaponAmmo,_aimTarget,_exitCondition,_t,_session,_fireModes] spawn {
+		params ["_pilot","_group","_leaderVic","_waypointPos","_direction","_overwatch_height","_fnc_vehicleWeaponAmmo","_aimTarget","_exitCondition","_t","_session","_fireModes"];
 		private _run = _session get "run";
 		private _current = {[_run,_session] call (_run get "valid")};
 		private _release = {
@@ -732,16 +772,21 @@ isNil {
 		private _usableGuns = [];
 		private _selectedTarget = createHashMap;
 		private _nextEvaluation = 0;
+		private _blockedUntil = createHashMap; // Failed weapon combinations get a five-second retry delay.
 		// Read live stock for classifier-approved gun/muzzle/magazine combinations.
-		// Entries: [weapon, muzzle, magazine, range]; loaded ammunition comes first.
+		// Entries: [weapon, muzzle, magazine, range, fireSpec]; loaded stock comes first.
 		private _getAvailableGuns = {
 			params ["_vehicle","_capabilities"];
 			if !(_capabilities getOrDefault ["hasTraversableGun",false]) exitWith {[]};
 			private _turret = _capabilities get "primaryGunnerTurret";
 			private _operator = _vehicle turretUnit _turret;
+			private _lease = _operator getVariable ["A3C_OW_FeatureSession",createHashMap];
 			if (isNull _operator || {!alive _operator} || {isPlayer _operator}
-				|| {!local _operator} || {!(_vehicle turretLocal _turret)}
-				|| {!((_vehicle unitTurret _operator) isEqualTo _turret)}) exitWith {[]};
+				|| {lifeState _operator == "INCAPACITATED"} || {!local _operator} || {!local _vehicle}
+				|| {!(_vehicle turretLocal _turret)}
+				|| {!((_vehicle unitTurret _operator) isEqualTo _turret)}
+				|| {(_lease getOrDefault ["vehicle",objNull]) != _vehicle}
+				|| {!((_lease getOrDefault ["id",[]]) isEqualTo (_session get "id"))}) exitWith {[]};
 			private _installed = (_vehicle weaponsTurret _turret) apply {toLower _x};
 			private _qualified = (_capabilities get "gunWeapons") apply {toLower _x};
 			private _stock = magazinesAllTurrets [_vehicle,true];
@@ -759,18 +804,21 @@ isNil {
 						}) then {
 							private _muzzleName = _ammo get "muzzle";
 							private _muzzle = if (_muzzleName == "this") then {_gun} else {_muzzleName};
-							private _info = [_gun,_muzzleName,_magazine,_rankingCache]
-								call A3C_main_fnc_getHeliOverwatchAmmoInfo;
-							// Same configured gun ceiling as 1B-A, cached per combination.
-							private _range = (_info get "range") min 3000;
-							if (_range > 0) then {
-								private _entry = [_gun,_muzzle,_magazine,_range];
-								private _state = weaponState [_vehicle,_turret,_gun,_muzzle];
-								if (toLower (_state param [3,""]) == toLower _magazine && {(_state param [4,0]) > 0}) then {
-									_loaded pushBackUnique _entry;
-								} else {
-									_reserve pushBackUnique _entry;
-								};
+							// Direct gun projectiles only; guided launcher ammunition never
+							// enters the cannon request path, even on a mixed modded weapon.
+							if ((_ammo get "simulation") in ["shotbullet","shotshell"]) then {
+								{
+									_x params ["_mode","_reload","_minRange","_range"];
+									_range = _range min 3000;
+									private _spec = [_gun,_muzzle,_magazine,+_turret,_operator,_mode,_reload,_minRange,_range];
+									private _entry = [_gun,_muzzle,_magazine,_range,_spec];
+									private _state = weaponState [_vehicle,_turret,_gun,_muzzle];
+									if (toLower (_state param [3,""]) == toLower _magazine && {(_state param [4,0]) > 0}) then {
+										_loaded pushBackUnique _entry;
+									} else {
+										_reserve pushBackUnique _entry;
+									};
+								} forEach ([_gun,_muzzleName,_rankingCache] call _fireModes);
 							};
 						};
 					} forEach (_x get "ammunition");
@@ -796,9 +844,13 @@ isNil {
 				_capabilitySignature = _signature;
 			};
 			_gunner = gunner _vehicle;
-			_weaponAmmo = [_vehicle,_rankingCache] call _fnc_vehicleWeaponAmmo;
+			_weaponAmmo = [_vehicle,_rankingCache,_capabilities,_fireModes] call _fnc_vehicleWeaponAmmo;
 			_usableGuns = [_vehicle,_capabilities] call _getAvailableGuns;
-			private _result = [_vehicle,_direction,_weaponAmmo,_usableGuns,_retention,_rankingCache]
+			private _available = {
+				private _spec = _x select (count _x - 1);
+				time >= (_blockedUntil getOrDefault [str (_spec select [0,5]),0])
+			};
+			private _result = [_vehicle,_direction,_weaponAmmo select _available,_usableGuns select _available,_retention,_rankingCache]
 				call A3C_main_fnc_selectHeliOverwatchTarget;
 			_selectedTarget = _result select 0;
 			_nextEvaluation = time + 2;
@@ -814,136 +866,360 @@ isNil {
 
 		isNil {
 			if !(call _current) exitWith {};
-			_vehicle setVariable ["A3C_Guided_Projectile",nil,true]; //-- original Fired projectile
-			private _handle = _vehicle addEventHandler
-			[
-				"FIRED",
-				{
-					params ["_vehicle", "_weapon", "_muzzle", "_mode", "_ammo", "_magazine", "_projectile", "_gunner"];
-					private _session = _vehicle getVariable ["A3C_OW_Session",createHashMap];
-					if (count _session == 0 || {(_session get "firedEH") != _thisEventHandler}) exitWith {};
-					private _run = _session get "run";
-					if !([_run,_session] call (_run get "valid")) exitWith {};
-					private _data = _vehicle getVariable ["A3C_fireComplete",["",false,-1]];
-					_data params ["_assignedWeapon","_isComplete",["_engagement",-1]];
-					private _missiletarget = assignedTarget _gunner;
-					// Guidance already resolves attachedTo laser -> real aim object.
-					// Capture that object at Fired, so cancellation may delete our laser.
-					private _aimObject = attachedTo _missiletarget;
-					if (!isNull _aimObject) then {_missiletarget = _aimObject;};
-					private _shot = _vehicle getVariable ["A3C_Guided_Projectile",[-1,objNull,0,[]]];
+			_vehicle setVariable ["A3C_Guided_Projectile",nil,true];
+			private _handle = _vehicle addEventHandler ["Fired",{
+				params ["_vehicle","_weapon","_muzzle","_mode","_ammo","_magazine","_projectile","_gunner"];
+				private _session = _vehicle getVariable ["A3C_OW_Session",createHashMap];
+				if (count _session == 0 || {(_session get "firedEH") != _thisEventHandler}) exitWith {};
+				private _run = _session get "run";
+				if !([_run,_session] call (_run get "valid")) exitWith {};
+				private _request = _session get "fireRequest";
+				if (count _request == 0 || {!(_request get "pending")}
+					|| {!((_request get "sessionId") isEqualTo (_session get "id"))}) exitWith {};
+				(_request get "spec") params ["_wantWeapon","_wantMuzzle","_wantMag","_turret","_operator","_wantMode"];
+				if (toLower _weapon != toLower _wantWeapon || {toLower _muzzle != toLower _wantMuzzle}
+					|| {toLower _magazine != toLower _wantMag} || {toLower _mode != toLower _wantMode}
+					|| {_gunner != _operator} || {!local _operator} || {isPlayer _operator}
+					|| {_vehicle turretUnit _turret != _operator} || {!(_vehicle turretLocal _turret)}
+					|| {!((_vehicle unitTurret _operator) isEqualTo _turret)}) exitWith {};
+				private _kind = _request get "kind";
+				private _simulation = toLower getText (configFile >> "CfgAmmo" >> _ammo >> "simulation");
+				if ((_kind == "MISSILE" && {_simulation != "shotmissile"})
+					|| {_kind == "GUN" && {!(_simulation in ["shotbullet","shotshell"])}}) exitWith {};
+				// Only a real matching event acknowledges one pending discharge.
+				_request set ["pending",false];
+				_request set ["shots",(_request get "shots") + 1];
+				_request set ["lastShot",time];
+				if (_kind != "MISSILE") exitWith {}; // Guns never touch missile state/guidance.
+				private _engagement = _request get "id";
+				private _missiletarget = _request get "target"; // Captured real object, never a future assignedTarget.
+				_request set ["projectile",_projectile];
+				_request set ["flightDeadline",time + 120];
+				_session set ["missileFlight",_request];
+				_vehicle setVariable ["A3C_Guided_Projectile",[_engagement,_projectile,1,[_projectile]],true];
+				[_vehicle,_weapon,_projectile,_missiletarget,_engagement,_session,_request] spawn {
+					params ["_vehicle","_weapon","_projectile","_missiletarget","_engagement","_session","_request"];
+					sleep 1;
+					isNil {
+						// A launched shot may finish after release/preemption; no firing here.
+						[[_projectile,_missiletarget,"MISSILE"],A3C_ai_shared_fnc_guideProjectileMissile] remoteExec ["bis_fnc_spawn",_vehicle];
+						if (_session get "closed") exitWith {};
+						private _run = _session get "run";
+						if !([_run,_session] call (_run get "valid")) exitWith {};
+						if (((_session get "missileFlight") getOrDefault ["id",-1]) != _engagement) exitWith {};
+						_request set ["handoff",true];
+						private _data = _vehicle getVariable ["A3C_fireComplete",["",false,-1]];
+						if ((_data param [2,-1]) == _engagement) then {
+							_vehicle setVariable ["A3C_fireComplete",[_weapon,true,_engagement],true];
+						};
+					};
+				};
+			}];
+			_session set ["firedEH",_handle];
+		};
 
-					if (_weapon == _assignedWeapon && {_engagement >= 0} && {(_shot select 0) == _engagement}) then {
-						// Track each original shot; delayed workers never overwrite the reference.
-						private _shotIndex = (_shot select 2) + 1;
-						private _projectiles = +(_shot select 3);
-						_projectiles pushBack _projectile;
-						_vehicle setVariable ["A3C_Guided_Projectile",[_engagement,_projectile,_shotIndex,_projectiles],true];
-						[_vehicle,_weapon,_projectile,_missiletarget,_engagement,_shotIndex,_session] spawn {
-							params ["_vehicle","_weapon","_projectile","_missiletarget","_engagement","_shotIndex","_session"];
-							sleep 1;
-							// Preserve owner routing/pacing without completing a newer engagement.
+		// These are worker-local engagement helpers, not another lifecycle monitor.
+		private _combatCurrent = {
+			if (!(call _current) || {[] call _exitCondition}
+				|| {!((_leaderVic getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)}
+				|| {!((_vehicle getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)}) exitWith {
+				_doExit = true; false
+			};
+			private _flight = _session get "missileFlight";
+			if (count _flight > 0) then {
+				private _projectile = _flight get "projectile";
+				if (_flight get "handoff" && {isNull _projectile || {!alive _projectile}}) then {
+					isNil {
+						if !(call _current) exitWith {};
+						_session set ["missileFlight",createHashMap];
+						if (((_vehicle getVariable ["A3C_Guided_Projectile",[-1]]) select 0) == (_flight get "id")) then {
+							_vehicle setVariable ["A3C_Guided_Projectile",nil,true];
+							_vehicle setVariable ["A3C_fireComplete",nil,true];
+						};
+					};
+				} else {
+					// Do not free the launch slot while its projectile is still alive.
+					// An overlong/failed handoff releases the session, never the missile.
+					if (time >= (_flight get "flightDeadline")) then {_doExit = true;};
+				};
+			};
+			!_doExit
+		};
+		private _engagementCurrent = {
+			params ["_target","_method","_spec"];
+			if !(call _combatCurrent) exitWith {false};
+			if (time >= _nextEvaluation) then {call _evaluateTargets;};
+			if (!((_selectedTarget getOrDefault ["target",objNull]) isEqualTo _target)
+				|| {(_selectedTarget getOrDefault ["method",""]) != _method}) exitWith {
+				_preempted = true; false
+			};
+			_spec params ["_weapon","_muzzle","_magazine","_turret","_operator","_mode","_reload","_minRange","_maxRange"];
+			private _distance = _vehicle distance _target;
+			private _lease = _operator getVariable ["A3C_OW_FeatureSession",createHashMap];
+			alive _target && {side _target != civilian} && {(side _target) getFriend (side _vehicle) < 0.6}
+				&& {!(_target isKindOf "Man") || {vehicle _target == _target}}
+				&& {_target isKindOf "Man" || {{alive _x} count crew _target > 0}}
+				&& {_target isKindOf "Man" || {!(lineIntersects [getPosASL _vehicle,getPosASL _target,_vehicle,_target])}}
+				&& {_distance >= _minRange} && {_distance <= _maxRange}
+				&& {alive _operator} && {!isPlayer _operator} && {local _operator}
+				&& {lifeState _operator != "INCAPACITATED"}
+				&& {(_lease getOrDefault ["vehicle",objNull]) == _vehicle}
+				&& {(_lease getOrDefault ["id",[]]) isEqualTo (_session get "id")}
+				&& {_vehicle turretLocal _turret} && {_vehicle turretUnit _turret == _operator}
+				&& {(_vehicle unitTurret _operator) isEqualTo _turret}
+				&& {toLower _weapon in ((_vehicle weaponsTurret _turret) apply {toLower _x})}
+				&& {(magazinesAllTurrets [_vehicle,true]) findIf {
+					(_x select 1) isEqualTo _turret && {(_x select 2) > 0}
+						&& {toLower (_x select 0) == toLower _magazine}
+				} >= 0}
+		};
+		private _clearAim = {
+			isNil {
+				if !(call _current) exitWith {};
+				{
+					_x params ["_actor","_target"];
+					private _lease = _actor getVariable ["A3C_OW_FeatureSession",createHashMap];
+					if (alive _actor && {local _actor} && {!isPlayer _actor}
+						&& {!(_actor == _vehicle && {isPlayer gunner _vehicle})}
+						&& {_actor == _vehicle || {
+							(_lease getOrDefault ["vehicle",objNull]) == _vehicle
+							&& {(_lease getOrDefault ["id",[]]) isEqualTo (_session get "id")}
+						}}
+						&& {(assignedTarget _actor) isEqualTo _target}) then {
+						_actor doTarget objNull;
+						_actor doWatch objNull;
+					};
+				} forEach (_session get "targetOrders");
+				_session set ["targetOrders",[]];
+			};
+		};
+		private _stopRotation = {
+			isNil {
+				if !(call _current) exitWith {};
+				private _rotation = _session get "rotation";
+				if (!scriptDone _rotation) then {
+					terminate _rotation;
+					if (_session get "rotationSpeedOwned") then {_vehicle limitSpeed false;};
+				};
+				_session set ["rotation",scriptNull];
+				_session set ["rotationSpeedOwned",false];
+			};
+		};
+
+		while {call _combatCurrent} do {
+			isNil {if (call _current) then {_pilot setBehaviourStrong "CARELESS";};};
+			call _evaluateTargets;
+			private _method = _selectedTarget getOrDefault ["method",""];
+			private _preempted = false;
+			if (_method != "") then {
+				private _target = _selectedTarget get "target";
+				private _option = _selectedTarget get "option";
+				private _spec = _option select (count _option - 1);
+				_spec params ["_weapon","_muzzle","_magazine","_turret","_operator","_mode","_reload","_minRange","_maxRange"];
+				private _mayEngage = {[_target,_method,_spec] call _engagementCurrent};
+				private _aim = _target;
+				private _laser = objNull;
+				private _request = createHashMap;
+				private _failed = false;
+				// Ground missiles keep the existing owned, surface-attached laser.
+				// AA uses the actual aircraft; it is never wrapped in a ground laser.
+				if (_method == "MISSILE" && {!(_target isKindOf "Air")}) then {
+					isNil {
+						if !(call _mayEngage) exitWith {};
+						private _laserType = if (((side _vehicle) getFriend west) > 0.6) then {"LaserTargetW"} else {"LaserTargetE"};
+						_laser = _laserType createVehicle position _target;
+						_aim = _laser;
+						_session set ["lasers",(_session get "lasers") select {!isNull _x}];
+						(_session get "lasers") pushBack _laser;
+						private _attachArray = [0,0,-1];
+						private _dir = _laser getDir _vehicle;
+						private _dist = sizeOf typeOf _target;
+						private _startPos = _laser getPos [_dist,_dir];
+						_startPos set [2,1];
+						_startPos = ATLtoASL _startPos;
+						private _refPos = [_startPos,_dist,_dir + 180] call BIS_fnc_relPos;
+						private _intersections = lineIntersectsSurfaces [_startPos,_refPos,_laser,objNull,true,1,"GEOM","NONE"];
+						if (_intersections isNotEqualTo []) then {
+							(_intersections select 0) params ["_surface","_normal","_object"];
+							if (_object == _target) then {
+								_laser setPosASL _surface;
+								_attachArray = _target worldToModel (ASLtoATL _surface);
+							};
+						};
+						_laser attachTo [_target,_attachArray];
+					};
+				};
+
+				// A fresh rotation for EVERY missile or eight-round gun engagement.
+				if (call _mayEngage) then {
+					call _clearAim;
+					private _rotation = [position _aim] call _rotate;
+					private _rotationDeadline = time + 12; // Helper's normal timeout remains ten seconds.
+					waitUntil {
+						sleep 0.05;
+						!(call _mayEngage) || {scriptDone _rotation} || {time >= _rotationDeadline}
+					};
+					call _stopRotation;
+					if (call _mayEngage) then {
+						[_operator,_vehicle,_aim,_session,_turret] call _aimTarget;
+						isNil {
+							if (call _mayEngage) then {
+								_vehicle selectWeaponTurret [_weapon,_turret,_muzzle,_mode];
+							};
+						};
+						private _settleUntil = time + 0.5;
+						waitUntil {sleep 0.05; !(call _mayEngage) || {time >= _settleUntil};};
+
+						// Preemption may rotate/aim at B while A remains in flight.
+						// Guns may engage B; another missile cannot launch before A finishes.
+						if (_method == "MISSILE") then {
+							waitUntil {
+								sleep 0.05;
+								!(call _mayEngage) || {count (_session get "missileFlight") == 0}
+							};
+						};
+						if (call _mayEngage) then {
 							isNil {
-								// Already-launched shots may finish; this handoff never fires a weapon.
-								[[_projectile,_missiletarget,"MISSILE"],A3C_ai_shared_fnc_guideProjectileMissile] remoteExec ["bis_fnc_spawn",_vehicle];
-								if (_session get "closed") exitWith {};
-								private _run = _session get "run";
-								if !([_run,_session] call (_run get "valid")) exitWith {};
-								private _current = _vehicle getVariable ["A3C_fireComplete",["",false,-1]];
-								if ((_current param [2,-1]) != _engagement) exitWith {};
-								private _latestShot = _vehicle getVariable ["A3C_Guided_Projectile",[-1,objNull,0,[]]];
-								if ((_latestShot select 0) == _engagement && {(_latestShot select 2) == _shotIndex}) then {
-									_vehicle setVariable ["A3C_fireComplete",[_weapon,true,_engagement],true];
+								if !(call _mayEngage) exitWith {};
+								private _id = (_vehicle getVariable ["A3C_Fire_Engagement",0]) + 1;
+								_vehicle setVariable ["A3C_Fire_Engagement",_id];
+								_request = createHashMapFromArray [
+									["id",_id],["sessionId",_session get "id"],["kind",_method],
+									["target",_target],["spec",_spec],["pending",false],["shots",0],
+									["lastShot",time - _reload],["projectile",objNull],["handoff",false],["flightDeadline",0]
+								];
+								_session set ["fireRequest",_request];
+							};
+							private _limit = if (_method == "MISSILE") then {1} else {8};
+							private _loadRequested = false;
+							private _weaponCfg = configFile >> "CfgWeapons" >> _weapon;
+							private _muzzleCfg = if (_muzzle == _weapon) then {_weaponCfg} else {_weaponCfg >> _muzzle};
+							private _magReload = getNumber (_muzzleCfg >> "magazineReloadTime");
+							private _readyWindow = ((_reload + _magReload + 3) max 3) min 120;
+							private _readyDeadline = time + _readyWindow;
+							private _stopFiring = false;
+							while {call _mayEngage && {!_stopFiring} && {count _request > 0} && {(_request get "shots") < _limit}} do {
+								if (time >= _readyDeadline) exitWith {_failed = true;};
+								private _ready = false;
+								isNil {
+									if !(call _mayEngage) exitWith {};
+									_vehicle selectWeaponTurret [_weapon,_turret,_muzzle,_mode];
+									private _state = weaponState [_vehicle,_turret];
+									private _loaded = toLower (_state param [3,""]) == toLower _magazine && {(_state param [4,0]) > 0};
+									if (_loaded) then {_loadRequested = false;};
+									if (!_loaded && {!_loadRequested} && {(_state param [6,-1]) == 0}) then {
+										_vehicle loadMagazine [_turret,_weapon,_magazine];
+										_loadRequested = true; // One ordinary request per empty/wrong magazine.
+									};
+									_ready = _loaded
+										&& {toLower (_state param [0,""]) == toLower _weapon}
+										&& {toLower (_state param [1,""]) == toLower _muzzle}
+										&& {toLower (_state param [2,""]) == toLower _mode}
+										&& {(_state param [5,-1]) == 0} && {(_state param [6,-1]) == 0}
+										&& {time >= (_request get "lastShot") + _reload};
+								};
+								if (_ready) then {
+									private _before = _request get "shots";
+									private _issued = false;
+									isNil {
+										if !(call _mayEngage) exitWith {};
+										// Recheck engine readiness in the same unscheduled scope
+										// as firing; a scheduled caller may have yielded since selection.
+										private _live = weaponState [_vehicle,_turret];
+										if (toLower (_live param [0,""]) != toLower _weapon
+											|| {toLower (_live param [1,""]) != toLower _muzzle}
+											|| {toLower (_live param [2,""]) != toLower _mode}
+											|| {toLower (_live param [3,""]) != toLower _magazine}
+											|| {(_live param [4,0]) <= 0} || {(_live param [5,-1]) != 0}
+											|| {(_live param [6,-1]) != 0}) exitWith {};
+										if (_method == "MISSILE") then {
+											// Initialize missile state once, immediately before its single command.
+											_vehicle setVariable ["A3C_Guided_Projectile",[_request get "id",objNull,0,[]],true];
+											_vehicle setVariable ["A3C_fireComplete",[_weapon,false,_request get "id"],true];
+										};
+										_request set ["pending",true];
+										private _stockBefore = 0;
+										{
+											if ((_x select 1) isEqualTo _turret && {toLower (_x select 0) == toLower _magazine}) then {
+												_stockBefore = _stockBefore + ((_x select 2) max 0);
+											};
+										} forEach magazinesAllTurrets [_vehicle,true];
+										_request set ["stockBefore",_stockBefore];
+										_issued = true;
+										// Correct local weapon operator, actual muzzle and config-resolved mode.
+										// The command return value is never used as evidence of a shot.
+										_operator forceWeaponFire [_muzzle,_mode];
+									};
+									if (_issued) then {
+										private _ackDeadline = time + 3;
+										waitUntil {
+											sleep 0.05;
+											(_request get "shots") > _before || {!(call _mayEngage)} || {time >= _ackDeadline}
+										};
+										if ((_request get "shots") == _before) then {
+											_stopFiring = true; // Latch in the while condition, not a nested exitWith.
+											_failed = !_preempted && {!_doExit} && {time >= _ackDeadline};
+											if (_method == "MISSILE" && {call _current}) then {
+												private _stockAfter = 0;
+												{
+													if ((_x select 1) isEqualTo _turret && {toLower (_x select 0) == toLower _magazine}) then {
+														_stockAfter = _stockAfter + ((_x select 2) max 0);
+													};
+												} forEach magazinesAllTurrets [_vehicle,true];
+												// Unacknowledged ammo consumption may be an untracked launch.
+												// Release rather than risk launching a duplicate missile.
+												if (_stockAfter < (_request get "stockBefore")) then {_doExit = true; _failed = true;};
+											};
+										};
+										_readyDeadline = time + _readyWindow;
+									} else {
+										sleep 0.05;
+									};
+								} else {
+									sleep 0.05;
+								};
+							};
+							if (_method == "MISSILE" && {(_request getOrDefault ["shots",0]) > 0}) then {
+								// Priority/validity reevaluations continue throughout the flight.
+								// Preemption exits this wait without deleting or retargeting its projectile.
+								waitUntil {
+									sleep 0.05;
+									!(call _mayEngage) || {count (_session get "missileFlight") == 0}
 								};
 							};
 						};
 					};
-				}
-			];
-			_session set ["firedEH",_handle];
+				};
+
+				call _clearAim;
+				// Guidance captures the real target at Fired, so deleting this owned
+				// laser cannot change a launched missile's target on preemption.
+				if (!isNull _laser) then {deleteVehicle _laser;};
+				isNil {
+					if !(call _current) exitWith {};
+					_request set ["pending",false];
+					_session set ["lastFire",[_method,_target,_spec,_request getOrDefault ["shots",0],_preempted,_failed]];
+					if (_vehicle getVariable ["A3C_OW_Debug",false]) then {
+						diag_log format ["A3C OW fire %1: kind/target/spec/actual shots/preempted/failed = %2",
+							_request getOrDefault ["id",-1],_session get "lastFire"];
+					};
+					_session set ["fireRequest",createHashMap];
+					if (_failed) then {_blockedUntil set [str (_spec select [0,5]),time + 5];};
+					if (_method == "MISSILE" && {(_request getOrDefault ["shots",0]) == 0}
+						&& {count (_session get "missileFlight") == 0}) then {
+						_vehicle setVariable ["A3C_fireComplete",nil,true];
+						_vehicle setVariable ["A3C_Guided_Projectile",nil,true];
+					};
+				};
+			};
+			if (_doExit) exitWith {};
+			// Include AA-only helicopters. Cooldown-filtered options do not count
+			// as ammunition depletion; their raw live stock is still present.
+			if (_weaponAmmo isEqualTo [] && {_usableGuns isEqualTo []}) exitWith {};
+			if (!_preempted) then {sleep 1;}; // Bounded burst/failure/idle pacing, then a new decision.
 		};
 
-		while {call _current && {canmove _vehicle}} do {
-			_pilot setBehaviourStrong "CARELESS";
-			private _isCompleted = [] call _exitCondition;
-			_leaderVar = _leaderVic getVariable ["A3C_Freeze_helicopter",[false,0]];
-			if (_isCompleted OR {!(_leaderVar select 0) OR {(_waypointPos distance (waypointPosition [_group, currentWaypoint _group])) > 1}}) exitWith {
-				_doExit = true;
-			};
-			
-
-			call _evaluateTargets;
-			private _method = _selectedTarget getOrDefault ["method",""];
-			private _activeTarget = objNull;
-			private _weapon = "";
-			private _enemyVehicle = objNull;
-			private _preempted = false;
-			if (_method == "MISSILE") then {
-				_enemyVehicle = _selectedTarget get "target";
-				_weapon = (_selectedTarget get "option") select 0;
-				isNil {
-					if !(call _current) exitWith {_doExit = true;};
-					_activeTargetType = if (((side _vehicle) getFriend west) > 0.6) then {"LaserTargetW"} else {"LaserTargetE"};
-					_activeTarget = _activeTargetType createVehicle position _enemyVehicle;
-					_session set ["lasers",(_session get "lasers") select {!isNull _x}];
-					(_session get "lasers") pushBack _activeTarget;
-
-					_attachArray = [0,0,-1];
-					_dir = _activeTarget getDir _vehicle;
-					_dist = sizeOf typeOf _enemyVehicle;
-					_startPos = (_activeTarget getPos [_dist,_dir]);
-					_startPos set [2,1];
-					_startPos = ATLtoASL _startPos;
-					_refPos = [_startPos,_dist, _dir + 180] call BIS_fnc_relPos;
-					private _ins = lineIntersectsSurfaces
-					[
-						_startPos,
-						_refPos,
-						_activeTarget,
-						objNull,
-						true,
-						1,
-						"GEOM",
-						"NONE"
-					];
-					if (count _ins > 0) then {
-						(_ins select 0) params ["_intsPos","_irrellevant","_intsObj"];
-						if (_intsObj == _enemyVehicle) then {
-							_activeTarget setposASL _intsPos;
-							_attachArray = _enemyVehicle worldToModel (ASLtoATL _intsPos);
-						} ;
-					};
-					_activeTarget attachTo [_enemyVehicle,_attachArray];
-				};
-				if (_weapon != "" && {!isNull _activeTarget} && {alive _activeTarget}) then {
-					private _orientPos = position _activeTarget;
-					private _rotation = [_orientPos] call _rotate;
-					waitUntil {
-						sleep 0.05;
-						if (time >= _nextEvaluation) then {call _evaluateTargets;};
-						_preempted = _preempted || {!((_selectedTarget getOrDefault ["target",objNull]) isEqualTo _enemyVehicle)};
-						_doExit = _doExit || {[_vehicle,_pilot,_waypointPos] call _exitFnc}
-							|| {!canMove _vehicle}
-							|| {[] call _exitCondition}
-							|| {!((_leaderVic getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)}
-							|| {!((_vehicle getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)};
-						!(call _current) || {_doExit} || {scriptDone _rotation}
-					};
-					if !(call _current) then {_doExit = true;};
-					if (!_doExit) then {call _evaluateTargets;};
-					_preempted = _preempted || {!((_selectedTarget getOrDefault ["target",objNull]) isEqualTo _enemyVehicle)};
-					if (!_doExit && {!_preempted} && {!isNull _activeTarget} && {alive _activeTarget}) then {
-						_weapon = (_selectedTarget get "option") select 0;
-						[_gunner,_vehicle,_activeTarget,_weapon,_enemyVehicle,_session] call _doFire;
-
-						if (_activeTarget isKindOf "AIR") then {
-							
-							sleep 5;
-						} else {
-						
-							///////////////////////////////////-- DO NOT DELETE THIS !!!!!!!!!!!!!!!!!!	
-							//_aslPos = getPosASL _vehicle;
-							/*
+/*
 							//-- save / generate vectors
 							_initVectorDir = vectorDir _vehicle;
 							_initVectorUp = vectorUp _vehicle;
@@ -969,41 +1245,7 @@ isNil {
 							] call BIS_fnc_addStackedEventHandler;
 							*/
 
-							sleep 1;
-							if (call _current && {[_vehicle,_enemyVehicle,40] call MCSS_fnc_relDirRange}) then {
-								isNil {
-									if !(call _current) exitWith {};
-									_gunner setCombatMode "RED"; //"YELLOW";
-									_gunner fireattarget [_vehicle,_weapon];
-								};
-								//systemchat str [_enemyVehicle,_weapon];
-								//systemchat str ["FIRE", _weapon,typeOf _enemyVehicle, typeOf _activeTarget, assignedTarget _gunner];
-								private _fireDeadline = time + 30;
-								waitUntil {
-									sleep 0.05;
-									!(call _current) || {time >= _fireDeadline}
-										|| {(_vehicle getVariable ["A3C_fireComplete",["",true]]) select 1}
-								};
-								if (!(call _current) || {time >= _fireDeadline}) exitWith {_doExit = true;};
-								sleep 0.5;
-								private _shot = _vehicle getVariable ["A3C_Guided_Projectile",[-1,objNull,0,[]]];
-								private _engagement = _shot select 0;
-								// Keep the owned laser target until every captured original shot completes.
-								private _projectileDeadline = time + 120;
-								waituntil {
-									sleep 0.05;
-									if (!(call _current) || {time >= _projectileDeadline}) exitWith {_doExit = true; true};
-									private _currentShot = _vehicle getVariable ["A3C_Guided_Projectile",_shot];
-									if ((_currentShot select 0) == _engagement) then {_shot = _currentShot;};
-									({!isNull _x && {alive _x}} count (_shot select 3)) == 0
-								};
-								isNil {
-									if (call _current && {((_vehicle getVariable ["A3C_Guided_Projectile",[-1,objNull,0,[]]]) select 0) == _engagement}) then {
-										_vehicle setVariable ["A3C_Guided_Projectile",nil,true];
-									};
-								};
-
-								/*
+/*
 								///////////////////////////////////-- DO NOT DELETE THIS !!!!!!!!!!!!!!!!!!
 								if (count _entitiesGroundAndWater < 2) then {
 									//-- tilt back to upright position
@@ -1017,122 +1259,6 @@ isNil {
 								};
 
 								*/
-
-							};
-
-							
-							deleteVehicle _activeTarget;
-						};
-					} else {
-						// Only the ground-target branch creates a temporary laser target.
-						if !(_activeTarget isKindOf "AIR") then {deleteVehicle _activeTarget;};
-					};
-				};
-			};
-			if (_doExit) exitWith {};
-
-			// The shared selector decides between missiles and on-foot gun targets.
-			if (_method == "GUN") then {
-				if (_usableGuns isNotEqualTo []) then {
-					private _gunTurret = _capabilities get "primaryGunnerTurret";
-					private _primaryGunner = _vehicle turretUnit _gunTurret;
-					private _target = _selectedTarget get "target";
-					if (!isNull _target) then {
-						private _gunIndex = _usableGuns findIf {
-							_vehicle distance _target <= (_x select 3)
-						};
-
-						if (_gunIndex < 0) exitWith {};
-
-						(_usableGuns select _gunIndex) params [
-							"_gunWeapon",
-							"_gunMuzzle",
-							"_gunMagazine",
-							"_effectiveRange"
-						];
-						
-						_doExit = [_vehicle,_pilot,_waypointPos] call _exitFnc;
-						_doExit = _doExit || {!canMove _vehicle} || {[] call _exitCondition}
-							|| {!((_leaderVic getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)}
-							|| {!((_vehicle getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)};
-						if (!_doExit && {_vehicle turretUnit _gunTurret == _primaryGunner} && {!isPlayer _primaryGunner} && {alive _primaryGunner}
-							&& {local _primaryGunner} && {_vehicle turretLocal _gunTurret}) then {
-							private _state = [];
-							isNil {
-								if !(call _current) exitWith {_doExit = true;};
-								_session set ["targetOrders",[[_primaryGunner,_target]]];
-								_vehicle selectWeaponTurret [_gunWeapon,_gunTurret,_gunMuzzle];
-								_state = weaponState [_vehicle,_gunTurret,_gunWeapon,_gunMuzzle];
-								if (((_state param [4,0]) <= 0 || {toLower (_state param [3,""]) != toLower _gunMagazine})
-									&& {(_state param [6,0]) == 0}) then {
-									// One ordinary load request; readiness is checked during the window.
-									_vehicle loadMagazine [_gunTurret,_gunWeapon,_gunMagazine];
-								};
-								_primaryGunner reveal [_target,4];
-								_primaryGunner doTarget _target;
-								_primaryGunner doWatch _target;
-							};
-							private _gunTimer = time;
-							private _fireOrdered = false;
-							while {call _current && {time - _gunTimer < 7}} do {
-								_doExit = _doExit || {[_vehicle,_pilot,_waypointPos] call _exitFnc}
-									|| {!canMove _vehicle} || {[] call _exitCondition}
-									|| {!((_leaderVic getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)}
-									|| {!((_vehicle getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)};
-								if (_doExit || {!alive _target} || {vehicle _target != _target}
-									|| {_vehicle distance _target > _effectiveRange}
-									|| {_vehicle turretUnit _gunTurret != _primaryGunner}) exitWith {};
-								if (time >= _nextEvaluation) then {call _evaluateTargets;};
-								if !((_selectedTarget getOrDefault ["target",objNull]) isEqualTo _target) exitWith {
-									_preempted = true;
-									// Preemption/invalidity ends this window, not a firing failure.
-									if (call _current && {alive _primaryGunner} && {!isPlayer _primaryGunner} && {local _primaryGunner}
-										&& {_vehicle turretLocal _gunTurret} && {_vehicle turretUnit _gunTurret == _primaryGunner}) then {
-										_primaryGunner doTarget objNull;
-									};
-								};
-								_usableGuns = [_vehicle,_capabilities] call _getAvailableGuns;
-								if (_usableGuns isEqualTo []) exitWith {};
-								private _selected = weaponState [_vehicle,_gunTurret];
-								private _selectionChanged = toLower (_vehicle currentWeaponTurret _gunTurret) != toLower _gunWeapon
-									|| {toLower (_selected param [1,""]) != toLower _gunMuzzle};
-								if (_selectionChanged && {_fireOrdered}) exitWith {};
-								isNil {
-									if !(call _current) exitWith {_doExit = true;};
-									if (_selectionChanged) then {
-										_vehicle selectWeaponTurret [_gunWeapon,_gunTurret,_gunMuzzle];
-									};
-									_state = weaponState [_vehicle,_gunTurret];
-									private _loadedGun = _usableGuns findIf {
-										toLower (_x select 0) == toLower _gunWeapon && {toLower (_x select 1) == toLower _gunMuzzle}
-										&& {toLower (_x select 2) == toLower (_state param [3,""])}
-									};
-									if (!_fireOrdered && {_loadedGun >= 0} && {(_state param [4,0]) > 0}
-										&& {toLower (_state param [0,""]) == toLower _gunWeapon}
-										&& {toLower (_state param [1,""]) == toLower _gunMuzzle}
-										&& {(_state param [5,-1]) == 0} && {(_state param [6,-1]) == 0}) then {
-										_primaryGunner doFire _target;
-										_fireOrdered = true;
-									};
-								};
-								sleep 0.5;
-							};
-							if (call _current && {_vehicle turretUnit _gunTurret == _primaryGunner} && {alive _primaryGunner} && {!isPlayer _primaryGunner}
-								&& {local _primaryGunner} && {_vehicle turretLocal _gunTurret}) then {
-								_primaryGunner doWatch objNull;
-							};
-						};
-					};
-					if (!_preempted) then {sleep 1;};
-				};
-			};
-			if (_doExit) exitWith {};
-			if ((_weaponAmmo findIf {!("AIR" in (_x select 1))}) < 0
-				&& {([_vehicle,_capabilities] call _getAvailableGuns) isEqualTo []}) exitWith {
-				//-- message goes here
-			};
-			if (!_preempted) then {sleep 2;}; //-- bounded cadence; preemption proceeds next iteration
-		};
 
 		"worker finished / cancelled" call _release;
 		/////////////////////////////////////////////   CAS BEHAVIOUR COMPLETE
