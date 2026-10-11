@@ -348,14 +348,26 @@ _fnc_tilt = {
 			if (_vehicle distance2D (formationposition _vehicle) < (_precision * 1.3) ) exitWith {}; //
 			if (_doExit) exitWith {};
 		};
-		if (_doExit) exitWith {};
+		if (_doExit || {!canMove _vehicle}) exitWith {};
 
 
 		//-- rotate chopper
 		private _targetPos = _vehicle getPos [1000,_direction];
-		[_vehicle,_targetPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
-		_vehicle domove _targetPos;
+		private _rotation = [_vehicle,_targetPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
 		_vehicle setVariable ["A3C_Freeze_helicopter",[true,_direction],true];
+		// Keep the hover flag active while the outer waypoint watcher waits.
+		waitUntil {
+			sleep 0.05;
+			_doExit = _doExit || {[_vehicle,_pilot,_waypointPos] call _exitFnc}
+				|| {!canMove _vehicle}
+				|| {[] call _exitCondition}
+				|| {!((_vehicle getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)};
+			// Let the helper restore its temporary speed limit even after cancellation.
+			scriptDone _rotation
+		};
+		if (_doExit) exitWith {
+			_vehicle setVariable ["A3C_Freeze_helicopter",[false,0],true];
+		};
 		_heliHeight = (getPosVisual _vehicle) select 2;
 
 		_adjustZvelocity = if (_heliHeight < _overwatch_height) then {7} else {-7};
@@ -372,7 +384,12 @@ _fnc_tilt = {
 		
 		private _weapons = weapons _vehicle;
 		private _gunner = gunner _vehicle;
-		if (isplayer _gunner) exitWith {};
+
+		if (isPlayer _gunner) exitWith {
+			_vehicle enableAI "PATH";
+			_vehicle setVariable ["A3C_Freeze_helicopter", [false, 0], true];
+			_vehicle flyInHeight (_pilot getVariable ["A3C_FLYINHEIGHT", 100]);
+		};
 		private _weapon = "";
 		private _weaponAmmo = [];
 		private _updateWeaponAmmo = true;
@@ -584,23 +601,20 @@ _fnc_tilt = {
 					};
 				};
 
-				if (_weapon != "") then {
-					_orientPos = _vehicle getPos [1000, _vehicle getDIr _activeTarget]; 
-					_orientPos set [2,0];
-					_vehicle domove _orientPos; 
-					//systemchat str _orientPos; playsound "A3C_MenuSound1";
-					_timer = time;
+				if (_weapon != "" && {!isNull _activeTarget} && {alive _activeTarget}) then {
+					private _orientPos = position _activeTarget;
+					private _rotation = [_vehicle,_orientPos] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
 					waitUntil {
-						!canMove _vehicle OR {
-							_relDir = _vehicle getRelDir _activeTarget;
-							_relDir < 90 OR {
-								_relDir < 270 OR {
-									time - _timer > 10
-								}
-							}
-						}
+						sleep 0.05;
+						_doExit = _doExit || {[_vehicle,_pilot,_waypointPos] call _exitFnc}
+							|| {!canMove _vehicle}
+							|| {[] call _exitCondition}
+							|| {!((_leaderVic getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)}
+							|| {!((_vehicle getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)};
+						// Latch cancellation, but wait for the helper's speed-limit cleanup.
+						scriptDone _rotation
 					};
-					if (canMove _vehicle) then {
+					if (!_doExit && {!isNull _activeTarget} && {alive _activeTarget}) then {
 						[_gunner,_vehicle,_activeTarget,_weapon,_enemyVehicle] call _doFire;
 
 						if (_activeTarget isKindOf "AIR") then {
@@ -677,10 +691,15 @@ _fnc_tilt = {
 							
 							deleteVehicle _activeTarget;
 						};
+					} else {
+						// Only the ground-target branch creates a temporary laser target.
+						if !(_activeTarget isKindOf "AIR") then {deleteVehicle _activeTarget;};
 					};
 					_vehicle selectWeapon (weapons _vehicle select 0);
 				};
 			};
+			if (_doExit) exitWith {};
+
 			if (count _weaponAmmo == 0) exitWith {
 				//-- message goes here
 			};
@@ -698,7 +717,6 @@ _fnc_tilt = {
 		_vehicle removeEventHandler ["FIRED",_handle];
 		_vehicle enableAI "PATH";
 		_vehicle flyInHeight (_pilot getVariable ["A3C_FLYINHEIGHT",100]);
-		//=====systemchat format ["exited: %1",_t];
 		/////////////////////////////////////////////   CAS BEHAVIOUR COMPLETE	
 	};
 } foreach _groupPilots;
