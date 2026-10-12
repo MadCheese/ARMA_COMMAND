@@ -1,4 +1,5 @@
-// A3C_ai_shared_fnc_readyLaunchers
+
+ // A3C_ai_shared_fnc_readyLaunchers
 
 params ["_group"];
 
@@ -93,4 +94,39 @@ if (_launcherUnitsNotReady isNotEqualTo []) then {
             _unit selectWeapon _launcherMuzzle;
         };
     } forEach _launcherUnitsNotReady;
+};
+
+/*
+ * CBA disposable launcher initialization.
+ *
+ * Launchers added directly through addWeapon may retain their
+ * placeholder class without being initialized by CBA.
+ *
+ * Convert only affected launchers using CBA's own function.
+ */
+if (
+    !isNil "cba_disposable_NormalLaunchers"
+    && {
+        !isNil "cba_disposable_fnc_changeDisposableLauncherClass"
+    }
+) then {
+    {
+        private _unit = _x;
+
+        if (!isPlayer _unit && {local _unit}) then {
+            private _launcher = secondaryWeapon _unit;
+
+            if (
+                _launcher != ""
+                && {
+                    !isNil {
+                        cba_disposable_NormalLaunchers get _launcher
+                    }
+                }
+            ) then {
+                _unit call
+                    cba_disposable_fnc_changeDisposableLauncherClass;
+            };
+        };
+    } forEach units _group;
 };

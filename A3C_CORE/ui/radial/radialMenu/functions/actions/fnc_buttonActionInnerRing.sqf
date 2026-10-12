@@ -846,7 +846,19 @@ switch (_mode) do {
 					params ["_clickData","_stance"];
 					{
 						{
-							[_x,_stance] remoteExec ["setUnitPos",_x];
+							private _unit = _x;
+							[
+								[_unit],
+								{
+									params ["_unit"];
+									if (secondaryweapon _unit == currentweapon _unit) then {
+										_unit forgetTarget (assignedTarget _unit);
+										_unit doTarget objNull; 	
+									};
+									_unit setunitpos "DOWN";
+								}
+							] remoteExec ["bis_fnc_call", _unit];
+							
 						} foreach (units _x);
 					} foreach A3C_RD_UNITS;
 					player groupRadio "SentUnitPosDown";

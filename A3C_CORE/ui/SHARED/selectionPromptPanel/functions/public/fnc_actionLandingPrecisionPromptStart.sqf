@@ -161,6 +161,35 @@ ctrlSetFocus _listBox;
 
 lbClear _listBox;
 
+private _landingTypes = [
+    "COMBAT LANDING"
+];
+
+private _selectedGroups = A3C_SELECTED_HC_GROUPS_SETTINGS;
+
+private _canTransportUnload =
+    _selectedGroups isNotEqualTo []
+    && {
+        _selectedGroups findIf {
+            private _vehicle = vehicle leader _x;
+
+            !(_vehicle isKindOf "AIR")
+            || {
+                count fullCrew [
+                    _vehicle,
+                    "cargo",
+                    true
+                ] == 0
+            }
+        } < 0
+    };
+
+if (_canTransportUnload) then {
+    _landingTypes pushBack "TRANSPORT UNLOAD";
+};
+
+_landingTypes pushBack "FULL LANDING";
+
 {
-	[_listBox, _x] call A3C_ui_shared_fnc_addLbEntry;
-} forEach ["COMBAT LANDING", "TRANSPORT UNLOAD", "FULL LANDING"];
+    [_listBox, _x] call A3C_ui_shared_fnc_addLbEntry;
+} forEach _landingTypes;

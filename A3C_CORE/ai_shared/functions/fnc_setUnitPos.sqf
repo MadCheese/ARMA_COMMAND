@@ -30,6 +30,14 @@ if (_radioMessage != "") then {
 	//-- spawn unitpos to add random delay to each unit (anti robot feel)
 	[_x,_unitPos] spawn {
 		params ["_unit","_unitPos"];
+		if (
+			_unitPos == "DOWN"
+			&& {secondaryweapon _unit == currentweapon _unit}
+		) then {
+			_unit forgetTarget (assignedTarget _unit);
+			_unit doTarget objNull; 
+			_unit setunitpos "DOWN";
+		};
 		sleep (random 1.5);
 		_unit setunitPos _unitPos;
 	};
