@@ -46,7 +46,15 @@ _slingEvents = _slingEvents select {
 					if (!isPlayer _x && {alive _x} && {isNull objectParent _x}) then {
 						private _binocular = binocular _x;
 
-						if (_binocular != "" && {currentWeapon _x == _binocular}) then {
+						if (
+							_binocular != ""
+							&& {currentWeapon _x == _binocular}
+							&& {
+								primaryWeapon _x != ""
+								|| {handgunWeapon _x != ""}
+								|| {secondaryWeapon _x != ""}
+							}
+						) then {
 							[_x] remoteExecCall [
 								"A3C_ai_shared_fnc_restoreWeaponFromBinoculars",
 								_x
