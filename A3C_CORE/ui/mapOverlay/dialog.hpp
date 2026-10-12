@@ -1333,6 +1333,7 @@ class A3C_DSP_MapOverlay
 				
 				class MAP_HCGP_LISTBOX_COMBATMODE: A3C_LISTBOX
 				{
+					
 					idc = IDC_MAP_HCGP_LISTBOX_COMBATMODE; //800702;
 					style = ST_LEFT + LB_TEXTURES; // Listbox style, not a control type.
 					x = GRIDX( 4 ); 
@@ -1346,6 +1347,27 @@ class A3C_DSP_MapOverlay
 
 				class MAP_HCGP_LISTBOX_FORMATION: A3C_LISTBOX
 				{
+					class ListScrollBar
+					{
+						color[] = {1,1,1,0.85};
+						colorActive[] = {1,1,1,1};
+						colorDisabled[] = {1,1,1,0.3};
+
+						thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+						arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+						arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+						border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+
+						shadow = 0;
+						scrollSpeed = 0.06;
+						width = 0;
+						height = 0;
+
+						autoScrollEnabled = 1;
+						autoScrollSpeed = -1;
+						autoScrollDelay = 5;
+						autoScrollRewind = 0;
+					};
 					idc = IDC_MAP_HCGP_LISTBOX_FORMATION; //800703;
 					style = ST_LEFT + LB_TEXTURES; // Listbox style, not a control type.
 					x = GRIDX( 0 ); 
@@ -1367,6 +1389,58 @@ class A3C_DSP_MapOverlay
 					sizeEx = EXPAND_AND_QUOTE(A3C_HCGP_LIST_FONT);
 					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(IDC_MAP_HCGP_LISTBOX_TEAMCOLOR,(_this select 1),IDD_MAP_OVERLAY)] call A3C_ui_mapOverlay_fnc_HCGP_onLbChange);
 					colorBackground[] = {0.6,0.6,0.6,0.7};
+				};
+
+				class MAP_HCGP_BEHAVIOUR_FRAME: A3C_RscFrame
+				{
+					idc = -1;
+					colorText[] = {0,0,0,0.8};
+					colorBackground[] = {0,0,0,0};
+					shadow = 0;
+
+					x = GRIDX(0);
+					y = GRIDY(2);
+					w = GRIDX(4);
+					h = A3C_HCGP_LIST_H;
+				};
+
+				class MAP_HCGP_COMBATMODE_FRAME: A3C_RscFrame
+				{
+					idc = -1;
+					colorText[] = {0,0,0,0.8};
+					colorBackground[] = {0,0,0,0};
+					shadow = 0;
+
+					x = GRIDX(4);
+					y = GRIDY(2);
+					w = GRIDX(4);
+					h = A3C_HCGP_LIST_H;
+				};
+
+				class MAP_HCGP_FORMATION_FRAME: A3C_RscFrame
+				{
+					idc = -1;
+					colorText[] = {0,0,0,0.8};
+					colorBackground[] = {0,0,0,0};
+					shadow = 0;
+
+					x = GRIDX(0);
+					y = A3C_HCGP_Y(2 + 4.5083);
+					w = GRIDX(4);
+					h = A3C_HCGP_LIST_H;
+				};
+
+				class MAP_HCGP_TEAMCOLOR_FRAME: A3C_RscFrame
+				{
+					idc = -1;
+					colorText[] = {0,0,0,0.8};
+					colorBackground[] = {0,0,0,0};
+					shadow = 0;
+
+					x = GRIDX(4);
+					y = A3C_HCGP_Y(2 + 4.5083);
+					w = GRIDX(4);
+					h = A3C_HCGP_LIST_H;
 				};
 	
 				

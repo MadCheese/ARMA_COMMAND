@@ -23,7 +23,7 @@ isNil {
     // Additional statistics rows increase spacing, never listbox capacity.
     private _bottom = _dashboardBottom max (_top + 2 * A3C_HCGP_LIST_H + _reserve);
     private _height = ((_bottom - _top - _reserve) / 2) min A3C_HCGP_LIST_H;
-    private _secondTop = _bottom - _reserve - _height;
+    private _secondTop = _top + _height;
     {
         _x params ["_id", "_y"];
         private _control = _display displayCtrl _id;
@@ -44,7 +44,7 @@ isNil {
         private _control = _display displayCtrl _x;
         if (!isNull _control) then {
             private _position = ctrlPosition _control;
-            _position set [1, _bottom - _confirmHeight];
+            _position set [1, _secondTop + _height];
             _position set [3, _confirmHeight];
             _control ctrlSetPosition _position;
             _control ctrlCommit 0;
