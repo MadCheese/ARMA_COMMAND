@@ -68,6 +68,54 @@ private _ctls =
 if ({[[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl _x] call MCSS_fnc_isClickPosInCtrlArea} count _ctls > 0) exitWith {};
 
 
+//-- Exit if the vanilla marker creation dialog is open.
+if (!isNull (findDisplay 54)) exitWith {};
+
+
+//-- Exit if mouse click occurs over vanilla map UI regions.
+private _vanillaMapDisplay = findDisplay 12;
+private _isOverVanillaUI = false;
+
+if (!isNull _vanillaMapDisplay) then {
+
+    private _blockingRegions = [
+        1020,   // CA_MainBackground
+        1021,   // CA_TopicsBackground
+        1022,   // CA_SubTopicsBackground
+        1023    // CA_ContentBackgroundd
+    ];
+
+    {
+        private _ctrl = _vanillaMapDisplay displayCtrl _x;
+
+        if (!isNull _ctrl && {ctrlShown _ctrl}) then {
+
+            private _pos = ctrlPosition _ctrl;
+
+            if (
+                count _pos >= 4
+                && {(_pos # 2) > 0}
+                && {(_pos # 3) > 0}
+                && {
+                    [[_sX, _sY], _ctrl]
+                    call MCSS_fnc_isClickPosInCtrlArea
+                }
+            ) exitWith {
+                _isOverVanillaUI = true;
+            };
+        };
+
+    } forEach _blockingRegions;
+};
+
+//-- Prevent A3C map interactions over vanilla UI regions.
+if (_isOverVanillaUI) exitWith {};
+
+//-- Prevent A3C map interactions over existing map elements.
+if ((ctrlMapMouseOver (findDisplay 12 displayCtrl 51)) isNotEqualTo []) exitWith {};
+
+
+
 
 //-- ENEMY-TARGET Combo is open - ALWAYS disables mapclick, hides Combo if it's not clicked on directly
 if (ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo)) exitWith {
