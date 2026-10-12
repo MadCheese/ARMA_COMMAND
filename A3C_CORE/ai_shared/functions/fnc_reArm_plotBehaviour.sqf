@@ -70,25 +70,121 @@ if !(_requestedItems isEqualTo []) then {
 		] call A3C_main_fnc_getItemContainer;
 
 		switch (true) do {
+
 			case (_requestedItem == "INVENTORY"): {
-				private _gearPos = _rearmSource getPos [
-					sizeOf typeOf _rearmSource * 0.7,
-					_rearmSource getDir _unit
+				// Calculate approach positions around the object's geometry.
+				private _bounds = 2 boundingBoxReal _rearmSource;
+				_bounds params ["_min", "_max"];
+
+				// Convert the unit's position into the source's model space.
+				private _unitLocal = _rearmSource worldToModel (
+					ASLToAGL getPosASL _unit
+				);
+
+				// Clamp the unit's position to the bounding box.
+				private _x = ((_unitLocal # 0) max (_min # 0)) min (_max # 0);
+				private _y = ((_unitLocal # 1) max (_min # 1)) min (_max # 1);
+				private _z = _unitLocal # 2;
+
+				// Candidate positions outside the four bounding-box sides.
+				private _clearance = 1.2;
+
+				private _candidates = [
+					[(_min # 0) - _clearance, _y, _z],
+					[(_max # 0) + _clearance, _y, _z],
+					[_x, (_min # 1) - _clearance, _z],
+					[_x, (_max # 1) + _clearance, _z]
 				];
 
-				[_unit, _gearPos] call A3C_ai_shared_fnc_doMove;
+				// Choose the closest candidate to the unit.
+				private _gearPos = _rearmSource modelToWorld (
+					_candidates # 0
+				);
 
-				_unit setPos _gearPos;
-				_unit setDir (_unit getDir _rearmSource);
-				_unit action ["GEAR", _rearmSource];
+				{
+					private _candidatePos = _rearmSource modelToWorld _x;
+
+					if (
+						_unit distance2D _candidatePos
+						< _unit distance2D _gearPos
+					) then {
+						_gearPos = _candidatePos;
+					};
+				} forEach _candidates;
+
+				// Use AI Rail for the final approach instead of issuing
+				// another conventional movement order.
+				if (
+					isNull objectParent _unit
+					&& {_unit distance2D _gearPos > 1.5}
+				) then {
+					// Check that the straight path is unobstructed.
+					private _aslStart = getPosASL _unit;
+					private _aslEnd = AGLToASL _gearPos;
+
+					_aslStart set [2, (_aslStart # 2) + 0.3];
+					_aslEnd set [2, (_aslEnd # 2) + 0.3];
+
+					if (
+						lineIntersectsObjs [
+							_aslStart,
+							_aslEnd,
+							_unit,
+							objNull,
+							false
+						] isEqualTo []
+					) then {
+						private _rail = [
+							_unit,
+							_gearPos
+						] spawn A3C_ai_rail_fnc_infantryForceDestination;
+
+						waitUntil {
+							sleep 0.05;
+							scriptDone _rail
+						};
+					};
+				};
+
+				if (!alive _unit) exitWith {};
+
+				// Hold position before turning and opening inventory.
 				_unit forceSpeed 0;
 
+				private _rotation = [
+					_unit,
+					_rearmSource
+				] spawn A3C_ai_shared_fnc_rotateVehicleTowardsPos;
+
 				waitUntil {
-					isNull findDisplay 602
+					sleep 0.05;
+					scriptDone _rotation
+				};
+
+				_unit action ["GEAR", _rearmSource];
+
+				// Wait for the inventory display to actually open.
+				private _inventoryOpenDeadline = diag_tickTime + 5;
+
+				waitUntil {
+					sleep 0.05;
+					!isNull findDisplay 602
+					|| {diag_tickTime >= _inventoryOpenDeadline}
+				};
+
+				// Keep the unit stationary until inventory closes.
+				if (!isNull findDisplay 602) then {
+					waitUntil {
+						sleep 0.1;
+						isNull findDisplay 602
+					};
 				};
 
 				_unit forceSpeed -1;
 			};
+
+
+
 
 			case (isClass (configFile >> "CfgWeapons" >> _requestedItem)): {
 				private _isWeapon = ({

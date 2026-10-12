@@ -1,5 +1,6 @@
 #include "..\..\script_component.hpp"
 #include "..\..\dialog_defines.hpp"
+#include "..\..\hcgp_layout.hpp"
 #include "..\..\..\SHARED\shared_ui_defines.hpp"
 
 // A3C_ui_mapOverlay_fnc_HCGP_openMenu
@@ -64,6 +65,15 @@ _groupMenuControlsGroup ctrlCommit 0;
 } forEach A3C_SELECTED_HC_GROUPS_SETTINGS;
 
 if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 0) exitWith {};
+
+// A new owner on every opening, including multi-group selection. Closing or
+// reopening invalidates any dashboard worker holding an earlier context.
+private _serial = (_groupMenuControlsGroup getVariable ["A3C_HCGP_LayoutSerial", 0]) + 1;
+_groupMenuControlsGroup setVariable ["A3C_HCGP_LayoutSerial", _serial];
+private _layoutContext = [_serial, +A3C_SELECTED_HC_GROUPS_SETTINGS];
+_groupMenuControlsGroup setVariable ["A3C_HCGP_LayoutContext", _layoutContext];
+[_display, A3C_MAP_DASH_BG_H, _layoutContext] call A3C_ui_mapOverlay_fnc_HCGP_layout;
+
 
 if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
 	private _groupStance =
@@ -234,179 +244,18 @@ private _listboxDefinitions = [
 
 _startupBar progressSetPosition 0.75;
 
+// Population can yield in a scheduled caller; do not show an obsolete menu.
+if (isNull _display || {!((_groupMenuControlsGroup getVariable ["A3C_HCGP_LayoutContext", []]) isEqualTo _layoutContext)}
+    || {!(A3C_SELECTED_HC_GROUPS_SETTINGS isEqualTo (_layoutContext select 1))}) exitWith {};
+
 if (count A3C_SELECTED_HC_GROUPS_SETTINGS == 1) then {
-	[] call A3C_ui_shared_fnc_createDashBoard;
-
-	waitUntil {
-		isNull findDisplay IDD_MAP_OVERLAY
-		|| {
-			ctrlShown (
-				findDisplay IDD_MAP_OVERLAY
-					displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT
-			)
-		}
-	};
-
-	private _dashboardDisplay =
-		findDisplay IDD_MAP_OVERLAY;
-
-	if (isNull _dashboardDisplay) exitWith {};
-
-	private _dashboardControl =
-		_dashboardDisplay
-			displayCtrl IDC_SHARED_UI_DASHBOARD_BG;
-
-	if (isNull _dashboardControl) exitWith {
-		systemChat "layout failed: 11015 not found";
-	};
-
-	private _showResponseButton = !(
-		profileNamespace getVariable [
-			"HC_GROUP_RESPONSE",
-			false
-		]
-	);
-
-	private _dashboardPosition =
-		ctrlPosition _dashboardControl;
-
-	private _dashboardBottom =
-		(_dashboardPosition select 1)
-			+ (_dashboardPosition select 3);
-
-	// Controls defining the bottom edge of the row above the listboxes.
-	private _topRowControlIds = [
-		IDC_MAP_HCGP_STANCES_AUTO_IMG
-	];
-
-	private _topBoundary = -1;
-
-	{
-		private _control =
-			_dashboardDisplay displayCtrl _x;
-
-		if !(isNull _control) then {
-			private _position = ctrlPosition _control;
-
-			private _bottom =
-				(_position select 1)
-					+ (_position select 3);
-
-			if (_bottom > _topBoundary) then {
-				_topBoundary = _bottom;
-			};
-		};
-	} forEach _topRowControlIds;
-
-	if (_topBoundary < 0) exitWith {
-		systemChat "layout failed: no top row controls found";
-	};
-
-	// Height reserved for the optional response button.
-	private _responseButtonHeight = 0;
-
-	if (_showResponseButton) then {
-		private _responseControl =
-			_dashboardDisplay
-				displayCtrl IDC_MAP_HCGP_CONFIRM_BG;
-
-		if !(isNull _responseControl) then {
-			_responseButtonHeight =
-				(ctrlPosition _responseControl) select 3;
-		};
-	};
-
-	// Divide the remaining dashboard height between two listbox rows.
-	private _availableHeight =
-		_dashboardBottom
-			- _topBoundary
-			- _responseButtonHeight;
-
-	private _rowHeight =
-		_availableHeight / 2;
-
-	// Top listbox row.
-	{
-		private _control =
-			_dashboardDisplay displayCtrl _x;
-
-		if !(isNull _control) then {
-			private _position =
-				ctrlPosition _control;
-
-			_position set [
-				1,
-				_topBoundary
-			];
-
-			_position set [
-				3,
-				_rowHeight
-			];
-
-			_control ctrlSetPosition _position;
-			_control ctrlCommit 0;
-		};
-	} forEach [
-		IDC_MAP_HCGP_LISTBOX_BEHAVIOUR,
-		IDC_MAP_HCGP_LISTBOX_COMBATMODE
-	];
-
-	// Bottom listbox row.
-	{
-		private _control =
-			_dashboardDisplay displayCtrl _x;
-
-		if !(isNull _control) then {
-			private _position =
-				ctrlPosition _control;
-
-			_position set [
-				1,
-				_topBoundary + _rowHeight
-			];
-
-			_position set [
-				3,
-				_rowHeight
-			];
-
-			_control ctrlSetPosition _position;
-			_control ctrlCommit 0;
-		};
-	} forEach [
-		IDC_MAP_HCGP_LISTBOX_FORMATION,
-		IDC_MAP_HCGP_LISTBOX_TEAMCOLOR
-	];
-
-	// Optional response button pair.
-	{
-		private _control =
-			_dashboardDisplay displayCtrl _x;
-
-		if !(isNull _control) then {
-			if (_showResponseButton) then {
-				private _position =
-					ctrlPosition _control;
-
-				_position set [
-					1,
-					_dashboardBottom
-						- _responseButtonHeight
-				];
-
-				_control ctrlSetPosition _position;
-				_control ctrlCommit 0;
-				_control ctrlShow true;
-			} else {
-				_control ctrlShow false;
-			};
-		};
-	} forEach [
-		IDC_MAP_HCGP_CONFIRM_BG,
-		IDC_MAP_HCGP_CONFIRM_BTN
-	];
+    // The shell is synchronous. Its final worker notifies the same layout
+    // helper after resizing; ctrlShown is not a completion signal.
+    [_layoutContext] call A3C_ui_shared_fnc_createDashBoard;
+} else {
+    (_display displayCtrl IDC_SHARED_UI_DASHBOARD_PARENT) ctrlShow false;
 };
+if (isNull _display || {!((_groupMenuControlsGroup getVariable ["A3C_HCGP_LayoutContext", []]) isEqualTo _layoutContext)}) exitWith {};
 
 {
 	_x ctrlShow false;

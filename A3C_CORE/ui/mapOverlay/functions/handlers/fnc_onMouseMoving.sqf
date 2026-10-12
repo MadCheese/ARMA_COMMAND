@@ -45,9 +45,7 @@ if (
 	(findDisplay 12 displayCtrl 51)
 		ctrlEnable true;
 
-	ctrlSetFocus (
-		findDisplay 12 displayCtrl 51
-	);
+	
 
 	if (A3C_MapSel_Field_Active) then {
 		A3C_MapSel_Field_DEST =

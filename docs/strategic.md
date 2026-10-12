@@ -22,6 +22,8 @@ You can select units directly by clicking ‘Left Mouse Button’ on their map-i
 
 To add or remove groups from your selection, hold ‘CTRL’ and click ‘Left Mouse Button’ on the unit’s map icon.
 
+To clear your current unit selection, hold ‘CTRL’ and click ‘Right Mouse Button’ on an empty area of the map.
+
 ![](assets/strategic/image13.gif)
 
 To draw a selection field, hold CTRL and drag ‘Left Mouse Button’ over the desired map-area.

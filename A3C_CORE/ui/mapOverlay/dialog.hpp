@@ -1,6 +1,7 @@
 #include "script_component.hpp"
 #include "dialog_defines.hpp"
 #include "..\SHARED\shared_ui_defines.hpp"
+#include "hcgp_layout.hpp"
 
 #define GRIDX( num ) ( num * ( pixelGrid * pixelW * 2.5 ))
 #define GRIDY( num ) ( num * ( pixelGrid * pixelH * 2.5 ))
@@ -1318,12 +1319,12 @@ class A3C_DSP_MapOverlay
 				class MAP_HCGP_LISTBOX_BEHAVIOUR: A3C_LISTBOX
 				{
 					idc = IDC_MAP_HCGP_LISTBOX_BEHAVIOUR; //800701;
-					style = CT_LISTBOX;
+					style = ST_LEFT + LB_TEXTURES; // Listbox style, not a control type.
 					x = GRIDX( 0 ); 
 					y = GRIDY( 2 );
 					w = GRIDX( 4 );
-					h = GRIDY( 4 );
-					sizeEx = 0.03;
+					h = A3C_HCGP_LIST_H;
+					sizeEx = EXPAND_AND_QUOTE(A3C_HCGP_LIST_FONT);
 					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(IDC_MAP_HCGP_LISTBOX_BEHAVIOUR,(_this select 1),IDD_MAP_OVERLAY)] call A3C_ui_mapOverlay_fnc_HCGP_onLbChange);
 
 					colorBackground[] = {0.2,0.2,0.2,0.7};
@@ -1333,12 +1334,12 @@ class A3C_DSP_MapOverlay
 				class MAP_HCGP_LISTBOX_COMBATMODE: A3C_LISTBOX
 				{
 					idc = IDC_MAP_HCGP_LISTBOX_COMBATMODE; //800702;
-					style = CT_LISTBOX;
+					style = ST_LEFT + LB_TEXTURES; // Listbox style, not a control type.
 					x = GRIDX( 4 ); 
 					y = GRIDY( 2 );
 					w = GRIDX( 4 );
-					h = GRIDY( 4 );
-					sizeEx = 0.03;
+					h = A3C_HCGP_LIST_H;
+					sizeEx = EXPAND_AND_QUOTE(A3C_HCGP_LIST_FONT);
 					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(IDC_MAP_HCGP_LISTBOX_COMBATMODE,(_this select 1),IDD_MAP_OVERLAY)] call A3C_ui_mapOverlay_fnc_HCGP_onLbChange);
 					colorBackground[] = {0.6,0.6,0.6,0.7};
 				};
@@ -1346,24 +1347,24 @@ class A3C_DSP_MapOverlay
 				class MAP_HCGP_LISTBOX_FORMATION: A3C_LISTBOX
 				{
 					idc = IDC_MAP_HCGP_LISTBOX_FORMATION; //800703;
-					style = CT_LISTBOX;
+					style = ST_LEFT + LB_TEXTURES; // Listbox style, not a control type.
 					x = GRIDX( 0 ); 
-					y = GRIDY(6 );
+					y = A3C_HCGP_Y(2 + 4.5083);
 					w = GRIDX( 4 );
-					h = GRIDY( 4 );
-					sizeEx = 0.03;
+					h = A3C_HCGP_LIST_H;
+					sizeEx = EXPAND_AND_QUOTE(A3C_HCGP_LIST_FONT);
 					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(IDC_MAP_HCGP_LISTBOX_FORMATION,(_this select 1),IDD_MAP_OVERLAY)] call A3C_ui_mapOverlay_fnc_HCGP_onLbChange);
 					colorBackground[] = {0.2,0.2,0.2,0.7};
 				};
 				class MAP_HCGP_LISTBOX_TEAMCOLOR: A3C_LISTBOX
 				{
 					idc = IDC_MAP_HCGP_LISTBOX_TEAMCOLOR; //800704;
-					style = CT_LISTBOX;
+					style = ST_LEFT + LB_TEXTURES; // Listbox style, not a control type.
 					x = GRIDX( 4 ); 
-					y = GRIDY(6 );
+					y = A3C_HCGP_Y(2 + 4.5083);
 					w = GRIDX( 4 );
-					h = GRIDY( 4 );
-					sizeEx = 0.03;
+					h = A3C_HCGP_LIST_H;
+					sizeEx = EXPAND_AND_QUOTE(A3C_HCGP_LIST_FONT);
 					onLBSelChanged = EXPAND_AND_QUOTE([ARR_3(IDC_MAP_HCGP_LISTBOX_TEAMCOLOR,(_this select 1),IDD_MAP_OVERLAY)] call A3C_ui_mapOverlay_fnc_HCGP_onLbChange);
 					colorBackground[] = {0.6,0.6,0.6,0.7};
 				};
@@ -1374,7 +1375,7 @@ class A3C_DSP_MapOverlay
 					idc = IDC_MAP_HCGP_CONFIRM_BG; //800707;
 					text = "#(argb,8,8,3)color(0,1,0,0.35)";
 					x = GRIDX( 0 ); 
-					y = GRIDY( 10 );
+					y = A3C_HCGP_Y(2 + 2 * 4.5083);
 					w = GRIDX( 8 );
 					h = GRIDY( 2 );
 				};
@@ -1386,10 +1387,10 @@ class A3C_DSP_MapOverlay
 					idc = IDC_MAP_HCGP_CONFIRM_BTN; //800711;
 					text = "CONFIRM";
 					//sizeEx = "(((((safezoneW / safezoneH) min 1.2) / 1.2) / 25) * 0.8)";
-					sizeEx = 0.045;
+					sizeEx = EXPAND_AND_QUOTE(A3C_HCGP_CONFIRM_FONT);
 					action = "[] call A3C_ui_mapOverlay_fnc_HCGP_onConfirmButton";
 					x = GRIDX( 0 ); 
-					y = GRIDY( 10 );
+					y = A3C_HCGP_Y(2 + 2 * 4.5083);
 					w = GRIDX( 8 );
 					h = GRIDY( 2 );	
 				};
@@ -1407,6 +1408,7 @@ class A3C_DSP_MapOverlay
 				{
 					idc = IDC_MAP_HCGP_CANCEL_BTN; //800712;
 					text = "X";
+					sizeEx = EXPAND_AND_QUOTE(A3C_HCGP_CANCEL_FONT);
 					action = EXPAND_AND_QUOTE([] call A3C_ui_mapOverlay_fnc_close_HCGP_Parent; A3C_SELECTED_HC_GROUPS_SETTINGS = []);
 					x = GRIDX( 8 ); 
 					y = GRIDY( 0 );
@@ -1726,10 +1728,10 @@ class A3C_DSP_MapOverlay
 		class SHARED_UI_DASHBOARD_PARENT: A3C_RscControlsGroup_NoScroll
 		{
 			idc = IDC_SHARED_UI_DASHBOARD_PARENT; //303030;
-			x = 33.5 * GUI_GRID_W + GUI_GRID_X;
+			x = 0.5 - A3C_MAP_DASH_W;
 			y = 100;
-			w = 0.240009 * safezoneW;
-			h = 0.289024 * safezoneH + (1.5 * (0.021 / (getResolution select 5)));
+			w = A3C_MAP_DASH_W;
+			h = A3C_MAP_DASH_PARENT_H;
 
 			class Controls
 			{
@@ -1737,10 +1739,10 @@ class A3C_DSP_MapOverlay
 				{
 					idc = IDC_SHARED_UI_DASHBOARD_BG; //11015;
 					text = "#(argb,8,8,3)color(1,1,1,0.6)";
-					x = 4.9593e-007 * safezoneW;
-					y = 0 * safezoneH;
-					w = 0.240009 * safezoneW;
-					h = 0.221018 * safezoneH + (1.5 * (0.021 / (getResolution select 5)));
+					x = A3C_MAP_DASH_BG_X;
+					y = 0;
+					w = A3C_MAP_DASH_W;
+					h = A3C_MAP_DASH_BG_H;
 				};
 
 				class SHARED_UI_DASHBOARD_GROUPNAME: A3C_RscText
@@ -1748,20 +1750,20 @@ class A3C_DSP_MapOverlay
 					idc = IDC_SHARED_UI_DASHBOARD_GROUPNAME; //11001;
 					text = "";
 					style = 0;
-					x = -5.72227e-008 * safezoneW;
-					y = -2.21673e-008 * safezoneH;
-					w = 0.160006 * safezoneW;
-					h = 0.0340028 * safezoneH;
-					sizeEx = "0.04 / (getResolution select 5)";
+					x = A3C_MAP_DASH_TEXT_X;
+					y = A3C_MAP_DASH_TITLE_Y;
+					w = A3C_MAP_DASH_TEXT_W;
+					h = A3C_MAP_DASH_TITLE_H;
+					sizeEx = EXPAND_AND_QUOTE(A3C_MAP_DASH_TITLE_FONT);
 				};
 
 				class SHARED_UI_DASHBOARD_GROUPICON: A3C_RscPicture
 				{
 					idc = IDC_SHARED_UI_DASHBOARD_GROUPICON; //11002;
-					x = 0.168007 * safezoneW;
-					y = -2.21673e-008 * safezoneH;
-					w = 0.0720028 * safezoneW;
-					h = 0.11901 * safezoneH;
+					x = A3C_MAP_DASH_ICON_X;
+					y = A3C_MAP_DASH_TITLE_Y;
+					w = A3C_MAP_DASH_ICON_W;
+					h = A3C_MAP_DASH_ICON_H;
 				};
 
 				class SHARED_UI_DASHBOARD_TXT_UNITSIZE: A3C_RscText
@@ -1769,11 +1771,11 @@ class A3C_DSP_MapOverlay
 					idc = IDC_SHARED_UI_DASHBOARD_TXT_UNITSIZE; //11003;
 					text = "Unit Size:";
 					style = 0;
-					x = -5.72227e-008 * safezoneW;
-					y = (-2.21673e-008 * safezoneH) + (0.0340028 * safezoneH) + (0.005 / (getResolution select 5));
-					w = 0.160006 * safezoneW;
-					h = 0.021 / (getResolution select 5);
-					sizeEx = "0.021 / (getResolution select 5)";
+					x = A3C_MAP_DASH_TEXT_X;
+					y = A3C_MAP_DASH_UNITS_Y;
+					w = A3C_MAP_DASH_TEXT_W;
+					h = A3C_MAP_DASH_TEXT_H;
+					sizeEx = EXPAND_AND_QUOTE(A3C_MAP_DASH_TEXT_H);
 				};
 
 				class SHARED_UI_DASHBOARD_TXT_LOCATION: A3C_RscText
@@ -1781,11 +1783,11 @@ class A3C_DSP_MapOverlay
 					idc = IDC_SHARED_UI_DASHBOARD_TXT_LOCATION; //11004;
 					text = "Location:";
 					style = 0;
-					x = -5.72227e-008 * safezoneW;
-					y = (-2.21673e-008 * safezoneH) + (0.0340028 * safezoneH) + (0.005 / (getResolution select 5)) + (1.1 * (0.021 / (getResolution select 5)));
-					w = 0.160006 * safezoneW;
-					h = 0.021 / (getResolution select 5);
-					sizeEx = "0.021 / (getResolution select 5)";
+					x = A3C_MAP_DASH_TEXT_X;
+					y = A3C_MAP_DASH_LOCATION_Y;
+					w = A3C_MAP_DASH_TEXT_W;
+					h = A3C_MAP_DASH_TEXT_H;
+					sizeEx = EXPAND_AND_QUOTE(A3C_MAP_DASH_TEXT_H);
 				};
 
 				class SHARED_UI_DASHBOARD_TXT_TASK: A3C_RscText
@@ -1793,21 +1795,21 @@ class A3C_DSP_MapOverlay
 					idc = IDC_SHARED_UI_DASHBOARD_TXT_TASK; //11005;
 					text = "Current Task:";
 					style = 0;
-					x = -5.72227e-008 * safezoneW;
-					y = (-2.21673e-008 * safezoneH) + (0.0340028 * safezoneH) + (0.005 / (getResolution select 5)) + (2.2 * (0.021 / (getResolution select 5)));
-					w = 0.160006 * safezoneW;
-					h = 0.021 / (getResolution select 5);
-					sizeEx = "0.021 / (getResolution select 5)";
+					x = A3C_MAP_DASH_TEXT_X;
+					y = A3C_MAP_DASH_TASK_Y;
+					w = A3C_MAP_DASH_TEXT_W;
+					h = A3C_MAP_DASH_TEXT_H;
+					sizeEx = EXPAND_AND_QUOTE(A3C_MAP_DASH_TEXT_H);
 				};
 
 				class SHARED_UI_DASHBOARD_PGBARS_BG: A3C_RscPicture
 				{
 					idc = IDC_SHARED_UI_DASHBOARD_PGBARS_BG; //12002;
 					text = "#(argb,8,8,3)color(0.5,0.5,0.5,0.5)";
-					x = (0.00800027 - 0.002) * safezoneW;
-					y = (0.136011 * safezoneH);
-					w = 0.0800031 * safezoneW;
-					h = 0.0085007 * safezoneH;
+					x = A3C_MAP_DASH_PROGRESS_X;
+					y = (A3C_MAP_DASH_PROGRESS_Y);
+					w = A3C_MAP_DASH_PROGRESS_W;
+					h = A3C_MAP_DASH_PROGRESS_H;
 				};
 
 				class SHARED_UI_DASHBOARD_PG_HEALTH_TXT: A3C_RscText
@@ -1815,20 +1817,20 @@ class A3C_DSP_MapOverlay
 					idc = IDC_SHARED_UI_DASHBOARD_PG_HEALTH_TXT; //12000;
 					text = "Health (Soldiers)";
 					style = 0;
-					x = -3.81485e-008 * safezoneW;
-					y = (0.136011 * safezoneH) - (0.021 / (getResolution select 5));
-					w = 0.0800031 * safezoneW;
-					h = 0.021 / (getResolution select 5);
-					sizeEx = "0.021 / (getResolution select 5)";
+					x = A3C_MAP_DASH_PROGRESS_TEXT_X;
+					y = A3C_MAP_DASH_PROGRESS_TEXT_Y;
+					w = A3C_MAP_DASH_PROGRESS_W;
+					h = A3C_MAP_DASH_TEXT_H;
+					sizeEx = EXPAND_AND_QUOTE(A3C_MAP_DASH_TEXT_H);
 				};
 
 				class SHARED_UI_DASHBOARD_PG_HEALTH_BAR: A3C_RscProgress
 				{
 					idc = IDC_SHARED_UI_DASHBOARD_PG_HEALTH_BAR; //12001;
-					x = (0.00800027 - 0.002) * safezoneW;
-					y = (0.136011 * safezoneH);
-					w = 0.0800031 * safezoneW;
-					h = 0.0085007 * safezoneH;
+					x = A3C_MAP_DASH_PROGRESS_X;
+					y = (A3C_MAP_DASH_PROGRESS_Y);
+					w = A3C_MAP_DASH_PROGRESS_W;
+					h = A3C_MAP_DASH_PROGRESS_H;
 				};
 
 				class SHARED_UI_DASHBOARD_PG_ROSTER_TXT: A3C_RscText
@@ -1836,20 +1838,21 @@ class A3C_DSP_MapOverlay
 					idc = IDC_SHARED_UI_DASHBOARD_PG_ROSTER_TXT; //11012;
 					text = "Roster";
 					style = 0;
-					x = 0.0960037 * safezoneW;
-					y = (0.136011 * safezoneH) - (0.021 / (getResolution select 5));
-					w = 0.0480019 * safezoneW;
-					h = 0.021 / (getResolution select 5);
-					sizeEx = "0.021 / (getResolution select 5)";
+					x = A3C_MAP_DASH_ROSTER_LABEL_X;
+					y = A3C_MAP_DASH_PROGRESS_TEXT_Y;
+					w = A3C_MAP_DASH_ROSTER_LABEL_W;
+					h = A3C_MAP_DASH_TEXT_H;
+					sizeEx = EXPAND_AND_QUOTE(A3C_MAP_DASH_TEXT_H);
 				};
 
 				class SHARED_UI_DASHBOARD_PG_ROSTER_STRUCTURED: A3C_RscStructuredText
 				{
 					idc = IDC_SHARED_UI_DASHBOARD_PG_ROSTER_STRUCTURED; //11014;
-					x = 0.104004 * safezoneW;
-					y = 0.136011 * safezoneH;
-					w = 0.136005 * safezoneW;
-					h = 0.085007 * safezoneH + (1.5 * (0.021 / (getResolution select 5)));
+					size = EXPAND_AND_QUOTE(A3C_MAP_DASH_ROSTER_FONT);
+					x = A3C_MAP_DASH_ROSTER_X;
+					y = A3C_MAP_DASH_PROGRESS_Y;
+					w = A3C_MAP_DASH_ROSTER_W;
+					h = A3C_MAP_DASH_ROSTER_H;
 				};
 
 				//-- MAP HAS ONE ADDITIONAL CONTROL: CT EDIT FOR GROUP NAME EDITING
@@ -1858,7 +1861,7 @@ class A3C_DSP_MapOverlay
 					idc = IDC_MAP_DASHBOARD_GROUPNAME_EDIT; //800713;
 					type = 2;
 					style = 0;
-					sizeEx = "0.04 / (getResolution select 5)";
+					sizeEx = EXPAND_AND_QUOTE(A3C_MAP_DASH_TITLE_FONT);
 					autocomplete = "false";
 
 					onSetFocus = "['GROUPNAME','ON'] call A3C_ui_mapOverlay_fnc_CTEdit_setActive; ['ON'] call A3C_ui_mapOverlay_fnc_HCGP_activateDashboardEditName;";
@@ -1866,8 +1869,8 @@ class A3C_DSP_MapOverlay
 
 					x = 0;
 					y = 0;
-					w = 0.14 * safezoneW;
-					h = 0.0340028 * safezoneH;
+					w = A3C_MAP_DASH_EDIT_W;
+					h = A3C_MAP_DASH_TITLE_H;
 					font = "PuristaLight";
 					colorBackground[] = {1,1,1,0};
 					colorDisabled[] = {0,0,0,0};

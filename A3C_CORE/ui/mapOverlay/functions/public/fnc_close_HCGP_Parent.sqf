@@ -7,16 +7,27 @@
 params [
 	["_delay", 0, [0]]
 ];
+disableSerialization;
 
-_delay spawn {
-	params ["_delay"];
+// Invalidate the map geometry owner immediately, before the delayed hide.
+// The radial dashboard retains its existing close behavior.
+private _closingMap = findDisplay IDD_MAP_OVERLAY;
+if (!isNull _closingMap) then {
+    (_closingMap displayCtrl IDC_MAP_HCGP_Parent) setVariable ["A3C_HCGP_LayoutContext", nil];
+};
+
+[_delay, _closingMap] spawn {
+	params ["_delay", "_mapDisplay"];
+	disableSerialization;
 
 	uiSleep _delay;
 
-	private _mapDisplay = findDisplay IDD_MAP_OVERLAY;
 	private _radialDisplay = findDisplay IDD_RADIAL_MENU;
 
-	if (!isNull _mapDisplay) then {
+    isNil {
+	if (!isNull _mapDisplay && {
+        ((_mapDisplay displayCtrl IDC_MAP_HCGP_Parent) getVariable ["A3C_HCGP_LayoutContext", []]) isEqualTo []
+    }) then {
 		{
 			private _control = _mapDisplay displayCtrl _x;
 
@@ -28,6 +39,7 @@ _delay spawn {
 			IDC_SHARED_UI_DASHBOARD_PARENT
 		];
 	};
+    };
 
 	if (!isNull _radialDisplay) then {
 		private _dashboard =

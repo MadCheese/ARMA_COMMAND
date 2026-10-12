@@ -115,8 +115,6 @@ if (_isOverVanillaUI) exitWith {};
 if ((ctrlMapMouseOver (findDisplay 12 displayCtrl 51)) isNotEqualTo []) exitWith {};
 
 
-
-
 //-- ENEMY-TARGET Combo is open - ALWAYS disables mapclick, hides Combo if it's not clicked on directly
 if (ctrlShown (findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo)) exitWith {
 	if !([[_sX,_sY],findDisplay IDD_MAP_OVERLAY displayCtrl IDC_MAP_DynamicCombo] call MCSS_fnc_isClickPosInCtrlArea) then {

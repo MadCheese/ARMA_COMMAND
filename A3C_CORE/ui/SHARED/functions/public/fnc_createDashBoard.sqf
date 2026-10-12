@@ -1,5 +1,6 @@
 #include "..\..\shared_ui_defines.hpp"
 #include "..\..\..\mapOverlay\dialog_defines.hpp"
+#include "..\..\..\mapOverlay\hcgp_layout.hpp"
 #include "..\..\..\radial\radialMenu\dialog_defines.hpp"
 
 
@@ -14,6 +15,8 @@
 	the selected group or active display has changed.
 */
 
+params [["_mapContext", [], [[]]]];
+
 private _displayId = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {
 	IDD_MAP_OVERLAY
 } else {
@@ -23,7 +26,17 @@ private _displayId = if (!isNull (findDisplay IDD_MAP_OVERLAY)) then {
 private _display = findDisplay _displayId;
 
 if (isNull _display) exitWith {};
+if (_displayId == IDD_MAP_OVERLAY && {!(_mapContext isEqualTo [])}
+    && {!(((_display displayCtrl IDC_MAP_HCGP_Parent) getVariable ["A3C_HCGP_LayoutContext", []]) isEqualTo _mapContext)
+        || {!(A3C_SELECTED_HC_GROUPS_SETTINGS isEqualTo (_mapContext select 1))}}) exitWith {};
 
+
+// Keep the lightweight map shell and its ownership acquisition atomic.
+// The radial call keeps normal scheduled execution. Statistics still spawn.
+private _buildDashboard = {
+if (_displayId == IDD_MAP_OVERLAY && {!(_mapContext isEqualTo [])}
+    && {!(((_display displayCtrl IDC_MAP_HCGP_Parent) getVariable ["A3C_HCGP_LayoutContext", []]) isEqualTo _mapContext)
+        || {!(A3C_SELECTED_HC_GROUPS_SETTINGS isEqualTo (_mapContext select 1))}}) exitWith {};
 private _requestId = (
 	uiNamespace getVariable [
 		"A3C_ui_shared_dashboardRequestId",
@@ -89,8 +102,8 @@ if (_displayId == IDD_MAP_OVERLAY) then {
 };
 
 private _resolutionScale = (getResolution select 5) max 0.001;
-private _textRowHeight = 0.021 / _resolutionScale;
-private _progressRowStep = 1.5 * _textRowHeight;
+private _textRowHeight = if (_displayId == IDD_MAP_OVERLAY) then {A3C_MAP_DASH_TEXT_H} else {0.021 / _resolutionScale};
+private _progressRowStep = if (_displayId == IDD_MAP_OVERLAY) then {A3C_MAP_DASH_STEP} else {1.5 * _textRowHeight};
 
 /*
 	Reset the static dashboard controls before displaying the lightweight
@@ -98,49 +111,43 @@ private _progressRowStep = 1.5 * _textRowHeight;
 */
 private _parentPosition = ctrlPosition _parentControl;
 
-_parentPosition set [
-	1,
-	0.414993 * safeZoneH + safeZoneY
-];
-
-_parentPosition set [
-	2,
-	0.240009 * safeZoneW
-];
-
-_parentPosition set [
-	3,
-	0.289024 * safeZoneH + _progressRowStep
-];
-
 if (_displayId == IDD_MAP_OVERLAY) then {
-	private _groupPanelControl = _display displayCtrl IDC_MAP_HCGP_Parent;
+    private _anchor = ctrlPosition (_display displayCtrl IDC_MAP_HCGP_Parent);
+    _parentPosition = [(_anchor select 0) - A3C_MAP_DASH_W, _anchor select 1,
+        A3C_MAP_DASH_W, A3C_MAP_DASH_PARENT_H];
+} else {
+    _parentPosition set [
+		1,
+		0.414993 * safeZoneH + safeZoneY
+    ];
 
-	if (!isNull _groupPanelControl) then {
-		private _groupPanelPosition = ctrlPosition _groupPanelControl;
+    _parentPosition set [
+		2,
+		0.240009 * safeZoneW
+    ];
 
-		_parentPosition set [
-			0,
-			(_groupPanelPosition select 0) - (_parentPosition select 2)
-		];
-
-		_parentPosition set [
-			1,
-			_groupPanelPosition select 1
-		];
-	};
+    _parentPosition set [
+		3,
+		0.289024 * safeZoneH + _progressRowStep
+    ];
 };
 
 _parentControl ctrlSetPosition _parentPosition;
 _parentControl ctrlCommit 0;
 
 if (!isNull _backgroundControl) then {
-	_backgroundControl ctrlSetPosition [
+	if (_displayId == IDD_MAP_OVERLAY) then {
+        _backgroundControl ctrlSetPosition [A3C_MAP_DASH_BG_X, 0,
+            A3C_MAP_DASH_W, A3C_MAP_DASH_BG_H];
+    } else {
+        _backgroundControl ctrlSetPosition [
 		4.9593e-007 * safeZoneW,
 		0,
 		0.240009 * safeZoneW,
 		0.221018 * safeZoneH + _progressRowStep
 	];
+
+    };
 
 	_backgroundControl ctrlCommit 0;
 
@@ -157,12 +164,18 @@ if (!isNull _backgroundControl) then {
 };
 
 if (!isNull _rosterControl) then {
-	_rosterControl ctrlSetPosition [
+	if (_displayId == IDD_MAP_OVERLAY) then {
+        _rosterControl ctrlSetPosition [A3C_MAP_DASH_ROSTER_X, A3C_MAP_DASH_PROGRESS_Y,
+            A3C_MAP_DASH_ROSTER_W, A3C_MAP_DASH_ROSTER_H];
+    } else {
+        _rosterControl ctrlSetPosition [
 		0.104004 * safeZoneW,
 		0.136011 * safeZoneH,
 		0.136005 * safeZoneW,
 		0.085007 * safeZoneH + _progressRowStep
 	];
+
+    };
 
 	_rosterControl ctrlCommit 0;
 	_rosterControl ctrlSetBackgroundColor [0, 0, 0, 0.2];
@@ -231,6 +244,9 @@ if (!isNull _healthProgressControl) then {
 	_healthProgressControl ctrlSetTextColor [1, 0, 0, 0.6];
 };
 
+if (_displayId == IDD_MAP_OVERLAY && {!(_mapContext isEqualTo [])}) then {
+    [_display, A3C_MAP_DASH_BG_H, _mapContext] call A3C_ui_mapOverlay_fnc_HCGP_layout;
+};
 _parentControl ctrlShow true;
 
 /*
@@ -248,7 +264,8 @@ _parentControl ctrlShow true;
 	_locationControl,
 	_taskControl,
 	_healthTextControl,
-	_healthProgressControl
+	_healthProgressControl,
+    _mapContext
 ] spawn {
 	disableSerialization;
 
@@ -263,7 +280,8 @@ _parentControl ctrlShow true;
 		"_locationControl",
 		"_taskControl",
 		"_healthTextControl",
-		"_healthProgressControl"
+		"_healthProgressControl",
+        "_mapContext"
 	];
 
 	private _fnc_requestIsCurrent = {
@@ -281,6 +299,10 @@ _parentControl ctrlShow true;
 		) exitWith {
 			false
 		};
+
+
+        if (_displayId == IDD_MAP_OVERLAY && {!(_mapContext isEqualTo [])}
+            && {!(((_display displayCtrl IDC_MAP_HCGP_Parent) getVariable ["A3C_HCGP_LayoutContext", []]) isEqualTo _mapContext)}) exitWith {false;};
 
 		private _currentSelection = A3C_SELECTED_HC_GROUPS_SETTINGS;
 
@@ -1247,6 +1269,8 @@ _parentControl ctrlShow true;
 	/*
 		Apply the calculated values.
 	*/
+    private _applyResults = {
+        if !(call _fnc_requestIsCurrent) exitWith {};
 	if (!isNull _locationControl) then {
 		_locationControl ctrlSetText _locationText;
 	};
@@ -1310,8 +1334,8 @@ _parentControl ctrlShow true;
 		getResolution select 5
 	) max 0.001;
 
-	private _textRowHeight = 0.021 / _resolutionScale;
-	private _progressRowStep = 1.5 * _textRowHeight;
+	private _textRowHeight = if (_displayId == IDD_MAP_OVERLAY) then {A3C_MAP_DASH_TEXT_H} else {0.021 / _resolutionScale};
+	private _progressRowStep = if (_displayId == IDD_MAP_OVERLAY) then {A3C_MAP_DASH_STEP} else {1.5 * _textRowHeight};
 
 	private _extraRowCount = (
 		(count _progressEntries) - 3
@@ -1319,60 +1343,51 @@ _parentControl ctrlShow true;
 
 	private _parentPosition = ctrlPosition _parentControl;
 
-	_parentPosition set [
-		1,
-		(
-			0.414993 * safeZoneH
-			+ safeZoneY
-		) - (
-			if (_displayId == IDD_RADIAL_MENU) then {
+    if (_displayId == IDD_MAP_OVERLAY) then {
+        private _anchor = ctrlPosition (_display displayCtrl IDC_MAP_HCGP_Parent);
+        _parentPosition = [(_anchor select 0) - A3C_MAP_DASH_W, _anchor select 1,
+            A3C_MAP_DASH_W, A3C_MAP_DASH_PARENT_H + _extraRowCount * _progressRowStep];
+    } else {
+		_parentPosition set [
+			1,
+			(
+				0.414993 * safeZoneH
+				+ safeZoneY
+			) - (
+				if (_displayId == IDD_RADIAL_MENU) then {
+					_extraRowCount
+					* 0.75
+					* _textRowHeight
+				} else {
+					0
+				}
+			)
+		];
+
+		_parentPosition set [
+			2,
+			0.240009 * safeZoneW
+		];
+
+		_parentPosition set [
+			3,
+			0.289024 * safeZoneH
+			+ _progressRowStep
+			+ (
 				_extraRowCount
-				* 0.75
-				* _textRowHeight
-			} else {
-				0
-			}
-		)
-	];
-
-	_parentPosition set [
-		2,
-		0.240009 * safeZoneW
-	];
-
-	_parentPosition set [
-		3,
-		0.289024 * safeZoneH
-		+ _progressRowStep
-		+ (
-			_extraRowCount
-			* _progressRowStep
-		)
-	];
-
-	if (_displayId == IDD_MAP_OVERLAY) then {
-		private _groupPanelControl = _display displayCtrl IDC_MAP_HCGP_Parent;
-
-		if (!isNull _groupPanelControl) then {
-			private _groupPanelPosition = ctrlPosition _groupPanelControl;
-
-			_parentPosition set [
-				0,
-				(_groupPanelPosition select 0)
-				- (_parentPosition select 2)
-			];
-
-			_parentPosition set [
-				1,
-				_groupPanelPosition select 1
-			];
-		};
-	};
+				* _progressRowStep
+			)
+		];
+    };
 
 	_parentControl ctrlSetPosition _parentPosition;
 	_parentControl ctrlCommit 0;
 
 	if (!isNull _backgroundControl) then {
+        if (_displayId == IDD_MAP_OVERLAY) then {
+            _backgroundControl ctrlSetPosition [A3C_MAP_DASH_BG_X, 0,
+                A3C_MAP_DASH_W, A3C_MAP_DASH_BG_H + _extraRowCount * _progressRowStep];
+        } else {
 		_backgroundControl ctrlSetPosition [
 			4.9593e-007 * safeZoneW,
 			0,
@@ -1385,10 +1400,16 @@ _parentControl ctrlShow true;
 			)
 		];
 
+        };
+
 		_backgroundControl ctrlCommit 0;
 	};
 
 	if (!isNull _rosterControl) then {
+        if (_displayId == IDD_MAP_OVERLAY) then {
+            _rosterControl ctrlSetPosition [A3C_MAP_DASH_ROSTER_X, A3C_MAP_DASH_PROGRESS_Y,
+                A3C_MAP_DASH_ROSTER_W, A3C_MAP_DASH_ROSTER_H + _extraRowCount * _progressRowStep];
+        } else {
 		_rosterControl ctrlSetPosition [
 			0.104004 * safeZoneW,
 			0.136011 * safeZoneH,
@@ -1400,6 +1421,8 @@ _parentControl ctrlShow true;
 				* _progressRowStep
 			)
 		];
+
+        };
 
 		_rosterControl ctrlCommit 0;
 	};
@@ -1413,7 +1436,12 @@ _parentControl ctrlShow true;
 			"_progress"
 		];
 
-		private _progressPosition = [
+		private _progressPosition = if (_displayId == IDD_MAP_OVERLAY) then {
+            [A3C_MAP_DASH_PROGRESS_X,
+                A3C_MAP_DASH_PROGRESS_Y + _progressIndex * _progressRowStep,
+                A3C_MAP_DASH_PROGRESS_W, A3C_MAP_DASH_PROGRESS_H]
+        } else {
+            [
 			(0.00800027 - 0.002) * safeZoneW,
 			0.136011 * safeZoneH
 			+ (
@@ -1422,15 +1450,21 @@ _parentControl ctrlShow true;
 			),
 			0.0800031 * safeZoneW,
 			0.0085007 * safeZoneH
-		];
+		]
+        };
 
-		private _textPosition = [
+		private _textPosition = if (_displayId == IDD_MAP_OVERLAY) then {
+            [A3C_MAP_DASH_PROGRESS_TEXT_X, (_progressPosition select 1) - _textRowHeight,
+                A3C_MAP_DASH_PROGRESS_W, _textRowHeight]
+        } else {
+            [
 			-3.81485e-008 * safeZoneW,
 			(_progressPosition select 1)
 			- _textRowHeight,
 			0.0800031 * safeZoneW,
 			_textRowHeight
-		];
+		]
+        };
 
 		private _progressBackground = _display ctrlCreate [
 			"RscPicture",
@@ -1462,6 +1496,9 @@ _parentControl ctrlShow true;
 			_parentControl
 		];
 
+        if (_displayId == IDD_MAP_OVERLAY) then {
+            _progressText ctrlSetFontHeight A3C_MAP_DASH_TEXT_H;
+        };
 		_progressText ctrlSetText _description;
 		_progressText ctrlSetPosition _textPosition;
 
@@ -1490,12 +1527,17 @@ _parentControl ctrlShow true;
 		Support icons are included in the same cleanup collection. The old
 		function recreated them without adding them to ExtraControls.
 	*/
-	private _supportPosition = [
+	private _supportPosition = if (_displayId == IDD_MAP_OVERLAY) then {
+        [A3C_MAP_DASH_SUPPORT_X, A3C_MAP_DASH_SUPPORT_Y,
+            A3C_MAP_DASH_SUPPORT_W, A3C_MAP_DASH_SUPPORT_H]
+    } else {
+        [
 		0.150315 * safeZoneW,
 		3.09064e-006 * safeZoneH,
 		0.0159271 * safeZoneW,
 		0.0340016 * safeZoneH
-	];
+	]
+    };
 
 	if (_hasMedic) then {
 		private _medicIcon = _display ctrlCreate [
@@ -1538,8 +1580,11 @@ _parentControl ctrlShow true;
 		if (_hasMedic) then {
 			_supportPosition set [
 				1,
-				3.09064e-006 * safeZoneH
-				+ 0.0340016 * safeZoneH
+                if (_displayId == IDD_MAP_OVERLAY) then {
+                    A3C_MAP_DASH_SUPPORT_Y + A3C_MAP_DASH_SUPPORT_H
+                } else {
+                    3.09064e-006 * safeZoneH + 0.0340016 * safeZoneH
+                }
 			];
 		};
 
@@ -1595,5 +1640,21 @@ _parentControl ctrlShow true;
 	A3C_ui_shared_fnc_createDashBoard_ExtraControls =
 		_newExtraControls;
 
+    if (_displayId == IDD_MAP_OVERLAY && {!(_mapContext isEqualTo [])}) then {
+        [_display, A3C_MAP_DASH_BG_H + _extraRowCount * _progressRowStep, _mapContext]
+            call A3C_ui_mapOverlay_fnc_HCGP_layout;
+    };
 	_parentControl ctrlShow true;
+    };
+    if (_displayId == IDD_MAP_OVERLAY) then {
+        isNil _applyResults;
+    } else {
+        call _applyResults;
+    };
+};
+};
+if (_displayId == IDD_MAP_OVERLAY) then {
+    isNil _buildDashboard;
+} else {
+    call _buildDashboard;
 };

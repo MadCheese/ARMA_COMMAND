@@ -1035,7 +1035,30 @@ if (count _multiWaypointSelection > 1) then {
 							'center'
 						];
 						private _waypointHitboxSize = _waypointIconSize;
-						A3C_UI_MAPICONS_HC_WPS pushBack [_highCommandGroup,[_waypointHitboxSize,_waypointHitboxSize],(_waypointPosition),_waypointIndex];
+						private _waypointHitboxPosition = _waypointPosition;
+
+						// Align the map-pin hitbox with the visually offset selection circle.
+						if (_waypointIconPath isEqualTo "\a3c_ui\markers\icon_waypoint_maps.paa") then {
+							private _screenPos = _mapControl ctrlMapWorldToScreen _waypointPosition;
+
+							if (_screenPos isNotEqualTo []) then {
+								_screenPos set [
+									1,
+									(_screenPos select 1)
+										- ((_waypointSelectionCircleSize / 480)
+										* _waypointSelectionCircleVerticalOffsetFactor)
+								];
+
+								_waypointHitboxPosition = _mapControl ctrlMapScreenToWorld _screenPos;
+							};
+						};
+
+						A3C_UI_MAPICONS_HC_WPS pushBack [
+							_highCommandGroup,
+							[_waypointHitboxSize, _waypointHitboxSize],
+							_waypointHitboxPosition,
+							_waypointIndex
+						];
 					};
 
 					private _conditionIconPath = "";

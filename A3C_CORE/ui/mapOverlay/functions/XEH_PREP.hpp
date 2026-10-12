@@ -69,6 +69,7 @@ A3C_PREP_SUBDIR(public,getOpacity);
 A3C_PREP_SUBDIR(public,HCGP_actionMergeGroups);
 A3C_PREP_SUBDIR(public,HCGP_actionParaLoadAndDrop);
 A3C_PREP_SUBDIR(public,HCGP_activateDashboardEditName);
+A3C_PREP_SUBDIR(public,HCGP_layout);
 A3C_PREP_SUBDIR(public,HCGP_openMenu);
 A3C_PREP_SUBDIR(public,HCWP_addActions);
 A3C_PREP_SUBDIR(public,HCWP_dayTimeZeroComp);
