@@ -95,6 +95,7 @@ A3C_PREP(removeEventhandlerFired);
 A3C_PREP(replaceUnit);
 A3C_PREP(reserveACECSWArtilleryOrder);
 A3C_PREP(resetUnit);
+A3C_PREP(restoreWeaponFromBinoculars);
 A3C_PREP(rotateVehicleTowardsPos);
 A3C_PREP(selectStaticWeaponDisassemblyUnits);
 A3C_PREP(setDestination);

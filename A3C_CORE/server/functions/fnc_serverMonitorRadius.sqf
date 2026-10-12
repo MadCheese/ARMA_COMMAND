@@ -30,6 +30,32 @@ _slingEvents = _slingEvents select {
 			private _actionScript = (waypointStatements _currentWaypoint) param [1, ""];
 			private _actionType = "";
 
+			//-- Restore weapons only for unwanted on-foot AI binocular use.
+			if (
+				!(_gp getVariable ["A3C_HC_BLACKLIST", false])
+				&& {
+					isPlayer _leader
+					|| {
+						_currentWpType != "HOLD"
+						&& {_currentWpIndex > 0}
+						&& {_currentWpIndex < count waypoints _gp}
+					}
+				}
+			) then {
+				{
+					if (!isPlayer _x && {alive _x} && {isNull objectParent _x}) then {
+						private _binocular = binocular _x;
+
+						if (_binocular != "" && {currentWeapon _x == _binocular}) then {
+							[_x] remoteExecCall [
+								"A3C_ai_shared_fnc_restoreWeaponFromBinoculars",
+								_x
+							];
+						};
+					};
+				} forEach units _gp;
+			};
+
 			if (["CASdistribute", _actionScript] call BIS_fnc_instring) then {
 				if !(["CAS-STRIKE_ACTIVE", _actionScript] call BIS_fnc_instring) then {
 					if (
