@@ -906,6 +906,11 @@ isNil {
 			_vehicle setVariable ["A3C_Guided_Projectile",nil,true];
 			private _handle = _vehicle addEventHandler ["Fired",{
 				params ["_vehicle","_weapon","_muzzle","_mode","_ammo","_magazine","_projectile","_gunner"];
+				private _debug = _vehicle getVariable ["A3C_OW_Debug",false];
+				if (_debug) then {
+					diag_log format ["A3C OW projectile fired: weapon/muzzle/mode/ammo/operator/projectile = %1",
+						[_weapon,_muzzle,_mode,_ammo,_gunner,_projectile]];
+				};
 				private _session = _vehicle getVariable ["A3C_OW_Session",createHashMap];
 				if (count _session == 0 || {(_session get "firedEH") != _thisEventHandler}) exitWith {};
 				private _run = _session get "run";
@@ -956,10 +961,89 @@ isNil {
 				_request set ["pending",false];
 				_request set ["shots",(_request get "shots") + 1];
 				_request set ["lastShot",time];
-				if (_kind != "MISSILE") exitWith {}; // Guns never touch missile state/guidance.
-				if ((_request get "shots") > 1) exitWith {};
 				private _engagement = _request get "id";
-				private _missiletarget = _request get "target"; // Captured real object, never a future assignedTarget.
+				private _shotTarget = _request get "target"; // Snapshot before any scheduled work or preemption.
+				private _round = _request get "shots";
+				if (_debug) then {
+					diag_log format ["A3C OW projectile matched: engagement=%1 kind=%2 round=%3 target=%4 projectile=%5",
+						_engagement,_kind,_round,_shotTarget,_projectile];
+				};
+				if (_kind == "GUN") exitWith {
+					// The suppression helper accepts [_eh,_target,_operator,_weapon,_token],
+					// but aims at getPosASL, deletes the real shot, sleeps, and creates a
+					// replacement without shot parents. Use its velocity-to-target idea
+					// on the ORIGINAL projectile: no launch delay, ammo/attribution changes,
+					// replacement Fired events, or dependency on mechanical turret alignment.
+					private _step = {
+						params ["_projectile","_target","_first","_deadline"];
+						private _result = [false,false,"projectile gone/dead or locality lost"];
+						isNil {
+							if (isNull _projectile || {!alive _projectile} || {!local _projectile}) exitWith {};
+							_result set [2,"target gone/dead or guidance deadline reached"];
+							if (isNull _target || {!alive _target} || {time >= _deadline}) exitWith {};
+							private _aimASL = aimPos _target;
+							_result set [2,"invalid aimPos"];
+							if (!(_aimASL isEqualTypeArray [0,0,0]) || {{finite _x} count _aimASL != 3}
+								|| {_aimASL isEqualTo [0,0,0]}) exitWith {};
+							private _offset = _aimASL vectorDiff getPosASL _projectile;
+							private _distance = vectorMagnitude _offset;
+							private _velocity = velocity _projectile;
+							private _speed = vectorMagnitude _velocity;
+							_result set [2,"zero/invalid projectile speed or aim distance"];
+							if (!finite _speed || {!finite _distance} || {_speed <= 0.001} || {_distance <= 0.001}) exitWith {};
+							// Release before impact/passage so penetration or a ricochet cannot
+							// cause a shot to be steered back into its target. Always correct
+							// the first shot, even inside this short terminal handoff window.
+							private _handoff = ((diag_deltaTime * 2) max 0.01) min 0.035;
+							_result set [2,"terminal handoff or target passed"];
+							if (!_first && {(_offset vectorDotProduct _velocity) <= 0 || {_distance / _speed <= _handoff}}) exitWith {};
+							private _direction = _offset vectorMultiply (1 / _distance);
+							private _up = vectorUp _projectile;
+							_up = _up vectorDiff (_direction vectorMultiply (_up vectorDotProduct _direction));
+							if (vectorMagnitude _up < 0.001) then {
+								private _reference = if (abs (_direction select 2) < 0.9) then {[0,0,1]} else {[1,0,0]};
+								_up = _reference vectorDiff (_direction vectorMultiply (_reference vectorDotProduct _direction));
+							};
+							_projectile setVectorDirAndUp [_direction,vectorNormalized _up];
+							// Preserve the engine's current speed, including drag/impact losses;
+							// never invent muzzle velocity or reset kinetic energy each step.
+							_projectile setVelocity (_direction vectorMultiply _speed);
+							_result = [_distance / _speed > _handoff,true,"terminal handoff"];
+						};
+						_result
+					};
+					private _deadline = time + ((getNumber (configFile >> "CfgAmmo" >> _ammo >> "timeToLive") max 0.1) min 30);
+					private _result = [false,false,"Fired event supplied no live projectile"];
+					if (!isNull _projectile && {_projectile getVariable ["A3C_OW_GunGuidanceClaimed",false]}) then {
+						_result set [2,"duplicate cannon guidance ownership"];
+					};
+					if (!isNull _projectile && {!(_projectile getVariable ["A3C_OW_GunGuidanceClaimed",false])}) then {
+						if (local _projectile) then {_projectile setVariable ["A3C_OW_GunGuidanceClaimed",true];};
+						// Unscheduled Fired call: first trajectory writes precede spawn.
+						_result = [_projectile,_shotTarget,true,_deadline] call _step;
+					};
+					if (_debug) then {
+						diag_log format ["A3C OW cannon guidance %1: engagement=%2 round=%3 target=%4 projectile=%5 reason=%6",
+							if (_result select 1) then {"started (trajectory corrected)"} else {"could not start"},
+							_engagement,_round,_shotTarget,_projectile,if (_result select 1) then {""} else {_result select 2}];
+					};
+					if !(_result select 0) exitWith {};
+					// Only shot/target/scalars/code survive. No run/session/request references
+					// and no permanent handler; preemption/cancellation cannot retarget it.
+					[_projectile,_shotTarget,_deadline,_step,_debug,_engagement,_round] spawn {
+						params ["_projectile","_target","_deadline","_step","_debug","_engagement","_round"];
+						private _result = [true,false,""];
+						while {_result select 0} do {
+							sleep 0.01;
+							_result = [_projectile,_target,false,_deadline] call _step;
+						};
+						if (_debug) then {
+							diag_log format ["A3C OW cannon guidance ended: engagement=%1 round=%2 target=%3 reason=%4",
+								_engagement,_round,_target,_result select 2];
+						};
+					};
+				}; // Guns never touch missile state/guidance; every matched round takes this branch.
+				if ((_request get "shots") > 1) exitWith {};
 				_request set ["projectile",_projectile];
 				(_request get "projectiles") pushBackUnique _projectile;
 				_request set ["unknown",false];
@@ -968,22 +1052,47 @@ isNil {
 				_request set ["reason","Confirmed missile in flight."];
 				_session set ["missileFlight",_request];
 				_vehicle setVariable ["A3C_Guided_Projectile",[_engagement,_projectile,1,[_projectile]],true];
-				[_vehicle,_weapon,_projectile,_missiletarget,_engagement,_session,_request] spawn {
-					params ["_vehicle","_weapon","_projectile","_missiletarget","_engagement","_session","_request"];
-					sleep 1;
-					isNil {
-						// A launched shot may finish after release/preemption; no firing here.
-						[[_projectile,_missiletarget,"MISSILE"],A3C_ai_shared_fnc_guideProjectileMissile] remoteExec ["bis_fnc_spawn",_vehicle];
-						if (_session get "closed") exitWith {};
-						private _run = _session get "run";
-						if !([_run,_session] call (_run get "valid")) exitWith {};
-						if (((_session get "missileFlight") getOrDefault ["id",-1]) != _engagement) exitWith {};
-						_request set ["handoff",true];
-						private _data = _vehicle getVariable ["A3C_fireComplete",["",false,-1]];
-						if ((_data param [2,-1]) == _engagement) then {
-							_vehicle setVariable ["A3C_fireComplete",[_weapon,true,_engagement],true];
+				private _startGuidance = {
+					params ["_projectile","_target","_engagement","_debug"];
+					private _reason = "";
+					if (isNull _projectile || {!alive _projectile}) then {_reason = "launched projectile no longer exists/alive";} else {
+						if (isNull _target) then {_reason = "captured target no longer exists";} else {
+							if (!local _projectile) then {_reason = "projectile not local at guidance receiver";} else {
+								if (isNil "A3C_ai_shared_fnc_guideProjectileMissile") then {_reason = "missile guidance helper unavailable";};
+							};
 						};
 					};
+					if (_reason != "") exitWith {
+						if (_debug) then {diag_log format ["A3C OW missile guidance could not start: engagement=%1 reason=%2",_engagement,_reason];};
+					};
+					private _alreadyStarted = _projectile getVariable ["A3C_Guidance_Started",false];
+					private _hasVelocity = vectorMagnitude velocity _projectile > 0.001;
+					// Helper claims atomically, corrects immediately, retries zero launch
+					// velocity in its own worker, and guards duplicate/locality ownership.
+					[_projectile,_target,"MISSILE"] call A3C_ai_shared_fnc_guideProjectileMissile;
+					if (_debug) then {
+						private _status = if (_alreadyStarted) then {"already owned; no duplicate worker"} else {
+							if !(_projectile getVariable ["A3C_Guidance_Started",false]) then {"helper did not claim projectile"} else {
+								if (_projectile getVariable ["A3C_Guidance_Released",true]) then {"helper claimed then released; no continuing guidance"} else {
+									if (_hasVelocity) then {"started (helper completed initial trajectory correction)"} else {"helper claimed; awaiting launch velocity, trajectory correction not yet confirmed"}
+								}
+							}
+						};
+						diag_log format ["A3C OW missile guidance: engagement=%1 target=%2 projectile=%3 status=%4",_engagement,_target,_projectile,_status];
+					};
+				};
+				if (isNull _projectile || {!alive _projectile} || {local _projectile}) then {
+					[_projectile,_shotTarget,_engagement,_debug] call _startGuidance;
+				} else {
+					// Exceptional locality handoff uses the projectile owner, never a
+					// future helicopter owner. Receiver validates locality and logs start.
+					[[_projectile,_shotTarget,_engagement,_debug],_startGuidance] remoteExecCall ["bis_fnc_call",_projectile];
+					if (_debug) then {diag_log format ["A3C OW missile guidance dispatched: engagement=%1; receiver execution not confirmed",_engagement];};
+				};
+				_request set ["handoff",true]; // Dispatch/attempt only; not proof of guidance execution.
+				private _data = _vehicle getVariable ["A3C_fireComplete",["",false,-1]];
+				if ((_data param [2,-1]) == _engagement) then {
+					_vehicle setVariable ["A3C_fireComplete",[_weapon,true,_engagement],true];
 				};
 			}];
 			_session set ["firedEH",_handle];
