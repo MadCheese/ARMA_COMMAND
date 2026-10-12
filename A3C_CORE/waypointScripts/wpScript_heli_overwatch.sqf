@@ -502,8 +502,10 @@ if (_retriggered || {!(call _owMainCurrent)}) exitWith {
 
 ///////////////  _fncs for CAS
 
-// Config-only mode cache. Require single-round modes, including their random
-// burst ceiling and ammo multiplier; prefer a nonautomatic mode when available.
+// Discover executable modes separately from their AI range/burst preferences.
+// A physical burst cannot be cancelled reliably by clearing doTarget/FIREWEAPON.
+// The controller therefore uses a one-round mode (often the player/manual mode)
+// from this list, rather than forcing an AI burst and assuming one command = one shot.
 // "this" is the actual muzzle classname when passed to forceWeaponFire.
 private _fireModes = {
 	params ["_weapon","_muzzleName","_cache"];
@@ -521,11 +523,11 @@ private _fireModes = {
 		private _burst = if (isNumber (_modeCfg >> "burst")) then {getNumber (_modeCfg >> "burst")} else {1};
 		private _multiplier = if (isNumber (_modeCfg >> "multiplier")) then {getNumber (_modeCfg >> "multiplier")} else {1};
 		private _range = getNumber (_modeCfg >> "maxRange");
-		if (isClass _modeCfg && {_burst == 1} && {_multiplier == 1}
-			&& {getNumber (_modeCfg >> "burstRangeMax") <= 1} && {_range > 0}) then {
+		if (isClass _modeCfg && {_burst >= 1} && {_multiplier >= 1}) then {
 			private _mode = if (_x == "this") then {_muzzle} else {_x};
 			private _entry = [_mode,(getNumber (_modeCfg >> "reloadTime")) max 0.05,
-				getNumber (_modeCfg >> "minRange"),_range];
+				getNumber (_modeCfg >> "minRange"),_range,
+				_burst max getNumber (_modeCfg >> "burstRangeMax"),_multiplier];
 			if (getNumber (_modeCfg >> "autoFire") == 0) then {_single pushBack _entry;}
 			else {_automatic pushBack _entry;};
 		};
@@ -574,7 +576,9 @@ _fnc_vehicleWeaponAmmo = {
 					_x params ["_mode","_reload","_minRange","_range"];
 					private _spec = [_weapon,_muzzle,_mag,+_turret,_operator,_mode,_reload,_minRange,_range];
 					_return pushBackUnique [_weapon,_types,_rounds,_range,_minRange,_spec];
-				} forEach ([_weapon,_muzzleName,_cache] call _fireModes);
+				} forEach (([_weapon,_muzzleName,_cache] call _fireModes) select {
+					(_x select 4) == 1 && {(_x select 5) == 1} && {(_x select 3) > 0}
+				});
 			};
 		};
 	} forEach (_capabilities getOrDefault ["guidedMagazines",[]]);
@@ -807,9 +811,33 @@ isNil {
 							// Direct gun projectiles only; guided launcher ammunition never
 							// enters the cannon request path, even on a mixed modded weapon.
 							if ((_ammo get "simulation") in ["shotbullet","shotshell"]) then {
+								private _modes = [_gun,_muzzleName,_rankingCache] call _fireModes;
+								private _controlled = _modes select {(_x select 4) == 1 && {(_x select 5) == 1}};
+								private _info = [_gun,_muzzleName,_magazine,_rankingCache] call A3C_main_fnc_getHeliOverwatchAmmoInfo;
+								// Use the muzzle's full range evidence, not the chosen mode's
+								// short AI selection range. Lifetime/speed is an upper bound,
+								// not a promise of ballistic accuracy or armor penetration.
+								private _magCfg = configFile >> "CfgMagazines" >> _magazine;
+								private _ammoCfg = configFile >> "CfgAmmo" >> (_ammo get "ammo");
+								private _gunCfg = configFile >> "CfgWeapons" >> _gun;
+								private _muzzleCfg = if (_muzzleName == "this") then {_gunCfg} else {_gunCfg >> _muzzleName};
+								private _velocity = getNumber (_magCfg >> "initSpeed");
+								private _override = getNumber (_muzzleCfg >> "initSpeed");
+								if (_override > 0) then {_velocity = _override;};
+								if (_override < 0) then {_velocity = _velocity * abs _override;};
+								private _lifeRange = _velocity * getNumber (_ammoCfg >> "timeToLive");
+								private _gunRange = _info get "range";
+								if (_gunRange <= 0) then {_gunRange = _lifeRange;};
+								_gunRange = _gunRange min 3000;
+								if (_lifeRange > 0) then {_gunRange = _gunRange min _lifeRange;};
+								private _modeReason = if (_controlled isEqualTo []) then {
+									"No bounded one-round mode; physical/random bursts or ammo multipliers require engine-specific validation."
+								} else {if (_gunRange <= 0) then {"No positive weapon/ammunition range evidence."} else {"Bounded firing mode and muzzle/ammunition range resolved."}};
+								_rankingCache set [format ["gunModes:%1:%2",_gun,_muzzle],[_modes,_controlled,_gunRange,_modeReason]];
 								{
-									_x params ["_mode","_reload","_minRange","_range"];
-									_range = _range min 3000;
+									_x params ["_mode","_reload"];
+									private _minRange = _info get "minRange";
+									private _range = _gunRange;
 									private _spec = [_gun,_muzzle,_magazine,+_turret,_operator,_mode,_reload,_minRange,_range];
 									private _entry = [_gun,_muzzle,_magazine,_range,_spec];
 									private _state = weaponState [_vehicle,_turret,_gun,_muzzle];
@@ -818,7 +846,7 @@ isNil {
 									} else {
 										_reserve pushBackUnique _entry;
 									};
-								} forEach ([_gun,_muzzleName,_rankingCache] call _fireModes);
+								} forEach (_controlled select {_gunRange > 0});
 							};
 						};
 					} forEach (_x get "ammunition");
@@ -848,10 +876,19 @@ isNil {
 			_usableGuns = [_vehicle,_capabilities] call _getAvailableGuns;
 			private _available = {
 				private _spec = _x select (count _x - 1);
-				time >= (_blockedUntil getOrDefault [str (_spec select [0,5]),0])
+				time >= (_blockedUntil getOrDefault [str (_spec select [0,6]),0])
 			};
-			private _result = [_vehicle,_direction,_weaponAmmo select _available,_usableGuns select _available,_retention,_rankingCache]
+			// An unobserved launch cannot be retried safely. Ground targets can
+			// use the gun during quarantine. Normal tracked flights retain the
+			// selector's hysteresis and wait for completion; AA infantry can preempt.
+			private _missilesReady = if ((_session get "missileFlight") getOrDefault ["unknown",false]) then {[]} else {_weaponAmmo select _available};
+			private _result = [_vehicle,_direction,_missilesReady,_usableGuns select _available,_retention,_rankingCache]
 				call A3C_main_fnc_selectHeliOverwatchTarget;
+			(_result select 1) set ["armament",[_weaponAmmo,_usableGuns,_missilesReady,
+				((keys _rankingCache) select {(_x find "gunModes:") == 0}) apply {[_x,_rankingCache get _x]}]];
+			(_result select 1) set ["missileStatus",(_session get "missileFlight") getOrDefault ["reason",""]];
+			(_result select 1) set ["stock",magazinesAllTurrets [_vehicle,true]];
+			(_result select 1) set ["capabilityReasons",_capabilities getOrDefault ["reasons",[]]];
 			_selectedTarget = _result select 0;
 			_nextEvaluation = time + 2;
 			isNil {
@@ -874,27 +911,61 @@ isNil {
 				private _run = _session get "run";
 				if !([_run,_session] call (_run get "valid")) exitWith {};
 				private _request = _session get "fireRequest";
-				if (count _request == 0 || {!(_request get "pending")}
-					|| {!((_request get "sessionId") isEqualTo (_session get "id"))}) exitWith {};
-				(_request get "spec") params ["_wantWeapon","_wantMuzzle","_wantMag","_turret","_operator","_wantMode"];
-				if (toLower _weapon != toLower _wantWeapon || {toLower _muzzle != toLower _wantMuzzle}
-					|| {toLower _magazine != toLower _wantMag} || {toLower _mode != toLower _wantMode}
-					|| {_gunner != _operator} || {!local _operator} || {isPlayer _operator}
-					|| {_vehicle turretUnit _turret != _operator} || {!(_vehicle turretLocal _turret)}
-					|| {!((_vehicle unitTurret _operator) isEqualTo _turret)}) exitWith {};
-				private _kind = _request get "kind";
 				private _simulation = toLower getText (configFile >> "CfgAmmo" >> _ammo >> "simulation");
-				if ((_kind == "MISSILE" && {_simulation != "shotmissile"})
-					|| {_kind == "GUN" && {!(_simulation in ["shotbullet","shotshell"])}}) exitWith {};
-				// Only a real matching event acknowledges one pending discharge.
+				private _flight = _session get "missileFlight";
+				private _lateMatch = (_flight getOrDefault ["unknown",false]) && {_simulation == "shotmissile"}
+					&& {(([_weapon,_muzzle,_magazine,_mode] apply {toLower _x}) + [_gunner])
+						isEqualTo (_flight get "expectedEvent")};
+				// Recover the exact captured request, even if a gun now owns fireRequest.
+				if (_lateMatch) then {_request = _flight;};
+				private _matches = false;
+				private _kind = _request getOrDefault ["kind",""];
+				if ((_lateMatch || {_request getOrDefault ["acceptShots",false]})
+					&& {(_request getOrDefault ["sessionId",[]]) isEqualTo (_session get "id")}) then {
+					(_request get "spec") params ["_wantWeapon","_wantMuzzle","_wantMag","_turret","_operator","_wantMode"];
+					_matches = toLower _weapon == toLower _wantWeapon && {toLower _muzzle == toLower _wantMuzzle}
+						&& {toLower _magazine == toLower _wantMag} && {toLower _mode == toLower _wantMode}
+						&& {_gunner == _operator} && {local _operator} && {!isPlayer _operator}
+						&& {_vehicle turretUnit _turret == _operator} && {_vehicle turretLocal _turret}
+						&& {(_vehicle unitTurret _operator) isEqualTo _turret}
+						&& {(_kind == "MISSILE" && {_simulation == "shotmissile"})
+							|| {_kind == "GUN" && {_simulation in ["shotbullet","shotshell"]}}};
+				};
+				// Even an unexpected/late missile event owns the launch slot until
+				// its actual projectile is gone. It is never guided or retargeted here.
+				if (_simulation == "shotmissile" && {!_matches || {(_request get "shots") > 0}}) then {
+					if (count _flight == 0) then {
+						_flight = createHashMapFromArray [["id",-1],["projectiles",[]],
+							["handoff",false],["flightDeadline",time + 120]];
+						_session set ["missileFlight",_flight];
+					};
+					(_flight get "projectiles") pushBackUnique _projectile;
+					if !(_flight getOrDefault ["unknown",false]) then {
+						_flight set ["reason","Unexpected missile Fired event; waiting for observed projectile completion."];
+					};
+				};
+				if (!_matches) exitWith {
+					if (_request getOrDefault ["acceptShots",false]) then {
+						_request set ["reason",format ["Fired mismatch: actual=%1 expected=%2",
+							[_weapon,_muzzle,_magazine,_mode,_gunner],_request get "spec"]];
+						if (_vehicle getVariable ["A3C_OW_Debug",false]) then {diag_log (_request get "reason");};
+					};
+				};
+				// Count EVERY matching Fired event during the request, including
+				// any extra events after the first acknowledged discharge.
 				_request set ["pending",false];
 				_request set ["shots",(_request get "shots") + 1];
 				_request set ["lastShot",time];
 				if (_kind != "MISSILE") exitWith {}; // Guns never touch missile state/guidance.
+				if ((_request get "shots") > 1) exitWith {};
 				private _engagement = _request get "id";
 				private _missiletarget = _request get "target"; // Captured real object, never a future assignedTarget.
 				_request set ["projectile",_projectile];
+				(_request get "projectiles") pushBackUnique _projectile;
+				_request set ["unknown",false];
 				_request set ["flightDeadline",time + 120];
+				_request set ["handoffDeadline",time + 3];
+				_request set ["reason","Confirmed missile in flight."];
 				_session set ["missileFlight",_request];
 				_vehicle setVariable ["A3C_Guided_Projectile",[_engagement,_projectile,1,[_projectile]],true];
 				[_vehicle,_weapon,_projectile,_missiletarget,_engagement,_session,_request] spawn {
@@ -927,10 +998,16 @@ isNil {
 			};
 			private _flight = _session get "missileFlight";
 			if (count _flight > 0) then {
-				private _projectile = _flight get "projectile";
-				if (_flight get "handoff" && {isNull _projectile || {!alive _projectile}}) then {
+				private _projectiles = _flight get "projectiles";
+				if (!(_flight getOrDefault ["unknown",false])
+					&& {_projectiles findIf {!isNull _x && {alive _x}} < 0}) then {
 					isNil {
 						if !(call _current) exitWith {};
+						// Recheck inside the atomic mutation; a Fired event may have
+						// added another observed projectile since the scheduled check.
+						_flight = _session get "missileFlight";
+						if (count _flight == 0 || {_flight getOrDefault ["unknown",false]}
+							|| {(_flight get "projectiles") findIf {!isNull _x && {alive _x}} >= 0}) exitWith {};
 						_session set ["missileFlight",createHashMap];
 						if (((_vehicle getVariable ["A3C_Guided_Projectile",[-1]]) select 0) == (_flight get "id")) then {
 							_vehicle setVariable ["A3C_Guided_Projectile",nil,true];
@@ -938,9 +1015,23 @@ isNil {
 						};
 					};
 				} else {
-					// Do not free the launch slot while its projectile is still alive.
-					// An overlong/failed handoff releases the session, never the missile.
-					if (time >= (_flight get "flightDeadline")) then {_doExit = true;};
+					if (time >= (_flight getOrDefault ["handoffDeadline",1e12])
+						&& {!(_flight getOrDefault ["handoffReported",false])}
+						&& {!(_flight get "handoff") || {
+							_projectiles findIf {local _x && {!(_x getVariable ["A3C_Guidance_Started",false])}} >= 0
+						}}) then {
+						_flight set ["handoffReported",true];
+						_flight set ["reason","Guidance handoff/start not acknowledged after 3 seconds; waiting for actual missile completion."];
+						if (_vehicle getVariable ["A3C_OW_Debug",false]) then {diag_log (_flight get "reason");};
+					};
+					// A timeout explains a blocked slot; it does not end Overwatch or
+					// permit another launch while the existing projectile is alive.
+					if (time >= (_flight get "flightDeadline") && {!(_flight getOrDefault ["timeoutReported",false])}) then {
+						_flight set ["timeoutReported",true];
+						_flight set ["reason",format ["Missile slot held: unknown launch=%1, live projectiles=%2, handoff requested=%3",
+							_flight getOrDefault ["unknown",false],_projectiles select {!isNull _x && {alive _x}},_flight get "handoff"]];
+						if (_vehicle getVariable ["A3C_OW_Debug",false]) then {diag_log (_flight get "reason");};
+					};
 				};
 			};
 			!_doExit
@@ -1053,7 +1144,7 @@ isNil {
 				// A fresh rotation for EVERY missile or eight-round gun engagement.
 				if (call _mayEngage) then {
 					call _clearAim;
-					private _rotation = [position _aim] call _rotate;
+					private _rotation = [position _target] call _rotate;
 					private _rotationDeadline = time + 12; // Helper's normal timeout remains ten seconds.
 					waitUntil {
 						sleep 0.05;
@@ -1086,7 +1177,8 @@ isNil {
 								_request = createHashMapFromArray [
 									["id",_id],["sessionId",_session get "id"],["kind",_method],
 									["target",_target],["spec",_spec],["pending",false],["shots",0],
-									["lastShot",time - _reload],["projectile",objNull],["handoff",false],["flightDeadline",0]
+									["acceptShots",false],["commands",0],["reason",""],
+									["lastShot",time - _reload],["projectile",objNull],["projectiles",[]],["handoff",false],["flightDeadline",0]
 								];
 								_session set ["fireRequest",_request];
 							};
@@ -1099,7 +1191,10 @@ isNil {
 							private _readyDeadline = time + _readyWindow;
 							private _stopFiring = false;
 							while {call _mayEngage && {!_stopFiring} && {count _request > 0} && {(_request get "shots") < _limit}} do {
-								if (time >= _readyDeadline) exitWith {_failed = true;};
+								if (time >= _readyDeadline) exitWith {
+									_failed = true;
+									_request set ["reason","Weapon/magazine did not become ready before deadline."];
+								};
 								private _ready = false;
 								isNil {
 									if !(call _mayEngage) exitWith {};
@@ -1123,6 +1218,9 @@ isNil {
 									private _issued = false;
 									isNil {
 										if !(call _mayEngage) exitWith {};
+										if ((_request get "shots") >= _limit || {(_request get "commands") >= _limit}
+											|| {_request get "pending"}) exitWith {};
+										if (_method == "MISSILE" && {count (_session get "missileFlight") > 0}) exitWith {};
 										// Recheck engine readiness in the same unscheduled scope
 										// as firing; a scheduled caller may have yielded since selection.
 										private _live = weaponState [_vehicle,_turret];
@@ -1138,6 +1236,8 @@ isNil {
 											_vehicle setVariable ["A3C_fireComplete",[_weapon,false,_request get "id"],true];
 										};
 										_request set ["pending",true];
+										_request set ["acceptShots",true];
+										_request set ["commands",(_request get "commands") + 1];
 										private _stockBefore = 0;
 										{
 											if ((_x select 1) isEqualTo _turret && {toLower (_x select 0) == toLower _magazine}) then {
@@ -1159,6 +1259,9 @@ isNil {
 										if ((_request get "shots") == _before) then {
 											_stopFiring = true; // Latch in the while condition, not a nested exitWith.
 											_failed = !_preempted && {!_doExit} && {time >= _ackDeadline};
+											if (_failed && {(_request get "reason") == ""}) then {
+												_request set ["reason","No matching Fired event within 3 seconds."];
+											};
 											if (_method == "MISSILE" && {call _current}) then {
 												private _stockAfter = 0;
 												{
@@ -1167,8 +1270,30 @@ isNil {
 													};
 												} forEach magazinesAllTurrets [_vehicle,true];
 												// Unacknowledged ammo consumption may be an untracked launch.
-												// Release rather than risk launching a duplicate missile.
-												if (_stockAfter < (_request get "stockBefore")) then {_doExit = true; _failed = true;};
+												// Keep ACTIVE, but quarantine the missile slot if no event
+												// supplied a projectile we can observe. Guns remain usable.
+												if (_stockAfter < (_request get "stockBefore") && {count (_session get "missileFlight") == 0}) then {
+													_failed = true;
+													_request set ["reason","Missile ammo consumed without a Fired projectile; launch slot quarantined until a late event or session replacement."];
+													_request set ["unknown",true];
+													_request set ["expectedEvent",([_weapon,_muzzle,_magazine,_mode] apply {toLower _x}) + [_operator]];
+													_request set ["flightDeadline",time + 120];
+													_session set ["missileFlight",_request];
+												};
+											};
+										};
+										// Drain the normal round-reload interval before issuing
+										// another command, counting any additional Fired events.
+										if (_method == "GUN" && {(_request get "shots") > _before}) then {
+											waitUntil {
+												sleep 0.01;
+												!(call _mayEngage) || {(_request get "shots") > (_request get "commands")}
+													|| {time >= (_request get "lastShot") + _reload}
+											};
+											if ((_request get "shots") > (_request get "commands")) then {
+												_stopFiring = true; _failed = true;
+												_request set ["reason","Configured single-round mode emitted extra Fired events; mode disabled for this session."];
+												_blockedUntil set [str (_spec select [0,6]),1e12];
 											};
 										};
 										_readyDeadline = time + _readyWindow;
@@ -1198,13 +1323,17 @@ isNil {
 				isNil {
 					if !(call _current) exitWith {};
 					_request set ["pending",false];
-					_session set ["lastFire",[_method,_target,_spec,_request getOrDefault ["shots",0],_preempted,_failed]];
+					_request set ["acceptShots",false];
+					_session set ["lastFire",[_method,_target,_spec,_request getOrDefault ["shots",0],_preempted,_failed,_request getOrDefault ["reason",""]]];
 					if (_vehicle getVariable ["A3C_OW_Debug",false]) then {
-						diag_log format ["A3C OW fire %1: kind/target/spec/actual shots/preempted/failed = %2",
+						diag_log format ["A3C OW fire %1: kind/target/spec/actual shots/preempted/failed/reason = %2",
 							_request getOrDefault ["id",-1],_session get "lastFire"];
 					};
 					_session set ["fireRequest",createHashMap];
-					if (_failed) then {_blockedUntil set [str (_spec select [0,5]),time + 5];};
+					if (_failed) then {
+						private _key = str (_spec select [0,6]);
+						_blockedUntil set [_key,(time + 5) max (_blockedUntil getOrDefault [_key,0])];
+					};
 					if (_method == "MISSILE" && {(_request getOrDefault ["shots",0]) == 0}
 						&& {count (_session get "missileFlight") == 0}) then {
 						_vehicle setVariable ["A3C_fireComplete",nil,true];
@@ -1213,9 +1342,8 @@ isNil {
 				};
 			};
 			if (_doExit) exitWith {};
-			// Include AA-only helicopters. Cooldown-filtered options do not count
-			// as ammunition depletion; their raw live stock is still present.
-			if (_weaponAmmo isEqualTo [] && {_usableGuns isEqualTo []}) exitWith {};
+			// No live ammo, no executable mode and no target are normal ACTIVE
+			// idle states. Reevaluate stock/capabilities on the next iteration.
 			if (!_preempted) then {sleep 1;}; // Bounded burst/failure/idle pacing, then a new decision.
 		};
 

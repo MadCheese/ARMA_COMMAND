@@ -81,7 +81,9 @@ private _threat = {
                             if (_aa > 0) then {
                                 private _inRange = (_info get "range") > 0 && {_distance <= (_info get "range")}
                                     && {_distance >= (_info get "minRange")};
-                                private _ready = _operatorReady && {canFire _target} && {_inRange};
+                                // Infantry can be holding a rifle while carrying a live
+                                // AA launcher. canFire then tests the wrong current weapon.
+                                private _ready = _operatorReady && {_isMan || {canFire _target}} && {_inRange};
                                 private _liveGrade = if (_aa == 1 && {_ready}) then {1} else {2};
                                 if (_grade == 0 || {_liveGrade < _grade}) then {_grade = _liveGrade;};
                                 _notes pushBackUnique format ["%1; rounds present, operator=%2 ready=%3 inRange=%4",
@@ -115,14 +117,9 @@ private _threat = {
     } else {
         _valid = _valid && {{alive _x} count crew _target > 0}
             && {!(lineIntersects [getPosASL _heli, getPosASL _target, _heli, _target])};
-        if (!_isAir) then {
-            _valid = _valid && {canFire _target} && {speed _target < 100}
-                && {(weapons _target) findIf {
-                    private _name = toLower _x;
-                    ["horn", "smoke"] findIf {_x in _name} < 0
-                } >= 0};
-        };
-        if (!_valid) then {_reason = "Vehicle failed alive/crew/LOS or legacy ground validity checks.";};
+        // Hostile live crew identifies the vehicle. A disabled gun, removed
+        // armament or speed changes threat readiness, not target validity.
+        if (!_valid) then {_reason = "Vehicle failed alive/hostility/live-crew/LOS checks.";};
     };
     private _method = "";
     private _option = [];
