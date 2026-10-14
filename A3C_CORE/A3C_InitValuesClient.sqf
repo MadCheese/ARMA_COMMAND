@@ -488,7 +488,7 @@ A3C_UI_MAP_UNITBUTTONCEIL = 16;
 
 
 A3C_FlyinHeightArrayHeli = ["25","75","200","500"];
-A3C_FlyinHeightArrayJet = ["30","100","500","1000","2000"];
+A3C_FlyinHeightArrayJet = ["30","100","500","1000","1500","2000"];
 
 
 A3C_HC_MENU_REFERENCE_UNITS = [];

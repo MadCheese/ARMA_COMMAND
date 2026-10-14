@@ -127,14 +127,3 @@ if (_eventHandlers isEqualTo [] && { _unit != player }) then {
 	];
 };
 
-// Add one side-correct IR grenade if the unit has no NVG-marker magazine.
-private _hasNVGMarkerMagazine = (magazines _unit findIf {
-	private _ammo = getText (configFile >> "CfgMagazines" >> _x >> "ammo");
-	private _nvgMarkers = "true" configClasses (configFile >> "CfgAmmo" >> _ammo >> "NVGMarkers");
-
-	!(_nvgMarkers isEqualTo [])
-}) >= 0;
-
-if (!_hasNVGMarkerMagazine) then {
-	_unit addMagazine _irType;
-};

@@ -21,10 +21,7 @@ if (!canSuspend) exitWith {
 private _radialDisplay = findDisplay IDD_RADIAL_MENU;
 private _mapDisplay = findDisplay IDD_MAP_OVERLAY;
 
-/*
-	The legacy function ultimately gave the radial display priority when
-	both displays were present.
-*/
+
 private _isRadial = !isNull _radialDisplay;
 private _isMap = !_isRadial && {!isNull _mapDisplay};
 
@@ -40,10 +37,7 @@ private _selectedGroups = +(
 if (_selectedGroups isEqualTo []) exitWith {};
 
 if (_isMap) then {
-	/*
-		Preserve the legacy page-mode switch. The original _refUnits value
-		was only used for this map-side membership check.
-	*/
+
 	private _currentSelection = missionNamespace getVariable [
 		"A3C_SELECTED_UNITS",
 		[]
@@ -101,10 +95,6 @@ private _activeSuppressionUnits = (
 					_canSuppress = false;
 				};
 
-				/*
-					The original condition checks only positive speed rather
-					than absolute speed. That behavior is retained.
-				*/
 				case (
 					speed _vehicle > 1
 					&& {_vehicle isKindOf "HELICOPTER"}
@@ -134,9 +124,7 @@ if (_message != "") then {
 	systemChat _message;
 };
 
-/*
-	Stop the current suppression order before initiating a replacement.
-*/
+//-- Stop the current suppression order before initiating a replacement.
 if (_currentlySuppressingUnits isNotEqualTo []) then {
 	[
 		_currentlySuppressingUnits,
