@@ -76,9 +76,7 @@ if (
 
 
 //-- Issue orders where the group leader is local
-[
-	[_leader, _group, _movePos],
-	{
+private _issueMovement = {
 		params ["_leader", "_group", "_movePos"];
 
 		//-- NOTE: _groupDrivers includes foot soldiers
@@ -133,5 +131,15 @@ if (
 		{
 			_x doFollow _leader;
 		} forEach (_groupDrivers - [_leader, _leaderVehicleDriver]);
-	}
-] remoteExec ["BIS_fnc_call", _leader];
+};
+
+// A local caller must finish issuing movement before starting an action that
+// depends on it. Keep the existing remote path for non-local callers.
+if (local _leader) then {
+	[_leader, _group, _movePos] call _issueMovement;
+} else {
+	[
+		[_leader, _group, _movePos],
+		_issueMovement
+	] remoteExec ["BIS_fnc_call", _leader];
+};

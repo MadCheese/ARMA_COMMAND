@@ -1,6 +1,10 @@
 // A3C_ai_highCommand_fnc_removeWaypoint
 
-params ["_group", "_wpIndex"];
+params [
+	"_group",
+	"_wpIndex",
+	["_moveGroup", true, [true]]
+];
 
 // ~~ polys will need to have their ID's adjusted.
 
@@ -90,7 +94,7 @@ deleteWaypoint [_group, _wpIndex];
 private _leader = leader _group;
 private _leaderVehicle = vehicle _leader;
 
-if (_isCurrentWaypoint) then {
+if (_isCurrentWaypoint && {_moveGroup}) then {
     private _movePos = if (_isLastWaypoint) then {
   	  position _leaderVehicle getPos [10, getDir _leaderVehicle]
     } else {
