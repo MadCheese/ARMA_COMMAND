@@ -10,9 +10,25 @@
 params ["_heli", "_direction", "_missiles", "_guns", "_state", "_cache"];
 private _radius = 0;
 {_radius = _radius max (_x select 3);} forEach (_missiles + _guns);
+
+private _knowledgeGroup = group (driver _heli);
+
 private _candidates = if (_radius > 0) then {
-    [side _heli, _radius, "ENEMY", position _heli, ["AIR", "TANK", "CAR", "SHIP", "MAN"]] call MCSS_fnc_nearEntities
-} else {[]};
+    (
+        [
+            side _heli,
+            _radius,
+            "ENEMY",
+            position _heli,
+            ["AIR", "TANK", "CAR", "SHIP", "MAN"]
+        ] call MCSS_fnc_nearEntities
+    ) select {
+        _knowledgeGroup knowsAbout _x > 1
+    }
+} else {
+    []
+};
+
 private _retained = _state getOrDefault ["retained", objNull];
 private _rows = [];
 private _ranked = [];

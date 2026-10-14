@@ -723,12 +723,21 @@ if (count A3C_MAP_DRAGPLANNING_POSITIONS > 0) then {
 			_vehi spawn {
 				sleep 1;
 				_boardingUnits = (A3C_SELECTED_UNITS) select {isNull objectParent _x};
-				[_this,'all',0,_boardingUnits] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro ;				
+				[_this,'all',0,_boardingUnits] spawn A3C_ai_squad_fnc_boarding_assignVehicleSeatMacro;				
 			};
+
 		} else {
+
 			if (count A3C_SELECTED_UNITS == 1) then {
+
 				private _unit = A3C_SELECTED_UNITS select 0;
-				if ( (_unit == A3C_SQ_CLICKED_UNIT) && (A3C_MAP_CommandMode == "INF") ) then {
+				
+				if (
+					A3C_MAP_CommandMode == "INF"
+					&& {_unit isEqualType objNull}
+					&& {!isNull _unit}
+					&& {_unit isEqualTo A3C_SQ_CLICKED_UNIT}
+				) then {
 					if (count (_unit getVariable ["A3C_PLOT",[]]) > 0 ) then {
 						[[_unit],true,true] call A3C_ai_shared_fnc_cancelUnitPlot;
 						waitUntil {count (_unit getvariable 'A3C_PLOT') == 0};

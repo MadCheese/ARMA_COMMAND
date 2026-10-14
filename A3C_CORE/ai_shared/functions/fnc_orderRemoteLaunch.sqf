@@ -115,7 +115,15 @@ if (_weaponGroup == "ATSHOT") then {
 
 // Function to make sure EH is added on correct machine.
 private _addEHFunc = {
-    params ["_object", "_func", "_target", "_target1", "_snapObject", ["_scheduled", true]];
+    params [
+        "_object",
+        "_func",
+        "_target",
+        "_target1",
+        "_snapObject",
+        ["_scheduled", true],
+        ["_publicHandle", true]
+    ];
 
     if !(local _object) exitWith {};
     if (isNil "_func") exitWith {};
@@ -134,7 +142,7 @@ private _addEHFunc = {
     _object setVariable [
         "A3C_REMOTE_HANDLE",
         [_handle, _target, _target1, _snapObject, behaviour _object],
-        true
+        _publicHandle
     ];
 };
 
@@ -312,7 +320,6 @@ switch (_weaponGroup) do {
             && {secondaryWeapon _unit == _launcher}
             && {!isNull _target}
         };
-
         private _lT = switch (true) do {
             case ((side _unit) getFriend WEST < 0.6): {
                 "LaserTargetW"
@@ -324,20 +331,16 @@ switch (_weaponGroup) do {
                 "LaserTargetC"
             };
         };
-
         private _target = "A3C_Invisible_Man_F" createVehicleLocal [0, 0, 0];
         private _target1 = _lT createVehicle _targetPos;
         _target setVariable ["A3C_AT_SHOT_TOKEN", _token];
         // Preserve the designated ASL point even if preparation attaches the proxy.
         _target setVariable ["A3C_AT_SHOT_AIM_ASL", +_targetPos];
-
         _target enableSimulation false;
         _target setPosASL _targetPos;
-
         if (_snapObjectStored isKindOf "HOUSE") then {
             _snapObjectStored = objNull;
         };
-
         private _list = if (!isNull _snapObjectStored) then {
             [_snapObjectStored]
         } else {
@@ -346,13 +349,11 @@ switch (_weaponGroup) do {
                 10
             ]
         };
-
         // All preparation failures return to the single restoration path below.
         private _prepare = {
             if !(call _valid) exitWith {};
             if (_launcher == "" || {!(_atAIState select 2)}) exitWith {};
             if (_unit ammo _launcher <= 0) exitWith {};
-
             private _crouchReady = _originalStance != "PRONE";
             if (_originalStance == "PRONE") then {
                 // Direct prone shouldering caused standing/prone transitions and failed
@@ -376,14 +377,11 @@ switch (_weaponGroup) do {
                 _crouchReady = (call _valid) && {_stableSince >= 0} && {time - _stableSince >= 0.3};
             };
             if (!_crouchReady) exitWith {};
-
             _targetingChanged = true;
             _unit doTarget _target;
             _unit lookAt _target;
             _unit reveal [_target, 4];
-
             sleep 1;
-
             if ((count _list) > 0) then {
                 {
                     if (!isNull _x) then {_x attachTo [(_list select 0), [0, 0, 0]];};
@@ -396,22 +394,16 @@ switch (_weaponGroup) do {
                     };
                 } forEach [_target, _target1];
             };
-
             if !(call _valid) exitWith {};
             _savedDestination = [_unit] call A3C_ai_shared_fnc_setDestination;
             _destinationSaved = count _savedDestination > 1;
-
             private _unitPos = position vehicle _unit;
-
             _unit doMove _unitPos;
             _unit moveTo _unitPos;
-
             {
                 _unit disableAI _x;
             } forEach ["MOVE", "PATH"];
-
             sleep 2;
-
             if !(call _valid) exitWith {};
             private _spawnBehaviour = scriptNull;
             private _rotationHandle = -1;
@@ -435,7 +427,6 @@ switch (_weaponGroup) do {
             // The helper already owns its rotation tolerance and timeout. Its
             // completion was sufficient in the validated sequence.
             if (!(call _valid) || {stance _unit == "PRONE"}) exitWith {};
-
             // Explicitly shoulder without consuming ammo or producing a projectile.
             _unit playAction "SecondaryWeapon";
             // Retain the tested 2 seconds. Freezing at final AnimDone failed in tests.
@@ -445,20 +436,15 @@ switch (_weaponGroup) do {
             _unit disableAI "ANIM";
             _unit doTarget _target;
             _unit setVariable ["A3C_PAUSE_PLAN", true, true];
-
             private _handlerFunc = {
                 params ["_unit", "_weapon"];
-
                 private _missile = _this select 6;
                 private _var = _unit getVariable ["A3C_REMOTE_HANDLE", []];
                 private _context = _unit getVariable ["A3C_AT_SHOT", []];
-
                 if (count _context != 4 || {count _var != 5}) exitWith {};
                 // Ignore rifle fire, premature events and duplicate launcher events.
                 if (_weapon != (_context select 1) || {!(_context select 2)} || {_context select 3}) exitWith {};
-
                 _var params ["_handle", "_target", "_target1"];
-
                 if (!local _unit || {_handle != _thisEventHandler}
                     || {(_target getVariable ["A3C_AT_SHOT_TOKEN", ""]) != (_context select 0)}) exitWith {};
                 _unit removeEventHandler ["Fired", _thisEventHandler];
@@ -468,11 +454,9 @@ switch (_weaponGroup) do {
                 _context set [3, true];
                 _unit setVariable ["A3C_AT_SHOT", _context, true];
                 _unit setVariable ["A3C_unit_is_Remote_Firing", false, true];
-
                 private _lock = getNumber (
                     configFile >> "CfgAmmo" >> (_this select 4) >> "weaponLockSystem"
                 );
-
                 // The local proxy is already token-checked above. Compiled handlers
                 // cannot capture preparation's private variables. Freeze the owner
                 // before firing; never start A3C steering during an ACE flight.
@@ -528,7 +512,6 @@ switch (_weaponGroup) do {
                             ];
                         };
                     };
-
                     if (!_nativeAccepted) then {
                         private _policy = "MISSILE";
                         private _aimObject = attachedTo _target;
@@ -542,7 +525,6 @@ switch (_weaponGroup) do {
                         ) then {
                             _policy = "OVERFLY";
                         };
-
                         private _ammo = _this select 4;
                         private _ammoCfg = configFile >> "CfgAmmo" >> _ammo;
                         private _sensors = _ammoCfg >> "Components" >> "SensorsManagerComponent" >> "Components";
@@ -590,72 +572,60 @@ switch (_weaponGroup) do {
                                 _ammo, _fixedAimASL
                             ];
                         };
-
                         [_missile, _target, _policy] call A3C_ai_shared_fnc_guideProjectileMissile;
                     };
                 };
-
                 // Protection and proxy lifetime belong to this projectile. Neither
                 // worker restores unit AI, so an old missile cannot alter a new order.
                 [_unit, _missile, _lock] spawn {
                     params ["_unit", "_missile", "_lock"];
-
                     if (_lock > 0) then {
                         private _hitHandle = _unit addEventHandler [
                             "HandleDamage",
                             {
                                 private _unit = _this select 0;
                                 private _damage = _this select 2;
-
                                 if ((damage _unit) + _damage >= 0.9) then {
                                     [_unit] spawn {
                                         params ["_unit"];
-
                                         sleep 1;
                                         _unit setDamage 1;
                                     };
-
                                     _damage = 0;
                                 };
-
                                 _damage
                             }
                         ];
-
                         _unit setVariable ["A3C_Hit_Handler", _hitHandle, true];
                         _unit setVariable ["A3C_Hit_Value", damage _unit, true];
-
                         waitUntil {sleep 0.01; isNull _missile || {!alive _missile}};
-
                         _unit removeEventHandler ["HandleDamage", _hitHandle];
                     };
                 };
-
                 [_missile, _target, _target1] spawn {
                     params ["_missile", "_target", "_target1"];
                     waitUntil {sleep 0.01; isNull _missile || {!alive _missile}};
                     {if (!isNull _x) then {deleteVehicle _x;};} forEach [_target, _target1];
                 };
             };
-
             // Bind this order's token into the installed code, rather than letting an
             // old handler read a later order's context after cancellation/reentrancy.
             _handlerFunc = compile format [
                 "if ((((_this select 0) getVariable ['A3C_AT_SHOT', []]) param [0, '']) != %1) exitWith {}; _this call %2;",
                 str _token, _handlerFunc
             ];
+            // The target proxy exists only on this shooter locality. Never publish
+            // an event-handler array containing its createVehicleLocal reference.
             // Synchronous capture must be ready before the only firing invocation.
             isNil {
                 if !(call _valid) exitWith {};
-                [_unit, _handlerFunc, _target, _target1, _snapObjectStored, false] call _addEHFunc;
+                [_unit, _handlerFunc, _target, _target1, _snapObjectStored, false, false] call _addEHFunc;
                 _atRemoteHandle = +(_unit getVariable ["A3C_REMOTE_HANDLE", []]);
                 _atHandle = _atRemoteHandle param [0, -1];
             };
-
             // Retain the second tested 2-second hold; do not gate on currentWeapon:
             // successful tests still reported the rifle immediately before firing.
             sleep 2;
-
             if !(call _valid) exitWith {};
             private _vari = _unit getVariable ["A3C_REMOTE_HANDLE", []];
             if !(_vari isEqualTo _atRemoteHandle) exitWith {};
@@ -674,7 +644,6 @@ switch (_weaponGroup) do {
                     _fireMode = _modes select _overflyIndex;
                 };
             };
-
             if (_fireMode == "this") then {_fireMode = _launcher;};
             if (_fireMode != _launcher && {!isClass (_weaponCfg >> _fireMode)}) exitWith {};
             // Open the capture window and issue the command without a scheduler yield.
@@ -810,7 +779,6 @@ switch (_weaponGroup) do {
             };
         };
         call _prepare;
-
         private _fired = false;
         // Close the capture window atomically before deciding whether proxies
         // belong to a projectile or to an unsuccessful order.
@@ -845,7 +813,6 @@ switch (_weaponGroup) do {
         if (!_fired) then {
             {if (!isNull _x) then {deleteVehicle _x;};} forEach [_target, _target1];
         };
-
         private _restore = {
             params ["_unit", "_token", "_aiState", "_stance", "_unitPos", "_pause", "_destinationSaved", "_stanceChanged", "_savedDestination", "_remoteHandle", "_targetingChanged", "_restoreFunc"];
             // A spawned/remote worker has no access to the caller's private scope.
@@ -956,7 +923,9 @@ switch (_weaponGroup) do {
                 _unit setVariable ["A3C_PAUSE_PLAN", _pause, true];
                 _unit setVariable ["A3C_unit_is_Remote_Firing", false, true];
                 if ((_unit getVariable ["A3C_REMOTE_HANDLE", []]) isEqualTo _remoteHandle) then {
-                    _unit setVariable ["A3C_REMOTE_HANDLE", [], true];
+                    // Match AT's local-only handler installation; do not broadcast
+                    // a handle containing a non-networked target proxy.
+                    _unit setVariable ["A3C_REMOTE_HANDLE", [], false];
                 };
                 _unit setVariable ["A3C_AT_SHOT", [], true];
                 A3C_REMFIRE_UNITS_ACTIVE = A3C_REMFIRE_UNITS_ACTIVE - [_unit];
@@ -968,6 +937,7 @@ switch (_weaponGroup) do {
         // The worker forwards live nonlocal units to their current owner itself.
         _restoreArgs call _restore;
     };
+
 
     case "UGLSHOT": {
         private _target = objNull;

@@ -200,6 +200,69 @@ switch (_mode) do {
 		private _suppressionDisabledAI = [];
 		private _suppressionOwnsSpeedLimit = false;
 
+		// Self-contained so the same check can run immediately before firing
+		// on the infantry unit's owner, as well as during controller polling.
+		private _isInfantryReadyToFire = {
+			params ["_unit", "_target", "_fireWeapon", "_polygonData"];
+
+			if (
+				isNull _unit
+				|| {isNull _target}
+				|| {!alive _unit}
+				|| {isPlayer _unit}
+				|| {!isNull objectParent _unit}
+				|| {!(_unit getVariable ["A3C_POLY_ACTION_ACTIVE", false])}
+				|| {currentWeapon _unit != _fireWeapon}
+				|| {weaponLowered _unit}
+				|| {vectorMagnitude velocity _unit > 0.2} // m/s; allow stationary jitter
+				|| {
+					!isPlayer leader group _unit
+					&& {_unit distance formationPosition _unit >= 3}
+				}
+				|| {count _polygonData < 3}
+			) exitWith {false};
+
+			private _origin = eyePos _unit;
+			private _weaponVector = _unit weaponDirection _fireWeapon;
+			private _targetVector = (getPosASL _target) vectorDiff _origin;
+			if (
+				vectorMagnitude _weaponVector <= 0
+				|| {vectorMagnitude _targetVector <= 0}
+			) exitWith {false};
+
+			_weaponVector = vectorNormalized _weaponVector;
+			_targetVector = vectorNormalized _targetVector;
+			if ((_weaponVector vectorDotProduct _targetVector) < cos 15) exitWith {false};
+
+			// Require the forward rifle direction to cross the polygon footprint.
+			// A ray also accepts the existing target's small offset toward the shooter.
+			private _originXY = [_origin select 0, _origin select 1, 0];
+			private _footprint = _polygonData apply {[_x select 0, _x select 1, 0]};
+			if (_originXY inPolygon _footprint) exitWith {true};
+
+			private _dx = _weaponVector select 0;
+			private _dy = _weaponVector select 1;
+			private _crossesPolygon = false;
+			for "_edgeIndex" from 0 to ((count _footprint) - 1) do {
+				private _a = _footprint select _edgeIndex;
+				private _b = _footprint select ((_edgeIndex + 1) mod count _footprint);
+				private _ex = (_b select 0) - (_a select 0);
+				private _ey = (_b select 1) - (_a select 1);
+				private _denominator = _dx * _ey - _dy * _ex;
+				if (abs _denominator > 0.000001) then {
+					private _qx = (_a select 0) - (_originXY select 0);
+					private _qy = (_a select 1) - (_originXY select 1);
+					private _rayDistance = (_qx * _ey - _qy * _ex) / _denominator;
+					private _edgeFraction = (_qx * _dy - _qy * _dx) / _denominator;
+					if (_rayDistance >= 0 && {_edgeFraction >= 0} && {_edgeFraction <= 1}) then {
+						_crossesPolygon = true;
+					};
+				};
+				if (_crossesPolygon) exitWith {};
+			};
+			_crossesPolygon
+		};
+
 		private _disableSuppressionAIFeature = {
 			params ["_entity", "_feature"];
 
@@ -883,6 +946,9 @@ switch (_mode) do {
 				};
 
 				private _aimReady = true;
+				private _infantryReady = {
+					[_unit, _target, _fireWeapon, _polygonData] call _isInfantryReadyToFire
+				};
 
 				private _polygonChangedWhileAiming = false;
 
@@ -890,34 +956,6 @@ switch (_mode) do {
 					_canFireCycle
 					&& {!_isMounted}
 				) then {
-					private _isWeaponPointedAtTarget = {
-						if (isNull _target) exitWith {
-							false
-						};
-
-						private _weaponVector =
-							_unit weaponDirection _fireWeapon;
-
-						private _targetVector =
-							(getPosASL _target) vectorDiff (eyePos _unit);
-
-						if (
-							vectorMagnitude _weaponVector <= 0
-							|| {vectorMagnitude _targetVector <= 0}
-						) exitWith {
-							false
-						};
-
-						_weaponVector = vectorNormalized _weaponVector;
-						_targetVector = vectorNormalized _targetVector;
-
-						/*
-							0.8 corresponds to approximately 37 degrees.
-							This confirms broad suppression aim rather than precision aim.
-						*/
-						(_weaponVector vectorDotProduct _targetVector) >= 0.8
-					};
-
 					private _aimTimeout = time + 5;
 
 					waitUntil {
@@ -940,14 +978,14 @@ switch (_mode) do {
 
 						!call _canContinueSuppression
 						|| {_polygonChangedWhileAiming}
-						|| {call _isWeaponPointedAtTarget}
+						|| {call _infantryReady}
 						|| {time >= _aimTimeout}
 					};
 
 					_aimReady =
 						!_polygonChangedWhileAiming
 						&& {call _canContinueSuppression}
-						&& {call _isWeaponPointedAtTarget};
+						&& {call _infantryReady};
 				};
 
 				if (
@@ -1043,6 +1081,12 @@ switch (_mode) do {
 								_abortFireCycle = true;
 							};
 
+							// Recheck throughout the bursts. Ending this cycle stops forced
+							// fire below, while the outer loop keeps suppression active.
+							if (!_isMounted && {!call _infantryReady}) exitWith {
+								_abortFireCycle = true;
+							};
+
 							if (_isMounted) then {
 								if (
 									(_firingObject isKindOf "HELICOPTER")
@@ -1067,12 +1111,27 @@ switch (_mode) do {
 								};
 							} else {
 								[
-									_unit,
-									[_fireMuzzle, _fireMode]
-								] remoteExecCall [
-									"forceWeaponFire",
-									_unit
-								];
+									[_unit, _target, _fireWeapon, _fireMuzzle, _fireMode,
+										_polygonData, _cycleToken, _isInfantryReadyToFire],
+									{
+										params ["_unit", "_target", "_fireWeapon", "_fireMuzzle", "_fireMode",
+											"_polygonData", "_cycleToken", "_isInfantryReadyToFire"];
+										if (isNull _unit || {!local _unit}) exitWith {};
+
+										// A delayed command from an old cycle cannot fire or stop a new one.
+										private _handler = _unit getVariable ["A3C_SUPPRESSION_FIRED_EH", []];
+										if (
+											(_handler param [4, ""]) != _cycleToken
+											|| {(_handler param [1, objNull]) != _target}
+										) exitWith {};
+
+										if ([_unit, _target, _fireWeapon, _polygonData] call _isInfantryReadyToFire) then {
+											_unit forceWeaponFire [_fireMuzzle, _fireMode];
+										} else {
+											_unit forceWeaponFire ["", ""];
+										};
+									}
+								] remoteExecCall ["BIS_fnc_call", _unit];
 							};
 
 							sleep 0.1;
