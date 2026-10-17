@@ -1100,10 +1100,7 @@ switch (_mode) do {
 								) then {
 									[
 										_firingObject,
-										[
-											_target,
-											_fireWeapon
-										]
+										[_target]
 									] remoteExecCall [
 										"fireAtTarget",
 										_firingObject

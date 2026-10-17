@@ -7,6 +7,19 @@
 
 params ["_displayCtrl","_mouseButton","_sX","_sY","_shift","_ctrl","_alt"];
 
+//-- exit if suppression action is active
+if (
+    _mouseButton == 0
+    && {
+        missionNamespace getVariable [
+            "A3C_HC_GroupMenu_SuppressionRequested",
+            false
+        ]
+    }
+) exitWith {
+    false
+};
+
 disableserialization;
 
 A3C_BOOL_MAP_MD = true; 
