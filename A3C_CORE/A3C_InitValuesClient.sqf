@@ -22,11 +22,11 @@ with profilenamespace do {
 	_giveHint = false;
 	if (isnil "A3C_CHECKVERSION") then {
 		_giveHint = true;
-		profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD 1.0.0.03.1"];
+		profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD 1.0.0.04"];
 	} else {
-		if !( (profileNameSpace getvariable "A3C_CHECKVERSION") == "BUILD 1.0.0.03.1") then {
+		if !( (profileNameSpace getvariable "A3C_CHECKVERSION") == "BUILD 1.0.0.04") then {
 			_giveHint = true;
-			profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD 1.0.0.03.1"];
+			profileNameSpace setvariable ["A3C_CHECKVERSION","BUILD 1.0.0.04"];
 		};
 	};
 
@@ -35,10 +35,10 @@ with profilenamespace do {
 			waituntil {alive player};
 			sleep 1;
 			"ARMA COMMAND DLC" hintC [
-				"You are playing a new build (#1.0.0.03.1) for the first time!",
+				"You are playing a new build (#1.0.0.04) for the first time!",
 				"Please refer to the changelog (STEAM or DISCORD)        ",
 				">>>>>>>   NEWS:   <<<<<<<                               ",
-				"1.0.0.03.1"
+				"1.0.0.04"
 			];		
 		};	
 	};

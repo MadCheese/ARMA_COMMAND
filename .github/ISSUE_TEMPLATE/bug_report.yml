@@ -54,7 +54,7 @@ body:
       description: |
         The current public release is entered automatically.
         Change this only if you are using a different A3C version or development build.
-      value: "1.0.0.03.1"
+      value: "1.0.0.04"
 
   # ---------------------------------------------------------------------------
   # ENVIRONMENT
