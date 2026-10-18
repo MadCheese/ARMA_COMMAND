@@ -42,8 +42,9 @@ if (_damaging) then {
         if (!_otherOffensive || {_simulation == "shotshell" && {getNumber (_cfg >> "canLock") > 0}}) then {
             _aa = 1;
         } else {
-            // Mixed-purpose cannon is credible but less certain air defense.
-            if (_simulation == "shotshell") then {_aa = 2;};
+            // Explicit OffensiveAir evidence remains credible for mixed bullets
+            // as well as shells. Physical ability to damage aircraft alone never qualifies.
+            _aa = 2;
         };
     };
 };

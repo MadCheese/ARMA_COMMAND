@@ -9,7 +9,7 @@
     Returns [selected candidate HashMap (empty if none), diagnostic snapshot].
     Only installed, live, locally executable firing options compete for priority.
 */
-params ["_heli", "_direction", "_missiles", "_guns", "_state", "_cache", ["_missileUnavailable", []]];
+params ["_heli", "_direction", "_missiles", "_guns", "_state", "_cache", ["_missileUnavailable", []], ["_engagementRejections", []]];
 private _knowledgeGroup = group (driver _heli);
 private _debug = _heli getVariable ["A3C_OW_Debug", false];
 
@@ -47,7 +47,6 @@ private _nearby = if (_radius > 0) then {
 } else {[]};
 private _sensorContacts = getSensorTargets _heli; // One engine snapshot, including reported datalink contacts.
 private _sensorObjects = _sensorContacts apply {_x select 0};
-private _observerASL = eyePos _heli; // Vehicle eyes/main turret; ignore our own geometry below.
 private _candidates = [];
 private _acquisitions = []; // Aligned with candidates, never a persistent target history.
 private _detectionRejected = [];
@@ -73,9 +72,7 @@ private _detectionRejected = [];
                     _visualEvaluated = true;
                     // ASL eye-to-aim ray tests terrain and view geometry (GEOM fallback).
                     // Both endpoint objects are ignored; neither hull can self-occlude the ray.
-                    _visual = (lineIntersectsSurfaces [
-                        _observerASL, aimPos _target, _heli, _target, true, 1, "VIEW", "GEOM"
-                    ]) isEqualTo [];
+                    _visual = [_heli, _target] call A3C_main_fnc_hasHeliOverwatchLOS;
                     _visualStatus = if (_visual) then {"CLEAR"} else {"BLOCKED"};
                 };
             };
@@ -109,16 +106,37 @@ private _threat = {
     params ["_target", "_distance", "_isMan", "_isAir"];
     private _grade = 0;
     private _notes = [];
-    private _stations = if (_isMan) then {[[]]} else {[[-1]] + allTurrets [_target, false]};
     private _stock = if (_isMan) then {magazinesAmmoFull _target} else {magazinesAllTurrets [_target, true]};
+    private _stations = if (_isMan) then {[[]]} else {[[-1]]};
+    if (!_isMan) then {
+        {_stations pushBackUnique _x;} forEach allTurrets [_target, true];
+        // Some modded dedicated stations are absent from allTurrets. Inventory
+        // supplies candidate paths only: config, installed weapons and matching stock still have to qualify.
+        {if ((_x select 2) > 0) then {_stations pushBackUnique (_x select 1);};} forEach _stock;
+        _stations = _stations select {
+            private _path = _x;
+            private _dedicated = _path isEqualTo [-1]; // Driver-operated weapons remain supported.
+            if (!_dedicated) then {
+                private _cfg = [_target, _path] call CBA_fnc_getTurret;
+                _dedicated = _path isNotEqualTo [] && {isClass _cfg}
+                    && {getNumber (_cfg >> "isPersonTurret") == 0}
+                    && {!(toLower getText (_cfg >> "proxyType") in ["cpcargo", "cppassenger", "cpdriver"])};
+            };
+            if (!_dedicated && {_debug}) then {_notes pushBack format ["turret=%1 excluded: FFV/passenger or unresolved dedicated station.",_path];};
+            _dedicated
+        };
+    };
+    private _canFire = _isMan || {canFire _target};
     {
         private _path = _x;
         private _operator = if (_isMan) then {_target} else {
             if (_path isEqualTo [-1]) then {driver _target} else {_target turretUnit _path}
         };
         private _operatorReady = !isNull _operator && {alive _operator}
-            && {lifeState _operator != "INCAPACITATED"};
+            && {lifeState _operator != "INCAPACITATED"}
+            && {_isMan || {vehicle _operator == _target && {(_target unitTurret _operator) isEqualTo _path}}};
         private _weapons = if (_isMan) then {[secondaryWeapon _target]} else {_target weaponsTurret _path};
+        if (_debug) then {_notes pushBack format ["turret=%1 installed=%2 operator=%3 operatorReady=%4 canFire=%5",_path,_weapons,_operator,_operatorReady,_canFire];};
         {
             private _weapon = _x;
             if (_weapon != "") then {
@@ -149,14 +167,15 @@ private _threat = {
                                     && {_distance >= (_info get "minRange")};
                                 // Infantry can be holding a rifle while carrying a live
                                 // AA launcher. canFire then tests the wrong current weapon.
-                                private _ready = _operatorReady && {_isMan || {canFire _target}} && {_inRange};
+                                private _ready = alive _target && {_operatorReady} && {_canFire} && {_inRange};
                                 private _liveGrade = if (_aa == 1 && {_ready}) then {1} else {2};
                                 if (_grade == 0 || {_liveGrade < _grade}) then {_grade = _liveGrade;};
-                                _notes pushBackUnique format ["%1; rounds present, operator=%2 ready=%3 inRange=%4",
-                                    _info get "evidence", _operator, _ready, _inRange];
+                                _notes pushBackUnique format ["%1; turret=%2 rounds=%3 operator=%4 operatorReady=%5 canFire=%6 inRange=%7 ready=%8 liveGrade=%9",
+                                    _info get "evidence", _path, _x select (if (_isMan) then {1} else {2}),
+                                    _operator, _operatorReady, _canFire, _inRange, _ready, _liveGrade];
                             } else {
                                 // Also explain conservative rejection, when diagnostics are on.
-                                if (_heli getVariable ["A3C_OW_Debug", false]) then {_notes pushBackUnique (_info get "evidence");};
+                                if (_debug) then {_notes pushBackUnique format ["%1; turret=%2: no credible AA ammunition evidence.",_info get "evidence",_path];};
                             };
                         };
                     } forEach _stock;
@@ -183,9 +202,9 @@ private _threat = {
         if (!_valid) then {_reason = "Dead, nonhostile or embarked infantry.";};
     } else {
         _valid = _valid && {{alive _x} count crew _target > 0}
-            // A successful optical ray already proved visibility using appropriate endpoints.
-            // Keep legacy vehicle LOS for knowledge/sensor paths; do not contradict optical LOS with origins.
-            && {(_detection get "visual") || {!(lineIntersects [getPosASL _heli, getPosASL _target, _heli, _target])}};
+            // Detection alone never establishes fireability; all paths use the same
+            // elevated observation geometry as the final firing check. Reuse a just-tested optical ray.
+            && {(_detection get "visual") || {[_heli, _target] call A3C_main_fnc_hasHeliOverwatchLOS}};
         // Hostile live crew identifies the vehicle. A disabled gun, removed
         // armament or speed changes threat readiness, not target validity.
         if (!_valid) then {_reason = "Vehicle failed alive/hostility/live-crew/LOS checks.";};
@@ -267,10 +286,17 @@ private _threat = {
     };
     private _identity = netId _target;
     if (_identity in ["", "0:0"]) then {_identity = str _target;};
-    private _eligible = _valid && {_method != ""};
+    // Temporary authorization failures stay visible, but never enter ranking or retention.
+    // Entries are worker-local [target, until, cause], independent of missile reservations.
+    private _rejectionIndex = _engagementRejections findIf {(_x select 0) isEqualTo _target && {time < (_x select 1)}};
+    private _temporarilyExcluded = _rejectionIndex >= 0;
+    private _rejection = if (_temporarilyExcluded) then {_engagementRejections select _rejectionIndex} else {[_target,0,""]};
+    if (_temporarilyExcluded) then {_reason = "TARGET_TEMPORARILY_UNAVAILABLE: " + (_rejection select 2);};
+    private _eligible = _valid && {_method != ""} && {!_temporarilyExcluded};
     private _row = createHashMapFromArray [
         ["target", _target], ["type", typeOf _target], ["distance", _distance],
         ["acquisition", _detection],
+        ["temporarilyExcluded", _temporarilyExcluded], ["rejectedUntil", _rejection select 1], ["rejectionCause", _rejection select 2],
         ["missileWithheld", _missileHeld || {_groundNeutralized}], ["missileReason", _missileReason],
         ["threat", _label], ["evidence", _evidence], ["tier", _tier],
         ["sector", _sector], ["angle", _angle], ["method", _method], ["option", _option],

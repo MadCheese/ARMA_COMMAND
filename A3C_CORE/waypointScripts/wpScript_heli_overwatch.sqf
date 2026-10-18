@@ -778,6 +778,8 @@ isNil {
 		private _selectedTarget = createHashMap;
 		private _nextEvaluation = 0;
 		private _blockedUntil = createHashMap; // Failed weapon combinations get a five-second retry delay.
+		private _engagementRejections = []; // [target, until, cause]; target failures only, never missile reservations.
+		private _lastEngagementRejection = createHashMap; // Bounded diagnostic state; suppress unchanged retries.
 		// Read live stock for classifier-approved gun/muzzle/magazine combinations.
 		// Entries: [weapon, muzzle, magazine, range, fireSpec]; loaded stock comes first.
 		private _getAvailableGuns = {
@@ -1012,7 +1014,8 @@ isNil {
 			private _quarantined = count (_session get "missileFlight") > 0 || {_flights findIf {_x getOrDefault ["safetyHold",false]} >= 0};
 			private _missilesReady = if (_quarantined) then {[]} else {_weaponAmmo select _available};
 			private _reservedTargets = _flights apply {_x get "target"};
-			private _result = [_vehicle,_direction,_missilesReady,_usableGuns select _available,_retention,_rankingCache,_reservedTargets]
+			_engagementRejections = _engagementRejections select {!isNull (_x select 0) && {time < (_x select 1)}};
+			private _result = [_vehicle,_direction,_missilesReady,_usableGuns select _available,_retention,_rankingCache,_reservedTargets,_engagementRejections]
 				call A3C_main_fnc_selectHeliOverwatchTarget;
 			(_result select 1) set ["armament",[_weaponAmmo,_usableGuns,_missilesReady,
 				((keys _rankingCache) select {(_x find "gunModes:") == 0}) apply {[_x,_rankingCache get _x]}]];
@@ -1024,6 +1027,8 @@ isNil {
 			isNil {
 				if !(call _current) exitWith {};
 				if (_vehicle getVariable ["A3C_OW_Debug",false]) then {
+					(_result select 1) set ["engagementRejections",_engagementRejections apply {+_x}];
+					(_result select 1) set ["lastEngagementRejection",_lastEngagementRejection];
 					(_result select 1) set ["missileFireControl",createHashMapFromArray [
 						["quarantined",_quarantined],["reservedTargets",_reservedTargets],
 						["flights",_flights apply {createHashMapFromArray [
@@ -1364,26 +1369,68 @@ isNil {
 			call _maintainMissileFlights;
 			!_doExit
 		};
+		private _rejectEngagement = {
+			params ["_target","_cause","_targetSpecific"];
+			_authorizationReason = _cause; // Latch even before a fireRequest/engagement ID exists.
+			// A confirmed command's own missile reservation is normal completion, not an early rejection.
+			if (!_targetSpecific && {(_request getOrDefault ["commands",0]) > 0}) exitWith {false};
+			private _until = 0;
+			if (_targetSpecific) then {
+				private _index = _engagementRejections findIf {(_x select 0) isEqualTo _target};
+				_until = time + 5;
+				private _entry = [_target,_until,_cause];
+				if (_index < 0) then {_engagementRejections pushBack _entry;} else {_engagementRejections set [_index,_entry];};
+				_retrySelection = true;
+				_nextEvaluation = 0;
+			};
+			private _scope = if (_targetSpecific) then {"TARGET"} else {
+				switch (_cause) do {
+					case "SESSION_CANCELLED": {"SESSION"};
+					case "TARGET_PREEMPTED": {"PREEMPTION"};
+					case "TARGET_TEMPORARILY_UNAVAILABLE": {"MISSILE_CONTROL"};
+					default {"WEAPON"};
+				}
+			};
+			private _changed = !((_lastEngagementRejection getOrDefault ["target",objNull]) isEqualTo _target)
+				|| {(_lastEngagementRejection getOrDefault ["cause",""]) != _cause}
+				|| {(_lastEngagementRejection getOrDefault ["scope",""]) != _scope};
+			_lastEngagementRejection = createHashMapFromArray [["time",time],["target",_target],
+				["cause",_cause],["scope",_scope],["excluded",_targetSpecific],["until",_until]];
+			if (_changed && {_vehicle getVariable ["A3C_OW_Debug",false]}) then {
+				diag_log format ["A3C OW authorization rejected: target=%1 cause=%2 scope=%3 excluded=%4 until=%5",
+					_target,_cause,_scope,_targetSpecific,_until];
+			};
+			false
+		};
 		private _engagementCurrent = {
 			params ["_target","_method","_spec"];
-			if !(call _combatCurrent) exitWith {false};
+			if (_authorizationReason != "") exitWith {false};
+			if !(call _combatCurrent) exitWith {[_target,"SESSION_CANCELLED",false] call _rejectEngagement};
 			if (_method == "MISSILE" && {count (_session get "missileFlight") > 0
-				|| {(_session get "missileFlights") findIf {(_x get "target") isEqualTo _target || {_x getOrDefault ["safetyHold",false]}} >= 0}}) exitWith {false};
+				|| {(_session get "missileFlights") findIf {(_x get "target") isEqualTo _target || {_x getOrDefault ["safetyHold",false]}} >= 0}}) exitWith {
+				[_target,"TARGET_TEMPORARILY_UNAVAILABLE",false] call _rejectEngagement
+			};
 			if (time >= _nextEvaluation) then {call _evaluateTargets;};
 			if (!((_selectedTarget getOrDefault ["target",objNull]) isEqualTo _target)
 				|| {(_selectedTarget getOrDefault ["method",""]) != _method}) exitWith {
-				_preempted = true; false
+				_preempted = true; [_target,"TARGET_PREEMPTED",false] call _rejectEngagement
 			};
 			_spec params ["_weapon","_muzzle","_magazine","_turret","_operator","_mode","_reload","_minRange","_maxRange"];
 			private _distance = _vehicle distance _target;
 			private _lease = _operator getVariable ["A3C_OW_FeatureSession",createHashMap];
-			alive _target && {side _target != civilian} && {(side _target) getFriend (side _vehicle) < 0.6}
+			if !(alive _target && {side _target != civilian} && {(side _target) getFriend (side _vehicle) < 0.6}
 				&& {_method != "MISSILE" || {!(_target isKindOf "Air")} || {canMove _target}}
 				&& {!(_target isKindOf "Man") || {vehicle _target == _target}}
-				&& {_target isKindOf "Man" || {{alive _x} count crew _target > 0}}
-				&& {_target isKindOf "Man" || {!(lineIntersects [getPosASL _vehicle,getPosASL _target,_vehicle,_target])}}
-				&& {_distance >= _minRange} && {_distance <= _maxRange}
-				&& {alive _operator} && {!isPlayer _operator} && {local _operator}
+				&& {_target isKindOf "Man" || {{alive _x} count crew _target > 0}}) exitWith {
+				[_target,"TARGET_INVALID",true] call _rejectEngagement
+			};
+			if (_distance < _minRange || {_distance > _maxRange}) exitWith {
+				[_target,"TARGET_OUT_OF_RANGE",true] call _rejectEngagement
+			};
+			if (!(_target isKindOf "Man") && {!([_vehicle,_target] call A3C_main_fnc_hasHeliOverwatchLOS)}) exitWith {
+				[_target,"LOS_BLOCKED",true] call _rejectEngagement
+			};
+			private _operatorReady = alive _operator && {!isPlayer _operator} && {local _operator}
 				&& {lifeState _operator != "INCAPACITATED"}
 				&& {(_lease getOrDefault ["vehicle",objNull]) == _vehicle}
 				&& {(_lease getOrDefault ["id",[]]) isEqualTo (_session get "id")}
@@ -1393,7 +1440,9 @@ isNil {
 				&& {(magazinesAllTurrets [_vehicle,true]) findIf {
 					(_x select 1) isEqualTo _turret && {(_x select 2) > 0}
 						&& {toLower (_x select 0) == toLower _magazine}
-				} >= 0}
+				} >= 0};
+			if (!_operatorReady) exitWith {[_target,"WEAPON_UNAVAILABLE",false] call _rejectEngagement};
+			true
 		};
 		private _clearAim = {
 			isNil {
@@ -1433,6 +1482,8 @@ isNil {
 			call _evaluateTargets;
 			private _method = _selectedTarget getOrDefault ["method",""];
 			private _preempted = false;
+			private _retrySelection = false;
+			private _authorizationReason = "";
 			if (_method != "") then {
 				private _target = _selectedTarget get "target";
 				private _option = _selectedTarget get "option";
@@ -1566,10 +1617,12 @@ isNil {
 											&& {!(alive _target && {canMove _target} && {{alive _x} count crew _target > 0})}) exitWith {
 											_stopFiring = true;
 											_request set ["reason","Aircraft no longer operational; AA missile firing authorization cancelled."];
+											[_target,"TARGET_INVALID",true] call _rejectEngagement;
 										};
 										if (_method == "MISSILE" && {(([_target] call _assessMissileTarget) select 0) == "NEUTRALIZED"}) exitWith {
 											_stopFiring = true;
 											_request set ["reason","Target no longer combat-effective at final missile authorization."];
+											[_target,"TARGET_INVALID",true] call _rejectEngagement;
 										};
 										if (_method == "MISSILE") then {
 											// Atomic reservation precedes the sole command; only Fired confirms a real flight.
@@ -1673,8 +1726,16 @@ isNil {
 					};
 					_request set ["pending",false];
 					_request set ["acceptShots",false];
+					if ((_request getOrDefault ["shots",0]) == 0) then {
+						if (_authorizationReason == "" && {(_request getOrDefault ["commands",0]) == 0}) then {
+							private _cause = _request getOrDefault ["reason",""];
+							if (_cause == "") then {_cause = "AUTHORIZATION_CANCELLED";};
+							[_target,_cause,false] call _rejectEngagement;
+						};
+						if ((_request getOrDefault ["reason",""]) == "") then {_request set ["reason",_authorizationReason];};
+					} else {_lastEngagementRejection = createHashMap;};
 					_session set ["lastFire",[_method,_target,_spec,_request getOrDefault ["shots",0],_preempted,_failed,_request getOrDefault ["reason",""]]];
-					if (_vehicle getVariable ["A3C_OW_Debug",false]) then {
+					if ((_request getOrDefault ["commands",0]) > 0 && {_vehicle getVariable ["A3C_OW_Debug",false]}) then {
 						diag_log format ["A3C OW fire %1: kind/target/spec/actual shots/preempted/failed/reason = %2",
 							_request getOrDefault ["id",-1],_session get "lastFire"];
 					};
@@ -1693,7 +1754,7 @@ isNil {
 			if (_doExit) exitWith {};
 			// No live ammo, no executable mode and no target are normal ACTIVE
 			// idle states. Reevaluate stock/capabilities on the next iteration.
-			if (!_preempted) then {sleep 1;}; // Bounded burst/failure/idle pacing, then a new decision.
+			if (!_preempted && {!_retrySelection}) then {sleep 1;}; // Target rejection immediately reselects; normal cadence is unchanged.
 		};
 
 /*
