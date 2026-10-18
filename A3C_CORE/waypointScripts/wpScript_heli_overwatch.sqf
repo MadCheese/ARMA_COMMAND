@@ -1057,13 +1057,72 @@ isNil {
 					private _reason = "";
 					if (isNull _projectile || {!alive _projectile}) then {_reason = "launched projectile no longer exists/alive";} else {
 						if (isNull _target) then {_reason = "captured target no longer exists";} else {
-							if (!local _projectile) then {_reason = "projectile not local at guidance receiver";} else {
-								if (isNil "A3C_ai_shared_fnc_guideProjectileMissile") then {_reason = "missile guidance helper unavailable";};
-							};
+							if (!local _projectile) then {_reason = "projectile not local at guidance receiver";};
 						};
 					};
 					if (_reason != "") exitWith {
-						if (_debug) then {diag_log format ["A3C OW missile guidance could not start: engagement=%1 reason=%2",_engagement,_reason];};
+						if (_debug) then {diag_log format ["A3C OW missile guidance could not start: engagement=%1 target=%2 projectile=%3 ammo=%4 nativeAttempted=false owner=NONE reason=%5",
+							_engagement,_target,_projectile,typeOf _projectile,_reason];};
+					};
+					private _guidanceOwner = "";
+					if (_target isKindOf "Air") then {
+						private _ammo = typeOf _projectile; // Actual Fired projectile, not the selected magazine's prediction.
+						private _ammoCfg = configFile >> "CfgAmmo" >> _ammo;
+						private _sensorManager = _ammoCfg >> "Components" >> "SensorsManagerComponent";
+						private _sensors = _sensorManager >> "Components";
+						// As in remote launch: object seekers qualify; laser/manual-only guidance does not.
+						// A modern sensor manager supersedes legacy irLock, even if empty.
+						private _objectGuidance = if (isClass _sensorManager) then {
+							(configProperties [_sensors,"isClass _x",true]) findIf {
+								getText (_x >> "componentType") in ["IRSensorComponent","VisualSensorComponent",
+									"ActiveRadarSensorComponent","PassiveRadarSensorComponent"]
+							} >= 0
+						} else {getNumber (_ammoCfg >> "irLock") == 1};
+						private _aceLoaded = isClass (configFile >> "CfgPatches" >> "ace_main")
+							|| {isClass (configFile >> "CfgPatches" >> "ace_missileguidance")}
+							|| {!isNil "ace_missileguidance_fnc_onFired"};
+						private _aceConfigured = _aceLoaded && {getNumber (_ammoCfg >> "ace_missileguidance" >> "enabled") == 1};
+						_guidanceOwner = _projectile getVariable ["A3C_OW_MissileGuidanceOwner",""];
+						if (_projectile getVariable ["A3C_Guidance_Started",false]) then {_guidanceOwner = "SCRIPTED";};
+						private _nativeReason = switch (true) do {
+							case (_guidanceOwner != ""): {"projectile already claimed; no reassignment"};
+							case (_aceConfigured): {"ACE-configured ammunition; mod guidance reserved, activation unverified"};
+							case (!alive _target): {"captured aircraft no longer alive"};
+							case (!isClass _ammoCfg || {toLower getText (_ammoCfg >> "simulation") != "shotmissile"}): {"actual ammunition is not a configured shotMissile"};
+							case (getNumber (_ammoCfg >> "maneuvrability") <= 0): {"ammunition has no native manoeuvrability"};
+							case (!_objectGuidance): {"no native object seeker (laser/manual-only or unsupported sensors)"};
+							default {""};
+						};
+						private _nativeApplicable = _nativeReason == "";
+						private _assigned = false;
+						if (_nativeApplicable) then {
+							// Ordinary acquisition only: respect the engine's cone/seeker/CM restrictions.
+							_assigned = _projectile setMissileTarget _target;
+						};
+						private _verifiedTarget = missileTarget _projectile;
+						private _nativeAccepted = _assigned && {_verifiedTarget isEqualTo _target};
+						if (_nativeApplicable) then {
+							_nativeReason = if (_nativeAccepted) then {"native target accepted and verified"} else {
+								if (!_assigned) then {"setMissileTarget rejected ordinary acquisition"} else {"missileTarget did not match captured aircraft"}
+							};
+						};
+						if (_guidanceOwner == "") then {
+							if (_aceConfigured) then {_guidanceOwner = "ACE_RESERVED";};
+							if (_nativeAccepted) then {_guidanceOwner = "NATIVE";};
+							if (_guidanceOwner != "") then {_projectile setVariable ["A3C_OW_MissileGuidanceOwner",_guidanceOwner];};
+						};
+						if (_debug) then {
+							diag_log format ["A3C OW AA missile guidance: engagement=%1 target=%2 projectile=%3 ammo=%4 nativeApplicable=%5 attempted=%6 setMissileTarget=%7 missileTarget=%8 owner=%9 reason=%10",
+								_engagement,_target,_projectile,_ammo,_nativeApplicable,_nativeApplicable,_assigned,_verifiedTarget,
+								if (_guidanceOwner == "") then {"SCRIPTED_FALLBACK_REQUESTED"} else {_guidanceOwner},_nativeReason];
+						};
+					};
+					// Native flights never enter the trajectory helper, even after lock loss/CM.
+					// ACE-enabled ammo is conservatively left to the mod, regardless of EH order/AI settings.
+					if (_guidanceOwner != "") exitWith {};
+					if (isNil "A3C_ai_shared_fnc_guideProjectileMissile") exitWith {
+						if (_debug) then {diag_log format ["A3C OW missile guidance could not start: engagement=%1 target=%2 projectile=%3 ammo=%4 owner=NONE reason=missile guidance helper unavailable",
+							_engagement,_target,_projectile,typeOf _projectile];};
 					};
 					private _alreadyStarted = _projectile getVariable ["A3C_Guidance_Started",false];
 					private _hasVelocity = vectorMagnitude velocity _projectile > 0.001;
@@ -1127,7 +1186,8 @@ isNil {
 					if (time >= (_flight getOrDefault ["handoffDeadline",1e12])
 						&& {!(_flight getOrDefault ["handoffReported",false])}
 						&& {!(_flight get "handoff") || {
-							_projectiles findIf {local _x && {!(_x getVariable ["A3C_Guidance_Started",false])}} >= 0
+							_projectiles findIf {local _x && {!(_x getVariable ["A3C_Guidance_Started",false])}
+								&& {(_x getVariable ["A3C_OW_MissileGuidanceOwner",""]) == ""}} >= 0
 						}}) then {
 						_flight set ["handoffReported",true];
 						_flight set ["reason","Guidance handoff/start not acknowledged after 3 seconds; waiting for actual missile completion."];
@@ -1157,6 +1217,7 @@ isNil {
 			private _distance = _vehicle distance _target;
 			private _lease = _operator getVariable ["A3C_OW_FeatureSession",createHashMap];
 			alive _target && {side _target != civilian} && {(side _target) getFriend (side _vehicle) < 0.6}
+				&& {_method != "MISSILE" || {!(_target isKindOf "Air")} || {canMove _target}}
 				&& {!(_target isKindOf "Man") || {vehicle _target == _target}}
 				&& {_target isKindOf "Man" || {{alive _x} count crew _target > 0}}
 				&& {_target isKindOf "Man" || {!(lineIntersects [getPosASL _vehicle,getPosASL _target,_vehicle,_target])}}
@@ -1339,6 +1400,12 @@ isNil {
 											|| {toLower (_live param [3,""]) != toLower _magazine}
 											|| {(_live param [4,0]) <= 0} || {(_live param [5,-1]) != 0}
 											|| {(_live param [6,-1]) != 0}) exitWith {};
+										// Final AIR authorization, before any launch/request bookkeeping, in this same unscheduled block.
+										if (_method == "MISSILE" && {_target isKindOf "Air"}
+											&& {!(alive _target && {canMove _target} && {{alive _x} count crew _target > 0})}) exitWith {
+											_stopFiring = true;
+											_request set ["reason","Aircraft no longer operational; AA missile firing authorization cancelled."];
+										};
 										if (_method == "MISSILE") then {
 											// Initialize missile state once, immediately before its single command.
 											_vehicle setVariable ["A3C_Guided_Projectile",[_request get "id",objNull,0,[]],true];

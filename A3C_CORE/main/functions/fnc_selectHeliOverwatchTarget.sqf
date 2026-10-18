@@ -10,26 +10,8 @@
     Only installed, live, locally executable firing options compete for priority.
 */
 params ["_heli", "_direction", "_missiles", "_guns", "_state", "_cache"];
-private _radius = 0;
-{_radius = _radius max (_x select 3);} forEach (_missiles + _guns);
-
 private _knowledgeGroup = group (driver _heli);
-
-private _candidates = if (_radius > 0) then {
-    (
-        [
-            side _heli,
-            _radius,
-            "ENEMY",
-            position _heli,
-            ["AIR", "TANK", "CAR", "SHIP", "MAN","STATICWEAPON"]
-        ] call MCSS_fnc_nearEntities
-    ) select {
-        _knowledgeGroup knowsAbout _x > 1
-    }
-} else {
-    []
-};
+private _debug = _heli getVariable ["A3C_OW_Debug", false];
 
 private _retained = _state getOrDefault ["retained", objNull];
 private _rows = [];
@@ -55,6 +37,72 @@ private _executable = {
 };
 _missiles = _missiles select {[_x] call _executable};
 _guns = _guns select {[_x] call _executable};
+
+// Bound all acquisition paths by the live executable options, before optical LOS.
+private _radius = 0;
+{_radius = _radius max (_x select 3);} forEach (_missiles + _guns);
+private _nearby = if (_radius > 0) then {
+    [side _heli, _radius, "ENEMY", position _heli,
+        ["AIR", "TANK", "CAR", "SHIP", "MAN", "STATICWEAPON"]] call MCSS_fnc_nearEntities
+} else {[]};
+private _sensorContacts = getSensorTargets _heli; // One engine snapshot, including reported datalink contacts.
+private _sensorObjects = _sensorContacts apply {_x select 0};
+private _observerASL = eyePos _heli; // Vehicle eyes/main turret; ignore our own geometry below.
+private _candidates = [];
+private _acquisitions = []; // Aligned with candidates, never a persistent target history.
+private _detectionRejected = [];
+{
+    private _target = _x;
+    if !(_target in _candidates) then {
+        private _knowledge = _knowledgeGroup knowsAbout _target;
+        private _known = _knowledge > 1; // Preserve the existing knowledge threshold exactly.
+        private _sensorIndex = _sensorObjects find _target;
+        private _sensed = _sensorIndex >= 0; // Contact identity, not its reported relationship, establishes detection.
+        private _distance = _heli distance _target;
+        private _angle = (((_heli getDir _target) - _direction) % 360 + 540) % 360 - 180;
+        private _visualRange = _radius min (if (_target isKindOf "Man") then {1000} else {3000});
+        private _visualHalfAngle = if (_target isKindOf "Air") then {120} else {60};
+        private _visual = false;
+        private _visualEvaluated = false;
+        private _visualStatus = "NOT_REQUIRED";
+        if (!_known && {!_sensed}) then {
+            _visualStatus = "OUT_OF_RANGE";
+            if (_distance <= _visualRange) then {
+                _visualStatus = "OUT_OF_CONE";
+                if ([_heli, _direction, _visualHalfAngle, _target] call MCSS_fnc_isInAngleSector) then {
+                    _visualEvaluated = true;
+                    // ASL eye-to-aim ray tests terrain and view geometry (GEOM fallback).
+                    // Both endpoint objects are ignored; neither hull can self-occlude the ray.
+                    _visual = (lineIntersectsSurfaces [
+                        _observerASL, aimPos _target, _heli, _target, true, 1, "VIEW", "GEOM"
+                    ]) isEqualTo [];
+                    _visualStatus = if (_visual) then {"CLEAR"} else {"BLOCKED"};
+                };
+            };
+        };
+        private _detected = _known || {_sensed} || {_visual};
+        if (_detected || {_debug}) then {
+            private _paths = [];
+            if (_known) then {_paths pushBack "KNOWLEDGE";};
+            if (_sensed) then {_paths pushBack "SENSOR";};
+            if (_visual) then {_paths pushBack "VISUAL";};
+            private _detection = createHashMapFromArray [
+                ["target", _target], ["distance", _distance], ["angle", _angle], ["paths", _paths],
+                ["knowledge", _known], ["knowsAbout", _knowledge], ["sensor", _sensed],
+                ["sensorContact", if (_sensed) then {_sensorContacts select _sensorIndex} else {[]}],
+                ["visual", _visual], ["visualEvaluated", _visualEvaluated], ["visualLOS", _visual],
+                ["visualStatus", _visualStatus], ["visualRange", _visualRange], ["visualHalfAngle", _visualHalfAngle]
+            ];
+            if (_detected) then {
+                _candidates pushBack _target;
+                _acquisitions pushBack _detection;
+            } else {
+                _detection set ["reason", "Insufficient detection: knowledge <= 1, no sensor contact; optical " + _visualStatus];
+                _detectionRejected pushBack _detection;
+            };
+        };
+    };
+} forEach _nearby;
 
 // Live threat readiness. Cached weapon/mag config; stock, crew and range are live.
 private _threat = {
@@ -122,10 +170,11 @@ private _threat = {
 
 {
     private _target = _x;
+    private _detection = _acquisitions select _forEachIndex;
     private _isMan = _target isKindOf "Man";
     private _isAir = _target isKindOf "Air";
-    private _distance = _heli distance _target;
-    private _angle = (((_heli getDir _target) - _direction) % 360 + 540) % 360 - 180;
+    private _distance = _detection get "distance";
+    private _angle = _detection get "angle";
     private _sector = abs _angle <= 60;
     private _valid = alive _target && {side _target != civilian} && {(side _target) getFriend (side _heli) < 0.6};
     private _reason = "";
@@ -134,7 +183,9 @@ private _threat = {
         if (!_valid) then {_reason = "Dead, nonhostile or embarked infantry.";};
     } else {
         _valid = _valid && {{alive _x} count crew _target > 0}
-            && {!(lineIntersects [getPosASL _heli, getPosASL _target, _heli, _target])};
+            // A successful optical ray already proved visibility using appropriate endpoints.
+            // Keep legacy vehicle LOS for knowledge/sensor paths; do not contradict optical LOS with origins.
+            && {(_detection get "visual") || {!(lineIntersects [getPosASL _heli, getPosASL _target, _heli, _target])}};
         // Hostile live crew identifies the vehicle. A disabled gun, removed
         // armament or speed changes threat readiness, not target validity.
         if (!_valid) then {_reason = "Vehicle failed alive/hostility/live-crew/LOS checks.";};
@@ -171,6 +222,13 @@ private _threat = {
                 else {"No executable ground missile or classified primary-gunner gun in range."};
         };
     };
+    // Detection is unchanged; only AIR missile eligibility requires mobility.
+    private _airCanMove = !_isAir || {canMove _target};
+    private _airDisabled = _isAir && {_method == "MISSILE"} && {!_airCanMove};
+    if (_airDisabled) then {
+        _valid = false;
+        _reason = "Aircraft operationally disabled (canMove=false); AA missile engagement rejected.";
+    };
     private _assessment = [_target, _distance, _isMan, _isAir] call _threat;
     _assessment params ["_aa", "_evidence"];
     // Attack orders are evidence only for candidates returned by nearEntities.
@@ -196,10 +254,18 @@ private _threat = {
     private _eligible = _valid && {_method != ""};
     private _row = createHashMapFromArray [
         ["target", _target], ["type", typeOf _target], ["distance", _distance],
+        ["acquisition", _detection],
         ["threat", _label], ["evidence", _evidence], ["tier", _tier],
         ["sector", _sector], ["angle", _angle], ["method", _method], ["option", _option],
         ["eligible", _eligible], ["reason", _reason]
     ];
+    if (_debug && {_isAir}) then {
+        _row set ["airOperational", createHashMapFromArray [
+            ["alive", alive _target], ["canMove", _airCanMove], ["canFire", canFire _target],
+            ["damage", damage _target], ["speed", speed _target], ["distance", _distance],
+            ["liveCrew", {alive _x} count crew _target], ["rejectedDisabled", _airDisabled]
+        ]];
+    };
     _rows pushBack _row;
     if (_eligible) then {
         // Lexicographic tuple, not a damage/armor multiplier. Stable ID is final.
@@ -266,6 +332,7 @@ _state set ["priority", _selected getOrDefault ["tier", 0]];
 private _snapshot = createHashMapFromArray [
     ["time", time], ["helicopter", _heli], ["direction", _direction], ["radius", _radius],
     ["candidates", _rows], ["selected", _newTarget], ["previous", _retained],
+    ["detectionRejected", _detectionRejected],
     ["retained", _newTarget], ["age", _age], ["decision", _decision],
     ["priority", _state get "priority"]
 ];
