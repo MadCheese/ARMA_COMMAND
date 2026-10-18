@@ -1,3 +1,5 @@
+// A3C_main_fnc_selectHeliOverwatchTarget
+
 /*
     Shared discovery, feasibility, threat tiers and hysteresis; no firing commands.
     missiles: [weapon,targetTypes,rounds,maxRange,minRange,fireSpec].
@@ -20,7 +22,7 @@ private _candidates = if (_radius > 0) then {
             _radius,
             "ENEMY",
             position _heli,
-            ["AIR", "TANK", "CAR", "SHIP", "MAN"]
+            ["AIR", "TANK", "CAR", "SHIP", "MAN","STATICWEAPON"]
         ] call MCSS_fnc_nearEntities
     ) select {
         _knowledgeGroup knowsAbout _x > 1
