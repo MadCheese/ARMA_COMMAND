@@ -63,6 +63,7 @@ private _owReleaseSession = {
 	_session set ["closed",true]; // Invalidate first; handover/release is unscheduled.
 	_session set ["fireRequest",createHashMap];
 	_session set ["missileFlight",createHashMap]; // Launched projectiles keep their captured guidance target.
+	_session set ["missileFlights",[]];
 	private _v = _session get "vehicle";
 	private _p = _session get "pilot";
 	private _owned = ((_v getVariable ["A3C_OW_Session",createHashMap]) getOrDefault ["id",[]])
@@ -231,7 +232,7 @@ isNil {
 			["savedFeatures",_saved],["fireOwned",false],["freezeOwned",false],
 			["worker",scriptNull],["workerStarted",false],["rotation",scriptNull],
 			["rotationSpeedOwned",false],["firedEH",-1],["lasers",[]],["targetOrders",[]],
-			["fireRequest",createHashMap],["missileFlight",createHashMap],["lastFire",[]]
+			["fireRequest",createHashMap],["missileFlight",createHashMap],["missileFlights",[]],["lastFire",[]]
 		];
 		(_owRun get "sessions") pushBack _session;
 		_v setVariable ["A3C_OW_Session",_session];
@@ -855,10 +856,139 @@ isNil {
 			_loaded + _reserve
 		};
 		
+		// Session-private safety bookkeeping shared with the unscheduled Fired receiver.
+		_session set ["quarantineMissile",{
+			params ["_session","_projectile","_request","_unobservable","_reason"];
+			private _quarantine = _session get "missileFlight";
+			if (count _quarantine == 0) then {
+				_quarantine = createHashMapFromArray [["projectiles",[]],["unresolved",[]],
+					["unobservable",false],["assessmentUntil",-1],["flightDeadline",time + 120]];
+				_session set ["missileFlight",_quarantine];
+			};
+			if (!isNull _projectile) then {(_quarantine get "projectiles") pushBackUnique _projectile;};
+			if (_unobservable) then {_quarantine set ["unobservable",true];};
+			if (count _request > 0) then {
+				_request set ["unknown",true];
+				_request set ["unaccountedShots",_request getOrDefault ["unaccountedShots",1]];
+				if ((_request get "shots") == 0) then {
+					_request set ["state","UNRESOLVED"];
+					_session set ["missileFlights",(_session get "missileFlights") select {(_x get "id") != (_request get "id")}];
+				} else {_request set ["safetyHold",true];};
+				if ((_quarantine get "unresolved") findIf {(_x get "id") == (_request get "id")} < 0) then {
+					(_quarantine get "unresolved") pushBack _request;
+				};
+			};
+			_quarantine set ["assessmentUntil",-1];
+			_quarantine set ["reason",_reason];
+			private _vehicle = _session get "vehicle";
+			if (_vehicle getVariable ["A3C_OW_Debug",false]) then {
+				diag_log format ["A3C OW UNKNOWN LAUNCH QUARANTINED: projectile=%1 engagement=%2 reason=%3",
+					_projectile,_request getOrDefault ["id",-1],_reason];
+			};
+		}];
+		private _assessMissileTarget = {
+			params ["_target"];
+			if (isNull _target || {!alive _target} || {{alive _x} count crew _target == 0}) exitWith {
+				["NEUTRALIZED","Target destroyed/deleted or no surviving crew."]
+			};
+			if (_target isKindOf "Air") exitWith {
+				if (canMove _target) then {["OPERATIONAL","Aircraft alive, mobile and crewed."]}
+				else {["NEUTRALIZED","Aircraft canMove=false."]}
+			};
+			if (_target isKindOf "StaticWeapon") exitWith {
+				if (canFire _target) then {["OPERATIONAL","Static weapon crewed and canFire=true."]}
+				else {["INDETERMINATE","Crewed static weapon: canFire=false alone is not reliable neutralization evidence."]}
+			};
+			if (canMove _target || {canFire _target}) exitWith {["OPERATIONAL","Ground target can move or fire."]};
+			private _armed = (magazinesAllTurrets [_target,true]) findIf {
+				private _ammoCfg = configFile >> "CfgAmmo" >> getText (configFile >> "CfgMagazines" >> (_x select 0) >> "ammo");
+				getNumber (_ammoCfg >> "hit") > 0
+					|| {getNumber (_ammoCfg >> "indirectHit") > 0 && {getNumber (_ammoCfg >> "indirectHitRange") > 0}}
+			} >= 0;
+			if (_armed) then {["NEUTRALIZED","Armed ground target can neither move nor fire."]}
+			else {["INDETERMINATE","No reliable armed-vehicle evidence; preserve existing target eligibility."]}
+		};
+		private _maintainMissileFlights = {
+			// Invoked by the existing worker only; Fired mutations cannot interleave with pruning/assessment.
+			isNil {
+				if !(call _current) exitWith {};
+				private _debug = _vehicle getVariable ["A3C_OW_Debug",false];
+				{
+					private _flight = _x;
+					private _projectiles = _flight get "projectiles";
+					if ((_flight get "state") == "FLIGHT" && {!(_flight getOrDefault ["unknown",false])}
+						&& {_projectiles findIf {!isNull _x && {alive _x}} < 0}) then {
+						_flight set ["state","ASSESSING"];
+						_flight set ["terminated",true];
+						_flight set ["assessmentUntil",time + 0.5];
+						_flight set ["reason",if (count (_session get "missileFlight") > 0) then {
+							"Observed projectiles terminated; reservation/laser retained while global launch uncertainty remains."
+						} else {"All associated projectiles terminated; awaiting 0.5 s damage assessment."}];
+						private _id = _flight get "id";
+						if (((_vehicle getVariable ["A3C_Guided_Projectile",[-1]]) param [0,-1]) == _id) then {
+							_vehicle setVariable ["A3C_Guided_Projectile",nil,true];
+						};
+						if (((_vehicle getVariable ["A3C_fireComplete",["",false,-1]]) param [2,-1]) == _id) then {
+							_vehicle setVariable ["A3C_fireComplete",nil,true];
+						};
+						if (_debug) then {diag_log format ["A3C OW MISSILE TERMINATED; ASSESSMENT STARTED: id=%1 target=%2 until=%3",_id,_flight get "target",_flight get "assessmentUntil"];};
+					};
+					if ((_flight get "state") == "FLIGHT") then {
+						if (time >= (_flight get "handoffDeadline") && {!(_flight getOrDefault ["handoffReported",false])}
+							&& {!(_flight get "handoff") || {_projectiles findIf {
+								!local _x || {!(_x getVariable ["A3C_Guidance_Started",false]) && {(_x getVariable ["A3C_OW_MissileGuidanceOwner",""]) != "NATIVE"}}
+							} >= 0}}) then {
+							_flight set ["handoffReported",true];
+							_flight set ["safetyHold",true];
+							_flight set ["reason","Guidance handoff/start unconfirmed; all missile launches withheld until this flight completes."];
+							if (_debug) then {diag_log format ["A3C OW UNKNOWN LAUNCH QUARANTINED: id=%1 reason=%2",_flight get "id",_flight get "reason"];};
+						};
+						if (time >= (_flight get "flightDeadline") && {!(_flight getOrDefault ["timeoutReported",false])}) then {
+							_flight set ["timeoutReported",true];
+							_flight set ["safetyHold",true];
+							_flight set ["reason","Flight diagnostic deadline exceeded; no timeout release while a projectile remains alive."];
+							if (_debug) then {diag_log format ["A3C OW UNKNOWN LAUNCH QUARANTINED: id=%1 reason=%2",_flight get "id",_flight get "reason"];};
+						};
+					};
+					if ((_flight get "state") == "ASSESSING" && {time >= (_flight get "assessmentUntil")}
+						&& {!(_flight getOrDefault ["acceptShots",false])} && {count (_session get "missileFlight") == 0}) then {
+						private _result = [_flight get "target"] call _assessMissileTarget;
+						private _laser = _flight getOrDefault ["laser",objNull];
+						if (!isNull _laser) then {deleteVehicle _laser;};
+						_flight set ["state","COMPLETE"];
+						_session set ["lastMissileAssessment",[time,_flight get "id",_flight get "target",_result]];
+						_nextEvaluation = 0;
+						if (_debug) then {diag_log format ["A3C OW ASSESSMENT COMPLETE; %1: id=%2 target=%3 result=%4 reason=%5",
+							if ((_result select 0) == "NEUTRALIZED") then {"TARGET NEUTRALIZED"} else {"TARGET RELEASED"},
+							_flight get "id",_flight get "target",_result select 0,_result select 1];};
+					};
+				} forEach (_session get "missileFlights");
+				_session set ["missileFlights",(_session get "missileFlights") select {(_x get "state") != "COMPLETE"}];
+				private _quarantine = _session get "missileFlight";
+				if (count _quarantine > 0) then {
+					if (!(_quarantine get "unobservable") && {(_quarantine get "unresolved") isEqualTo []}
+						&& {(_quarantine get "projectiles") findIf {!isNull _x && {alive _x}} < 0}) then {
+						if ((_quarantine get "assessmentUntil") < 0) then {_quarantine set ["assessmentUntil",time + 0.5];};
+						if (time >= (_quarantine get "assessmentUntil")) then {
+							_session set ["missileFlight",createHashMap];
+							_nextEvaluation = 0;
+							if (_debug) then {diag_log "A3C OW UNKNOWN LAUNCH QUARANTINE RELEASED: observed projectiles terminated and assessment elapsed.";};
+						};
+					} else {
+						if (time >= (_quarantine get "flightDeadline") && {!(_quarantine getOrDefault ["timeoutReported",false])}) then {
+							_quarantine set ["timeoutReported",true];
+							if (_debug) then {diag_log "A3C OW UNKNOWN LAUNCH QUARANTINED: diagnostic timeout; unresolved launches remain fail-closed.";};
+						};
+					};
+				};
+			};
+		};
+
 		// Run on engagement boundaries and at most once per two seconds in a gun
 		// window. Selection keeps the original waypoint direction.
 		private _evaluateTargets = {
 			if !(call _current) exitWith {};
+			call _maintainMissileFlights;
 			private _primary = _capabilities getOrDefault ["primaryGunnerTurret",[]];
 			private _paths = allTurrets [_vehicle,true];
 			private _signature = [
@@ -878,11 +1008,11 @@ isNil {
 				private _spec = _x select (count _x - 1);
 				time >= (_blockedUntil getOrDefault [str (_spec select [0,6]),0])
 			};
-			// An unobserved launch cannot be retried safely. Ground targets can
-			// use the gun during quarantine. Normal tracked flights retain the
-			// selector's hysteresis and wait for completion; AA infantry can preempt.
-			private _missilesReady = if ((_session get "missileFlight") getOrDefault ["unknown",false]) then {[]} else {_weaponAmmo select _available};
-			private _result = [_vehicle,_direction,_missilesReady,_usableGuns select _available,_retention,_rankingCache]
+			private _flights = _session get "missileFlights";
+			private _quarantined = count (_session get "missileFlight") > 0 || {_flights findIf {_x getOrDefault ["safetyHold",false]} >= 0};
+			private _missilesReady = if (_quarantined) then {[]} else {_weaponAmmo select _available};
+			private _reservedTargets = _flights apply {_x get "target"};
+			private _result = [_vehicle,_direction,_missilesReady,_usableGuns select _available,_retention,_rankingCache,_reservedTargets]
 				call A3C_main_fnc_selectHeliOverwatchTarget;
 			(_result select 1) set ["armament",[_weaponAmmo,_usableGuns,_missilesReady,
 				((keys _rankingCache) select {(_x find "gunModes:") == 0}) apply {[_x,_rankingCache get _x]}]];
@@ -894,6 +1024,23 @@ isNil {
 			isNil {
 				if !(call _current) exitWith {};
 				if (_vehicle getVariable ["A3C_OW_Debug",false]) then {
+					(_result select 1) set ["missileFireControl",createHashMapFromArray [
+						["quarantined",_quarantined],["reservedTargets",_reservedTargets],
+						["flights",_flights apply {createHashMapFromArray [
+							["id",_x get "id"],["target",_x get "target"],["state",_x get "state"],
+							["started",_x get "started"],["flightStart",_x get "flightStart"],
+							["projectiles",+(_x get "projectiles")],["alive",(_x get "projectiles") apply {!isNull _x && {alive _x}}],
+							["terminated",_x get "terminated"],["assessmentUntil",_x get "assessmentUntil"],
+							["safetyHold",_x get "safetyHold"],["handoff",_x get "handoff"],["reason",_x get "reason"]
+						]}],
+						["unknownProjectiles",+((_session get "missileFlight") getOrDefault ["projectiles",[]])],
+						["unknownAlive",((_session get "missileFlight") getOrDefault ["projectiles",[]]) apply {!isNull _x && {alive _x}}],
+						["quarantineAssessmentUntil",(_session get "missileFlight") getOrDefault ["assessmentUntil",-1]],
+						["quarantineReason",(_session get "missileFlight") getOrDefault ["reason",""]],
+						["unresolved",((_session get "missileFlight") getOrDefault ["unresolved",[]]) apply {[_x get "id",_x get "target",_x get "unaccountedShots"]}],
+						["unobservable",(_session get "missileFlight") getOrDefault ["unobservable",false]],
+						["lastAssessment",_session getOrDefault ["lastMissileAssessment",[]]]
+					]];
 					_vehicle setVariable ["A3C_OW_Ranking",_result select 1];
 				} else {
 					_vehicle setVariable ["A3C_OW_Ranking",nil];
@@ -917,15 +1064,36 @@ isNil {
 				if !([_run,_session] call (_run get "valid")) exitWith {};
 				private _request = _session get "fireRequest";
 				private _simulation = toLower getText (configFile >> "CfgAmmo" >> _ammo >> "simulation");
-				private _flight = _session get "missileFlight";
-				private _lateMatch = (_flight getOrDefault ["unknown",false]) && {_simulation == "shotmissile"}
-					&& {(([_weapon,_muzzle,_magazine,_mode] apply {toLower _x}) + [_gunner])
-						isEqualTo (_flight get "expectedEvent")};
+				private _quarantine = _session get "missileFlight";
+				private _claim = if (isNull _projectile) then {[]} else {_projectile getVariable ["A3C_OW_MissileLaunch",[]]};
+				if (_simulation == "shotmissile" && {_claim isNotEqualTo []}
+					&& {!((_claim select 0) isEqualTo (_session get "id"))}) exitWith {
+					[_session,_projectile,createHashMap,false,"Projectile belongs to a previous Overwatch session; no new ownership assigned."]
+						call (_session get "quarantineMissile");
+				};
+				// A repeated event for an already captured object cannot be a new request's shot.
+				if (_simulation == "shotmissile" && {!isNull _projectile} && {
+					(_session get "missileFlights") findIf {_projectile in (_x get "projectiles")} >= 0
+					|| {_projectile in (_quarantine getOrDefault ["projectiles",[]])}
+				}) exitWith {};
+				if (_simulation == "shotmissile" && {_claim isNotEqualTo []}) exitWith {
+					[_session,_projectile,createHashMap,false,"Previously claimed projectile has no active record; never reassigned to the current request."]
+						call (_session get "quarantineMissile");
+				};
+				private _event = ([_weapon,_muzzle,_magazine,_mode] apply {toLower _x}) + [_gunner];
+				private _unresolved = _quarantine getOrDefault ["unresolved",[]];
+				private _lateCandidates = if (_simulation == "shotmissile") then {
+					_unresolved select {(_x get "expectedEvent") isEqualTo _event}
+				} else {[]};
+				private _lateMatch = count _lateCandidates == 1;
+				private _ambiguous = count _lateCandidates > 1 || {_lateMatch && {(_request getOrDefault ["kind",""]) == "MISSILE"}
+					&& {_request getOrDefault ["acceptShots",false]}
+					&& {(_request get "id") != ((_lateCandidates select 0) get "id")}};
 				// Recover the exact captured request, even if a gun now owns fireRequest.
-				if (_lateMatch) then {_request = _flight;};
+				if (_lateMatch && {!_ambiguous}) then {_request = _lateCandidates select 0;};
 				private _matches = false;
 				private _kind = _request getOrDefault ["kind",""];
-				if ((_lateMatch || {_request getOrDefault ["acceptShots",false]})
+				if (!_ambiguous && {(_lateMatch || {_request getOrDefault ["acceptShots",false]})}
 					&& {(_request getOrDefault ["sessionId",[]]) isEqualTo (_session get "id")}) then {
 					(_request get "spec") params ["_wantWeapon","_wantMuzzle","_wantMag","_turret","_operator","_wantMode"];
 					_matches = toLower _weapon == toLower _wantWeapon && {toLower _muzzle == toLower _wantMuzzle}
@@ -936,18 +1104,10 @@ isNil {
 						&& {(_kind == "MISSILE" && {_simulation == "shotmissile"})
 							|| {_kind == "GUN" && {_simulation in ["shotbullet","shotshell"]}}};
 				};
-				// Even an unexpected/late missile event owns the launch slot until
-				// its actual projectile is gone. It is never guided or retargeted here.
-				if (_simulation == "shotmissile" && {!_matches || {(_request get "shots") > 0}}) then {
-					if (count _flight == 0) then {
-						_flight = createHashMapFromArray [["id",-1],["projectiles",[]],
-							["handoff",false],["flightDeadline",time + 120]];
-						_session set ["missileFlight",_flight];
-					};
-					(_flight get "projectiles") pushBackUnique _projectile;
-					if !(_flight getOrDefault ["unknown",false]) then {
-						_flight set ["reason","Unexpected missile Fired event; waiting for observed projectile completion."];
-					};
+				// Unmatched missiles never borrow the selected target or mutate a confirmed record.
+				if (_simulation == "shotmissile" && {!_matches}) then {
+					[_session,_projectile,createHashMap,isNull _projectile,
+						"Unexpected/ambiguous missile Fired event; globally withheld until observed completion."] call (_session get "quarantineMissile");
 				};
 				if (!_matches) exitWith {
 					if (_request getOrDefault ["acceptShots",false]) then {
@@ -955,6 +1115,10 @@ isNil {
 							[_weapon,_muzzle,_magazine,_mode,_gunner],_request get "spec"]];
 						if (_vehicle getVariable ["A3C_OW_Debug",false]) then {diag_log (_request get "reason");};
 					};
+				};
+				if (_kind == "MISSILE" && {isNull _projectile}) exitWith {
+					[_session,objNull,_request,false,"Matching Fired event supplied no observable projectile; trustworthy late recovery required."]
+						call (_session get "quarantineMissile");
 				};
 				// Count EVERY matching Fired event during the request, including
 				// any extra events after the first acknowledged discharge.
@@ -964,6 +1128,16 @@ isNil {
 				private _engagement = _request get "id";
 				private _shotTarget = _request get "target"; // Snapshot before any scheduled work or preemption.
 				private _round = _request get "shots";
+				if (_lateMatch) then {
+					private _missing = ((_request getOrDefault ["unaccountedShots",1]) - 1) max 0;
+					_request set ["unaccountedShots",_missing];
+					_request set ["unknown",_missing > 0];
+					if (_missing == 0) then {
+						_quarantine set ["unresolved",_unresolved select {(_x get "id") != _engagement}];
+						if ((_quarantine get "unresolved") isEqualTo [] && {(_quarantine get "projectiles") isEqualTo []}
+							&& {!(_quarantine get "unobservable")}) then {_session set ["missileFlight",createHashMap];};
+					};
+				};
 				if (_debug) then {
 					diag_log format ["A3C OW projectile matched: engagement=%1 kind=%2 round=%3 target=%4 projectile=%5",
 						_engagement,_kind,_round,_shotTarget,_projectile];
@@ -1043,15 +1217,32 @@ isNil {
 						};
 					};
 				}; // Guns never touch missile state/guidance; every matched round takes this branch.
-				if ((_request get "shots") > 1) exitWith {};
+				if ((_request get "shots") > 1) exitWith {
+					_projectile setVariable ["A3C_OW_MissileLaunch",[_session get "id",_engagement]];
+					(_request get "projectiles") pushBackUnique _projectile;
+					_request set ["state","FLIGHT"];
+					_request set ["terminated",false];
+					_request set ["assessmentUntil",-1];
+					_request set ["safetyHold",true];
+					_request set ["reason","Additional matching missile projectile: target reserved and global safety hold until every projectile terminates."];
+					if (_debug) then {diag_log format ["A3C OW UNKNOWN LAUNCH QUARANTINED: extra projectile=%1 id=%2 capturedTarget=%3",_projectile,_engagement,_shotTarget];};
+				};
 				_request set ["projectile",_projectile];
+				_projectile setVariable ["A3C_OW_MissileLaunch",[_session get "id",_engagement]];
 				(_request get "projectiles") pushBackUnique _projectile;
-				_request set ["unknown",false];
+				if (!_lateMatch) then {_request set ["unknown",false];};
+				_request set ["state","FLIGHT"];
+				_request set ["flightStart",time];
 				_request set ["flightDeadline",time + 120];
 				_request set ["handoffDeadline",time + 3];
 				_request set ["reason","Confirmed missile in flight."];
-				_session set ["missileFlight",_request];
-				_vehicle setVariable ["A3C_Guided_Projectile",[_engagement,_projectile,1,[_projectile]],true];
+				if ((_session get "missileFlights") findIf {(_x get "id") == _engagement} < 0) then {
+					(_session get "missileFlights") pushBack _request;
+				};
+				if (((_vehicle getVariable ["A3C_Guided_Projectile",[-1]]) param [0,-1]) == _engagement) then {
+					_vehicle setVariable ["A3C_Guided_Projectile",[_engagement,_projectile,1,[_projectile]],true];
+				};
+				if (_debug) then {diag_log format ["A3C OW MISSILE CONFIRMED: id=%1 target=%2 projectile=%3 late=%4",_engagement,_shotTarget,_projectile,_lateMatch];};
 				private _startGuidance = {
 					params ["_projectile","_target","_engagement","_debug"];
 					private _reason = "";
@@ -1149,6 +1340,12 @@ isNil {
 					if (_debug) then {diag_log format ["A3C OW missile guidance dispatched: engagement=%1; receiver execution not confirmed",_engagement];};
 				};
 				_request set ["handoff",true]; // Dispatch/attempt only; not proof of guidance execution.
+				// ACE_RESERVED is a reservation, not proof that ACE actually started guidance.
+				if (!local _projectile || {!(_projectile getVariable ["A3C_Guidance_Started",false])
+					&& {(_projectile getVariable ["A3C_OW_MissileGuidanceOwner",""]) != "NATIVE"}}) then {
+					_request set ["safetyHold",true];
+					_request set ["reason","Guidance receiver ownership unconfirmed; global safety hold until actual projectile completion."];
+				};
 				private _data = _vehicle getVariable ["A3C_fireComplete",["",false,-1]];
 				if ((_data param [2,-1]) == _engagement) then {
 					_vehicle setVariable ["A3C_fireComplete",[_weapon,true,_engagement],true];
@@ -1164,50 +1361,14 @@ isNil {
 				|| {!((_vehicle getVariable ["A3C_Freeze_helicopter",[false,0]]) select 0)}) exitWith {
 				_doExit = true; false
 			};
-			private _flight = _session get "missileFlight";
-			if (count _flight > 0) then {
-				private _projectiles = _flight get "projectiles";
-				if (!(_flight getOrDefault ["unknown",false])
-					&& {_projectiles findIf {!isNull _x && {alive _x}} < 0}) then {
-					isNil {
-						if !(call _current) exitWith {};
-						// Recheck inside the atomic mutation; a Fired event may have
-						// added another observed projectile since the scheduled check.
-						_flight = _session get "missileFlight";
-						if (count _flight == 0 || {_flight getOrDefault ["unknown",false]}
-							|| {(_flight get "projectiles") findIf {!isNull _x && {alive _x}} >= 0}) exitWith {};
-						_session set ["missileFlight",createHashMap];
-						if (((_vehicle getVariable ["A3C_Guided_Projectile",[-1]]) select 0) == (_flight get "id")) then {
-							_vehicle setVariable ["A3C_Guided_Projectile",nil,true];
-							_vehicle setVariable ["A3C_fireComplete",nil,true];
-						};
-					};
-				} else {
-					if (time >= (_flight getOrDefault ["handoffDeadline",1e12])
-						&& {!(_flight getOrDefault ["handoffReported",false])}
-						&& {!(_flight get "handoff") || {
-							_projectiles findIf {local _x && {!(_x getVariable ["A3C_Guidance_Started",false])}
-								&& {(_x getVariable ["A3C_OW_MissileGuidanceOwner",""]) == ""}} >= 0
-						}}) then {
-						_flight set ["handoffReported",true];
-						_flight set ["reason","Guidance handoff/start not acknowledged after 3 seconds; waiting for actual missile completion."];
-						if (_vehicle getVariable ["A3C_OW_Debug",false]) then {diag_log (_flight get "reason");};
-					};
-					// A timeout explains a blocked slot; it does not end Overwatch or
-					// permit another launch while the existing projectile is alive.
-					if (time >= (_flight get "flightDeadline") && {!(_flight getOrDefault ["timeoutReported",false])}) then {
-						_flight set ["timeoutReported",true];
-						_flight set ["reason",format ["Missile slot held: unknown launch=%1, live projectiles=%2, handoff requested=%3",
-							_flight getOrDefault ["unknown",false],_projectiles select {!isNull _x && {alive _x}},_flight get "handoff"]];
-						if (_vehicle getVariable ["A3C_OW_Debug",false]) then {diag_log (_flight get "reason");};
-					};
-				};
-			};
+			call _maintainMissileFlights;
 			!_doExit
 		};
 		private _engagementCurrent = {
 			params ["_target","_method","_spec"];
 			if !(call _combatCurrent) exitWith {false};
+			if (_method == "MISSILE" && {count (_session get "missileFlight") > 0
+				|| {(_session get "missileFlights") findIf {(_x get "target") isEqualTo _target || {_x getOrDefault ["safetyHold",false]}} >= 0}}) exitWith {false};
 			if (time >= _nextEvaluation) then {call _evaluateTargets;};
 			if (!((_selectedTarget getOrDefault ["target",objNull]) isEqualTo _target)
 				|| {(_selectedTarget getOrDefault ["method",""]) != _method}) exitWith {
@@ -1331,14 +1492,7 @@ isNil {
 						private _settleUntil = time + 0.5;
 						waitUntil {sleep 0.05; !(call _mayEngage) || {time >= _settleUntil};};
 
-						// Preemption may rotate/aim at B while A remains in flight.
-						// Guns may engage B; another missile cannot launch before A finishes.
-						if (_method == "MISSILE") then {
-							waitUntil {
-								sleep 0.05;
-								!(call _mayEngage) || {count (_session get "missileFlight") == 0}
-							};
-						};
+						// Confirmed flights reserve only their own targets; no global flight-completion wait.
 						if (call _mayEngage) then {
 							isNil {
 								if !(call _mayEngage) exitWith {};
@@ -1348,7 +1502,10 @@ isNil {
 									["id",_id],["sessionId",_session get "id"],["kind",_method],
 									["target",_target],["spec",_spec],["pending",false],["shots",0],
 									["acceptShots",false],["commands",0],["reason",""],
-									["lastShot",time - _reload],["projectile",objNull],["projectiles",[]],["handoff",false],["flightDeadline",0]
+									["lastShot",time - _reload],["projectile",objNull],["projectiles",[]],["handoff",false],["flightDeadline",0],
+									["state","PREPARING"],["started",-1],["flightStart",-1],["terminated",false],
+									["assessmentUntil",-1],["safetyHold",false],["laser",_laser],
+									["expectedEvent",([_weapon,_muzzle,_magazine,_mode] apply {toLower _x}) + [_operator]]
 								];
 								_session set ["fireRequest",_request];
 							};
@@ -1390,7 +1547,11 @@ isNil {
 										if !(call _mayEngage) exitWith {};
 										if ((_request get "shots") >= _limit || {(_request get "commands") >= _limit}
 											|| {_request get "pending"}) exitWith {};
-										if (_method == "MISSILE" && {count (_session get "missileFlight") > 0}) exitWith {};
+										if (_method == "MISSILE" && {count (_session get "missileFlight") > 0
+											|| {(_session get "missileFlights") findIf {(_x get "target") isEqualTo _target || {_x getOrDefault ["safetyHold",false]}} >= 0}}) exitWith {
+											_stopFiring = true;
+											_request set ["reason","Missile target reserved or global quarantine active at final authorization."];
+										};
 										// Recheck engine readiness in the same unscheduled scope
 										// as firing; a scheduled caller may have yielded since selection.
 										private _live = weaponState [_vehicle,_turret];
@@ -1406,7 +1567,18 @@ isNil {
 											_stopFiring = true;
 											_request set ["reason","Aircraft no longer operational; AA missile firing authorization cancelled."];
 										};
+										if (_method == "MISSILE" && {(([_target] call _assessMissileTarget) select 0) == "NEUTRALIZED"}) exitWith {
+											_stopFiring = true;
+											_request set ["reason","Target no longer combat-effective at final missile authorization."];
+										};
 										if (_method == "MISSILE") then {
+											// Atomic reservation precedes the sole command; only Fired confirms a real flight.
+											_request set ["state","RESERVED"];
+											_request set ["started",time];
+											(_session get "missileFlights") pushBack _request;
+											if (_vehicle getVariable ["A3C_OW_Debug",false]) then {
+												diag_log format ["A3C OW MISSILE RESERVED: id=%1 target=%2",_request get "id",_target];
+											};
 											// Initialize missile state once, immediately before its single command.
 											_vehicle setVariable ["A3C_Guided_Projectile",[_request get "id",objNull,0,[]],true];
 											_vehicle setVariable ["A3C_fireComplete",[_weapon,false,_request get "id"],true];
@@ -1430,7 +1602,9 @@ isNil {
 										private _ackDeadline = time + 3;
 										waitUntil {
 											sleep 0.05;
-											(_request get "shots") > _before || {!(call _mayEngage)} || {time >= _ackDeadline}
+											(_request get "shots") > _before
+												|| {if (_method == "MISSILE") then {!(call _combatCurrent)} else {!(call _mayEngage)}}
+												|| {time >= _ackDeadline}
 										};
 										if ((_request get "shots") == _before) then {
 											_stopFiring = true; // Latch in the while condition, not a nested exitWith.
@@ -1438,23 +1612,25 @@ isNil {
 											if (_failed && {(_request get "reason") == ""}) then {
 												_request set ["reason","No matching Fired event within 3 seconds."];
 											};
-											if (_method == "MISSILE" && {call _current}) then {
+										};
+										if (_method == "MISSILE") then {
+											isNil {
+												if !(call _current) exitWith {};
 												private _stockAfter = 0;
 												{
 													if ((_x select 1) isEqualTo _turret && {toLower (_x select 0) == toLower _magazine}) then {
 														_stockAfter = _stockAfter + ((_x select 2) max 0);
 													};
 												} forEach magazinesAllTurrets [_vehicle,true];
-												// Unacknowledged ammo consumption may be an untracked launch.
-												// Keep ACTIVE, but quarantine the missile slot if no event
-												// supplied a projectile we can observe. Guns remain usable.
-												if (_stockAfter < (_request get "stockBefore") && {count (_session get "missileFlight") == 0}) then {
-													_failed = true;
-													_request set ["reason","Missile ammo consumed without a Fired projectile; launch slot quarantined until a late event or session replacement."];
-													_request set ["unknown",true];
-													_request set ["expectedEvent",([_weapon,_muzzle,_magazine,_mode] apply {toLower _x}) + [_operator]];
-													_request set ["flightDeadline",time + 120];
-													_session set ["missileFlight",_request];
+												// Check for unobserved extra rounds even when one projectile was confirmed.
+												private _missing = (_request get "stockBefore") - _stockAfter - (_request get "shots");
+												if (_missing > 0) then {
+													_failed = true; _stopFiring = true;
+													_request set ["unaccountedShots",_missing max (_request getOrDefault ["unaccountedShots",0])];
+													_request set ["reason","Missile ammunition consumption exceeds captured projectiles; globally quarantined until trustworthy late recovery or session replacement."];
+													if !(_request getOrDefault ["unknown",false]) then {
+														[_session,objNull,_request,false,_request get "reason"] call (_session get "quarantineMissile");
+													};
 												};
 											};
 										};
@@ -1480,24 +1656,21 @@ isNil {
 									sleep 0.05;
 								};
 							};
-							if (_method == "MISSILE" && {(_request getOrDefault ["shots",0]) > 0}) then {
-								// Priority/validity reevaluations continue throughout the flight.
-								// Preemption exits this wait without deleting or retargeting its projectile.
-								waitUntil {
-									sleep 0.05;
-									!(call _mayEngage) || {count (_session get "missileFlight") == 0}
-								};
-							};
+							// Launch acknowledgement is complete; the worker may select B while A remains tracked.
 						};
 					};
 				};
 
 				call _clearAim;
-				// Guidance captures the real target at Fired, so deleting this owned
-				// laser cannot change a launched missile's target on preemption.
-				if (!isNull _laser) then {deleteVehicle _laser;};
 				isNil {
 					if !(call _current) exitWith {};
+					// Confirmed/unresolved flights retain their own ground laser until termination/session cleanup.
+					if (!isNull _laser && {(_request getOrDefault ["shots",0]) == 0}
+						&& {!(_request getOrDefault ["unknown",false])}) then {deleteVehicle _laser;};
+					if (_method == "MISSILE" && {(_request getOrDefault ["shots",0]) == 0}) then {
+						private _id = _request getOrDefault ["id",-1];
+						_session set ["missileFlights",(_session get "missileFlights") select {(_x get "id") != _id}];
+					};
 					_request set ["pending",false];
 					_request set ["acceptShots",false];
 					_session set ["lastFire",[_method,_target,_spec,_request getOrDefault ["shots",0],_preempted,_failed,_request getOrDefault ["reason",""]]];
@@ -1510,10 +1683,10 @@ isNil {
 						private _key = str (_spec select [0,6]);
 						_blockedUntil set [_key,(time + 5) max (_blockedUntil getOrDefault [_key,0])];
 					};
-					if (_method == "MISSILE" && {(_request getOrDefault ["shots",0]) == 0}
-						&& {count (_session get "missileFlight") == 0}) then {
-						_vehicle setVariable ["A3C_fireComplete",nil,true];
-						_vehicle setVariable ["A3C_Guided_Projectile",nil,true];
+					if (_method == "MISSILE" && {(_request getOrDefault ["shots",0]) == 0}) then {
+						private _id = _request getOrDefault ["id",-1];
+						if (((_vehicle getVariable ["A3C_fireComplete",["",false,-1]]) param [2,-1]) == _id) then {_vehicle setVariable ["A3C_fireComplete",nil,true];};
+						if (((_vehicle getVariable ["A3C_Guided_Projectile",[-1]]) param [0,-1]) == _id) then {_vehicle setVariable ["A3C_Guided_Projectile",nil,true];};
 					};
 				};
 			};

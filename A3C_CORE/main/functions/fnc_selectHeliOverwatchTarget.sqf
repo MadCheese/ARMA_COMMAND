@@ -9,7 +9,7 @@
     Returns [selected candidate HashMap (empty if none), diagnostic snapshot].
     Only installed, live, locally executable firing options compete for priority.
 */
-params ["_heli", "_direction", "_missiles", "_guns", "_state", "_cache"];
+params ["_heli", "_direction", "_missiles", "_guns", "_state", "_cache", ["_missileUnavailable", []]];
 private _knowledgeGroup = group (driver _heli);
 private _debug = _heli getVariable ["A3C_OW_Debug", false];
 
@@ -190,6 +190,20 @@ private _threat = {
         // armament or speed changes threat readiness, not target validity.
         if (!_valid) then {_reason = "Vehicle failed alive/hostility/live-crew/LOS checks.";};
     };
+    private _missileHeld = _target in _missileUnavailable;
+    private _groundNeutralized = false;
+    if (!_isMan && {!_isAir} && {!(_target isKindOf "StaticWeapon")}
+        && {!canMove _target} && {!canFire _target}) then {
+        // Positive mounted damaging-ammunition evidence avoids treating an unarmed/modded vehicle's canFire=false as gun failure.
+        _groundNeutralized = (magazinesAllTurrets [_target, true]) findIf {
+            private _ammoCfg = configFile >> "CfgAmmo" >> getText (configFile >> "CfgMagazines" >> (_x select 0) >> "ammo");
+            getNumber (_ammoCfg >> "hit") > 0
+                || {getNumber (_ammoCfg >> "indirectHit") > 0 && {getNumber (_ammoCfg >> "indirectHitRange") > 0}}
+        } >= 0;
+    };
+    private _missileReason = if (_missileHeld) then {"Missile target reserved: launch/flight or damage assessment outstanding."} else {
+        if (_groundNeutralized) then {"Armed ground target can neither move nor fire."} else {""}
+    };
     private _method = "";
     private _option = [];
     if (_valid && {_isMan}) then {
@@ -207,7 +221,7 @@ private _threat = {
             default {"CAR"};
         };
         private _index = _missiles findIf {
-            _type in (_x select 1) && {(_x select 2) > 0}
+            !_missileHeld && {!_groundNeutralized} && {_type in (_x select 1)} && {(_x select 2) > 0}
                 && {_distance <= (_x select 3)} && {_distance >= (_x select 4)}
         };
         if (_index >= 0) then {_method = "MISSILE"; _option = _missiles select _index;};
@@ -218,8 +232,10 @@ private _threat = {
             if (_index >= 0) then {_method = "GUN"; _option = _guns select _index;};
         };
         if (_method == "") then {
-            _reason = if (_isAir) then {"No executable compatible AA missile in range."}
-                else {"No executable ground missile or classified primary-gunner gun in range."};
+            _reason = if (_missileReason != "") then {_missileReason} else {
+                if (_isAir) then {"No executable compatible AA missile in range."}
+                    else {"No executable ground missile or classified primary-gunner gun in range."}
+            };
         };
     };
     // Detection is unchanged; only AIR missile eligibility requires mobility.
@@ -255,6 +271,7 @@ private _threat = {
     private _row = createHashMapFromArray [
         ["target", _target], ["type", typeOf _target], ["distance", _distance],
         ["acquisition", _detection],
+        ["missileWithheld", _missileHeld || {_groundNeutralized}], ["missileReason", _missileReason],
         ["threat", _label], ["evidence", _evidence], ["tier", _tier],
         ["sector", _sector], ["angle", _angle], ["method", _method], ["option", _option],
         ["eligible", _eligible], ["reason", _reason]
