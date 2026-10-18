@@ -113,16 +113,26 @@ private _threat = {
         // Some modded dedicated stations are absent from allTurrets. Inventory
         // supplies candidate paths only: config, installed weapons and matching stock still have to qualify.
         {if ((_x select 2) > 0) then {_stations pushBackUnique (_x select 1);};} forEach _stock;
+        private _crewSeats = fullCrew [_target, "", true]; // Include empty seats; occupancy is checked by live readiness below.
         _stations = _stations select {
             private _path = _x;
             private _dedicated = _path isEqualTo [-1]; // Driver-operated weapons remain supported.
             if (!_dedicated) then {
-                private _cfg = [_target, _path] call CBA_fnc_getTurret;
-                _dedicated = _path isNotEqualTo [] && {isClass _cfg}
-                    && {getNumber (_cfg >> "isPersonTurret") == 0}
-                    && {!(toLower getText (_cfg >> "proxyType") in ["cpcargo", "cppassenger", "cpdriver"])};
+                // Engine seat identity is direct evidence; config proxy/FFV metadata
+                // can disagree with a modded vehicle's actual mounted gunner seat.
+                private _matchingSeats = _crewSeats select {(_x select 3) isEqualTo _path};
+                private _seatCount = count _matchingSeats;
+                private _seat = _matchingSeats param [0, []];
+                private _role = toLower (_seat param [1, ""]);
+                private _personTurret = _seat param [4, true]; // Missing evidence fails closed.
+                private _pathNonempty = _path isNotEqualTo [];
+                private _weaponRole = _role in ["gunner", "commander", "turret"];
+                _dedicated = _pathNonempty && {_seatCount == 1} && {_weaponRole} && {!_personTurret};
+                if (!_dedicated && {_debug}) then {
+                    _notes pushBack format ["turret=%1 excluded: pathNonempty=%2 seatCount=%3 role=%4 weaponRole=%5 personTurret=%6",
+                        _path,_pathNonempty,_seatCount,_role,_weaponRole,_personTurret];
+                };
             };
-            if (!_dedicated && {_debug}) then {_notes pushBack format ["turret=%1 excluded: FFV/passenger or unresolved dedicated station.",_path];};
             _dedicated
         };
     };

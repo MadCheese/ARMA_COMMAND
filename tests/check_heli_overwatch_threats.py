@@ -15,6 +15,7 @@ def expression(source, values):
     source = re.sub(r'getNumber\s*\(_cfg\s*>>\s*"canLock"\)', '_canLock', source)
     source = source.replace('alive _target', '_alive')
     source = source.replace('canFire _target', '_fireable')
+    source = re.sub(r'\btoLower (_\w+)', r'\1.lower()', source)
     source = re.sub(r'\(_x select (\d+)\)', r'_x[\1]', source)
     source = source.replace('isEqualTo', '==').replace('isNotEqualTo', '!=')
     source = source.replace('&&', ' and ').replace('||', ' or ')
@@ -57,12 +58,90 @@ def run_assignments(source, values):
             index += match.end()
 
 
+def station_fixtures(threat, stock_expr):
+    """Evaluate the production seat/stock/compatibility/readiness predicates.
+
+    fullCrew rows, installed weapons and compatibility lists are engine inputs;
+    this exercises the actual acceptance conditions, not an Arma seat query.
+    """
+    block = section(threat, 'private _crewSeats = fullCrew', '    private _canFire =')
+    assert 'fullCrew [_target, "", true]' in block
+    assert '_matchingSeats param [0, []]' in block
+    assert 'toLower (_seat param [1, ""])' in block
+    assert '_seat param [4, true]' in block
+    driver_expr = re.search(r'private _dedicated = (.*?);', block)[1]
+    match_expr = re.search(r'_crewSeats select \{(.*?)\};', block)[1]
+    path_expr = re.search(r'private _pathNonempty = (.*?);', block)[1]
+    role_expr = re.search(r'private _weaponRole = (.*?);', block)[1]
+    station_expr = re.search(r'^\s*_dedicated = (.*?);', block, re.M)[1]
+    compatibility_expr = re.search(r'if \((_stockHere[^\n]+)\) then \{', threat)[1]
+    ready_expr = re.search(r'private _ready = (.*);', threat)[1]
+    live_condition = re.search(r'private _liveGrade = if \((.*?)\) then \{1\} else \{2\};', threat)[1]
+    # name, path, seat rows, weapons, stock, compatible mags, ready operator,
+    # ammo AA grade, accepted station, live AA grade contribution.
+    fixtures = [
+        ("mounted Shilka [0]", [0], [["gunner", "gunner", -1, [0], False]], ["cannon"], [["AA", [0], 1734]], ["aa"], True, 2, True, 2),
+        ("actual FFV", [0], [["passenger", "turret", 0, [0], True]], ["cannon"], [["AA", [0], 1734]], ["aa"], True, 2, False, 0),
+        ("cargo role without FFV flag", [0], [["passenger", "cargo", 0, [0], False]], ["cannon"], [["AA", [0], 1734]], ["aa"], True, 2, False, 0),
+        ("nested mounted turret", [0, 1], [["gunner", "TuRrEt", -1, [0, 1], False]], ["cannon"], [["AA", [0, 1], 100]], ["aa"], True, 1, True, 1),
+        ("driver-operated weapon", [-1], [["driver", "driver", -1, [], False]], ["cannon"], [["AA", [-1], 100]], ["aa"], True, 1, True, 1),
+        ("missing seat", [0], [], ["cannon"], [["AA", [0], 100]], ["aa"], True, 2, False, 0),
+        ("unrelated seat path", [0], [["gunner", "gunner", -1, [1], False]], ["cannon"], [["AA", [0], 100]], ["aa"], True, 2, False, 0),
+        ("ambiguous seats", [0], [["a", "gunner", -1, [0], False], ["b", "turret", -1, [0], False]], ["cannon"], [["AA", [0], 100]], ["aa"], True, 2, False, 0),
+        ("missing personTurret evidence", [0], [["gunner", "gunner", -1, [0]]], ["cannon"], [["AA", [0], 100]], ["aa"], True, 2, False, 0),
+        ("missing installed weapon", [0], [["gunner", "gunner", -1, [0], False]], [], [["AA", [0], 100]], ["aa"], True, 2, True, 0),
+        ("missing ammunition", [0], [["gunner", "gunner", -1, [0], False]], ["cannon"], [], ["aa"], True, 2, True, 0),
+        ("incompatible ammunition", [0], [["gunner", "gunner", -1, [0], False]], ["cannon"], [["AA", [0], 100]], ["other"], True, 2, True, 0),
+        ("other turret owns ammunition", [0], [["gunner", "gunner", -1, [0], False]], ["cannon"], [["AA", [1], 100]], ["aa"], True, 2, True, 0),
+        ("no rounds remaining", [0], [["gunner", "gunner", -1, [0], False]], ["cannon"], [["AA", [0], 0]], ["aa"], True, 2, True, 0),
+        ("empty gunner seat", [0], [[None, "gunner", -1, [0], False]], ["cannon"], [["AA", [0], 100]], ["aa"], False, 1, True, 2),
+    ]
+    for name, path, seats, weapons, stock, compatible, operator, aa, expected_station, expected_grade in fixtures:
+        values = dict(_path=path)
+        accepted = expression(driver_expr, values)
+        if not accepted:
+            matches = [row for row in seats if expression(match_expr, dict(values, _x=row))]
+            seat = matches[0] if matches else []
+            # Adapt the documented fullCrew fields/param defaults as observations.
+            values.update(_seatCount=len(matches), _role=seat[1].lower() if len(seat) > 1 else '',
+                          _personTurret=seat[4] if len(seat) > 4 else True)
+            values['_pathNonempty'] = expression(path_expr, values)
+            values['_weaponRole'] = expression(role_expr, values)
+            accepted = expression(station_expr, values)
+        assert accepted == expected_station, (name, values)
+        contribution = 0
+        if accepted:
+            for weapon in weapons:
+                if not weapon:
+                    continue
+                for row in stock:
+                    values['_stockHere'] = expression(stock_expr, dict(values, _x=row))
+                    values.update(_mag=row[0], _compatible=compatible, _pylonMatch=False)
+                    if expression(compatibility_expr, values):
+                        values.update(_aa=aa, _alive=True, _operatorReady=operator, _canFire=True, _inRange=True)
+                        values['_ready'] = expression(ready_expr, values)
+                        contribution = 1 if expression(live_condition, values) else 2
+        assert contribution == expected_grade, (name, contribution)
+        print(f"PASS: {name}: station={accepted}, AA contribution={contribution}")
+    assert 'pathNonempty=%2 seatCount=%3 role=%4 weaponRole=%5 personTurret=%6' in block
+    assert 'CBA_fnc_getTurret' not in block and 'proxyType' not in block and 'isPersonTurret' not in block
+
+
 def run():
     ammo_path = "A3C_CORE/main/functions/fnc_getHeliOverwatchAmmoInfo.sqf"
     ammo = (ROOT / ammo_path).read_text(encoding="utf-8")
     selector = (ROOT / SELECTOR).read_text(encoding="utf-8")
     delimiters(ammo)
     delimiters(selector)
+    # This patch may change only station validation; all other production text
+    # (including the ammo parser/grades and earlier LOS/reselection fix) is exact.
+    station_baseline = head(SELECTOR, '30d45ba')
+    old_start = station_baseline.index('        _stations = _stations select {')
+    new_start = selector.index('        private _crewSeats = fullCrew')
+    end = '\n    };\n    private _canFire ='
+    assert selector[:new_start] == station_baseline[:old_start]
+    assert selector[selector.index(end, new_start):] == station_baseline[station_baseline.index(end, old_start):]
+    assert ammo == head(ammo_path, '30d45ba')
     old_ammo = head(ammo_path, "a6568c2")
     # Config parsing, damage/range calculation and firing-facing fields are exact.
     assert ammo[:ammo.index('private _aa =')] == old_ammo[:old_ammo.index('private _aa =')]
@@ -103,9 +182,6 @@ def run():
     assert 'forEach allTurrets [_target, true]' in threat
     assert '{if ((_x select 2) > 0) then {_stations pushBackUnique (_x select 1);};} forEach _stock;' in threat
     assert 'private _stations = if (_isMan) then {[[]]} else {[[-1]]};' in threat
-    assert '[_target, _path] call CBA_fnc_getTurret' in threat
-    assert 'isClass _cfg' in threat and 'getNumber (_cfg >> "isPersonTurret") == 0' in threat
-    assert '["cpcargo", "cppassenger", "cpdriver"]' in threat
     assert '_target weaponsTurret _path' in threat and 'compatibleMagazines [_weapon, _x]' in threat
     assert 'vehicle _operator == _target' in threat and '(_target unitTurret _operator) isEqualTo _path' in threat
     assert 'turretUnit _path' in threat and 'driver _target' in threat
@@ -114,6 +190,7 @@ def run():
     assert expression(stock_expr, {"_x": shilka_stock, "_path": [0]})
     assert not expression(stock_expr, {"_x": shilka_stock, "_path": [-1]})
     assert not expression(stock_expr, {"_x": [shilka_stock[0], [0], 0], "_path": [0]})
+    station_fixtures(threat, stock_expr)
     print("PASS: inventory [0] discovery contract; dedicated-station/FFV, installed-weapon, compatibility, exact-path and positive-stock guards")
 
     ready_expr = re.search(r'private _ready = (.*);', threat)[1]
