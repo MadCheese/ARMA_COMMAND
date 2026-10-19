@@ -77,10 +77,13 @@ def station_fixtures(threat, stock_expr):
     compatibility_expr = re.search(r'if \((_stockHere[^\n]+)\) then \{', threat)[1]
     ready_expr = re.search(r'private _ready = (.*);', threat)[1]
     live_condition = re.search(r'private _liveGrade = if \((.*?)\) then \{1\} else \{2\};', threat)[1]
+    aa_qualifier = re.search(r'if \((_aa > 0)\) then \{', threat)[1]
     # name, path, seat rows, weapons, stock, compatible mags, ready operator,
     # ammo AA grade, accepted station, live AA grade contribution.
     fixtures = [
-        ("mounted Shilka [0]", [0], [["gunner", "gunner", -1, [0], False]], ["cannon"], [["AA", [0], 1734]], ["aa"], True, 2, True, 2),
+        ("mounted operational Shilka [0]", [0], [["gunner", "gunner", -1, [0], False]], ["cannon"], [["AA", [0], 1734]], ["aa"], True, 2, True, 1),
+        ("mounted operational mixed BMP cannon", [0], [["gunner", "gunner", -1, [0], False]], ["cannon"], [["AA", [0], 100]], ["aa"], True, 2, True, 1),
+        ("ordinary mounted cannon without AA evidence", [0], [["gunner", "gunner", -1, [0], False]], ["cannon"], [["ball", [0], 100]], ["ball"], True, 0, True, 0),
         ("actual FFV", [0], [["passenger", "turret", 0, [0], True]], ["cannon"], [["AA", [0], 1734]], ["aa"], True, 2, False, 0),
         ("cargo role without FFV flag", [0], [["passenger", "cargo", 0, [0], False]], ["cannon"], [["AA", [0], 1734]], ["aa"], True, 2, False, 0),
         ("nested mounted turret", [0, 1], [["gunner", "TuRrEt", -1, [0, 1], False]], ["cannon"], [["AA", [0, 1], 100]], ["aa"], True, 1, True, 1),
@@ -120,7 +123,8 @@ def station_fixtures(threat, stock_expr):
                     if expression(compatibility_expr, values):
                         values.update(_aa=aa, _alive=True, _operatorReady=operator, _canFire=True, _inRange=True)
                         values['_ready'] = expression(ready_expr, values)
-                        contribution = 1 if expression(live_condition, values) else 2
+                        if expression(aa_qualifier, values):
+                            contribution = 1 if expression(live_condition, values) else 2
         assert contribution == expected_grade, (name, contribution)
         print(f"PASS: {name}: station={accepted}, AA contribution={contribution}")
     assert 'pathNonempty=%2 seatCount=%3 role=%4 weaponRole=%5 personTurret=%6' in block
@@ -133,14 +137,12 @@ def run():
     selector = (ROOT / SELECTOR).read_text(encoding="utf-8")
     delimiters(ammo)
     delimiters(selector)
-    # This patch may change only station validation; all other production text
-    # (including the ammo parser/grades and earlier LOS/reselection fix) is exact.
-    station_baseline = head(SELECTOR, '30d45ba')
-    old_start = station_baseline.index('        _stations = _stations select {')
-    new_start = selector.index('        private _crewSeats = fullCrew')
-    end = '\n    };\n    private _canFire ='
-    assert selector[:new_start] == station_baseline[:old_start]
-    assert selector[selector.index(end, new_start):] == station_baseline[station_baseline.index(end, old_start):]
+    # Only live AA-grade conversion changes; fullCrew station validation,
+    # readiness, acquisition, LOS, exclusions and ranking remain exact.
+    old_decision = 'private _liveGrade = if (_aa == 1 && {_ready}) then {1} else {2};'
+    new_decision = 'private _liveGrade = if (_aa > 0 && {_ready}) then {1} else {2};'
+    assert selector.count(new_decision) == 1
+    assert selector.replace(new_decision, old_decision) == head(SELECTOR, '126b3cc')
     assert ammo == head(ammo_path, '30d45ba')
     old_ammo = head(ammo_path, "a6568c2")
     # Config parsing, damage/range calculation and firing-facing fields are exact.
@@ -161,6 +163,10 @@ def run():
         ("AA missile", 256, "shotmissile", True, 0, False, 1),
         ("air-only missile", 0, "shotmissile", True, 0, True, 1),
         ("AT missile", 128, "shotmissile", True, 1, False, 0),
+        # Audit the existing simulation boundary without broadening it: the
+        # separate armed-aircraft threat path already handles damaging rockets.
+        ("air-flagged rocket remains unsupported by ammo helper", 256, "shotrocket", True, 0, False, 0),
+        ("ordinary rocket", 64, "shotrocket", True, 0, False, 0),
         ("nondamaging countermeasure", 448, "shotbullet", False, 0, False, 0),
         ("unresolved expression", "256 * 1", "shotbullet", True, 0, False, 0),
     ]
@@ -198,8 +204,12 @@ def run():
     live_condition = re.search(r'private _liveGrade = if \((.*?)\) then \{1\} else \{2\};', threat)[1]
     for name, aa, alive, operator, can_fire, in_range, expected in [
         ("reported Shilka", 2, True, True, False, True, 2),
-        ("ready mixed Shilka", 2, True, True, True, True, 2),
-        ("dedicated operational AA", 1, True, True, True, True, 1),
+        ("ready mixed Shilka", 2, True, True, True, True, 1),
+        ("ready mixed BMP cannon", 2, True, True, True, True, 1),
+        ("dedicated operational AA missile", 1, True, True, True, True, 1),
+        ("mixed AA gun unavailable", 2, True, True, False, True, 2),
+        ("mixed AA operator unavailable", 2, True, False, True, True, 2),
+        ("mixed AA out of range", 2, True, True, True, False, 2),
         ("uncrewed dedicated AA", 1, True, False, True, True, 2),
         ("disabled dedicated AA", 1, True, True, False, True, 2),
         ("destroyed dedicated AA", 1, False, True, True, True, 2),

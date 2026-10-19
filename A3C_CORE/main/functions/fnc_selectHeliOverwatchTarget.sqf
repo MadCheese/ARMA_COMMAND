@@ -178,7 +178,7 @@ private _threat = {
                                 // Infantry can be holding a rifle while carrying a live
                                 // AA launcher. canFire then tests the wrong current weapon.
                                 private _ready = alive _target && {_operatorReady} && {_canFire} && {_inRange};
-                                private _liveGrade = if (_aa == 1 && {_ready}) then {1} else {2};
+                                private _liveGrade = if (_aa > 0 && {_ready}) then {1} else {2};
                                 if (_grade == 0 || {_liveGrade < _grade}) then {_grade = _liveGrade;};
                                 _notes pushBackUnique format ["%1; turret=%2 rounds=%3 operator=%4 operatorReady=%5 canFire=%6 inRange=%7 ready=%8 liveGrade=%9",
                                     _info get "evidence", _path, _x select (if (_isMan) then {1} else {2}),
