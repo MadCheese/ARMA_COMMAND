@@ -287,13 +287,17 @@ private _threat = {
     private _attacking = _actors findIf {
         (getAttackTarget _x) in _selfTargets || {(assignedTarget _x) in _selfTargets}
     } >= 0;
+    
     private _tier = switch (true) do {
-        case (_aa == 1): {1};
+        
+        case (_aa == 1): {0};
+        case (_isAir && {_valid} && {_method == "MISSILE"}): {1};
         case (_aa == 2): {2};
         case (_attacking): {3};
         case (_sector): {4};
         default {5};
     };
+
     private _label = ["Ordinary", "Operational immediate air threat", "Credible/uncertain air defense"] select _aa;
     if (_attacking) then {_evidence pushBack "Candidate or live crew getAttackTarget/assignedTarget points at helicopter/crew.";};
     private _idIndex = _ids findIf {(_x select 0) isEqualTo _target};
