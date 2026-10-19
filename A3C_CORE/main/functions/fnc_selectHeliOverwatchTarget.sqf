@@ -124,10 +124,13 @@ private _threat = {
                 private _seatCount = count _matchingSeats;
                 private _seat = _matchingSeats param [0, []];
                 private _role = toLower (_seat param [1, ""]);
-                private _personTurret = _seat param [4, true]; // Missing evidence fails closed.
+                private _personTurret = _seat param [4, true]; // Diagnostic metadata, not a veto on mounted weapons.
                 private _pathNonempty = _path isNotEqualTo [];
                 private _weaponRole = _role in ["gunner", "commander", "turret"];
-                _dedicated = _pathNonempty && {_seatCount == 1} && {_weaponRole} && {!_personTurret};
+                // A personal FFV weapon has no installed vehicle weapon with
+                // compatible turret-owned stock. Enforce that below, without
+                // borrowing secondaryWeapon or personal magazines from occupants.
+                _dedicated = _pathNonempty && {_seatCount == 1} && {_weaponRole};
                 if (!_dedicated && {_debug}) then {
                     _notes pushBack format ["turret=%1 excluded: pathNonempty=%2 seatCount=%3 role=%4 weaponRole=%5 personTurret=%6",
                         _path,_pathNonempty,_seatCount,_role,_weaponRole,_personTurret];
@@ -177,8 +180,11 @@ private _threat = {
                                     && {_distance >= (_info get "minRange")};
                                 // Infantry can be holding a rifle while carrying a live
                                 // AA launcher. canFire then tests the wrong current weapon.
-                                private _ready = alive _target && {_operatorReady} && {_canFire} && {_inRange};
-                                private _liveGrade = if (_aa > 0 && {_ready}) then {1} else {2};
+                                private _ready = alive _target && {_operatorReady} && {_canFire} && {_inRange}
+                                    && {!_isAir || {canMove _target}};
+                                // Only dedicated AA (or the armed-aircraft override)
+                                // establishes immediate priority; secondary cannons stay Tier 2.
+                                private _liveGrade = if (_aa == 1 && {_ready}) then {1} else {2};
                                 if (_grade == 0 || {_liveGrade < _grade}) then {_grade = _liveGrade;};
                                 _notes pushBackUnique format ["%1; turret=%2 rounds=%3 operator=%4 operatorReady=%5 canFire=%6 inRange=%7 ready=%8 liveGrade=%9",
                                     _info get "evidence", _path, _x select (if (_isMan) then {1} else {2}),
