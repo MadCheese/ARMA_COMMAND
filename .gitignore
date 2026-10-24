@@ -1,4 +1,5 @@
 /bin/
+/tests/
 /tools_editing/
 /*.sqf
 /*.sqm
