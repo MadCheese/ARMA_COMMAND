@@ -7,7 +7,10 @@
 // disableSerialization;
 params ["_display","_key","_shift","_ctrl","_alt"];
 
+systemchat str _key;
 
+//-- declare variable for suppression of Engine Binds
+private _blockDefault = false;
 
 //-- CTRL key must block default engine bind to disable map drawing || NOTE : NOTE EVEN EXECUTED
 if (_key == 29) then {
@@ -21,8 +24,7 @@ if ((_this select 1) in actionKeys "showmap") exitWith {
 };
 
 
-//-- declare variable for suppression of Engine Binds
-private _blockDefault = false;
+
 
 
 
