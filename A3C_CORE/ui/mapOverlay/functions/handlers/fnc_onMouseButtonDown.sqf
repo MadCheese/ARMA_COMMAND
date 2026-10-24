@@ -125,7 +125,11 @@ if (!isNull _vanillaMapDisplay) then {
 if (_isOverVanillaUI) exitWith {};
 
 //-- Prevent A3C map interactions over existing map elements.
-if ((ctrlMapMouseOver (findDisplay 12 displayCtrl 51)) isNotEqualTo []) exitWith {};
+private _ctrlMapMouseOver = ctrlMapMouseOver(findDisplay 12 displayCtrl 51);
+if (
+	_ctrlMapMouseOver isNotEqualTo []
+	&& { (_ctrlMapMouseOver select 0) in ["task"] } //"customMark","marker",
+) exitWith {};
 
 
 //-- ENEMY-TARGET Combo is open - ALWAYS disables mapclick, hides Combo if it's not clicked on directly
