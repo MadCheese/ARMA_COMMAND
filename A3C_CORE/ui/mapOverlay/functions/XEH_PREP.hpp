@@ -24,6 +24,7 @@ A3C_PREP_SUBDIR(handlers,HXT_OMBD_prepLoopOrSyncSQ);
 A3C_PREP_SUBDIR(handlers,HXT_OMBU_setLoopOrSyncSQ);
 
 A3C_PREP_SUBDIR(handlers,MAP_onKeyDown);
+A3C_PREP_SUBDIR(handlers,MAP_onDeleteKey);
 A3C_PREP_SUBDIR(handlers,onDragMapHCWP);
 A3C_PREP_SUBDIR(handlers,onDragMapItem);
 A3C_PREP_SUBDIR(handlers,onDragMapStandard);

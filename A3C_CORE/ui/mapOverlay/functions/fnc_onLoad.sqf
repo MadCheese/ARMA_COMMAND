@@ -24,7 +24,7 @@ if (!isNull _mainMapDisplay) then {
                 false
             };
 
-            _this call A3C_ui_mapOverlay_fnc_MAP_onDeleteKey
+            _this call A3C_ui_mapOverlay_fnc_MAP_onDeleteKey;
         }
     ];
 

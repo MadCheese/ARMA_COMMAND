@@ -105,7 +105,6 @@ A3C_UI_FNC_ADD_KEYBINDS =
 		"KeyDown",
 		{
 			disableSerialization;
-			systemchat str _this;
 			private _return = _this call A3C_ui_mapOverlay_fnc_MAP_onKeyDown;
 			_return	
 		}

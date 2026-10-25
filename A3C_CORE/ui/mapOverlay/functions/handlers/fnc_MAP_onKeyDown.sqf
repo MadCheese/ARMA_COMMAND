@@ -34,6 +34,8 @@ params [
 	"_alt"
 ];
 
+
+
 private _display = findDisplay IDD_MAP_OVERLAY;
 
 private _blockDefault = false;
